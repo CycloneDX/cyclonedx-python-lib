@@ -1,0 +1,17 @@
+# Exlude python build & distribution directories
+build/
+dist/
+*.egg-info*
+
+# Exlude *.pyc
+*.pyc
+
+# Exclude test-related items
+.tox/*
+
+# Exclude Python Virtual Environment
+venv/*
+
+# Exlude IDE related files
+.idea/*
+.vscode/*
