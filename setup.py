@@ -33,6 +33,7 @@ setup(
     package_data={
         'cyclonedx': ['schema/*.json', 'schema/*.xsd', 'schema/ext/*.json', 'schema/ext/*.xsd']
     },
+    data_files=['README.md', 'requirements.txt', 'VERSION'],
     include_package_data=True,
     install_requires=open(os.path.join(script_path, 'requirements.txt')).read()
 )
