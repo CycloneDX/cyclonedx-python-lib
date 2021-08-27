@@ -1,2 +1,4 @@
+packageurl-python==0.9.4
+requirements_parser==0.2.0
 setuptools>=50.3.2
 tox==3.24.3
