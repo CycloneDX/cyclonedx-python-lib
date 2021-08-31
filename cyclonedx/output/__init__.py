@@ -25,6 +25,9 @@ class BaseOutput(ABC):
     def __init__(self, bom: Bom = None):
         self._bom = bom
 
+    def get_bom(self) -> Bom:
+        return self._bom
+
     def set_bom(self, bom: Bom):
         self._bom = bom
 

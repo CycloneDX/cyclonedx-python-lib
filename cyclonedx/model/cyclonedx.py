@@ -33,11 +33,20 @@ class Component:
         self._type = type
         self._qualifiers = qualifiers
 
+    def get_name(self) -> str:
+        return self._name
+
     def get_purl(self) -> str:
         base_purl = 'pkg:{}/{}@{}'.format(PURL_TYPE_PREFIX, self._name, self._version)
         if self._qualifiers:
             base_purl = '{}?{}'.format(base_purl, self._qualifiers)
         return base_purl
+
+    def get_type(self) -> ComponentType:
+        return self._type
+
+    def get_version(self) -> str:
+        return self._version
 
     def __eq__(self, other):
         return other.get_purl() == self.get_purl()

@@ -23,13 +23,16 @@ class Bom:
         self._components.clear()
 
     def add_component(self, component: Component):
-        self._components.add(component)
+        self._components.append(component)
 
     def add_components(self, components: List[Component]):
         self._components = self._components + components
 
     def component_count(self) -> int:
         return len(self._components)
+
+    def get_components(self) -> List[Component]:
+        return self._components
 
     def has_component(self, component: Component) -> bool:
         return component in self._components
