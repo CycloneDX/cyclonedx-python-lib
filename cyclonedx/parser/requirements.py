@@ -14,7 +14,7 @@ class RequirementsParser(BaseParser):
             @todo
             Note that the below line will get the first (lowest) version specified in the Requirement and
             ignore the operator (it might not be ==). This is passed to the Component.
-            
+
             For example if a requirement was listed as: "PickyThing>1.6,<=1.9,!=1.8.6", we'll be interpretting this
             as if it were written "PickyThing==1.6"
             """
