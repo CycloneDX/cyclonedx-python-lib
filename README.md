@@ -1,5 +1,7 @@
 # Python Library for generating CycloneDX
 
+[![CircleCI](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib.svg?style=shield)](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib)
+
 _Coming soon!_
 
 ## The Fine Print
