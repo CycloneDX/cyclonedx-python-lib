@@ -1,5 +1,7 @@
 # Python Library for generating CycloneDX
 
+[![CircleCI](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib.svg?style=shield)](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib)
+
 This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all 
 project dependencies.
 
