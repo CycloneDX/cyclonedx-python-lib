@@ -15,13 +15,13 @@
 version: 2.1
 
 executors:
-  python:
+  python39:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.9
 
 jobs:
   publish:
-    executor: python
+    executor: python39
     environment:
       PIPENV_VENV_IN_PROJECT: true
     steps:
@@ -39,28 +39,26 @@ jobs:
             # TODO: perform publish steps, maybe using python-semantic-release
 
   build:
-    executor: python
+    executor: python39
     environment:
       PIPENV_VENV_IN_PROJECT: true
     steps:
       - checkout
       - run:
-          name: Setup Python environment
+          name: Install Tox
           command: |
-            # TODO: do stuff, like setup .venv, poetry, pip etc.
+            pip install tox
       - run:
-          name: Run tests
+          name: Run tox
           command: |
-            # TODO: maybe run pylint and run those tests
+            tox --result-json=.tox/results.json
       - run:
           name: Run self scan
           command: |
             # TODO: audit with jake maybe?
-      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: test-results
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: test-results
-          destination: tr1
+          path: .tox/results.json
+          destination: tox-logs
 
 workflows:
   version: 2
