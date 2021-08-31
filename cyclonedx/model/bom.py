@@ -32,5 +32,4 @@ class Bom:
         return len(self._components)
 
     def has_component(self, component: Component) -> bool:
-        print("Checking if {} is contained within {}".format(component, self._components))
         return component in self._components
