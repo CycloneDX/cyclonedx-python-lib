@@ -5,7 +5,7 @@ PURL_TYPE_PREFIX = 'pypi'
 
 class ComponentType(Enum):
     """
-    Enum object that defines the permissable 'types' for a Component according to the CycloneDX
+    Enum object that defines the permissible 'types' for a Component according to the CycloneDX
     schemas.
     """
     APPLICATION = 'application'
@@ -27,11 +27,17 @@ class Component:
     _version: str
     _qualifiers: str
 
-    def __init__(self, name: str, version: str, qualifiers: str = None, type: ComponentType = ComponentType.LIBRARY):
+    _author: str = None
+
+    def __init__(self, name: str, version: str, qualifiers: str = None,
+                 component_type: ComponentType = ComponentType.LIBRARY):
         self._name = name
         self._version = version
-        self._type = type
+        self._type = component_type
         self._qualifiers = qualifiers
+
+    def get_author(self) -> str:
+        return self._author
 
     def get_name(self) -> str:
         return self._name
@@ -47,6 +53,9 @@ class Component:
 
     def get_version(self) -> str:
         return self._version
+
+    def set_author(self, author: str):
+        self._author = author
 
     def __eq__(self, other):
         return other.get_purl() == self.get_purl()

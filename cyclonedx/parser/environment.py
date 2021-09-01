@@ -12,5 +12,14 @@ class EnvironmentParser(BaseParser):
 
     def __init__(self):
         import pkg_resources
+        from importlib.metadata import metadata
+
+        i: pkg_resources.DistInfoDistribution
         for i in iter(pkg_resources.working_set):
-            self._components.append(Component(name=i.project_name, version=i.version, type='pypi'))
+            c = Component(name=i.project_name, version=i.version)
+            i_metadata = metadata(i.project_name)
+
+            if 'Author' in i_metadata.keys():
+                c.set_author(i_metadata.get('Author'))
+
+            self._components.append(c)

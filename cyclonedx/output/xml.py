@@ -62,16 +62,19 @@ class Xml(BaseOutput):
         if self._component_supports_bom_ref_attribute():
             element_attributes['bom-ref'] = component.get_purl()
 
-        element = ElementTree.Element('component', element_attributes)
+        component_element = ElementTree.Element('component', element_attributes)
+
+        if self._component_supports_author() and component.get_author() is not None:
+            ElementTree.SubElement(component_element, 'author').text = component.get_author()
 
         # if publisher and publisher != "UNKNOWN":
         #     ElementTree.SubElement(component, "publisher").text = re.sub(RE_XML_ILLEGAL, "?", publisher)
 
         # if name and name != "UNKNOWN":
-        ElementTree.SubElement(element, 'name').text = component.get_name()
+        ElementTree.SubElement(component_element, 'name').text = component.get_name()
 
         # if version and version != "UNKNOWN":
-        ElementTree.SubElement(element, 'version').text = component.get_version()
+        ElementTree.SubElement(component_element, 'version').text = component.get_version()
 
         # if description and description != "UNKNOWN":
         #     ElementTree.SubElement(component, "description").text = re.sub(RE_XML_ILLEGAL, "?", description)
@@ -90,11 +93,11 @@ class Xml(BaseOutput):
         #             component_license.license.name)
 
         # if purl:
-        ElementTree.SubElement(element, 'purl').text = component.get_purl()
+        ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
 
         # ElementTree.SubElement(component, "modified").text = modified if modified else "false"
 
-        return element
+        return component_element
 
     def _add_metadata(self, bom: ElementTree.Element) -> ElementTree.Element:
         metadata_e = ElementTree.SubElement(bom, 'metadata')
@@ -102,6 +105,9 @@ class Xml(BaseOutput):
         return bom
 
     def _bom_supports_metadata(self) -> bool:
+        return True
+
+    def _component_supports_author(self) -> bool:
         return True
 
     def _component_supports_bom_ref_attribute(self) -> bool:
@@ -126,6 +132,9 @@ class XmlV1Dot0(Xml):
     def _component_supports_bom_ref_attribute(self) -> bool:
         return False
 
+    def _component_supports_author(self) -> bool:
+        return False
+
 
 class XmlV1Dot1(Xml):
 
@@ -133,6 +142,9 @@ class XmlV1Dot1(Xml):
         return '1.1'
 
     def _bom_supports_metadata(self) -> bool:
+        return False
+
+    def _component_supports_author(self) -> bool:
         return False
 
 
