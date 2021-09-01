@@ -92,7 +92,7 @@ outputter.output_as_string()
 ```
 from cyclonedx.output import get_instance, SchemaVersion
 
-outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_)
+outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
 outputter.output_to_file(filename='/tmp/sbom-v1.2.xml')
 ```
 
