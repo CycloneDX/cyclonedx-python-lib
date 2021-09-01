@@ -9,6 +9,9 @@ dist/
 # Exclude test-related items
 .tox/*
 
+# Exclude coverage
+.coverage
+
 # Exclude Python Virtual Environment
 venv/*
 

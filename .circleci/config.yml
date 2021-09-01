@@ -45,13 +45,17 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Tox
+          name: Install Tox & Coverage
           command: |
-            pip install tox
+            pip install tox coverage
       - run:
           name: Run tox
           command: |
             tox --result-json=.tox/results.json
+      - run:
+          name: Generate Coverage Reports
+          command: |
+            coverage report && coverage xml -o test-reports/coverage.xml
       - run:
           name: Run self scan
           command: |
@@ -59,6 +63,8 @@ jobs:
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: .tox/results.json
           destination: tox-logs
+      - store_test_results:
+          path: test-reports
 
 workflows:
   version: 2
