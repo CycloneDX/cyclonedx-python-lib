@@ -33,10 +33,14 @@ def _xml_pretty_print(elem: ElementTree.Element, level: int = 0) -> ElementTree.
 
 
 class Xml(BaseOutput):
-    XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
+
+    def get_target_namespace(self) -> str:
+        return 'http://cyclonedx.org/schema/bom/{}'.format(self._get_schema_version())
 
     def output_as_string(self) -> str:
-        bom = ElementTree.Element('bom', {'xmlns': self._get_target_namespace(), 'version': '1'})
+        bom = ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
+        bom = self._add_metadata(bom=bom)
         components = ElementTree.SubElement(bom, 'components')
         for component in self.get_bom().get_components():
             components.append(Xml._get_component_as_xml_element(component=component))
@@ -83,12 +87,16 @@ class Xml(BaseOutput):
 
         return element
 
+    def _add_metadata(self, bom: ElementTree.Element) -> ElementTree.Element:
+        metadata_e = ElementTree.SubElement(bom, 'metadata')
+        ElementTree.SubElement(metadata_e, 'timestamp').text = self.get_bom().get_metadata().get_timestamp().isoformat()
+        return bom
+
     @abstractmethod
     def _get_schema_version(self) -> str:
         pass
 
-    def _get_target_namespace(self) -> str:
-        return 'http://cyclonedx.org/schema/bom/{}'.format(self._get_schema_version())
+
 
 
 class XmlV1Dot2(Xml):

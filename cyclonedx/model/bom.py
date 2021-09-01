@@ -1,6 +1,23 @@
+import datetime
 from typing import List
 from .cyclonedx import Component
 from ..parser import BaseParser
+
+
+class BomMetaData:
+    """
+    Our internal representation of the metadata complex type within the CycloneDX standard.
+
+    See https://cyclonedx.org/docs/1.3/#type_metadata
+    """
+
+    _timestamp: datetime.datetime
+
+    def __init__(self):
+        self._timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
+
+    def get_timestamp(self) -> datetime.datetime:
+        return self._timestamp
 
 
 class Bom:
@@ -11,6 +28,7 @@ class Bom:
     to the requested schema version.
     """
 
+    _metadata: BomMetaData = None
     _components: List[Component] = []
 
     @staticmethod
@@ -20,6 +38,7 @@ class Bom:
         return bom
 
     def __init__(self):
+        self._metadata = BomMetaData()
         self._components.clear()
 
     def add_component(self, component: Component):
@@ -33,6 +52,9 @@ class Bom:
 
     def get_components(self) -> List[Component]:
         return self._components
+
+    def get_metadata(self) -> BomMetaData:
+        return self._metadata
 
     def has_component(self, component: Component) -> bool:
         return component in self._components

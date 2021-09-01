@@ -1,6 +1,8 @@
+import xml.etree.ElementTree
 from unittest import TestCase
 
 import json
+from datetime import datetime, timezone
 from xml.dom import minidom
 
 
@@ -28,7 +30,28 @@ class BaseXmlTestCase(TestCase):
 
     def assertEqualXml(self, a: str, b: str):
         da, db = minidom.parseString(a), minidom.parseString(b)
-        self.assertTrue(self._is_equal_xml_element(da.documentElement, db.documentElement))
+        self.assertTrue(self._is_equal_xml_element(da.documentElement, db.documentElement),
+                        'XML Documents are not equal: \n{}\n{}'.format(da.toxml(), db.toxml()))
+
+    def assertEqualXmlBom(self, a: str, b: str, namespace: str):
+        """
+        Sanitise some fields such as timestamps which cannot have their values directly compared for equality.
+        """
+        ba, bb = xml.etree.ElementTree.fromstring(a), xml.etree.ElementTree.fromstring(b)
+
+        now = datetime.now(tz=timezone.utc)
+        metadata_ts_a = ba.find('./{{{}}}metadata/{{{}}}timestamp'.format(namespace, namespace))
+        if metadata_ts_a is not None:
+            metadata_ts_a.text = now.isoformat()
+
+        metadata_ts_b = bb.find('./{{{}}}metadata/{{{}}}timestamp'.format(namespace, namespace))
+        if metadata_ts_b is not None:
+            metadata_ts_b.text = now.isoformat()
+
+        self.assertEqualXml(
+            xml.etree.ElementTree.tostring(ba, 'unicode'),
+            xml.etree.ElementTree.tostring(bb, 'unicode')
+        )
 
     def _is_equal_xml_element(self, a, b):
         if a.tagName != b.tagName:
