@@ -1,47 +1,20 @@
-from abc import abstractmethod
 from xml.etree import ElementTree
 
 from . import BaseOutput
+from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
 from ..model.cyclonedx import Component
 
 
-def _xml_pretty_print(elem: ElementTree.Element, level: int = 0) -> ElementTree.Element:
-    """
-    Helper method lifed from cyclonedx-python original project for formatting
-    XML without using any XML-libraries.
-
-    NOTE: This method is recursive.
-
-    :param elem:
-    :param level:
-    :return:
-    """
-    i = "\n" + level * "    "
-    if len(elem):
-        if not elem.text or not elem.text.strip():
-            elem.text = i + "    "
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = i
-        for elem in elem:
-            _xml_pretty_print(elem, level + 1)
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = i
-    else:
-        if level and (not elem.tail or not elem.tail.strip()):
-            elem.tail = i
-    return elem
-
-
-class Xml(BaseOutput):
+class Xml(BaseOutput, BaseSchemaVersion):
     XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def get_target_namespace(self) -> str:
-        return 'http://cyclonedx.org/schema/bom/{}'.format(self._get_schema_version())
+        return 'http://cyclonedx.org/schema/bom/{}'.format(self.get_schema_version())
 
     def output_as_string(self) -> str:
         bom = self._get_bom_root_element()
 
-        if self._bom_supports_metadata():
+        if self.bom_supports_metadata():
             bom = self._add_metadata(bom=bom)
 
         components = ElementTree.SubElement(bom, 'components')
@@ -53,18 +26,21 @@ class Xml(BaseOutput):
     def output_to_file(self, filename: str):
         pass
 
+    def _component_supports_bom_ref_attribute(self) -> bool:
+        return True
+
     def _get_bom_root_element(self) -> ElementTree.Element:
         return ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1',
                                            'serialNumber': self.get_bom().get_urn_uuid()})
 
     def _get_component_as_xml_element(self, component: Component) -> ElementTree.Element:
         element_attributes = {'type': component.get_type().value}
-        if self._component_supports_bom_ref_attribute():
+        if self.component_supports_bom_ref():
             element_attributes['bom-ref'] = component.get_purl()
 
         component_element = ElementTree.Element('component', element_attributes)
 
-        if self._component_supports_author() and component.get_author() is not None:
+        if self.component_supports_author() and component.get_author() is not None:
             ElementTree.SubElement(component_element, 'author').text = component.get_author()
 
         # if publisher and publisher != "UNKNOWN":
@@ -104,57 +80,20 @@ class Xml(BaseOutput):
         ElementTree.SubElement(metadata_e, 'timestamp').text = self.get_bom().get_metadata().get_timestamp().isoformat()
         return bom
 
-    def _bom_supports_metadata(self) -> bool:
-        return True
 
-    def _component_supports_author(self) -> bool:
-        return True
-
-    def _component_supports_bom_ref_attribute(self) -> bool:
-        return True
-
-    @abstractmethod
-    def _get_schema_version(self) -> str:
-        pass
-
-
-class XmlV1Dot0(Xml):
+class XmlV1Dot0(Xml, SchemaVersion1Dot0):
 
     def _get_bom_root_element(self) -> ElementTree.Element:
         return ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
 
-    def _get_schema_version(self) -> str:
-        return '1.0'
 
-    def _bom_supports_metadata(self) -> bool:
-        return False
-
-    def _component_supports_bom_ref_attribute(self) -> bool:
-        return False
-
-    def _component_supports_author(self) -> bool:
-        return False
+class XmlV1Dot1(Xml, SchemaVersion1Dot1):
+    pass
 
 
-class XmlV1Dot1(Xml):
-
-    def _get_schema_version(self) -> str:
-        return '1.1'
-
-    def _bom_supports_metadata(self) -> bool:
-        return False
-
-    def _component_supports_author(self) -> bool:
-        return False
+class XmlV1Dot2(Xml, SchemaVersion1Dot2):
+    pass
 
 
-class XmlV1Dot2(Xml):
-
-    def _get_schema_version(self) -> str:
-        return '1.2'
-
-
-class XmlV1Dot3(Xml):
-
-    def _get_schema_version(self) -> str:
-        return '1.3'
+class XmlV1Dot3(Xml, SchemaVersion1Dot3):
+    pass
