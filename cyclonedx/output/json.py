@@ -1,5 +1,4 @@
 import json
-from abc import ABC, abstractmethod
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
@@ -12,7 +11,7 @@ class Json(BaseOutput, BaseSchemaVersion):
         return json.dumps(self._get_json())
 
     def output_to_file(self, filename: str):
-        raise NotImplemented
+        raise NotImplementedError
 
     def _get_json(self) -> dict:
         components = list(map(self._get_component_as_dict, self.get_bom().get_components()))
