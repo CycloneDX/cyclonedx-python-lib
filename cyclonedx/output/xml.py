@@ -39,22 +39,30 @@ class Xml(BaseOutput):
         return 'http://cyclonedx.org/schema/bom/{}'.format(self._get_schema_version())
 
     def output_as_string(self) -> str:
-        bom = ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1',
-                                          'serialNumber': self.get_bom().get_urn_uuid()})
-        bom = self._add_metadata(bom=bom)
+        bom = self._get_bom_root_element()
+
+        if self._bom_supports_metadata():
+            bom = self._add_metadata(bom=bom)
+
         components = ElementTree.SubElement(bom, 'components')
         for component in self.get_bom().get_components():
-            components.append(Xml._get_component_as_xml_element(component=component))
+            components.append(self._get_component_as_xml_element(component=component))
 
         return Xml.XML_VERSION_DECLARATION + ElementTree.tostring(bom, 'unicode')
 
     def output_to_file(self, filename: str):
         pass
 
-    @staticmethod
-    def _get_component_as_xml_element(component: Component) -> ElementTree.Element:
-        element = ElementTree.Element('component',
-                                      {'type': component.get_type().value, 'bom-ref': component.get_purl()})
+    def _get_bom_root_element(self) -> ElementTree.Element:
+        return ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1',
+                                           'serialNumber': self.get_bom().get_urn_uuid()})
+
+    def _get_component_as_xml_element(self, component: Component) -> ElementTree.Element:
+        element_attributes = {'type': component.get_type().value}
+        if self._component_supports_bom_ref_attribute():
+            element_attributes['bom-ref'] = component.get_purl()
+
+        element = ElementTree.Element('component', element_attributes)
 
         # if publisher and publisher != "UNKNOWN":
         #     ElementTree.SubElement(component, "publisher").text = re.sub(RE_XML_ILLEGAL, "?", publisher)
@@ -93,9 +101,39 @@ class Xml(BaseOutput):
         ElementTree.SubElement(metadata_e, 'timestamp').text = self.get_bom().get_metadata().get_timestamp().isoformat()
         return bom
 
+    def _bom_supports_metadata(self) -> bool:
+        return True
+
+    def _component_supports_bom_ref_attribute(self) -> bool:
+        return True
+
     @abstractmethod
     def _get_schema_version(self) -> str:
         pass
+
+
+class XmlV1Dot0(Xml):
+
+    def _get_bom_root_element(self) -> ElementTree.Element:
+        return ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
+
+    def _get_schema_version(self) -> str:
+        return '1.0'
+
+    def _bom_supports_metadata(self) -> bool:
+        return False
+
+    def _component_supports_bom_ref_attribute(self) -> bool:
+        return False
+
+
+class XmlV1Dot1(Xml):
+
+    def _get_schema_version(self) -> str:
+        return '1.1'
+
+    def _bom_supports_metadata(self) -> bool:
+        return False
 
 
 class XmlV1Dot2(Xml):

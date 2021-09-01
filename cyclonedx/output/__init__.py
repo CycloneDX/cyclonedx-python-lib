@@ -12,6 +12,8 @@ class OutputFormat(Enum):
 
 
 class SchemaVersion(Enum):
+    V1_0: str = 'V1Dot0'
+    V1_1: str = 'V1Dot1'
     V1_2: str = 'V1Dot2'
     V1_3: str = 'V1Dot3'
 
