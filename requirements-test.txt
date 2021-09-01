@@ -1,4 +1,5 @@
 backports.entry-points-selectable==1.1.0
+coverage==5.5
 distlib==0.3.2
 filelock==3.0.12
 packageurl-python==0.9.4
