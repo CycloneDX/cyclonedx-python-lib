@@ -72,13 +72,6 @@ We provide two helper methods:
 1. Output to string (for you to do with as you require)
 2. Output directly to a filename you provide
 
-#### Supported Schema Versions
-
-| Schema Version | JSON | XML | Notes |
-| ---- | ---- | ---- | ---- |
-| 1.3 _(current)_ | Y | Y | |
-| 1.2 | Y | Y | |
-
 ##### Example as JSON
 
 ```
@@ -137,6 +130,11 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
       </tr>
       <tr>
          <th colspan="6"><strong><code>/bom/components/component</code></strong></th>
+      </tr>
+      <tr>
+         <td><code>./author</code></td>
+         <td>Y</td><td>Y</td><td>N/A</td><td>N/A</td>
+         <td>&nbsp;</td>
       </tr>
       <tr>
          <td><code>./name</code></td>
