@@ -55,14 +55,17 @@ jobs:
       - run:
           name: Generate Coverage Reports
           command: |
-            coverage report && coverage xml -o test-reports/coverage.xml
+            coverage report && coverage xml -o test-reports/coverage.xml && coverage html -o test-reports/coverage.html
       - run:
           name: Run self scan
           command: |
             # TODO: audit with jake maybe?
-      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+      - store_artifacts:
           path: .tox/results.json
           destination: tox-logs
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
       - store_test_results:
           path: test-reports
 
