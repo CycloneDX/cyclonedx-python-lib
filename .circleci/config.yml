@@ -55,7 +55,7 @@ jobs:
       - run:
           name: Generate Coverage Reports
           command: |
-            coverage report && coverage xml -o test-reports/coverage.xml && coverage html -o test-reports/coverage.html
+            coverage report && coverage xml -o test-reports/coverage.xml && coverage html -d test-reports
       - run:
           name: Run self scan
           command: |

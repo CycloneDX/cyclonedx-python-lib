@@ -11,6 +11,7 @@ dist/
 
 # Exclude coverage
 .coverage
+test-reports
 
 # Exclude Python Virtual Environment
 venv/*
