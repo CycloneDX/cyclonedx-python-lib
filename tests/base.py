@@ -1,6 +1,27 @@
 from unittest import TestCase
 
+import json
 from xml.dom import minidom
+
+
+class BaseJsonTestCase(TestCase):
+
+    def assertEqualJson(self, a: str, b: str):
+        self.assertEqual(
+            json.dumps(json.loads(a), sort_keys=True),
+            json.dumps(json.loads(b), sort_keys=True)
+        )
+
+    def assertEqualJsonBom(self, a: str, b: str):
+        """
+        Remove UUID before comparison as this will be unique to each generation
+        """
+        ab, bb = json.loads(a), json.loads(b)
+
+        ab['serialNumber'] = ''
+        bb['serialNumber'] = ''
+
+        self.assertEqualJson(json.dumps(ab), json.dumps(bb))
 
 
 class BaseXmlTestCase(TestCase):
