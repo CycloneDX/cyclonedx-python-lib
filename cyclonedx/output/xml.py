@@ -36,7 +36,7 @@ class Xml(BaseOutput):
     XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>\n'
 
     def output_as_string(self) -> str:
-        bom = ElementTree.Element('bom', {'xmlns': self._get_target_namespace(), 'version': self._get_schema_version()})
+        bom = ElementTree.Element('bom', {'xmlns': self._get_target_namespace(), 'version': '1'})
         components = ElementTree.SubElement(bom, 'components')
         for component in self.get_bom().get_components():
             components.append(Xml._get_component_as_xml_element(component=component))
@@ -48,7 +48,8 @@ class Xml(BaseOutput):
 
     @staticmethod
     def _get_component_as_xml_element(component: Component) -> ElementTree.Element:
-        element = ElementTree.Element('component', {'type': component.get_type().value, 'bom-ref': component.get_purl()})
+        element = ElementTree.Element('component',
+                                      {'type': component.get_type().value, 'bom-ref': component.get_purl()})
 
         # if publisher and publisher != "UNKNOWN":
         #     ElementTree.SubElement(component, "publisher").text = re.sub(RE_XML_ILLEGAL, "?", publisher)
@@ -72,7 +73,8 @@ class Xml(BaseOutput):
         #     for component_license in licenses:
         #         if component_license.license is not None:
         #             license_elm = ElementTree.SubElement(licenses_elm, "license")
-        #             ElementTree.SubElement(license_elm, "name").text = re.sub(RE_XML_ILLEGAL, "?", component_license.license.name)
+        #             ElementTree.SubElement(license_elm, "name").text = re.sub(RE_XML_ILLEGAL, "?",
+        #             component_license.license.name)
 
         # if purl:
         ElementTree.SubElement(element, 'purl').text = component.get_purl()

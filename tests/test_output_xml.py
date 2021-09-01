@@ -1,19 +1,29 @@
-from unittest import TestCase
+from os.path import dirname, join
 
-from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from cyclonedx.output.xml import XmlV1Dot3
+from cyclonedx.model.bom import Bom
+from cyclonedx.model.cyclonedx import Component
+from cyclonedx.output import get_instance, SchemaVersion
+from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot2
+
+from tests.base import BaseXmlTestCase
 
 
-class TestOutputGeneric(TestCase):
+class TestOutputXml(BaseXmlTestCase):
 
-    def test_get_instance_default(self):
-        i = get_instance()
-        self.assertIsInstance(i, XmlV1Dot3)
+    def test_simple_bom_v1_3(self):
+        bom = Bom()
+        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        outputter = get_instance(bom=bom)
+        self.assertIsInstance(outputter, XmlV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')) as expected_xml:
+            self.assertEqualXml(outputter.output_as_string(), expected_xml.read())
+            expected_xml.close()
 
-    def test_get_instance_xml(self):
-        i = get_instance(output_format=OutputFormat.XML)
-        self.assertIsInstance(i, XmlV1Dot3)
-
-    def test_get_instance_xml_v1_3(self):
-        i = get_instance(output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
-        self.assertIsInstance(i, XmlV1Dot3)
+    def test_simple_bom_v1_2(self):
+        bom = Bom()
+        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
+        self.assertIsInstance(outputter, XmlV1Dot2)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools.xml')) as expected_xml:
+            self.assertEqualXml(outputter.output_as_string(), expected_xml.read())
+            expected_xml.close()
