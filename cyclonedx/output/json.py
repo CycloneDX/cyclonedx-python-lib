@@ -21,6 +21,7 @@ class Json(BaseOutput):
             "specVersion": str(self._get_schema_version()),
             "serialNumber": "",
             "version": 1,
+            "metadata": self._get_metadata_as_dict(),
             "components": components
         }
 
@@ -31,6 +32,12 @@ class Json(BaseOutput):
             "name": component.get_name(),
             "version": component.get_version(),
             "purl": component.get_purl()
+        }
+
+    def _get_metadata_as_dict(self) -> dict:
+        metadata = self.get_bom().get_metadata()
+        return {
+            "timestamp": metadata.get_timestamp().isoformat()
         }
 
     @abstractmethod

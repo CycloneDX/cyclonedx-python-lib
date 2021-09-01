@@ -20,8 +20,14 @@ class BaseJsonTestCase(TestCase):
         """
         ab, bb = json.loads(a), json.loads(b)
 
+        # Null serialNumbers
         ab['serialNumber'] = ''
         bb['serialNumber'] = ''
+
+        # Unify timestamps to ensure they will compare
+        now = datetime.now(tz=timezone.utc)
+        ab['metadata']['timestamp'] = now.isoformat()
+        bb['metadata']['timestamp'] = now.isoformat()
 
         self.assertEqualJson(json.dumps(ab), json.dumps(bb))
 
