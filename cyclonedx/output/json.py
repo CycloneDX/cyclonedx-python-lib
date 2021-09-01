@@ -19,7 +19,7 @@ class Json(BaseOutput):
         return {
             "bomFormat": "CycloneDX",
             "specVersion": str(self._get_schema_version()),
-            "serialNumber": "",
+            "serialNumber": self.get_bom().get_urn_uuid(),
             "version": 1,
             "metadata": self._get_metadata_as_dict(),
             "components": components

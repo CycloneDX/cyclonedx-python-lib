@@ -39,7 +39,8 @@ class Xml(BaseOutput):
         return 'http://cyclonedx.org/schema/bom/{}'.format(self._get_schema_version())
 
     def output_as_string(self) -> str:
-        bom = ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
+        bom = ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1',
+                                          'serialNumber': self.get_bom().get_urn_uuid()})
         bom = self._add_metadata(bom=bom)
         components = ElementTree.SubElement(bom, 'components')
         for component in self.get_bom().get_components():
@@ -95,8 +96,6 @@ class Xml(BaseOutput):
     @abstractmethod
     def _get_schema_version(self) -> str:
         pass
-
-
 
 
 class XmlV1Dot2(Xml):

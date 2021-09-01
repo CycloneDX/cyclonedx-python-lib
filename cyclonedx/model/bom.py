@@ -1,5 +1,7 @@
 import datetime
 from typing import List
+from uuid import uuid4
+
 from .cyclonedx import Component
 from ..parser import BaseParser
 
@@ -28,6 +30,7 @@ class Bom:
     to the requested schema version.
     """
 
+    _uuid: str
     _metadata: BomMetaData = None
     _components: List[Component] = []
 
@@ -38,6 +41,7 @@ class Bom:
         return bom
 
     def __init__(self):
+        self._uuid = uuid4()
         self._metadata = BomMetaData()
         self._components.clear()
 
@@ -55,6 +59,9 @@ class Bom:
 
     def get_metadata(self) -> BomMetaData:
         return self._metadata
+
+    def get_urn_uuid(self) -> str:
+        return 'urn:uuid:{}'.format(self._uuid)
 
     def has_component(self, component: Component) -> bool:
         return component in self._components

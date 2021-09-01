@@ -3,7 +3,10 @@ from unittest import TestCase
 
 import json
 from datetime import datetime, timezone
+from uuid import uuid4
 from xml.dom import minidom
+
+single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
 
 class BaseJsonTestCase(TestCase):
@@ -21,8 +24,8 @@ class BaseJsonTestCase(TestCase):
         ab, bb = json.loads(a), json.loads(b)
 
         # Null serialNumbers
-        ab['serialNumber'] = ''
-        bb['serialNumber'] = ''
+        ab['serialNumber'] = single_uuid
+        bb['serialNumber'] = single_uuid
 
         # Unify timestamps to ensure they will compare
         now = datetime.now(tz=timezone.utc)
@@ -45,6 +48,11 @@ class BaseXmlTestCase(TestCase):
         """
         ba, bb = xml.etree.ElementTree.fromstring(a), xml.etree.ElementTree.fromstring(b)
 
+        # Align serialNumbers
+        ba.set('serialNumber', single_uuid)
+        bb.set('serialNumber', single_uuid)
+
+        # Align timestamps in metadata
         now = datetime.now(tz=timezone.utc)
         metadata_ts_a = ba.find('./{{{}}}metadata/{{{}}}timestamp'.format(namespace, namespace))
         if metadata_ts_a is not None:
