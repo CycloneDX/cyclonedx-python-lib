@@ -96,6 +96,71 @@ outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_)
 outputter.output_to_file(filename='/tmp/sbom-v1.2.xml')
 ```
 
+## Schema Support
+
+This library is a work in progress and complete support for all parts of the CycloneDX schema will come in future releases.
+
+Here is a summary of the parts of the schema supported by this library:
+
+_Note: We refer throughout using XPath, but the same is true for both XML and JSON output formats._
+
+<table width="100%">
+   <thead>
+      <tr>
+         <th>XPath</th>
+         <th>Support v1.3</th>
+         <th>Support v1.2</th>
+         <th>Support v1.1</th>
+         <th>Support v1.0</th>
+         <th>Notes</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td><code>/bom</code></td>
+         <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+         <td>
+            This is the root element and is supported with all it's defined attributes.
+         </td>
+      </tr>
+      <tr>
+         <td><code>/bom/metadata</code></td>
+         <td>Y</td><td>Y</td><td>N/A</td><td>N/A</td>
+         <td>
+            Only <code>timestamp</code> is currently supported 
+         </td>
+      </tr>
+      <tr>
+         <td><code>/bom/components</code></td>
+         <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+         <td>&nbsp;</td>
+      </tr>
+      <tr>
+         <th colspan="6"><strong><code>/bom/components/component</code></strong></th>
+      </tr>
+      <tr>
+         <td><code>./name</code></td>
+         <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+         <td>&nbsp;</td>
+      </tr>
+      <tr>
+         <td><code>./version</code></td>
+         <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+         <td>&nbsp;</td>
+      </tr>
+      <tr>
+         <td><code>./purl</code></td>
+         <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+         <td>&nbsp;</td>
+      </tr>
+   </tbody>
+</table>
+
+### Notes on Schema Support
+
+1. N/A is where the CycloneDX standard does not include this
+2. If the table above does not refer to an element, it is not currently supported
+
 ## The Fine Print
 
 Remember:
