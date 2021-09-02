@@ -1,0 +1,29 @@
+# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: 'pip'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'saturday'
+    allow:
+      - dependency-type: 'all'
+    versioning-strategy: 'auto'
+    labels: [ 'dependencies' ]
+    commit-message:
+      ## prefix maximum string length of 15
+      prefix: 'poetry'
+      include: 'scope'
+    open-pull-requests-limit: 999
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'saturday'
+    labels: [ 'dependencies' ]
+    commit-message:
+      ## prefix maximum string length of 15
+      prefix: 'gh-actions'
+      include: 'scope'
+    open-pull-requests-limit: 999
