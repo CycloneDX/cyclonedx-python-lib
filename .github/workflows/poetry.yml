@@ -19,6 +19,8 @@ jobs:
   build-and-test:
     name: Build & Test (Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
+    env:
+      REPORTS_ARTIFACT: tests-reports
     strategy:
       fail-fast: false
       matrix:
