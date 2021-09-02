@@ -29,7 +29,7 @@ setup(
         'Programming Language :: Python :: 3'
     ],
     packages=find_packages(),
-    python_requires='>=3.6',
+    python_requires='>=3.9',
     package_data={
         'cyclonedx': ['schema/*.json', 'schema/*.xsd', 'schema/ext/*.json', 'schema/ext/*.xsd']
     },
