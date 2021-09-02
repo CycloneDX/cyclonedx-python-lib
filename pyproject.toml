@@ -13,6 +13,7 @@ setuptools = "^50.3.2"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.24.3"
+coverage = "^5.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
