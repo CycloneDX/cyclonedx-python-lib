@@ -54,7 +54,8 @@ jobs:
         run: poetry run tox
       - name: Generate coverage reports
         run: >
-          poetry run coverage report && coverage xml -o ${{ env.REPORTS_DIR }}/coverage.xml &&
+          poetry run coverage report &&
+          poetry run coverage xml -o ${{ env.REPORTS_DIR }}/coverage.xml &&
           poetry run coverage html -d ${{ env.REPORTS_DIR }}
       - name: Artifact reports
         if: ${{ ! cancelled() }}
