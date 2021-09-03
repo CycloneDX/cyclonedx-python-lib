@@ -3,7 +3,7 @@ from unittest import TestCase
 import os
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.cyclonedx import Component
+from cyclonedx.model.component import Component
 from cyclonedx.parser.requirements import RequirementsFileParser
 
 

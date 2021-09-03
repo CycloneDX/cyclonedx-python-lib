@@ -1,7 +1,7 @@
 from os.path import dirname, join
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.cyclonedx import Component
+from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
 

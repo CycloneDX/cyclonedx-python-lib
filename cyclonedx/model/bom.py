@@ -2,7 +2,7 @@ import datetime
 from typing import List
 from uuid import uuid4
 
-from .cyclonedx import Component
+from .component import Component
 from ..parser import BaseParser
 
 

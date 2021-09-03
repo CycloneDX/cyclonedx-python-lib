@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from cyclonedx.model.cyclonedx import Component
+from cyclonedx.model.component import Component
 from packageurl import PackageURL
 
 

@@ -2,7 +2,7 @@ import pkg_resources
 
 from . import BaseParser
 
-from ..model.cyclonedx import Component
+from ..model.component import Component
 
 
 class RequirementsParser(BaseParser):

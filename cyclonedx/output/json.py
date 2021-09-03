@@ -2,7 +2,7 @@ import json
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
-from ..model.cyclonedx import Component
+from ..model.component import Component
 
 
 class Json(BaseOutput, BaseSchemaVersion):

@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import List
 
-from ..model.cyclonedx import Component
+from ..model.component import Component
 
 
 class BaseParser(ABC):

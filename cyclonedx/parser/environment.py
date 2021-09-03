@@ -7,7 +7,7 @@ else:
 
 from . import BaseParser
 
-from ..model.cyclonedx import Component
+from ..model.component import Component
 
 
 class EnvironmentParser(BaseParser):

@@ -2,7 +2,7 @@ from os.path import dirname, join
 from tests.base import BaseJsonTestCase
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.cyclonedx import Component
+from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
 from cyclonedx.output.json import JsonV1Dot3, JsonV1Dot2
 
