@@ -49,7 +49,11 @@ jobs:
             # TODO: perform publish steps, maybe using python-semantic-release
 
   build:
-    executor: python39
+    parameters:
+      executor:
+        type: executor
+        default: python39
+    executor: << parameters.executor >>
     environment:
       PIPENV_VENV_IN_PROJECT: true
     steps:
