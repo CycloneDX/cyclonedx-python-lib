@@ -55,7 +55,7 @@ jobs:
           - "3.9" # highest supported
           - "3.8"
           - "3.7"
-#          - "3.6" # lowest supported
+          - "3.6" # lowest supported
     timeout-minutes: 30
     steps:
       - name: Checkout

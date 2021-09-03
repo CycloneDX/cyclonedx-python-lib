@@ -15,6 +15,9 @@
 version: 2.1
 
 executors:
+  python36:
+    docker:
+      - image: circleci/python:3.6
   python37:
     docker:
       - image: circleci/python:3.7
@@ -88,6 +91,8 @@ workflows:
   build_and_test_and_publish:
     jobs:
       - build:
+          executor: python36
+      - build:
           executor: python37
       - build:
           executor: python38
@@ -102,6 +107,8 @@ workflows:
             branches:
               only: main
     jobs:
+      - build:
+          executor: python36
       - build:
           executor: python37
       - build:
