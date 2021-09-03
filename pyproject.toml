@@ -6,7 +6,7 @@ authors = ["Paul Horton <phorton@sonatype.com>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 packageurl-python = "^0.9.4"
 requirements_parser = "^0.2.0"
 setuptools = "^50.3.2"
