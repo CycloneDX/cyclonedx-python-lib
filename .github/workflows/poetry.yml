@@ -25,7 +25,10 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - "3.9" # highest and lowest supported
+          - "3.9" # highest supported
+          - "3.8"
+          - "3.7"
+          - "3.6" # lowest supported
     timeout-minutes: 30
     steps:
       - name: Checkout

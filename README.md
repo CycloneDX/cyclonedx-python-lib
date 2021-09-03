@@ -1,6 +1,14 @@
 # Python Library for generating CycloneDX
 
 [![CircleCI](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib.svg?style=shield)](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/sonatype-nexus-community/cyclonedx-python-lib/Python%20CI)
+![Python Version Support](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue)
+[![GitHub license](https://img.shields.io/github/license/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/issues)
+[![GitHub forks](https://img.shields.io/github/forks/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/network)
+[![GitHub stars](https://img.shields.io/github/stars/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/stargazers)
+
+----
 
 This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all
 project dependencies.
@@ -158,6 +166,11 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
 
 1. N/A is where the CycloneDX standard does not include this
 2. If the table above does not refer to an element, it is not currently supported
+
+## Python Support
+
+We endeavour to support all functionality for all [current actively supported Python versions](https://www.python.org/downloads/).
+However, some features may not be possible/present in older Python versions due to their lack of support.
 
 ## The Fine Print
 
