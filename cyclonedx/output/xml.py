@@ -39,9 +39,6 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return Xml.XML_VERSION_DECLARATION + ElementTree.tostring(bom, 'unicode')
 
-    def output_to_file(self, filename: str):
-        raise NotImplementedError
-
     def _component_supports_bom_ref_attribute(self) -> bool:
         return True
 

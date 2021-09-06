@@ -26,9 +26,6 @@ class Json(BaseOutput, BaseSchemaVersion):
     def output_as_string(self) -> str:
         return json.dumps(self._get_json())
 
-    def output_to_file(self, filename: str):
-        raise NotImplementedError
-
     def _get_json(self) -> dict:
         components = list(map(self._get_component_as_dict, self.get_bom().get_components()))
 

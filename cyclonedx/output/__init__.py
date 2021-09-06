@@ -15,6 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import importlib
+import os
 from abc import ABC, abstractmethod
 from enum import Enum
 
@@ -52,9 +53,21 @@ class BaseOutput(ABC):
     def output_as_string(self) -> str:
         pass
 
-    @abstractmethod
-    def output_to_file(self, filename: str):
-        pass
+    def output_to_file(self, filename: str, allow_overwrite: bool = False):
+        # Check directory writable
+        output_filename = os.path.realpath(filename)
+        output_directory = os.path.dirname(output_filename)
+
+        if not os.access(output_directory, os.W_OK):
+            raise PermissionError
+
+        if os.path.exists(output_filename) and not allow_overwrite:
+            raise FileExistsError
+
+        with open(output_filename, mode='w') as f_out:
+            f_out.write(self.output_as_string())
+
+        f_out.close()
 
 
 def get_instance(bom: Bom = None, output_format: OutputFormat = OutputFormat.XML,
