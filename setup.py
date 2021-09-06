@@ -18,6 +18,7 @@ setup(
     keywords=["BOM", "SBOM", "SCA", "OWASP"],
     license="Apache-2.0",
     classifiers=[
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
         'Intended Audience :: Legal Industry',
@@ -26,7 +27,10 @@ setup(
         'Topic :: Software Development',
         'Topic :: System :: Software Distribution',
         'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 3'
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9'
     ],
     packages=find_packages(),
     python_requires='>=3.6',
