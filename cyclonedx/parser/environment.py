@@ -41,7 +41,6 @@ class EnvironmentParser(BaseParser):
             c = Component(name=i.project_name, version=i.version)
 
             i_metadata = self._get_metadata_for_package(i.project_name)
-            print(i_metadata.keys())
             if 'Author' in i_metadata.keys():
                 c.set_author(author=i_metadata.get('Author'))
 
