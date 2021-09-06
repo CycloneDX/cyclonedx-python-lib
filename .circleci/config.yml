@@ -15,13 +15,26 @@
 version: 2.1
 
 executors:
-  python:
+  python36:
+    docker:
+      - image: circleci/python:3.6
+  python37:
     docker:
       - image: circleci/python:3.7
+  python38:
+    docker:
+      - image: circleci/python:3.8
+  python39:
+    docker:
+      - image: circleci/python:3.9
 
 jobs:
   publish:
-    executor: python
+    parameters:
+      executor:
+        type: executor
+        default: python39
+    executor: << parameters.executor >>
     environment:
       PIPENV_VENV_IN_PROJECT: true
     steps:
@@ -39,42 +52,52 @@ jobs:
             # TODO: perform publish steps, maybe using python-semantic-release
 
   build:
-    executor: python
+    parameters:
+      executor:
+        type: executor
+        default: python39
+    executor: << parameters.executor >>
     environment:
       PIPENV_VENV_IN_PROJECT: true
     steps:
       - checkout
       - run:
-          name: Setup Python environment
+          name: Install Tox & Coverage
           command: |
-            # TODO: do stuff, like setup .venv, poetry, pip etc.
+            pip install tox coverage
       - run:
-          name: Run tests
+          name: Run tox
           command: |
-            # TODO: maybe run pylint and run those tests
+            tox --result-json=.tox/results.json
+      - run:
+          name: Generate Coverage Reports
+          command: |
+            coverage report && coverage xml -o test-reports/coverage.xml && coverage html -d test-reports
       - run:
           name: Run self scan
           command: |
             # TODO: audit with jake maybe?
-      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: test-results
-      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: test-results
-          destination: tr1
+      - store_artifacts:
+          path: .tox/results.json
+          destination: tox-logs
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
+      - store_test_results:
+          path: test-reports
 
 workflows:
   version: 2
   build_and_test_and_publish:
     jobs:
-      - build
-#  TODO: enable to publish after successful build
-#      - publish:
-#          filters:
-#            branches:
-#              only: main
-#          context: pypi
-#          requires:
-#            - build
+      - build:
+          executor: python36
+      - build:
+          executor: python37
+      - build:
+          executor: python38
+      - build:
+          executor: python39
 
   build_nightly:
     triggers:
@@ -84,4 +107,11 @@ workflows:
             branches:
               only: main
     jobs:
-      - build
+      - build:
+          executor: python36
+      - build:
+          executor: python37
+      - build:
+          executor: python38
+      - build:
+          executor: python39
