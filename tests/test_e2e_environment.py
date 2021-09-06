@@ -15,6 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import json
+import os
 from unittest import TestCase
 from xml.etree import ElementTree
 
@@ -26,26 +27,38 @@ from cyclonedx.parser.environment import EnvironmentParser
 
 
 class TestE2EEnvironment(TestCase):
+    _our_package_version: str
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with open(os.path.join(os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../')),
+                               'VERSION')) as _our_version:
+            cls._our_package_version = _our_version.read()
+
+        _our_version.close()
 
     def test_json_defaults(self):
         outputter: Json = get_instance(bom=Bom.from_parser(EnvironmentParser()), output_format=OutputFormat.JSON)
         bom_json = json.loads(outputter.output_as_string())
         component_this_library = next(
-            (x for x in bom_json['components'] if x['purl'] == 'pkg:pypi/cyclonedx-python-lib@0.0.1'), None
+            (x for x in bom_json['components'] if
+             x['purl'] == 'pkg:pypi/cyclonedx-python-lib@{}'.format(TestE2EEnvironment._our_package_version)), None
         )
 
         self.assertTrue('author' in component_this_library.keys(), 'author is missing from JSON BOM')
         self.assertEqual(component_this_library['author'], 'Sonatype Community')
         self.assertEqual(component_this_library['name'], 'cyclonedx-python-lib')
-        self.assertEqual(component_this_library['version'], '0.0.1')
+        self.assertEqual(component_this_library['version'], TestE2EEnvironment._our_package_version)
 
     def test_xml_defaults(self):
         outputter: Xml = get_instance(bom=Bom.from_parser(EnvironmentParser()))
 
-        # Check we have cyclonedx-python-lib version 0.0.1 with Author, Name and Version
+        # Check we have cyclonedx-python-lib with Author, Name and Version
         bom_xml_e = ElementTree.fromstring(outputter.output_as_string())
         component_this_library = bom_xml_e.find('./{{{}}}components/{{{}}}component[@bom-ref=\'pkg:pypi/{}\']'.format(
-            outputter.get_target_namespace(), outputter.get_target_namespace(), 'cyclonedx-python-lib@0.0.1'
+            outputter.get_target_namespace(), outputter.get_target_namespace(), 'cyclonedx-python-lib@{}'.format(
+                TestE2EEnvironment._our_package_version
+            )
         ))
 
         author = component_this_library.find('./{{{}}}author'.format(outputter.get_target_namespace()))
@@ -58,4 +71,4 @@ class TestE2EEnvironment(TestCase):
 
         version = component_this_library.find('./{{{}}}version'.format(outputter.get_target_namespace()))
         self.assertIsNotNone(version, 'No version element but one was expected.')
-        self.assertEqual(version.text, '0.0.1')
+        self.assertEqual(version.text, TestE2EEnvironment._our_package_version)
