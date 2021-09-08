@@ -34,7 +34,7 @@ jobs:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
           PYPI_TOKEN: ${{secrets.PYPI_TOKEN}}
         run: |
-          pip install python-semantic-release
+          python3 -m pip install python-semantic-release
           git config user.name github-actions
           git config user.email github-actions@github.com
           semantic-release publish --${{ github.event.inputs.releaseType }}
