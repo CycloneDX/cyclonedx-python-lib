@@ -2,11 +2,6 @@ name: Deploy to PyPI
 
 on:
   workflow_dispatch:
-    inputs:
-      releaseType:
-        description: 'Release type (major, minor, patch)'
-        required: true
-        default: 'patch'
 
 jobs:
   release:
