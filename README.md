@@ -2,6 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/sonatype-nexus-community/cyclonedx-python-lib/Python%20CI)
 ![Python Version Support](https://img.shields.io/badge/python-3.6+-blue)
+![PyPI Version](https://img.shields.io/pypi/v/cyclonedx-python-lib?label=PyPI&logo=pypi)
 [![GitHub license](https://img.shields.io/github/license/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/issues)
 [![GitHub forks](https://img.shields.io/github/forks/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/network)
