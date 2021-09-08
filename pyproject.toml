@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cyclonedx"
-version = "0.0.1"
+version = "0.0.2"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
 authors = ["Paul Horton <phorton@sonatype.com>"]
 license = "Apache-2.0"
