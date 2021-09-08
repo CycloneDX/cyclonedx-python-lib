@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.10 (2021-09-08)
+### Fix
+* Add in pypi badge ([`6098c36`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6098c36715b2459d7b04ced5ba6294437576e481))
+
 ## v0.0.9 (2021-09-08)
 ### Fix
 * Additional info to poetry, remove circleci ([`2fcfa5a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2fcfa5ac3a7d9d7f372be6d69e1c616b551877df))
