@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cyclonedx"
-version = "0.0.2"
+version = "0.0.1"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
 authors = ["Paul Horton <phorton@sonatype.com>"]
 license = "Apache-2.0"
@@ -19,3 +19,12 @@ coverage = "^5.5"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.semantic_release]
+version_variable = [
+    "pyproject.toml:version"
+]
+branch = "main"
+upload_to_pypi = true
+upload_to_release = true
+build_command = "pip install poetry && poetry build"
