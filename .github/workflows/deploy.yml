@@ -30,13 +30,9 @@ jobs:
           poetry install
       - name: View poetry version
         run: poetry --version
-      - name: Semantic Release
-        env:
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          PYPI_TOKEN: ${{secrets.PYPI_TOKEN}}
-        run: |
-          python3 -m pip install python-semantic-release
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          semantic-release publish --${{ github.event.inputs.releaseType }}
+      - name: Python Semantic Release
+        uses: relekang/python-semantic-release@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
 
