@@ -4,8 +4,14 @@ version = "0.0.7"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
 authors = ["Paul Horton <phorton@sonatype.com>"]
 license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/CycloneDX/cyclonedx-python-lib"
+repository = "https://github.com/CycloneDX/cyclonedx-python-lib"
 packages = [
     { include = "cyclonedx" }
+]
+include = [
+    "LICENSE"
 ]
 
 [tool.poetry.dependencies]
