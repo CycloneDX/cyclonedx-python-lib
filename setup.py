@@ -9,7 +9,7 @@ script_path = os.path.dirname(__file__)
 setup(
     name='cyclonedx-python-lib',
     version=open(os.path.join(script_path, 'VERSION')).read(),
-    url="https://github.com/sonatype-nexus-community/cyclonedx-python-lib",
+    url="https://github.com/CycloneDX/cyclonedx-python-lib",
     author="Sonatype Community",
     author_email="community-group@sonatype.com",
     description="A library for producing CycloneDX SBOM (Software Bill of Materials) files.",

@@ -1,6 +1,5 @@
 # Python Library for generating CycloneDX
 
-[![CircleCI](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib.svg?style=shield)](https://circleci.com/gh/sonatype-nexus-community/cyclonedx-python-lib)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/sonatype-nexus-community/cyclonedx-python-lib/Python%20CI)
 ![Python Version Support](https://img.shields.io/badge/python-3.6+-blue)
 [![GitHub license](https://img.shields.io/github/license/sonatype-nexus-community/cyclonedx-python-lib)](https://github.com/sonatype-nexus-community/cyclonedx-python-lib/blob/main/LICENSE)
@@ -13,12 +12,15 @@
 This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all
 project dependencies.
 
-This module is not designed for standalone use. If you're looking for a tool to run to generate CycloneDX software
+This module is not designed for standalone use. If you're looking for a CycloneDX tool to run to generate (SBOM) software
 bill-of-materials documents, why not checkout:
 
+- [cyclonedx-python](https://github.com/CycloneDX/cyclonedx-python)
+
+Additionally, the following tool can be used as well (and this library was written to help improve it)
 - [Jake](https://github.com/sonatype-nexus-community/jake)
 
-Or you can use this module yourself in your application to generate SBOMs.
+Additionally, you can use this module yourself in your application to programmatically generate SBOMs.
 
 CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple to parse.
 
@@ -172,16 +174,7 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
 We endeavour to support all functionality for all [current actively supported Python versions](https://www.python.org/downloads/).
 However, some features may not be possible/present in older Python versions due to their lack of support.
 
-## The Fine Print
+## Copyright & License
+CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.
 
-Remember:
-
-It is worth noting that this is **NOT SUPPORTED** by Sonatype, and is a contribution of ours to the open source
-community (read: you!)
-
-* Use this contribution at the risk tolerance that you have
-* Do NOT file Sonatype support tickets related to `cyclonedx-python-lib` support in regard to this project
-* DO file issues here on GitHub, so that the community can pitch in
-
-Phew, that was easier than I thought. Last but not least of all - have fun!
-
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.
