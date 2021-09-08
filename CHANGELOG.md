@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.7 (2021-09-08)
+### Fix
+* Release with full name ([`4c620ed`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4c620ed053aac8c31343b1ca84ca56912b762ab2))
+
 ## v0.0.6 (2021-09-08)
 ### Fix
 * Initial release to pypi ([`99687db`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/99687dbec1389bf323bb625bfb707306aa3b8d1a))
