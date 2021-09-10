@@ -31,6 +31,7 @@ from cyclonedx.parser.environment import EnvironmentParser
 
 OUR_PACKAGE_NAME: str = 'cyclonedx-python-lib'
 OUR_PACKAGE_VERSION: str = pkg_resources.get_distribution(OUR_PACKAGE_NAME).version
+OUR_PACKAGE_AUTHOR: str = 'Paul Horton'
 
 
 class TestE2EEnvironment(TestCase):
@@ -44,7 +45,7 @@ class TestE2EEnvironment(TestCase):
         )
 
         self.assertTrue('author' in component_this_library.keys(), 'author is missing from JSON BOM')
-        self.assertEqual(component_this_library['author'], 'Sonatype Community')
+        self.assertEqual(component_this_library['author'], OUR_PACKAGE_AUTHOR)
         self.assertEqual(component_this_library['name'], OUR_PACKAGE_NAME)
         self.assertEqual(component_this_library['version'], OUR_PACKAGE_VERSION)
 
@@ -61,7 +62,7 @@ class TestE2EEnvironment(TestCase):
 
         author = component_this_library.find('./{{{}}}author'.format(outputter.get_target_namespace()))
         self.assertIsNotNone(author, 'No author element but one was expected.')
-        self.assertEqual(author.text, 'Sonatype Community')
+        self.assertEqual(author.text, OUR_PACKAGE_AUTHOR)
 
         name = component_this_library.find('./{{{}}}name'.format(outputter.get_target_namespace()))
         self.assertIsNotNone(name, 'No name element but one was expected.')
