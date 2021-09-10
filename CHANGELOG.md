@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.11 (2021-09-10)
+### Fix
+* **test:** Test was not updated for revised author statement ([`d1c9d37`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d1c9d379a1e92ee49aae8d133e2ad3e117054ec9))
+* **build:** Test failure and dependency missing ([`9a2cfe9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9a2cfe94386b51acca44ae3bacae319b9b3c8f0d))
+* **build:** Removed artefacts associtated with non-poetry build ([`f9119d4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f9119d49e462cf1f7ccca9c50af2936f8962fd6d))
+
 ## v0.0.10 (2021-09-08)
 ### Fix
 * Add in pypi badge ([`6098c36`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6098c36715b2459d7b04ced5ba6294437576e481))
