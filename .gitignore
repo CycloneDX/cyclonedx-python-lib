@@ -19,6 +19,3 @@ venv/*
 # Exlude IDE related files
 .idea/*
 .vscode/*
-
-# ci config for local ci build
-/.circleci/local-config.yml
