@@ -46,6 +46,7 @@ importlib-metadata = "^4.8.1"
 [tool.poetry.dev-dependencies]
 tox = "^3.24.3"
 coverage = "^5.5"
+flake8 = "^3.9.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
