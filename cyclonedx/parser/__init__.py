@@ -23,6 +23,9 @@ from ..model.component import Component
 class BaseParser(ABC):
     _components: List[Component] = []
 
+    def __init__(self):
+        self._components.clear()
+
     def component_count(self) -> int:
         return len(self._components)
 
