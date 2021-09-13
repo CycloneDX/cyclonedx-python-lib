@@ -37,6 +37,8 @@ class EnvironmentParser(BaseParser):
     """
 
     def __init__(self):
+        super().__init__()
+
         import pkg_resources
 
         i: pkg_resources.DistInfoDistribution

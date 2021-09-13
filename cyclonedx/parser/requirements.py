@@ -26,6 +26,8 @@ from ..model.component import Component
 class RequirementsParser(BaseParser):
 
     def __init__(self, requirements_content: str):
+        super().__init__()
+
         requirements = pkg_resources.parse_requirements(requirements_content)
         for requirement in requirements:
             """
