@@ -65,7 +65,13 @@ parser = EnvironmentParser()
 
 ### Modelling
 
-You can create a BOM Model from either an Parser instance or manually using the methods avaialbel directly on the `Bom` class.
+You can create a BOM Model from either a Parser instance or manually using the methods avaialbel directly on the `Bom` class.
+
+The model also supports definition of vulnerabilities for output using the CycloneDX schema extension for 
+[Vulnerability Disclosures](https://cyclonedx.org/use-cases/#vulnerability-disclosure) as of version 0.3.0.
+
+**Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library 
+will not source them for you. Perhaps look at [Jake](https://github.com/sonatype-nexus-community/jake) if you're interested in this.
 
 #### Example from a Parser
 
