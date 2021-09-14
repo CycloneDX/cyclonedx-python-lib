@@ -19,6 +19,9 @@
 
 from enum import Enum
 from packageurl import PackageURL
+from typing import List
+
+from .vulnerability import Vulnerability
 
 PURL_TYPE_PREFIX = 'pypi'
 
@@ -51,12 +54,18 @@ class Component:
     _description: str = None
     _license: str = None
 
+    _vulnerabilites: List[Vulnerability] = []
+
     def __init__(self, name: str, version: str, qualifiers: str = None,
                  component_type: ComponentType = ComponentType.LIBRARY):
         self._name = name
         self._version = version
         self._type = component_type
         self._qualifiers = qualifiers
+        self._vulnerabilites = []
+
+    def add_vulnerability(self, vulnerability: Vulnerability):
+        self._vulnerabilites.append(vulnerability)
 
     def get_author(self) -> str:
         return self._author
@@ -81,6 +90,12 @@ class Component:
 
     def get_version(self) -> str:
         return self._version
+
+    def get_vulnerabilities(self) -> List[Vulnerability]:
+        return self._vulnerabilites
+
+    def has_vulnerabilities(self) -> bool:
+        return len(self._vulnerabilites) != 0
 
     def set_author(self, author: str):
         self._author = author

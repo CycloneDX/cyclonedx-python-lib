@@ -84,3 +84,10 @@ class Bom:
 
     def has_component(self, component: Component) -> bool:
         return component in self._components
+
+    def has_vulnerabilities(self) -> bool:
+        for c in self.get_components():
+            if c.has_vulnerabilities():
+                return True
+
+        return False
