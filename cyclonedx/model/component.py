@@ -18,6 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from enum import Enum
+from packageurl import PackageURL
 
 PURL_TYPE_PREFIX = 'pypi'
 
@@ -89,6 +90,19 @@ class Component:
 
     def set_license(self, license_str: str):
         self._license = license_str
+
+    def to_package_url(self) -> PackageURL:
+        """
+        Return a PackageURL representation of this Component.
+        
+        :return: PackageURL
+        """""
+        return PackageURL(
+            type=PURL_TYPE_PREFIX,
+            name=self._name,
+            version=self._version,
+            qualifiers=self._qualifiers
+        )
 
     def __eq__(self, other):
         return other.get_purl() == self.get_purl()

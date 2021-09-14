@@ -25,20 +25,19 @@ from cyclonedx.model.component import Component
 
 
 class TestComponent(TestCase):
-    _component: Component
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls._component = Component(name='setuptools', version='50.3.2').get_purl()
-        cls._component_with_qualifiers = Component(name='setuptools', version='50.3.2',
-                                                   qualifiers='extension=tar.gz').get_purl()
+        cls._component: Component = Component(name='setuptools', version='50.3.2')
+        cls._component_with_qualifiers: Component = Component(name='setuptools', version='50.3.2',
+                                                              qualifiers='extension=tar.gz')
 
     def test_purl_correct(self):
         self.assertEqual(
             str(PackageURL(
                 type='pypi', name='setuptools', version='50.3.2'
             )),
-            TestComponent._component
+            TestComponent._component.get_purl()
         )
 
     def test_purl_incorrect_version(self):
@@ -47,7 +46,7 @@ class TestComponent(TestCase):
         )
         self.assertNotEqual(
             str(purl),
-            TestComponent._component
+            TestComponent._component.get_purl()
         )
         self.assertEqual(purl.type, 'pypi')
         self.assertEqual(purl.name, 'setuptools')
@@ -59,7 +58,7 @@ class TestComponent(TestCase):
         )
         self.assertNotEqual(
             str(purl),
-            TestComponent._component
+            TestComponent._component.get_purl()
         )
         self.assertEqual(purl.type, 'pypi')
         self.assertEqual(purl.name, 'setuptoolz')
@@ -71,10 +70,28 @@ class TestComponent(TestCase):
         )
         self.assertEqual(
             str(purl),
-            TestComponent._component_with_qualifiers
+            TestComponent._component_with_qualifiers.get_purl()
         )
         self.assertNotEqual(
             str(purl),
-            TestComponent._component
+            TestComponent._component.get_purl()
         )
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
+
+    def test_as_package_url_1(self):
+        purl = PackageURL(
+            type='pypi', name='setuptools', version='50.3.2'
+        )
+        self.assertEqual(TestComponent._component.to_package_url(), purl)
+
+    def test_as_package_url_2(self):
+        purl = PackageURL(
+            type='pypi', name='setuptools', version='50.3.1'
+        )
+        self.assertNotEqual(TestComponent._component.to_package_url(), purl)
+
+    def test_as_package_url_3(self):
+        purl = PackageURL(
+            type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+        )
+        self.assertEqual(TestComponent._component_with_qualifiers.to_package_url(), purl)
