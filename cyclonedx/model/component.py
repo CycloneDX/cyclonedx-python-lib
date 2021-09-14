@@ -94,7 +94,7 @@ class Component:
     def to_package_url(self) -> PackageURL:
         """
         Return a PackageURL representation of this Component.
-        
+
         :return: PackageURL
         """""
         return PackageURL(
