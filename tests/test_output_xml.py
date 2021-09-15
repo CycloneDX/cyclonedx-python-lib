@@ -21,6 +21,8 @@ from os.path import dirname, join
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
+    VulnerabilitySourceType
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
 from tests.base import BaseXmlTestCase
@@ -66,4 +68,58 @@ class TestOutputXml(BaseXmlTestCase):
         with open(join(dirname(__file__), 'fixtures/bom_v1.0_setuptools.xml')) as expected_xml:
             self.assertEqualXmlBom(outputter.output_as_string(), expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_3_with_vulnerabilities(self):
+        bom = Bom()
+        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        c.add_vulnerability(Vulnerability(
+            id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
+            ratings=[
+                VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
+                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilitySourceType.CVSS_V3,
+                                    vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
+                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilitySourceType.OWASP,
+                                    vector='OWASP/K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50', )
+            ],
+            cwes=[123, 456], description='A description here', recommendations=['Upgrade'],
+            advisories=[
+                'http://www.securityfocus.com/bid/103203',
+                'http://www.securitytracker.com/id/1040693'
+            ]
+        ))
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom)
+        self.assertIsInstance(outputter, XmlV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools_with_vulnerabilities.xml')) as expected_xml:
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+
+            expected_xml.close()
+
+    def test_simple_bom_v1_0_with_vulnerabilities(self):
+        bom = Bom()
+        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        c.add_vulnerability(Vulnerability(
+            id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
+            ratings=[
+                VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
+                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilitySourceType.CVSS_V3,
+                                    vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
+                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilitySourceType.OWASP,
+                                    vector='OWASP/K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50', )
+            ],
+            cwes=[123, 456], description='A description here', recommendations=['Upgrade'],
+            advisories=[
+                'http://www.securityfocus.com/bid/103203',
+                'http://www.securitytracker.com/id/1040693'
+            ]
+        ))
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_0)
+        self.assertIsInstance(outputter, XmlV1Dot0)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.0_setuptools.xml')) as expected_xml:
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+
             expected_xml.close()
