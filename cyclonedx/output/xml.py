@@ -45,13 +45,15 @@ class Xml(BaseOutput, BaseSchemaVersion):
             ElementTree.register_namespace('v', Xml.get_vulnerabilities_namespace())
 
         components = ElementTree.SubElement(bom, 'components')
-        if self.get_bom().has_vulnerabilities():
-            vulnerabilities = ElementTree.SubElement(bom, 'v:vulnerabilities')
+        # if self.get_bom().has_vulnerabilities():
+        #     vulnerabilities = ElementTree.SubElement(bom, 'v:vulnerabilities')
 
         for component in self.get_bom().get_components():
-            components.append(self._get_component_as_xml_element(component=component))
+            component_element = self._get_component_as_xml_element(component=component)
+            components.append(component_element)
             if component.has_vulnerabilities() and self.component_supports_bom_ref():
                 # Vulnerabilities are only possible when bom-ref is supported by the main CycloneDX schema version
+                vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
                 for vulnerability in component.get_vulnerabilities():
                     vulnerabilities.append(self._get_vulnerability_as_xml_element(bom_ref=component.get_purl(),
                                                                                   vulnerability=vulnerability))
