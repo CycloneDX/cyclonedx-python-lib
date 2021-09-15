@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2021-09-15)
+### Feature
+* Adding support for extension schema that descriptions vulnerability disclosures ([`d496695`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d4966951ab6c0229171cfe97723421bb0302c4fc))
+
 ## v0.2.0 (2021-09-14)
 ### Feature
 * Added helper method to return a PackageURL object representing a Component ([`367bef1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/367bef11bb1a7ede3100acae39581e33d20fa7f5))
