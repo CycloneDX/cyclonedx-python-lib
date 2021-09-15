@@ -45,8 +45,6 @@ class Xml(BaseOutput, BaseSchemaVersion):
             ElementTree.register_namespace('v', Xml.get_vulnerabilities_namespace())
 
         components = ElementTree.SubElement(bom, 'components')
-        # if self.get_bom().has_vulnerabilities():
-        #     vulnerabilities = ElementTree.SubElement(bom, 'v:vulnerabilities')
 
         for component in self.get_bom().get_components():
             component_element = self._get_component_as_xml_element(component=component)
