@@ -31,6 +31,5 @@ class TestPoetryParser(TestCase):
         parser = PoetryFileParser(poetry_lock_filename=tests_poetry_lock_file)
         self.assertEqual(1, parser.component_count())
         components = parser.get_components()
-        print(components)
         self.assertEqual('toml', components[0].get_name())
         self.assertEqual('0.10.2', components[0].get_version())
