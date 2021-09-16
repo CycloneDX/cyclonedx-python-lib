@@ -18,6 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import os
+import unittest
 from unittest import TestCase
 
 from cyclonedx.parser.requirements import RequirementsParser
@@ -40,3 +41,20 @@ class TestRequirementsParser(TestCase):
             )
             r.close()
         self.assertTrue(3, parser.component_count())
+
+    def test_example_with_comments(self):
+        with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-with-comments.txt')) as r:
+            parser = RequirementsParser(
+                requirements_content=r.read()
+            )
+            r.close()
+        self.assertTrue(5, parser.component_count())
+
+    @unittest.skip('Not yet supported')
+    def test_example_with_hashes(self):
+        with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-with-hashes.txt')) as r:
+            parser = RequirementsParser(
+                requirements_content=r.read()
+            )
+            r.close()
+        self.assertTrue(5, parser.component_count())
