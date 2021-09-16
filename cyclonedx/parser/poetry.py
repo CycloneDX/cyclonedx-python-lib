@@ -27,7 +27,6 @@ class PoetryParser(BaseParser):
 
     def __init__(self, poetry_lock_contents: str):
         super().__init__()
-        print("Starting Poetry Parser {}".format(len(self.get_components())))
         poetry_lock = toml.loads(poetry_lock_contents)
 
         for package in poetry_lock['package']:
