@@ -108,6 +108,10 @@ outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
 outputter.output_to_file(filename='/tmp/sbom-v1.2.xml')
 ```
 
+## Library API Documentation
+
+The Library API Documentation is available online at [https://cyclonedx.github.io/cyclonedx-python-lib/](https://cyclonedx.github.io/cyclonedx-python-lib/).
+
 ## Schema Support
 
 This library is a work in progress and complete support for all parts of the CycloneDX schema will come in future releases.

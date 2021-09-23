@@ -43,6 +43,7 @@ requirements_parser = "^0.2.0"
 setuptools = "^50.3.2"
 importlib-metadata = "^4.8.1"
 toml = "^0.10.2"
+pdoc3 = "^0.10.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.24.3"
