@@ -33,6 +33,7 @@ class TestRequirementsParser(TestCase):
             )
             r.close()
         self.assertTrue(1, parser.component_count())
+        self.assertFalse(parser.has_warnings())
 
     def test_example_1(self):
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-example-1.txt')) as r:
@@ -41,6 +42,7 @@ class TestRequirementsParser(TestCase):
             )
             r.close()
         self.assertTrue(3, parser.component_count())
+        self.assertFalse(parser.has_warnings())
 
     def test_example_with_comments(self):
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-with-comments.txt')) as r:
@@ -49,6 +51,7 @@ class TestRequirementsParser(TestCase):
             )
             r.close()
         self.assertTrue(5, parser.component_count())
+        self.assertFalse(parser.has_warnings())
 
     def test_example_multiline_with_comments(self):
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-multilines-with-comments.txt')) as r:
@@ -57,6 +60,7 @@ class TestRequirementsParser(TestCase):
             )
             r.close()
         self.assertTrue(5, parser.component_count())
+        self.assertFalse(parser.has_warnings())
 
     @unittest.skip('Not yet supported')
     def test_example_with_hashes(self):
@@ -66,3 +70,14 @@ class TestRequirementsParser(TestCase):
             )
             r.close()
         self.assertTrue(5, parser.component_count())
+        self.assertFalse(parser.has_warnings())
+
+    def test_example_without_pinned_versions(self):
+        with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-without-pinned-versions.txt')) as r:
+            parser = RequirementsParser(
+                requirements_content=r.read()
+            )
+            r.close()
+        self.assertTrue(2, parser.component_count())
+        self.assertTrue(parser.has_warnings())
+        self.assertEqual(3, len(parser.get_warnings()))

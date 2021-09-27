@@ -19,7 +19,7 @@
 
 import pkg_resources
 
-from . import BaseParser
+from . import BaseParser, ParserWarning
 from ..model.component import Component
 
 
@@ -35,13 +35,22 @@ class RequirementsParser(BaseParser):
             Note that the below line will get the first (lowest) version specified in the Requirement and
             ignore the operator (it might not be ==). This is passed to the Component.
 
-            For example if a requirement was listed as: "PickyThing>1.6,<=1.9,!=1.8.6", we'll be interpretting this
+            For example if a requirement was listed as: "PickyThing>1.6,<=1.9,!=1.8.6", we'll be interpreting this
             as if it were written "PickyThing==1.6"
             """
-            (op, version) = requirement.specs[0]
-            self._components.append(Component(
-                name=requirement.project_name, version=version
-            ))
+            try:
+                (op, version) = requirement.specs[0]
+                self._components.append(Component(
+                    name=requirement.project_name, version=version
+                ))
+            except IndexError:
+                self._warnings.append(
+                    ParserWarning(
+                        item=requirement.project_name,
+                        warning='Requirement \'{}\' does not have a pinned version and cannot be included in your '
+                                'CycloneDX SBOM.'.format(requirement.project_name)
+                    )
+                )
 
 
 class RequirementsFileParser(RequirementsParser):
