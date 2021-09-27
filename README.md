@@ -63,6 +63,24 @@ from cyclonedx.parser.environment import EnvironmentParser
 parser = EnvironmentParser()
 ```
 
+#### Notes on Requirements parsing
+
+CycloneDX software bill-of-materials require pinned versions of requirements. If your `requirements.txt` does not have 
+pinned versions, warnings will be recorded and the dependencies without pinned versions will be excluded from the 
+generated CycloneDX. CycloneDX schemas (from version 1.0+) require a component to have a version when included in a
+CycloneDX bill of materials (according to schema).
+
+If you need to use a `requirements.txt` in your project that does not have pinned versions an acceptable workaround 
+might be to:
+
+```
+pip install -r requirements.txt
+pip freeze > requirements-frozen.txt
+```
+
+You can then feed in the frozen requirements from `requirements-frozen.txt` _or_ use the `Environment` parser one you
+have `pip install`ed your dependencies.
+
 ### Modelling
 
 You can create a BOM Model from either a Parser instance or manually using the methods avaialbel directly on the `Bom` class.
