@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.1 (2021-09-27)
+### Fix
+* Improved handling for `requirements.txt` content without pinned or declared versions ([`7f318cb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7f318cb495ac1754029088cae1ef2574c58da2e5))
+
 ## v0.4.0 (2021-09-16)
 ### Feature
 * Support for localising vectors (i.e. stripping out any scheme prefix) ([`b9e9e17`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b9e9e17ba1e2c1c9dfe551c61ad5152eebd829ab))
