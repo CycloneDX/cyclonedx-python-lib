@@ -19,3 +19,6 @@ venv/*
 # Exlude IDE related files
 .idea/*
 .vscode/*
+
+# pdoc3 HTML output
+html/
