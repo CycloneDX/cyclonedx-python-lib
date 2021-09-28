@@ -39,6 +39,6 @@ jobs:
       - name: Deploy documentation
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: html/cyclonedx
+          branch: gh-pages
+          folder: html/cyclonedx
+          token: ${{ secrets.GITHUB_TOKEN }}
