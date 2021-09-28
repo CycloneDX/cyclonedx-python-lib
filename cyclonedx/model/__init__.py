@@ -17,4 +17,7 @@
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
+
+You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
+from a `cyclonedx.parser.BaseParser` implementation.
 """
