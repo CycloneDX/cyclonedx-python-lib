@@ -187,8 +187,24 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return vulnerability_element
 
     def _add_metadata(self, bom: ElementTree.Element) -> ElementTree.Element:
+        bom_metadata = self.get_bom().get_metadata()
+
         metadata_e = ElementTree.SubElement(bom, 'metadata')
-        ElementTree.SubElement(metadata_e, 'timestamp').text = self.get_bom().get_metadata().get_timestamp().isoformat()
+        ElementTree.SubElement(metadata_e, 'timestamp').text = bom_metadata.get_timestamp().isoformat()
+
+        if self.bom_metadata_supports_tools() and len(bom_metadata.get_tools()) > 0:
+            tools_e = ElementTree.SubElement(metadata_e, 'tools')
+            for tool in bom_metadata.get_tools():
+                tool_e = ElementTree.SubElement(tools_e, 'tool')
+                ElementTree.SubElement(tool_e, 'vendor').text = tool.get_vendor()
+                ElementTree.SubElement(tool_e, 'name').text = tool.get_name()
+                ElementTree.SubElement(tool_e, 'version').text = tool.get_version()
+                if len(tool.get_hashes()) > 0:
+                    hashes_e = ElementTree.SubElement(tool_e, 'hashes')
+                    for hash in tool.get_hashes():
+                        ElementTree.SubElement(hashes_e, 'hash',
+                                               {'alg': hash.get_algorithm().value}).text = hash.get_hash_value()
+
         return bom
 
 
