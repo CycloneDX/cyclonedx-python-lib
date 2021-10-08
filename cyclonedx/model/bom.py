@@ -18,6 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import datetime
+import sys
 from importlib.metadata import version
 from typing import List
 from uuid import uuid4
@@ -87,6 +88,11 @@ class Tool:
     def __repr__(self):
         return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
 
+
+if sys.version_info >= (3, 8, 0):
+    from importlib.metadata import version
+else:
+    from importlib_metadata import version
 
 try:
     ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=version('cyclonedx-python-lib'))
