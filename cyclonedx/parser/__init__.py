@@ -14,6 +14,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+"""
+Set of classes and methods which allow for quick creation of a Bom instance from your environment or Python project.
+
+Use a Parser instead of programmatically creating a Bom as a developer.
+"""
+
 from abc import ABC
 from typing import List
 

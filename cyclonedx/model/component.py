@@ -28,8 +28,10 @@ PURL_TYPE_PREFIX = 'pypi'
 
 class ComponentType(Enum):
     """
-    Enum object that defines the permissible 'types' for a Component according to the CycloneDX
-    schemas.
+    Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_classification
     """
     APPLICATION = 'application'
     CONTAINER = 'container'
@@ -43,7 +45,10 @@ class ComponentType(Enum):
 
 class Component:
     """
-    An object that mirrors the Component type in the CycloneDX schema.
+    This is our internal representation of a Component within a Bom.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_component
     """
     _type: ComponentType
     _name: str
@@ -65,52 +70,147 @@ class Component:
         self._vulnerabilites = []
 
     def add_vulnerability(self, vulnerability: Vulnerability):
+        """
+        Add a Vulnerability to this Component.
+
+        Args:
+            vulnerability:
+                `cyclonedx.model.vulnerability.Vulnerability` instance to add to this Component.
+
+        Returns:
+            None
+        """
         self._vulnerabilites.append(vulnerability)
 
     def get_author(self) -> str:
+        """
+        Get the author of this Component.
+
+        Returns:
+            Declared author of this Component as `str`.
+        """
         return self._author
 
     def get_description(self) -> str:
+        """
+        Get the description of this Component.
+
+        Returns:
+            Declared description of this Component as `str`.
+        """
         return self._description
 
     def get_license(self) -> str:
+        """
+        Get the license of this Component.
+
+        Returns:
+            Declared license of this Component as `str`.
+        """
         return self._license
 
     def get_name(self) -> str:
+        """
+        Get the name of this Component.
+
+        Returns:
+            Declared name of this Component as `str`.
+        """
         return self._name
 
     def get_purl(self) -> str:
+        """
+        Get the PURL for this Component.
+
+        Returns:
+            PackageURL that reflects this Component as `str`.
+        """
         base_purl = 'pkg:{}/{}@{}'.format(PURL_TYPE_PREFIX, self._name, self._version)
         if self._qualifiers:
             base_purl = '{}?{}'.format(base_purl, self._qualifiers)
         return base_purl
 
     def get_type(self) -> ComponentType:
+        """
+        Get the type of this Component.
+
+        Returns:
+            Declared type of this Component as `ComponentType`.
+        """
         return self._type
 
     def get_version(self) -> str:
+        """
+        Get the version of this Component.
+
+        Returns:
+            Declared version of this Component as `str`.
+        """
         return self._version
 
     def get_vulnerabilities(self) -> List[Vulnerability]:
+        """
+        Get all the Vulnerabilities for this Component.
+
+        Returns:
+             List of `Vulnerability` objects assigned to this Component.
+        """
         return self._vulnerabilites
 
     def has_vulnerabilities(self) -> bool:
+        """
+        Does this Component have any vulnerabilities?
+
+        Returns:
+             `True` if this Component has 1 or more vulnerabilities, `False` otherwise.
+        """
         return len(self._vulnerabilites) != 0
 
     def set_author(self, author: str):
+        """
+        Set the author of this Component.
+
+        Args:
+            author:
+                `str` to set the author to
+
+        Returns:
+            None
+        """
         self._author = author
 
     def set_description(self, description: str):
+        """
+        Set the description of this Component.
+
+        Args:
+            description:
+                `str` to set the description to
+
+        Returns:
+            None
+        """
         self._description = description
 
     def set_license(self, license_str: str):
+        """
+        Set the license for this Component.
+
+        Args:
+            license_str:
+                `str` to set the license to
+
+        Returns:
+            None
+        """
         self._license = license_str
 
     def to_package_url(self) -> PackageURL:
         """
         Return a PackageURL representation of this Component.
 
-        :return: PackageURL
+        Returns:
+            `packageurl.PackageURL` instance which represents this Component.
         """""
         return PackageURL(
             type=PURL_TYPE_PREFIX,

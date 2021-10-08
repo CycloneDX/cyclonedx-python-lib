@@ -14,6 +14,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+"""
+Set of classes and methods for outputting our libraries internal Bom model to CycloneDX documents in varying formats
+and according to different versions of the CycloneDX schema standard.
+"""
+
 import importlib
 import os
 from abc import ABC, abstractmethod
