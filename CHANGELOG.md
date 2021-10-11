@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.2 (2021-10-11)
+### Fix
+* Added ability to add tools in addition to this library when generating CycloneDX + plus fixes relating to multiple BOM instances ([`e03a25c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e03a25c3d2a1a0b711204bb26c7b898eadacdcb0))
+
 ## v0.6.1 (2021-10-11)
 ### Fix
 * Better methods for checking if a Component is already represented in the BOM, and the ability to get the existing instance ([`5fee85f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5fee85fc38376478a1a438d228c632a5d14f4740))
