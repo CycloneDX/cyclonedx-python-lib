@@ -83,35 +83,22 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.component_supports_author() and component.get_author() is not None:
             ElementTree.SubElement(component_element, 'author').text = component.get_author()
 
-        # if publisher and publisher != "UNKNOWN":
-        #     ElementTree.SubElement(component, "publisher").text = re.sub(RE_XML_ILLEGAL, "?", publisher)
-
-        # if name and name != "UNKNOWN":
+        # name
         ElementTree.SubElement(component_element, 'name').text = component.get_name()
 
-        # if version and version != "UNKNOWN":
+        # version
         ElementTree.SubElement(component_element, 'version').text = component.get_version()
 
-        # if description and description != "UNKNOWN":
-        #     ElementTree.SubElement(component, "description").text = re.sub(RE_XML_ILLEGAL, "?", description)
-        #
-        # if hashes:
-        #     hashes_elm = ElementTree.SubElement(component, "hashes")
-        #     for h in hashes:
-        #         ElementTree.SubElement(hashes_elm, "hash", alg=h.alg).text = h.content
-        #
-        # if len(licenses):
-        #     licenses_elm = ElementTree.SubElement(component, "licenses")
-        #     for component_license in licenses:
-        #         if component_license.license is not None:
-        #             license_elm = ElementTree.SubElement(licenses_elm, "license")
-        #             ElementTree.SubElement(license_elm, "name").text = re.sub(RE_XML_ILLEGAL, "?",
-        #             component_license.license.name)
-
-        # if purl:
+        # purl
         ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
 
-        # ElementTree.SubElement(component, "modified").text = modified if modified else "false"
+        # hashes
+        if len(component.get_hashes()) > 0:
+            hashes_e = ElementTree.SubElement(component_element, 'hashes')
+            for hash in component.get_hashes():
+                ElementTree.SubElement(
+                    hashes_e, 'hash', {'alg': hash.get_algorithm().value}
+                ).text = hash.get_hash_value()
 
         return component_element
 

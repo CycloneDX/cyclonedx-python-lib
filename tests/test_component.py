@@ -17,6 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from os.path import dirname, join
 from unittest import TestCase
 
 from packageurl import PackageURL
@@ -31,6 +32,9 @@ class TestComponent(TestCase):
         cls._component: Component = Component(name='setuptools', version='50.3.2')
         cls._component_with_qualifiers: Component = Component(name='setuptools', version='50.3.2',
                                                               qualifiers='extension=tar.gz')
+        cls._component_generic_file: Component = Component(
+            name='/test.py', version='UNKNOWN', package_url_type='generic'
+        )
 
     def test_purl_correct(self):
         self.assertEqual(
@@ -95,3 +99,20 @@ class TestComponent(TestCase):
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         )
         self.assertEqual(TestComponent._component_with_qualifiers.to_package_url(), purl)
+
+    def test_custom_package_url_type(self):
+        purl = PackageURL(
+            type='generic', name='/test.py', version='UNKNOWN'
+        )
+        self.assertEqual(TestComponent._component_generic_file.to_package_url(), purl)
+
+    def test_from_file_with_path_for_bom(self):
+        test_file = join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')
+        c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_v1.3_setuptools.xml')
+        self.assertEqual(c.get_name(), 'fixtures/bom_v1.3_setuptools.xml')
+        self.assertEqual(c.get_version(), '0.0.0-16932e52ed1e')
+        purl = PackageURL(
+            type='generic', name='fixtures/bom_v1.3_setuptools.xml', version='0.0.0-16932e52ed1e'
+        )
+        self.assertEqual(c.to_package_url(), purl)
+        self.assertEqual(len(c.get_hashes()), 1)

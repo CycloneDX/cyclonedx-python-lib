@@ -15,6 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+import hashlib
 from enum import Enum
 
 """
@@ -23,6 +24,16 @@ Uniform set of models to represent objects within a CycloneDX software bill-of-m
 You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
 from a `cyclonedx.parser.BaseParser` implementation.
 """
+
+
+def sha1sum(filename: str) -> str:
+    h = hashlib.sha1()
+    b = bytearray(128 * 1024)
+    mv = memoryview(b)
+    with open(filename, 'rb', buffering=0) as f:
+        for n in iter(lambda: f.readinto(mv), 0):
+            h.update(mv[:n])
+    return h.hexdigest()
 
 
 class HashAlgorithm(Enum):
