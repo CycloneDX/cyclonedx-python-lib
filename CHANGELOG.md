@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.0 (2021-10-11)
+### Feature
+* Support for pipenv.lock file parsing ([`68a2dff`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/68a2dffc770d40f693b6891a580d1f7d8018f71c))
+
 ## v0.6.2 (2021-10-11)
 ### Fix
 * Added ability to add tools in addition to this library when generating CycloneDX + plus fixes relating to multiple BOM instances ([`e03a25c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e03a25c3d2a1a0b711204bb26c7b898eadacdcb0))
