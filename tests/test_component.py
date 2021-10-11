@@ -31,6 +31,9 @@ class TestComponent(TestCase):
         cls._component: Component = Component(name='setuptools', version='50.3.2')
         cls._component_with_qualifiers: Component = Component(name='setuptools', version='50.3.2',
                                                               qualifiers='extension=tar.gz')
+        cls._component_generic_file: Component = Component(
+            name='/test.py', version='UNKNOWN', package_url_type='generic'
+        )
 
     def test_purl_correct(self):
         self.assertEqual(
@@ -95,3 +98,9 @@ class TestComponent(TestCase):
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         )
         self.assertEqual(TestComponent._component_with_qualifiers.to_package_url(), purl)
+
+    def test_custom_package_url_type(self):
+        purl = PackageURL(
+            type='generic', name='/test.py', version='UNKNOWN'
+        )
+        self.assertEqual(TestComponent._component_generic_file.to_package_url(), purl)

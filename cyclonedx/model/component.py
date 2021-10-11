@@ -23,8 +23,6 @@ from typing import List
 
 from .vulnerability import Vulnerability
 
-PURL_TYPE_PREFIX = 'pypi'
-
 
 class ComponentType(Enum):
     """
@@ -51,6 +49,7 @@ class Component:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_component
     """
     _type: ComponentType
+    _package_url_type: str
     _name: str
     _version: str
     _qualifiers: str
@@ -62,12 +61,13 @@ class Component:
     _vulnerabilites: List[Vulnerability] = []
 
     def __init__(self, name: str, version: str, qualifiers: str = None,
-                 component_type: ComponentType = ComponentType.LIBRARY):
+                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi'):
         self._name = name
         self._version = version
         self._type = component_type
         self._qualifiers = qualifiers
         self._vulnerabilites = []
+        self._package_url_type = package_url_type
 
     def add_vulnerability(self, vulnerability: Vulnerability):
         """
@@ -125,7 +125,7 @@ class Component:
         Returns:
             PackageURL that reflects this Component as `str`.
         """
-        base_purl = 'pkg:{}/{}@{}'.format(PURL_TYPE_PREFIX, self._name, self._version)
+        base_purl = 'pkg:{}/{}@{}'.format(self._package_url_type, self._name, self._version)
         if self._qualifiers:
             base_purl = '{}?{}'.format(base_purl, self._qualifiers)
         return base_purl
@@ -213,7 +213,7 @@ class Component:
             `packageurl.PackageURL` instance which represents this Component.
         """""
         return PackageURL(
-            type=PURL_TYPE_PREFIX,
+            type=self._package_url_type,
             name=self._name,
             version=self._version,
             qualifiers=self._qualifiers
