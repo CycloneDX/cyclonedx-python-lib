@@ -18,11 +18,85 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import datetime
+import sys
 from typing import List
 from uuid import uuid4
 
+from . import HashType
 from .component import Component
 from ..parser import BaseParser
+
+
+class Tool:
+    """
+    This is out internal representation of the toolType complex type within the CycloneDX standard.
+
+    Tool(s) are the things used in the creation of the BOM.
+
+    .. note::
+        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
+    """
+
+    _vendor: str = None
+    _name: str = None
+    _version: str = None
+    _hashes: List[HashType] = []
+
+    def __init__(self, vendor: str, name: str, version: str, hashes: List[HashType] = []):
+        self._vendor = vendor
+        self._name = name
+        self._version = version
+        self._hashes = hashes
+
+    def get_hashes(self) -> List[HashType]:
+        """
+        List of cryptographic hashes that identify this version of this Tool.
+
+        Returns:
+            `List` of `HashType` objects where there are any hashes, else an empty `List`.
+        """
+        return self._hashes
+
+    def get_name(self) -> str:
+        """
+        The name of this Tool.
+
+        Returns:
+            `str` representing the name of the Tool
+        """
+        return self._name
+
+    def get_vendor(self) -> str:
+        """
+        The vendor of this Tool.
+
+        Returns:
+            `str` representing the vendor of the Tool
+        """
+        return self._vendor
+
+    def get_version(self) -> str:
+        """
+        The version of this Tool.
+
+        Returns:
+            `str` representing the version of the Tool
+        """
+        return self._version
+
+    def __repr__(self):
+        return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
+
+
+if sys.version_info >= (3, 8, 0):
+    from importlib.metadata import version
+else:
+    from importlib_metadata import version
+
+try:
+    ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=version('cyclonedx-python-lib'))
+except Exception:
+    ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version='UNKNOWN')
 
 
 class BomMetaData:
@@ -34,9 +108,13 @@ class BomMetaData:
     """
 
     _timestamp: datetime.datetime
+    _tools: List[Tool] = []
 
-    def __init__(self):
+    def __init__(self, tools: List[Tool] = []):
         self._timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
+        if len(tools) == 0:
+            tools.append(ThisTool)
+        self._tools = tools
 
     def get_timestamp(self) -> datetime.datetime:
         """
@@ -46,6 +124,15 @@ class BomMetaData:
             `datetime.datetime` instance in UTC timezone
         """
         return self._timestamp
+
+    def get_tools(self) -> List[Tool]:
+        """
+        Tools used to create this BOM.
+
+        Returns:
+            `List` of `Tool` objects where there are any, else an empty `List`.
+        """
+        return self._tools
 
 
 class Bom:

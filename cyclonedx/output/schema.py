@@ -22,6 +22,9 @@ from abc import ABC
 
 class BaseSchemaVersion(ABC):
 
+    def bom_metadata_supports_tools(self) -> bool:
+        return True
+
     def bom_supports_metadata(self) -> bool:
         return True
 
@@ -49,6 +52,9 @@ class SchemaVersion1Dot2(BaseSchemaVersion):
 
 class SchemaVersion1Dot1(BaseSchemaVersion):
 
+    def bom_metadata_supports_tools(self) -> bool:
+        return False
+
     def bom_supports_metadata(self) -> bool:
         return False
 
@@ -60,6 +66,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
 
 
 class SchemaVersion1Dot0(BaseSchemaVersion):
+
+    def bom_metadata_supports_tools(self) -> bool:
+        return False
 
     def bom_supports_metadata(self) -> bool:
         return False

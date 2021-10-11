@@ -59,10 +59,21 @@ class Json(BaseOutput, BaseSchemaVersion):
         return c
 
     def _get_metadata_as_dict(self) -> dict:
-        metadata = self.get_bom().get_metadata()
-        return {
-            "timestamp": metadata.get_timestamp().isoformat()
+        bom_metadata = self.get_bom().get_metadata()
+        metadata = {
+            "timestamp": bom_metadata.get_timestamp().isoformat()
         }
+
+        if self.bom_metadata_supports_tools() and len(bom_metadata.get_tools()) > 0:
+            metadata['tools'] = []
+            for tool in bom_metadata.get_tools():
+                metadata['tools'].append({
+                    "vendor": tool.get_vendor(),
+                    "name": tool.get_name(),
+                    "version": tool.get_version()
+                })
+
+        return metadata
 
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):

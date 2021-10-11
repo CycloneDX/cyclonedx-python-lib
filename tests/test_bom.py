@@ -20,7 +20,7 @@
 import os
 from unittest import TestCase
 
-from cyclonedx.model.bom import Bom
+from cyclonedx.model.bom import Bom, ThisTool
 from cyclonedx.model.component import Component
 from cyclonedx.parser.requirements import RequirementsFileParser
 
@@ -37,3 +37,8 @@ class TestBom(TestCase):
         self.assertTrue(bom.has_component(
             Component(name='setuptools', version='50.3.2')
         ))
+
+    def test_bom_metadata_tool_this_tool(self):
+        self.assertEqual(ThisTool.get_vendor(), 'CycloneDX')
+        self.assertEqual(ThisTool.get_name(), 'cyclonedx-python-lib')
+        self.assertNotEqual(ThisTool.get_version(), 'UNKNOWN')

@@ -161,7 +161,7 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
          <td><code>/bom/metadata</code></td>
          <td>Y</td><td>Y</td><td>N/A</td><td>N/A</td>
          <td>
-            Only <code>timestamp</code> is currently supported 
+            <code>timestamp</code> and <code>tools</code> are currently supported 
          </td>
       </tr>
       <tr>

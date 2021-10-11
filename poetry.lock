@@ -145,11 +145,14 @@ python-versions = "*"
 
 [[package]]
 name = "packageurl-python"
-version = "0.9.4"
-description = "A \"purl\" aka. Package URL parser and builder"
+version = "0.9.6"
+description = "A purl aka. Package URL parser and builder"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
+
+[package.extras]
+test = ["pytest", "isort"]
 
 [[package]]
 name = "packaging"
@@ -478,8 +481,8 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 packageurl-python = [
-    {file = "packageurl-python-0.9.4.tar.gz", hash = "sha256:bd0e829260baff12055c47e1898e0f4014469d09bdb380ddcb102b5d2392fb56"},
-    {file = "packageurl_python-0.9.4-py2.py3-none-any.whl", hash = "sha256:65f1eade0f3f412bdc77401e76725e9fc21d0c742ba0f2d066113cb19ccd8b61"},
+    {file = "packageurl-python-0.9.6.tar.gz", hash = "sha256:c01fbaf62ad2eb791e97158d1f30349e830bee2dd3e9503a87f6c3ffae8d1cf0"},
+    {file = "packageurl_python-0.9.6-py3-none-any.whl", hash = "sha256:676dcb8278721df952e2444bfcd8d7bf3518894498050f0c6a5faddbe0860cd0"},
 ]
 packaging = [
     {file = "packaging-21.0-py3-none-any.whl", hash = "sha256:c86254f9220d55e31cc94d69bade760f0847da8000def4dfe1c6b872fd14ff14"},
