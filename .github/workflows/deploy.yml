@@ -1,6 +1,9 @@
 name: Deploy to PyPI
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
