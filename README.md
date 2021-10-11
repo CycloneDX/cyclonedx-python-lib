@@ -50,6 +50,8 @@ You can use one of the parsers to obtain information about your project or envir
 | Parser | Class / Import | Description |
 | ------- | ------ | ------ |
 | Environment | `from cyclonedx.parser.environment import EnvironmentParser` | Looks at the packaged installed in your current Python environment. |
+| PipEnvParser | `from cyclonedx.parser.pipenv import PipEnvParser` | Parses `Pipfile.lock` content passed in as a string. |
+| PipEnvFileParser | `from cyclonedx.parser.pipenv import PipEnvFileParser` | Parses the `Pipfile.lock` file at the supplied path. |
 | PoetryParser | `from cyclonedx.parser.poetry import PoetryParser` | Parses `poetry.lock` content passed in as a string. |
 | PoetryFileParser | `from cyclonedx.parser.poetry import PoetryFileParser` | Parses the `poetry.lock` file at the supplied path. |
 | RequirementsParser | `from cyclonedx.parser.requirements import RequirementsParser` | Parses a multiline string that you provide that conforms to the `requirements.txt` [PEP-508](https://www.python.org/dev/peps/pep-0508/) standard. |
