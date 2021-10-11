@@ -192,6 +192,14 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
          <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
          <td>&nbsp;</td>
       </tr>
+      <tr>
+         <td><code>./hashes</code></td>
+         <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+         <td>
+            These are supported when programmatically creating a <code>Bom</code> - these will not currently be 
+            automatically populated when using a <code>Parser</code>.
+         </td>
+      </tr>
    </tbody>
 </table>
 
