@@ -17,6 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from os.path import dirname, join
 from unittest import TestCase
 
 from packageurl import PackageURL
@@ -104,3 +105,14 @@ class TestComponent(TestCase):
             type='generic', name='/test.py', version='UNKNOWN'
         )
         self.assertEqual(TestComponent._component_generic_file.to_package_url(), purl)
+
+    def test_from_file_with_path_for_bom(self):
+        test_file = join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')
+        c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_v1.3_setuptools.xml')
+        self.assertEqual(c.get_name(), 'fixtures/bom_v1.3_setuptools.xml')
+        self.assertEqual(c.get_version(), '0.0.0-16932e52ed1e')
+        purl = PackageURL(
+            type='generic', name='fixtures/bom_v1.3_setuptools.xml', version='0.0.0-16932e52ed1e'
+        )
+        self.assertEqual(c.to_package_url(), purl)
+        self.assertEqual(len(c.get_hashes()), 1)

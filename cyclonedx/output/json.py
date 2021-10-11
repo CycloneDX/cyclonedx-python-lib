@@ -53,6 +53,15 @@ class Json(BaseOutput, BaseSchemaVersion):
             "purl": component.get_purl()
         }
 
+        if len(component.get_hashes()) > 0:
+            hashes = []
+            for component_hash in component.get_hashes():
+                hashes.append({
+                    "alg": component_hash.get_algorithm().value,
+                    "content": component_hash.get_hash_value()
+                })
+            c['hashes'] = hashes
+
         if self.component_supports_author() and component.get_author() is not None:
             c['author'] = component.get_author()
 
@@ -67,11 +76,22 @@ class Json(BaseOutput, BaseSchemaVersion):
         if self.bom_metadata_supports_tools() and len(bom_metadata.get_tools()) > 0:
             metadata['tools'] = []
             for tool in bom_metadata.get_tools():
-                metadata['tools'].append({
+                tool_dict = {
                     "vendor": tool.get_vendor(),
                     "name": tool.get_name(),
                     "version": tool.get_version()
-                })
+                }
+
+                if len(tool.get_hashes()) > 0:
+                    hashes = []
+                    for tool_hash in tool.get_hashes():
+                        hashes.append({
+                            "alg": tool_hash.get_algorithm().value,
+                            "content": tool_hash.get_hash_value()
+                        })
+                    tool_dict['hashes'] = hashes
+
+                metadata['tools'].append(tool_dict)
 
         return metadata
 

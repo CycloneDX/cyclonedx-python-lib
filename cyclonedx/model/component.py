@@ -18,9 +18,11 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from enum import Enum
+from os.path import exists
 from packageurl import PackageURL
 from typing import List
 
+from . import HashAlgorithm, HashType, sha1sum
 from .vulnerability import Vulnerability
 
 
@@ -58,16 +60,57 @@ class Component:
     _description: str = None
     _license: str = None
 
+    _hashes: List[HashType] = []
     _vulnerabilites: List[Vulnerability] = []
 
-    def __init__(self, name: str, version: str, qualifiers: str = None,
+    @staticmethod
+    def for_file(absolute_file_path: str, path_for_bom: str = None):
+        """
+        Helper method to create a Component that represents the provided local file as a Component.
+
+        Args:
+            absolute_file_path:
+                Absolute path to the file you wish to represent
+            path_for_bom:
+                Optionally, if supplied this is the path that will be used to identify the file in the BOM
+
+        Returns:
+            `Component` representing the supplied file
+        """
+        if not exists(absolute_file_path):
+            raise FileExistsError('Supplied file path \'{}\' does not exist'.format(absolute_file_path))
+
+        sha1_hash: str = sha1sum(filename=absolute_file_path)
+
+        return Component(
+            name=path_for_bom if path_for_bom else absolute_file_path,
+            version='0.0.0-{}'.format(sha1_hash[0:12]),
+            hashes=[
+                HashType(algorithm=HashAlgorithm.SHA_1, hash_value=sha1_hash)
+            ],
+            component_type=ComponentType.FILE,
+            package_url_type='generic'
+        )
+
+    def __init__(self, name: str, version: str, qualifiers: str = None, hashes: List[HashType] = [],
                  component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi'):
         self._name = name
         self._version = version
         self._type = component_type
         self._qualifiers = qualifiers
+        self._hashes = hashes
         self._vulnerabilites = []
         self._package_url_type = package_url_type
+
+    def add_hash(self, hash: HashType):
+        """
+        Adds a hash that pins/identifies this Component.
+
+        Args:
+            hash:
+                `HashType` instance
+        """
+        self._hashes.append(hash)
 
     def add_vulnerability(self, vulnerability: Vulnerability):
         """
@@ -99,6 +142,15 @@ class Component:
             Declared description of this Component as `str`.
         """
         return self._description
+
+    def get_hashes(self) -> List[HashType]:
+        """
+        List of cryptographic hashes that identify this Component.
+
+        Returns:
+            `List` of `HashType` objects where there are any hashes, else an empty `List`.
+        """
+        return self._hashes
 
     def get_license(self) -> str:
         """
