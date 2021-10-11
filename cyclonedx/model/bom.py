@@ -89,12 +89,12 @@ class Tool:
 
 
 if sys.version_info >= (3, 8, 0):
-    from importlib.metadata import version
+    from importlib.metadata import version as meta_version
 else:
-    from importlib_metadata import version
+    from importlib_metadata import version as meta_version
 
 try:
-    ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=version('cyclonedx-python-lib'))
+    ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=meta_version('cyclonedx-python-lib'))
 except Exception:
     ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version='UNKNOWN')
 
@@ -112,9 +112,21 @@ class BomMetaData:
 
     def __init__(self, tools: List[Tool] = []):
         self._timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
+        self._tools.clear()
         if len(tools) == 0:
             tools.append(ThisTool)
         self._tools = tools
+
+    def add_tool(self, tool: Tool):
+        """
+        Add a Tool definition to this Bom Metadata. The `cyclonedx-python-lib` is automatically added - you do not need
+        to add this yourself.
+
+        Args:
+            tool:
+                Instance of `Tool` that represents the tool you are using.
+        """
+        self._tools.append(tool)
 
     def get_timestamp(self) -> datetime.datetime:
         """
@@ -173,7 +185,7 @@ class Bom:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
         self._uuid = uuid4()
-        self._metadata = BomMetaData()
+        self._metadata = BomMetaData(tools=[])
         self._components.clear()
 
     def add_component(self, component: Component):
