@@ -18,12 +18,17 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
+import sys
 import xml.etree.ElementTree
 from datetime import datetime, timezone
-from importlib.metadata import version
 from unittest import TestCase
 from uuid import uuid4
 from xml.dom import minidom
+
+if sys.version_info >= (3, 8, 0):
+    from importlib.metadata import version
+else:
+    from importlib_metadata import version
 
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
 cyclonedx_lib_version: str = version(cyclonedx_lib_name)
