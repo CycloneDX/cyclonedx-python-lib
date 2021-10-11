@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2021-10-11)
+### Feature
+* Add support for tool(s) that generated the SBOM ([`7d1e6ef`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7d1e6ef04d473407b9b4eefc2ef18e6723838f94))
+
+### Fix
+* Bumped a dependency version ([`efc1053`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/efc1053ec9ed3f57711f78f1eca181f7bff0c3bf))
+
 ## v0.4.1 (2021-09-27)
 ### Fix
 * Improved handling for `requirements.txt` content without pinned or declared versions ([`7f318cb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7f318cb495ac1754029088cae1ef2574c58da2e5))
