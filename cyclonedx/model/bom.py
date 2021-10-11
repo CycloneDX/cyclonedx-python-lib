@@ -19,7 +19,6 @@
 
 import datetime
 import sys
-from importlib.metadata import version
 from typing import List
 from uuid import uuid4
 
