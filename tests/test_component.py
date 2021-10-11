@@ -22,6 +22,7 @@ from unittest import TestCase
 
 from packageurl import PackageURL
 
+from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 
 
@@ -30,6 +31,7 @@ class TestComponent(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls._component: Component = Component(name='setuptools', version='50.3.2')
+        cls._component_2: Component = Component(name='setuptools', version='50.3.2')
         cls._component_with_qualifiers: Component = Component(name='setuptools', version='50.3.2',
                                                               qualifiers='extension=tar.gz')
         cls._component_generic_file: Component = Component(
@@ -116,3 +118,23 @@ class TestComponent(TestCase):
         )
         self.assertEqual(c.to_package_url(), purl)
         self.assertEqual(len(c.get_hashes()), 1)
+
+    def test_has_component_1(self):
+        bom = Bom()
+        bom.add_component(component=TestComponent._component)
+        bom.add_component(component=TestComponent._component_2)
+        self.assertEqual(len(bom.get_components()), 1)
+        self.assertTrue(bom.has_component(component=TestComponent._component_2))
+        self.assertIsNot(TestComponent._component, TestComponent._component_2)
+
+    def test_get_component_by_purl_1(self):
+        bom = Bom()
+        bom.add_component(component=TestComponent._component)
+        bom.add_component(component=TestComponent._component_2)
+        self.assertEqual(len(bom.get_components()), 1)
+        self.assertTrue(bom.has_component(component=TestComponent._component))
+        self.assertTrue(bom.has_component(component=TestComponent._component_2))
+        self.assertEqual(bom.get_component_by_purl(
+            purl=TestComponent._component.get_purl()),
+            TestComponent._component_2
+        )

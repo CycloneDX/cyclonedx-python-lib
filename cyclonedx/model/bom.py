@@ -19,7 +19,7 @@
 
 import datetime
 import sys
-from typing import List
+from typing import List, Union
 from uuid import uuid4
 
 from . import HashType
@@ -187,7 +187,8 @@ class Bom:
         Returns:
             None
         """
-        self._components.append(component)
+        if not self.has_component(component=component):
+            self._components.append(component)
 
     def add_components(self, components: List[Component]):
         """
@@ -210,6 +211,23 @@ class Bom:
              The number of Components in this Bom as `int`.
         """
         return len(self._components)
+
+    def get_component_by_purl(self, purl: str) -> Union[Component, None]:
+        """
+        Get a Component already in the Bom by it's PURL
+
+        Args:
+             purl:
+                Package URL as a `str` to look and find `Component`
+
+        Returns:
+            `Component` or `None`
+        """
+        found = list(filter(lambda x: x.get_purl() == purl, self._components))
+        if len(found) == 1:
+            return found[0]
+
+        return None
 
     def get_components(self) -> List[Component]:
         """
