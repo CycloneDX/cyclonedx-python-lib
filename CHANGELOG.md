@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.0 (2021-10-12)
+### Feature
+* Add support for `externalReferneces` for `Components` and associated enhancements to parsers to obtain information where possible/known ([`a152852`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a152852b361bbb7a69c9f7ab61ae7ea6dcffd214))
+
 ## v0.7.0 (2021-10-11)
 ### Feature
 * Support for pipenv.lock file parsing ([`68a2dff`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/68a2dffc770d40f693b6891a580d1f7d8018f71c))
