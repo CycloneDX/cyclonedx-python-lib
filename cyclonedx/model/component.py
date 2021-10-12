@@ -22,7 +22,7 @@ from os.path import exists
 from packageurl import PackageURL
 from typing import List
 
-from . import HashAlgorithm, HashType, sha1sum
+from . import ExternalReference, HashAlgorithm, HashType, sha1sum
 from .vulnerability import Vulnerability
 
 
@@ -62,6 +62,7 @@ class Component:
 
     _hashes: List[HashType] = []
     _vulnerabilites: List[Vulnerability] = []
+    _external_references: List[ExternalReference] = []
 
     @staticmethod
     def for_file(absolute_file_path: str, path_for_bom: str = None):
@@ -92,15 +93,28 @@ class Component:
             package_url_type='generic'
         )
 
-    def __init__(self, name: str, version: str, qualifiers: str = None, hashes: List[HashType] = [],
+    def __init__(self, name: str, version: str, qualifiers: str = None, hashes: List[HashType] = None,
                  component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi'):
         self._name = name
         self._version = version
         self._type = component_type
         self._qualifiers = qualifiers
-        self._hashes = hashes
-        self._vulnerabilites = []
+        self._hashes.clear()
+        if hashes:
+            self._hashes = hashes
+        self._vulnerabilites.clear()
         self._package_url_type = package_url_type
+        self._external_references.clear()
+
+    def add_external_reference(self, reference: ExternalReference):
+        """
+        Add an `ExternalReference` to this `Component`.
+
+        Args:
+            reference:
+                `ExternalReference` instance to add.
+        """
+        self._external_references.append(reference)
 
     def add_hash(self, hash: HashType):
         """
@@ -143,6 +157,15 @@ class Component:
         """
         return self._description
 
+    def get_external_references(self) -> List[ExternalReference]:
+        """
+        List of external references for this Component.
+
+        Returns:
+            `List` of `ExternalReference` objects where there are any, else an empty `List`.
+        """
+        return self._external_references
+
     def get_hashes(self) -> List[HashType]:
         """
         List of cryptographic hashes that identify this Component.
@@ -181,6 +204,9 @@ class Component:
         if self._qualifiers:
             base_purl = '{}?{}'.format(base_purl, self._qualifiers)
         return base_purl
+
+    def get_pypi_url(self) -> str:
+        return f'https://pypi.org/project/{self.get_name()}/{self.get_version()}'
 
     def get_type(self) -> ComponentType:
         """

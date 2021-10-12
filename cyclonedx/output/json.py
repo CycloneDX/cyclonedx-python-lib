@@ -53,7 +53,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             "purl": component.get_purl()
         }
 
-        if len(component.get_hashes()) > 0:
+        if component.get_hashes():
             hashes = []
             for component_hash in component.get_hashes():
                 hashes.append({
@@ -62,8 +62,30 @@ class Json(BaseOutput, BaseSchemaVersion):
                 })
             c['hashes'] = hashes
 
-        if self.component_supports_author() and component.get_author() is not None:
+        if self.component_supports_author() and component.get_author():
             c['author'] = component.get_author()
+
+        if self.component_supports_external_references() and component.get_external_references():
+            c['externalReferences'] = []
+            for ext_ref in component.get_external_references():
+                ref = {
+                    "type": ext_ref.get_reference_type().value,
+                    "url": ext_ref.get_url()
+                }
+
+                if ext_ref.get_comment():
+                    ref['comment'] = ext_ref.get_comment()
+
+                if ext_ref.get_hashes():
+                    ref_hashes = []
+                    for ref_hash in ext_ref.get_hashes():
+                        ref_hashes.append({
+                            "alg": ref_hash.get_algorithm().value,
+                            "content": ref_hash.get_hash_value()
+                        })
+                    ref['hashes'] = ref_hashes
+
+                c['externalReferences'].append(ref)
 
         return c
 

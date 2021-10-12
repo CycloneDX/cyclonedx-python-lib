@@ -17,10 +17,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from typing import List
 from xml.etree import ElementTree
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
+from ..model import HashType
 from ..model.component import Component
 from ..model.vulnerability import Vulnerability, VulnerabilityRating
 
@@ -89,16 +91,32 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # version
         ElementTree.SubElement(component_element, 'version').text = component.get_version()
 
+        # hashes
+        if len(component.get_hashes()) > 0:
+            Xml._add_hashes_to_element(hashes=component.get_hashes(), element=component_element)
+            # hashes_e = ElementTree.SubElement(component_element, 'hashes')
+            # for hash in component.get_hashes():
+            #     ElementTree.SubElement(
+            #         hashes_e, 'hash', {'alg': hash.get_algorithm().value}
+            #     ).text = hash.get_hash_value()
+
         # purl
         ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
 
-        # hashes
-        if len(component.get_hashes()) > 0:
-            hashes_e = ElementTree.SubElement(component_element, 'hashes')
-            for hash in component.get_hashes():
-                ElementTree.SubElement(
-                    hashes_e, 'hash', {'alg': hash.get_algorithm().value}
-                ).text = hash.get_hash_value()
+        # externalReferences
+        if self.component_supports_external_references() and len(component.get_external_references()) > 0:
+            external_references_e = ElementTree.SubElement(component_element, 'externalReferences')
+            for ext_ref in component.get_external_references():
+                external_reference_e = ElementTree.SubElement(
+                    external_references_e, 'reference', {'type': ext_ref.get_reference_type().value}
+                )
+                ElementTree.SubElement(external_reference_e, 'url').text = ext_ref.get_url()
+
+                if ext_ref.get_comment():
+                    ElementTree.SubElement(external_reference_e, 'comment').text = ext_ref.get_comment()
+
+                if len(ext_ref.get_hashes()) > 0:
+                    Xml._add_hashes_to_element(hashes=ext_ref.get_hashes(), element=external_reference_e)
 
         return component_element
 
@@ -193,6 +211,14 @@ class Xml(BaseOutput, BaseSchemaVersion):
                                                {'alg': hash.get_algorithm().value}).text = hash.get_hash_value()
 
         return bom
+
+    @staticmethod
+    def _add_hashes_to_element(hashes: List[HashType], element: ElementTree.Element):
+        hashes_e = ElementTree.SubElement(element, 'hashes')
+        for h in hashes:
+            ElementTree.SubElement(
+                hashes_e, 'hash', {'alg': h.get_algorithm().value}
+            ).text = h.get_hash_value()
 
 
 class XmlV1Dot0(Xml, SchemaVersion1Dot0):

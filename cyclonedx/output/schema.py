@@ -34,6 +34,9 @@ class BaseSchemaVersion(ABC):
     def component_supports_bom_ref(self) -> bool:
         return True
 
+    def component_supports_external_references(self) -> bool:
+        return True
+
     def get_schema_version(self) -> str:
         pass
 
@@ -77,6 +80,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def component_supports_bom_ref(self) -> bool:
+        return False
+
+    def component_supports_external_references(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:
