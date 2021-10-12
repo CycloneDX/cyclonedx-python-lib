@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.1 (2021-10-12)
+### Fix
+* Multiple hashes being created for an externalRefernce which is not as required ([`970d192`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/970d19202d13d4becbbf040b3a9fb115dd7a0795))
+
 ## v0.8.0 (2021-10-12)
 ### Feature
 * Add support for `externalReferneces` for `Components` and associated enhancements to parsers to obtain information where possible/known ([`a152852`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a152852b361bbb7a69c9f7ab61ae7ea6dcffd214))
