@@ -150,11 +150,14 @@ class ExternalReference:
     _hashes: List[HashType] = []
 
     def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = None,
-                 hashes: List[HashType] = []):
+                 hashes: List[HashType] = None):
         self._reference_type = reference_type
         self._url = url
         self._comment = comment
-        self._hashes = hashes
+        if not hashes:
+            self._hashes.clear()
+        else:
+            self._hashes = hashes
 
     def add_hash(self, our_hash: HashType):
         """

@@ -34,3 +34,4 @@ class TestPipEnvParser(TestCase):
         self.assertEqual('toml', components[0].get_name())
         self.assertEqual('0.10.2', components[0].get_version())
         self.assertEqual(len(components[0].get_external_references()), 2)
+        self.assertEqual(len(components[0].get_external_references()[0].get_hashes()), 1)
