@@ -33,3 +33,4 @@ class TestPoetryParser(TestCase):
         components = parser.get_components()
         self.assertEqual('toml', components[0].get_name())
         self.assertEqual('0.10.2', components[0].get_version())
+        self.assertEqual(len(components[0].get_external_references()), 2)

@@ -17,6 +17,7 @@
 
 import hashlib
 from enum import Enum
+from typing import List, Union
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
@@ -69,6 +70,36 @@ class HashType:
     _algorithm: HashAlgorithm
     _value: str
 
+    @staticmethod
+    def from_composite_str(composite_hash: str):
+        """
+        Attempts to convert a string which includes both the Hash Algorithm and Hash Value and represent using our
+        internal model classes.
+
+        Args:
+             composite_hash:
+                Composite Hash string of the format `HASH_ALGORITHM`:`HASH_VALUE`.
+                Example: `sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b`.
+
+        Returns:
+            An instance of `HashType` when possible, else `None`.
+        """
+        algorithm: HashAlgorithm = None
+        parts = composite_hash.split(':')
+
+        algorithm_prefix = parts[0].lower()
+        if algorithm_prefix == 'md5':
+            algorithm = HashAlgorithm.MD5
+        elif algorithm_prefix[0:3] == 'sha':
+            algorithm = getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:]))
+        elif algorithm_prefix[0:6] == 'blake2':
+            algorithm = getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:]))
+
+        return HashType(
+            algorithm=algorithm,
+            hash_value=parts[1].lower()
+        )
+
     def __init__(self, algorithm: HashAlgorithm, hash_value: str):
         self._algorithm = algorithm
         self._value = hash_value
@@ -78,3 +109,95 @@ class HashType:
 
     def get_hash_value(self) -> str:
         return self._value
+
+
+class ExternalReferenceType(Enum):
+    """
+    Enum object that defines the permissible 'types' for an External Reference according to the CycloneDX schema.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReferenceType
+    """
+    ADVISORIES = 'advisories'
+    BOM = 'bom'
+    BUILD_META = 'build-meta'
+    BUILD_SYSTEM = 'build-system'
+    CHAT = 'chat'
+    DISTRIBUTION = 'distribution'
+    DOCUMENTATION = 'documentation'
+    ISSUE_TRACKER = 'issue-tracker'
+    LICENSE = 'license'
+    MAILING_LIST = 'mailing-list'
+    OTHER = 'other'
+    SOCIAL = 'social'
+    SCM = 'vcs'
+    SUPPORT = 'support'
+    VCS = 'vcs'
+    WEBSITE = 'website'
+
+
+class ExternalReference:
+    """
+    This is out internal representation of an ExternalReference complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
+    """
+    _reference_type: ExternalReferenceType
+    _url: str
+    _comment: str
+    _hashes: List[HashType] = []
+
+    def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = None,
+                 hashes: List[HashType] = []):
+        self._reference_type = reference_type
+        self._url = url
+        self._comment = comment
+        self._hashes = hashes
+
+    def add_hash(self, our_hash: HashType):
+        """
+        Adds a hash that pins/identifies this External Reference.
+
+        Args:
+            our_hash:
+                `HashType` instance
+        """
+        self._hashes.append(our_hash)
+
+    def get_comment(self) -> Union[str, None]:
+        """
+        Get the comment for this External Reference.
+
+        Returns:
+            Any comment as a `str` else `None`.
+        """
+        return self._comment
+
+    def get_hashes(self) -> List[HashType]:
+        """
+        List of cryptographic hashes that identify this External Reference.
+
+        Returns:
+            `List` of `HashType` objects where there are any hashes, else an empty `List`.
+        """
+        return self._hashes
+
+    def get_reference_type(self) -> ExternalReferenceType:
+        """
+        Get the type of this External Reference.
+
+        Returns:
+            `ExternalReferenceType` that represents the type of this External Reference.
+        """
+        return self._reference_type
+
+    def get_url(self) -> str:
+        """
+        Get the URL/URI for this External Reference.
+
+        Returns:
+            URI as a `str`.
+        """
+        return self._url

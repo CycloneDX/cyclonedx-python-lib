@@ -17,6 +17,17 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+"""
+Parser classes for reading installed packages in your current Python environment.
+
+These parsers look at installed packages only - not what you have defined in any dependency tool - see the other Parsers
+if you want to derive CycloneDX from declared dependencies.
+
+
+The Environment Parsers support population of the following data about Components:
+
+"""
+
 import sys
 
 if sys.version_info >= (3, 8, 0):

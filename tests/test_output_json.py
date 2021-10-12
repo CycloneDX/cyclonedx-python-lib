@@ -19,10 +19,11 @@
 
 from os.path import dirname, join
 
+from cyclonedx.model import ExternalReference, ExternalReferenceType, HashType
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from cyclonedx.output.json import JsonV1Dot3, JsonV1Dot2
+from cyclonedx.output.json import Json, JsonV1Dot3, JsonV1Dot2
 from tests.base import BaseJsonTestCase
 
 
@@ -44,4 +45,42 @@ class TestOutputJson(BaseJsonTestCase):
         self.assertIsInstance(outputter, JsonV1Dot2)
         with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools.json')) as expected_json:
             self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
+            expected_json.close()
+
+    def test_bom_v1_3_with_component_hashes(self):
+        bom = Bom()
+        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c.add_hash(
+            HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
+        )
+        bom.add_component(c)
+        outputter: Json = get_instance(bom=bom, output_format=OutputFormat.JSON)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_toml_with_component_hashes.json')) as expected_json:
+            self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
+            expected_json.close()
+
+    def test_bom_v1_3_with_component_external_references(self):
+        bom = Bom()
+        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c.add_hash(
+            HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
+        )
+        c.add_external_reference(
+            ExternalReference(
+                reference_type=ExternalReferenceType.DISTRIBUTION,
+                url='https://cyclonedx.org',
+                comment='No comment',
+                hashes=[
+                    HashType.from_composite_str(
+                        'sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
+                ]
+            )
+        )
+        bom.add_component(c)
+        outputter: Json = get_instance(bom=bom, output_format=OutputFormat.JSON)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__),
+                       'fixtures/bom_v1.3_toml_with_component_external_references.json')) as expected_json:
+            self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()

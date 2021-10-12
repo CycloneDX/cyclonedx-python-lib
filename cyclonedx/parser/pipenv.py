@@ -19,6 +19,7 @@
 import json
 
 from . import BaseParser
+from ..model import ExternalReference, ExternalReferenceType, HashType
 from ..model.component import Component
 
 
@@ -29,13 +30,21 @@ class PipEnvParser(BaseParser):
         pipfile_lock_contents = json.loads(pipenv_contents)
 
         for package_name in pipfile_lock_contents['default'].keys():
-            print('Processing {}'.format(package_name))
             package_data = pipfile_lock_contents['default'][package_name]
             c = Component(
                 name=package_name, version=str(package_data['version']).strip('='),
             )
 
-            # @todo: Add hashes
+            if package_data['index'] == 'pypi':
+                # Add download location with hashes stored in Pipfile.lock
+                for pip_hash in package_data['hashes']:
+                    ext_ref = ExternalReference(
+                        reference_type=ExternalReferenceType.DISTRIBUTION,
+                        url=c.get_pypi_url(),
+                        comment='Distribution available from pypi.org'
+                    )
+                    ext_ref.add_hash(HashType.from_composite_str(pip_hash))
+                    c.add_external_reference(ext_ref)
 
             self._components.append(c)
 

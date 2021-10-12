@@ -20,6 +20,7 @@
 import toml
 
 from . import BaseParser
+from ..model import ExternalReference, ExternalReferenceType, HashType
 from ..model.component import Component
 
 
@@ -30,9 +31,21 @@ class PoetryParser(BaseParser):
         poetry_lock = toml.loads(poetry_lock_contents)
 
         for package in poetry_lock['package']:
-            self._components.append(Component(
-                name=package['name'], version=package['version'],
-            ))
+            component = Component(
+                name=package['name'], version=package['version']
+            )
+
+            for file_metadata in poetry_lock['metadata']['files'][package['name']]:
+                component.add_external_reference(ExternalReference(
+                    reference_type=ExternalReferenceType.DISTRIBUTION,
+                    url=component.get_pypi_url(),
+                    comment=f'Distribution file: {file_metadata["file"]}',
+                    hashes=[
+                        HashType.from_composite_str(file_metadata['hash'])
+                    ]
+                ))
+
+            self._components.append(component)
 
 
 class PoetryFileParser(PoetryParser):
