@@ -37,6 +37,9 @@ class TestComponent(TestCase):
         cls._component_generic_file: Component = Component(
             name='/test.py', version='UNKNOWN', package_url_type='generic'
         )
+        cls._component_purl_spec_no_subpath: Component = Component(
+            namespace='name-space', name='setuptools', version='50.0.1', qualifiers='extension=whl'
+        )
 
     def test_purl_correct(self):
         self.assertEqual(
@@ -138,3 +141,10 @@ class TestComponent(TestCase):
             purl=TestComponent._component.get_purl()),
             TestComponent._component_2
         )
+
+    def test_full_purl_spec_no_subpath(self):
+        self.assertEqual(
+            TestComponent._component_purl_spec_no_subpath.get_purl(),
+            'pkg:pypi/name-space/setuptools@50.0.1?extension=whl'
+        )
+        self.assertIsNone(TestComponent._component_purl_spec_no_subpath.get_subpath())

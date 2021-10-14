@@ -52,9 +52,11 @@ class Component:
     """
     _type: ComponentType
     _package_url_type: str
+    _namespace: str
     _name: str
     _version: str
     _qualifiers: str
+    _subpath: str
 
     _author: str = None
     _description: str = None
@@ -93,17 +95,21 @@ class Component:
             package_url_type='generic'
         )
 
-    def __init__(self, name: str, version: str, qualifiers: str = None, hashes: List[HashType] = None,
+    def __init__(self, name: str, version: str, namespace: str = None, qualifiers: str = None, subpath: str = None,
+                 hashes: List[HashType] = None,
                  component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi'):
+        self._package_url_type = package_url_type
+        self._namespace = namespace
         self._name = name
         self._version = version
         self._type = component_type
         self._qualifiers = qualifiers
+        self._subpath = subpath
+
         self._hashes.clear()
         if hashes:
             self._hashes = hashes
         self._vulnerabilites.clear()
-        self._package_url_type = package_url_type
         self._external_references.clear()
 
     def add_external_reference(self, reference: ExternalReference):
@@ -193,20 +199,35 @@ class Component:
         """
         return self._name
 
+    def get_namespace(self) -> str:
+        """
+        Get the namespace of this Component.
+
+        Returns:
+            Declared namespace of this Component as `str` if declared, else `None`.
+        """
+        return self._namespace
+
     def get_purl(self) -> str:
         """
         Get the PURL for this Component.
 
         Returns:
-            PackageURL that reflects this Component as `str`.
+            PackageURL or 'PURL' that reflects this Component as `str`.
         """
-        base_purl = 'pkg:{}/{}@{}'.format(self._package_url_type, self._name, self._version)
-        if self._qualifiers:
-            base_purl = '{}?{}'.format(base_purl, self._qualifiers)
-        return base_purl
+        return self.to_package_url().to_string()
 
     def get_pypi_url(self) -> str:
         return f'https://pypi.org/project/{self.get_name()}/{self.get_version()}'
+
+    def get_subpath(self) -> str:
+        """
+        Get the subpath of this Component.
+
+        Returns:
+            Declared subpath of this Component as `str` if declared, else `None`.
+        """
+        return self._subpath
 
     def get_type(self) -> ComponentType:
         """
@@ -292,9 +313,11 @@ class Component:
         """""
         return PackageURL(
             type=self._package_url_type,
+            namespace=self._namespace,
             name=self._name,
             version=self._version,
-            qualifiers=self._qualifiers
+            qualifiers=self._qualifiers,
+            subpath=self._subpath
         )
 
     def __eq__(self, other):
