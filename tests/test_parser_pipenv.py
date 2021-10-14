@@ -20,8 +20,6 @@
 import os
 from unittest import TestCase
 
-from cyclonedx.model.component import Component
-
 from cyclonedx.parser.pipenv import PipEnvFileParser
 
 
@@ -56,4 +54,3 @@ class TestPipEnvParser(TestCase):
         self.assertEqual('0.10.2', c_toml.get_version())
         self.assertEqual(len(c_toml.get_external_references()), 2)
         self.assertEqual(len(c_toml.get_external_references()[0].get_hashes()), 1)
-
