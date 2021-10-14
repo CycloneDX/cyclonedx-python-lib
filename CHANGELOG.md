@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.3 (2021-10-14)
+### Fix
+* Coding standards violations ([`00cd1ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/00cd1ca20899b6861b1b959611a3556ffad36832))
+* Handle `Pipfile.lock` dependencies without an `index` specified ([`26c62fb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/26c62fb996c4b1b2bf719e10c9072cf4fbadab9f))
+
 ## v0.8.2 (2021-10-14)
 ### Fix
 * Add namespace and subpath support to Component to complete PackageURL Spec support ([`780adeb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/780adebe3861ef08eb1e8817a5e9e3451c0a2137))
