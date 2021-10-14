@@ -53,6 +53,9 @@ class Json(BaseOutput, BaseSchemaVersion):
             "purl": component.get_purl()
         }
 
+        if component.get_namespace():
+            c['group'] = component.get_namespace()
+
         if component.get_hashes():
             hashes = []
             for component_hash in component.get_hashes():

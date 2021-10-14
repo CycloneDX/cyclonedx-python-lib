@@ -85,6 +85,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.component_supports_author() and component.get_author() is not None:
             ElementTree.SubElement(component_element, 'author').text = component.get_author()
 
+        # group
+        if component.get_namespace():
+            ElementTree.SubElement(component_element, 'group').text = component.get_namespace()
+
         # name
         ElementTree.SubElement(component_element, 'name').text = component.get_name()
 
@@ -94,11 +98,6 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # hashes
         if len(component.get_hashes()) > 0:
             Xml._add_hashes_to_element(hashes=component.get_hashes(), element=component_element)
-            # hashes_e = ElementTree.SubElement(component_element, 'hashes')
-            # for hash in component.get_hashes():
-            #     ElementTree.SubElement(
-            #         hashes_e, 'hash', {'alg': hash.get_algorithm().value}
-            #     ).text = hash.get_hash_value()
 
         # purl
         ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
