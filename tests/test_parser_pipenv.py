@@ -20,6 +20,8 @@
 import os
 from unittest import TestCase
 
+from cyclonedx.model.component import Component
+
 from cyclonedx.parser.pipenv import PipEnvFileParser
 
 
@@ -35,3 +37,23 @@ class TestPipEnvParser(TestCase):
         self.assertEqual('0.10.2', components[0].get_version())
         self.assertEqual(len(components[0].get_external_references()), 2)
         self.assertEqual(len(components[0].get_external_references()[0].get_hashes()), 1)
+
+    def test_with_multiple_and_no_index(self):
+        tests_pipfile_lock = os.path.join(os.path.dirname(__file__), 'fixtures/pipfile-lock-no-index-example.txt')
+
+        parser = PipEnvFileParser(pipenv_lock_filename=tests_pipfile_lock)
+        self.assertEqual(2, parser.component_count())
+        components = parser.get_components()
+
+        c_anyio = [x for x in components if x.get_name() == 'anyio'][0]
+        c_toml = [x for x in components if x.get_name() == 'toml'][0]
+
+        self.assertEqual('anyio', c_anyio.get_name())
+        self.assertEqual('3.3.3', c_anyio.get_version())
+        self.assertEqual(0, len(c_anyio.get_external_references()))
+
+        self.assertEqual('toml', c_toml.get_name())
+        self.assertEqual('0.10.2', c_toml.get_version())
+        self.assertEqual(len(c_toml.get_external_references()), 2)
+        self.assertEqual(len(c_toml.get_external_references()[0].get_hashes()), 1)
+

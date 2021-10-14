@@ -37,16 +37,11 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    _vendor: str = None
-    _name: str = None
-    _version: str = None
-    _hashes: List[HashType] = []
-
     def __init__(self, vendor: str, name: str, version: str, hashes: List[HashType] = []):
         self._vendor = vendor
         self._name = name
         self._version = version
-        self._hashes = hashes
+        self._hashes: List[HashType] = hashes
 
     def get_hashes(self) -> List[HashType]:
         """
@@ -107,15 +102,11 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
     """
 
-    _timestamp: datetime.datetime
-    _tools: List[Tool] = []
-
     def __init__(self, tools: List[Tool] = []):
         self._timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
-        self._tools.clear()
+        self._tools: List[Tool] = tools
         if len(tools) == 0:
             tools.append(ThisTool)
-        self._tools = tools
 
     def add_tool(self, tool: Tool):
         """
@@ -158,10 +149,6 @@ class Bom:
     `cyclonedx.output.BaseOutput` to produce a CycloneDX document according to a specific schema version and format.
     """
 
-    _uuid: str
-    _metadata: BomMetaData = None
-    _components: List[Component] = []
-
     @staticmethod
     def from_parser(parser: BaseParser):
         """
@@ -185,8 +172,8 @@ class Bom:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
         self._uuid = uuid4()
-        self._metadata = BomMetaData(tools=[])
-        self._components.clear()
+        self._metadata: BomMetaData = BomMetaData(tools=[])
+        self._components: List[Component] = []
 
     def add_component(self, component: Component):
         """
