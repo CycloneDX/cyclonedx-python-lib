@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.2 (2021-10-14)
+### Fix
+* Add namespace and subpath support to Component to complete PackageURL Spec support ([`780adeb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/780adebe3861ef08eb1e8817a5e9e3451c0a2137))
+
 ## v0.8.1 (2021-10-12)
 ### Fix
 * Multiple hashes being created for an externalRefernce which is not as required ([`970d192`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/970d19202d13d4becbbf040b3a9fb115dd7a0795))
