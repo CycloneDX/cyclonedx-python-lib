@@ -50,21 +50,6 @@ class Component:
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_component
     """
-    _type: ComponentType
-    _package_url_type: str
-    _namespace: str
-    _name: str
-    _version: str
-    _qualifiers: str
-    _subpath: str
-
-    _author: str = None
-    _description: str = None
-    _license: str = None
-
-    _hashes: List[HashType] = []
-    _vulnerabilites: List[Vulnerability] = []
-    _external_references: List[ExternalReference] = []
 
     @staticmethod
     def for_file(absolute_file_path: str, path_for_bom: str = None):
@@ -96,7 +81,7 @@ class Component:
         )
 
     def __init__(self, name: str, version: str, namespace: str = None, qualifiers: str = None, subpath: str = None,
-                 hashes: List[HashType] = None,
+                 hashes: List[HashType] = None, author: str = None, description: str = None, license_str: str = None,
                  component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi'):
         self._package_url_type = package_url_type
         self._namespace = namespace
@@ -106,11 +91,13 @@ class Component:
         self._qualifiers = qualifiers
         self._subpath = subpath
 
-        self._hashes.clear()
-        if hashes:
-            self._hashes = hashes
-        self._vulnerabilites.clear()
-        self._external_references.clear()
+        self._author: str = author
+        self._description: str = description
+        self._license: str = license_str
+
+        self._hashes: List[HashType] = hashes if hashes else []
+        self._vulnerabilites: List[Vulnerability] = []
+        self._external_references: List[ExternalReference] = []
 
     def add_external_reference(self, reference: ExternalReference):
         """
@@ -122,15 +109,15 @@ class Component:
         """
         self._external_references.append(reference)
 
-    def add_hash(self, hash: HashType):
+    def add_hash(self, a_hash: HashType):
         """
         Adds a hash that pins/identifies this Component.
 
         Args:
-            hash:
+            a_hash:
                 `HashType` instance
         """
-        self._hashes.append(hash)
+        self._hashes.append(a_hash)
 
     def add_vulnerability(self, vulnerability: Vulnerability):
         """

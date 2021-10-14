@@ -28,6 +28,16 @@ from a `cyclonedx.parser.BaseParser` implementation.
 
 
 def sha1sum(filename: str) -> str:
+    """
+    Generate a SHA1 hash of the provided file.
+
+    Args:
+        filename:
+            Absolute path to file to hash as `str`
+
+    Returns:
+        SHA-1 hash
+    """
     h = hashlib.sha1()
     b = bytearray(128 * 1024)
     mv = memoryview(b)
@@ -67,9 +77,6 @@ class HashType:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.3/#type_hashType
     """
 
-    _algorithm: HashAlgorithm
-    _value: str
-
     @staticmethod
     def from_composite_str(composite_hash: str):
         """
@@ -84,7 +91,7 @@ class HashType:
         Returns:
             An instance of `HashType` when possible, else `None`.
         """
-        algorithm: HashAlgorithm = None
+        algorithm = None
         parts = composite_hash.split(':')
 
         algorithm_prefix = parts[0].lower()
@@ -109,6 +116,9 @@ class HashType:
 
     def get_hash_value(self) -> str:
         return self._value
+
+    def __repr__(self):
+        return f'<Hash {self._algorithm.value}:{self._value}>'
 
 
 class ExternalReferenceType(Enum):
@@ -144,20 +154,13 @@ class ExternalReference:
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
-    _reference_type: ExternalReferenceType
-    _url: str
-    _comment: str
-    _hashes: List[HashType] = []
 
     def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = None,
                  hashes: List[HashType] = None):
-        self._reference_type = reference_type
+        self._reference_type: ExternalReferenceType = reference_type
         self._url = url
         self._comment = comment
-        if not hashes:
-            self._hashes.clear()
-        else:
-            self._hashes = hashes
+        self._hashes: List[HashType] = hashes if hashes else []
 
     def add_hash(self, our_hash: HashType):
         """
@@ -204,3 +207,6 @@ class ExternalReference:
             URI as a `str`.
         """
         return self._url
+
+    def __repr__(self):
+        return f'<ExternalReference {self._reference_type.name}, {self._url}> {self._hashes}'
