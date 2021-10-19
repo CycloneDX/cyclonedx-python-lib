@@ -63,9 +63,10 @@ class EnvironmentParser(BaseParser):
             if 'License' in i_metadata.keys() and i_metadata.get('License') != 'UNKNOWN':
                 c.set_license(license_str=i_metadata.get('License'))
 
-            for classifier in i_metadata.get_all('Classifier'):
-                if str(classifier).startswith('License :: OSI Approved :: '):
-                    c.set_license(license_str=str(classifier).replace('License :: OSI Approved :: ', '').strip())
+            if 'Classifier' in i_metadata.keys():
+                for classifier in i_metadata.get_all('Classifier'):
+                    if str(classifier).startswith('License :: OSI Approved :: '):
+                        c.set_license(license_str=str(classifier).replace('License :: OSI Approved :: ', '').strip())
 
             self._components.append(c)
 
