@@ -84,3 +84,15 @@ class TestOutputJson(BaseJsonTestCase):
                        'fixtures/bom_v1.3_toml_with_component_external_references.json')) as expected_json:
             self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()
+
+    def test_bom_v1_3_with_component_license(self):
+        bom = Bom()
+        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c.set_license('MIT License')
+        bom.add_component(c)
+        outputter: Json = get_instance(bom=bom, output_format=OutputFormat.JSON)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__),
+                       'fixtures/bom_v1.3_toml_with_component_license.json')) as expected_json:
+            self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
+            expected_json.close()

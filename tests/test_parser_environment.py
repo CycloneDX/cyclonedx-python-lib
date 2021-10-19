@@ -20,9 +20,10 @@
 from unittest import TestCase
 
 from cyclonedx.parser.environment import EnvironmentParser
+from cyclonedx.model.component import Component
 
 
-class TestRequirementsParser(TestCase):
+class TestEnvironmentParser(TestCase):
 
     def test_simple(self):
         """
@@ -33,3 +34,8 @@ class TestRequirementsParser(TestCase):
         """
         parser = EnvironmentParser()
         self.assertGreater(parser.component_count(), 1)
+
+        # We can only be sure that tox is in the environment, for example as we use tox to run tests
+        c_tox: Component = [x for x in parser.get_components() if x.get_name() == 'tox'][0]
+        self.assertIsNotNone(c_tox.get_license())
+        self.assertEqual('MIT License', c_tox.get_license())

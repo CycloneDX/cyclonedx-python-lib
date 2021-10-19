@@ -165,3 +165,16 @@ class TestOutputXml(BaseXmlTestCase):
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
+
+    def test_with_component_license(self):
+        bom = Bom()
+        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c.set_license('MIT License')
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom)
+        self.assertIsInstance(outputter, XmlV1Dot3)
+        with open(join(dirname(__file__),
+                       'fixtures/bom_v1.3_toml_with_component_license.xml')) as expected_xml:
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
