@@ -65,6 +65,15 @@ class Json(BaseOutput, BaseSchemaVersion):
                 })
             c['hashes'] = hashes
 
+        if component.get_license():
+            c['licenses'] = [
+                {
+                    "license": {
+                        "name": component.get_license()
+                    }
+                }
+            ]
+
         if self.component_supports_author() and component.get_author():
             c['author'] = component.get_author()
 

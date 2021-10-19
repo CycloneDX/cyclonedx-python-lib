@@ -102,6 +102,12 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # purl
         ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
 
+        # licenses
+        if component.get_license():
+            licenses_e = ElementTree.SubElement(component_element, 'licenses')
+            license_e = ElementTree.SubElement(licenses_e, 'license')
+            ElementTree.SubElement(license_e, 'name').text = component.get_license()
+
         # externalReferences
         if self.component_supports_external_references() and len(component.get_external_references()) > 0:
             external_references_e = ElementTree.SubElement(component_element, 'externalReferences')
