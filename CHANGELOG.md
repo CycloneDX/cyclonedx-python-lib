@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.1 (2021-10-19)
+### Fix
+* Missing check for Classifiers in Environment Parser ([`b7fa38e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b7fa38e9740bbc5b4c406410df37c3b34818010c))
+
 ## v0.9.0 (2021-10-19)
 ### Feature
 * Add support for parsing package licenses when using the `Environment` Parsers ([`c414eaf`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c414eafde2abaca1005a2a0af6993fcdc17897d3))
