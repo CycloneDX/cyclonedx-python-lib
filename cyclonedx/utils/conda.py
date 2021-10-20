@@ -17,9 +17,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import json
+import sys
 from json import JSONDecodeError
+from typing import Union
 
-from typing import TypedDict, Union
+if sys.version_info >= (3, 8, 0):
+    from typing import TypedDict
+else:
+    from typing_extensions import TypedDict
+
 from urllib.parse import urlparse
 
 
