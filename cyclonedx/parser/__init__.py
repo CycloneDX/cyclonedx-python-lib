@@ -24,28 +24,28 @@ obtained and limitations of what information is available to each Parser. The ta
 information is obtained by each set of Parsers. It does NOT guarantee the information is output in the resulting
 CycloneDX BOM document.
 
-| Data Path | Environment | Pipenv | Poetry | Requirements |
+| Data Path | Conda | Environment | Pipenv | Poetry | Requirements |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| `component.supplier` | N (if in package METADATA) | N/A | | |
-| `component.author` | Y (if in package METADATA) | N/A | | |
-| `component.publisher` | N (if in package METADATA) | N/A | | |
-| `component.group` | - | - | - | - |
-| `component.name` | Y | Y | Y | Y |
-| `component.version` | Y | Y | Y | Y |
-| `component.description` | N | N/A | N | N/A |
-| `component.scope` | N | N/A | N | N/A |
-| `component.hashes` | N/A | Y - see below (1) | Y - see below (1) | N/A |
-| `component.licenses` | Y (if in package METADATA) | N/A | N/A | N/A |
-| `component.copyright` | N (if in package METADATA) | N/A | N/A | N/A |
-| `component.cpe` | _Deprecated_ | _Deprecated_ | _Deprecated_ | _Deprecated_ |
-| `component.purl` | Y | Y | Y | Y |
-| `component.swid` | N/A | N/A | N/A | N/A |
-| `component.modified` | _Deprecated_ | _Deprecated_ | _Deprecated_ | _Deprecated_ |
-| `component.pedigree` | N/A | N/A | N/A | N/A |
-| `component.externalReferences` | N/A | Y - see below (1) | Y - see below (1) | N/A |
-| `component.properties` | N/A | N/A | N/A | N/A |
-| `component.components` | N/A | N/A | N/A | N/A |
-| `component.evidence` | N/A | N/A | N/A | N/A |
+| `component.supplier` | N | N (if in package METADATA) | N/A | | |
+| `component.author` | N | Y (if in package METADATA) | N/A | | |
+| `component.publisher` | N | N (if in package METADATA) | N/A | | |
+| `component.group` | - | - | - | - | - |
+| `component.name` | Y |Y | Y | Y | Y |
+| `component.version` | Y |Y | Y | Y | Y |
+| `component.description` | N |N | N/A | N | N/A |
+| `component.scope` | N |N | N/A | N | N/A |
+| `component.hashes` | Y - see below (2) | N/A | Y - see below (1) | Y - see below (1) | N/A |
+| `component.licenses` | N | Y (if in package METADATA) | N/A | N/A | N/A |
+| `component.copyright` | N |N (if in package METADATA) | N/A | N/A | N/A |
+| `component.cpe` | _Deprecated_ |_Deprecated_ | _Deprecated_ | _Deprecated_ | _Deprecated_ |
+| `component.purl` | Y |Y | Y | Y | Y |
+| `component.swid` | N/A |N/A | N/A | N/A | N/A |
+| `component.modified` | _Deprecated_ |_Deprecated_ | _Deprecated_ | _Deprecated_ | _Deprecated_ |
+| `component.pedigree` | N/A |N/A | N/A | N/A | N/A |
+| `component.externalReferences` | Y - see below (3) | N/A | Y - see below (1) | Y - see below (1) | N/A |
+| `component.properties` | N/A | N/A | N/A | N/A | N/A |
+| `component.components` | N/A | N/A | N/A | N/A | N/A |
+| `component.evidence` | N/A | N/A | N/A | N/A | N/A |
 
 **Legend:**
 
@@ -61,6 +61,9 @@ CycloneDX BOM document.
     supports only a single set of hashes identifying a single artefact at `component.hashes`. To cater for this
     situation in Python, we add the hashes to `component.externalReferences`, as we cannot determine which package was
     actually obtained and installed to meet a given dependency.
+2. MD5 hashses are available when using the `CondaListExplicitParser` with output from the conda command
+    `conda list --explicit --md5` only.
+3. For Conda, we provide a link to the registry as provided in the Conda output.
 
 """
 

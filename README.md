@@ -49,6 +49,8 @@ You can use one of the parsers to obtain information about your project or envir
 
 | Parser | Class / Import | Description |
 | ------- | ------ | ------ |
+| CondaListJsonParser | `from cyclonedx.parser.conda import CondaListJsonParser` | Parses input provided as a `str` that is output from `conda list --json` |
+| CondaListExplicitParser | `from cyclonedx.parser.conda import CondaListExplicitParser` | Parses input provided as a `str` that is output from `conda list --explicit` or `conda list --explicit --md5` |
 | Environment | `from cyclonedx.parser.environment import EnvironmentParser` | Looks at the packaged installed in your current Python environment. |
 | PipEnvParser | `from cyclonedx.parser.pipenv import PipEnvParser` | Parses `Pipfile.lock` content passed in as a string. |
 | PipEnvFileParser | `from cyclonedx.parser.pipenv import PipEnvFileParser` | Parses the `Pipfile.lock` file at the supplied path. |
@@ -193,6 +195,11 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
          <td><code>./purl</code></td>
          <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
          <td>&nbsp;</td>
+      </tr>
+      <tr>
+         <td><code>./externalReferences</code></td>
+         <td>Y</td><td>Y</td><td>Y</td><td>N/A</td>
+         <td>Not all Parsers have this information. It will be populated where there is information available.</td>
       </tr>
       <tr>
          <td><code>./hashes</code></td>
