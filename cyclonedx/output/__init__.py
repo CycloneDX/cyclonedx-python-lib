@@ -69,8 +69,8 @@ class BaseOutput(ABC):
         if os.path.exists(output_filename) and not allow_overwrite:
             raise FileExistsError
 
-        with open(output_filename, mode='w') as f_out:
-            f_out.write(self.output_as_string(), encoding='utf-8')
+        with open(output_filename, mode='wb') as f_out:
+            f_out.write(self.output_as_string().encode('utf-8'))
 
         f_out.close()
 
