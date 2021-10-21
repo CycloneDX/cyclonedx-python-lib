@@ -39,11 +39,9 @@ def sha1sum(filename: str) -> str:
         SHA-1 hash
     """
     h = hashlib.sha1()
-    b = bytearray(128 * 1024)
-    mv = memoryview(b)
-    with open(filename, 'rb', buffering=0) as f:
-        for n in iter(lambda: f.readinto(mv), 0):
-            h.update(mv[:n])
+    with open(filename, 'rb') as f:
+        for byte_block in iter(lambda: f.read(4096), b""):
+            h.update(byte_block)
     return h.hexdigest()
 
 
