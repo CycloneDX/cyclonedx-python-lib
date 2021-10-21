@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.1 (2021-10-21)
+### Fix
+* Ensure output to file is UTF-8 ([`a10da20`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a10da20865e90e9a0a5bb1e12fba9cfd23970c39))
+* Ensure output to file is UTF-8 ([`193bf64`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/193bf64cdb19bf6fb9662367402dcf7eaab8dd1a))
+
 ## v0.10.0 (2021-10-20)
 ### Feature
 * Add support for Conda ([`bd29c78`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bd29c782d39a4956f482b9e4de20d7f829beefba))
