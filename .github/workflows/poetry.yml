@@ -70,6 +70,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
+      - name: Validate Python Environment
+        run: echo "import sys; print('Python %s on %s in %s' % (sys.version, sys.platform, sys.getdefaultencoding()))" | python
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
         uses: Gr1N/setup-poetry@v7
