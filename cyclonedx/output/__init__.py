@@ -70,7 +70,7 @@ class BaseOutput(ABC):
             raise FileExistsError
 
         with open(output_filename, mode='w') as f_out:
-            f_out.write(self.output_as_string())
+            f_out.write(self.output_as_string(), encoding='utf-8')
 
         f_out.close()
 
