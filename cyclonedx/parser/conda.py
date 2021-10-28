@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import json
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 from typing import List
 
 from . import BaseParser
@@ -26,11 +26,10 @@ from ..model.component import Component
 from ..utils.conda import parse_conda_json_to_conda_package, parse_conda_list_str_to_conda_package, CondaPackage
 
 
-class _BaseCondaParser(BaseParser):
+class _BaseCondaParser(BaseParser, metaclass=ABCMeta):
+    """Internal abstract parser - not for programmatic use.
     """
-    Internal abstract parser - not for programatic use.
 
-    """
     def __init__(self, conda_data: str):
         super().__init__()
         self._conda_packages: List[CondaPackage] = []
