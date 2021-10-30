@@ -38,16 +38,15 @@ class _BaseCondaParser(BaseParser):
         self._conda_packages_to_components()
 
     @abstractmethod
-    def _parse_to_conda_packages(self, data_str: str):
+    def _parse_to_conda_packages(self, data_str: str) -> None:
         """
-        Abstract method for implementation by concrete Conda Parsers
+        Abstract method for implementation by concrete Conda Parsers.
+
+        Implementation should add a `list` of `CondaPackage` instances to `self._conda_packages`
 
         Params:
             data_str:
                 `str` data passed into the Parser
-
-        Returns:
-            A `list` of `CondaPackage` instances parsed.
         """
         pass
 
@@ -74,7 +73,7 @@ class CondaListJsonParser(_BaseCondaParser):
     This parser is intended to receive the output from the command `conda list --json`.
     """
 
-    def _parse_to_conda_packages(self, data_str: str):
+    def _parse_to_conda_packages(self, data_str: str) -> None:
         conda_list_content = json.loads(data_str)
 
         for package in conda_list_content:
@@ -89,7 +88,7 @@ class CondaListExplicitParser(_BaseCondaParser):
     `conda list --explicit --md5`.
     """
 
-    def _parse_to_conda_packages(self, data_str: str):
+    def _parse_to_conda_packages(self, data_str: str) -> None:
         for line in data_str.replace('\r\n', '\n').split('\n'):
             line = line.strip()
             conda_package = parse_conda_list_str_to_conda_package(conda_list_str=line)
