@@ -15,6 +15,7 @@ test-reports
 
 # Exclude Python Virtual Environment
 venv/*
+.venv/*
 
 # Exlude IDE related files
 .idea/*
@@ -22,3 +23,6 @@ venv/*
 
 # pdoc3 HTML output
 html/
+
+# mypy caches
+/.mypy_cache
