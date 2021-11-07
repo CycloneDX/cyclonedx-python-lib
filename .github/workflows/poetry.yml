@@ -4,11 +4,11 @@ name: Python CI
 
 on:
   push:
-    branches: ["master"]
+    branches: ["master", "main"]
   pull_request:
   workflow_dispatch:
   schedule:
-    # schedule weekly tests, since dependencies are not intended to be pinned
+    # schedule weekly tests, since some dependencies are not intended to be pinned
     # this means: at 23:42 on Fridays
     - cron: '42 23 * * 5'
 
