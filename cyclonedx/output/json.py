@@ -59,7 +59,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             c['group'] = str(component.get_namespace())
 
         if component.get_hashes():
-            hashes: list[dict[str, str]]
+            hashes: list[dict[str, str]] = []
             for component_hash in component.get_hashes():
                 hashes.append({
                     "alg": component_hash.get_algorithm().value,
@@ -111,7 +111,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             "timestamp": bom_metadata.get_timestamp().isoformat()
         }
 
-        if self.bom_metadata_supports_tools() and len(bom_metadata.get_tools()) > 0:
+        if self.bom_metadata_supports_tools():
             tools: list[dict[str, Union[str, list[dict[str, str]]]]] = []
             for tool in bom_metadata.get_tools():
                 tool_dict: dict[str, Union[str, list[dict[str, str]]]] = {
@@ -128,8 +128,8 @@ class Json(BaseOutput, BaseSchemaVersion):
                             "content": tool_hash.get_hash_value()
                         })
                     tool_dict['hashes'] = hashes
-
-                metadata['tools'] = tools
+                tools.append(tool_dict)
+            metadata['tools'] = tools
 
         return metadata
 

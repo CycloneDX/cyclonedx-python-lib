@@ -19,7 +19,7 @@
 
 import datetime
 import sys
-from typing import List, Union
+from typing import List, Optional, Union
 from uuid import uuid4
 
 from . import HashType
@@ -102,11 +102,11 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
     """
 
-    def __init__(self, tools: List[Tool] = []) -> None:
+    def __init__(self, tools: Optional[List[Tool]] = None) -> None:
         self._timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
-        self._tools: List[Tool] = tools
-        if len(tools) == 0:
-            tools.append(ThisTool)
+        self._tools: List[Tool] = tools if tools else []
+        if len(self._tools) < 1:
+            self._tools.append(ThisTool)
 
     def add_tool(self, tool: Tool) -> None:
         """
@@ -172,7 +172,7 @@ class Bom:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
         self._uuid = uuid4()
-        self._metadata: BomMetaData = BomMetaData(tools=[])
+        self._metadata: BomMetaData = BomMetaData()
         self._components: List[Component] = []
 
     def add_component(self, component: Component) -> None:
