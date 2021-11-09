@@ -25,7 +25,7 @@ from cyclonedx.model.component import Component
 
 class TestEnvironmentParser(TestCase):
 
-    def test_simple(self):
+    def test_simple(self) -> None:
         """
         @todo This test is a vague as it will detect the unique environment where tests are being executed -
                 so is this valid?

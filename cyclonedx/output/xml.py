@@ -218,7 +218,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return bom
 
     @staticmethod
-    def _add_hashes_to_element(hashes: List[HashType], element: ElementTree.Element):
+    def _add_hashes_to_element(hashes: List[HashType], element: ElementTree.Element) -> None:
         hashes_e = ElementTree.SubElement(element, 'hashes')
         for h in hashes:
             ElementTree.SubElement(

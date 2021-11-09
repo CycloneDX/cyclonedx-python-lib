@@ -19,6 +19,7 @@
 
 from enum import Enum
 from os.path import exists
+
 from packageurl import PackageURL
 from typing import List
 
@@ -52,7 +53,7 @@ class Component:
     """
 
     @staticmethod
-    def for_file(absolute_file_path: str, path_for_bom: str = None):
+    def for_file(absolute_file_path: str, path_for_bom: str = None) -> 'Component':
         """
         Helper method to create a Component that represents the provided local file as a Component.
 
@@ -82,7 +83,7 @@ class Component:
 
     def __init__(self, name: str, version: str, namespace: str = None, qualifiers: str = None, subpath: str = None,
                  hashes: List[HashType] = None, author: str = None, description: str = None, license_str: str = None,
-                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi'):
+                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi') -> None:
         self._package_url_type = package_url_type
         self._namespace = namespace
         self._name = name
@@ -99,7 +100,7 @@ class Component:
         self._vulnerabilites: List[Vulnerability] = []
         self._external_references: List[ExternalReference] = []
 
-    def add_external_reference(self, reference: ExternalReference):
+    def add_external_reference(self, reference: ExternalReference) -> None:
         """
         Add an `ExternalReference` to this `Component`.
 
@@ -109,7 +110,7 @@ class Component:
         """
         self._external_references.append(reference)
 
-    def add_hash(self, a_hash: HashType):
+    def add_hash(self, a_hash: HashType) -> None:
         """
         Adds a hash that pins/identifies this Component.
 
@@ -119,7 +120,7 @@ class Component:
         """
         self._hashes.append(a_hash)
 
-    def add_vulnerability(self, vulnerability: Vulnerability):
+    def add_vulnerability(self, vulnerability: Vulnerability) -> None:
         """
         Add a Vulnerability to this Component.
 
@@ -252,7 +253,7 @@ class Component:
         """
         return len(self._vulnerabilites) != 0
 
-    def set_author(self, author: str):
+    def set_author(self, author: str) -> None:
         """
         Set the author of this Component.
 
@@ -265,7 +266,7 @@ class Component:
         """
         self._author = author
 
-    def set_description(self, description: str):
+    def set_description(self, description: str) -> None:
         """
         Set the description of this Component.
 
@@ -278,7 +279,7 @@ class Component:
         """
         self._description = description
 
-    def set_license(self, license_str: str):
+    def set_license(self, license_str: str) -> None:
         """
         Set the license for this Component.
 
@@ -307,8 +308,8 @@ class Component:
             subpath=self._subpath
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other: 'Component') -> bool:
         return other.get_purl() == self.get_purl()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<Component {}={}>'.format(self._name, self._version)

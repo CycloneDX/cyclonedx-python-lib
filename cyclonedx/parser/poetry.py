@@ -26,7 +26,7 @@ from ..model.component import Component
 
 class PoetryParser(BaseParser):
 
-    def __init__(self, poetry_lock_contents: str):
+    def __init__(self, poetry_lock_contents: str) -> None:
         super().__init__()
         poetry_lock = toml.loads(poetry_lock_contents)
 
@@ -50,7 +50,7 @@ class PoetryParser(BaseParser):
 
 class PoetryFileParser(PoetryParser):
 
-    def __init__(self, poetry_lock_filename: str):
+    def __init__(self, poetry_lock_filename: str) -> None:
         with open(poetry_lock_filename) as r:
             super(PoetryFileParser, self).__init__(poetry_lock_contents=r.read())
         r.close()

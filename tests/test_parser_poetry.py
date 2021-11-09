@@ -25,7 +25,7 @@ from cyclonedx.parser.poetry import PoetryFileParser
 
 class TestPoetryParser(TestCase):
 
-    def test_simple(self):
+    def test_simple(self) -> None:
         tests_poetry_lock_file = os.path.join(os.path.dirname(__file__), 'fixtures/poetry-lock-simple.txt')
 
         parser = PoetryFileParser(poetry_lock_filename=tests_poetry_lock_file)

@@ -32,8 +32,10 @@ import sys
 
 if sys.version_info >= (3, 8, 0):
     from importlib.metadata import metadata
+    import email
 else:
     from importlib_metadata import metadata
+    import email
 
 from . import BaseParser
 
@@ -47,7 +49,7 @@ class EnvironmentParser(BaseParser):
     Best used when you have virtual Python environments per project.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         import pkg_resources
@@ -71,7 +73,7 @@ class EnvironmentParser(BaseParser):
             self._components.append(c)
 
     @staticmethod
-    def _get_metadata_for_package(package_name: str):
+    def _get_metadata_for_package(package_name: str) -> email.message.Message:
         if sys.version_info >= (3, 8, 0):
             return metadata(package_name)
         else:

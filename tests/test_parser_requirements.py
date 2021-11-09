@@ -26,7 +26,7 @@ from cyclonedx.parser.requirements import RequirementsParser
 
 class TestRequirementsParser(TestCase):
 
-    def test_simple(self):
+    def test_simple(self) -> None:
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-simple.txt')) as r:
             parser = RequirementsParser(
                 requirements_content=r.read()
@@ -35,7 +35,7 @@ class TestRequirementsParser(TestCase):
         self.assertTrue(1, parser.component_count())
         self.assertFalse(parser.has_warnings())
 
-    def test_example_1(self):
+    def test_example_1(self) -> None:
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-example-1.txt')) as r:
             parser = RequirementsParser(
                 requirements_content=r.read()
@@ -44,7 +44,7 @@ class TestRequirementsParser(TestCase):
         self.assertTrue(3, parser.component_count())
         self.assertFalse(parser.has_warnings())
 
-    def test_example_with_comments(self):
+    def test_example_with_comments(self) -> None:
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-with-comments.txt')) as r:
             parser = RequirementsParser(
                 requirements_content=r.read()
@@ -53,7 +53,7 @@ class TestRequirementsParser(TestCase):
         self.assertTrue(5, parser.component_count())
         self.assertFalse(parser.has_warnings())
 
-    def test_example_multiline_with_comments(self):
+    def test_example_multiline_with_comments(self) -> None:
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-multilines-with-comments.txt')) as r:
             parser = RequirementsParser(
                 requirements_content=r.read()
@@ -63,7 +63,7 @@ class TestRequirementsParser(TestCase):
         self.assertFalse(parser.has_warnings())
 
     @unittest.skip('Not yet supported')
-    def test_example_with_hashes(self):
+    def test_example_with_hashes(self) -> None:
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-with-hashes.txt')) as r:
             parser = RequirementsParser(
                 requirements_content=r.read()
@@ -72,7 +72,7 @@ class TestRequirementsParser(TestCase):
         self.assertTrue(5, parser.component_count())
         self.assertFalse(parser.has_warnings())
 
-    def test_example_without_pinned_versions(self):
+    def test_example_without_pinned_versions(self) -> None:
         with open(os.path.join(os.path.dirname(__file__), 'fixtures/requirements-without-pinned-versions.txt')) as r:
             parser = RequirementsParser(
                 requirements_content=r.read()

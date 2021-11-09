@@ -25,7 +25,7 @@ from ..model.component import Component
 
 class RequirementsParser(BaseParser):
 
-    def __init__(self, requirements_content: str):
+    def __init__(self, requirements_content: str) -> None:
         super().__init__()
 
         requirements = pkg_resources.parse_requirements(requirements_content)
@@ -55,7 +55,7 @@ class RequirementsParser(BaseParser):
 
 class RequirementsFileParser(RequirementsParser):
 
-    def __init__(self, requirements_file: str):
+    def __init__(self, requirements_file: str) -> None:
         with open(requirements_file) as r:
             super(RequirementsFileParser, self).__init__(requirements_content=r.read())
             r.close()

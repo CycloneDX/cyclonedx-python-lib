@@ -45,20 +45,20 @@ DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 class BaseOutput(ABC):
     _bom: Bom
 
-    def __init__(self, bom: Bom = None):
+    def __init__(self, bom: Bom = None) -> None:
         self._bom = bom
 
     def get_bom(self) -> Bom:
         return self._bom
 
-    def set_bom(self, bom: Bom):
+    def set_bom(self, bom: Bom) -> None:
         self._bom = bom
 
     @abstractmethod
     def output_as_string(self) -> str:
         pass
 
-    def output_to_file(self, filename: str, allow_overwrite: bool = False):
+    def output_to_file(self, filename: str, allow_overwrite: bool = False) -> None:
         # Check directory writable
         output_filename = os.path.realpath(filename)
         output_directory = os.path.dirname(output_filename)

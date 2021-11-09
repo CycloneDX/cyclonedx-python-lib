@@ -29,7 +29,7 @@ from tests.base import BaseJsonTestCase
 
 class TestOutputJson(BaseJsonTestCase):
 
-    def test_simple_bom_v1_3(self):
+    def test_simple_bom_v1_3(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
@@ -38,7 +38,7 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
             expected_json.close()
 
-    def test_simple_bom_v1_2(self):
+    def test_simple_bom_v1_2(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_2)
@@ -47,7 +47,7 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
             expected_json.close()
 
-    def test_bom_v1_3_with_component_hashes(self):
+    def test_bom_v1_3_with_component_hashes(self) -> None:
         bom = Bom()
         c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
         c.add_hash(
@@ -60,7 +60,7 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()
 
-    def test_bom_v1_3_with_component_external_references(self):
+    def test_bom_v1_3_with_component_external_references(self) -> None:
         bom = Bom()
         c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
         c.add_hash(
@@ -85,7 +85,7 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()
 
-    def test_bom_v1_3_with_component_license(self):
+    def test_bom_v1_3_with_component_license(self) -> None:
         bom = Bom()
         c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
         c.set_license('MIT License')

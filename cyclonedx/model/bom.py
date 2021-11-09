@@ -37,7 +37,7 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, vendor: str, name: str, version: str, hashes: List[HashType] = []):
+    def __init__(self, vendor: str, name: str, version: str, hashes: List[HashType] = []) -> None:
         self._vendor = vendor
         self._name = name
         self._version = version
@@ -79,7 +79,7 @@ class Tool:
         """
         return self._version
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
 
 
@@ -102,13 +102,13 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
     """
 
-    def __init__(self, tools: List[Tool] = []):
+    def __init__(self, tools: List[Tool] = []) -> None:
         self._timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
         self._tools: List[Tool] = tools
         if len(tools) == 0:
             tools.append(ThisTool)
 
-    def add_tool(self, tool: Tool):
+    def add_tool(self, tool: Tool) -> None:
         """
         Add a Tool definition to this Bom Metadata. The `cyclonedx-python-lib` is automatically added - you do not need
         to add this yourself.
@@ -150,7 +150,7 @@ class Bom:
     """
 
     @staticmethod
-    def from_parser(parser: BaseParser):
+    def from_parser(parser: BaseParser) -> 'Bom':
         """
         Create a Bom instance from a Parser object.
 
@@ -164,7 +164,7 @@ class Bom:
         bom.add_components(parser.get_components())
         return bom
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -175,7 +175,7 @@ class Bom:
         self._metadata: BomMetaData = BomMetaData(tools=[])
         self._components: List[Component] = []
 
-    def add_component(self, component: Component):
+    def add_component(self, component: Component) -> None:
         """
         Add a Component to this Bom instance.
 
@@ -189,7 +189,7 @@ class Bom:
         if not self.has_component(component=component):
             self._components.append(component)
 
-    def add_components(self, components: List[Component]):
+    def add_components(self, components: List[Component]) -> None:
         """
         Add multiple Components at once to this Bom instance.
 

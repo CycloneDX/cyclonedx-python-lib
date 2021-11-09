@@ -6,7 +6,7 @@ from cyclonedx.model.component import Component, ComponentType
 
 class TestModelComponent(TestCase):
 
-    def test_empty_basic_component(self):
+    def test_empty_basic_component(self) -> None:
         c = Component(
             name='test-component', version='1.2.3'
         )
@@ -17,7 +17,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c.get_hashes()), 0)
         self.assertEqual(len(c.get_vulnerabilities()), 0)
 
-    def test_multiple_basic_components(self):
+    def test_multiple_basic_components(self) -> None:
         c1 = Component(
             name='test-component', version='1.2.3'
         )
@@ -38,7 +38,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c2.get_hashes()), 0)
         self.assertEqual(len(c2.get_vulnerabilities()), 0)
 
-    def test_external_references(self):
+    def test_external_references(self) -> None:
         c = Component(
             name='test-component', version='1.2.3'
         )

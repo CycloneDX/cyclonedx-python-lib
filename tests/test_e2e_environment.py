@@ -36,7 +36,7 @@ OUR_PACKAGE_AUTHOR: str = 'Paul Horton'
 
 class TestE2EEnvironment(TestCase):
 
-    def test_json_defaults(self):
+    def test_json_defaults(self) -> None:
         outputter: Json = get_instance(bom=Bom.from_parser(EnvironmentParser()), output_format=OutputFormat.JSON)
         bom_json = json.loads(outputter.output_as_string())
         component_this_library = next(
@@ -49,7 +49,7 @@ class TestE2EEnvironment(TestCase):
         self.assertEqual(component_this_library['name'], OUR_PACKAGE_NAME)
         self.assertEqual(component_this_library['version'], OUR_PACKAGE_VERSION)
 
-    def test_xml_defaults(self):
+    def test_xml_defaults(self) -> None:
         outputter: Xml = get_instance(bom=Bom.from_parser(EnvironmentParser()))
 
         # Check we have cyclonedx-python-lib with Author, Name and Version

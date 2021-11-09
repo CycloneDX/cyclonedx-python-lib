@@ -76,7 +76,7 @@ class HashType:
     """
 
     @staticmethod
-    def from_composite_str(composite_hash: str):
+    def from_composite_str(composite_hash: str) -> 'HashType':
         """
         Attempts to convert a string which includes both the Hash Algorithm and Hash Value and represent using our
         internal model classes.
@@ -105,7 +105,7 @@ class HashType:
             hash_value=parts[1].lower()
         )
 
-    def __init__(self, algorithm: HashAlgorithm, hash_value: str):
+    def __init__(self, algorithm: HashAlgorithm, hash_value: str) -> None:
         self._algorithm = algorithm
         self._value = hash_value
 
@@ -115,7 +115,7 @@ class HashType:
     def get_hash_value(self) -> str:
         return self._value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Hash {self._algorithm.value}:{self._value}>'
 
 
@@ -154,13 +154,13 @@ class ExternalReference:
     """
 
     def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = None,
-                 hashes: List[HashType] = None):
+                 hashes: List[HashType] = None) -> None:
         self._reference_type: ExternalReferenceType = reference_type
         self._url = url
         self._comment = comment
         self._hashes: List[HashType] = hashes if hashes else []
 
-    def add_hash(self, our_hash: HashType):
+    def add_hash(self, our_hash: HashType) -> None:
         """
         Adds a hash that pins/identifies this External Reference.
 
@@ -206,5 +206,5 @@ class ExternalReference:
         """
         return self._url
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<ExternalReference {self._reference_type.name}, {self._url}> {self._hashes}'
