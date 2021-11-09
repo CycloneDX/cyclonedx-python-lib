@@ -113,7 +113,7 @@ class HashType:
                 hash_value=parts[1].lower()
             )
 
-        raise UnknownHashTypeException
+        raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
     def __init__(self, algorithm: HashAlgorithm, hash_value: str) -> None:
         self._algorithm = algorithm

@@ -19,8 +19,6 @@
 Exceptions that are specific to the CycloneDX library implementation.
 """
 
-from abc import ABC
 
-
-class CycloneDxException(ABC):
+class CycloneDxException(Exception):
     pass
