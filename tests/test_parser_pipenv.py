@@ -31,6 +31,7 @@ class TestPipEnvParser(TestCase):
         parser = PipEnvFileParser(pipenv_lock_filename=tests_pipfile_lock)
         self.assertEqual(1, parser.component_count())
         components = parser.get_components()
+
         self.assertEqual('toml', components[0].get_name())
         self.assertEqual('0.10.2', components[0].get_version())
         self.assertEqual(len(components[0].get_external_references()), 2)

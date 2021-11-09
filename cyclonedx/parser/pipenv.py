@@ -17,6 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import json
+from typing import Any, Dict
 
 from . import BaseParser
 from ..model import ExternalReference, ExternalReferenceType, HashType
@@ -27,26 +28,25 @@ class PipEnvParser(BaseParser):
 
     def __init__(self, pipenv_contents: str):
         super().__init__()
+
         pipfile_lock_contents = json.loads(pipenv_contents)
+        pipfile_default: Dict[str, Dict[str, Any]] = pipfile_lock_contents.get('default') or {}
 
-        for package_name in pipfile_lock_contents['default'].keys():
-            package_data = pipfile_lock_contents['default'][package_name]
+        for (package_name, package_data) in pipfile_default.items():
             c = Component(
-                name=package_name, version=str(package_data['version']).strip('='),
+                name=package_name,
+                version=str(package_data.get('version') or 'unknown').lstrip('='),
             )
-
-            if 'index' in package_data.keys() and package_data['index'] == 'pypi':
+            if package_data.get('index') == 'pypi' and isinstance(package_data.get('hashes'), list):
                 # Add download location with hashes stored in Pipfile.lock
-                if 'hashes' in package_data.keys():
-                    for pip_hash in package_data['hashes']:
-
-                        ext_ref = ExternalReference(
-                            reference_type=ExternalReferenceType.DISTRIBUTION,
-                            url=c.get_pypi_url(),
-                            comment='Distribution available from pypi.org'
-                        )
-                        ext_ref.add_hash(HashType.from_composite_str(pip_hash))
-                        c.add_external_reference(ext_ref)
+                for pip_hash in package_data['hashes']:
+                    ext_ref = ExternalReference(
+                        reference_type=ExternalReferenceType.DISTRIBUTION,
+                        url=c.get_pypi_url(),
+                        comment='Distribution available from pypi.org'
+                    )
+                    ext_ref.add_hash(HashType.from_composite_str(pip_hash))
+                    c.add_external_reference(ext_ref)
 
             self._components.append(c)
 
@@ -56,4 +56,3 @@ class PipEnvFileParser(PipEnvParser):
     def __init__(self, pipenv_lock_filename: str):
         with open(pipenv_lock_filename) as r:
             super(PipEnvFileParser, self).__init__(pipenv_contents=r.read())
-        r.close()
