@@ -41,7 +41,7 @@ class CondaPackage(TypedDict):
     name: str
     platform: str
     version: str
-    md5_hash: str
+    md5_hash: Union[str, None]
 
 
 def parse_conda_json_to_conda_package(conda_json_str: str) -> Union[CondaPackage, None]:
@@ -78,7 +78,7 @@ def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Union[CondaPac
         return None
 
     # Remove any hash
-    package_hash: str
+    package_hash = None
     if '#' in line:
         hash_parts = line.split('#')
         if len(hash_parts) > 1:

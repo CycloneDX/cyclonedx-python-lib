@@ -19,9 +19,9 @@
 
 from enum import Enum
 from os.path import exists
-
-from packageurl import PackageURL
-from typing import List
+# See https://github.com/package-url/packageurl-python/issues/65
+from packageurl import PackageURL  # type: ignore
+from typing import List, Union
 
 from . import ExternalReference, HashAlgorithm, HashType, sha1sum
 from .vulnerability import Vulnerability
@@ -81,9 +81,11 @@ class Component:
             package_url_type='generic'
         )
 
-    def __init__(self, name: str, version: str, namespace: str = "", qualifiers: str = "", subpath: str = "",
-                 hashes: List[HashType] = "", author: str = "", description: str = "", license_str: str = "",
-                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi') -> None:
+    def __init__(self, name: str, version: str, namespace: Union[str, None] = None, qualifiers: Union[str, None] = None,
+                 subpath: Union[str, None] = None, hashes: Union[List[HashType], None] = None,
+                 author: Union[str, None] = None, description: Union[str, None] = None,
+                 license_str: Union[str, None] = None, component_type: ComponentType = ComponentType.LIBRARY,
+                 package_url_type: str = 'pypi') -> None:
         self._package_url_type = package_url_type
         self._namespace = namespace
         self._name = name
@@ -203,7 +205,7 @@ class Component:
         Returns:
             PackageURL or 'PURL' that reflects this Component as `str`.
         """
-        return self.to_package_url().to_string()
+        return str(self.to_package_url().to_string())
 
     def get_pypi_url(self) -> str:
         return f'https://pypi.org/project/{self.get_name()}/{self.get_version()}'
@@ -308,8 +310,11 @@ class Component:
             subpath=self._subpath
         )
 
-    def __eq__(self, other: 'Component') -> bool:
-        return other.get_purl() == self.get_purl()
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Component):
+            return other.get_purl() == self.get_purl()
+        else:
+            raise NotImplemented
 
     def __repr__(self) -> str:
         return '<Component {}={}>'.format(self._name, self._version)

@@ -164,11 +164,11 @@ class ExternalReference:
     """
 
     def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = '',
-                 hashes: List[HashType] = []) -> None:
+                 hashes: Union[List[HashType], None] = None) -> None:
         self._reference_type: ExternalReferenceType = reference_type
         self._url = url
         self._comment = comment
-        self._hashes: List[HashType] = hashes
+        self._hashes: List[HashType] = hashes if hashes else []
 
     def add_hash(self, our_hash: HashType) -> None:
         """
