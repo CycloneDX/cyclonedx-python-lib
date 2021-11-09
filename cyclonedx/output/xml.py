@@ -17,14 +17,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import List
+from typing import cast, List
+from urllib.parse import ParseResult
 from xml.etree import ElementTree
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
 from ..model import HashType
 from ..model.component import Component
-from ..model.vulnerability import Vulnerability, VulnerabilityRating
+from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilitySourceType
 
 
 class Xml(BaseOutput, BaseSchemaVersion):
@@ -137,10 +138,12 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # source
         if vulnerability.get_source_name():
             source_element = ElementTree.SubElement(
-                vulnerability_element, 'v:source', attrib={'name': vulnerability.get_source_name()}
+                vulnerability_element, 'v:source', attrib={'name': str(vulnerability.get_source_name())}
             )
             if vulnerability.get_source_url():
-                ElementTree.SubElement(source_element, 'v:url').text = vulnerability.get_source_url().geturl()
+                ElementTree.SubElement(source_element, 'v:url').text = str(
+                    cast(ParseResult, vulnerability.get_source_url()).geturl()
+                )
 
         # ratings
         if vulnerability.has_ratings():
@@ -162,11 +165,15 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
                 # rating.severity
                 if rating.get_severity():
-                    ElementTree.SubElement(rating_element, 'v:severity').text = rating.get_severity().value
+                    ElementTree.SubElement(rating_element, 'v:severity').text = cast(
+                        VulnerabilitySeverity, rating.get_severity()
+                    ).value
 
                 # rating.severity
                 if rating.get_method():
-                    ElementTree.SubElement(rating_element, 'v:method').text = rating.get_method().value
+                    ElementTree.SubElement(rating_element, 'v:method').text = cast(
+                        VulnerabilitySourceType, rating.get_method()
+                    ).value
 
                 # rating.vector
                 if rating.get_vector():

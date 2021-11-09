@@ -29,7 +29,7 @@ from typing import Any
 if sys.version_info >= (3, 8, 0):
     from importlib.metadata import version
 else:
-    from importlib_metadata import version
+    from importlib_metadata import version  # type: ignore
 
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
 cyclonedx_lib_version: str = version(cyclonedx_lib_name)

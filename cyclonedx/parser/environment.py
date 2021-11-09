@@ -29,12 +29,13 @@ The Environment Parsers support population of the following data about Component
 """
 
 import sys
+from pkg_resources import DistInfoDistribution  # type: ignore
 
 if sys.version_info >= (3, 8, 0):
     from importlib.metadata import metadata
     import email
 else:
-    from importlib_metadata import metadata
+    from importlib_metadata import metadata  # type: ignore
     import email
 
 from . import BaseParser
@@ -54,7 +55,7 @@ class EnvironmentParser(BaseParser):
 
         import pkg_resources
 
-        i: pkg_resources.DistInfoDistribution
+        i: DistInfoDistribution
         for i in iter(pkg_resources.working_set):
             c = Component(name=i.project_name, version=i.version)
 
