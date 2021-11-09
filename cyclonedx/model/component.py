@@ -94,9 +94,9 @@ class Component:
         self._qualifiers = qualifiers
         self._subpath = subpath
 
-        self._author: str = author
-        self._description: str = description
-        self._license: str = license_str
+        self._author: Union[str, None] = author
+        self._description: Union[str, None] = description
+        self._license: Union[str, None] = license_str
 
         self._hashes: List[HashType] = hashes if hashes else []
         self._vulnerabilites: List[Vulnerability] = []
@@ -135,21 +135,21 @@ class Component:
         """
         self._vulnerabilites.append(vulnerability)
 
-    def get_author(self) -> str:
+    def get_author(self) -> Union[str, None]:
         """
         Get the author of this Component.
 
         Returns:
-            Declared author of this Component as `str`.
+            Declared author of this Component as `str` if set, else `None`.
         """
         return self._author
 
-    def get_description(self) -> str:
+    def get_description(self) -> Union[str, None]:
         """
         Get the description of this Component.
 
         Returns:
-            Declared description of this Component as `str`.
+            Declared description of this Component as `str` if set, else `None`.
         """
         return self._description
 
@@ -171,12 +171,12 @@ class Component:
         """
         return self._hashes
 
-    def get_license(self) -> str:
+    def get_license(self) -> Union[str, None]:
         """
         Get the license of this Component.
 
         Returns:
-            Declared license of this Component as `str`.
+            Declared license of this Component as `str` if set, else `None`.
         """
         return self._license
 
@@ -189,7 +189,7 @@ class Component:
         """
         return self._name
 
-    def get_namespace(self) -> str:
+    def get_namespace(self) -> Union[str, None]:
         """
         Get the namespace of this Component.
 
@@ -210,7 +210,7 @@ class Component:
     def get_pypi_url(self) -> str:
         return f'https://pypi.org/project/{self.get_name()}/{self.get_version()}'
 
-    def get_subpath(self) -> str:
+    def get_subpath(self) -> Union[str, None]:
         """
         Get the subpath of this Component.
 
