@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class BaseSchemaVersion(ABC):
@@ -37,8 +37,9 @@ class BaseSchemaVersion(ABC):
     def component_supports_external_references(self) -> bool:
         return True
 
+    @abstractmethod
     def get_schema_version(self) -> str:
-        pass
+        raise NotImplementedError
 
 
 class SchemaVersion1Dot3(BaseSchemaVersion):
