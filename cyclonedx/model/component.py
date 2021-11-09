@@ -53,7 +53,7 @@ class Component:
     """
 
     @staticmethod
-    def for_file(absolute_file_path: str, path_for_bom: str = None) -> 'Component':
+    def for_file(absolute_file_path: str, path_for_bom: str = "") -> 'Component':
         """
         Helper method to create a Component that represents the provided local file as a Component.
 
@@ -81,8 +81,8 @@ class Component:
             package_url_type='generic'
         )
 
-    def __init__(self, name: str, version: str, namespace: str = None, qualifiers: str = None, subpath: str = None,
-                 hashes: List[HashType] = None, author: str = None, description: str = None, license_str: str = None,
+    def __init__(self, name: str, version: str, namespace: str = "", qualifiers: str = "", subpath: str = "",
+                 hashes: List[HashType] = "", author: str = "", description: str = "", license_str: str = "",
                  component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi') -> None:
         self._package_url_type = package_url_type
         self._namespace = namespace

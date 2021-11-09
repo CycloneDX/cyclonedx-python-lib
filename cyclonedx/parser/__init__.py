@@ -96,6 +96,10 @@ class BaseParser(ABC):
     _warnings: List[ParserWarning] = []
 
     def __init__(self) -> None:
+        """
+
+        :rtype: object
+        """
         self._components.clear()
         self._warnings.clear()
 

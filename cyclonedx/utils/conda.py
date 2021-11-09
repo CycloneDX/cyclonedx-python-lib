@@ -48,7 +48,6 @@ def parse_conda_json_to_conda_package(conda_json_str: str) -> Union[CondaPackage
     try:
         package_data = json.loads(conda_json_str)
     except JSONDecodeError:
-        print(f'Failed to decode JSON: {conda_json_str}')
         raise ValueError(f'Invalid JSON supplied - cannot be parsed: {conda_json_str}')
 
     if 'md5_hash' not in package_data.keys():
@@ -79,7 +78,7 @@ def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Union[CondaPac
         return None
 
     # Remove any hash
-    package_hash: str = None
+    package_hash: str
     if '#' in line:
         hash_parts = line.split('#')
         if len(hash_parts) > 1:
@@ -107,7 +106,7 @@ def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Union[CondaPac
             else:
                 raise ValueError(f'Unexpected build version string for Conda Package: {conda_list_str}')
         else:
-            build_string = None
+            build_string = ''
             build_number = int(build_number_with_opt_string)
 
         build_version = package_nvbs_parts.pop()

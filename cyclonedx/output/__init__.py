@@ -45,7 +45,7 @@ DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 class BaseOutput(ABC):
     _bom: Bom
 
-    def __init__(self, bom: Bom = None) -> None:
+    def __init__(self, bom: Bom) -> None:
         self._bom = bom
 
     def get_bom(self) -> Bom:
@@ -75,7 +75,7 @@ class BaseOutput(ABC):
         f_out.close()
 
 
-def get_instance(bom: Bom = None, output_format: OutputFormat = OutputFormat.XML,
+def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = DEFAULT_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.

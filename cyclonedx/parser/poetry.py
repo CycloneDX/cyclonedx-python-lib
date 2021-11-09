@@ -17,9 +17,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import toml
+from toml import loads as load_toml
 
 from . import BaseParser
+from ..exception.parser import UnknownHashTypeException
 from ..model import ExternalReference, ExternalReferenceType, HashType
 from ..model.component import Component
 
@@ -28,7 +29,7 @@ class PoetryParser(BaseParser):
 
     def __init__(self, poetry_lock_contents: str) -> None:
         super().__init__()
-        poetry_lock = toml.loads(poetry_lock_contents)
+        poetry_lock = load_toml(poetry_lock_contents)
 
         for package in poetry_lock['package']:
             component = Component(
@@ -36,14 +37,16 @@ class PoetryParser(BaseParser):
             )
 
             for file_metadata in poetry_lock['metadata']['files'][package['name']]:
-                component.add_external_reference(ExternalReference(
-                    reference_type=ExternalReferenceType.DISTRIBUTION,
-                    url=component.get_pypi_url(),
-                    comment=f'Distribution file: {file_metadata["file"]}',
-                    hashes=[
-                        HashType.from_composite_str(file_metadata['hash'])
-                    ]
-                ))
+                try:
+                    component.add_external_reference(ExternalReference(
+                        reference_type=ExternalReferenceType.DISTRIBUTION,
+                        url=component.get_pypi_url(),
+                        comment=f'Distribution file: {file_metadata["file"]}',
+                        hashes=[HashType.from_composite_str(file_metadata['hash'])]
+                    ))
+                except UnknownHashTypeException:
+                    # @todo add logging for this type of exception?
+                    pass
 
             self._components.append(component)
 
