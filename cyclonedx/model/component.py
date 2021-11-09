@@ -313,7 +313,7 @@ class Component:
         if isinstance(other, Component):
             return other.get_purl() == self.get_purl()
         else:
-            raise NotImplemented
+            raise NotImplementedError
 
     def __repr__(self) -> str:
         return f'<Component {self._name}={self._version}>'
