@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.1 (2021-11-10)
+### Fix
+* Constructor for `Vulnerability` to correctly define `ratings` as optional ([`395a0ec`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/395a0ec14ebcba8e0849a0ced30ec4163c42fa7a))
+
 ## v0.11.0 (2021-11-10)
 ### Feature
 * Typing & PEP 561 ([`9144765`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/91447656c0914ceb2af2e4b7282292ec7b93f5bf))
