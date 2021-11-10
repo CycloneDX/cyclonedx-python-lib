@@ -21,7 +21,8 @@ import json
 from typing import Union
 
 from . import BaseOutput
-from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
+from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
+    SchemaVersion1Dot4
 from ..model.component import Component
 
 
@@ -147,4 +148,8 @@ class JsonV1Dot2(Json, SchemaVersion1Dot2):
 
 
 class JsonV1Dot3(Json, SchemaVersion1Dot3):
+    pass
+
+
+class JsonV1Dot4(Json, SchemaVersion1Dot4):
     pass

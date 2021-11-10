@@ -22,7 +22,8 @@ from urllib.parse import ParseResult
 from xml.etree import ElementTree
 
 from . import BaseOutput
-from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
+from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
+    SchemaVersion1Dot4
 from ..model import HashType
 from ..model.component import Component
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilitySourceType
@@ -248,4 +249,8 @@ class XmlV1Dot2(Xml, SchemaVersion1Dot2):
 
 
 class XmlV1Dot3(Xml, SchemaVersion1Dot3):
+    pass
+
+
+class XmlV1Dot4(Xml, SchemaVersion1Dot4):
     pass

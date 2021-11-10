@@ -42,6 +42,12 @@ class BaseSchemaVersion(ABC):
         raise NotImplementedError
 
 
+class SchemaVersion1Dot4(BaseSchemaVersion):
+
+    def get_schema_version(self) -> str:
+        return '1.4'
+
+
 class SchemaVersion1Dot3(BaseSchemaVersion):
 
     def get_schema_version(self) -> str:

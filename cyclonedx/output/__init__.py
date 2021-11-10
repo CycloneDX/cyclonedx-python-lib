@@ -38,6 +38,7 @@ class SchemaVersion(Enum):
     V1_1: str = 'V1Dot1'
     V1_2: str = 'V1Dot2'
     V1_3: str = 'V1Dot3'
+    V1_4: str = 'V1Dot4'
 
 
 DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
