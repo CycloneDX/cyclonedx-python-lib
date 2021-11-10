@@ -23,7 +23,7 @@ import importlib
 import os
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import cast, Union
+from typing import cast, Optional
 
 from ..model.bom import Bom
 
@@ -76,7 +76,7 @@ class BaseOutput(ABC):
         f_out.close()
 
 
-def get_instance(bom: Union[Bom, None] = None, output_format: OutputFormat = OutputFormat.XML,
+def get_instance(bom: Optional[Bom] = None, output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = DEFAULT_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.

@@ -19,7 +19,7 @@
 
 import datetime
 import sys
-from typing import List, Optional, Union
+from typing import List, Optional
 from uuid import uuid4
 
 from . import HashType
@@ -37,11 +37,11 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, vendor: str, name: str, version: str, hashes: List[HashType] = []) -> None:
+    def __init__(self, vendor: str, name: str, version: str, hashes: Optional[List[HashType]] = None) -> None:
         self._vendor = vendor
         self._name = name
         self._version = version
-        self._hashes: List[HashType] = hashes
+        self._hashes: List[HashType] = hashes or []
 
     def get_hashes(self) -> List[HashType]:
         """
@@ -211,7 +211,7 @@ class Bom:
         """
         return len(self._components)
 
-    def get_component_by_purl(self, purl: str) -> Union[Component, None]:
+    def get_component_by_purl(self, purl: str) -> Optional[Component]:
         """
         Get a Component already in the Bom by it's PURL
 

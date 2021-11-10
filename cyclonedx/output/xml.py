@@ -218,9 +218,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 ElementTree.SubElement(tool_e, 'version').text = tool.get_version()
                 if len(tool.get_hashes()) > 0:
                     hashes_e = ElementTree.SubElement(tool_e, 'hashes')
-                    for hash in tool.get_hashes():
+                    for hash_ in tool.get_hashes():
                         ElementTree.SubElement(hashes_e, 'hash',
-                                               {'alg': hash.get_algorithm().value}).text = hash.get_hash_value()
+                                               {'alg': hash_.get_algorithm().value}).text = hash_.get_hash_value()
 
         return bom
 
