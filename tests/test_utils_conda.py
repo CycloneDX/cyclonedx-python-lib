@@ -107,3 +107,20 @@ class TestUtilsConda(TestCase):
         self.assertEqual(cp['platform'], 'noarch')
         self.assertEqual(cp['version'], '2.10')
         self.assertEqual(cp['md5_hash'], '153ff132f593ea80aae2eea61a629c92')
+
+    def test_parse_conda_list_str_with_hash_4(self):
+        cp: CondaPackage = parse_conda_list_str_to_conda_package(
+            conda_list_str='https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2'
+                           '#d7c89558ba9fa0495403155b64376d81'
+        )
+
+        self.assertIsInstance(cp, dict)
+        self.assertEqual(cp['base_url'], 'https://conda.anaconda.org/conda-forge')
+        self.assertIsNone(cp['build_number'])
+        self.assertEqual(cp['build_string'], 'conda_forge')
+        self.assertEqual(cp['channel'], 'conda-forge')
+        self.assertEqual(cp['dist_name'], '_libgcc_mutex-0.1-conda_forge')
+        self.assertEqual(cp['name'], '_libgcc_mutex')
+        self.assertEqual(cp['platform'], 'linux-64')
+        self.assertEqual(cp['version'], '0.1')
+        self.assertEqual(cp['md5_hash'], 'd7c89558ba9fa0495403155b64376d81')
