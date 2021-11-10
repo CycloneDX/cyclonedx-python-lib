@@ -34,7 +34,7 @@ class CondaPackage(TypedDict):
     Internal package for unifying Conda package definitions to.
     """
     base_url: str
-    build_number: int
+    build_number: Optional[int]
     build_string: str
     channel: str
     dist_name: str

@@ -108,7 +108,7 @@ class TestUtilsConda(TestCase):
         self.assertEqual(cp['version'], '2.10')
         self.assertEqual(cp['md5_hash'], '153ff132f593ea80aae2eea61a629c92')
 
-    def test_parse_conda_list_str_with_hash_4(self):
+    def test_parse_conda_list_str_with_hash_4(self) -> None:
         cp: CondaPackage = parse_conda_list_str_to_conda_package(
             conda_list_str='https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2'
                            '#d7c89558ba9fa0495403155b64376d81'
