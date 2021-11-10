@@ -41,7 +41,7 @@ class TestComponent(TestCase):
             namespace='name-space', name='setuptools', version='50.0.1', qualifiers='extension=whl'
         )
 
-    def test_purl_correct(self):
+    def test_purl_correct(self) -> None:
         self.assertEqual(
             str(PackageURL(
                 type='pypi', name='setuptools', version='50.3.2'
@@ -49,7 +49,7 @@ class TestComponent(TestCase):
             TestComponent._component.get_purl()
         )
 
-    def test_purl_incorrect_version(self):
+    def test_purl_incorrect_version(self) -> None:
         purl = PackageURL(
             type='pypi', name='setuptools', version='50.3.1'
         )
@@ -61,7 +61,7 @@ class TestComponent(TestCase):
         self.assertEqual(purl.name, 'setuptools')
         self.assertEqual(purl.version, '50.3.1')
 
-    def test_purl_incorrect_name(self):
+    def test_purl_incorrect_name(self) -> None:
         purl = PackageURL(
             type='pypi', name='setuptoolz', version='50.3.2'
         )
@@ -73,7 +73,7 @@ class TestComponent(TestCase):
         self.assertEqual(purl.name, 'setuptoolz')
         self.assertEqual(purl.version, '50.3.2')
 
-    def test_purl_with_qualifiers(self):
+    def test_purl_with_qualifiers(self) -> None:
         purl = PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         )
@@ -87,31 +87,31 @@ class TestComponent(TestCase):
         )
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
 
-    def test_as_package_url_1(self):
+    def test_as_package_url_1(self) -> None:
         purl = PackageURL(
             type='pypi', name='setuptools', version='50.3.2'
         )
         self.assertEqual(TestComponent._component.to_package_url(), purl)
 
-    def test_as_package_url_2(self):
+    def test_as_package_url_2(self) -> None:
         purl = PackageURL(
             type='pypi', name='setuptools', version='50.3.1'
         )
         self.assertNotEqual(TestComponent._component.to_package_url(), purl)
 
-    def test_as_package_url_3(self):
+    def test_as_package_url_3(self) -> None:
         purl = PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         )
         self.assertEqual(TestComponent._component_with_qualifiers.to_package_url(), purl)
 
-    def test_custom_package_url_type(self):
+    def test_custom_package_url_type(self) -> None:
         purl = PackageURL(
             type='generic', name='/test.py', version='UNKNOWN'
         )
         self.assertEqual(TestComponent._component_generic_file.to_package_url(), purl)
 
-    def test_from_file_with_path_for_bom(self):
+    def test_from_file_with_path_for_bom(self) -> None:
         test_file = join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_v1.3_setuptools.xml')
         self.assertEqual(c.get_name(), 'fixtures/bom_v1.3_setuptools.xml')
@@ -122,7 +122,7 @@ class TestComponent(TestCase):
         self.assertEqual(c.to_package_url(), purl)
         self.assertEqual(len(c.get_hashes()), 1)
 
-    def test_has_component_1(self):
+    def test_has_component_1(self) -> None:
         bom = Bom()
         bom.add_component(component=TestComponent._component)
         bom.add_component(component=TestComponent._component_2)
@@ -130,7 +130,7 @@ class TestComponent(TestCase):
         self.assertTrue(bom.has_component(component=TestComponent._component_2))
         self.assertIsNot(TestComponent._component, TestComponent._component_2)
 
-    def test_get_component_by_purl_1(self):
+    def test_get_component_by_purl_1(self) -> None:
         bom = Bom()
         bom.add_component(component=TestComponent._component)
         bom.add_component(component=TestComponent._component_2)
@@ -142,7 +142,7 @@ class TestComponent(TestCase):
             TestComponent._component_2
         )
 
-    def test_full_purl_spec_no_subpath(self):
+    def test_full_purl_spec_no_subpath(self) -> None:
         self.assertEqual(
             TestComponent._component_purl_spec_no_subpath.get_purl(),
             'pkg:pypi/name-space/setuptools@50.0.1?extension=whl'

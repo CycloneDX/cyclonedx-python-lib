@@ -23,7 +23,7 @@ from cyclonedx.utils.conda import parse_conda_json_to_conda_package, parse_conda
 
 class TestUtilsConda(TestCase):
 
-    def test_parse_conda_json_no_hash(self):
+    def test_parse_conda_json_no_hash(self) -> None:
         cp: CondaPackage = parse_conda_json_to_conda_package(
             conda_json_str='{"base_url": "https://repo.anaconda.com/pkgs/main","build_number": 1003,"build_string": '
                            '"py39hecd8cb5_1003","channel": "pkgs/main","dist_name": "chardet-4.0.0-py39hecd8cb5_1003",'
@@ -41,7 +41,7 @@ class TestUtilsConda(TestCase):
         self.assertEqual(cp['version'], '4.0.0')
         self.assertIsNone(cp['md5_hash'])
 
-    def test_parse_conda_list_str_no_hash(self):
+    def test_parse_conda_list_str_no_hash(self) -> None:
         cp: CondaPackage = parse_conda_list_str_to_conda_package(
             conda_list_str='https://repo.anaconda.com/pkgs/main/osx-64/chardet-4.0.0-py39hecd8cb5_1003.conda'
         )
@@ -57,7 +57,7 @@ class TestUtilsConda(TestCase):
         self.assertEqual(cp['version'], '4.0.0')
         self.assertIsNone(cp['md5_hash'])
 
-    def test_parse_conda_list_str_with_hash_1(self):
+    def test_parse_conda_list_str_with_hash_1(self) -> None:
         cp: CondaPackage = parse_conda_list_str_to_conda_package(
             conda_list_str='https://repo.anaconda.com/pkgs/main/noarch/tzdata-2021a-h52ac0ba_0.conda'
                            '#d42e4db918af84a470286e4c300604a3'
@@ -74,7 +74,7 @@ class TestUtilsConda(TestCase):
         self.assertEqual(cp['version'], '2021a')
         self.assertEqual(cp['md5_hash'], 'd42e4db918af84a470286e4c300604a3')
 
-    def test_parse_conda_list_str_with_hash_2(self):
+    def test_parse_conda_list_str_with_hash_2(self) -> None:
         cp: CondaPackage = parse_conda_list_str_to_conda_package(
             conda_list_str='https://repo.anaconda.com/pkgs/main/osx-64/ca-certificates-2021.7.5-hecd8cb5_1.conda'
                            '#c2d0ae65c08dacdcf86770b7b5bbb187'
@@ -91,7 +91,7 @@ class TestUtilsConda(TestCase):
         self.assertEqual(cp['version'], '2021.7.5')
         self.assertEqual(cp['md5_hash'], 'c2d0ae65c08dacdcf86770b7b5bbb187')
 
-    def test_parse_conda_list_str_with_hash_3(self):
+    def test_parse_conda_list_str_with_hash_3(self) -> None:
         cp: CondaPackage = parse_conda_list_str_to_conda_package(
             conda_list_str='https://repo.anaconda.com/pkgs/main/noarch/idna-2.10-pyhd3eb1b0_0.tar.bz2'
                            '#153ff132f593ea80aae2eea61a629c92'

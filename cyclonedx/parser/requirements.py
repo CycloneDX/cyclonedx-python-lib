@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import pkg_resources
+from pkg_resources import parse_requirements as parse_requirements
 
 from . import BaseParser, ParserWarning
 from ..model.component import Component
@@ -25,10 +25,10 @@ from ..model.component import Component
 
 class RequirementsParser(BaseParser):
 
-    def __init__(self, requirements_content: str):
+    def __init__(self, requirements_content: str) -> None:
         super().__init__()
 
-        requirements = pkg_resources.parse_requirements(requirements_content)
+        requirements = parse_requirements(requirements_content)
         for requirement in requirements:
             """
             @todo
@@ -55,7 +55,7 @@ class RequirementsParser(BaseParser):
 
 class RequirementsFileParser(RequirementsParser):
 
-    def __init__(self, requirements_file: str):
+    def __init__(self, requirements_file: str) -> None:
         with open(requirements_file) as r:
             super(RequirementsFileParser, self).__init__(requirements_content=r.read())
             r.close()

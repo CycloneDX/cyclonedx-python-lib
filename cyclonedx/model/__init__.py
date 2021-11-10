@@ -19,6 +19,8 @@ import hashlib
 from enum import Enum
 from typing import List, Union
 
+from ..exception.parser import UnknownHashTypeException
+
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
 
@@ -69,14 +71,14 @@ class HashAlgorithm(Enum):
 
 class HashType:
     """
-    This is out internal representation of the hashType complex type within the CycloneDX standard.
+    This is our internal representation of the hashType complex type within the CycloneDX standard.
 
     .. note::
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.3/#type_hashType
     """
 
     @staticmethod
-    def from_composite_str(composite_hash: str):
+    def from_composite_str(composite_hash: str) -> 'HashType':
         """
         Attempts to convert a string which includes both the Hash Algorithm and Hash Value and represent using our
         internal model classes.
@@ -86,26 +88,34 @@ class HashType:
                 Composite Hash string of the format `HASH_ALGORITHM`:`HASH_VALUE`.
                 Example: `sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b`.
 
+        Raises:
+            `UnknownHashTypeException` if the type of hash cannot be determined.
+
         Returns:
-            An instance of `HashType` when possible, else `None`.
+            An instance of `HashType`.
         """
-        algorithm = None
         parts = composite_hash.split(':')
 
         algorithm_prefix = parts[0].lower()
         if algorithm_prefix == 'md5':
-            algorithm = HashAlgorithm.MD5
+            return HashType(
+                algorithm=HashAlgorithm.MD5,
+                hash_value=parts[1].lower()
+            )
         elif algorithm_prefix[0:3] == 'sha':
-            algorithm = getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:]))
+            return HashType(
+                algorithm=getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:])),
+                hash_value=parts[1].lower()
+            )
         elif algorithm_prefix[0:6] == 'blake2':
-            algorithm = getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:]))
+            return HashType(
+                algorithm=getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:])),
+                hash_value=parts[1].lower()
+            )
 
-        return HashType(
-            algorithm=algorithm,
-            hash_value=parts[1].lower()
-        )
+        raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
-    def __init__(self, algorithm: HashAlgorithm, hash_value: str):
+    def __init__(self, algorithm: HashAlgorithm, hash_value: str) -> None:
         self._algorithm = algorithm
         self._value = hash_value
 
@@ -115,7 +125,7 @@ class HashType:
     def get_hash_value(self) -> str:
         return self._value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Hash {self._algorithm.value}:{self._value}>'
 
 
@@ -153,14 +163,14 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = None,
-                 hashes: List[HashType] = None):
+    def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = '',
+                 hashes: Union[List[HashType], None] = None) -> None:
         self._reference_type: ExternalReferenceType = reference_type
         self._url = url
         self._comment = comment
         self._hashes: List[HashType] = hashes if hashes else []
 
-    def add_hash(self, our_hash: HashType):
+    def add_hash(self, our_hash: HashType) -> None:
         """
         Adds a hash that pins/identifies this External Reference.
 
@@ -206,5 +216,5 @@ class ExternalReference:
         """
         return self._url
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<ExternalReference {self._reference_type.name}, {self._url}> {self._hashes}'

@@ -25,7 +25,7 @@ from cyclonedx.parser.pipenv import PipEnvFileParser
 
 class TestPipEnvParser(TestCase):
 
-    def test_simple(self):
+    def test_simple(self) -> None:
         tests_pipfile_lock = os.path.join(os.path.dirname(__file__), 'fixtures/pipfile-lock-simple.txt')
 
         parser = PipEnvFileParser(pipenv_lock_filename=tests_pipfile_lock)
@@ -37,7 +37,7 @@ class TestPipEnvParser(TestCase):
         self.assertEqual(len(components[0].get_external_references()), 2)
         self.assertEqual(len(components[0].get_external_references()[0].get_hashes()), 1)
 
-    def test_with_multiple_and_no_index(self):
+    def test_with_multiple_and_no_index(self) -> None:
         tests_pipfile_lock = os.path.join(os.path.dirname(__file__), 'fixtures/pipfile-lock-no-index-example.txt')
 
         parser = PipEnvFileParser(pipenv_lock_filename=tests_pipfile_lock)

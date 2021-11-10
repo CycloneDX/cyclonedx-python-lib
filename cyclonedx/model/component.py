@@ -19,8 +19,10 @@
 
 from enum import Enum
 from os.path import exists
-from packageurl import PackageURL
-from typing import List
+from typing import List, Optional
+
+# See https://github.com/package-url/packageurl-python/issues/65
+from packageurl import PackageURL  # type: ignore
 
 from . import ExternalReference, HashAlgorithm, HashType, sha1sum
 from .vulnerability import Vulnerability
@@ -52,7 +54,7 @@ class Component:
     """
 
     @staticmethod
-    def for_file(absolute_file_path: str, path_for_bom: str = None):
+    def for_file(absolute_file_path: str, path_for_bom: Optional[str]) -> 'Component':
         """
         Helper method to create a Component that represents the provided local file as a Component.
 
@@ -69,7 +71,6 @@ class Component:
             raise FileExistsError('Supplied file path \'{}\' does not exist'.format(absolute_file_path))
 
         sha1_hash: str = sha1sum(filename=absolute_file_path)
-
         return Component(
             name=path_for_bom if path_for_bom else absolute_file_path,
             version='0.0.0-{}'.format(sha1_hash[0:12]),
@@ -80,26 +81,27 @@ class Component:
             package_url_type='generic'
         )
 
-    def __init__(self, name: str, version: str, namespace: str = None, qualifiers: str = None, subpath: str = None,
-                 hashes: List[HashType] = None, author: str = None, description: str = None, license_str: str = None,
-                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi'):
-        self._package_url_type = package_url_type
-        self._namespace = namespace
-        self._name = name
-        self._version = version
-        self._type = component_type
-        self._qualifiers = qualifiers
-        self._subpath = subpath
+    def __init__(self, name: str, version: str, namespace: Optional[str] = None, qualifiers: Optional[str] = None,
+                 subpath: Optional[str] = None, hashes: Optional[List[HashType]] = None, author: Optional[str] = None,
+                 description: Optional[str] = None, license_str: Optional[str] = None,
+                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi') -> None:
+        self._package_url_type: str = package_url_type
+        self._namespace: Optional[str] = namespace
+        self._name: str = name
+        self._version: str = version
+        self._type: ComponentType = component_type
+        self._qualifiers: Optional[str] = qualifiers
+        self._subpath: Optional[str] = subpath
 
-        self._author: str = author
-        self._description: str = description
-        self._license: str = license_str
+        self._author: Optional[str] = author
+        self._description: Optional[str] = description
+        self._license: Optional[str] = license_str
 
         self._hashes: List[HashType] = hashes if hashes else []
         self._vulnerabilites: List[Vulnerability] = []
         self._external_references: List[ExternalReference] = []
 
-    def add_external_reference(self, reference: ExternalReference):
+    def add_external_reference(self, reference: ExternalReference) -> None:
         """
         Add an `ExternalReference` to this `Component`.
 
@@ -109,7 +111,7 @@ class Component:
         """
         self._external_references.append(reference)
 
-    def add_hash(self, a_hash: HashType):
+    def add_hash(self, a_hash: HashType) -> None:
         """
         Adds a hash that pins/identifies this Component.
 
@@ -119,7 +121,7 @@ class Component:
         """
         self._hashes.append(a_hash)
 
-    def add_vulnerability(self, vulnerability: Vulnerability):
+    def add_vulnerability(self, vulnerability: Vulnerability) -> None:
         """
         Add a Vulnerability to this Component.
 
@@ -132,21 +134,21 @@ class Component:
         """
         self._vulnerabilites.append(vulnerability)
 
-    def get_author(self) -> str:
+    def get_author(self) -> Optional[str]:
         """
         Get the author of this Component.
 
         Returns:
-            Declared author of this Component as `str`.
+            Declared author of this Component as `str` if set, else `None`.
         """
         return self._author
 
-    def get_description(self) -> str:
+    def get_description(self) -> Optional[str]:
         """
         Get the description of this Component.
 
         Returns:
-            Declared description of this Component as `str`.
+            Declared description of this Component as `str` if set, else `None`.
         """
         return self._description
 
@@ -168,12 +170,12 @@ class Component:
         """
         return self._hashes
 
-    def get_license(self) -> str:
+    def get_license(self) -> Optional[str]:
         """
         Get the license of this Component.
 
         Returns:
-            Declared license of this Component as `str`.
+            Declared license of this Component as `str` if set, else `None`.
         """
         return self._license
 
@@ -186,7 +188,7 @@ class Component:
         """
         return self._name
 
-    def get_namespace(self) -> str:
+    def get_namespace(self) -> Optional[str]:
         """
         Get the namespace of this Component.
 
@@ -202,12 +204,12 @@ class Component:
         Returns:
             PackageURL or 'PURL' that reflects this Component as `str`.
         """
-        return self.to_package_url().to_string()
+        return str(self.to_package_url().to_string())
 
     def get_pypi_url(self) -> str:
         return f'https://pypi.org/project/{self.get_name()}/{self.get_version()}'
 
-    def get_subpath(self) -> str:
+    def get_subpath(self) -> Optional[str]:
         """
         Get the subpath of this Component.
 
@@ -250,9 +252,9 @@ class Component:
         Returns:
              `True` if this Component has 1 or more vulnerabilities, `False` otherwise.
         """
-        return len(self._vulnerabilites) != 0
+        return bool(self.get_vulnerabilities())
 
-    def set_author(self, author: str):
+    def set_author(self, author: str) -> None:
         """
         Set the author of this Component.
 
@@ -265,7 +267,7 @@ class Component:
         """
         self._author = author
 
-    def set_description(self, description: str):
+    def set_description(self, description: str) -> None:
         """
         Set the description of this Component.
 
@@ -278,7 +280,7 @@ class Component:
         """
         self._description = description
 
-    def set_license(self, license_str: str):
+    def set_license(self, license_str: str) -> None:
         """
         Set the license for this Component.
 
@@ -307,8 +309,11 @@ class Component:
             subpath=self._subpath
         )
 
-    def __eq__(self, other):
-        return other.get_purl() == self.get_purl()
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Component):
+            return other.get_purl() == self.get_purl()
+        else:
+            raise NotImplementedError
 
-    def __repr__(self):
-        return '<Component {}={}>'.format(self._name, self._version)
+    def __repr__(self) -> str:
+        return f'<Component {self._name}={self._version}>'

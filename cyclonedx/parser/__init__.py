@@ -77,7 +77,7 @@ class ParserWarning:
     _item: str
     _warning: str
 
-    def __init__(self, item: str, warning: str):
+    def __init__(self, item: str, warning: str) -> None:
         self._item = item
         self._warning = warning
 
@@ -87,7 +87,7 @@ class ParserWarning:
     def get_warning_message(self) -> str:
         return self._warning
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<ParserWarning item=\'{}\'>'.format(self._item)
 
 
@@ -95,7 +95,11 @@ class BaseParser(ABC):
     _components: List[Component] = []
     _warnings: List[ParserWarning] = []
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+
+        :rtype: object
+        """
         self._components.clear()
         self._warnings.clear()
 

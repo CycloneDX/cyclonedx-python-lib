@@ -31,7 +31,7 @@ from tests.base import BaseXmlTestCase
 
 class TestOutputXml(BaseXmlTestCase):
 
-    def test_simple_bom_v1_3(self):
+    def test_simple_bom_v1_3(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
         outputter: Xml = get_instance(bom=bom)
@@ -41,7 +41,7 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
-    def test_simple_bom_v1_2(self):
+    def test_simple_bom_v1_2(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
         outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
@@ -51,7 +51,7 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
-    def test_simple_bom_v1_1(self):
+    def test_simple_bom_v1_1(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
         outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_1)
@@ -61,7 +61,7 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
-    def test_simple_bom_v1_0(self):
+    def test_simple_bom_v1_0(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
         self.assertEqual(len(bom.get_components()), 1)
@@ -72,7 +72,7 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
-    def test_simple_bom_v1_3_with_vulnerabilities(self):
+    def test_simple_bom_v1_3_with_vulnerabilities(self) -> None:
         bom = Bom()
         c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
         c.add_vulnerability(Vulnerability(
@@ -99,7 +99,7 @@ class TestOutputXml(BaseXmlTestCase):
 
             expected_xml.close()
 
-    def test_simple_bom_v1_0_with_vulnerabilities(self):
+    def test_simple_bom_v1_0_with_vulnerabilities(self) -> None:
         bom = Bom()
         c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
         c.add_vulnerability(Vulnerability(
@@ -126,7 +126,7 @@ class TestOutputXml(BaseXmlTestCase):
 
             expected_xml.close()
 
-    def test_bom_v1_3_with_component_hashes(self):
+    def test_bom_v1_3_with_component_hashes(self) -> None:
         bom = Bom()
         c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
         c.add_hash(
@@ -140,7 +140,7 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
-    def test_bom_v1_3_with_component_external_references(self):
+    def test_bom_v1_3_with_component_external_references(self) -> None:
         bom = Bom()
         c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
         c.add_hash(
@@ -166,7 +166,7 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
-    def test_with_component_license(self):
+    def test_with_component_license(self) -> None:
         bom = Bom()
         c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
         c.set_license('MIT License')

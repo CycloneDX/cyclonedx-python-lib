@@ -30,7 +30,7 @@ class _BaseCondaParser(BaseParser, metaclass=ABCMeta):
     """Internal abstract parser - not for programmatic use.
     """
 
-    def __init__(self, conda_data: str):
+    def __init__(self, conda_data: str) -> None:
         super().__init__()
         self._conda_packages: List[CondaPackage] = []
         self._parse_to_conda_packages(data_str=conda_data)
@@ -49,7 +49,7 @@ class _BaseCondaParser(BaseParser, metaclass=ABCMeta):
         """
         pass
 
-    def _conda_packages_to_components(self):
+    def _conda_packages_to_components(self) -> None:
         """
         Converts the parsed `CondaPackage` instances into `Component` instances.
 

@@ -19,7 +19,7 @@
 import json
 import sys
 from json import JSONDecodeError
-from typing import Union
+from typing import Optional
 
 if sys.version_info >= (3, 8, 0):
     from typing import TypedDict
@@ -41,26 +41,23 @@ class CondaPackage(TypedDict):
     name: str
     platform: str
     version: str
-    md5_hash: str
+    md5_hash: Optional[str]
 
 
-def parse_conda_json_to_conda_package(conda_json_str: str) -> Union[CondaPackage, None]:
+def parse_conda_json_to_conda_package(conda_json_str: str) -> Optional[CondaPackage]:
     try:
         package_data = json.loads(conda_json_str)
-    except JSONDecodeError:
-        print(f'Failed to decode JSON: {conda_json_str}')
-        raise ValueError(f'Invalid JSON supplied - cannot be parsed: {conda_json_str}')
+    except JSONDecodeError as e:
+        raise ValueError(f'Invalid JSON supplied - cannot be parsed: {conda_json_str}') from e
 
-    if 'md5_hash' not in package_data.keys():
-        package_data['md5_hash'] = None
+    if not isinstance(package_data, dict):
+        return None
 
-    if isinstance(package_data, dict):
-        return CondaPackage(**package_data)
-
-    return None
+    package_data.setdefault('md5_hash', None)
+    return CondaPackage(package_data)  # type: ignore # @FIXME write proper type safe dict at this point
 
 
-def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Union[CondaPackage, None]:
+def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Optional[CondaPackage]:
     """
     Helper method for parsing a line of output from `conda list --explicit` into our internal `CondaPackage` object.
 
@@ -79,7 +76,7 @@ def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Union[CondaPac
         return None
 
     # Remove any hash
-    package_hash: str = None
+    package_hash = None
     if '#' in line:
         hash_parts = line.split('#')
         if len(hash_parts) > 1:
@@ -107,13 +104,13 @@ def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Union[CondaPac
             else:
                 raise ValueError(f'Unexpected build version string for Conda Package: {conda_list_str}')
         else:
-            build_string = None
+            build_string = ''
             build_number = int(build_number_with_opt_string)
 
         build_version = package_nvbs_parts.pop()
         package_name = '-'.join(package_nvbs_parts)
     except IndexError as e:
-        raise ValueError(f'Error parsing {package_nvbs_parts} from {conda_list_str} IndexError: {str(e)}')
+        raise ValueError(f'Error parsing {package_nvbs_parts} from {conda_list_str}') from e
 
     return CondaPackage(
         base_url=package_url.geturl(), build_number=build_number, build_string=build_string,

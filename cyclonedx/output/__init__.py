@@ -23,6 +23,7 @@ import importlib
 import os
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import cast, Optional
 
 from ..model.bom import Bom
 
@@ -45,20 +46,20 @@ DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 class BaseOutput(ABC):
     _bom: Bom
 
-    def __init__(self, bom: Bom = None):
+    def __init__(self, bom: Bom) -> None:
         self._bom = bom
 
     def get_bom(self) -> Bom:
         return self._bom
 
-    def set_bom(self, bom: Bom):
+    def set_bom(self, bom: Bom) -> None:
         self._bom = bom
 
     @abstractmethod
     def output_as_string(self) -> str:
         pass
 
-    def output_to_file(self, filename: str, allow_overwrite: bool = False):
+    def output_to_file(self, filename: str, allow_overwrite: bool = False) -> None:
         # Check directory writable
         output_filename = os.path.realpath(filename)
         output_directory = os.path.dirname(output_filename)
@@ -75,7 +76,7 @@ class BaseOutput(ABC):
         f_out.close()
 
 
-def get_instance(bom: Bom = None, output_format: OutputFormat = OutputFormat.XML,
+def get_instance(bom: Optional[Bom] = None, output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = DEFAULT_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.
@@ -93,4 +94,4 @@ def get_instance(bom: Bom = None, output_format: OutputFormat = OutputFormat.XML
     except (ImportError, AttributeError):
         raise ValueError(f"Unknown format {output_format.value.lower()!r}") from None
 
-    return output_klass(bom=bom)
+    return cast(BaseOutput, output_klass(bom=bom))

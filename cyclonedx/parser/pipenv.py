@@ -26,7 +26,7 @@ from ..model.component import Component
 
 class PipEnvParser(BaseParser):
 
-    def __init__(self, pipenv_contents: str):
+    def __init__(self, pipenv_contents: str) -> None:
         super().__init__()
 
         pipfile_lock_contents = json.loads(pipenv_contents)
@@ -53,6 +53,6 @@ class PipEnvParser(BaseParser):
 
 class PipEnvFileParser(PipEnvParser):
 
-    def __init__(self, pipenv_lock_filename: str):
+    def __init__(self, pipenv_lock_filename: str) -> None:
         with open(pipenv_lock_filename) as r:
             super(PipEnvFileParser, self).__init__(pipenv_contents=r.read())

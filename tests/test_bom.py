@@ -27,7 +27,7 @@ from cyclonedx.parser.requirements import RequirementsFileParser
 
 class TestBom(TestCase):
 
-    def test_bom_simple(self):
+    def test_bom_simple(self) -> None:
         parser = RequirementsFileParser(
             requirements_file=os.path.join(os.path.dirname(__file__), 'fixtures/requirements-simple.txt')
         )
@@ -38,12 +38,12 @@ class TestBom(TestCase):
             Component(name='setuptools', version='50.3.2')
         ))
 
-    def test_bom_metadata_tool_this_tool(self):
+    def test_bom_metadata_tool_this_tool(self) -> None:
         self.assertEqual(ThisTool.get_vendor(), 'CycloneDX')
         self.assertEqual(ThisTool.get_name(), 'cyclonedx-python-lib')
         self.assertNotEqual(ThisTool.get_version(), 'UNKNOWN')
 
-    def test_bom_metadata_tool_multiple_tools(self):
+    def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()
         self.assertEqual(len(bom.get_metadata().get_tools()), 1)
 
