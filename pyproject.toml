@@ -47,9 +47,6 @@ requirements_parser = "^0.2.0"
 setuptools = "^50.3.2"
 importlib-metadata = { version = "^4.8.1", python = "~3.6 | ~3.7" }
 toml = "^0.10.2"
-typing-extensions = { version = "^3.10.0", python = "~3.6 | ~3.7" }
-types-setuptools = "^57.4.2"
-types-toml = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.24.3"
@@ -59,6 +56,9 @@ pdoc3 = "^0.10.0"
 mypy = "^0.910"
 flake8-annotations = "^2.0"
 flake8-bugbear = "^21.9.2"
+typing-extensions = { version = "^3.10.0", python = "~3.6 | ~3.7" }
+types-setuptools = "^57.4.2"
+types-toml = "^0.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
