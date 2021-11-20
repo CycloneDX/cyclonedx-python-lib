@@ -13,13 +13,12 @@
 This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all
 project dependencies.
 
-This module is not designed for standalone use. If you're looking for a CycloneDX tool to run to generate (SBOM) software
-bill-of-materials documents, why not checkout:
-
-- [cyclonedx-python](https://github.com/CycloneDX/cyclonedx-python)
+This module is not designed for standalone use.  
+If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout:
+[CycloneDX Python][cyclonedx-python]
 
 Additionally, the following tool can be used as well (and this library was written to help improve it)
-- [Jake](https://github.com/sonatype-nexus-community/jake)
+[Jake][jake]
 
 Additionally, you can use this module yourself in your application to programmatically generate SBOMs.
 
@@ -230,3 +229,6 @@ See our [CHANGELOG](./CHANGELOG.md).
 CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.
+
+[cyclonedx-python]: https://github.com/CycloneDX/cyclonedx-python
+[jake]: https://github.com/sonatype-nexus-community/jake
