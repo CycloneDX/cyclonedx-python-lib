@@ -1,12 +1,13 @@
 # Python Library for generating CycloneDX
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI)
-![Python Version Support](https://img.shields.io/badge/python-3.6+-blue)
-![PyPI Version](https://img.shields.io/pypi/v/cyclonedx-python-lib?label=PyPI&logo=pypi)
-[![GitHub license](https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib)](https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/CycloneDX/cyclonedx-python-lib)](https://github.com/sCycloneDX/cyclonedx-python-lib/issues)
-[![GitHub forks](https://img.shields.io/github/forks/CycloneDX/cyclonedx-python-lib)](https://github.com/CycloneDX/cyclonedx-python-lib/network)
-[![GitHub stars](https://img.shields.io/github/stars/CycloneDX/cyclonedx-python-lib)](https://github.com/CycloneDX/cyclonedx-python-lib/stargazers)
+[![shield_gh-workflow-test]][link_gh-workflow-test]
+![shield_python-version]
+[![shield_pypi-version]][link_pypi]
+[![shield_license]][license_file]  
+[![shield_website]][link_website]
+[![shield_slack]][link_slack]
+[![shield_groups]][link_discussion]
+[![shield_twitter-follow]][link_twitter]
 
 ----
 
@@ -223,13 +224,31 @@ However, some features may not be possible/present in older Python versions due 
 
 ## Changelog
 
-See our [CHANGELOG](./CHANGELOG.md).
+See our [CHANGELOG][chaneglog_file].
 
 ## Copyright & License
 
-CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.
-
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.
+CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.  
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.  
+See the [LICENSE][license_file] file for the full license.
 
 [cyclonedx-python]: https://github.com/CycloneDX/cyclonedx-python
 [jake]: https://github.com/sonatype-nexus-community/jake
+
+[chaneglog_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CHANGELOG.md
+[license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
+
+[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
+[shield_python-version]: https://img.shields.io/pypi/pyversions/cyclonedx-python-lib?logo=Python&logoColor=white "python version constraint"
+[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=PyPI&logoColor=white "pypi"
+[shield_license]: https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib "license"
+[shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
+[shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
+[shield_groups]: https://img.shields.io/badge/discussion-groups.io-blue.svg "groups discussion"
+[shield_twitter-follow]: https://img.shields.io/badge/Twitter-follow-blue?logo=Twitter&logoColor=white "twitter follow"
+[link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/ci.yml?query=branch%3Amaster
+[link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
+[link_website]: https://cyclonedx.org/
+[link_slack]: https://cyclonedx.org/slack/invite
+[link_discussion]: https://groups.io/g/CycloneDX
+[link_twitter]: https://twitter.com/CycloneDX_Spec
