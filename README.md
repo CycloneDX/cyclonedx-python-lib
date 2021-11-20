@@ -123,7 +123,7 @@ outputter.output_as_string()
 
 ##### Example as XML
 
-```
+```py
 from cyclonedx.output import get_instance, SchemaVersion
 
 outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
