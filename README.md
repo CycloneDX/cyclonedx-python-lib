@@ -112,7 +112,7 @@ We provide two helper methods:
 * Output to string (for you to do with as you require)
 * Output directly to a filename you provide
 
-##### Example as JSON
+#### Example as JSON
 
 ```py
 from cyclonedx.output import get_instance, OutputFormat
@@ -121,7 +121,7 @@ outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
 outputter.output_as_string()
 ```
 
-##### Example as XML
+#### Example as XML
 
 ```py
 from cyclonedx.output import get_instance, SchemaVersion
@@ -214,8 +214,8 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
 
 ### Notes on Schema Support
 
-1. N/A is where the CycloneDX standard does not include this
-2. If the table above does not refer to an element, it is not currently supported
+* N/A is where the CycloneDX standard does not include this
+* If the table above does not refer to an element, it is not currently supported
 
 ## Python Support
 
