@@ -2,7 +2,6 @@
 
 [![shield_gh-workflow-test]][link_gh-workflow-test]
 [![shield_pypi-version]][link_pypi]
-![shield_python-version]
 [![shield_license]][license_file]  
 [![shield_website]][link_website]
 [![shield_slack]][link_slack]
@@ -239,8 +238,7 @@ See the [LICENSE][license_file] file for the full license.
 [license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
 
 [shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
-[shield_python-version]: https://img.shields.io/pypi/pyversions/cyclonedx-python-lib?logo=Python&logoColor=white "python version constraint"
-[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=PyPI&logoColor=white "pypi"
+[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=Python&logoColor=white "pypi"
 [shield_license]: https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib "license"
 [shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
 [shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
