@@ -28,7 +28,7 @@ CycloneDX is a lightweight BOM specification that is easily created, human-reada
 
 Install from pypi.org as you would any other Python module:
 
-```
+```shell
 pip install cyclonedx-python-lib
 ```
 
@@ -60,7 +60,7 @@ You can use one of the parsers to obtain information about your project or envir
 
 #### Example
 
-```
+```py
 from cyclonedx.parser.environment import EnvironmentParser
 
 parser = EnvironmentParser()
@@ -76,7 +76,7 @@ CycloneDX bill of materials (according to schema).
 If you need to use a `requirements.txt` in your project that does not have pinned versions an acceptable workaround 
 might be to:
 
-```
+```shell
 pip install -r requirements.txt
 pip freeze > requirements-frozen.txt
 ```
@@ -96,7 +96,7 @@ will not source them for you. Perhaps look at [Jake](https://github.com/sonatype
 
 #### Example from a Parser
 
-```
+```py
 from cyclonedx.model.bom import Bom
 from cyclonedx.parser.environment import EnvironmentParser
 
@@ -114,7 +114,7 @@ We provide two helper methods:
 
 ##### Example as JSON
 
-```
+```py
 from cyclonedx.output import get_instance, OutputFormat
 
 outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
