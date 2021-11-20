@@ -14,11 +14,9 @@ This CycloneDX module for Python can generate valid CycloneDX bill-of-material d
 project dependencies.
 
 This module is not designed for standalone use.  
-If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout:
-[CycloneDX Python][cyclonedx-python]
+If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout: [CycloneDX Python][cyclonedx-python]
 
-Additionally, the following tool can be used as well (and this library was written to help improve it)
-[Jake][jake]
+Additionally, the following tool can be used as well (and this library was written to help improve it) [Jake][jake].
 
 Additionally, you can use this module yourself in your application to programmatically generate SBOMs.
 
@@ -68,12 +66,12 @@ parser = EnvironmentParser()
 
 #### Notes on Requirements parsing
 
-CycloneDX software bill-of-materials require pinned versions of requirements. If your `requirements.txt` does not have 
-pinned versions, warnings will be recorded and the dependencies without pinned versions will be excluded from the 
+CycloneDX software bill-of-materials require pinned versions of requirements. If your `requirements.txt` does not have
+pinned versions, warnings will be recorded and the dependencies without pinned versions will be excluded from the
 generated CycloneDX. CycloneDX schemas (from version 1.0+) require a component to have a version when included in a
 CycloneDX bill of materials (according to schema).
 
-If you need to use a `requirements.txt` in your project that does not have pinned versions an acceptable workaround 
+If you need to use a `requirements.txt` in your project that does not have pinned versions an acceptable workaround
 might be to:
 
 ```shell
@@ -91,7 +89,7 @@ You can create a BOM Model from either a Parser instance or manually using the m
 The model also supports definition of vulnerabilities for output using the CycloneDX schema extension for 
 [Vulnerability Disclosures](https://cyclonedx.org/use-cases/#vulnerability-disclosure) as of version 0.3.0.
 
-**Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library 
+**Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library
 will not source them for you. Perhaps look at [Jake](https://github.com/sonatype-nexus-community/jake) if you're interested in this.
 
 #### Example from a Parser
@@ -109,8 +107,9 @@ bom = Bom.from_parser(parser=parser)
 Once you have an instance of a `Bom` you can produce output in either `JSON` or `XML` against any of the supporting CycloneDX schema versions as you require.
 
 We provide two helper methods:
-1. Output to string (for you to do with as you require)
-2. Output directly to a filename you provide
+
+* Output to string (for you to do with as you require)
+* Output directly to a filename you provide
 
 ##### Example as JSON
 
@@ -122,6 +121,7 @@ outputter.output_as_string()
 ```
 
 ##### Example as XML
+
 ```
 from cyclonedx.output import get_instance, SchemaVersion
 
@@ -226,6 +226,7 @@ However, some features may not be possible/present in older Python versions due 
 See our [CHANGELOG](./CHANGELOG.md).
 
 ## Copyright & License
+
 CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.
