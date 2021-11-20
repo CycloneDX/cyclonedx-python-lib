@@ -47,7 +47,7 @@ requirements_parser = "^0.2.0"
 setuptools = "^50.3.2"
 importlib-metadata = { version = "^4.8.1", python = "~3.6 | ~3.7" }
 toml = "^0.10.2"
-typing-extensions = { version = "^3.10.0", python = "~3.6 | ~3.7" }
+typing-extensions = { version = ">=3.10,<5.0", python = "~3.6 | ~3.7" }
 types-setuptools = "^57.4.2"
 types-toml = "^0.10.1"
 
