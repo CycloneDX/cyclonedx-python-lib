@@ -1,8 +1,8 @@
 # Python Library for generating CycloneDX
 
 [![shield_gh-workflow-test]][link_gh-workflow-test]
-![shield_python-version]
 [![shield_pypi-version]][link_pypi]
+![shield_python-version]
 [![shield_license]][license_file]  
 [![shield_website]][link_website]
 [![shield_slack]][link_slack]
@@ -54,8 +54,8 @@ You can use one of the parsers to obtain information about your project or envir
 | PipEnvFileParser | `from cyclonedx.parser.pipenv import PipEnvFileParser` | Parses the `Pipfile.lock` file at the supplied path. |
 | PoetryParser | `from cyclonedx.parser.poetry import PoetryParser` | Parses `poetry.lock` content passed in as a string. |
 | PoetryFileParser | `from cyclonedx.parser.poetry import PoetryFileParser` | Parses the `poetry.lock` file at the supplied path. |
-| RequirementsParser | `from cyclonedx.parser.requirements import RequirementsParser` | Parses a multiline string that you provide that conforms to the `requirements.txt` [PEP-508](https://www.python.org/dev/peps/pep-0508/) standard. |
-| RequirementsFileParser | `from cyclonedx.parser.requirements import RequirementsFileParser` | Parses a file that you provide the path to that conforms to the `requirements.txt` [PEP-508](https://www.python.org/dev/peps/pep-0508/) standard. |
+| RequirementsParser | `from cyclonedx.parser.requirements import RequirementsParser` | Parses a multiline string that you provide that conforms to the `requirements.txt` [PEP-508] standard. |
+| RequirementsFileParser | `from cyclonedx.parser.requirements import RequirementsFileParser` | Parses a file that you provide the path to that conforms to the `requirements.txt` [PEP-508] standard. |
 
 #### Example
 
@@ -87,11 +87,11 @@ have `pip install`ed your dependencies.
 
 You can create a BOM Model from either a Parser instance or manually using the methods avaialbel directly on the `Bom` class.
 
-The model also supports definition of vulnerabilities for output using the CycloneDX schema extension for 
+The model also supports definition of vulnerabilities for output using the CycloneDX schema extension for
 [Vulnerability Disclosures](https://cyclonedx.org/use-cases/#vulnerability-disclosure) as of version 0.3.0.
 
 **Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library
-will not source them for you. Perhaps look at [Jake](https://github.com/sonatype-nexus-community/jake) if you're interested in this.
+will not source them for you. Perhaps look at [Jake][jake] if you're interested in this.
 
 #### Example from a Parser
 
@@ -252,3 +252,5 @@ See the [LICENSE][license_file] file for the full license.
 [link_slack]: https://cyclonedx.org/slack/invite
 [link_discussion]: https://groups.io/g/CycloneDX
 [link_twitter]: https://twitter.com/CycloneDX_Spec
+
+[PEP-508]: https://www.python.org/dev/peps/pep-0508/
