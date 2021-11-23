@@ -238,13 +238,13 @@ See the [LICENSE][license_file] file for the full license.
 [license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
 
 [shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
-[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=Python&logoColor=white "pypi"
+[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=Python&logoColor=white&label=PyPI "PyPI"
 [shield_license]: https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib "license"
 [shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
 [shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
 [shield_groups]: https://img.shields.io/badge/discussion-groups.io-blue.svg "groups discussion"
 [shield_twitter-follow]: https://img.shields.io/badge/Twitter-follow-blue?logo=Twitter&logoColor=white "twitter follow"
-[link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/ci.yml?query=branch%3Amaster
+[link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/poetry.yml?query=branch%3Amain
 [link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
 [link_website]: https://cyclonedx.org/
 [link_slack]: https://cyclonedx.org/slack/invite
