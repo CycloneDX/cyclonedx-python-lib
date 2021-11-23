@@ -21,7 +21,7 @@ import sys
 from json import JSONDecodeError
 from typing import Optional
 
-if sys.version_info >= (3, 8, 0):
+if sys.version_info >= (3, 8):
     from typing import TypedDict
 else:
     from typing_extensions import TypedDict
