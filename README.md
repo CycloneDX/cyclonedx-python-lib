@@ -1,25 +1,22 @@
 # Python Library for generating CycloneDX
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI)
-![Python Version Support](https://img.shields.io/badge/python-3.6+-blue)
-![PyPI Version](https://img.shields.io/pypi/v/cyclonedx-python-lib?label=PyPI&logo=pypi)
-[![GitHub license](https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib)](https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/CycloneDX/cyclonedx-python-lib)](https://github.com/sCycloneDX/cyclonedx-python-lib/issues)
-[![GitHub forks](https://img.shields.io/github/forks/CycloneDX/cyclonedx-python-lib)](https://github.com/CycloneDX/cyclonedx-python-lib/network)
-[![GitHub stars](https://img.shields.io/github/stars/CycloneDX/cyclonedx-python-lib)](https://github.com/CycloneDX/cyclonedx-python-lib/stargazers)
+[![shield_gh-workflow-test]][link_gh-workflow-test]
+[![shield_pypi-version]][link_pypi]
+[![shield_license]][license_file]  
+[![shield_website]][link_website]
+[![shield_slack]][link_slack]
+[![shield_groups]][link_discussion]
+[![shield_twitter-follow]][link_twitter]
 
 ----
 
 This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all
 project dependencies.
 
-This module is not designed for standalone use. If you're looking for a CycloneDX tool to run to generate (SBOM) software
-bill-of-materials documents, why not checkout:
+This module is not designed for standalone use.  
+If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout: [CycloneDX Python][cyclonedx-python]
 
-- [cyclonedx-python](https://github.com/CycloneDX/cyclonedx-python)
-
-Additionally, the following tool can be used as well (and this library was written to help improve it)
-- [Jake](https://github.com/sonatype-nexus-community/jake)
+Additionally, the following tool can be used as well (and this library was written to help improve it) [Jake][jake].
 
 Additionally, you can use this module yourself in your application to programmatically generate SBOMs.
 
@@ -29,7 +26,7 @@ CycloneDX is a lightweight BOM specification that is easily created, human-reada
 
 Install from pypi.org as you would any other Python module:
 
-```
+```shell
 pip install cyclonedx-python-lib
 ```
 
@@ -56,12 +53,12 @@ You can use one of the parsers to obtain information about your project or envir
 | PipEnvFileParser | `from cyclonedx.parser.pipenv import PipEnvFileParser` | Parses the `Pipfile.lock` file at the supplied path. |
 | PoetryParser | `from cyclonedx.parser.poetry import PoetryParser` | Parses `poetry.lock` content passed in as a string. |
 | PoetryFileParser | `from cyclonedx.parser.poetry import PoetryFileParser` | Parses the `poetry.lock` file at the supplied path. |
-| RequirementsParser | `from cyclonedx.parser.requirements import RequirementsParser` | Parses a multiline string that you provide that conforms to the `requirements.txt` [PEP-508](https://www.python.org/dev/peps/pep-0508/) standard. |
-| RequirementsFileParser | `from cyclonedx.parser.requirements import RequirementsFileParser` | Parses a file that you provide the path to that conforms to the `requirements.txt` [PEP-508](https://www.python.org/dev/peps/pep-0508/) standard. |
+| RequirementsParser | `from cyclonedx.parser.requirements import RequirementsParser` | Parses a multiline string that you provide that conforms to the `requirements.txt` [PEP-508] standard. |
+| RequirementsFileParser | `from cyclonedx.parser.requirements import RequirementsFileParser` | Parses a file that you provide the path to that conforms to the `requirements.txt` [PEP-508] standard. |
 
 #### Example
 
-```
+```py
 from cyclonedx.parser.environment import EnvironmentParser
 
 parser = EnvironmentParser()
@@ -69,15 +66,15 @@ parser = EnvironmentParser()
 
 #### Notes on Requirements parsing
 
-CycloneDX software bill-of-materials require pinned versions of requirements. If your `requirements.txt` does not have 
-pinned versions, warnings will be recorded and the dependencies without pinned versions will be excluded from the 
+CycloneDX software bill-of-materials require pinned versions of requirements. If your `requirements.txt` does not have
+pinned versions, warnings will be recorded and the dependencies without pinned versions will be excluded from the
 generated CycloneDX. CycloneDX schemas (from version 1.0+) require a component to have a version when included in a
 CycloneDX bill of materials (according to schema).
 
-If you need to use a `requirements.txt` in your project that does not have pinned versions an acceptable workaround 
+If you need to use a `requirements.txt` in your project that does not have pinned versions an acceptable workaround
 might be to:
 
-```
+```shell
 pip install -r requirements.txt
 pip freeze > requirements-frozen.txt
 ```
@@ -89,15 +86,15 @@ have `pip install`ed your dependencies.
 
 You can create a BOM Model from either a Parser instance or manually using the methods avaialbel directly on the `Bom` class.
 
-The model also supports definition of vulnerabilities for output using the CycloneDX schema extension for 
+The model also supports definition of vulnerabilities for output using the CycloneDX schema extension for
 [Vulnerability Disclosures](https://cyclonedx.org/use-cases/#vulnerability-disclosure) as of version 0.3.0.
 
-**Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library 
-will not source them for you. Perhaps look at [Jake](https://github.com/sonatype-nexus-community/jake) if you're interested in this.
+**Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library
+will not source them for you. Perhaps look at [Jake][jake] if you're interested in this.
 
 #### Example from a Parser
 
-```
+```py
 from cyclonedx.model.bom import Bom
 from cyclonedx.parser.environment import EnvironmentParser
 
@@ -110,20 +107,22 @@ bom = Bom.from_parser(parser=parser)
 Once you have an instance of a `Bom` you can produce output in either `JSON` or `XML` against any of the supporting CycloneDX schema versions as you require.
 
 We provide two helper methods:
-1. Output to string (for you to do with as you require)
-2. Output directly to a filename you provide
 
-##### Example as JSON
+* Output to string (for you to do with as you require)
+* Output directly to a filename you provide
 
-```
+#### Example as JSON
+
+```py
 from cyclonedx.output import get_instance, OutputFormat
 
 outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
 outputter.output_as_string()
 ```
 
-##### Example as XML
-```
+#### Example as XML
+
+```py
 from cyclonedx.output import get_instance, SchemaVersion
 
 outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
@@ -214,8 +213,8 @@ _Note: We refer throughout using XPath, but the same is true for both XML and JS
 
 ### Notes on Schema Support
 
-1. N/A is where the CycloneDX standard does not include this
-2. If the table above does not refer to an element, it is not currently supported
+* N/A is where the CycloneDX standard does not include this
+* If the table above does not refer to an element, it is not currently supported
 
 ## Python Support
 
@@ -224,9 +223,32 @@ However, some features may not be possible/present in older Python versions due 
 
 ## Changelog
 
-See our [CHANGELOG](./CHANGELOG.md).
+See our [CHANGELOG][chaneglog_file].
 
 ## Copyright & License
-CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.
 
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.
+CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.  
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.  
+See the [LICENSE][license_file] file for the full license.
+
+[cyclonedx-python]: https://github.com/CycloneDX/cyclonedx-python
+[jake]: https://github.com/sonatype-nexus-community/jake
+
+[chaneglog_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CHANGELOG.md
+[license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
+
+[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
+[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=Python&logoColor=white "pypi"
+[shield_license]: https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib "license"
+[shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
+[shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
+[shield_groups]: https://img.shields.io/badge/discussion-groups.io-blue.svg "groups discussion"
+[shield_twitter-follow]: https://img.shields.io/badge/Twitter-follow-blue?logo=Twitter&logoColor=white "twitter follow"
+[link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/ci.yml?query=branch%3Amaster
+[link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
+[link_website]: https://cyclonedx.org/
+[link_slack]: https://cyclonedx.org/slack/invite
+[link_discussion]: https://groups.io/g/CycloneDX
+[link_twitter]: https://twitter.com/CycloneDX_Spec
+
+[PEP-508]: https://www.python.org/dev/peps/pep-0508/
