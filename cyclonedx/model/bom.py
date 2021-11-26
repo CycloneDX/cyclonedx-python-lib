@@ -83,7 +83,7 @@ class Tool:
         return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
 
 
-if sys.version_info >= (3, 8, 0):
+if sys.version_info >= (3, 8):
     from importlib.metadata import version as meta_version
 else:
     from importlib_metadata import version as meta_version  # type: ignore

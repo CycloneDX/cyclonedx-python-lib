@@ -30,16 +30,14 @@ The Environment Parsers support population of the following data about Component
 
 import sys
 from pkg_resources import DistInfoDistribution  # type: ignore
+import email
 
-if sys.version_info >= (3, 8, 0):
+if sys.version_info >= (3, 8):
     from importlib.metadata import metadata
-    import email
 else:
     from importlib_metadata import metadata  # type: ignore
-    import email
 
 from . import BaseParser
-
 from ..model.component import Component
 
 
@@ -75,7 +73,4 @@ class EnvironmentParser(BaseParser):
 
     @staticmethod
     def _get_metadata_for_package(package_name: str) -> email.message.Message:
-        if sys.version_info >= (3, 8, 0):
-            return metadata(package_name)
-        else:
-            return metadata(package_name)
+        return metadata(package_name)
