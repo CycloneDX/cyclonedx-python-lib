@@ -86,7 +86,7 @@ class Tool:
 if sys.version_info >= (3, 8):
     from importlib.metadata import version as meta_version
 else:
-    from importlib_metadata import version as meta_version  # type: ignore
+    from importlib_metadata import version as meta_version
 
 try:
     ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=meta_version('cyclonedx-python-lib'))

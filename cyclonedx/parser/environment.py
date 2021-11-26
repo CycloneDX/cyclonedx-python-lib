@@ -35,7 +35,7 @@ import email
 if sys.version_info >= (3, 8):
     from importlib.metadata import metadata
 else:
-    from importlib_metadata import metadata  # type: ignore
+    from importlib_metadata import metadata
 
 from . import BaseParser
 from ..model.component import Component
