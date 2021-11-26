@@ -34,8 +34,9 @@ import email
 
 if sys.version_info >= (3, 8):
     from importlib.metadata import metadata
+    _PackageMetadataReturn = email.message.Message
 else:
-    from importlib_metadata import metadata
+    from importlib_metadata import metadata, PackageMetadata as _PackageMetadataReturn
 
 from . import BaseParser
 from ..model.component import Component
@@ -72,5 +73,5 @@ class EnvironmentParser(BaseParser):
             self._components.append(c)
 
     @staticmethod
-    def _get_metadata_for_package(package_name: str) -> email.message.Message:
+    def _get_metadata_for_package(package_name: str) -> _PackageMetadataReturn:
         return metadata(package_name)
