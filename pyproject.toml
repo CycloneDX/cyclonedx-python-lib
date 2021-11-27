@@ -53,7 +53,7 @@ types-toml = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.24.3"
-coverage = "^6.1"
+coverage = "^6.2"
 flake8 = "^3.9.2"
 pdoc3 = "^0.10.0"
 mypy = "^0.910"
