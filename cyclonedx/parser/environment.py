@@ -35,7 +35,8 @@ if sys.version_info >= (3, 8):
     from importlib.metadata import metadata
     from email.message import Message as _MetadataReturn
 else:
-    from importlib_metadata import metadata, PackageMetadata as _MetadataReturn
+    from importlib_metadata import metadata
+    from importlib_metadata._meta import PackageMetadata as _MetadataReturn
 
 from . import BaseParser
 from ..model.component import Component
@@ -58,14 +59,14 @@ class EnvironmentParser(BaseParser):
             c = Component(name=i.project_name, version=i.version)
 
             i_metadata = self._get_metadata_for_package(i.project_name)
-            if 'Author' in i_metadata.keys():
-                c.set_author(author=i_metadata.get('Author'))
+            if 'Author' in i_metadata:
+                c.set_author(author=i_metadata['Author'])
 
-            if 'License' in i_metadata.keys() and i_metadata.get('License') != 'UNKNOWN':
-                c.set_license(license_str=i_metadata.get('License'))
+            if 'License' in i_metadata and i_metadata['License'] != 'UNKNOWN':
+                c.set_license(license_str=i_metadata['License'])
 
-            if 'Classifier' in i_metadata.keys():
-                for classifier in i_metadata.get_all('Classifier'):
+            if 'Classifier' in i_metadata:
+                for classifier in i_metadata['Classifier']:
                     if str(classifier).startswith('License :: OSI Approved :: '):
                         c.set_license(license_str=str(classifier).replace('License :: OSI Approved :: ', '').strip())
 
