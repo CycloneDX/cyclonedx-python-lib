@@ -225,6 +225,11 @@ However, some features may not be possible/present in older Python versions due 
 
 See our [CHANGELOG][chaneglog_file].
 
+## Contributing
+
+Feel free to open issues, bugreports or pull requests.  
+See the [CONTRIBUTING][contributing_file] file for details.
+
 ## Copyright & License
 
 CycloneDX Python Lib is Copyright (c) OWASP Foundation. All Rights Reserved.  
@@ -234,8 +239,9 @@ See the [LICENSE][license_file] file for the full license.
 [cyclonedx-python]: https://github.com/CycloneDX/cyclonedx-python
 [jake]: https://github.com/sonatype-nexus-community/jake
 
-[chaneglog_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CHANGELOG.md
 [license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
+[chaneglog_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CHANGELOG.md
+[contributing_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CONTRIBUTING.md
 
 [shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
 [shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=Python&logoColor=white&label=PyPI "PyPI"
