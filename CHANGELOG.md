@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.0 (2021-12-09)
+### Feature
+* Loosed dependency versions to make this library more consumable ([`55f10fb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/55f10fb5524dafa68112c0836806c27bdd74fcbe))
+
 ## v0.11.1 (2021-11-10)
 ### Fix
 * Constructor for `Vulnerability` to correctly define `ratings` as optional ([`395a0ec`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/395a0ec14ebcba8e0849a0ced30ec4163c42fa7a))
