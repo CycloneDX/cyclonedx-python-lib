@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.2 (2021-12-09)
+### Fix
+* Tightened dependency `packageurl-python` ([#95](https://github.com/CycloneDX/cyclonedx-python-lib/issues/95)) ([`eb4ae5c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/eb4ae5ca8842877b780a755b6611feef847bdb8c))
+
 ## v0.12.1 (2021-12-09)
 ### Fix
 * Further loosened dependency definitions ([`8bef6ec`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8bef6ecad36f51a003b266d776c9520d33e06034))
