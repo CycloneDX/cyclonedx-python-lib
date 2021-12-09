@@ -31,15 +31,14 @@ The Environment Parsers support population of the following data about Component
 import sys
 from pkg_resources import DistInfoDistribution  # type: ignore
 
-if sys.version_info >= (3, 8, 0):
+if sys.version_info >= (3, 8):
     from importlib.metadata import metadata
-    import email
+    from email.message import Message as _MetadataReturn
 else:
-    from importlib_metadata import metadata  # type: ignore
-    import email
+    from importlib_metadata import metadata
+    from importlib_metadata._meta import PackageMetadata as _MetadataReturn
 
 from . import BaseParser
-
 from ..model.component import Component
 
 
@@ -60,22 +59,19 @@ class EnvironmentParser(BaseParser):
             c = Component(name=i.project_name, version=i.version)
 
             i_metadata = self._get_metadata_for_package(i.project_name)
-            if 'Author' in i_metadata.keys():
-                c.set_author(author=i_metadata.get('Author'))
+            if 'Author' in i_metadata:
+                c.set_author(author=i_metadata['Author'])
 
-            if 'License' in i_metadata.keys() and i_metadata.get('License') != 'UNKNOWN':
-                c.set_license(license_str=i_metadata.get('License'))
+            if 'License' in i_metadata and i_metadata['License'] != 'UNKNOWN':
+                c.set_license(license_str=i_metadata['License'])
 
-            if 'Classifier' in i_metadata.keys():
-                for classifier in i_metadata.get_all('Classifier'):
+            if 'Classifier' in i_metadata:
+                for classifier in i_metadata['Classifier']:
                     if str(classifier).startswith('License :: OSI Approved :: '):
                         c.set_license(license_str=str(classifier).replace('License :: OSI Approved :: ', '').strip())
 
             self._components.append(c)
 
     @staticmethod
-    def _get_metadata_for_package(package_name: str) -> email.message.Message:
-        if sys.version_info >= (3, 8, 0):
-            return metadata(package_name)
-        else:
-            return metadata(package_name)
+    def _get_metadata_for_package(package_name: str) -> _MetadataReturn:
+        return metadata(package_name)

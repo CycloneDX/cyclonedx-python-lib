@@ -83,15 +83,16 @@ class Tool:
         return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
 
 
-if sys.version_info >= (3, 8, 0):
+if sys.version_info >= (3, 8):
     from importlib.metadata import version as meta_version
 else:
-    from importlib_metadata import version as meta_version  # type: ignore
+    from importlib_metadata import version as meta_version
 
 try:
-    ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=meta_version('cyclonedx-python-lib'))
+    __ThisToolVersion: Optional[str] = str(meta_version('cyclonedx-python-lib'))  # type: ignore[no-untyped-call]
 except Exception:
-    ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version='UNKNOWN')
+    __ThisToolVersion = None
+ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
 
 
 class BomMetaData:
