@@ -35,8 +35,7 @@ if sys.version_info >= (3, 8):
     from importlib.metadata import metadata
     from email.message import Message as _MetadataReturn
 else:
-    from importlib_metadata import metadata
-    from importlib_metadata._meta import PackageMetadata as _MetadataReturn
+    from importlib_metadata import metadata, PackageMetadata as _MetadataReturn
 
 from . import BaseParser
 from ..model.component import Component
