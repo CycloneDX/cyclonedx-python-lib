@@ -1,11 +1,11 @@
 # exactly pinned dependencies to the lowest version regardless of python_version
 # see pyptoject file for ranges
 
-packageurl-python == 0.9.4
+packageurl-python == 0.3.0
 requirements_parser == 0.2.0
-setuptools == 50.3.2
-importlib-metadata == 4.8.1 # ; python_version < '3.8'
-toml == 0.10.2
+setuptools == 47.0.0
+importlib-metadata == 3.4.0 # ; python_version < '3.8'
+toml == 0.10.0
 typing-extensions == 3.10.0 # ; python_version < '3.8'
-types-setuptools == 57.4.2
-types-toml == 0.10.1
+types-setuptools == 57.0.0
+types-toml == 0.10.0
