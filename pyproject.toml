@@ -44,7 +44,6 @@ keywords = [
 # ATTENTION: keep `requirements.lowest.txt` file in sync
 python = "^3.6"
 packageurl-python = ">= 0.9"
-requirements_parser = ">= 0.2"
 setuptools = ">= 47.0.0"
 importlib-metadata = { version = ">= 3.4", python = "< 3.8" }
 toml = "^0.10.0"
