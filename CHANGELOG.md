@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.3 (2021-12-15)
+### Fix
+* Removed requirements-parser as dependency (temp) as not available for Python 3 as Wheel ([#98](https://github.com/CycloneDX/cyclonedx-python-lib/issues/98)) ([`3677d9f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3677d9fd584b7c0eb715954bb7b8adc59c0bc9b1))
+
 ## v0.12.2 (2021-12-09)
 ### Fix
 * Tightened dependency `packageurl-python` ([#95](https://github.com/CycloneDX/cyclonedx-python-lib/issues/95)) ([`eb4ae5c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/eb4ae5ca8842877b780a755b6611feef847bdb8c))
