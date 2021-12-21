@@ -21,7 +21,7 @@ import sys
 from json import JSONDecodeError
 from typing import Optional
 
-if sys.version_info >= (3, 8, 0):
+if sys.version_info >= (3, 8):
     from typing import TypedDict
 else:
     from typing_extensions import TypedDict
@@ -34,7 +34,7 @@ class CondaPackage(TypedDict):
     Internal package for unifying Conda package definitions to.
     """
     base_url: str
-    build_number: int
+    build_number: Optional[int]
     build_string: str
     channel: str
     dist_name: str
@@ -96,13 +96,20 @@ def parse_conda_list_str_to_conda_package(conda_list_str: str) -> Optional[Conda
             pos = build_number_with_opt_string.find('.')
             build_number_with_opt_string = build_number_with_opt_string[0:pos]
 
+        build_string: str
+        build_number: Optional[int]
+
         if '_' in build_number_with_opt_string:
             bnbs_parts = build_number_with_opt_string.split('_')
-            if len(bnbs_parts) == 2:
-                build_number = int(bnbs_parts.pop())
+            # Build number will be the last part - check if it's an integer
+            # Updated logic given https://github.com/CycloneDX/cyclonedx-python-lib/issues/65
+            candidate_build_number: str = bnbs_parts.pop()
+            if candidate_build_number.isdigit():
+                build_number = int(candidate_build_number)
                 build_string = build_number_with_opt_string
             else:
-                raise ValueError(f'Unexpected build version string for Conda Package: {conda_list_str}')
+                build_number = None
+                build_string = build_number_with_opt_string
         else:
             build_string = ''
             build_number = int(build_number_with_opt_string)

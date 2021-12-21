@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
-from typing import Union
+from typing import Dict, List, Union
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
@@ -48,8 +48,8 @@ class Json(BaseOutput, BaseSchemaVersion):
         return response
 
     def _get_component_as_dict(self, component: Component) -> object:
-        c: dict[str, Union[str, list[dict[str, str]], list[dict[str, dict[str, str]]], list[
-            dict[str, Union[str, list[dict[str, str]]]]]]] = {
+        c: Dict[str, Union[str, List[Dict[str, str]], List[Dict[str, Dict[str, str]]], List[
+            Dict[str, Union[str, List[Dict[str, str]]]]]]] = {
             "type": component.get_type().value,
             "name": component.get_name(),
             "version": component.get_version(),
@@ -60,7 +60,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             c['group'] = str(component.get_namespace())
 
         if component.get_hashes():
-            hashes: list[dict[str, str]] = []
+            hashes: List[Dict[str, str]] = []
             for component_hash in component.get_hashes():
                 hashes.append({
                     "alg": component_hash.get_algorithm().value,
@@ -69,7 +69,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             c['hashes'] = hashes
 
         if component.get_license():
-            licenses: list[dict[str, dict[str, str]]] = [
+            licenses: List[Dict[str, Dict[str, str]]] = [
                 {
                     "license": {
                         "name": str(component.get_license())
@@ -82,9 +82,9 @@ class Json(BaseOutput, BaseSchemaVersion):
             c['author'] = str(component.get_author())
 
         if self.component_supports_external_references() and component.get_external_references():
-            ext_references: list[dict[str, Union[str, list[dict[str, str]]]]] = []
+            ext_references: List[Dict[str, Union[str, List[Dict[str, str]]]]] = []
             for ext_ref in component.get_external_references():
-                ref: dict[str, Union[str, list[dict[str, str]]]] = {
+                ref: Dict[str, Union[str, List[Dict[str, str]]]] = {
                     "type": ext_ref.get_reference_type().value,
                     "url": ext_ref.get_url()
                 }
@@ -93,7 +93,7 @@ class Json(BaseOutput, BaseSchemaVersion):
                     ref['comment'] = str(ext_ref.get_comment())
 
                 if ext_ref.get_hashes():
-                    ref_hashes: list[dict[str, str]] = []
+                    ref_hashes: List[Dict[str, str]] = []
                     for ref_hash in ext_ref.get_hashes():
                         ref_hashes.append({
                             "alg": ref_hash.get_algorithm().value,
@@ -108,21 +108,21 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     def _get_metadata_as_dict(self) -> object:
         bom_metadata = self.get_bom().get_metadata()
-        metadata: dict[str, Union[str, list[dict[str, Union[str, list[dict[str, str]]]]]]] = {
+        metadata: Dict[str, Union[str, List[Dict[str, Union[str, List[Dict[str, str]]]]]]] = {
             "timestamp": bom_metadata.get_timestamp().isoformat()
         }
 
         if self.bom_metadata_supports_tools():
-            tools: list[dict[str, Union[str, list[dict[str, str]]]]] = []
+            tools: List[Dict[str, Union[str, List[Dict[str, str]]]]] = []
             for tool in bom_metadata.get_tools():
-                tool_dict: dict[str, Union[str, list[dict[str, str]]]] = {
+                tool_dict: Dict[str, Union[str, List[Dict[str, str]]]] = {
                     "vendor": tool.get_vendor(),
                     "name": tool.get_name(),
                     "version": tool.get_version()
                 }
 
                 if len(tool.get_hashes()) > 0:
-                    hashes: list[dict[str, str]] = []
+                    hashes: List[Dict[str, str]] = []
                     for tool_hash in tool.get_hashes():
                         hashes.append({
                             "alg": tool_hash.get_algorithm().value,
