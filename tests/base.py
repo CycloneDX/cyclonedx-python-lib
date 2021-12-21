@@ -16,15 +16,21 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
+import io
 import json
+import os
 import sys
 import xml.etree.ElementTree
 from datetime import datetime, timezone
+from lxml import etree
+from typing import Any
 from unittest import TestCase
 from uuid import uuid4
 from xml.dom import minidom
-from typing import Any
+
+from lxml.etree import DocumentInvalid
+
+from cyclonedx.output import SchemaVersion
 
 if sys.version_info >= (3, 8, 0):
     from importlib.metadata import version
@@ -34,6 +40,7 @@ else:
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
 cyclonedx_lib_version: str = version(cyclonedx_lib_name)
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
+schema_directory = os.path.join(os.path.dirname(__file__), '../cyclonedx/schema')
 
 
 class BaseJsonTestCase(TestCase):
@@ -74,6 +81,22 @@ class BaseJsonTestCase(TestCase):
 
 
 class BaseXmlTestCase(TestCase):
+
+    def assertValidAgainstSchema(self, bom_xml: str, schema_version: SchemaVersion) -> None:
+        xsd_fn = os.path.join(schema_directory, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
+        with open(xsd_fn) as xsd_fd:
+            xsd_doc = etree.parse(xsd_fd)
+
+        xml_schema = etree.XMLSchema(xsd_doc)
+        schema_validates = False
+        try:
+            schema_validates = xml_schema.validate(etree.parse(io.BytesIO(bytes(bom_xml, 'ascii'))))
+        except DocumentInvalid as e:
+            print(f'Failed to validate SBOM against schema: {str(e)}')
+
+        if not schema_validates:
+            print(xml_schema.error_log.last_error)
+        self.assertTrue(schema_validates, 'Failed to validate Generated SBOM against XSD Schema')
 
     def assertEqualXml(self, a: str, b: str) -> None:
         da, db = minidom.parseString(a), minidom.parseString(b)

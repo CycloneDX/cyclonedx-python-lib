@@ -28,6 +28,9 @@ class BaseSchemaVersion(ABC):
     def bom_supports_metadata(self) -> bool:
         return True
 
+    def bom_requires_modified(self) -> bool:
+        return False
+
     def component_supports_author(self) -> bool:
         return True
 
@@ -82,6 +85,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
 
     def bom_supports_metadata(self) -> bool:
         return False
+
+    def bom_requires_modified(self) -> bool:
+        return True
 
     def component_supports_author(self) -> bool:
         return False

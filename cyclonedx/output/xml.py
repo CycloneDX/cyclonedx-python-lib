@@ -104,6 +104,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # purl
         ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
 
+        # modified
+        if self.bom_requires_modified():
+            ElementTree.SubElement(component_element, 'modified').text = 'false'
+
         # licenses
         if component.get_license():
             licenses_e = ElementTree.SubElement(component_element, 'licenses')
