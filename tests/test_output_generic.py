@@ -19,8 +19,11 @@
 
 from unittest import TestCase
 
+from cyclonedx.exception.output import ComponentVersionRequiredException
+from cyclonedx.model.bom import Bom
+from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from cyclonedx.output.xml import XmlV1Dot3
+from cyclonedx.output.xml import XmlV1Dot3, Xml
 
 
 class TestOutputGeneric(TestCase):
@@ -36,3 +39,10 @@ class TestOutputGeneric(TestCase):
     def test_get_instance_xml_v1_3(self) -> None:
         i = get_instance(output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
         self.assertIsInstance(i, XmlV1Dot3)
+
+    def test_component_no_version_v1_3(self) -> None:
+        bom = Bom()
+        bom.add_component(Component(name='setuptools'))
+        with self.assertRaises(ComponentVersionRequiredException):
+            outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_3)
+            outputter.output_as_string()

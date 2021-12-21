@@ -24,6 +24,7 @@ from xml.etree import ElementTree
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
+from ..exception.output import ComponentVersionRequiredException
 from ..model import HashType
 from ..model.component import Component
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilitySourceType
@@ -95,6 +96,11 @@ class Xml(BaseOutput, BaseSchemaVersion):
         ElementTree.SubElement(component_element, 'name').text = component.get_name()
 
         # version
+        if not self.component_version_optional() and not component.get_version():
+            raise ComponentVersionRequiredException(
+                f'Component "{component.get_purl()}" has no version but the target schema version mandates Components '
+                f'have a version specified'
+            )
         ElementTree.SubElement(component_element, 'version').text = component.get_version()
 
         # hashes
