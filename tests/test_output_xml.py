@@ -109,6 +109,7 @@ class TestOutputXml(BaseXmlTestCase):
         outputter: Xml = get_instance(bom=bom)
         self.assertIsInstance(outputter, XmlV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools_with_vulnerabilities.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
 
@@ -136,6 +137,7 @@ class TestOutputXml(BaseXmlTestCase):
         outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_0)
         self.assertIsInstance(outputter, XmlV1Dot0)
         with open(join(dirname(__file__), 'fixtures/bom_v1.0_setuptools.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_0)
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
 
@@ -151,6 +153,7 @@ class TestOutputXml(BaseXmlTestCase):
         outputter: Xml = get_instance(bom=bom)
         self.assertIsInstance(outputter, XmlV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_toml_with_component_hashes.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
@@ -177,6 +180,7 @@ class TestOutputXml(BaseXmlTestCase):
         self.assertIsInstance(outputter, XmlV1Dot3)
         with open(join(dirname(__file__),
                        'fixtures/bom_v1.3_toml_with_component_external_references.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
@@ -190,6 +194,19 @@ class TestOutputXml(BaseXmlTestCase):
         self.assertIsInstance(outputter, XmlV1Dot3)
         with open(join(dirname(__file__),
                        'fixtures/bom_v1.3_toml_with_component_license.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_with_no_component_version_1_4(self) -> None:
+        bom = Bom()
+        bom.add_component(Component(name='setuptools', qualifiers='extension=tar.gz'))
+        outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, XmlV1Dot4)
+        with open(join(dirname(__file__),
+                       'fixtures/bom_v1.4_setuptools_no_version.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()

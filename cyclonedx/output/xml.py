@@ -96,16 +96,27 @@ class Xml(BaseOutput, BaseSchemaVersion):
         ElementTree.SubElement(component_element, 'name').text = component.get_name()
 
         # version
-        if not self.component_version_optional() and not component.get_version():
-            raise ComponentVersionRequiredException(
-                f'Component "{component.get_purl()}" has no version but the target schema version mandates Components '
-                f'have a version specified'
-            )
-        ElementTree.SubElement(component_element, 'version').text = component.get_version()
+        if self.component_version_optional():
+            if component.get_version():
+                # 1.4 schema version
+                ElementTree.SubElement(component_element, 'version').text = component.get_version()
+        else:
+            if not component.get_version():
+                raise ComponentVersionRequiredException(
+                    f'Component "{component.get_purl()}" has no version but the target schema version mandates Components '
+                    f'have a version specified'
+                )
+            ElementTree.SubElement(component_element, 'version').text = component.get_version()
 
         # hashes
         if len(component.get_hashes()) > 0:
             Xml._add_hashes_to_element(hashes=component.get_hashes(), element=component_element)
+
+        # licenses
+        if component.get_license():
+            licenses_e = ElementTree.SubElement(component_element, 'licenses')
+            license_e = ElementTree.SubElement(licenses_e, 'license')
+            ElementTree.SubElement(license_e, 'name').text = component.get_license()
 
         # purl
         ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
@@ -113,12 +124,6 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # modified
         if self.bom_requires_modified():
             ElementTree.SubElement(component_element, 'modified').text = 'false'
-
-        # licenses
-        if component.get_license():
-            licenses_e = ElementTree.SubElement(component_element, 'licenses')
-            license_e = ElementTree.SubElement(licenses_e, 'license')
-            ElementTree.SubElement(license_e, 'name').text = component.get_license()
 
         # externalReferences
         if self.component_supports_external_references() and len(component.get_external_references()) > 0:
