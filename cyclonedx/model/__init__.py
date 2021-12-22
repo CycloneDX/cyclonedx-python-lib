@@ -16,9 +16,11 @@
 #
 
 import hashlib
+import re
 from enum import Enum
-from typing import List, Union
+from typing import List, Optional, Union
 
+from ..exception.model import InvalidLocaleTypeException, InvalidUriException
 from ..exception.parser import UnknownHashTypeException
 
 """
@@ -27,6 +29,8 @@ Uniform set of models to represent objects within a CycloneDX software bill-of-m
 You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
 from a `cyclonedx.parser.BaseParser` implementation.
 """
+
+LOCALE_TYPE_REGEX = re.compile(r'^([a-z]{2})(-[A-Z]{2})?$')
 
 
 def sha1sum(filename: str) -> str:
@@ -45,6 +49,16 @@ def sha1sum(filename: str) -> str:
         for byte_block in iter(lambda: f.read(4096), b""):
             h.update(byte_block)
     return h.hexdigest()
+
+
+class Encoding(Enum):
+    """
+    This is out internal representation of the encoding simple type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/#type_encoding
+    """
+    BASE_64 = 'base64'
 
 
 class HashAlgorithm(Enum):
@@ -154,6 +168,28 @@ class ExternalReferenceType(Enum):
     WEBSITE = 'website'
 
 
+class XsUri:
+    """
+    Helper class that allows us to perform validation on data strings that are defined as xs:anyURI
+    in CycloneDX schema.
+
+    .. note::
+        See XSD definition for xsd:anyURI: http://www.datypic.com/sc/xsd/t-xsd_anyURI.html
+    """
+
+    invalid_uri_regex = re.compile("(%(?![0-9A-F]{2})|#.*#)", re.IGNORECASE + re.MULTILINE)
+
+    def __init__(self, uri: str) -> None:
+        if re.search(XsUri.invalid_uri_regex, uri):
+            raise InvalidUriException(
+                f"Supplied value '{uri}' does not appear to be a valid URI."
+            )
+        self._uri = uri
+
+    def __repr__(self) -> str:
+        return self._uri
+
+
 class ExternalReference:
     """
     This is out internal representation of an ExternalReference complex type that can be used in multiple places within
@@ -218,3 +254,136 @@ class ExternalReference:
 
     def __repr__(self) -> str:
         return f'<ExternalReference {self._reference_type.name}, {self._url}> {self._hashes}'
+
+
+class IssueClassification(Enum):
+    """
+    This is out internal representation of the enum `issueClassification`.
+
+    .. note::
+        See the CycloneDX Schema definition: hhttps://cyclonedx.org/docs/1.4/xml/#type_issueClassification
+    """
+    DEFECT = 'defect'
+    ENHANCEMENT = 'enhancement'
+    SECURITY = 'security'
+
+
+class IssueType:
+    """
+    This is out internal representation of an IssueType complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
+    """
+
+    def __init__(self, classification: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
+                 description: Optional[str] = None, source_name: Optional[str] = None,
+                 source_url: Optional[XsUri] = None, references: Optional[List[XsUri]] = None) -> None:
+        self._classification: IssueClassification = classification
+        self._id: Optional[str] = id
+        self._name: Optional[str] = name
+        self._description: Optional[str] = description
+        self._source_name: Optional[str] = source_name
+        self._source_url: Optional[XsUri] = source_url
+        self._references: Optional[List[XsUri]] = references
+
+
+class Property:
+    """
+    This is out internal representation of `propertyType` complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_propertyType
+
+    Specifies an individual property with a name and value.
+    """
+
+    def __init__(self, name: str, value: str) -> None:
+        self._name = name
+        self._value = value
+
+    def get_name(self) -> str:
+        """
+        Get the name of this Property.
+
+        Returns:
+            Name of this Property as `str`.
+        """
+        return self._name
+
+    def get_value(self) -> str:
+        """
+        Get the value of this Property.
+
+        Returns:
+            Value of this Property as `str`.
+        """
+        return self._value
+
+
+class Properties:
+    """
+    This is out internal representation of `propertiesType` complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_propertiesType
+
+    Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+    officially supported in the standard without having to use additional namespaces or create extensions.
+    """
+
+    def __init__(self, properties: Optional[List[Property]] = None) -> None:
+        if properties:
+            self._properties = properties
+        else:
+            self._properties = []
+
+    def add_property(self, prop: Property) -> None:
+        """
+        Add a Property to this list of Properties.
+
+        Args:
+            prop:
+                `Property` to add
+
+        Returns:
+            None
+        """
+        self._properties.append(prop)
+
+    def get_properties(self) -> List[Property]:
+        """
+        Get all Property instances in this List.
+
+        Returns:
+             List of `Property` objects, or an empty List.
+        """
+        return self._properties
+
+
+class Note:
+    """
+    This is out internal representation of the Note complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
+    """
+
+    def __init__(self, text: str, locale: Optional[str] = None, content_type: Optional[str] = None,
+                 content_encoding: Optional[Encoding] = None) -> None:
+        self._text: str = text
+        self._locale: Optional[str] = None
+        self._content_type: Optional[str] = content_type
+        self._content_encoding: Optional[Encoding] = content_encoding
+        if locale:
+            if re.search(LOCALE_TYPE_REGEX, locale):
+                # Valid locale
+                self._locale = locale
+            else:
+                raise InvalidLocaleTypeException(
+                    f"Supplied locale '{locale}' is not a valid locale according to ISO-639 format."
+                )
