@@ -26,7 +26,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
-    VulnerabilitySourceType
+    VulnerabilityScoreSourceType
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
 from tests.base import BaseXmlTestCase
@@ -97,9 +97,9 @@ class TestOutputXml(BaseXmlTestCase):
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
                 VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
-                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilitySourceType.CVSS_V3,
+                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilityScoreSourceType.CVSS_V3,
                                     vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
-                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilitySourceType.OWASP,
+                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilityScoreSourceType.OWASP,
                                     vector='OWASP/K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50', )
             ],
             cwes=[123, 456], description='A description here', recommendations=['Upgrade'],
@@ -125,9 +125,9 @@ class TestOutputXml(BaseXmlTestCase):
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
                 VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
-                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilitySourceType.CVSS_V3,
+                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilityScoreSourceType.CVSS_V3,
                                     vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
-                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilitySourceType.OWASP,
+                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilityScoreSourceType.OWASP,
                                     vector='OWASP/K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50', )
             ],
             cwes=[123, 456], description='A description here', recommendations=['Upgrade'],
