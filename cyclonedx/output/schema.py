@@ -25,6 +25,9 @@ class BaseSchemaVersion(ABC):
     def bom_metadata_supports_tools(self) -> bool:
         return True
 
+    def bom_metadata_supports_tools_external_references(self) -> bool:
+        return True
+
     def bom_supports_metadata(self) -> bool:
         return True
 
@@ -59,11 +62,17 @@ class SchemaVersion1Dot4(BaseSchemaVersion):
 
 class SchemaVersion1Dot3(BaseSchemaVersion):
 
+    def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
     def get_schema_version(self) -> str:
         return '1.3'
 
 
 class SchemaVersion1Dot2(BaseSchemaVersion):
+
+    def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
 
     def get_schema_version(self) -> str:
         return '1.2'
@@ -72,6 +81,9 @@ class SchemaVersion1Dot2(BaseSchemaVersion):
 class SchemaVersion1Dot1(BaseSchemaVersion):
 
     def bom_metadata_supports_tools(self) -> bool:
+        return False
+
+    def bom_metadata_supports_tools_external_references(self) -> bool:
         return False
 
     def bom_supports_metadata(self) -> bool:
@@ -87,6 +99,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
 class SchemaVersion1Dot0(BaseSchemaVersion):
 
     def bom_metadata_supports_tools(self) -> bool:
+        return False
+
+    def bom_metadata_supports_tools_external_references(self) -> bool:
         return False
 
     def bom_supports_metadata(self) -> bool:

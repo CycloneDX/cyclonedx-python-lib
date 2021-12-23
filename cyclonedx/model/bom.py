@@ -22,7 +22,7 @@ import sys
 from typing import List, Optional
 from uuid import uuid4
 
-from . import HashType, ExternalReference
+from . import HashType, ExternalReference, ExternalReferenceType, XsUri
 from .component import Component
 from ..parser import BaseParser
 
@@ -44,6 +44,41 @@ class Tool:
         self._version = version
         self._hashes: List[HashType] = hashes or []
         self._external_references: List[ExternalReference] = external_references or []
+
+    def add_external_reference(self, reference: ExternalReference) -> None:
+        """
+        Add an external reference to this Tool.
+
+        Args:
+            reference:
+                `ExternalReference` to add to this Tool.
+
+        Returns:
+            None
+        """
+        self._external_references.append(reference)
+
+    def add_external_references(self, references: List[ExternalReference]) -> None:
+        """
+        Add a list of external reference to this Tool.
+
+        Args:
+            references:
+                List of `ExternalReference` to add to this Tool.
+
+        Returns:
+            None
+        """
+        self._external_references = self._external_references + references
+
+    def get_external_references(self) -> List[ExternalReference]:
+        """
+        List of External References that relate to this Tool.
+
+        Returns:
+            `List` of `ExternalReference` objects where there are, else an empty `List`.
+        """
+        return self._external_references
 
     def get_hashes(self) -> List[HashType]:
         """
@@ -95,6 +130,40 @@ try:
 except Exception:
     __ThisToolVersion = None
 ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
+ThisTool.add_external_references(references=[
+    ExternalReference(
+        reference_type=ExternalReferenceType.BUILD_SYSTEM,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.DISTRIBUTION,
+        url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.DOCUMENTATION,
+        url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.ISSUE_TRACKER,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.LICENSE,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.RELEASE_NOTES,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.VCS,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.WEBSITE,
+        url=XsUri('https://cyclonedx.org')
+    )
+])
 
 
 class BomMetaData:

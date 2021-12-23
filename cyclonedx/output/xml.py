@@ -25,7 +25,7 @@ from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from ..exception.output import ComponentVersionRequiredException
-from ..model import HashType
+from ..model import ExternalReference, HashType
 from ..model.component import Component
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilitySourceType
 
@@ -232,13 +232,27 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 ElementTree.SubElement(tool_e, 'vendor').text = tool.get_vendor()
                 ElementTree.SubElement(tool_e, 'name').text = tool.get_name()
                 ElementTree.SubElement(tool_e, 'version').text = tool.get_version()
-                if len(tool.get_hashes()) > 0:
-                    hashes_e = ElementTree.SubElement(tool_e, 'hashes')
-                    for hash_ in tool.get_hashes():
-                        ElementTree.SubElement(hashes_e, 'hash',
-                                               {'alg': hash_.get_algorithm().value}).text = hash_.get_hash_value()
+                if tool.get_hashes():
+                    Xml._add_hashes_to_element(hashes=tool.get_hashes(), element=tool_e)
+                if self.bom_metadata_supports_tools_external_references() and tool.get_external_references():
+                    Xml._add_external_references_to_element(
+                        ext_refs=tool.get_external_references(), element=tool_e
+                    )
 
         return bom
+
+    @staticmethod
+    def _add_external_references_to_element(ext_refs: List[ExternalReference], element: ElementTree.Element) -> None:
+        tool_ext_refs = ElementTree.SubElement(element, 'externalReferences')
+        for ext_ref in ext_refs:
+            tool_ext_ref = ElementTree.SubElement(
+                tool_ext_refs, 'reference', {'type': ext_ref.get_reference_type().value}
+            )
+            ElementTree.SubElement(tool_ext_ref, 'url').text = ext_ref.get_url()
+            if ext_ref.get_comment():
+                ElementTree.SubElement(tool_ext_ref, 'comment').text = ext_ref.get_comment()
+            if ext_ref.get_hashes():
+                Xml._add_hashes_to_element(hashes=ext_ref.get_hashes(), element=tool_ext_ref)
 
     @staticmethod
     def _add_hashes_to_element(hashes: List[HashType], element: ElementTree.Element) -> None:
