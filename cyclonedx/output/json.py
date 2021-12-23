@@ -32,18 +32,17 @@ class Json(BaseOutput, BaseSchemaVersion):
         return json.dumps(self._get_json())
 
     def _get_json(self) -> object:
-        components = list(map(self._get_component_as_dict, self.get_bom().get_components()))
-
         response = {
             "bomFormat": "CycloneDX",
             "specVersion": str(self.get_schema_version()),
             "serialNumber": self.get_bom().get_urn_uuid(),
-            "version": 1,
-            "components": components
+            "version": 1
         }
 
         if self.bom_supports_metadata():
             response['metadata'] = self._get_metadata_as_dict()
+
+        response["components"] = list(map(self._get_component_as_dict, self.get_bom().get_components()))
 
         return response
 

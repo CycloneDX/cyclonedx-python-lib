@@ -103,8 +103,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
         else:
             if not component.get_version():
                 raise ComponentVersionRequiredException(
-                    f'Component "{component.get_purl()}" has no version but the target schema version mandates Components '
-                    f'have a version specified'
+                    f'Component "{component.get_purl()}" has no version but the target schema version mandates '
+                    f'Components have a version specified'
                 )
             ElementTree.SubElement(component_element, 'version').text = component.get_version()
 

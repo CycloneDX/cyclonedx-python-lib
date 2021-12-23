@@ -35,6 +35,7 @@ class TestOutputJson(BaseJsonTestCase):
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
         self.assertIsInstance(outputter, JsonV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
             expected_json.close()
 
@@ -44,6 +45,7 @@ class TestOutputJson(BaseJsonTestCase):
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_2)
         self.assertIsInstance(outputter, JsonV1Dot2)
         with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_2)
             self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
             expected_json.close()
 
@@ -57,6 +59,7 @@ class TestOutputJson(BaseJsonTestCase):
         outputter: Json = get_instance(bom=bom, output_format=OutputFormat.JSON)
         self.assertIsInstance(outputter, JsonV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_toml_with_component_hashes.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()
 
@@ -82,6 +85,7 @@ class TestOutputJson(BaseJsonTestCase):
         self.assertIsInstance(outputter, JsonV1Dot3)
         with open(join(dirname(__file__),
                        'fixtures/bom_v1.3_toml_with_component_external_references.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()
 
@@ -94,5 +98,6 @@ class TestOutputJson(BaseJsonTestCase):
         self.assertIsInstance(outputter, JsonV1Dot3)
         with open(join(dirname(__file__),
                        'fixtures/bom_v1.3_toml_with_component_license.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()
