@@ -46,6 +46,9 @@ class BaseSchemaVersion(ABC):
     def component_supports_external_references(self) -> bool:
         return True
 
+    def component_supports_release_notes(self) -> bool:
+        return True
+
     @abstractmethod
     def get_schema_version(self) -> str:
         raise NotImplementedError
@@ -65,6 +68,9 @@ class SchemaVersion1Dot3(BaseSchemaVersion):
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return False
 
+    def component_supports_release_notes(self) -> bool:
+        return False
+
     def get_schema_version(self) -> str:
         return '1.3'
 
@@ -72,6 +78,9 @@ class SchemaVersion1Dot3(BaseSchemaVersion):
 class SchemaVersion1Dot2(BaseSchemaVersion):
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def component_supports_release_notes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:
@@ -90,6 +99,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
         return False
 
     def component_supports_author(self) -> bool:
+        return False
+
+    def component_supports_release_notes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:
@@ -117,6 +129,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def component_supports_external_references(self) -> bool:
+        return False
+
+    def component_supports_release_notes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:

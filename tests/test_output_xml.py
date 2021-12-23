@@ -16,12 +16,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
+import base64
+from datetime import datetime, timezone
 from os.path import dirname, join
 
-from cyclonedx.model import ExternalReference, ExternalReferenceType, HashType
+from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, IssueClassification, \
+    IssueType, Note, Properties, Property, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
     VulnerabilitySourceType
 from cyclonedx.output import get_instance, SchemaVersion
@@ -206,6 +209,79 @@ class TestOutputXml(BaseXmlTestCase):
         self.assertIsInstance(outputter, XmlV1Dot4)
         with open(join(dirname(__file__),
                        'fixtures/bom_v1.4_setuptools_no_version.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_with_component_release_notes_pre_1_4(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='toml', version='0.10.2', qualifiers='extension=tar.gz',
+            release_notes=ReleaseNotes(type='major')
+        )
+        c.set_license('MIT License')
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_3)
+        self.assertIsInstance(outputter, XmlV1Dot3)
+        with open(join(dirname(__file__),
+                       'fixtures/bom_v1.3_toml_with_component_license.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_with_component_release_notes_post_1_4(self) -> None:
+        bom = Bom()
+        timestamp: datetime = datetime(2021, 12, 31, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
+
+        text_content: str = base64.b64encode(
+            bytearray('Some simple plain text', encoding='UTF-8')
+        ).decode(encoding='UTF-8')
+
+        c = Component(
+            name='setuptools', version='50.3.2', qualifiers='extension=tar.gz',
+            release_notes=ReleaseNotes(
+                type='major', title="Release Notes Title",
+                featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
+                social_image=XsUri('https://cyclonedx.org/cyclonedx-icon.png'),
+                description="This release is a test release", timestamp=timestamp,
+                aliases=[
+                    "First Test Release"
+                ],
+                tags=['test', 'alpha'],
+                resolves=[
+                    IssueType(
+                        classification=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
+                        description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
+                        source_name='NVD', source_url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'),
+                        references=[
+                            XsUri('https://logging.apache.org/log4j/2.x/security.html'),
+                            XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
+                        ]
+                    )
+                ],
+                notes=[
+                    Note(
+                        text=text_content, locale='en-GB', content_type='text/plain; charset=UTF-8',
+                        content_encoding=Encoding.BASE_64
+                    ),
+                    Note(
+                        text=text_content, locale='en-US', content_type='text/plain; charset=UTF-8',
+                        content_encoding=Encoding.BASE_64
+                    )
+                ],
+                properties=Properties(properties=[
+                    Property(name='key1', value='val1'),
+                    Property(name='key2', value='val2')
+                ])
+            )
+        )
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, XmlV1Dot4)
+        with open(join(dirname(__file__),
+                       'fixtures/bom_v1.4_setuptools_with_release_notes.xml')) as expected_xml:
             self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())

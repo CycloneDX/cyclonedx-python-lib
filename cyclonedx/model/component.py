@@ -25,6 +25,7 @@ from typing import List, Optional
 from packageurl import PackageURL  # type: ignore
 
 from . import ExternalReference, HashAlgorithm, HashType, sha1sum
+from .release_note import ReleaseNotes
 from .vulnerability import Vulnerability
 
 
@@ -85,7 +86,8 @@ class Component:
                  qualifiers: Optional[str] = None, subpath: Optional[str] = None,
                  hashes: Optional[List[HashType]] = None, author: Optional[str] = None,
                  description: Optional[str] = None, license_str: Optional[str] = None,
-                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi') -> None:
+                 component_type: ComponentType = ComponentType.LIBRARY, package_url_type: str = 'pypi',
+                 release_notes: Optional[ReleaseNotes] = None) -> None:
         self._package_url_type: str = package_url_type
         self._namespace: Optional[str] = namespace
         self._name: str = name
@@ -98,9 +100,10 @@ class Component:
         self._description: Optional[str] = description
         self._license: Optional[str] = license_str
 
-        self._hashes: List[HashType] = hashes if hashes else []
+        self._hashes: List[HashType] = hashes or []
         self._vulnerabilites: List[Vulnerability] = []
         self._external_references: List[ExternalReference] = []
+        self._release_notes: Optional[ReleaseNotes] = release_notes or None
 
     def add_external_reference(self, reference: ExternalReference) -> None:
         """
@@ -249,6 +252,15 @@ class Component:
         """
         return self._vulnerabilites
 
+    def get_release_notes(self) -> Optional[ReleaseNotes]:
+        """
+        Get the Release Notes for this Component if present.
+
+        Returns:
+             `ReleaseNotes` if present else `None`.
+        """
+        return self._release_notes
+
     def has_vulnerabilities(self) -> bool:
         """
         Does this Component have any vulnerabilities?
@@ -297,6 +309,19 @@ class Component:
         """
         self._license = license_str
 
+    def set_release_notes(self, release_notes: ReleaseNotes) -> None:
+        """
+        Set the release notes for this Component.
+
+        Args:
+            release_notes:
+                `ReleaseNotes` for this `Component`
+
+        Returns:
+            None
+        """
+        self._release_notes = release_notes
+
     def to_package_url(self) -> PackageURL:
         """
         Return a PackageURL representation of this Component.
@@ -313,11 +338,8 @@ class Component:
             subpath=self._subpath
         )
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Component):
-            return other.get_purl() == self.get_purl()
-        else:
-            raise NotImplementedError
+    def __eq__(self, other: "Component") -> bool:
+        return other.get_purl() == self.get_purl()
 
     def __repr__(self) -> str:
         return f'<Component {self._name}={self._version}>'

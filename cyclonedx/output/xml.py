@@ -140,6 +140,73 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 if len(ext_ref.get_hashes()) > 0:
                     Xml._add_hashes_to_element(hashes=ext_ref.get_hashes(), element=external_reference_e)
 
+        # releaseNotes
+        if self.component_supports_release_notes() and component.get_release_notes():
+            release_notes_e = ElementTree.SubElement(component_element, 'releaseNotes')
+            ElementTree.SubElement(release_notes_e, 'type').text = component.get_release_notes().get_type()
+            if component.get_release_notes().get_title():
+                ElementTree.SubElement(release_notes_e, 'title').text = component.get_release_notes().get_title()
+            if component.get_release_notes().get_featured_image():
+                ElementTree.SubElement(release_notes_e,
+                                       'featuredImage').text = str(component.get_release_notes().get_featured_image())
+            if component.get_release_notes().get_social_image():
+                ElementTree.SubElement(release_notes_e,
+                                       'socialImage').text = str(component.get_release_notes().get_social_image())
+            if component.get_release_notes().get_description():
+                ElementTree.SubElement(release_notes_e,
+                                       'description').text = component.get_release_notes().get_description()
+            if component.get_release_notes().get_timestamp():
+                ElementTree.SubElement(release_notes_e,
+                                       'timestamp').text = component.get_release_notes().get_timestamp().isoformat()
+            if component.get_release_notes().get_aliases():
+                release_notes_aliases_e = ElementTree.SubElement(release_notes_e, 'aliases')
+                for alias in component.get_release_notes().get_aliases():
+                    ElementTree.SubElement(release_notes_aliases_e, 'alias').text = alias
+            if component.get_release_notes().get_tags():
+                release_notes_tags_e = ElementTree.SubElement(release_notes_e, 'tags')
+                for tag in component.get_release_notes().get_tags():
+                    ElementTree.SubElement(release_notes_tags_e, 'tag').text = tag
+            if component.get_release_notes().get_resolves():
+                release_notes_resolves_e = ElementTree.SubElement(release_notes_e, 'resolves')
+                for issue in component.get_release_notes().get_resolves():
+                    issue_e = ElementTree.SubElement(
+                        release_notes_resolves_e, 'issue', {'type': issue.get_classification().value}
+                    )
+                    if issue.get_id():
+                        ElementTree.SubElement(issue_e, 'id').text = issue.get_id()
+                    if issue.get_name():
+                        ElementTree.SubElement(issue_e, 'name').text = issue.get_name()
+                    if issue.get_description():
+                        ElementTree.SubElement(issue_e, 'description').text = issue.get_description()
+                    if issue.get_source_name() or issue.get_source_url():
+                        issue_source_e = ElementTree.SubElement(issue_e, 'source')
+                        if issue.get_source_name():
+                            ElementTree.SubElement(issue_source_e, 'name').text = issue.get_source_name()
+                        if issue.get_source_url():
+                            ElementTree.SubElement(issue_source_e, 'url').text = str(issue.get_source_url())
+                    if issue.get_references():
+                        issue_references_e = ElementTree.SubElement(issue_e, 'references')
+                        for reference in issue.get_references():
+                            ElementTree.SubElement(issue_references_e, 'url').text = str(reference)
+            if component.get_release_notes().get_notes():
+                release_notes_notes_e = ElementTree.SubElement(release_notes_e, 'notes')
+                for note in component.get_release_notes().get_notes():
+                    note_e = ElementTree.SubElement(release_notes_notes_e, 'note')
+                    if note.get_locale():
+                        ElementTree.SubElement(note_e, 'locale').text = note.get_locale()
+                    text_attrs = {}
+                    if note.get_content_type():
+                        text_attrs['content-type'] = note.get_content_type()
+                    if note.get_content_encoding():
+                        text_attrs['encoding'] = note.get_content_encoding().value
+                    ElementTree.SubElement(note_e, 'text', text_attrs).text = note.get_text()
+            if component.get_release_notes().get_properties():
+                release_notes_properties_e = ElementTree.SubElement(release_notes_e, 'properties')
+                for prop in component.get_release_notes().get_properties().get_properties():
+                    ElementTree.SubElement(
+                        release_notes_properties_e, 'property', {'name': prop.get_name()}
+                    ).text = prop.get_value()
+
         return component_element
 
     @staticmethod
