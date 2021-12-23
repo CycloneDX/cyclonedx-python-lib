@@ -161,6 +161,7 @@ class ExternalReferenceType(Enum):
     LICENSE = 'license'
     MAILING_LIST = 'mailing-list'
     OTHER = 'other'
+    RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
     SOCIAL = 'social'
     SCM = 'vcs'
     SUPPORT = 'support'
@@ -172,6 +173,8 @@ class XsUri:
     """
     Helper class that allows us to perform validation on data strings that are defined as xs:anyURI
     in CycloneDX schema.
+
+    Developers can just use this via `str(XsUri('https://www.google.com'))`.
 
     .. note::
         See XSD definition for xsd:anyURI: http://www.datypic.com/sc/xsd/t-xsd_anyURI.html
@@ -186,6 +189,9 @@ class XsUri:
             )
         self._uri = uri
 
+    def __eq__(self, other: "XsUri") -> bool:
+        return self._uri == str(other)
+
     def __repr__(self) -> str:
         return self._uri
 
@@ -199,10 +205,10 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, reference_type: ExternalReferenceType, url: str, comment: str = '',
-                 hashes: Union[List[HashType], None] = None) -> None:
+    def __init__(self, reference_type: ExternalReferenceType, url: Union[str, XsUri], comment: str = '',
+                 hashes: Optional[List[HashType]] = None) -> None:
         self._reference_type: ExternalReferenceType = reference_type
-        self._url = url
+        self._url = str(url)
         self._comment = comment
         self._hashes: List[HashType] = hashes if hashes else []
 
@@ -286,7 +292,151 @@ class IssueType:
         self._description: Optional[str] = description
         self._source_name: Optional[str] = source_name
         self._source_url: Optional[XsUri] = source_url
-        self._references: Optional[List[XsUri]] = references
+        self._references: List[XsUri] = references or []
+
+    def add_reference(self, reference: XsUri) -> None:
+        """
+        Add a reference URL to this Issue.
+
+        Args:
+            reference:
+                `XsUri` Reference URL to add
+        """
+        self._references.append(reference)
+
+    def get_classification(self) -> IssueClassification:
+        """
+        Get the classification of this IssueType.
+
+        Returns:
+            `IssueClassification` that represents the classification of this `IssueType`.
+        """
+        return self._classification
+
+    def get_id(self) -> Optional[str]:
+        """
+        Get the ID of this IssueType.
+
+        Returns:
+            `str` that represents the ID of this `IssueType` if set else `None`.
+        """
+        return self._id
+
+    def get_name(self) -> Optional[str]:
+        """
+        Get the name of this IssueType.
+
+        Returns:
+            `str` that represents the name of this `IssueType` if set else `None`.
+        """
+        return self._name
+
+    def get_description(self) -> Optional[str]:
+        """
+        Get the description of this IssueType.
+
+        Returns:
+            `str` that represents the description of this `IssueType` if set else `None`.
+        """
+        return self._description
+
+    def get_source_name(self) -> Optional[str]:
+        """
+        Get the source_name of this IssueType.
+
+        For example, this might be "NVD" or "National Vulnerability Database".
+
+        Returns:
+            `str` that represents the source_name of this `IssueType` if set else `None`.
+        """
+        return self._source_name
+
+    def get_source_url(self) -> Optional[XsUri]:
+        """
+        Get the source_url of this IssueType.
+
+        For example, this would likely be a URL to the issue on the NVD.
+
+        Returns:
+            `XsUri` that represents the source_url of this `IssueType` if set else `None`.
+        """
+        return self._source_url
+
+    def get_references(self) -> List[XsUri]:
+        """
+        Get any references for this IssueType.
+
+        References are an arbitrary list of URIs that relate to this issue.
+
+        Returns:
+            List of `XsUri` objects.
+        """
+        return self._references
+
+    def set_id(self, id: str) -> None:
+        """
+        Set the ID of this Issue.
+
+        Args:
+            id:
+                `str` the Issue ID
+
+        Returns:
+            None
+        """
+        self._id = id
+
+    def set_name(self, name: str) -> None:
+        """
+        Set the name of this Issue.
+
+        Args:
+            name:
+                `str` the name of this Issue
+
+        Returns:
+            None
+        """
+        self._name = name
+
+    def set_description(self, description: str) -> None:
+        """
+        Set the description of this Issue.
+
+        Args:
+            description:
+                `str` the description of this Issue
+
+        Returns:
+            None
+        """
+        self._description = description
+
+    def set_source_name(self, source_name: str) -> None:
+        """
+        Set the name of the source of this Issue.
+
+        Args:
+            source_name:
+                `str` For example, this might be "NVD" or "National Vulnerability Database"
+
+        Returns:
+            None
+        """
+        self._source_name = source_name
+
+    def set_source_url(self, source_url: XsUri) -> None:
+        """
+        Set the URL for the source of this Issue.
+
+        Args:
+            source_url:
+                `XsUri` For example, this would likely be a URL to the issue on the NVD
+
+        Returns:
+            None
+        """
+        self._source_url = source_url
 
 
 class Property:
@@ -336,10 +486,7 @@ class Properties:
     """
 
     def __init__(self, properties: Optional[List[Property]] = None) -> None:
-        if properties:
-            self._properties = properties
-        else:
-            self._properties = []
+        self._properties = properties or []
 
     def add_property(self, prop: Property) -> None:
         """
@@ -373,11 +520,13 @@ class Note:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
     """
 
+    DEFAULT_CONTENT_TYPE: str = 'text/plain'
+
     def __init__(self, text: str, locale: Optional[str] = None, content_type: Optional[str] = None,
                  content_encoding: Optional[Encoding] = None) -> None:
         self._text: str = text
         self._locale: Optional[str] = None
-        self._content_type: Optional[str] = content_type
+        self._content_type: str = content_type or Note.DEFAULT_CONTENT_TYPE
         self._content_encoding: Optional[Encoding] = content_encoding
         if locale:
             if re.search(LOCALE_TYPE_REGEX, locale):
@@ -385,5 +534,49 @@ class Note:
                 self._locale = locale
             else:
                 raise InvalidLocaleTypeException(
-                    f"Supplied locale '{locale}' is not a valid locale according to ISO-639 format."
+                    f"Supplied locale '{locale}' is not a valid locale. "
+                    f"Locale string should be formatted as the ISO-639 (or higher) language code and optional "
+                    f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
                 )
+
+    def get_text(self) -> str:
+        """
+        Get the text content of this Note.
+
+        Returns:
+            `str` note content
+        """
+        return self._text
+
+    def get_locale(self) -> Optional[str]:
+        """
+        Get the ISO locale of this Note.
+
+        The ISO-639 (or higher) language code and optional ISO-3166 (or higher) country code.
+
+        Examples include: "en", "en-US", "fr" and "fr-CA".
+
+        Returns:
+            `str` locale if set else `None`
+        """
+        return self._locale
+
+    def get_content_type(self) -> str:
+        """
+        Get the content-type of this Note.
+
+        Defaults to 'text/plain' if one was not explicitly specified.
+
+        Returns:
+            `str` content-type
+        """
+        return self._content_type
+
+    def get_content_encoding(self) -> Optional[Encoding]:
+        """
+        Get the encoding method used for the note's content.
+
+        Returns:
+            `Encoding` if set else `None`
+        """
+        return self._content_encoding

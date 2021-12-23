@@ -22,7 +22,7 @@ import sys
 from typing import List, Optional
 from uuid import uuid4
 
-from . import HashType
+from . import HashType, ExternalReference
 from .component import Component
 from ..parser import BaseParser
 
@@ -37,11 +37,13 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, vendor: str, name: str, version: str, hashes: Optional[List[HashType]] = None) -> None:
+    def __init__(self, vendor: str, name: str, version: str, hashes: Optional[List[HashType]] = None,
+                 external_references: Optional[List[ExternalReference]] = None) -> None:
         self._vendor = vendor
         self._name = name
         self._version = version
         self._hashes: List[HashType] = hashes or []
+        self._external_references: List[ExternalReference] = external_references or []
 
     def get_hashes(self) -> List[HashType]:
         """
