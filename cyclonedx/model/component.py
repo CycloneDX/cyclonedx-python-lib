@@ -81,7 +81,7 @@ class Component:
             package_url_type='generic'
         )
 
-    def __init__(self, name: str, version: Optional[str] = None, namespace: Optional[str] = None,
+    def __init__(self, name: str, version: str = '', namespace: Optional[str] = None,
                  qualifiers: Optional[str] = None, subpath: Optional[str] = None,
                  hashes: Optional[List[HashType]] = None, author: Optional[str] = None,
                  description: Optional[str] = None, license_str: Optional[str] = None,
@@ -89,7 +89,7 @@ class Component:
         self._package_url_type: str = package_url_type
         self._namespace: Optional[str] = namespace
         self._name: str = name
-        self._version: Optional[str] = version
+        self._version: str = version
         self._type: ComponentType = component_type
         self._qualifiers: Optional[str] = qualifiers
         self._subpath: Optional[str] = subpath
@@ -228,11 +228,12 @@ class Component:
         """
         return self._type
 
-    def get_version(self) -> Optional[str]:
+    def get_version(self) -> str:
         """
         Get the version of this Component.
 
-        This is NOT optional for CycloneDX Schema Version <= 1.3.
+        This is NOT optional for CycloneDX Schema Version < 1.4 but was agreed to default to an empty string where a
+        version was not supplied for schema versions < 1.4
 
         Returns:
             Declared version of this Component as `str`.

@@ -69,7 +69,7 @@ class TestModelComponent(TestCase):
             name='test-component'
         )
         self.assertEqual(c.get_name(), 'test-component')
-        self.assertIsNone(c.get_version())
+        self.assertEqual(c.get_version(), '')
         self.assertEqual(c.get_type(), ComponentType.LIBRARY)
         self.assertEqual(len(c.get_external_references()), 0)
         self.assertEqual(len(c.get_hashes()), 0)
