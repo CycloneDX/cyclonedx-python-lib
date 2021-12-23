@@ -24,7 +24,7 @@ from . import CycloneDxException
 
 class InvalidLocaleTypeException(CycloneDxException):
     """
-    Raised when the supplied locale does not conform to ISD-639 specification.
+    Raised when the supplied locale does not conform to ISO-639 specification.
 
     Good examples:
         - en
@@ -33,7 +33,7 @@ class InvalidLocaleTypeException(CycloneDxException):
         - fr
         - fr-CA
 
-    The language code MUST be lower case. If the country code is specified, the country code MUST be upper case.
+    The language code MUST be lowercase. If the country code is specified, the country code MUST be upper case.
     The language code and country code MUST be separated by a minus sign.
     """
     pass
