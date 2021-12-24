@@ -17,153 +17,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import datetime
-import sys
+from datetime import datetime, timezone
 from typing import List, Optional
 from uuid import uuid4
 
-from . import HashType, ExternalReference, ExternalReferenceType, XsUri
+from . import ThisTool, Tool
 from .component import Component
 from ..parser import BaseParser
-
-
-class Tool:
-    """
-    This is out internal representation of the toolType complex type within the CycloneDX standard.
-
-    Tool(s) are the things used in the creation of the BOM.
-
-    .. note::
-        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
-    """
-
-    def __init__(self, vendor: str, name: str, version: str, hashes: Optional[List[HashType]] = None,
-                 external_references: Optional[List[ExternalReference]] = None) -> None:
-        self._vendor = vendor
-        self._name = name
-        self._version = version
-        self._hashes: List[HashType] = hashes or []
-        self._external_references: List[ExternalReference] = external_references or []
-
-    def add_external_reference(self, reference: ExternalReference) -> None:
-        """
-        Add an external reference to this Tool.
-
-        Args:
-            reference:
-                `ExternalReference` to add to this Tool.
-
-        Returns:
-            None
-        """
-        self._external_references.append(reference)
-
-    def add_external_references(self, references: List[ExternalReference]) -> None:
-        """
-        Add a list of external reference to this Tool.
-
-        Args:
-            references:
-                List of `ExternalReference` to add to this Tool.
-
-        Returns:
-            None
-        """
-        self._external_references = self._external_references + references
-
-    def get_external_references(self) -> List[ExternalReference]:
-        """
-        List of External References that relate to this Tool.
-
-        Returns:
-            `List` of `ExternalReference` objects where there are, else an empty `List`.
-        """
-        return self._external_references
-
-    def get_hashes(self) -> List[HashType]:
-        """
-        List of cryptographic hashes that identify this version of this Tool.
-
-        Returns:
-            `List` of `HashType` objects where there are any hashes, else an empty `List`.
-        """
-        return self._hashes
-
-    def get_name(self) -> str:
-        """
-        The name of this Tool.
-
-        Returns:
-            `str` representing the name of the Tool
-        """
-        return self._name
-
-    def get_vendor(self) -> str:
-        """
-        The vendor of this Tool.
-
-        Returns:
-            `str` representing the vendor of the Tool
-        """
-        return self._vendor
-
-    def get_version(self) -> str:
-        """
-        The version of this Tool.
-
-        Returns:
-            `str` representing the version of the Tool
-        """
-        return self._version
-
-    def __repr__(self) -> str:
-        return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
-
-
-if sys.version_info >= (3, 8):
-    from importlib.metadata import version as meta_version
-else:
-    from importlib_metadata import version as meta_version
-
-try:
-    __ThisToolVersion: Optional[str] = str(meta_version('cyclonedx-python-lib'))  # type: ignore[no-untyped-call]
-except Exception:
-    __ThisToolVersion = None
-ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
-ThisTool.add_external_references(references=[
-    ExternalReference(
-        reference_type=ExternalReferenceType.BUILD_SYSTEM,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
-    ),
-    ExternalReference(
-        reference_type=ExternalReferenceType.DISTRIBUTION,
-        url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
-    ),
-    ExternalReference(
-        reference_type=ExternalReferenceType.DOCUMENTATION,
-        url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
-    ),
-    ExternalReference(
-        reference_type=ExternalReferenceType.ISSUE_TRACKER,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
-    ),
-    ExternalReference(
-        reference_type=ExternalReferenceType.LICENSE,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
-    ),
-    ExternalReference(
-        reference_type=ExternalReferenceType.RELEASE_NOTES,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
-    ),
-    ExternalReference(
-        reference_type=ExternalReferenceType.VCS,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
-    ),
-    ExternalReference(
-        reference_type=ExternalReferenceType.WEBSITE,
-        url=XsUri('https://cyclonedx.org')
-    )
-])
 
 
 class BomMetaData:
@@ -175,7 +35,7 @@ class BomMetaData:
     """
 
     def __init__(self, tools: Optional[List[Tool]] = None) -> None:
-        self._timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
+        self._timestamp = datetime.now(tz=timezone.utc)
         self._tools: List[Tool] = tools if tools else []
         if len(self._tools) < 1:
             self._tools.append(ThisTool)
@@ -191,12 +51,12 @@ class BomMetaData:
         """
         self._tools.append(tool)
 
-    def get_timestamp(self) -> datetime.datetime:
+    def get_timestamp(self) -> datetime:
         """
         The date and time (in UTC) when this BomMetaData was created.
 
         Returns:
-            `datetime.datetime` instance in UTC timezone
+            `datetime` instance in UTC timezone
         """
         return self._timestamp
 

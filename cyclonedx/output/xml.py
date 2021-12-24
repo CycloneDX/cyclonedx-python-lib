@@ -27,7 +27,7 @@ from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, S
 from ..exception.output import ComponentVersionRequiredException
 from ..model import ExternalReference, HashType
 from ..model.component import Component
-from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilityScoreSourceType
+from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilityScoreSource
 
 
 class Xml(BaseOutput, BaseSchemaVersion):
@@ -255,7 +255,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 # rating.severity
                 if rating.get_method():
                     ElementTree.SubElement(rating_element, 'v:method').text = cast(
-                        VulnerabilityScoreSourceType, rating.get_method()
+                        VulnerabilityScoreSource, rating.get_method()
                     ).value
 
                 # rating.vector

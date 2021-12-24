@@ -17,10 +17,11 @@
 
 import hashlib
 import re
+import sys
 from enum import Enum
 from typing import List, Optional, Union
 
-from ..exception.model import InvalidLocaleTypeException, InvalidUriException
+from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException
 from ..exception.parser import UnknownHashTypeException
 
 """
@@ -580,3 +581,237 @@ class Note:
             `Encoding` if set else `None`
         """
         return self._content_encoding
+
+
+class OrganizationalContact:
+    """
+    This is out internal representation of the `organizationalContact` complex type that can be used in multiple places
+    within a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalContact
+    """
+
+    def __init__(self, name: Optional[str] = None, phone: Optional[str] = None, email: Optional[str] = None) -> None:
+        if not name and not phone and not email:
+            raise NoPropertiesProvidedException(
+                'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
+            )
+        self.name = name
+        self._name: Optional[str] = name
+        self._email: Optional[str] = email
+        self._phone: Optional[str] = phone
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        Get the name of the contact.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    def get_email(self) -> Optional[str]:
+        """
+        Get the email of the contact.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._email
+
+    def get_phone(self) -> Optional[str]:
+        """
+        Get the phone of the contact.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._phone
+
+
+class OrganizationalEntity:
+    """
+    This is out internal representation of the `organizationalEntity` complex type that can be used in multiple places
+    within a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
+    """
+
+    def __init__(self, name: Optional[str] = None, urls: Optional[List[XsUri]] = None,
+                 contacts: Optional[List[OrganizationalContact]] = None) -> None:
+        if not name and not urls and not contacts:
+            raise NoPropertiesProvidedException(
+                'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
+            )
+        self._name: Optional[str] = name
+        self._urls: Optional[List[XsUri]] = urls
+        self._contacts: Optional[List[OrganizationalContact]] = contacts
+
+    def get_name(self) -> Optional[str]:
+        """
+        Get the name of the organization.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    def get_urls(self) -> Optional[List[XsUri]]:
+        """
+        Get a list of URLs of the organization. Multiple URLs are allowed.
+
+        Returns:
+            `List[XsUri]` if set else `None`
+        """
+        return self._urls
+
+    def get_contacts(self) -> Optional[List[OrganizationalContact]]:
+        """
+        Get a list of contact person at the organization. Multiple contacts are allowed.
+
+        Returns:
+            `List[OrganizationalContact]` if set else `None`
+        """
+        return self._contacts
+
+
+class Tool:
+    """
+    This is out internal representation of the `toolType` complex type within the CycloneDX standard.
+
+    Tool(s) are the things used in the creation of the BOM.
+
+    .. note::
+        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
+    """
+
+    def __init__(self, vendor: str, name: str, version: str, hashes: Optional[List[HashType]] = None,
+                 external_references: Optional[List[ExternalReference]] = None) -> None:
+        self._vendor = vendor
+        self._name = name
+        self._version = version
+        self._hashes: List[HashType] = hashes or []
+        self._external_references: List[ExternalReference] = external_references or []
+
+    def add_external_reference(self, reference: ExternalReference) -> None:
+        """
+        Add an external reference to this Tool.
+
+        Args:
+            reference:
+                `ExternalReference` to add to this Tool.
+
+        Returns:
+            None
+        """
+        self._external_references.append(reference)
+
+    def add_external_references(self, references: List[ExternalReference]) -> None:
+        """
+        Add a list of external reference to this Tool.
+
+        Args:
+            references:
+                List of `ExternalReference` to add to this Tool.
+
+        Returns:
+            None
+        """
+        self._external_references = self._external_references + references
+
+    def get_external_references(self) -> List[ExternalReference]:
+        """
+        List of External References that relate to this Tool.
+
+        Returns:
+            `List` of `ExternalReference` objects where there are, else an empty `List`.
+        """
+        return self._external_references
+
+    def get_hashes(self) -> List[HashType]:
+        """
+        List of cryptographic hashes that identify this version of this Tool.
+
+        Returns:
+            `List` of `HashType` objects where there are any hashes, else an empty `List`.
+        """
+        return self._hashes
+
+    def get_name(self) -> str:
+        """
+        The name of this Tool.
+
+        Returns:
+            `str` representing the name of the Tool
+        """
+        return self._name
+
+    def get_vendor(self) -> str:
+        """
+        The vendor of this Tool.
+
+        Returns:
+            `str` representing the vendor of the Tool
+        """
+        return self._vendor
+
+    def get_version(self) -> str:
+        """
+        The version of this Tool.
+
+        Returns:
+            `str` representing the version of the Tool
+        """
+        return self._version
+
+    def __repr__(self) -> str:
+        return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
+
+
+if sys.version_info >= (3, 8):
+    from importlib.metadata import version as meta_version
+else:
+    from importlib_metadata import version as meta_version
+
+try:
+    __ThisToolVersion: Optional[str] = str(meta_version('cyclonedx-python-lib'))  # type: ignore[no-untyped-call]
+except Exception:
+    __ThisToolVersion = None
+ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
+ThisTool.add_external_references(references=[
+    ExternalReference(
+        reference_type=ExternalReferenceType.BUILD_SYSTEM,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.DISTRIBUTION,
+        url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.DOCUMENTATION,
+        url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.ISSUE_TRACKER,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.LICENSE,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.RELEASE_NOTES,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.VCS,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.WEBSITE,
+        url=XsUri('https://cyclonedx.org')
+    )
+])
