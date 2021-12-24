@@ -138,6 +138,8 @@ class ReleaseNotes:
 
     @aliases.setter
     def aliases(self, aliases: Optional[List[str]]) -> None:
+        if not aliases:
+            aliases = None
         self._aliases = aliases
 
     def add_alias(self, alias: str) -> None:
@@ -159,6 +161,8 @@ class ReleaseNotes:
 
     @tags.setter
     def tags(self, tags: Optional[List[str]]) -> None:
+        if not tags:
+            tags = None
         self._tags = tags
 
     def add_tag(self, tag: str) -> None:
@@ -180,6 +184,8 @@ class ReleaseNotes:
 
     @resolves.setter
     def resolves(self, resolves: Optional[List[IssueType]]) -> None:
+        if not resolves:
+            resolves = None
         self._resolves = resolves
 
     def add_resolves(self, issue: IssueType) -> None:
@@ -202,6 +208,8 @@ class ReleaseNotes:
 
     @notes.setter
     def notes(self, notes: Optional[List[Note]]) -> None:
+        if not notes:
+            notes = None
         self._notes = notes
 
     def add_note(self, note: Note) -> None:

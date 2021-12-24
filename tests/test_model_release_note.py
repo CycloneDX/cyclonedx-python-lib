@@ -9,17 +9,17 @@ class TestModelReleaseNote(TestCase):
 
     def test_simple(self) -> None:
         rn = ReleaseNotes(type='major')
-        self.assertEqual(rn.get_type(), 'major')
-        self.assertIsNone(rn.get_title())
-        self.assertIsNone(rn.get_featured_image())
-        self.assertIsNone(rn.get_social_image())
-        self.assertIsNone(rn.get_description())
-        self.assertIsNone(rn.get_timestamp())
-        self.assertIsNone(rn.get_aliases())
-        self.assertIsNone(rn.get_tags())
-        self.assertIsNone(rn.get_resolves())
-        self.assertIsNone(rn.get_notes())
-        self.assertIsNone(rn.get_properties())
+        self.assertEqual(rn.type, 'major')
+        self.assertIsNone(rn.title)
+        self.assertIsNone(rn.featured_image)
+        self.assertIsNone(rn.social_image)
+        self.assertIsNone(rn.description)
+        self.assertIsNone(rn.timestamp)
+        self.assertIsNone(rn.aliases)
+        self.assertIsNone(rn.tags)
+        self.assertIsNone(rn.resolves)
+        self.assertIsNone(rn.notes)
+        self.assertIsNone(rn.properties)
 
     def test_complete(self) -> None:
         timestamp: datetime.datetime = datetime.datetime.utcnow()
@@ -33,22 +33,21 @@ class TestModelReleaseNote(TestCase):
             ],
             tags=['test', 'alpha'],
             resolves=[],
-            notes=[],
-            properties=[]
+            notes=[]
         )
         rn.add_alias(alias="Release Alpha")
         rn.add_tag(tag='testing')
 
-        self.assertEqual(rn.get_type(), 'major')
-        self.assertEqual(rn.get_title(), 'Release Notes Title')
+        self.assertEqual(rn.type, 'major')
+        self.assertEqual(rn.title, 'Release Notes Title')
         self.assertEqual(
-            rn.get_featured_image(),
+            rn.featured_image,
             'https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'
         )
-        self.assertEqual(rn.get_social_image(), 'https://cyclonedx.org/cyclonedx-icon.png')
-        self.assertEqual(rn.get_description(), 'This release is a test release'),
-        self.assertListEqual(rn.get_aliases(), ["First Test Release", "Release Alpha"])
-        self.assertListEqual(rn.get_tags(), ['test', 'alpha', 'testing'])
-        self.assertIsNone(rn.get_resolves())
-        self.assertIsNone(rn.get_notes())
-        self.assertIsNone(rn.get_properties())
+        self.assertEqual(rn.social_image, 'https://cyclonedx.org/cyclonedx-icon.png')
+        self.assertEqual(rn.description, 'This release is a test release')
+        self.assertListEqual(rn.aliases, ["First Test Release", "Release Alpha"])
+        self.assertListEqual(rn.tags, ['test', 'alpha', 'testing'])
+        self.assertIsNone(rn.resolves)
+        self.assertIsNone(rn.notes)
+        self.assertIsNone(rn.properties)
