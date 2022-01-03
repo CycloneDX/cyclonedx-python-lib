@@ -45,16 +45,29 @@ DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 
 
 class BaseOutput(ABC):
-    _bom: Bom
 
-    def __init__(self, bom: Bom) -> None:
+    def __init__(self, bom: Bom, **kwargs) -> None:
+        super().__init__(**kwargs)
         self._bom = bom
+        self._generated: bool = False
+
+    @property
+    def generated(self) -> bool:
+        return self._generated
+
+    @generated.setter
+    def generated(self, generated: bool) -> None:
+        self._generated = generated
 
     def get_bom(self) -> Bom:
         return self._bom
 
     def set_bom(self, bom: Bom) -> None:
         self._bom = bom
+
+    @abstractmethod
+    def generate(self, force_regeneration: bool = False) -> None:
+        pass
 
     @abstractmethod
     def output_as_string(self) -> str:

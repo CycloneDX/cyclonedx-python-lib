@@ -3,7 +3,6 @@
     <metadata>
         <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
         <tools>
-        <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
@@ -45,7 +44,7 @@
         </component>
     </components>
     <vulnerabilities>
-        <vulnerability bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
+        <vulnerability>
             <id>CVE-2018-7489</id>
             <source name="NVD">
                 <url>https://nvd.nist.gov/vuln/detail/CVE-2018-7489</url>

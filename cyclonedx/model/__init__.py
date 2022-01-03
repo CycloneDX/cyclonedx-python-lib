@@ -650,7 +650,8 @@ class OrganizationalEntity:
         self._urls: Optional[List[XsUri]] = urls
         self._contacts: Optional[List[OrganizationalContact]] = contacts
 
-    def get_name(self) -> Optional[str]:
+    @property
+    def name(self) -> Optional[str]:
         """
         Get the name of the organization.
 
@@ -659,7 +660,8 @@ class OrganizationalEntity:
         """
         return self._name
 
-    def get_urls(self) -> Optional[List[XsUri]]:
+    @property
+    def urls(self) -> Optional[List[XsUri]]:
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
 
@@ -668,7 +670,8 @@ class OrganizationalEntity:
         """
         return self._urls
 
-    def get_contacts(self) -> Optional[List[OrganizationalContact]]:
+    @property
+    def contacts(self) -> Optional[List[OrganizationalContact]]:
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
 
