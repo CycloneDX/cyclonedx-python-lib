@@ -44,40 +44,112 @@
         </component>
     </components>
     <vulnerabilities>
-        <vulnerability>
+        <vulnerability bom-ref="my-vuln-ref-1">
             <id>CVE-2018-7489</id>
-            <source name="NVD">
+            <source>
+                <name>NVD</name>
                 <url>https://nvd.nist.gov/vuln/detail/CVE-2018-7489</url>
             </source>
+            <references>
+                <reference>
+                    <id>SOME-OTHER-ID</id>
+                    <source>
+                        <name>OSS Index</name>
+                        <url>https://ossindex.sonatype.org/component/pkg:pypi/setuptools</url>
+                    </source>
+                </reference>
+            </references>
             <ratings>
                 <rating>
-                    <score>
-                        <base>9.8</base>
-                        <impact>5.9</impact>
-                        <exploitability>3.0</exploitability>
-                    </score>
-                    <severity>Critical</severity>
+                    <source>
+                        <name>NVD</name>
+                        <url>https://nvd.nist.gov/vuln/detail/CVE-2018-7489</url>
+                    </source>
+                    <score>9.8</score>
+                    <severity>critical</severity>
                     <method>CVSSv3</method>
                     <vector>AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</vector>
+                    <justification>Some justification</justification>
                 </rating>
                 <rating>
-                    <severity>Low</severity>
-                    <method>OWASP Risk</method>
-                    <vector>K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50</vector>
+                    <source>
+                        <name>OWASP</name>
+                        <url>https://owasp.org</url>
+                    </source>
+                    <score>2.7</score>
+                    <severity>low</severity>
+                    <method>CVSSv3</method>
+                    <vector>AV:L/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N</vector>
+                    <justification>Some other justification</justification>
                 </rating>
             </ratings>
             <cwes>
-                <cwe>123</cwe>
-                <cwe>456</cwe>
+                <cwe>22</cwe>
+                <cwe>33</cwe>
             </cwes>
             <description>A description here</description>
-            <recommendations>
-                <recommendation>Upgrade</recommendation>
-            </recommendations>
+            <detail>Some detail here</detail>
+            <recommendation>Upgrade</recommendation>
             <advisories>
-                <advisory>http://www.securityfocus.com/bid/103203</advisory>
-                <advisory>http://www.securitytracker.com/id/1040693</advisory>
+                <advisory>
+                    <url>https://nvd.nist.gov/vuln/detail/CVE-2018-7489</url>
+                </advisory>
+                <advisory>
+                    <url>http://www.securitytracker.com/id/1040693</url>
+                </advisory>
             </advisories>
+            <created>2021-09-01T10:50:42.051979+00:00</created>
+            <published>2021-09-02T10:50:42.051979+00:00</published>
+            <updated>2021-09-03T10:50:42.051979+00:00</updated>
+            <credits>
+                <organizations>
+                    <organization>
+                        <name>CycloneDX</name>
+                        <url>https://cyclonedx.org</url>
+                        <contact>
+                            <name>Paul Horton</name>
+                            <email>simplyecommerce@googlemail.com</email>
+                        </contact>
+                        <contact>
+                            <name>A N Other</name>
+                            <email>someone@somewhere.tld</email>
+                            <phone>+44 (0)1234 567890</phone>
+                        </contact>
+                    </organization>
+                </organizations>
+                <individuals>
+                    <individual>
+                        <name>A N Other</name>
+                        <email>someone@somewhere.tld</email>
+                        <phone>+44 (0)1234 567890</phone>
+                    </individual>
+                </individuals>
+            </credits>
+            <tools>
+                <tool>
+                    <vendor>CycloneDX</vendor>
+                    <name>cyclonedx-python-lib</name>
+                </tool>
+            </tools>
+            <analysis>
+                <state>exploitable</state>
+                <justification>requires_environment</justification>
+                <responses>
+                    <response>can_not_fix</response>
+                </responses>
+                <detail>Some extra detail</detail>
+            </analysis>
+            <affects>
+                <target>
+                    <ref>pkg:pypi/setuptools@50.3.2?extension=tar.gz</ref>
+                    <versions>
+                        <version>
+                            <range>49.0.0 - 54.0.0</range>
+                            <status>affected</status>
+                        </version>
+                    </versions>
+                </target>
+            </affects>
         </vulnerability>
     </vulnerabilities>
 </bom>

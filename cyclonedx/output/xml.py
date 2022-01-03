@@ -22,13 +22,13 @@ from typing import cast, List, Optional
 from urllib.parse import ParseResult
 from xml.etree import ElementTree
 
-from cyclonedx.model.vulnerability import VulnerabilitySource
+from cyclonedx.model.vulnerability import VulnerabilitySource, BomTargetVersionRange
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from ..exception.output import ComponentVersionRequiredException
-from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact
+from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
 from ..model.bom import Bom
 from ..model.component import Component
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilityScoreSource
@@ -70,9 +70,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
             for component in self.get_bom().get_components():
                 for vulnerability in component.get_vulnerabilities():
                     vulnerabilities_element.append(
-                        Xml._get_vulnerability_as_xml_element_post_1_4(
-                            bom_ref=component.get_purl(), vulnerability=vulnerability
-                        )
+                        self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
                     )
 
         self.generated = True
@@ -107,16 +105,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.bom_metadata_supports_tools() and len(bom_metadata.get_tools()) > 0:
             tools_e = ElementTree.SubElement(metadata_e, 'tools')
             for tool in bom_metadata.get_tools():
-                tool_e = ElementTree.SubElement(tools_e, 'tool')
-                ElementTree.SubElement(tool_e, 'vendor').text = tool.get_vendor()
-                ElementTree.SubElement(tool_e, 'name').text = tool.get_name()
-                ElementTree.SubElement(tool_e, 'version').text = tool.get_version()
-                if tool.get_hashes():
-                    Xml._add_hashes_to_element(hashes=tool.get_hashes(), element=tool_e)
-                if self.bom_metadata_supports_tools_external_references() and tool.get_external_references():
-                    Xml._add_external_references_to_element(
-                        ext_refs=tool.get_external_references(), element=tool_e
-                    )
+                self._add_tool(parent_element=tools_e, tool=tool)
 
     def _add_component_element(self, component: Component) -> ElementTree.Element:
         element_attributes = {'type': component.get_type().value}
@@ -255,8 +244,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     # ----  ----  ----  ----  ----
 
-    @staticmethod
-    def _get_vulnerability_as_xml_element_post_1_4(bom_ref: str, vulnerability: Vulnerability) -> ElementTree.Element:
+    def _get_vulnerability_as_xml_element_post_1_4(self, vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element('vulnerability', {
             'bom-ref': vulnerability.bom_ref
         })
@@ -284,7 +272,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 v_rating_element = ElementTree.SubElement(v_ratings_element, 'rating')
                 Xml._add_vulnerability_source(parent_element=v_rating_element, source=rating.source)
                 if rating.score:
-                    ElementTree.SubElement(v_rating_element, 'score').text = f'{rating.score:.2f}'
+                    ElementTree.SubElement(v_rating_element, 'score').text = f'{rating.score:.1f}'
                 if rating.severity:
                     ElementTree.SubElement(v_rating_element, 'severity').text = rating.severity.value
                 if rating.score_source:
@@ -337,19 +325,52 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if vulnerability.credits:
             v_credits_element = ElementTree.SubElement(vulnerability_element, 'credits')
             if vulnerability.get_credit_organizations():
-                v_credits_organizations_element = ElementTree.SubElement(vulnerability_element, 'organizations')
+                v_credits_organizations_element = ElementTree.SubElement(v_credits_element, 'organizations')
                 for organization in vulnerability.get_credit_organizations():
                     Xml._add_organizational_entity(
                         parent_element=v_credits_organizations_element, organization=organization,
                         tag_name='organization'
                     )
             if vulnerability.get_credit_individuals():
-                v_credits_individuals_element = ElementTree.SubElement(vulnerability_element, 'individuals')
+                v_credits_individuals_element = ElementTree.SubElement(v_credits_element, 'individuals')
                 for individual in vulnerability.get_credit_individuals():
                     Xml._add_organizational_contact(
                         parent_element=v_credits_individuals_element, contact=individual,
                         tag_name='individual'
                     )
+
+        # tools
+        if vulnerability.tools:
+            v_tools_element = ElementTree.SubElement(vulnerability_element, 'tools')
+            for tool in vulnerability.tools:
+                self._add_tool(parent_element=v_tools_element, tool=tool)
+
+        # analysis
+        if vulnerability.analysis:
+            v_analysis_element = ElementTree.SubElement(vulnerability_element, 'analysis')
+            if vulnerability.analysis.state:
+                ElementTree.SubElement(v_analysis_element, 'state').text = vulnerability.analysis.state.value
+            if vulnerability.analysis.justification:
+                ElementTree.SubElement(v_analysis_element,
+                                       'justification').text = vulnerability.analysis.justification.value
+            if vulnerability.analysis.responses:
+                v_analysis_responses_element = ElementTree.SubElement(v_analysis_element, 'responses')
+                for response in vulnerability.analysis.responses:
+                    ElementTree.SubElement(v_analysis_responses_element, 'response').text = response.value
+            if vulnerability.analysis.detail:
+                ElementTree.SubElement(v_analysis_element, 'detail').text = vulnerability.analysis.detail
+
+        # affects
+        if vulnerability.affects_targets:
+            v_affects_element = ElementTree.SubElement(vulnerability_element, 'affects')
+            for target in vulnerability.affects_targets:
+                v_target_element = ElementTree.SubElement(v_affects_element, 'target')
+                ElementTree.SubElement(v_target_element, 'ref').text = target.bom_ref
+
+                if target.versions:
+                    v_target_versions_element = ElementTree.SubElement(v_target_element, 'versions')
+                    for version in target.versions:
+                        Xml._add_bom_target_version_range(parent_element=v_target_versions_element, version=version)
 
         return vulnerability_element
 
@@ -430,16 +451,16 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     @staticmethod
     def _add_external_references_to_element(ext_refs: List[ExternalReference], element: ElementTree.Element) -> None:
-        tool_ext_refs = ElementTree.SubElement(element, 'externalReferences')
-        for ext_ref in ext_refs:
-            tool_ext_ref = ElementTree.SubElement(
-                tool_ext_refs, 'reference', {'type': ext_ref.get_reference_type().value}
+        ext_refs_element = ElementTree.SubElement(element, 'externalReferences')
+        for external_reference in ext_refs:
+            ext_ref_element = ElementTree.SubElement(
+                ext_refs_element, 'reference', {'type': external_reference.get_reference_type().value}
             )
-            ElementTree.SubElement(tool_ext_ref, 'url').text = ext_ref.get_url()
-            if ext_ref.get_comment():
-                ElementTree.SubElement(tool_ext_ref, 'comment').text = ext_ref.get_comment()
-            if ext_ref.get_hashes():
-                Xml._add_hashes_to_element(hashes=ext_ref.get_hashes(), element=tool_ext_ref)
+            ElementTree.SubElement(ext_ref_element, 'url').text = external_reference.get_url()
+            if external_reference.get_comment():
+                ElementTree.SubElement(ext_ref_element, 'comment').text = external_reference.get_comment()
+            if external_reference.get_hashes():
+                Xml._add_hashes_to_element(hashes=external_reference.get_hashes(), element=ext_ref_element)
 
     @staticmethod
     def _add_hashes_to_element(hashes: List[HashType], element: ElementTree.Element) -> None:
@@ -448,6 +469,32 @@ class Xml(BaseOutput, BaseSchemaVersion):
             ElementTree.SubElement(
                 hashes_e, 'hash', {'alg': h.get_algorithm().value}
             ).text = h.get_hash_value()
+
+    @staticmethod
+    def _add_bom_target_version_range(parent_element: ElementTree.Element, version: BomTargetVersionRange) -> None:
+        version_element = ElementTree.SubElement(parent_element, 'version')
+        if version.version:
+            ElementTree.SubElement(version_element, 'version').text = version.version
+        else:
+            ElementTree.SubElement(version_element, 'range').text = version.version_range
+
+        if version.status:
+            ElementTree.SubElement(version_element, 'status').text = version.status.value
+
+    def _add_tool(self, parent_element: ElementTree.Element, tool: Tool, tag_name: str = 'tool') -> None:
+        tool_element = ElementTree.SubElement(parent_element, tag_name)
+        if tool.get_vendor():
+            ElementTree.SubElement(tool_element, 'vendor').text = tool.get_vendor()
+        if tool.get_name():
+            ElementTree.SubElement(tool_element, 'name').text = tool.get_name()
+        if tool.get_version():
+            ElementTree.SubElement(tool_element, 'version').text = tool.get_version()
+        if tool.get_hashes():
+            Xml._add_hashes_to_element(hashes=tool.get_hashes(), element=tool_element)
+        if self.bom_metadata_supports_tools_external_references() and tool.get_external_references():
+            Xml._add_external_references_to_element(
+                ext_refs=tool.get_external_references(), element=tool_element
+            )
 
     @staticmethod
     def _add_organizational_contact(parent_element: ElementTree.Element, contact: OrganizationalContact,

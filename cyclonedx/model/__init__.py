@@ -597,7 +597,6 @@ class OrganizationalContact:
             raise NoPropertiesProvidedException(
                 'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
             )
-        self.name = name
         self._name: Optional[str] = name
         self._email: Optional[str] = email
         self._phone: Optional[str] = phone
@@ -612,7 +611,8 @@ class OrganizationalContact:
         """
         return self._name
 
-    def get_email(self) -> Optional[str]:
+    @property
+    def email(self) -> Optional[str]:
         """
         Get the email of the contact.
 
@@ -621,7 +621,8 @@ class OrganizationalContact:
         """
         return self._email
 
-    def get_phone(self) -> Optional[str]:
+    @property
+    def phone(self) -> Optional[str]:
         """
         Get the phone of the contact.
 
@@ -691,7 +692,8 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, vendor: str, name: str, version: str, hashes: Optional[List[HashType]] = None,
+    def __init__(self, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
+                 hashes: Optional[List[HashType]] = None,
                  external_references: Optional[List[ExternalReference]] = None) -> None:
         self._vendor = vendor
         self._name = name
@@ -743,7 +745,7 @@ class Tool:
         """
         return self._hashes
 
-    def get_name(self) -> str:
+    def get_name(self) -> Optional[str]:
         """
         The name of this Tool.
 
@@ -752,7 +754,7 @@ class Tool:
         """
         return self._name
 
-    def get_vendor(self) -> str:
+    def get_vendor(self) -> Optional[str]:
         """
         The vendor of this Tool.
 
@@ -761,7 +763,7 @@ class Tool:
         """
         return self._vendor
 
-    def get_version(self) -> str:
+    def get_version(self) -> Optional[str]:
         """
         The version of this Tool.
 

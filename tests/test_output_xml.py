@@ -23,14 +23,17 @@ from decimal import Decimal
 from os.path import dirname, join
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, IssueClassification, \
-    IssueType, Note, Properties, Property, XsUri
+    IssueType, Note, Properties, Property, XsUri, OrganizationalContact, OrganizationalEntity, Tool
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
-    VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory
+    VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, VulnerabilityReference, VulnerabilityAnalysis, \
+    BomTarget, BomTargetVersionRange
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
+from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
+    ImpactAnalysisAffectedStatus
 from tests.base import BaseXmlTestCase
 
 
@@ -95,23 +98,60 @@ class TestOutputXml(BaseXmlTestCase):
     def test_simple_bom_v1_4_with_vulnerabilities(self) -> None:
         bom = Bom()
         nvd = VulnerabilitySource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489'))
+        owasp = VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
         c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
         c.add_vulnerability(Vulnerability(
-            id='CVE-2018-7489', source=nvd,
+            bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=nvd,
+            references=[
+                VulnerabilityReference(id='SOME-OTHER-ID', source=VulnerabilitySource(
+                    name='OSS Index', url=XsUri('https://ossindex.sonatype.org/component/pkg:pypi/setuptools')
+                ))
+            ],
             ratings=[
                 VulnerabilityRating(
                     source=nvd, score=Decimal(9.8), severity=VulnerabilitySeverity.CRITICAL,
-                    score_source=VulnerabilityScoreSource.CVSS_V3, vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'
+                    score_source=VulnerabilityScoreSource.CVSS_V3,
+                    vector='AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', justification='Some justification'
                 ),
                 VulnerabilityRating(
-                    severity=VulnerabilitySeverity.LOW, score_source=VulnerabilityScoreSource.OWASP,
-                    vector='OWASP/K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50'
+                    source=owasp, score=Decimal(2.7), severity=VulnerabilitySeverity.LOW,
+                    score_source=VulnerabilityScoreSource.CVSS_V3,
+                    vector='AV:L/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N', justification='Some other justification'
                 )
             ],
-            cwes=[123, 456], description='A description here', recommendation='Upgrade',
+            cwes=[22, 33], description='A description here', detail='Some detail here',
+            recommendation='Upgrade',
             advisories=[
-                VulnerabilityAdvisory(url=XsUri('http://www.securityfocus.com/bid/103203')),
+                VulnerabilityAdvisory(url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489')),
                 VulnerabilityAdvisory(url=XsUri('http://www.securitytracker.com/id/1040693'))
+            ],
+            created=datetime(year=2021, month=9, day=1, hour=10, minute=50, second=42, microsecond=51979,
+                             tzinfo=timezone.utc),
+            published=datetime(year=2021, month=9, day=2, hour=10, minute=50, second=42, microsecond=51979,
+                             tzinfo=timezone.utc),
+            updated=datetime(year=2021, month=9, day=3, hour=10, minute=50, second=42, microsecond=51979,
+                             tzinfo=timezone.utc),
+            credits=[
+                OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890'),
+                OrganizationalEntity(
+                    name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[
+                        OrganizationalContact(name='Paul Horton', email='simplyecommerce@googlemail.com'),
+                        OrganizationalContact(name='A N Other', email='someone@somewhere.tld',
+                                              phone='+44 (0)1234 567890')
+                    ]
+                )
+            ],
+            tools=[
+                Tool(vendor='CycloneDX', name='cyclonedx-python-lib')
+            ],
+            analysis=VulnerabilityAnalysis(
+                state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
+                responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
+            ),
+            affects_targets=[
+                BomTarget(bom_ref=c.get_purl(), versions=[
+                    BomTargetVersionRange(version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED)
+                ])
             ]
         ))
         bom.add_component(c)
