@@ -49,6 +49,8 @@ class TestE2EEnvironment(TestCase):
     def test_json_defaults(self) -> None:
         outputter: Json = get_instance(bom=TestE2EEnvironment.bom, output_format=OutputFormat.JSON)
         bom_json = json.loads(outputter.output_as_string())
+        self.assertTrue('metadata' in bom_json)
+        self.assertFalse('component' in bom_json['metadata'])
         component_this_library = next(
             (x for x in bom_json['components'] if
              x['purl'] == 'pkg:pypi/{}@{}'.format(OUR_PACKAGE_NAME, OUR_PACKAGE_VERSION)), None

@@ -25,7 +25,7 @@ from packageurl import PackageURL
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, LicenseChoice, Note, \
     NoteText, OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component
+from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.issue import IssueClassification, IssueType
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
@@ -327,3 +327,14 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
             self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
             expected_json.close()
+
+    def test_bom_v1_3_with_metadata_component(self) -> None:
+        bom = Bom()
+        bom.metadata.component = Component(
+            name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY)
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_with_metadata_component.json')) as expected_json:
+            self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
+
+    maxDiff = None

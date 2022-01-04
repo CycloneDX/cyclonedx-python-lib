@@ -20,6 +20,7 @@
 from unittest import TestCase
 
 from cyclonedx.model.bom import Bom, ThisTool, Tool
+from cyclonedx.model.component import Component, ComponentType
 
 
 class TestBom(TestCase):
@@ -36,3 +37,12 @@ class TestBom(TestCase):
             Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
         )
         self.assertEqual(len(bom.metadata.tools), 2)
+
+    def test_metadata_component(self) -> None:
+        metadata = Bom().metadata
+        self.assertTrue(metadata.component is None)
+        hextech = Component(name='Hextech', version='1.0.0',
+                            component_type=ComponentType.LIBRARY)
+        metadata.component = hextech
+        self.assertFalse(metadata.component is None)
+        self.assertEquals(metadata.component, hextech)
