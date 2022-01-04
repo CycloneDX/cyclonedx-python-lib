@@ -17,42 +17,43 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from abc import ABC, abstractmethod
 from typing import cast, List, Optional
-from urllib.parse import ParseResult
 from xml.etree import ElementTree
-
-from cyclonedx.model.vulnerability import VulnerabilitySource, BomTargetVersionRange
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from ..exception.output import ComponentVersionRequiredException
-from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
+from ..model import Encoding, ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
 from ..model.bom import Bom
 from ..model.component import Component
-from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilityScoreSource
+from ..model.release_note import ReleaseNotes
+from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilityScoreSource, \
+    VulnerabilitySource, BomTargetVersionRange
 
 
 class Xml(BaseOutput, BaseSchemaVersion):
     VULNERABILITY_EXTENSION_NAMESPACE: str = 'http://cyclonedx.org/schema/ext/vulnerability/1.0'
     XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
-    def __init__(self, bom: Bom) -> None:
+    def __init__(self, bom: Optional[Bom] = None) -> None:
         super().__init__(bom=bom)
-        self._root_bom_element: ElementTree.Element = self._create_bom_element()
+        self._root_bom_element: ElementTree.Element = None
 
     def generate(self, force_regeneration: bool = False) -> None:
-        if force_regeneration:
-            self._root_bom_element: ElementTree.Element = self._create_bom_element()
+        if self._root_bom_element and force_regeneration:
+            self._root_bom_element = self._create_bom_element()
         elif self.generated:
             return
+        else:
+            self._root_bom_element = self._create_bom_element()
 
         if self.bom_supports_metadata():
             self._add_metadata_element()
 
         components_element = ElementTree.SubElement(self._root_bom_element, 'components')
 
+        has_vulnerabilities: bool = False
         for component in self.get_bom().get_components():
             component_element = self._add_component_element(component=component)
             components_element.append(component_element)
@@ -61,11 +62,13 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
                 for vulnerability in component.get_vulnerabilities():
                     vulnerabilities.append(
-                        Xml._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.get_purl(),
+                        self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.get_purl(),
                                                                       vulnerability=vulnerability)
                     )
+            elif component.has_vulnerabilities():
+                has_vulnerabilities = True
 
-        if self.bom_supports_vulnerabilities():
+        if self.bom_supports_vulnerabilities() and has_vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
             for component in self.get_bom().get_components():
                 for vulnerability in component.get_vulnerabilities():
@@ -176,32 +179,33 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # releaseNotes
         if self.component_supports_release_notes() and component.get_release_notes():
             release_notes_e = ElementTree.SubElement(component_element, 'releaseNotes')
-            ElementTree.SubElement(release_notes_e, 'type').text = component.get_release_notes().type
-            if component.get_release_notes().title:
-                ElementTree.SubElement(release_notes_e, 'title').text = component.get_release_notes().title
-            if component.get_release_notes().featured_image:
+            release_notes = cast(ReleaseNotes, component.get_release_notes())
+
+            ElementTree.SubElement(release_notes_e, 'type').text = release_notes.type
+            if release_notes.title:
+                ElementTree.SubElement(release_notes_e, 'title').text = release_notes.title
+            if release_notes.featured_image:
                 ElementTree.SubElement(release_notes_e,
-                                       'featuredImage').text = str(component.get_release_notes().featured_image)
-            if component.get_release_notes().social_image:
+                                       'featuredImage').text = str(release_notes.featured_image)
+            if release_notes.social_image:
                 ElementTree.SubElement(release_notes_e,
-                                       'socialImage').text = str(component.get_release_notes().social_image)
-            if component.get_release_notes().description:
+                                       'socialImage').text = str(release_notes.social_image)
+            if release_notes.description:
                 ElementTree.SubElement(release_notes_e,
-                                       'description').text = component.get_release_notes().description
-            if component.get_release_notes().timestamp:
-                ElementTree.SubElement(release_notes_e,
-                                       'timestamp').text = component.get_release_notes().timestamp.isoformat()
-            if component.get_release_notes().aliases:
+                                       'description').text = release_notes.description
+            if release_notes.timestamp:
+                ElementTree.SubElement(release_notes_e, 'timestamp').text = release_notes.timestamp.isoformat()
+            if release_notes.aliases:
                 release_notes_aliases_e = ElementTree.SubElement(release_notes_e, 'aliases')
-                for alias in component.get_release_notes().aliases:
+                for alias in release_notes.aliases:
                     ElementTree.SubElement(release_notes_aliases_e, 'alias').text = alias
-            if component.get_release_notes().tags:
+            if release_notes.tags:
                 release_notes_tags_e = ElementTree.SubElement(release_notes_e, 'tags')
-                for tag in component.get_release_notes().tags:
+                for tag in release_notes.tags:
                     ElementTree.SubElement(release_notes_tags_e, 'tag').text = tag
-            if component.get_release_notes().resolves:
+            if release_notes.resolves:
                 release_notes_resolves_e = ElementTree.SubElement(release_notes_e, 'resolves')
-                for issue in component.get_release_notes().resolves:
+                for issue in release_notes.resolves:
                     issue_e = ElementTree.SubElement(
                         release_notes_resolves_e, 'issue', {'type': issue.get_classification().value}
                     )
@@ -221,9 +225,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
                         issue_references_e = ElementTree.SubElement(issue_e, 'references')
                         for reference in issue.get_references():
                             ElementTree.SubElement(issue_references_e, 'url').text = str(reference)
-            if component.get_release_notes().get_notes():
+            if release_notes.notes:
                 release_notes_notes_e = ElementTree.SubElement(release_notes_e, 'notes')
-                for note in component.get_release_notes().get_notes():
+                for note in release_notes.notes:
                     note_e = ElementTree.SubElement(release_notes_notes_e, 'note')
                     if note.get_locale():
                         ElementTree.SubElement(note_e, 'locale').text = note.get_locale()
@@ -231,11 +235,11 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     if note.get_content_type():
                         text_attrs['content-type'] = note.get_content_type()
                     if note.get_content_encoding():
-                        text_attrs['encoding'] = note.get_content_encoding().value
+                        text_attrs['encoding'] = cast(Encoding, note.get_content_encoding()).value
                     ElementTree.SubElement(note_e, 'text', text_attrs).text = note.get_text()
-            if component.get_release_notes().get_properties():
+            if release_notes.properties:
                 release_notes_properties_e = ElementTree.SubElement(release_notes_e, 'properties')
-                for prop in component.get_release_notes().get_properties().get_properties():
+                for prop in release_notes.properties.get_properties():
                     ElementTree.SubElement(
                         release_notes_properties_e, 'property', {'name': prop.get_name()}
                     ).text = prop.get_value()
@@ -374,8 +378,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return vulnerability_element
 
-    @staticmethod
-    def _get_vulnerability_as_xml_element_pre_1_3(bom_ref: str, vulnerability: Vulnerability) -> ElementTree.Element:
+    def _get_vulnerability_as_xml_element_pre_1_3(self, bom_ref: str, vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element('v:vulnerability', {
             'ref': bom_ref
         })
@@ -384,7 +387,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         ElementTree.SubElement(vulnerability_element, 'v:id').text = vulnerability.id
 
         # source
-        if vulnerability.source.name:
+        if vulnerability.source and vulnerability.source.name:
             source_element = ElementTree.SubElement(
                 vulnerability_element, 'v:source', attrib={'name': str(vulnerability.source.name)}
             )
@@ -392,60 +395,49 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 ElementTree.SubElement(source_element, 'v:url').text = str(vulnerability.source.url)
 
         # ratings
-        if vulnerability.has_ratings():
+        if vulnerability.ratings:
             ratings_element = ElementTree.SubElement(vulnerability_element, 'v:ratings')
             rating: VulnerabilityRating
-            for rating in vulnerability.get_ratings():
+            for rating in vulnerability.ratings:
                 rating_element = ElementTree.SubElement(ratings_element, 'v:rating')
 
-                # rating.score
-                if rating.has_score():
+                if rating.score:
                     score_element = ElementTree.SubElement(rating_element, 'v:score')
-                    if rating.get_base_score():
-                        ElementTree.SubElement(score_element, 'v:base').text = str(rating.get_base_score())
-                    if rating.get_impact_score():
-                        ElementTree.SubElement(score_element, 'v:impact').text = str(rating.get_impact_score())
-                    if rating.get_exploitability_score():
-                        ElementTree.SubElement(score_element,
-                                               'v:exploitability').text = str(rating.get_exploitability_score())
+                    ElementTree.SubElement(score_element, 'v:base').text = str(rating.score)
 
                 # rating.severity
-                if rating.get_severity():
-                    ElementTree.SubElement(rating_element, 'v:severity').text = cast(
-                        VulnerabilitySeverity, rating.get_severity()
-                    ).value
+                if rating.severity:
+                    ElementTree.SubElement(rating_element, 'v:severity').text = str(rating.severity.value).title()
 
                 # rating.severity
-                if rating.get_method():
-                    ElementTree.SubElement(rating_element, 'v:method').text = cast(
-                        VulnerabilityScoreSource, rating.get_method()
-                    ).value
+                if rating.score_source:
+                    ElementTree.SubElement(rating_element, 'v:method').text = rating.score_source.get_value_pre_1_4()
 
                 # rating.vector
-                if rating.get_vector():
-                    ElementTree.SubElement(rating_element, 'v:vector').text = rating.get_vector()
+                if rating.vector:
+                    ElementTree.SubElement(rating_element, 'v:vector').text = rating.vector
 
         # cwes
-        if vulnerability.has_cwes():
+        if vulnerability.cwes:
             cwes_element = ElementTree.SubElement(vulnerability_element, 'v:cwes')
-            for cwe in vulnerability.get_cwes():
+            for cwe in vulnerability.cwes:
                 ElementTree.SubElement(cwes_element, 'v:cwe').text = str(cwe)
 
         # description
-        if vulnerability.get_description():
-            ElementTree.SubElement(vulnerability_element, 'v:description').text = vulnerability.get_description()
+        if vulnerability.description:
+            ElementTree.SubElement(vulnerability_element, 'v:description').text = vulnerability.description
 
         # recommendations
-        if vulnerability.has_recommendations():
+        if vulnerability.recommendation:
             recommendations_element = ElementTree.SubElement(vulnerability_element, 'v:recommendations')
-            for recommendation in vulnerability.get_recommendations():
-                ElementTree.SubElement(recommendations_element, 'v:recommendation').text = recommendation
+            # for recommendation in vulnerability.get_recommendations():
+            ElementTree.SubElement(recommendations_element, 'v:recommendation').text = vulnerability.recommendation
 
         # advisories
-        if vulnerability.has_advisories():
+        if vulnerability.advisories:
             advisories_element = ElementTree.SubElement(vulnerability_element, 'v:advisories')
-            for advisory in vulnerability.get_advisories():
-                ElementTree.SubElement(advisories_element, 'v:advisory').text = advisory
+            for advisory in vulnerability.advisories:
+                ElementTree.SubElement(advisories_element, 'v:advisory').text = str(advisory.url)
 
         return vulnerability_element
 

@@ -28,8 +28,8 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
-    VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, VulnerabilityReference, VulnerabilityAnalysis, \
-    BomTarget, BomTargetVersionRange
+    VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, VulnerabilityReference, \
+    VulnerabilityAnalysis, BomTarget, BomTargetVersionRange
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
 from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
@@ -128,7 +128,7 @@ class TestOutputXml(BaseXmlTestCase):
             created=datetime(year=2021, month=9, day=1, hour=10, minute=50, second=42, microsecond=51979,
                              tzinfo=timezone.utc),
             published=datetime(year=2021, month=9, day=2, hour=10, minute=50, second=42, microsecond=51979,
-                             tzinfo=timezone.utc),
+                               tzinfo=timezone.utc),
             updated=datetime(year=2021, month=9, day=3, hour=10, minute=50, second=42, microsecond=51979,
                              tzinfo=timezone.utc),
             credits=[
@@ -165,14 +165,13 @@ class TestOutputXml(BaseXmlTestCase):
 
             expected_xml.close()
 
-    @unittest.skip('TODO: Resolve how to backport Vulnerabilities to pre 1.4')
     def test_simple_bom_v1_3_with_vulnerabilities(self) -> None:
         bom = Bom()
         c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
         c.add_vulnerability(Vulnerability(
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
-                VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
+                VulnerabilityRating(score_base=9.8,
                                     severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilityScoreSource.CVSS_V3,
                                     vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
                 VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilityScoreSource.OWASP,
@@ -194,14 +193,13 @@ class TestOutputXml(BaseXmlTestCase):
 
             expected_xml.close()
 
-    @unittest.skip('TODO: Resolve how to backport Vulnerabilities to pre 1.4')
     def test_simple_bom_v1_0_with_vulnerabilities(self) -> None:
         bom = Bom()
         c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
         c.add_vulnerability(Vulnerability(
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
-                VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
+                VulnerabilityRating(score_base=9.8,
                                     severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilityScoreSource.CVSS_V3,
                                     vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
                 VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilityScoreSource.OWASP,

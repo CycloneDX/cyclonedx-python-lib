@@ -23,7 +23,7 @@ import importlib
 import os
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import cast, Optional
+from typing import cast, Optional, ParamSpec
 
 from ..model.bom import Bom
 
@@ -46,7 +46,7 @@ DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 
 class BaseOutput(ABC):
 
-    def __init__(self, bom: Bom, **kwargs) -> None:
+    def __init__(self, bom: Optional[Bom] = None, **kwargs: ParamSpec) -> None:
         super().__init__(**kwargs)
         self._bom = bom
         self._generated: bool = False
