@@ -114,3 +114,15 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
             self.assertEqualJsonBom(a=outputter.output_as_string(), b=expected_json.read())
             expected_json.close()
+
+    def test_bom_v1_4_no_component_version(self) -> None:
+        bom = Bom()
+        c = Component(name='setuptools', package_url_qualifiers='extension=tar.gz')
+        bom.add_component(c)
+
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, JsonV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools_no_version.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
