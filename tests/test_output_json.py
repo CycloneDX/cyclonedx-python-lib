@@ -23,11 +23,23 @@ from cyclonedx.model import ExternalReference, ExternalReferenceType, HashType
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from cyclonedx.output.json import Json, JsonV1Dot3, JsonV1Dot2
+from cyclonedx.output.json import Json, JsonV1Dot4, JsonV1Dot3, JsonV1Dot2
 from tests.base import BaseJsonTestCase
 
 
 class TestOutputJson(BaseJsonTestCase):
+
+    def test_simple_bom_v1_4(self) -> None:
+        bom = Bom()
+        c = Component(name='setuptools', version='50.3.2', package_url_qualifiers='extension=tar.gz')
+        bom.add_component(c)
+
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, JsonV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
 
     def test_simple_bom_v1_3(self) -> None:
         bom = Bom()
