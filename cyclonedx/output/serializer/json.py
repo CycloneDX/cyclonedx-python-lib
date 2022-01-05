@@ -21,7 +21,7 @@ from datetime import datetime
 from enum import Enum
 from json import JSONEncoder
 from re import compile
-from typing import Any
+from typing import Any, Dict
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -56,7 +56,7 @@ class CycloneDxJSONEncoder(JSONEncoder):
 
         # Classes
         if isinstance(o, object):
-            d: dict[Any, Any] = {}
+            d: Dict[Any, Any] = {}
             for k, v in o.__dict__.items():
                 # Remove leading _ in key names
                 new_key = k[1:]

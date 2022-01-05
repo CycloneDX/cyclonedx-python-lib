@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
@@ -43,7 +43,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
         self.generated = True
 
-    def _specialise_output_for_schema_version(self, bom_json: dict[Any, Any]) -> str:
+    def _specialise_output_for_schema_version(self, bom_json: Dict[Any, Any]) -> str:
         if not self.bom_supports_metadata():
             if 'metadata' in bom_json.keys():
                 del bom_json['metadata']
@@ -60,7 +60,7 @@ class Json(BaseOutput, BaseSchemaVersion):
         return self._json_output
 
     # Builder Methods
-    def _create_bom_element(self) -> dict[str, Union[str, int]]:
+    def _create_bom_element(self) -> Dict[str, Union[str, int]]:
         return {
             "bomFormat": "CycloneDX",
             "specVersion": str(self.get_schema_version()),
