@@ -19,11 +19,12 @@
 
 from datetime import datetime
 from enum import Enum
-from json import JSONEncoder, dumps
-from packageurl import PackageURL
+from json import JSONEncoder
 from re import compile
 from typing import Any
 from uuid import UUID
+
+from packageurl import PackageURL
 
 HYPHENATED_ATTRIBUTES = [
     'bom_ref', 'mime_type'
@@ -33,7 +34,7 @@ PYTHON_TO_JSON_NAME = compile(r'_([a-z])')
 
 class CycloneDxJSONEncoder(JSONEncoder):
 
-    def iterencode(self, o, _one_shot=False):
+    def iterencode(self, o: object, _one_shot: bool = False) -> Any:
         if isinstance(o, PackageURL):
             return o.to_string()
         else:

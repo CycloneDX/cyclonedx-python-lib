@@ -122,7 +122,7 @@ class AttachedText:
         return self._content
 
     @content.setter
-    def content(self, content) -> None:
+    def content(self, content: str) -> None:
         self._content = content
 
 
@@ -516,12 +516,10 @@ class License:
     def __init__(self, spxd_license_id: Optional[str] = None, license_name: Optional[str] = None,
                  license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> 'License':
         if not spxd_license_id and not license_name:
-            raise MutuallyExclusivePropertiesException(
-                f'Either `spxd_license_id` or `license_name` MUST be supplied'
-            )
+            raise MutuallyExclusivePropertiesException('Either `spxd_license_id` or `license_name` MUST be supplied')
         if spxd_license_id and license_name:
             warnings.warn(
-                f'Both `spxd_license_id` and `license_name` have been supplied - `license_name` will be ignored!',
+                'Both `spxd_license_id` and `license_name` have been supplied - `license_name` will be ignored!',
                 RuntimeWarning
             )
         self.id = spxd_license_id
@@ -586,7 +584,7 @@ class License:
         return self._url
 
     @url.setter
-    def url(self, url) -> None:
+    def url(self, url: XsUri) -> None:
         self._url = url
 
 
@@ -602,11 +600,11 @@ class LicenseChoice:
     def __init__(self, license: Optional[License] = None, license_expression: Optional[str] = None) -> 'LicenseChoice':
         if not license and not license_expression:
             raise NoPropertiesProvidedException(
-                f'One of `license` or `license_expression` must be supplied - neither supplied'
+                'One of `license` or `license_expression` must be supplied - neither supplied'
             )
         if license and license_expression:
             warnings.warn(
-                f'Both `license` and `license_expression` have been supplied - `license` will take precedence',
+                'Both `license` and `license_expression` have been supplied - `license` will take precedence',
                 RuntimeWarning
             )
         self.license = license

@@ -19,7 +19,7 @@
 
 from os.path import dirname, join
 
-from cyclonedx.model import ExternalReference, ExternalReferenceType, HashType, LicenseChoice
+from cyclonedx.model import ExternalReference, ExternalReferenceType, HashType
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion

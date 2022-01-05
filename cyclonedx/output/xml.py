@@ -28,8 +28,7 @@ from ..model import Encoding, ExternalReference, HashType, OrganizationalEntity,
 from ..model.bom import Bom
 from ..model.component import Component
 from ..model.release_note import ReleaseNotes
-from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, VulnerabilityScoreSource, \
-    VulnerabilitySource, BomTargetVersionRange
+from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySource, BomTargetVersionRange
 
 
 class Xml(BaseOutput, BaseSchemaVersion):

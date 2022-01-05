@@ -17,7 +17,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import base64
-import unittest
 from datetime import datetime, timezone
 from decimal import Decimal
 from os.path import dirname, join
@@ -26,14 +25,14 @@ from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, 
     IssueType, Note, Properties, Property, XsUri, OrganizationalContact, OrganizationalEntity, Tool
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
+    ImpactAnalysisAffectedStatus
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
     VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, VulnerabilityReference, \
     VulnerabilityAnalysis, BomTarget, BomTargetVersionRange
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
-from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
-    ImpactAnalysisAffectedStatus
 from tests.base import BaseXmlTestCase
 
 

@@ -136,7 +136,7 @@ class Component:
         # Deprecated for 1.4, but kept for some backwards compatibility
         if namespace:
             warnings.warn(
-                f'`namespace` is deprecated and has been replaced with `group` to align with the CycloneDX standard',
+                '`namespace` is deprecated and has been replaced with `group` to align with the CycloneDX standard',
                 DeprecationWarning
             )
             if not group:
@@ -144,20 +144,20 @@ class Component:
 
         if qualifiers:
             warnings.warn(
-                'f`qualifiers` is deprecated - if your Component is best represented with qualifiers, provide a '
+                '`qualifiers` is deprecated - if your Component is best represented with qualifiers, provide a '
                 'PackageURL via `purl` or use `package_url_qualifiers`', DeprecationWarning
             )
 
         if subpath:
             warnings.warn(
-                'f`subpath` is deprecated - if your Component is best represented with a subpath, provide a '
+                '`subpath` is deprecated - if your Component is best represented with a subpath, provide a '
                 'PackageURL via `purl` or use `package_url_subpath`', DeprecationWarning
             )
 
         if license_str:
             warnings.warn(
-                f'`license_str` is deprecated and has been replaced with `licenses` to align with the CycloneDX '
-                f'standard', DeprecationWarning
+                '`license_str` is deprecated and has been replaced with `licenses` to align with the CycloneDX '
+                'standard', DeprecationWarning
             )
             if not licenses:
                 self.licenses = [LicenseChoice(license_expression=license_str)]

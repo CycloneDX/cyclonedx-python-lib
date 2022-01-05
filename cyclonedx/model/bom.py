@@ -52,7 +52,7 @@ class BomMetaData:
         return self._tools
 
     @tools.setter
-    def tools(self, tools) -> None:
+    def tools(self, tools: List[Tool]) -> None:
         self._tools = tools
 
     def add_tool(self, tool: Tool) -> None:
@@ -77,7 +77,7 @@ class BomMetaData:
         return self._timestamp
 
     @timestamp.setter
-    def timestamp(self, timestamp) -> None:
+    def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
 
