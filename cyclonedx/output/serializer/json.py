@@ -24,7 +24,8 @@ from re import compile
 from typing import Any
 from uuid import UUID
 
-from packageurl import PackageURL
+# See https://github.com/package-url/packageurl-python/issues/65
+from packageurl import PackageURL  # type: ignore
 
 HYPHENATED_ATTRIBUTES = [
     'bom_ref', 'mime_type'
@@ -55,7 +56,7 @@ class CycloneDxJSONEncoder(JSONEncoder):
 
         # Classes
         if isinstance(o, object):
-            d: dict = {}
+            d: dict[Any, Any] = {}
             for k, v in o.__dict__.items():
                 # Remove leading _ in key names
                 new_key = k[1:]

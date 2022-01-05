@@ -166,7 +166,7 @@ class Component:
         self.release_notes = release_notes
 
         # Last as depends on others having being set
-        self.bom_ref = bom_ref
+        self.bom_ref = bom_ref or self.to_package_url().to_string()
 
     @property
     def type(self) -> ComponentType:
@@ -201,7 +201,7 @@ class Component:
         self._mime_type = mime_type
 
     @property
-    def bom_ref(self) -> str:
+    def bom_ref(self) -> Optional[str]:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
@@ -215,8 +215,6 @@ class Component:
 
     @bom_ref.setter
     def bom_ref(self, bom_ref: Optional[str]) -> None:
-        if not bom_ref:
-            bom_ref = self.purl
         self._bom_ref = bom_ref
 
     @property
@@ -349,7 +347,7 @@ class Component:
         self._scope = scope
 
     @property
-    def hashes(self) -> Optional[List[HashType]]:
+    def hashes(self) -> List[HashType]:
         """
         Optional list of hashes that help specifiy the integrity of this Component.
 
@@ -359,7 +357,7 @@ class Component:
         return self._hashes
 
     @hashes.setter
-    def hashes(self, hashes: Optional[List[HashType]]) -> None:
+    def hashes(self, hashes: List[HashType]) -> None:
         self._hashes = hashes
 
     def add_hash(self, a_hash: HashType) -> None:
@@ -370,10 +368,10 @@ class Component:
             a_hash:
                 `HashType` instance
         """
-        self.hashes = self.hashes or [] + [a_hash]
+        self.hashes = self.hashes + [a_hash]
 
     @property
-    def licenses(self) -> Optional[List[LicenseChoice]]:
+    def licenses(self) -> List[LicenseChoice]:
         """
         A optional list of statements about how this Component is licensed.
 
@@ -383,7 +381,7 @@ class Component:
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Optional[List[LicenseChoice]]) -> None:
+    def licenses(self, licenses: List[LicenseChoice]) -> None:
         self._licenses = licenses
 
     @property
@@ -402,7 +400,7 @@ class Component:
         self._copyright = copyright
 
     @property
-    def purl(self) -> str:
+    def purl(self) -> Optional[str]:
         """
         Specifies the package-url (PURL).
 
@@ -418,10 +416,11 @@ class Component:
         return self._purl
 
     @purl.setter
-    def purl(self, purl: Optional[PackageURL]) -> None:
-        if not purl:
-            purl = self.to_package_url().to_string()
-        self._purl = purl
+    def purl(self, purl: Optional[str]) -> None:
+        if purl:
+            self._purl = purl
+        else:
+            self._purl = self.to_package_url().to_string()
 
     def _recalculate_purl(self) -> None:
         if self.group and self.name and self.version:
@@ -525,9 +524,8 @@ class Component:
         Returns:
             Declared subpath of this Component as `str` if declared, else `None`.
         """
-        if hasattr(self.purl, 'subpath'):
-            return self.purl.subpath
-        return None
+        p = self.to_package_url()
+        return p.subpath if hasattr(p, 'subpath') else None
 
     def to_package_url(self) -> PackageURL:
         """
@@ -539,8 +537,10 @@ class Component:
         return PackageURL(type=self.__purl_type, namespace=self.group, name=self.name, version=self.version,
                           qualifiers=self.__purl_qualifiers, subpath=self.__purl_subpath)
 
-    def __eq__(self, other: "Component") -> bool:
-        return other.purl == self.purl
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Component):
+            return other.purl == self.purl
+        return False
 
     def __repr__(self) -> str:
         return f'<Component {self._name}={self._version}>'

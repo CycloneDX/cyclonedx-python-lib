@@ -75,7 +75,7 @@ class AttachedText:
     DEFAULT_CONTENT_TYPE = 'text/plain'
 
     def __init__(self, content: str, content_type: str = DEFAULT_CONTENT_TYPE,
-                 encoding: Optional[Encoding] = None) -> 'AttachedText':
+                 encoding: Optional[Encoding] = None) -> None:
         self.content_type = content_type
         self.encoding = encoding
         self.content = content
@@ -254,8 +254,10 @@ class XsUri:
             )
         self._uri = uri
 
-    def __eq__(self, other: "XsUri") -> bool:
-        return self._uri == str(other)
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, XsUri):
+            return self._uri == str(other)
+        return False
 
     def __repr__(self) -> str:
         return self._uri
@@ -514,7 +516,7 @@ class License:
     """
 
     def __init__(self, spxd_license_id: Optional[str] = None, license_name: Optional[str] = None,
-                 license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> 'License':
+                 license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> None:
         if not spxd_license_id and not license_name:
             raise MutuallyExclusivePropertiesException('Either `spxd_license_id` or `license_name` MUST be supplied')
         if spxd_license_id and license_name:
@@ -597,7 +599,7 @@ class LicenseChoice:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
     """
 
-    def __init__(self, license: Optional[License] = None, license_expression: Optional[str] = None) -> 'LicenseChoice':
+    def __init__(self, license: Optional[License] = None, license_expression: Optional[str] = None) -> None:
         if not license and not license_expression:
             raise NoPropertiesProvidedException(
                 'One of `license` or `license_expression` must be supplied - neither supplied'

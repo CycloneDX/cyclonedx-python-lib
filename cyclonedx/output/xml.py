@@ -27,7 +27,6 @@ from ..exception.output import ComponentVersionRequiredException
 from ..model import Encoding, ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
 from ..model.bom import Bom
 from ..model.component import Component
-from ..model.release_note import ReleaseNotes
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySource, BomTargetVersionRange
 
 
@@ -35,17 +34,15 @@ class Xml(BaseOutput, BaseSchemaVersion):
     VULNERABILITY_EXTENSION_NAMESPACE: str = 'http://cyclonedx.org/schema/ext/vulnerability/1.0'
     XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
-    def __init__(self, bom: Optional[Bom] = None) -> None:
+    def __init__(self, bom: Bom) -> None:
         super().__init__(bom=bom)
-        self._root_bom_element: ElementTree.Element = None
+        self._root_bom_element: ElementTree.Element = self._create_bom_element()
 
     def generate(self, force_regeneration: bool = False) -> None:
-        if self._root_bom_element and force_regeneration:
+        if self.generated and force_regeneration:
             self._root_bom_element = self._create_bom_element()
         elif self.generated:
             return
-        else:
-            self._root_bom_element = self._create_bom_element()
 
         if self.bom_supports_metadata():
             self._add_metadata_element()
@@ -60,8 +57,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 # Vulnerabilities are only possible when bom-ref is supported by the main CycloneDX schema version
                 vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
                 for vulnerability in component.get_vulnerabilities():
+                    bom_ref: str = component.purl if component.purl else component.to_package_url().to_string()
                     vulnerabilities.append(
-                        self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.purl,
+                        self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=bom_ref,
                                                                        vulnerability=vulnerability)
                     )
             elif component.has_vulnerabilities():
@@ -111,12 +109,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     def _add_component_element(self, component: Component) -> ElementTree.Element:
         element_attributes = {'type': component.type.value}
-        if self.component_supports_bom_ref_attribute():
+        if self.component_supports_bom_ref_attribute() and component.purl:
             element_attributes['bom-ref'] = component.purl
-
-        # @todo Support component[@mime-type]
-        # if self.component_supports_mime_type_attribute():
-        #     element_attributes['mime-type'] =
+        if self.component_supports_mime_type_attribute() and component.mime_type:
+            element_attributes['mime-type'] = component.mime_type
 
         component_element = ElementTree.Element('component', element_attributes)
 
@@ -195,7 +191,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # releaseNotes
         if self.component_supports_release_notes() and component.release_notes:
             release_notes_e = ElementTree.SubElement(component_element, 'releaseNotes')
-            release_notes = cast(ReleaseNotes, component.release_notes)
+            release_notes = component.release_notes
 
             ElementTree.SubElement(release_notes_e, 'type').text = release_notes.type
             if release_notes.title:
@@ -265,9 +261,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
     # ----  ----  ----  ----  ----
 
     def _get_vulnerability_as_xml_element_post_1_4(self, vulnerability: Vulnerability) -> ElementTree.Element:
-        vulnerability_element = ElementTree.Element('vulnerability', {
-            'bom-ref': vulnerability.bom_ref
-        })
+        vulnerability_element = ElementTree.Element(
+            'vulnerability',
+            {'bom-ref': vulnerability.bom_ref} if vulnerability.bom_ref else {}
+        )
 
         # id
         if vulnerability.id:
