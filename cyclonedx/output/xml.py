@@ -417,7 +417,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
                 if rating.score:
                     score_element = ElementTree.SubElement(rating_element, 'v:score')
-                    ElementTree.SubElement(score_element, 'v:base').text = str(rating.score)
+                    ElementTree.SubElement(score_element, 'v:base').text = f'{rating.score:.1f}'
 
                 # rating.severity
                 if rating.severity:

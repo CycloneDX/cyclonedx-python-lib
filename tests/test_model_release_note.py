@@ -41,10 +41,10 @@ class TestModelReleaseNote(TestCase):
         self.assertEqual(rn.type, 'major')
         self.assertEqual(rn.title, 'Release Notes Title')
         self.assertEqual(
-            rn.featured_image,
+            str(rn.featured_image),
             'https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'
         )
-        self.assertEqual(rn.social_image, 'https://cyclonedx.org/cyclonedx-icon.png')
+        self.assertEqual(str(rn.social_image), 'https://cyclonedx.org/cyclonedx-icon.png')
         self.assertEqual(rn.description, 'This release is a test release')
         self.assertListEqual(rn.aliases, ["First Test Release", "Release Alpha"])
         self.assertListEqual(rn.tags, ['test', 'alpha', 'testing'])

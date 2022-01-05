@@ -28,21 +28,24 @@ from cyclonedx.output.xml import XmlV1Dot3, Xml
 
 class TestOutputGeneric(TestCase):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls._bom = Bom()
+        cls._bom.add_component(Component(name='setuptools'))
+
     def test_get_instance_default(self) -> None:
-        i = get_instance()
+        i = get_instance(bom=TestOutputGeneric._bom)
         self.assertIsInstance(i, XmlV1Dot3)
 
     def test_get_instance_xml(self) -> None:
-        i = get_instance(output_format=OutputFormat.XML)
+        i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML)
         self.assertIsInstance(i, XmlV1Dot3)
 
     def test_get_instance_xml_v1_3(self) -> None:
-        i = get_instance(output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
+        i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
         self.assertIsInstance(i, XmlV1Dot3)
 
     def test_component_no_version_v1_3(self) -> None:
-        bom = Bom()
-        bom.add_component(Component(name='setuptools'))
         with self.assertRaises(ComponentVersionRequiredException):
-            outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_3)
+            outputter: Xml = get_instance(bom=TestOutputGeneric._bom, schema_version=SchemaVersion.V1_3)
             outputter.output_as_string()

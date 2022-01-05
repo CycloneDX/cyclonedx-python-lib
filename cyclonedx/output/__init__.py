@@ -23,7 +23,7 @@ import importlib
 import os
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import cast, Optional, ParamSpec
+from typing import cast
 
 from ..model.bom import Bom
 
@@ -46,7 +46,7 @@ DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 
 class BaseOutput(ABC):
 
-    def __init__(self, bom: Bom, **kwargs: ParamSpec) -> None:
+    def __init__(self, bom: Bom, **kwargs: int) -> None:
         super().__init__(**kwargs)
         self._bom = bom
         self._generated: bool = False
@@ -90,7 +90,7 @@ class BaseOutput(ABC):
         f_out.close()
 
 
-def get_instance(bom: Optional[Bom] = None, output_format: OutputFormat = OutputFormat.XML,
+def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = DEFAULT_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.

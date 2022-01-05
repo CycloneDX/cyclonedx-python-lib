@@ -256,7 +256,7 @@ class XsUri:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, XsUri):
-            return self._uri == str(other)
+            return str(self) == str(other)
         return False
 
     def __repr__(self) -> str:
