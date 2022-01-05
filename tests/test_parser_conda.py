@@ -35,11 +35,11 @@ class TestCondaParser(TestCase):
         self.assertEqual(34, parser.component_count())
         components = parser.get_components()
 
-        c_noarch = [x for x in components if x.get_name() == 'idna'][0]
-        self.assertEqual('idna', c_noarch.get_name())
-        self.assertEqual('2.10', c_noarch.get_version())
-        self.assertEqual(1, len(c_noarch.get_external_references()))
-        self.assertEqual(0, len(c_noarch.get_external_references()[0].get_hashes()))
+        c_noarch = [x for x in components if x.name == 'idna'][0]
+        self.assertEqual('idna', c_noarch.name)
+        self.assertEqual('2.10', c_noarch.version)
+        self.assertEqual(1, len(c_noarch.external_references))
+        self.assertEqual(0, len(c_noarch.external_references[0].get_hashes()))
 
     def test_conda_list_explicit_md5(self) -> None:
         conda_list_ouptut_file = os.path.join(os.path.dirname(__file__), 'fixtures/conda-list-explicit-md5.txt')
@@ -51,8 +51,8 @@ class TestCondaParser(TestCase):
         self.assertEqual(34, parser.component_count())
         components = parser.get_components()
 
-        c_noarch = [x for x in components if x.get_name() == 'idna'][0]
-        self.assertEqual('idna', c_noarch.get_name())
-        self.assertEqual('2.10', c_noarch.get_version())
-        self.assertEqual(1, len(c_noarch.get_external_references()))
-        self.assertEqual(0, len(c_noarch.get_external_references()[0].get_hashes()))
+        c_noarch = [x for x in components if x.name == 'idna'][0]
+        self.assertEqual('idna', c_noarch.name)
+        self.assertEqual('2.10', c_noarch.version)
+        self.assertEqual(1, len(c_noarch.external_references))
+        self.assertEqual(0, len(c_noarch.external_references[0].get_hashes()))

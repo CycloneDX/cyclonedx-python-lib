@@ -38,6 +38,7 @@ else:
     from importlib_metadata import metadata, PackageMetadata as _MetadataReturn
 
 from . import BaseParser
+from ..model import LicenseChoice
 from ..model.component import Component
 
 
@@ -59,15 +60,21 @@ class EnvironmentParser(BaseParser):
 
             i_metadata = self._get_metadata_for_package(i.project_name)
             if 'Author' in i_metadata:
-                c.set_author(author=i_metadata['Author'])
+                c.author = i_metadata['Author']
 
             if 'License' in i_metadata and i_metadata['License'] != 'UNKNOWN':
-                c.set_license(license_str=i_metadata['License'])
+                c.licenses.append(
+                    LicenseChoice(license_expression=i_metadata['License'])
+                )
 
             if 'Classifier' in i_metadata:
                 for classifier in i_metadata['Classifier']:
                     if str(classifier).startswith('License :: OSI Approved :: '):
-                        c.set_license(license_str=str(classifier).replace('License :: OSI Approved :: ', '').strip())
+                        c.licenses.append(
+                            LicenseChoice(
+                                license_expression=str(classifier).replace('License :: OSI Approved :: ', '').strip()
+                            )
+                        )
 
             self._components.append(c)
 

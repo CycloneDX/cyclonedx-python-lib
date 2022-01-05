@@ -18,10 +18,12 @@
 import hashlib
 import re
 import sys
+import warnings
 from enum import Enum
 from typing import List, Optional, Union
 
-from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException
+from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException, \
+    MutuallyExclusivePropertiesException
 from ..exception.parser import UnknownHashTypeException
 
 """
@@ -60,6 +62,68 @@ class Encoding(Enum):
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/#type_encoding
     """
     BASE_64 = 'base64'
+
+
+class AttachedText:
+    """
+    This is our internal representation of the `attachedTextType` complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.3/#type_attachedTextType
+    """
+
+    DEFAULT_CONTENT_TYPE = 'text/plain'
+
+    def __init__(self, content: str, content_type: str = DEFAULT_CONTENT_TYPE,
+                 encoding: Optional[Encoding] = None) -> 'AttachedText':
+        self.content_type = content_type
+        self.encoding = encoding
+        self.content = content
+
+    @property
+    def content_type(self) -> str:
+        """
+        Specifies the content type of the text. Defaults to text/plain if not specified.
+
+        Returns:
+            `str`
+        """
+        return self._content_type
+
+    @content_type.setter
+    def content_type(self, content_type: str) -> None:
+        self._content_type = content_type
+
+    @property
+    def encoding(self) -> Optional[Encoding]:
+        """
+        Specifies the optional encoding the text is represented in.
+
+        Returns:
+            `Encoding` if set else `None`
+        """
+        return self._encoding
+
+    @encoding.setter
+    def encoding(self, encoding: Optional[Encoding]) -> None:
+        self._encoding = encoding
+
+    @property
+    def content(self) -> str:
+        """
+        The attachment data.
+
+        Proactive controls such as input validation and sanitization should be employed to prevent misuse of attachment
+        text.
+
+        Returns:
+            `str`
+        """
+        return self._content
+
+    @content.setter
+    def content(self, content) -> None:
+        self._content = content
 
 
 class HashAlgorithm(Enum):
@@ -131,17 +195,17 @@ class HashType:
         raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
     def __init__(self, algorithm: HashAlgorithm, hash_value: str) -> None:
-        self._algorithm = algorithm
-        self._value = hash_value
+        self._alg = algorithm
+        self._content = hash_value
 
     def get_algorithm(self) -> HashAlgorithm:
-        return self._algorithm
+        return self._alg
 
     def get_hash_value(self) -> str:
-        return self._value
+        return self._content
 
     def __repr__(self) -> str:
-        return f'<Hash {self._algorithm.value}:{self._value}>'
+        return f'<Hash {self._alg.value}:{self._content}>'
 
 
 class ExternalReferenceType(Enum):
@@ -208,7 +272,7 @@ class ExternalReference:
 
     def __init__(self, reference_type: ExternalReferenceType, url: Union[str, XsUri], comment: str = '',
                  hashes: Optional[List[HashType]] = None) -> None:
-        self._reference_type: ExternalReferenceType = reference_type
+        self._type: ExternalReferenceType = reference_type
         self._url = str(url)
         self._comment = comment
         self._hashes: List[HashType] = hashes if hashes else []
@@ -248,7 +312,7 @@ class ExternalReference:
         Returns:
             `ExternalReferenceType` that represents the type of this External Reference.
         """
-        return self._reference_type
+        return self._type
 
     def get_url(self) -> str:
         """
@@ -260,7 +324,7 @@ class ExternalReference:
         return self._url
 
     def __repr__(self) -> str:
-        return f'<ExternalReference {self._reference_type.name}, {self._url}> {self._hashes}'
+        return f'<ExternalReference {self._type.name}, {self._url}> {self._hashes}'
 
 
 class IssueClassification(Enum):
@@ -438,6 +502,148 @@ class IssueType:
             None
         """
         self._source_url = source_url
+
+
+class License:
+    """
+    This is out internal representation of `licenseType` complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
+    """
+
+    def __init__(self, spxd_license_id: Optional[str] = None, license_name: Optional[str] = None,
+                 license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> 'License':
+        if not spxd_license_id and not license_name:
+            raise MutuallyExclusivePropertiesException(
+                f'Either `spxd_license_id` or `license_name` MUST be supplied'
+            )
+        if spxd_license_id and license_name:
+            warnings.warn(
+                f'Both `spxd_license_id` and `license_name` have been supplied - `license_name` will be ignored!',
+                RuntimeWarning
+            )
+        self.id = spxd_license_id
+        if not spxd_license_id:
+            self.name = license_name
+        else:
+            self.name = None
+        self.text = license_text
+        self.url = license_url
+
+    @property
+    def id(self) -> Optional[str]:
+        """
+        A valid SPDX license ID
+
+        Returns:
+            `str` or `None`
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id: Optional[str]) -> None:
+        self._id = id
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        If SPDX does not define the license used, this field may be used to provide the license name.
+
+        Returns:
+            `str` or `None`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    def text(self) -> Optional[AttachedText]:
+        """
+        Specifies the optional full text of the attachment
+
+        Returns:
+            `AttachedText` else `None`
+        """
+        return self._text
+
+    @text.setter
+    def text(self, text: Optional[AttachedText]) -> None:
+        self._text = text
+
+    @property
+    def url(self) -> Optional[XsUri]:
+        """
+        The URL to the attachment file. If the attachment is a license or BOM, an externalReference should also be
+        specified for completeness.
+
+        Returns:
+            `XsUri` or `None`
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url) -> None:
+        self._url = url
+
+
+class LicenseChoice:
+    """
+    This is out internal representation of `licenseChoiceType` complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
+    """
+
+    def __init__(self, license: Optional[License] = None, license_expression: Optional[str] = None) -> 'LicenseChoice':
+        if not license and not license_expression:
+            raise NoPropertiesProvidedException(
+                f'One of `license` or `license_expression` must be supplied - neither supplied'
+            )
+        if license and license_expression:
+            warnings.warn(
+                f'Both `license` and `license_expression` have been supplied - `license` will take precedence',
+                RuntimeWarning
+            )
+        self.license = license
+        if not license:
+            self.expression = license_expression
+        else:
+            self.expression = None
+
+    @property
+    def license(self) -> Optional[License]:
+        """
+        License definition
+
+        Returns:
+            `License` or `None`
+        """
+        return self._license
+
+    @license.setter
+    def license(self, license: Optional[License]) -> None:
+        self._license = license
+
+    @property
+    def expression(self) -> Optional[str]:
+        """
+        A valid SPDX license expression (not enforced).
+
+        Refer to https://spdx.org/specifications for syntax requirements.
+
+        Returns:
+            `str` or `None`
+        """
+        return self._expression
+
+    @expression.setter
+    def expression(self, expression: Optional[str]) -> None:
+        self._expression = expression
 
 
 class Property:

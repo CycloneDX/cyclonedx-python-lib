@@ -16,14 +16,13 @@
   "components": [
     {
       "type": "library",
+      "bom-ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "name": "toml",
       "version": "0.10.2",
       "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "licenses": [
         {
-          "license": {
-            "name": "MIT License"
-          }
+          "expression": "MIT License"
         }
       ]
     }

@@ -19,7 +19,7 @@
 
 from datetime import datetime, timezone
 from typing import List, Optional
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 from . import ThisTool, Tool
 from .component import Component
@@ -35,10 +35,25 @@ class BomMetaData:
     """
 
     def __init__(self, tools: Optional[List[Tool]] = None) -> None:
-        self._timestamp = datetime.now(tz=timezone.utc)
-        self._tools: List[Tool] = tools if tools else []
-        if len(self._tools) < 1:
-            self._tools.append(ThisTool)
+        self.timestamp = datetime.now(tz=timezone.utc)
+        self.tools = tools if tools else []
+
+        if not self.tools:
+            self.add_tool(ThisTool)
+
+    @property
+    def tools(self) -> List[Tool]:
+        """
+        Tools used to create this BOM.
+
+        Returns:
+            `List` of `Tool` objects where there are any, else an empty `List`.
+        """
+        return self._tools
+
+    @tools.setter
+    def tools(self, tools) -> None:
+        self._tools = tools
 
     def add_tool(self, tool: Tool) -> None:
         """
@@ -51,7 +66,8 @@ class BomMetaData:
         """
         self._tools.append(tool)
 
-    def get_timestamp(self) -> datetime:
+    @property
+    def timestamp(self) -> datetime:
         """
         The date and time (in UTC) when this BomMetaData was created.
 
@@ -60,14 +76,9 @@ class BomMetaData:
         """
         return self._timestamp
 
-    def get_tools(self) -> List[Tool]:
-        """
-        Tools used to create this BOM.
-
-        Returns:
-            `List` of `Tool` objects where there are any, else an empty `List`.
-        """
-        return self._tools
+    @timestamp.setter
+    def timestamp(self, timestamp) -> None:
+        self._timestamp = timestamp
 
 
 class Bom:
@@ -103,9 +114,54 @@ class Bom:
         Returns:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
-        self._uuid = uuid4()
-        self._metadata: BomMetaData = BomMetaData()
+        self.uuid = uuid4()
+        self.metadata = BomMetaData()
         self._components: List[Component] = []
+
+    @property
+    def uuid(self) -> UUID:
+        """
+        Unique UUID for this BOM
+
+        Returns:
+            `UUID` instance
+        """
+        return self.__uuid
+
+    @uuid.setter
+    def uuid(self, uuid: UUID) -> None:
+        self.__uuid = uuid
+
+    @property
+    def metadata(self) -> BomMetaData:
+        """
+        Get our internal metadata object for this Bom.
+
+        Returns:
+            Metadata object instance for this Bom.
+
+        .. note::
+            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
+        """
+        return self._metadata
+
+    @metadata.setter
+    def metadata(self, metadata: BomMetaData) -> None:
+        self._metadata = metadata
+
+    @property
+    def components(self) -> List[Component]:
+        """
+        Get all the Components currently in this Bom.
+
+        Returns:
+             List of all Components in this Bom.
+        """
+        return self._components
+
+    @components.setter
+    def components(self, components: List[Component]) -> None:
+        self._components = components
 
     def add_component(self, component: Component) -> None:
         """
@@ -132,7 +188,7 @@ class Bom:
         Returns:
             None
         """
-        self._components = self._components + components
+        self.components = self._components + components
 
     def component_count(self) -> int:
         """
@@ -154,32 +210,11 @@ class Bom:
         Returns:
             `Component` or `None`
         """
-        found = list(filter(lambda x: x.get_purl() == purl, self._components))
+        found = list(filter(lambda x: x.purl == purl, self.components))
         if len(found) == 1:
             return found[0]
 
         return None
-
-    def get_components(self) -> List[Component]:
-        """
-        Get all the Components currently in this Bom.
-
-        Returns:
-             List of all Components in this Bom.
-        """
-        return self._components
-
-    def get_metadata(self) -> BomMetaData:
-        """
-        Get our internal metadata object for this Bom.
-
-        Returns:
-            Metadata object instance for this Bom.
-
-        .. note::
-            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
-        """
-        return self._metadata
 
     def get_urn_uuid(self) -> str:
         """
@@ -188,7 +223,7 @@ class Bom:
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
         """
-        return 'urn:uuid:{}'.format(self._uuid)
+        return 'urn:uuid:{}'.format(self.__uuid)
 
     def has_component(self, component: Component) -> bool:
         """
@@ -211,7 +246,7 @@ class Bom:
             `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
                 `False` otherwise.
         """
-        for c in self.get_components():
+        for c in self.components:
             if c.has_vulnerabilities():
                 return True
 

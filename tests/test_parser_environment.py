@@ -36,6 +36,6 @@ class TestEnvironmentParser(TestCase):
         self.assertGreater(parser.component_count(), 1)
 
         # We can only be sure that tox is in the environment, for example as we use tox to run tests
-        c_tox: Component = [x for x in parser.get_components() if x.get_name() == 'tox'][0]
-        self.assertIsNotNone(c_tox.get_license())
-        self.assertEqual('MIT', c_tox.get_license())
+        c_tox: Component = [x for x in parser.get_components() if x.name == 'tox'][0]
+        self.assertIsNotNone(c_tox.licenses)
+        self.assertEqual('MIT', c_tox.licenses[0].expression)

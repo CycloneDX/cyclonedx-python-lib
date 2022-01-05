@@ -86,7 +86,7 @@ class TestOutputXml(BaseXmlTestCase):
     def test_simple_bom_v1_0(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
-        self.assertEqual(len(bom.get_components()), 1)
+        self.assertEqual(len(bom.components), 1)
         outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_0)
         self.assertIsInstance(outputter, XmlV1Dot0)
         with open(join(dirname(__file__), 'fixtures/bom_v1.0_setuptools.xml')) as expected_xml:
@@ -149,7 +149,7 @@ class TestOutputXml(BaseXmlTestCase):
                 responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
             ),
             affects_targets=[
-                BomTarget(bom_ref=c.get_purl(), versions=[
+                BomTarget(bom_ref=c.purl, versions=[
                     BomTargetVersionRange(version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED)
                 ])
             ]
@@ -265,8 +265,7 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_with_component_license(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
-        c.set_license('MIT License')
+        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz', license_str='MIT License')
         bom.add_component(c)
         outputter: Xml = get_instance(bom=bom)
         self.assertIsInstance(outputter, XmlV1Dot3)
@@ -293,9 +292,8 @@ class TestOutputXml(BaseXmlTestCase):
         bom = Bom()
         c = Component(
             name='toml', version='0.10.2', qualifiers='extension=tar.gz',
-            release_notes=ReleaseNotes(type='major')
+            release_notes=ReleaseNotes(type='major'), license_str='MIT License'
         )
-        c.set_license('MIT License')
         bom.add_component(c)
         outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_3)
         self.assertIsInstance(outputter, XmlV1Dot3)

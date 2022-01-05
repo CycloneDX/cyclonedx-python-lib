@@ -46,7 +46,7 @@ class TestComponent(TestCase):
             str(PackageURL(
                 type='pypi', name='setuptools', version='50.3.2'
             )),
-            TestComponent._component.get_purl()
+            TestComponent._component.purl
         )
 
     def test_purl_incorrect_version(self) -> None:
@@ -55,7 +55,7 @@ class TestComponent(TestCase):
         )
         self.assertNotEqual(
             str(purl),
-            TestComponent._component.get_purl()
+            TestComponent._component.purl
         )
         self.assertEqual(purl.type, 'pypi')
         self.assertEqual(purl.name, 'setuptools')
@@ -67,7 +67,7 @@ class TestComponent(TestCase):
         )
         self.assertNotEqual(
             str(purl),
-            TestComponent._component.get_purl()
+            TestComponent._component.purl
         )
         self.assertEqual(purl.type, 'pypi')
         self.assertEqual(purl.name, 'setuptoolz')
@@ -79,11 +79,11 @@ class TestComponent(TestCase):
         )
         self.assertEqual(
             str(purl),
-            TestComponent._component_with_qualifiers.get_purl()
+            TestComponent._component_with_qualifiers.purl
         )
         self.assertNotEqual(
             str(purl),
-            TestComponent._component.get_purl()
+            TestComponent._component.purl
         )
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
 
@@ -114,19 +114,19 @@ class TestComponent(TestCase):
     def test_from_file_with_path_for_bom(self) -> None:
         test_file = join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_v1.3_setuptools.xml')
-        self.assertEqual(c.get_name(), 'fixtures/bom_v1.3_setuptools.xml')
-        self.assertEqual(c.get_version(), '0.0.0-16932e52ed1e')
+        self.assertEqual(c.name, 'fixtures/bom_v1.3_setuptools.xml')
+        self.assertEqual(c.version, '0.0.0-16932e52ed1e')
         purl = PackageURL(
             type='generic', name='fixtures/bom_v1.3_setuptools.xml', version='0.0.0-16932e52ed1e'
         )
         self.assertEqual(c.to_package_url(), purl)
-        self.assertEqual(len(c.get_hashes()), 1)
+        self.assertEqual(len(c.hashes), 1)
 
     def test_has_component_1(self) -> None:
         bom = Bom()
         bom.add_component(component=TestComponent._component)
         bom.add_component(component=TestComponent._component_2)
-        self.assertEqual(len(bom.get_components()), 1)
+        self.assertEqual(len(bom.components), 1)
         self.assertTrue(bom.has_component(component=TestComponent._component_2))
         self.assertIsNot(TestComponent._component, TestComponent._component_2)
 
@@ -134,17 +134,17 @@ class TestComponent(TestCase):
         bom = Bom()
         bom.add_component(component=TestComponent._component)
         bom.add_component(component=TestComponent._component_2)
-        self.assertEqual(len(bom.get_components()), 1)
+        self.assertEqual(len(bom.components), 1)
         self.assertTrue(bom.has_component(component=TestComponent._component))
         self.assertTrue(bom.has_component(component=TestComponent._component_2))
         self.assertEqual(bom.get_component_by_purl(
-            purl=TestComponent._component.get_purl()),
+            purl=TestComponent._component.purl),
             TestComponent._component_2
         )
 
     def test_full_purl_spec_no_subpath(self) -> None:
         self.assertEqual(
-            TestComponent._component_purl_spec_no_subpath.get_purl(),
+            TestComponent._component_purl_spec_no_subpath.purl,
             'pkg:pypi/name-space/setuptools@50.0.1?extension=whl'
         )
         self.assertIsNone(TestComponent._component_purl_spec_no_subpath.get_subpath())

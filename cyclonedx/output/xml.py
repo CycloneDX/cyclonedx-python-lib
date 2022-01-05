@@ -54,7 +54,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         components_element = ElementTree.SubElement(self._root_bom_element, 'components')
 
         has_vulnerabilities: bool = False
-        for component in self.get_bom().get_components():
+        for component in self.get_bom().components:
             component_element = self._add_component_element(component=component)
             components_element.append(component_element)
             if self.bom_supports_vulnerabilities_via_extension() and component.has_vulnerabilities():
@@ -62,15 +62,15 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
                 for vulnerability in component.get_vulnerabilities():
                     vulnerabilities.append(
-                        self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.get_purl(),
-                                                                      vulnerability=vulnerability)
+                        self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.purl,
+                                                                       vulnerability=vulnerability)
                     )
             elif component.has_vulnerabilities():
                 has_vulnerabilities = True
 
         if self.bom_supports_vulnerabilities() and has_vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
-            for component in self.get_bom().get_components():
+            for component in self.get_bom().components:
                 for vulnerability in component.get_vulnerabilities():
                     vulnerabilities_element.append(
                         self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
@@ -100,20 +100,20 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return ElementTree.Element('bom', root_attributes)
 
     def _add_metadata_element(self) -> None:
-        bom_metadata = self.get_bom().get_metadata()
+        bom_metadata = self.get_bom().metadata
         metadata_e = ElementTree.SubElement(self._root_bom_element, 'metadata')
 
-        ElementTree.SubElement(metadata_e, 'timestamp').text = bom_metadata.get_timestamp().isoformat()
+        ElementTree.SubElement(metadata_e, 'timestamp').text = bom_metadata.timestamp.isoformat()
 
-        if self.bom_metadata_supports_tools() and len(bom_metadata.get_tools()) > 0:
+        if self.bom_metadata_supports_tools() and len(bom_metadata.tools) > 0:
             tools_e = ElementTree.SubElement(metadata_e, 'tools')
-            for tool in bom_metadata.get_tools():
+            for tool in bom_metadata.tools:
                 self._add_tool(parent_element=tools_e, tool=tool)
 
     def _add_component_element(self, component: Component) -> ElementTree.Element:
-        element_attributes = {'type': component.get_type().value}
+        element_attributes = {'type': component.type.value}
         if self.component_supports_bom_ref_attribute():
-            element_attributes['bom-ref'] = component.get_purl()
+            element_attributes['bom-ref'] = component.purl
 
         # @todo Support component[@mime-type]
         # if self.component_supports_mime_type_attribute():
@@ -121,50 +121,67 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         component_element = ElementTree.Element('component', element_attributes)
 
-        if self.component_supports_author() and component.get_author() is not None:
-            ElementTree.SubElement(component_element, 'author').text = component.get_author()
+        if self.component_supports_author() and component.author is not None:
+            ElementTree.SubElement(component_element, 'author').text = component.author
 
         # group
-        if component.get_namespace():
-            ElementTree.SubElement(component_element, 'group').text = component.get_namespace()
+        if component.group:
+            ElementTree.SubElement(component_element, 'group').text = component.group
 
         # name
-        ElementTree.SubElement(component_element, 'name').text = component.get_name()
+        ElementTree.SubElement(component_element, 'name').text = component.name
 
         # version
         if self.component_version_optional():
-            if component.get_version():
+            if component.version:
                 # 1.4 schema version
-                ElementTree.SubElement(component_element, 'version').text = component.get_version()
+                ElementTree.SubElement(component_element, 'version').text = component.version
         else:
-            if not component.get_version():
+            if not component.version:
                 raise ComponentVersionRequiredException(
-                    f'Component "{component.get_purl()}" has no version but the target schema version mandates '
+                    f'Component "{component.purl}" has no version but the target schema version mandates '
                     f'Components have a version specified'
                 )
-            ElementTree.SubElement(component_element, 'version').text = component.get_version()
+            ElementTree.SubElement(component_element, 'version').text = component.version
 
         # hashes
-        if len(component.get_hashes()) > 0:
-            Xml._add_hashes_to_element(hashes=component.get_hashes(), element=component_element)
+        if component.hashes:
+            Xml._add_hashes_to_element(hashes=component.hashes, element=component_element)
 
         # licenses
-        if component.get_license():
+        if component.licenses:
             licenses_e = ElementTree.SubElement(component_element, 'licenses')
-            license_e = ElementTree.SubElement(licenses_e, 'license')
-            ElementTree.SubElement(license_e, 'name').text = component.get_license()
+            for license in component.licenses:
+                if license.license:
+                    license_e = ElementTree.SubElement(licenses_e, 'license')
+                    if license.license.id:
+                        ElementTree.SubElement(license_e, 'id').text = license.license.id
+                    elif license.license.name:
+                        ElementTree.SubElement(license_e, 'name').text = license.license.name
+                    if license.license.text:
+                        license_text_e_attrs = {}
+                        if license.license.text.content_type:
+                            license_text_e_attrs['content-type'] = license.license.text.content_type
+                        if license.license.text.encoding:
+                            license_text_e_attrs['encoding'] = license.license.text.encoding.value
+                        ElementTree.SubElement(license_e, 'text',
+                                               license_text_e_attrs).text = license.license.text.content
+
+                        ElementTree.SubElement(license_e, 'text').text = license.license.id
+                else:
+                    ElementTree.SubElement(licenses_e, 'expression').text = license.expression
 
         # purl
-        ElementTree.SubElement(component_element, 'purl').text = component.get_purl()
+        ElementTree.SubElement(component_element, 'purl').text = component.purl
 
         # modified
         if self.bom_requires_modified():
             ElementTree.SubElement(component_element, 'modified').text = 'false'
 
         # externalReferences
-        if self.component_supports_external_references() and len(component.get_external_references()) > 0:
+        if self.component_supports_external_references() and len(component.external_references) > 0:
             external_references_e = ElementTree.SubElement(component_element, 'externalReferences')
-            for ext_ref in component.get_external_references():
+            for ext_ref in component.external_references:
                 external_reference_e = ElementTree.SubElement(
                     external_references_e, 'reference', {'type': ext_ref.get_reference_type().value}
                 )
@@ -177,9 +194,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     Xml._add_hashes_to_element(hashes=ext_ref.get_hashes(), element=external_reference_e)
 
         # releaseNotes
-        if self.component_supports_release_notes() and component.get_release_notes():
+        if self.component_supports_release_notes() and component.release_notes:
             release_notes_e = ElementTree.SubElement(component_element, 'releaseNotes')
-            release_notes = cast(ReleaseNotes, component.get_release_notes())
+            release_notes = cast(ReleaseNotes, component.release_notes)
 
             ElementTree.SubElement(release_notes_e, 'type').text = release_notes.type
             if release_notes.title:
@@ -378,7 +395,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return vulnerability_element
 
-    def _get_vulnerability_as_xml_element_pre_1_3(self, bom_ref: str, vulnerability: Vulnerability) -> ElementTree.Element:
+    def _get_vulnerability_as_xml_element_pre_1_3(self, bom_ref: str,
+                                                  vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element('v:vulnerability', {
             'ref': bom_ref
         })
