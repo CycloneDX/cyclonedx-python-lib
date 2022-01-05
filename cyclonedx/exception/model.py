@@ -22,7 +22,14 @@ Exceptions relating to specific conditions that occur when modelling CycloneDX B
 from . import CycloneDxException
 
 
-class InvalidLocaleTypeException(CycloneDxException):
+class CycloneDxModelException(CycloneDxException):
+    """
+    Base exception that covers all exceptions that may be thrown during model creation.
+    """
+    pass
+
+
+class InvalidLocaleTypeException(CycloneDxModelException):
     """
     Raised when the supplied locale does not conform to ISO-639 specification.
 
@@ -39,8 +46,24 @@ class InvalidLocaleTypeException(CycloneDxException):
     pass
 
 
-class InvalidUriException(CycloneDxException):
+class InvalidUriException(CycloneDxModelException):
     """
     Raised when a `str` is provided that needs to be a valid URI, but isn't.
+    """
+    pass
+
+
+class MutuallyExclusivePropertiesException(CycloneDxModelException):
+    """
+    Raised when mutually exclusive properties are provided.
+    """
+    pass
+
+
+class NoPropertiesProvidedException(CycloneDxModelException):
+    """
+    Raised when attempting to construct a model class and providing NO values (where all properites are defined as
+    Optional, but at least one is required).
+
     """
     pass

@@ -76,13 +76,13 @@ class TestModelIssueType(TestCase):
             'Services projects.'
         )
         self.assertEqual(it.get_source_name(), 'NVD'),
-        self.assertEqual(it.get_source_url(), XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'))
-        self.assertEqual(it.get_source_url(), 'https://nvd.nist.gov/vuln/detail/CVE-2021-44228')
-        self.assertListEqual(it.get_references(), [
-            XsUri('https://logging.apache.org/log4j/2.x/security.html'),
-            XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
+        self.assertEqual(str(it.get_source_url()), str(XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')))
+        self.assertEqual(str(it.get_source_url()), str('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'))
+        self.assertListEqual(list(map(lambda u: str(u), it.get_references())), [
+            'https://logging.apache.org/log4j/2.x/security.html',
+            'https://central.sonatype.org/news/20211213_log4shell_help'
         ])
-        self.assertListEqual(it.get_references(), [
+        self.assertListEqual(list(map(lambda u: str(u), it.get_references())), [
             'https://logging.apache.org/log4j/2.x/security.html',
             'https://central.sonatype.org/news/20211213_log4shell_help'
         ])

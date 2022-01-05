@@ -45,9 +45,8 @@ class TestBom(TestCase):
 
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()
-        self.assertEqual(len(bom.get_metadata().get_tools()), 1)
-
-        bom.get_metadata().add_tool(Tool(
-            vendor='TestVendor', name='TestTool', version='0.0.0'
-        ))
-        self.assertEqual(len(bom.get_metadata().get_tools()), 2)
+        self.assertEqual(len(bom.metadata.tools), 1)
+        bom.metadata.add_tool(
+            Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
+        )
+        self.assertEqual(len(bom.metadata.tools), 2)

@@ -17,10 +17,13 @@
 
 import hashlib
 import re
+import sys
+import warnings
 from enum import Enum
 from typing import List, Optional, Union
 
-from ..exception.model import InvalidLocaleTypeException, InvalidUriException
+from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException, \
+    MutuallyExclusivePropertiesException
 from ..exception.parser import UnknownHashTypeException
 
 """
@@ -59,6 +62,68 @@ class Encoding(Enum):
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/#type_encoding
     """
     BASE_64 = 'base64'
+
+
+class AttachedText:
+    """
+    This is our internal representation of the `attachedTextType` complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.3/#type_attachedTextType
+    """
+
+    DEFAULT_CONTENT_TYPE = 'text/plain'
+
+    def __init__(self, content: str, content_type: str = DEFAULT_CONTENT_TYPE,
+                 encoding: Optional[Encoding] = None) -> None:
+        self.content_type = content_type
+        self.encoding = encoding
+        self.content = content
+
+    @property
+    def content_type(self) -> str:
+        """
+        Specifies the content type of the text. Defaults to text/plain if not specified.
+
+        Returns:
+            `str`
+        """
+        return self._content_type
+
+    @content_type.setter
+    def content_type(self, content_type: str) -> None:
+        self._content_type = content_type
+
+    @property
+    def encoding(self) -> Optional[Encoding]:
+        """
+        Specifies the optional encoding the text is represented in.
+
+        Returns:
+            `Encoding` if set else `None`
+        """
+        return self._encoding
+
+    @encoding.setter
+    def encoding(self, encoding: Optional[Encoding]) -> None:
+        self._encoding = encoding
+
+    @property
+    def content(self) -> str:
+        """
+        The attachment data.
+
+        Proactive controls such as input validation and sanitization should be employed to prevent misuse of attachment
+        text.
+
+        Returns:
+            `str`
+        """
+        return self._content
+
+    @content.setter
+    def content(self, content: str) -> None:
+        self._content = content
 
 
 class HashAlgorithm(Enum):
@@ -130,17 +195,17 @@ class HashType:
         raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
     def __init__(self, algorithm: HashAlgorithm, hash_value: str) -> None:
-        self._algorithm = algorithm
-        self._value = hash_value
+        self._alg = algorithm
+        self._content = hash_value
 
     def get_algorithm(self) -> HashAlgorithm:
-        return self._algorithm
+        return self._alg
 
     def get_hash_value(self) -> str:
-        return self._value
+        return self._content
 
     def __repr__(self) -> str:
-        return f'<Hash {self._algorithm.value}:{self._value}>'
+        return f'<Hash {self._alg.value}:{self._content}>'
 
 
 class ExternalReferenceType(Enum):
@@ -189,8 +254,10 @@ class XsUri:
             )
         self._uri = uri
 
-    def __eq__(self, other: "XsUri") -> bool:
-        return self._uri == str(other)
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, XsUri):
+            return str(self) == str(other)
+        return False
 
     def __repr__(self) -> str:
         return self._uri
@@ -207,7 +274,7 @@ class ExternalReference:
 
     def __init__(self, reference_type: ExternalReferenceType, url: Union[str, XsUri], comment: str = '',
                  hashes: Optional[List[HashType]] = None) -> None:
-        self._reference_type: ExternalReferenceType = reference_type
+        self._type: ExternalReferenceType = reference_type
         self._url = str(url)
         self._comment = comment
         self._hashes: List[HashType] = hashes if hashes else []
@@ -247,7 +314,7 @@ class ExternalReference:
         Returns:
             `ExternalReferenceType` that represents the type of this External Reference.
         """
-        return self._reference_type
+        return self._type
 
     def get_url(self) -> str:
         """
@@ -259,7 +326,7 @@ class ExternalReference:
         return self._url
 
     def __repr__(self) -> str:
-        return f'<ExternalReference {self._reference_type.name}, {self._url}> {self._hashes}'
+        return f'<ExternalReference {self._type.name}, {self._url}> {self._hashes}'
 
 
 class IssueClassification(Enum):
@@ -439,6 +506,146 @@ class IssueType:
         self._source_url = source_url
 
 
+class License:
+    """
+    This is out internal representation of `licenseType` complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
+    """
+
+    def __init__(self, spxd_license_id: Optional[str] = None, license_name: Optional[str] = None,
+                 license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> None:
+        if not spxd_license_id and not license_name:
+            raise MutuallyExclusivePropertiesException('Either `spxd_license_id` or `license_name` MUST be supplied')
+        if spxd_license_id and license_name:
+            warnings.warn(
+                'Both `spxd_license_id` and `license_name` have been supplied - `license_name` will be ignored!',
+                RuntimeWarning
+            )
+        self.id = spxd_license_id
+        if not spxd_license_id:
+            self.name = license_name
+        else:
+            self.name = None
+        self.text = license_text
+        self.url = license_url
+
+    @property
+    def id(self) -> Optional[str]:
+        """
+        A valid SPDX license ID
+
+        Returns:
+            `str` or `None`
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id: Optional[str]) -> None:
+        self._id = id
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        If SPDX does not define the license used, this field may be used to provide the license name.
+
+        Returns:
+            `str` or `None`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    def text(self) -> Optional[AttachedText]:
+        """
+        Specifies the optional full text of the attachment
+
+        Returns:
+            `AttachedText` else `None`
+        """
+        return self._text
+
+    @text.setter
+    def text(self, text: Optional[AttachedText]) -> None:
+        self._text = text
+
+    @property
+    def url(self) -> Optional[XsUri]:
+        """
+        The URL to the attachment file. If the attachment is a license or BOM, an externalReference should also be
+        specified for completeness.
+
+        Returns:
+            `XsUri` or `None`
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url: XsUri) -> None:
+        self._url = url
+
+
+class LicenseChoice:
+    """
+    This is out internal representation of `licenseChoiceType` complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
+    """
+
+    def __init__(self, license: Optional[License] = None, license_expression: Optional[str] = None) -> None:
+        if not license and not license_expression:
+            raise NoPropertiesProvidedException(
+                'One of `license` or `license_expression` must be supplied - neither supplied'
+            )
+        if license and license_expression:
+            warnings.warn(
+                'Both `license` and `license_expression` have been supplied - `license` will take precedence',
+                RuntimeWarning
+            )
+        self.license = license
+        if not license:
+            self.expression = license_expression
+        else:
+            self.expression = None
+
+    @property
+    def license(self) -> Optional[License]:
+        """
+        License definition
+
+        Returns:
+            `License` or `None`
+        """
+        return self._license
+
+    @license.setter
+    def license(self, license: Optional[License]) -> None:
+        self._license = license
+
+    @property
+    def expression(self) -> Optional[str]:
+        """
+        A valid SPDX license expression (not enforced).
+
+        Refer to https://spdx.org/specifications for syntax requirements.
+
+        Returns:
+            `str` or `None`
+        """
+        return self._expression
+
+    @expression.setter
+    def expression(self, expression: Optional[str]) -> None:
+        self._expression = expression
+
+
 class Property:
     """
     This is out internal representation of `propertyType` complex type that can be used in multiple places within
@@ -580,3 +787,242 @@ class Note:
             `Encoding` if set else `None`
         """
         return self._content_encoding
+
+
+class OrganizationalContact:
+    """
+    This is out internal representation of the `organizationalContact` complex type that can be used in multiple places
+    within a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalContact
+    """
+
+    def __init__(self, name: Optional[str] = None, phone: Optional[str] = None, email: Optional[str] = None) -> None:
+        if not name and not phone and not email:
+            raise NoPropertiesProvidedException(
+                'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
+            )
+        self._name: Optional[str] = name
+        self._email: Optional[str] = email
+        self._phone: Optional[str] = phone
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        Get the name of the contact.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    @property
+    def email(self) -> Optional[str]:
+        """
+        Get the email of the contact.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._email
+
+    @property
+    def phone(self) -> Optional[str]:
+        """
+        Get the phone of the contact.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._phone
+
+
+class OrganizationalEntity:
+    """
+    This is out internal representation of the `organizationalEntity` complex type that can be used in multiple places
+    within a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
+    """
+
+    def __init__(self, name: Optional[str] = None, urls: Optional[List[XsUri]] = None,
+                 contacts: Optional[List[OrganizationalContact]] = None) -> None:
+        if not name and not urls and not contacts:
+            raise NoPropertiesProvidedException(
+                'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
+            )
+        self._name: Optional[str] = name
+        self._urls: Optional[List[XsUri]] = urls
+        self._contacts: Optional[List[OrganizationalContact]] = contacts
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        Get the name of the organization.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    @property
+    def urls(self) -> Optional[List[XsUri]]:
+        """
+        Get a list of URLs of the organization. Multiple URLs are allowed.
+
+        Returns:
+            `List[XsUri]` if set else `None`
+        """
+        return self._urls
+
+    @property
+    def contacts(self) -> Optional[List[OrganizationalContact]]:
+        """
+        Get a list of contact person at the organization. Multiple contacts are allowed.
+
+        Returns:
+            `List[OrganizationalContact]` if set else `None`
+        """
+        return self._contacts
+
+
+class Tool:
+    """
+    This is out internal representation of the `toolType` complex type within the CycloneDX standard.
+
+    Tool(s) are the things used in the creation of the BOM.
+
+    .. note::
+        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
+    """
+
+    def __init__(self, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
+                 hashes: Optional[List[HashType]] = None,
+                 external_references: Optional[List[ExternalReference]] = None) -> None:
+        self._vendor = vendor
+        self._name = name
+        self._version = version
+        self._hashes: List[HashType] = hashes or []
+        self._external_references: List[ExternalReference] = external_references or []
+
+    def add_external_reference(self, reference: ExternalReference) -> None:
+        """
+        Add an external reference to this Tool.
+
+        Args:
+            reference:
+                `ExternalReference` to add to this Tool.
+
+        Returns:
+            None
+        """
+        self._external_references.append(reference)
+
+    def add_external_references(self, references: List[ExternalReference]) -> None:
+        """
+        Add a list of external reference to this Tool.
+
+        Args:
+            references:
+                List of `ExternalReference` to add to this Tool.
+
+        Returns:
+            None
+        """
+        self._external_references = self._external_references + references
+
+    def get_external_references(self) -> List[ExternalReference]:
+        """
+        List of External References that relate to this Tool.
+
+        Returns:
+            `List` of `ExternalReference` objects where there are, else an empty `List`.
+        """
+        return self._external_references
+
+    def get_hashes(self) -> List[HashType]:
+        """
+        List of cryptographic hashes that identify this version of this Tool.
+
+        Returns:
+            `List` of `HashType` objects where there are any hashes, else an empty `List`.
+        """
+        return self._hashes
+
+    def get_name(self) -> Optional[str]:
+        """
+        The name of this Tool.
+
+        Returns:
+            `str` representing the name of the Tool
+        """
+        return self._name
+
+    def get_vendor(self) -> Optional[str]:
+        """
+        The vendor of this Tool.
+
+        Returns:
+            `str` representing the vendor of the Tool
+        """
+        return self._vendor
+
+    def get_version(self) -> Optional[str]:
+        """
+        The version of this Tool.
+
+        Returns:
+            `str` representing the version of the Tool
+        """
+        return self._version
+
+    def __repr__(self) -> str:
+        return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
+
+
+if sys.version_info >= (3, 8):
+    from importlib.metadata import version as meta_version
+else:
+    from importlib_metadata import version as meta_version
+
+try:
+    __ThisToolVersion: Optional[str] = str(meta_version('cyclonedx-python-lib'))  # type: ignore[no-untyped-call]
+except Exception:
+    __ThisToolVersion = None
+ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
+ThisTool.add_external_references(references=[
+    ExternalReference(
+        reference_type=ExternalReferenceType.BUILD_SYSTEM,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.DISTRIBUTION,
+        url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.DOCUMENTATION,
+        url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.ISSUE_TRACKER,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.LICENSE,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.RELEASE_NOTES,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.VCS,
+        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
+    ),
+    ExternalReference(
+        reference_type=ExternalReferenceType.WEBSITE,
+        url=XsUri('https://cyclonedx.org')
+    )
+])

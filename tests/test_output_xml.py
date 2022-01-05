@@ -18,15 +18,19 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import base64
 from datetime import datetime, timezone
+from decimal import Decimal
 from os.path import dirname, join
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, IssueClassification, \
-    IssueType, Note, Properties, Property, XsUri
+    IssueType, Note, Properties, Property, XsUri, OrganizationalContact, OrganizationalEntity, Tool
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
+    ImpactAnalysisAffectedStatus
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
-    VulnerabilitySourceType
+    VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, VulnerabilityReference, \
+    VulnerabilityAnalysis, BomTarget, BomTargetVersionRange
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
 from tests.base import BaseXmlTestCase
@@ -81,7 +85,7 @@ class TestOutputXml(BaseXmlTestCase):
     def test_simple_bom_v1_0(self) -> None:
         bom = Bom()
         bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
-        self.assertEqual(len(bom.get_components()), 1)
+        self.assertEqual(len(bom.components), 1)
         outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_0)
         self.assertIsInstance(outputter, XmlV1Dot0)
         with open(join(dirname(__file__), 'fixtures/bom_v1.0_setuptools.xml')) as expected_xml:
@@ -90,22 +94,92 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
+    def test_simple_bom_v1_4_with_vulnerabilities(self) -> None:
+        bom = Bom()
+        nvd = VulnerabilitySource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489'))
+        owasp = VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
+        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        c.add_vulnerability(Vulnerability(
+            bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=nvd,
+            references=[
+                VulnerabilityReference(id='SOME-OTHER-ID', source=VulnerabilitySource(
+                    name='OSS Index', url=XsUri('https://ossindex.sonatype.org/component/pkg:pypi/setuptools')
+                ))
+            ],
+            ratings=[
+                VulnerabilityRating(
+                    source=nvd, score=Decimal(9.8), severity=VulnerabilitySeverity.CRITICAL,
+                    score_source=VulnerabilityScoreSource.CVSS_V3,
+                    vector='AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', justification='Some justification'
+                ),
+                VulnerabilityRating(
+                    source=owasp, score=Decimal(2.7), severity=VulnerabilitySeverity.LOW,
+                    score_source=VulnerabilityScoreSource.CVSS_V3,
+                    vector='AV:L/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N', justification='Some other justification'
+                )
+            ],
+            cwes=[22, 33], description='A description here', detail='Some detail here',
+            recommendation='Upgrade',
+            advisories=[
+                VulnerabilityAdvisory(url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489')),
+                VulnerabilityAdvisory(url=XsUri('http://www.securitytracker.com/id/1040693'))
+            ],
+            created=datetime(year=2021, month=9, day=1, hour=10, minute=50, second=42, microsecond=51979,
+                             tzinfo=timezone.utc),
+            published=datetime(year=2021, month=9, day=2, hour=10, minute=50, second=42, microsecond=51979,
+                               tzinfo=timezone.utc),
+            updated=datetime(year=2021, month=9, day=3, hour=10, minute=50, second=42, microsecond=51979,
+                             tzinfo=timezone.utc),
+            credits=[
+                OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890'),
+                OrganizationalEntity(
+                    name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[
+                        OrganizationalContact(name='Paul Horton', email='simplyecommerce@googlemail.com'),
+                        OrganizationalContact(name='A N Other', email='someone@somewhere.tld',
+                                              phone='+44 (0)1234 567890')
+                    ]
+                )
+            ],
+            tools=[
+                Tool(vendor='CycloneDX', name='cyclonedx-python-lib')
+            ],
+            analysis=VulnerabilityAnalysis(
+                state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
+                responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
+            ),
+            affects_targets=[
+                BomTarget(bom_ref=c.purl, versions=[
+                    BomTargetVersionRange(version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED)
+                ])
+            ]
+        ))
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, XmlV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools_with_vulnerabilities.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualXmlBom(a=outputter.output_as_string(),
+                                   b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+
+            expected_xml.close()
+
     def test_simple_bom_v1_3_with_vulnerabilities(self) -> None:
         bom = Bom()
         c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
         c.add_vulnerability(Vulnerability(
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
-                VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
-                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilitySourceType.CVSS_V3,
+                VulnerabilityRating(score_base=9.8,
+                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilityScoreSource.CVSS_V3,
                                     vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
-                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilitySourceType.OWASP,
+                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilityScoreSource.OWASP,
                                     vector='OWASP/K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50', )
             ],
-            cwes=[123, 456], description='A description here', recommendations=['Upgrade'],
+            cwes=[123, 456], description='A description here', recommendation='Upgrade',
             advisories=[
-                'http://www.securityfocus.com/bid/103203',
-                'http://www.securitytracker.com/id/1040693'
+                VulnerabilityAdvisory(url=XsUri('http://www.securityfocus.com/bid/103203')),
+                VulnerabilityAdvisory(url=XsUri('http://www.securitytracker.com/id/1040693'))
             ]
         ))
         bom.add_component(c)
@@ -124,10 +198,10 @@ class TestOutputXml(BaseXmlTestCase):
         c.add_vulnerability(Vulnerability(
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
-                VulnerabilityRating(score_base=9.8, score_impact=5.9, score_exploitability=3.0,
-                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilitySourceType.CVSS_V3,
+                VulnerabilityRating(score_base=9.8,
+                                    severity=VulnerabilitySeverity.CRITICAL, method=VulnerabilityScoreSource.CVSS_V3,
                                     vector='AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'),
-                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilitySourceType.OWASP,
+                VulnerabilityRating(severity=VulnerabilitySeverity.LOW, method=VulnerabilityScoreSource.OWASP,
                                     vector='OWASP/K9:M1:O0:Z2/D1:X1:W1:L3/C2:I1:A1:T1/F1:R1:S2:P3/50', )
             ],
             cwes=[123, 456], description='A description here', recommendations=['Upgrade'],
@@ -190,8 +264,7 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_with_component_license(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
-        c.set_license('MIT License')
+        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz', license_str='MIT License')
         bom.add_component(c)
         outputter: Xml = get_instance(bom=bom)
         self.assertIsInstance(outputter, XmlV1Dot3)
@@ -218,9 +291,8 @@ class TestOutputXml(BaseXmlTestCase):
         bom = Bom()
         c = Component(
             name='toml', version='0.10.2', qualifiers='extension=tar.gz',
-            release_notes=ReleaseNotes(type='major')
+            release_notes=ReleaseNotes(type='major'), license_str='MIT License'
         )
-        c.set_license('MIT License')
         bom.add_component(c)
         outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_3)
         self.assertIsInstance(outputter, XmlV1Dot3)

@@ -31,12 +31,14 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_simple_bom_v1_3(self) -> None:
         bom = Bom()
-        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        bom.add_component(c)
+
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
         self.assertIsInstance(outputter, JsonV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.json')) as expected_json:
             self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
-            self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
             expected_json.close()
 
     def test_simple_bom_v1_2(self) -> None:
@@ -91,8 +93,7 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_v1_3_with_component_license(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
-        c.set_license('MIT License')
+        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz', license_str='MIT License')
         bom.add_component(c)
         outputter: Json = get_instance(bom=bom, output_format=OutputFormat.JSON)
         self.assertIsInstance(outputter, JsonV1Dot3)

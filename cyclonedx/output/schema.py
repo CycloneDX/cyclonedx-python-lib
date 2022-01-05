@@ -22,14 +22,20 @@ from abc import ABC, abstractmethod
 
 class BaseSchemaVersion(ABC):
 
+    def bom_supports_metadata(self) -> bool:
+        return True
+
     def bom_metadata_supports_tools(self) -> bool:
         return True
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return True
 
-    def bom_supports_metadata(self) -> bool:
+    def bom_supports_vulnerabilities(self) -> bool:
         return True
+
+    def bom_supports_vulnerabilities_via_extension(self) -> bool:
+        return False
 
     def bom_requires_modified(self) -> bool:
         return False
@@ -37,7 +43,10 @@ class BaseSchemaVersion(ABC):
     def component_supports_author(self) -> bool:
         return True
 
-    def component_supports_bom_ref(self) -> bool:
+    def component_supports_bom_ref_attribute(self) -> bool:
+        return True
+
+    def component_supports_mime_type_attribute(self) -> bool:
         return True
 
     def component_version_optional(self) -> bool:
@@ -68,6 +77,15 @@ class SchemaVersion1Dot3(BaseSchemaVersion):
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return False
 
+    def bom_supports_vulnerabilities(self) -> bool:
+        return False
+
+    def bom_supports_vulnerabilities_via_extension(self) -> bool:
+        return True
+
+    def component_supports_mime_type_attribute(self) -> bool:
+        return False
+
     def component_supports_release_notes(self) -> bool:
         return False
 
@@ -78,6 +96,15 @@ class SchemaVersion1Dot3(BaseSchemaVersion):
 class SchemaVersion1Dot2(BaseSchemaVersion):
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def bom_supports_vulnerabilities(self) -> bool:
+        return False
+
+    def bom_supports_vulnerabilities_via_extension(self) -> bool:
+        return True
+
+    def component_supports_mime_type_attribute(self) -> bool:
         return False
 
     def component_supports_release_notes(self) -> bool:
@@ -95,7 +122,16 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return False
 
+    def bom_supports_vulnerabilities(self) -> bool:
+        return False
+
+    def bom_supports_vulnerabilities_via_extension(self) -> bool:
+        return True
+
     def bom_supports_metadata(self) -> bool:
+        return False
+
+    def component_supports_mime_type_attribute(self) -> bool:
         return False
 
     def component_supports_author(self) -> bool:
@@ -116,6 +152,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return False
 
+    def bom_supports_vulnerabilities(self) -> bool:
+        return False
+
     def bom_supports_metadata(self) -> bool:
         return False
 
@@ -125,7 +164,10 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
     def component_supports_author(self) -> bool:
         return False
 
-    def component_supports_bom_ref(self) -> bool:
+    def component_supports_bom_ref_attribute(self) -> bool:
+        return False
+
+    def component_supports_mime_type_attribute(self) -> bool:
         return False
 
     def component_supports_external_references(self) -> bool:

@@ -16,6 +16,7 @@
   "components": [
     {
       "type": "library",
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
       "name": "setuptools",
       "version": "50.3.2",
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
