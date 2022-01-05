@@ -53,6 +53,17 @@ class Json(BaseOutput, BaseSchemaVersion):
             for i in range(len(bom_json['metadata']['tools'])):
                 del bom_json['metadata']['tools'][i]['externalReferences']
 
+        # Iterate Components
+        for i in range(len(bom_json['components'])):
+            if not self.component_supports_author() and 'author' in bom_json['components'][i].keys():
+                del bom_json['components'][i]['author']
+
+            if not self.component_supports_mime_type_attribute() and 'mime-type' in bom_json['components'][i].keys():
+                del bom_json['components'][i]['mime-type']
+
+            if not self.component_supports_release_notes() and 'releaseNotes' in bom_json['components'][i].keys():
+                del bom_json['components'][i]['releaseNotes']
+
         return json.dumps(bom_json)
 
     def output_as_string(self) -> str:

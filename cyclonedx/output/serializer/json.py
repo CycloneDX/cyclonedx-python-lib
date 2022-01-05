@@ -27,6 +27,8 @@ from uuid import UUID
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
+from cyclonedx.model import XsUri
+
 HYPHENATED_ATTRIBUTES = [
     'bom_ref', 'mime_type'
 ]
@@ -52,6 +54,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
 
         # UUID
         if isinstance(o, UUID):
+            return str(o)
+
+        # XsUri
+        if isinstance(o, XsUri):
             return str(o)
 
         # Classes

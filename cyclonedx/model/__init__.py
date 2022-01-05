@@ -341,6 +341,52 @@ class IssueClassification(Enum):
     SECURITY = 'security'
 
 
+class IssueTypeSource:
+    """
+    This is out internal representation ofa source within the IssueType complex type that can be used in multiple
+    places within a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
+    """
+
+    def __init__(self, name: Optional[str] = None, url: Optional[XsUri] = None) -> None:
+        if not name and not url:
+            raise NoPropertiesProvidedException(
+                'Neither `name` nor `url` were provided - at least one must be provided.'
+            )
+        self.name = name
+        self.url = url
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        The name of the source. For example "National Vulnerability Database", "NVD", and "Apache".
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: str) -> None:
+        self._name = name
+
+    @property
+    def url(self) -> Optional[XsUri]:
+        """
+        Optional url of the issue documentation as provided by the source.
+
+        Returns:
+            `XsUri` if set else `None`
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url) -> None:
+        self._url = url
+
+
 class IssueType:
     """
     This is out internal representation of an IssueType complex type that can be used in multiple places within
@@ -353,13 +399,24 @@ class IssueType:
     def __init__(self, classification: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
                  description: Optional[str] = None, source_name: Optional[str] = None,
                  source_url: Optional[XsUri] = None, references: Optional[List[XsUri]] = None) -> None:
-        self._classification: IssueClassification = classification
+        self._type: IssueClassification = classification
         self._id: Optional[str] = id
         self._name: Optional[str] = name
         self._description: Optional[str] = description
-        self._source_name: Optional[str] = source_name
-        self._source_url: Optional[XsUri] = source_url
+        self._source: Optional[IssueTypeSource] = None
         self._references: List[XsUri] = references or []
+        if source_name or source_url:
+            self._source = IssueTypeSource(
+                name=source_name, url=source_url
+            )
+
+    @property
+    def source(self) -> Optional[IssueTypeSource]:
+        return self._source
+
+    @source.setter
+    def source(self, source: IssueTypeSource) -> None:
+        self._source = source
 
     def add_reference(self, reference: XsUri) -> None:
         """
@@ -378,7 +435,7 @@ class IssueType:
         Returns:
             `IssueClassification` that represents the classification of this `IssueType`.
         """
-        return self._classification
+        return self._type
 
     def get_id(self) -> Optional[str]:
         """
@@ -416,7 +473,9 @@ class IssueType:
         Returns:
             `str` that represents the source_name of this `IssueType` if set else `None`.
         """
-        return self._source_name
+        if self.source:
+            return self._source.name
+        return None
 
     def get_source_url(self) -> Optional[XsUri]:
         """
@@ -427,7 +486,9 @@ class IssueType:
         Returns:
             `XsUri` that represents the source_url of this `IssueType` if set else `None`.
         """
-        return self._source_url
+        if self.source:
+            return self._source.url
+        return None
 
     def get_references(self) -> List[XsUri]:
         """
@@ -490,7 +551,10 @@ class IssueType:
         Returns:
             None
         """
-        self._source_name = source_name
+        if self._source:
+            self._source.name = source_name
+        else:
+            self._source = IssueTypeSource(name=source_name)
 
     def set_source_url(self, source_url: XsUri) -> None:
         """
@@ -503,7 +567,10 @@ class IssueType:
         Returns:
             None
         """
-        self._source_url = source_url
+        if self._source:
+            self._source.url = source_url
+        else:
+            self._source = IssueTypeSource(url=source_url)
 
 
 class License:
@@ -680,42 +747,66 @@ class Property:
         return self._value
 
 
-class Properties:
+class NoteText:
     """
-    This is out internal representation of `propertiesType` complex type that can be used in multiple places within
+    This is out internal representation of the Note.text complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_propertiesType
-
-    Provides the ability to document properties in a key/value store. This provides flexibility to include data not
-    officially supported in the standard without having to use additional namespaces or create extensions.
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
     """
 
-    def __init__(self, properties: Optional[List[Property]] = None) -> None:
-        self._properties = properties or []
+    DEFAULT_CONTENT_TYPE: str = 'text/plain'
 
-    def add_property(self, prop: Property) -> None:
+    def __init__(self, content: str, content_type: Optional[str] = None,
+                 content_encoding: Optional[Encoding] = None) -> None:
+        self.content = content
+        self.content_type = content_type or NoteText.DEFAULT_CONTENT_TYPE
+        self.encoding = content_encoding
+
+    @property
+    def content(self) -> str:
         """
-        Add a Property to this list of Properties.
-
-        Args:
-            prop:
-                `Property` to add
+        Get the text content of this Note.
 
         Returns:
-            None
+            `str` note content
         """
-        self._properties.append(prop)
+        return self._content
 
-    def get_properties(self) -> List[Property]:
+    @content.setter
+    def content(self, content: str) -> None:
+        self._content = content
+
+    @property
+    def content_type(self) -> Optional[str]:
         """
-        Get all Property instances in this List.
+        Get the content-type of this Note.
+
+        Defaults to 'text/plain' if one was not explicitly specified.
 
         Returns:
-             List of `Property` objects, or an empty List.
+            `str` content-type
         """
-        return self._properties
+        return self._content_type
+
+    @content_type.setter
+    def content_type(self, content_type: str) -> None:
+        self._content_type = content_type
+
+    @property
+    def encoding(self) -> Optional[Encoding]:
+        """
+        Get the encoding method used for the note's content.
+
+        Returns:
+            `Encoding` if set else `None`
+        """
+        return self._encoding
+
+    @encoding.setter
+    def encoding(self, encoding: Encoding) -> None:
+        self._encoding = encoding
 
 
 class Note:
@@ -727,35 +818,26 @@ class Note:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
     """
 
-    DEFAULT_CONTENT_TYPE: str = 'text/plain'
+    def __init__(self, text: NoteText, locale: Optional[str] = None) -> None:
+        self.text = text
+        self.locale = locale
 
-    def __init__(self, text: str, locale: Optional[str] = None, content_type: Optional[str] = None,
-                 content_encoding: Optional[Encoding] = None) -> None:
-        self._text: str = text
-        self._locale: Optional[str] = None
-        self._content_type: str = content_type or Note.DEFAULT_CONTENT_TYPE
-        self._content_encoding: Optional[Encoding] = content_encoding
-        if locale:
-            if re.search(LOCALE_TYPE_REGEX, locale):
-                # Valid locale
-                self._locale = locale
-            else:
-                raise InvalidLocaleTypeException(
-                    f"Supplied locale '{locale}' is not a valid locale. "
-                    f"Locale string should be formatted as the ISO-639 (or higher) language code and optional "
-                    f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
-                )
-
-    def get_text(self) -> str:
+    @property
+    def text(self) -> NoteText:
         """
-        Get the text content of this Note.
+        Specifies the full content of the release note.
 
         Returns:
-            `str` note content
+            `NoteText`
         """
         return self._text
 
-    def get_locale(self) -> Optional[str]:
+    @text.setter
+    def text(self, text: NoteText) -> None:
+        self._text = text
+
+    @property
+    def locale(self) -> Optional[str]:
         """
         Get the ISO locale of this Note.
 
@@ -768,25 +850,16 @@ class Note:
         """
         return self._locale
 
-    def get_content_type(self) -> str:
-        """
-        Get the content-type of this Note.
-
-        Defaults to 'text/plain' if one was not explicitly specified.
-
-        Returns:
-            `str` content-type
-        """
-        return self._content_type
-
-    def get_content_encoding(self) -> Optional[Encoding]:
-        """
-        Get the encoding method used for the note's content.
-
-        Returns:
-            `Encoding` if set else `None`
-        """
-        return self._content_encoding
+    @locale.setter
+    def locale(self, locale: str) -> None:
+        if re.search(LOCALE_TYPE_REGEX, locale):
+            self._locale = locale
+        else:
+            raise InvalidLocaleTypeException(
+                f"Supplied locale '{locale}' is not a valid locale. "
+                f"Locale string should be formatted as the ISO-639 (or higher) language code and optional "
+                f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
+            )
 
 
 class OrganizationalContact:

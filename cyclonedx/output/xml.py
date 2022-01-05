@@ -227,12 +227,12 @@ class Xml(BaseOutput, BaseSchemaVersion):
                         ElementTree.SubElement(issue_e, 'name').text = issue.get_name()
                     if issue.get_description():
                         ElementTree.SubElement(issue_e, 'description').text = issue.get_description()
-                    if issue.get_source_name() or issue.get_source_url():
+                    if issue.source:
                         issue_source_e = ElementTree.SubElement(issue_e, 'source')
-                        if issue.get_source_name():
-                            ElementTree.SubElement(issue_source_e, 'name').text = issue.get_source_name()
-                        if issue.get_source_url():
-                            ElementTree.SubElement(issue_source_e, 'url').text = str(issue.get_source_url())
+                        if issue.source.name:
+                            ElementTree.SubElement(issue_source_e, 'name').text = issue.source.name
+                        if issue.source.url:
+                            ElementTree.SubElement(issue_source_e, 'url').text = str(issue.source.url)
                     if issue.get_references():
                         issue_references_e = ElementTree.SubElement(issue_e, 'references')
                         for reference in issue.get_references():
@@ -241,17 +241,17 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 release_notes_notes_e = ElementTree.SubElement(release_notes_e, 'notes')
                 for note in release_notes.notes:
                     note_e = ElementTree.SubElement(release_notes_notes_e, 'note')
-                    if note.get_locale():
-                        ElementTree.SubElement(note_e, 'locale').text = note.get_locale()
+                    if note.locale:
+                        ElementTree.SubElement(note_e, 'locale').text = note.locale
                     text_attrs = {}
-                    if note.get_content_type():
-                        text_attrs['content-type'] = note.get_content_type()
-                    if note.get_content_encoding():
-                        text_attrs['encoding'] = cast(Encoding, note.get_content_encoding()).value
-                    ElementTree.SubElement(note_e, 'text', text_attrs).text = note.get_text()
+                    if note.text.content_type:
+                        text_attrs['content-type'] = note.text.content_type
+                    if note.text.encoding:
+                        text_attrs['encoding'] = cast(Encoding, note.text.encoding).value
+                    ElementTree.SubElement(note_e, 'text', text_attrs).text = note.text.content
             if release_notes.properties:
                 release_notes_properties_e = ElementTree.SubElement(release_notes_e, 'properties')
-                for prop in release_notes.properties.get_properties():
+                for prop in release_notes.properties:
                     ElementTree.SubElement(
                         release_notes_properties_e, 'property', {'name': prop.get_name()}
                     ).text = prop.get_value()

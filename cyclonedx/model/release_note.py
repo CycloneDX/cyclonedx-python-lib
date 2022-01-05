@@ -20,7 +20,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from ..model import IssueType, Note, Properties, XsUri
+from ..model import IssueType, Note, Property, XsUri
 
 
 class ReleaseNotes:
@@ -35,7 +35,7 @@ class ReleaseNotes:
                  social_image: Optional[XsUri] = None, description: Optional[str] = None,
                  timestamp: Optional[datetime] = None, aliases: Optional[List[str]] = None,
                  tags: Optional[List[str]] = None, resolves: Optional[List[IssueType]] = None,
-                 notes: Optional[List[Note]] = None, properties: Optional[Properties] = None) -> None:
+                 notes: Optional[List[Note]] = None, properties: Optional[List[Property]] = None) -> None:
         self.type = type
         self.title = title
         self.featured_image = featured_image
@@ -46,7 +46,7 @@ class ReleaseNotes:
         self.tags = tags
         self.resolves = resolves
         self.notes = notes
-        self._properties: Optional[Properties] = properties or None
+        self._properties: Optional[List[Property]] = properties or None
 
     @property
     def type(self) -> str:
@@ -223,14 +223,17 @@ class ReleaseNotes:
         self.notes = (self.notes or []) + [note]
 
     @property
-    def properties(self) -> Optional[Properties]:
+    def properties(self) -> Optional[List[Property]]:
         """
         Provides the ability to document properties in a name-value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions. Unlike
         key-value stores, properties support duplicate names, each potentially having different values.
+
+        Returns:
+            List of `Property` or `None`
         """
         return self._properties
 
     @properties.setter
-    def properties(self, properties: Optional[Properties]) -> None:
+    def properties(self, properties: Optional[List[Property]]) -> None:
         self._properties = properties

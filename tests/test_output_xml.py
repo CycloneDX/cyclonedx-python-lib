@@ -22,7 +22,7 @@ from decimal import Decimal
 from os.path import dirname, join
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, IssueClassification, \
-    IssueType, Note, Properties, Property, XsUri, OrganizationalContact, OrganizationalEntity, Tool
+    IssueType, Note, NoteText, Property, XsUri, OrganizationalContact, OrganizationalEntity, Tool
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
@@ -335,18 +335,22 @@ class TestOutputXml(BaseXmlTestCase):
                 ],
                 notes=[
                     Note(
-                        text=text_content, locale='en-GB', content_type='text/plain; charset=UTF-8',
-                        content_encoding=Encoding.BASE_64
+                        text=NoteText(
+                            content=text_content, content_type='text/plain; charset=UTF-8',
+                            content_encoding=Encoding.BASE_64
+                        ), locale='en-GB'
                     ),
                     Note(
-                        text=text_content, locale='en-US', content_type='text/plain; charset=UTF-8',
-                        content_encoding=Encoding.BASE_64
+                        text=NoteText(
+                            content=text_content, content_type='text/plain; charset=UTF-8',
+                            content_encoding=Encoding.BASE_64
+                        ), locale='en-US'
                     )
                 ],
-                properties=Properties(properties=[
+                properties=[
                     Property(name='key1', value='val1'),
                     Property(name='key2', value='val2')
-                ])
+                ]
             )
         )
         bom.add_component(c)

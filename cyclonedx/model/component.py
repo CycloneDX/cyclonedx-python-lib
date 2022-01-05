@@ -25,7 +25,7 @@ from typing import List, Optional
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
-from . import ExternalReference, HashAlgorithm, HashType, OrganizationalEntity, sha1sum, LicenseChoice, Properties
+from . import ExternalReference, HashAlgorithm, HashType, OrganizationalEntity, sha1sum, LicenseChoice, Property
 from .release_note import ReleaseNotes
 from .vulnerability import Vulnerability
 
@@ -103,7 +103,7 @@ class Component:
                  hashes: Optional[List[HashType]] = None, licenses: Optional[List[LicenseChoice]] = None,
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[List[ExternalReference]] = None,
-                 properties: Optional[Properties] = None, release_notes: Optional[ReleaseNotes] = None,
+                 properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  package_url_type: str = 'pypi', package_url_qualifiers: Optional[str] = None,
                  package_url_subpath: Optional[str] = None,
                  # Deprecated parameters kept for backwards compatibility
@@ -452,18 +452,18 @@ class Component:
         self.external_references = self._external_references + [reference]
 
     @property
-    def properties(self) -> Optional[Properties]:
+    def properties(self) -> Optional[List[Property]]:
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
 
         Return:
-            `Properties` or `None`
+            List of `Property` or `None`
         """
         return self._properties
 
     @properties.setter
-    def properties(self, properties: Optional[Properties]) -> None:
+    def properties(self, properties: Optional[List[Property]]) -> None:
         self._properties = properties
 
     @property
