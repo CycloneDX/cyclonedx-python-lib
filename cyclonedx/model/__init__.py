@@ -383,7 +383,7 @@ class IssueTypeSource:
         return self._url
 
     @url.setter
-    def url(self, url) -> None:
+    def url(self, url: XsUri) -> None:
         self._url = url
 
 
@@ -473,7 +473,7 @@ class IssueType:
         Returns:
             `str` that represents the source_name of this `IssueType` if set else `None`.
         """
-        if self.source:
+        if self._source:
             return self._source.name
         return None
 
@@ -486,7 +486,7 @@ class IssueType:
         Returns:
             `XsUri` that represents the source_url of this `IssueType` if set else `None`.
         """
-        if self.source:
+        if self._source:
             return self._source.url
         return None
 

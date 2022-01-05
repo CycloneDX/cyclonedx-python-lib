@@ -17,14 +17,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import cast, List, Optional
+from typing import List, Optional
 from xml.etree import ElementTree
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from ..exception.output import ComponentVersionRequiredException
-from ..model import Encoding, ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
+from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
 from ..model.bom import Bom
 from ..model.component import Component
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySource, BomTargetVersionRange
@@ -247,7 +247,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     if note.text.content_type:
                         text_attrs['content-type'] = note.text.content_type
                     if note.text.encoding:
-                        text_attrs['encoding'] = cast(Encoding, note.text.encoding).value
+                        text_attrs['encoding'] = note.text.encoding.value
                     ElementTree.SubElement(note_e, 'text', text_attrs).text = note.text.content
             if release_notes.properties:
                 release_notes_properties_e = ElementTree.SubElement(release_notes_e, 'properties')
