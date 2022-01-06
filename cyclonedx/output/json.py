@@ -18,7 +18,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
-from typing import Any, Dict, List, Union
+from abc import abstractmethod
+from typing import Any, Dict, List, Optional, Union
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
@@ -35,6 +36,11 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     def generate(self, force_regeneration: bool = False) -> None:
         if self.generated and not force_regeneration:
+            return
+
+        schema_uri: Optional[str] = self._get_schema_uri()
+        if not schema_uri:
+            # JSON not supported!
             return
 
         vulnerabilities: Dict[str, List[Dict[Any, Any]]] = {"vulnerabilities": []}
@@ -90,28 +96,43 @@ class Json(BaseOutput, BaseSchemaVersion):
     # Builder Methods
     def _create_bom_element(self) -> Dict[str, Union[str, int]]:
         return {
+            "$schema": str(self._get_schema_uri()),
             "bomFormat": "CycloneDX",
             "specVersion": str(self.get_schema_version()),
             "serialNumber": self.get_bom().get_urn_uuid(),
             "version": 1
         }
 
+    @abstractmethod
+    def _get_schema_uri(self) -> Optional[str]:
+        pass
+
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return None
 
 
 class JsonV1Dot1(Json, SchemaVersion1Dot1):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return None
 
 
 class JsonV1Dot2(Json, SchemaVersion1Dot2):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return 'http://cyclonedx.org/schema/bom-1.2a.schema.json'
 
 
 class JsonV1Dot3(Json, SchemaVersion1Dot3):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return 'http://cyclonedx.org/schema/bom-1.3.schema.json'
 
 
 class JsonV1Dot4(Json, SchemaVersion1Dot4):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return 'http://cyclonedx.org/schema/bom-1.4.schema.json'
