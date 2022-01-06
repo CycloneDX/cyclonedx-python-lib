@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
@@ -37,9 +37,21 @@ class Json(BaseOutput, BaseSchemaVersion):
         if self.generated and not force_regeneration:
             return
 
+        vulnerabilities: Dict[str, List[Dict[Any, Any]]] = {"vulnerabilities": []}
+        for component in self.get_bom().components:
+            for vulnerability in component.get_vulnerabilities():
+                vulnerabilities['vulnerabilities'].append(
+                    json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
+                )
+
         bom_json = json.loads(json.dumps(self.get_bom(), cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
-        self._json_output = json.dumps({**self._create_bom_element(), **bom_json})
+        if self.bom_supports_vulnerabilities() and vulnerabilities['vulnerabilities']:
+            self._json_output = json.dumps(
+                {**self._create_bom_element(), **bom_json, **vulnerabilities}
+            )
+        else:
+            self._json_output = json.dumps({**self._create_bom_element(), **bom_json})
 
         self.generated = True
 
@@ -63,6 +75,11 @@ class Json(BaseOutput, BaseSchemaVersion):
 
             if not self.component_supports_release_notes() and 'releaseNotes' in bom_json['components'][i].keys():
                 del bom_json['components'][i]['releaseNotes']
+
+        # Iterate Vulnerabilities
+        if 'vulnerabilities' in bom_json.keys():
+            for i in range(len(bom_json['vulnerabilities'])):
+                print("Checking " + str(bom_json['vulnerabilities'][i]))
 
         return json.dumps(bom_json)
 

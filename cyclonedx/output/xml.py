@@ -292,8 +292,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     ElementTree.SubElement(v_rating_element, 'score').text = f'{rating.score:.1f}'
                 if rating.severity:
                     ElementTree.SubElement(v_rating_element, 'severity').text = rating.severity.value
-                if rating.score_source:
-                    ElementTree.SubElement(v_rating_element, 'method').text = rating.score_source.value
+                if rating.method:
+                    ElementTree.SubElement(v_rating_element, 'method').text = rating.method.value
                 if rating.vector:
                     ElementTree.SubElement(v_rating_element, 'vector').text = rating.vector
                 if rating.justification:
@@ -341,16 +341,16 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # credits
         if vulnerability.credits:
             v_credits_element = ElementTree.SubElement(vulnerability_element, 'credits')
-            if vulnerability.get_credit_organizations():
+            if vulnerability.credits.organizations:
                 v_credits_organizations_element = ElementTree.SubElement(v_credits_element, 'organizations')
-                for organization in vulnerability.get_credit_organizations():
+                for organization in vulnerability.credits.organizations:
                     Xml._add_organizational_entity(
                         parent_element=v_credits_organizations_element, organization=organization,
                         tag_name='organization'
                     )
-            if vulnerability.get_credit_individuals():
+            if vulnerability.credits.individuals:
                 v_credits_individuals_element = ElementTree.SubElement(v_credits_element, 'individuals')
-                for individual in vulnerability.get_credit_individuals():
+                for individual in vulnerability.credits.individuals:
                     Xml._add_organizational_contact(
                         parent_element=v_credits_individuals_element, contact=individual,
                         tag_name='individual'
@@ -370,19 +370,19 @@ class Xml(BaseOutput, BaseSchemaVersion):
             if vulnerability.analysis.justification:
                 ElementTree.SubElement(v_analysis_element,
                                        'justification').text = vulnerability.analysis.justification.value
-            if vulnerability.analysis.responses:
+            if vulnerability.analysis.response:
                 v_analysis_responses_element = ElementTree.SubElement(v_analysis_element, 'responses')
-                for response in vulnerability.analysis.responses:
+                for response in vulnerability.analysis.response:
                     ElementTree.SubElement(v_analysis_responses_element, 'response').text = response.value
             if vulnerability.analysis.detail:
                 ElementTree.SubElement(v_analysis_element, 'detail').text = vulnerability.analysis.detail
 
         # affects
-        if vulnerability.affects_targets:
+        if vulnerability.affects:
             v_affects_element = ElementTree.SubElement(vulnerability_element, 'affects')
-            for target in vulnerability.affects_targets:
+            for target in vulnerability.affects:
                 v_target_element = ElementTree.SubElement(v_affects_element, 'target')
-                ElementTree.SubElement(v_target_element, 'ref').text = target.bom_ref
+                ElementTree.SubElement(v_target_element, 'ref').text = target.ref
 
                 if target.versions:
                     v_target_versions_element = ElementTree.SubElement(v_target_element, 'versions')
@@ -424,8 +424,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     ElementTree.SubElement(rating_element, 'v:severity').text = str(rating.severity.value).title()
 
                 # rating.severity
-                if rating.score_source:
-                    ElementTree.SubElement(rating_element, 'v:method').text = rating.score_source.get_value_pre_1_4()
+                if rating.method:
+                    ElementTree.SubElement(rating_element, 'v:method').text = rating.method.get_value_pre_1_4()
 
                 # rating.vector
                 if rating.vector:
@@ -482,7 +482,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if version.version:
             ElementTree.SubElement(version_element, 'version').text = version.version
         else:
-            ElementTree.SubElement(version_element, 'range').text = version.version_range
+            ElementTree.SubElement(version_element, 'range').text = version.range
 
         if version.status:
             ElementTree.SubElement(version_element, 'status').text = version.status.value
