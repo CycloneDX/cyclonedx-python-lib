@@ -35,6 +35,11 @@ programmatically generate SBOMs.
    :maxdepth: 2
    :caption: Contents:
 
+   install
+   architecture
+   support
+
+
 .. _CycloneDX Python: https://pypi.org/project/cyclonedx-bom/
 .. _Jake: https://pypi.org/project/jake
 .. _CycloneDX Tool Center: https://cyclonedx.org/tool-center/
