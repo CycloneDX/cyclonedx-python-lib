@@ -40,5 +40,7 @@ formats: all
 # Optionally declare the Python requirements required to build your docs
 python:
    install:
-     - method: setuptools
-       path: sphinx-autoapi
+     - method: pip
+       path: .
+       extra_requirements:
+         - sphinx-autoapi
