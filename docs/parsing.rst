@@ -4,8 +4,8 @@ Parsing
 Parsers are provided as a quick way to generate a BOM for Python applications or from Python environments.
 
     **WARNING**: Limited information will be available when generating a BOM using some Parsers due to limited
-    information kept/suppled by those package managers. See
-    :py:mod:`cyclonedx.parser` for details of what fields can be completed by different Parsers.
+    information kept/supplied by those package managers. See below for details of what fields can be completed by
+    different Parsers.
 
 Easily create your parser instance as follows:
 
@@ -67,3 +67,87 @@ might be to:
 
 You can then feed in the frozen requirements from ``requirements-frozen.txt`` `or` use the ``Environment`` parser once
 you have installed your dependencies.
+
+Parser Schema Support
+---------------------
+
+Different parsers support population of different information about your dependencies due to how information is
+obtained and limitations of what information is available to each Parser. The sections below explain coverage as to what
+information is obtained by each set of Parsers. It does NOT guarantee the information is output in the resulting
+CycloneDX BOM document.
+
+The below tables do not state whether specific schema versions support the attributes/items, just whether this library
+does.
+
+xPath is used to refer to data attributes according to the `Cyclone DX Specification`_.
+
+``bom.components.component``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++------------------------+-------------------------------------------------------------------+
+|                        | Parser Support                                                    |
+| Data Path              +------------+-------------+------------+------------+--------------+
+|                        | Conda      | Environment | Pip        | Poetry     | Requirements |
++========================+============+=============+============+============+==============+
+| ``.supplier``          | N          | N - Note 1  | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.author``            | N          | Y - Note 1  | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.publisher``         | N          | N - Note 1  | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.group``             | N          | N           | N          | N          | N            |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.name``              | Y          | Y           | Y          | Y          | Y            |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.version``           | Y          | Y           | Y          | Y          | Y            |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.description``       | N          | N           | N/A        | N          | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.scope``             | N          | N           | N/A        | N          | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.hashes``            | Y - Note 2 | N/A         | Y - Note 3 | Y - Note 3 | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.licenses``          | N          | Y - Note 1  | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.copyright``         | N          | N - Note 1  | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.cpe``               | N/A        | N/A         | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.purl``              | Y          | Y           | Y          | Y          | Y            |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.swid``              | N/A        | N/A         | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.modified``          | *Deprecated - not used*                                           |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.pedigree``          | N/A        | N/A         | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``externalReferences`` | Y - Note 3 | N/A         | Y - Note 1 | Y - Note 1 | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``.properties``        | N/A        | N/A         | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``components``         | N/A        | N/A         | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``evidence``           | N/A        | N/A         | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+| ``releaseNotes``       | N/A        | N/A         | N/A        | N/A        | N/A          |
++------------------------+------------+-------------+------------+------------+--------------+
+
+    **Legend:**
+
+    * **Y**: YES with any caveat states.
+    * **N**: Not currently supported, but support believed to be possible.
+    * **N/A**: Not supported and not deemed possible (i.e. the Parser would never be able to reliably determine this
+      info).
+
+**Notes**
+
+1. If contained in the packaages ``METADATA``
+2. MD5 hashses are available when using the ``CondaListExplicitParser`` with output from the
+   conda command ``conda list --explicit --md5`` only
+3. Python packages are regularly available as both ``.whl`` and ``.tar.gz`` packages. This means for that for a given
+   package and version multiple artefacts are possible - which would mean multiple hashes are possible. CycloneDX
+   supports only a single set of hashes identifying a single artefact at ``component.hashes``. To cater for this
+   situation in Python, we add the hashes to `component.externalReferences`, as we cannot determine which package was
+   actually obtained and installed to meet a given dependency.
+
+.. _Cyclone DX Specification: https://cyclonedx.org/docs/latest
