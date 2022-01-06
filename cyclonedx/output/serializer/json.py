@@ -18,6 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from datetime import datetime
+from decimal import Decimal
 from enum import Enum
 from json import JSONEncoder
 from re import compile
@@ -47,6 +48,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
         # datetime
         if isinstance(o, datetime):
             return o.isoformat()
+
+        # Decimal
+        if isinstance(o, Decimal):
+            return float(f'{o:.1f}')
 
         # Enum
         if isinstance(o, Enum):

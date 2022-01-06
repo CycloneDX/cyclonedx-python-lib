@@ -28,9 +28,9 @@ from cyclonedx.model.component import Component
 from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
     ImpactAnalysisAffectedStatus
 from cyclonedx.model.release_note import ReleaseNotes
-from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySeverity, \
-    VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, VulnerabilityReference, \
-    VulnerabilityAnalysis, BomTarget, BomTargetVersionRange
+from cyclonedx.model.vulnerability import Vulnerability, VulnerabilityCredits, VulnerabilityRating, \
+    VulnerabilitySeverity, VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, \
+    VulnerabilityReference, VulnerabilityAnalysis, BomTarget, BomTargetVersionRange
 from cyclonedx.output import get_instance, SchemaVersion
 from cyclonedx.output.xml import XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0, Xml
 from tests.base import BaseXmlTestCase
@@ -109,12 +109,12 @@ class TestOutputXml(BaseXmlTestCase):
             ratings=[
                 VulnerabilityRating(
                     source=nvd, score=Decimal(9.8), severity=VulnerabilitySeverity.CRITICAL,
-                    score_source=VulnerabilityScoreSource.CVSS_V3,
+                    method=VulnerabilityScoreSource.CVSS_V3,
                     vector='AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', justification='Some justification'
                 ),
                 VulnerabilityRating(
                     source=owasp, score=Decimal(2.7), severity=VulnerabilitySeverity.LOW,
-                    score_source=VulnerabilityScoreSource.CVSS_V3,
+                    method=VulnerabilityScoreSource.CVSS_V3,
                     vector='AV:L/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N', justification='Some other justification'
                 )
             ],
@@ -130,16 +130,20 @@ class TestOutputXml(BaseXmlTestCase):
                                tzinfo=timezone.utc),
             updated=datetime(year=2021, month=9, day=3, hour=10, minute=50, second=42, microsecond=51979,
                              tzinfo=timezone.utc),
-            credits=[
-                OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890'),
-                OrganizationalEntity(
-                    name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[
-                        OrganizationalContact(name='Paul Horton', email='simplyecommerce@googlemail.com'),
-                        OrganizationalContact(name='A N Other', email='someone@somewhere.tld',
-                                              phone='+44 (0)1234 567890')
-                    ]
-                )
-            ],
+            credits=VulnerabilityCredits(
+                organizations=[
+                    OrganizationalEntity(
+                        name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[
+                            OrganizationalContact(name='Paul Horton', email='simplyecommerce@googlemail.com'),
+                            OrganizationalContact(name='A N Other', email='someone@somewhere.tld',
+                                                  phone='+44 (0)1234 567890')
+                        ]
+                    )
+                ],
+                individuals=[
+                    OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890'),
+                ]
+            ),
             tools=[
                 Tool(vendor='CycloneDX', name='cyclonedx-python-lib')
             ],
@@ -148,7 +152,7 @@ class TestOutputXml(BaseXmlTestCase):
                 responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
             ),
             affects_targets=[
-                BomTarget(bom_ref=c.purl, versions=[
+                BomTarget(ref=c.purl, versions=[
                     BomTargetVersionRange(version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED)
                 ])
             ]

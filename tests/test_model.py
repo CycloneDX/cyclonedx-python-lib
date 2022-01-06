@@ -5,7 +5,7 @@ from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriExce
 from cyclonedx.exception.parser import UnknownHashTypeException
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashAlgorithm, HashType, \
-    IssueClassification, IssueType, Note, XsUri
+    IssueClassification, IssueType, Note, NoteText, XsUri
 
 
 class TestModelExternalReference(TestCase):
@@ -91,15 +91,15 @@ class TestModelIssueType(TestCase):
 class TestModelNote(TestCase):
 
     def test_note_plain_text(self) -> None:
-        n = Note(text='Some simple plain text')
-        self.assertEqual(n.get_text(), 'Some simple plain text')
-        self.assertEqual(n.get_content_type(), Note.DEFAULT_CONTENT_TYPE)
-        self.assertIsNone(n.get_locale())
-        self.assertIsNone(n.get_content_encoding())
+        n = Note(text=NoteText('Some simple plain text'))
+        self.assertEqual(n.text.content, 'Some simple plain text')
+        self.assertEqual(n.text.content_type, NoteText.DEFAULT_CONTENT_TYPE)
+        self.assertIsNone(n.locale)
+        self.assertIsNone(n.text.encoding)
 
     def test_note_invalid_locale(self) -> None:
         with self.assertRaises(InvalidLocaleTypeException):
-            Note(text='Some simple plain text', locale='invalid-locale')
+            Note(text=NoteText(content='Some simple plain text'), locale='invalid-locale')
 
     def test_note_encoded_text_with_locale(self) -> None:
         text_content: str = base64.b64encode(
@@ -107,13 +107,14 @@ class TestModelNote(TestCase):
         ).decode(encoding='UTF-8')
 
         n = Note(
-            text=text_content, locale='en-GB', content_type='text/plain; charset=UTF-8',
-            content_encoding=Encoding.BASE_64
+            text=NoteText(
+                content=text_content, content_type='text/plain; charset=UTF-8', content_encoding=Encoding.BASE_64
+            ), locale='en-GB'
         )
-        self.assertEqual(n.get_text(), text_content)
-        self.assertEqual(n.get_content_type(), 'text/plain; charset=UTF-8')
-        self.assertEqual(n.get_locale(), 'en-GB')
-        self.assertEqual(n.get_content_encoding(), Encoding.BASE_64)
+        self.assertEqual(n.text.content, text_content)
+        self.assertEqual(n.text.content_type, 'text/plain; charset=UTF-8')
+        self.assertEqual(n.locale, 'en-GB')
+        self.assertEqual(n.text.encoding, Encoding.BASE_64)
 
 
 class TestModelXsUri(TestCase):

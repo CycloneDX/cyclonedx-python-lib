@@ -851,15 +851,16 @@ class Note:
         return self._locale
 
     @locale.setter
-    def locale(self, locale: str) -> None:
-        if re.search(LOCALE_TYPE_REGEX, locale):
-            self._locale = locale
-        else:
-            raise InvalidLocaleTypeException(
-                f"Supplied locale '{locale}' is not a valid locale. "
-                f"Locale string should be formatted as the ISO-639 (or higher) language code and optional "
-                f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
-            )
+    def locale(self, locale: Optional[str]) -> None:
+        self._locale = locale
+        if isinstance(locale, str):
+            if not re.search(LOCALE_TYPE_REGEX, locale):
+                self._locale = None
+                raise InvalidLocaleTypeException(
+                    f"Supplied locale '{locale}' is not a valid locale. "
+                    f"Locale string should be formatted as the ISO-639 (or higher) language code and optional "
+                    f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
+                )
 
 
 class OrganizationalContact:
@@ -927,8 +928,8 @@ class OrganizationalEntity:
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
         self._name: Optional[str] = name
-        self._urls: Optional[List[XsUri]] = urls
-        self._contacts: Optional[List[OrganizationalContact]] = contacts
+        self._url: Optional[List[XsUri]] = urls
+        self._contact: Optional[List[OrganizationalContact]] = contacts
 
     @property
     def name(self) -> Optional[str]:
@@ -948,7 +949,7 @@ class OrganizationalEntity:
         Returns:
             `List[XsUri]` if set else `None`
         """
-        return self._urls
+        return self._url
 
     @property
     def contacts(self) -> Optional[List[OrganizationalContact]]:
@@ -958,7 +959,7 @@ class OrganizationalEntity:
         Returns:
             `List[OrganizationalContact]` if set else `None`
         """
-        return self._contacts
+        return self._contact
 
 
 class Tool:
