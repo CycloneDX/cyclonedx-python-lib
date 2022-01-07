@@ -33,8 +33,6 @@ You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or 
 from a `cyclonedx.parser.BaseParser` implementation.
 """
 
-LOCALE_TYPE_REGEX = re.compile(r'^([a-z]{2})(-[A-Z]{2})?$')
-
 
 def sha1sum(filename: str) -> str:
     """
@@ -245,10 +243,10 @@ class XsUri:
         See XSD definition for xsd:anyURI: http://www.datypic.com/sc/xsd/t-xsd_anyURI.html
     """
 
-    invalid_uri_regex = re.compile("(%(?![0-9A-F]{2})|#.*#)", re.IGNORECASE + re.MULTILINE)
+    _INVALID_URI_REGEX = re.compile(r'%(?![0-9A-F]{2})|#.*#', re.IGNORECASE + re.MULTILINE)
 
     def __init__(self, uri: str) -> None:
-        if re.search(XsUri.invalid_uri_regex, uri):
+        if re.search(XsUri._INVALID_URI_REGEX, uri):
             raise InvalidUriException(
                 f"Supplied value '{uri}' does not appear to be a valid URI."
             )
@@ -818,6 +816,8 @@ class Note:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
     """
 
+    _LOCALE_TYPE_REGEX = re.compile(r'^([a-z]{2})(-[A-Z]{2})?$')
+
     def __init__(self, text: NoteText, locale: Optional[str] = None) -> None:
         self.text = text
         self.locale = locale
@@ -854,7 +854,7 @@ class Note:
     def locale(self, locale: Optional[str]) -> None:
         self._locale = locale
         if isinstance(locale, str):
-            if not re.search(LOCALE_TYPE_REGEX, locale):
+            if not re.search(Note._LOCALE_TYPE_REGEX, locale):
                 self._locale = None
                 raise InvalidLocaleTypeException(
                     f"Supplied locale '{locale}' is not a valid locale. "
