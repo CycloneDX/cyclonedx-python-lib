@@ -367,7 +367,7 @@ class IssueTypeSource:
         return self._name
 
     @name.setter
-    def name(self, name: str) -> None:
+    def name(self, name: Optional[str]) -> None:
         self._name = name
 
     @property
@@ -803,7 +803,7 @@ class NoteText:
         return self._encoding
 
     @encoding.setter
-    def encoding(self, encoding: Encoding) -> None:
+    def encoding(self, encoding: Optional[Encoding]) -> None:
         self._encoding = encoding
 
 
