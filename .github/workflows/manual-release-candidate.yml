@@ -3,11 +3,10 @@ name: Manual Release Candidate
 on:
   workflow_dispatch:
     inputs:
-      rc_number:
-        description: 'RC Number'
-        default: 0
+      release_candidate_suffix:
+        description: 'RC Suffix e.g. rc0, beta1, alpha2. Do not include a leading hyphen.'
         required: true
-        type: number
+        type: string
 
 jobs:
   release_candidate:
@@ -27,10 +26,11 @@ jobs:
           poetry config virtualenvs.create false
           poetry install
           python -m pip install python-semantic-release
-      - name: Determine RC candidate version
+      - name: Apply Candidate Version
         run: |
-          RC_VERSION="$(semantic-release --noop --major print-version)-rc${{ github.event.inputs..rc_number }}"
+          RC_VERSION="$(semantic-release --noop --major print-version)-${{ github.event.inputs.release_candidate_suffix }}"
           echo "RC Version will be: ${RC_VERSION}"
+          poetry version ${RC_VERSION}
 #      - name: Python Semantic Release
 #        uses: relekang/python-semantic-release@master
 #        with:
