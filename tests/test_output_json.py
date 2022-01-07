@@ -156,7 +156,7 @@ class TestOutputJson(BaseJsonTestCase):
         timestamp: datetime = datetime(2021, 12, 31, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
 
         text_content: str = base64.b64encode(
-            bytearray('Some simple plain text', encoding='UTF-8')
+            bytes('Some simple plain text', encoding='UTF-8')
         ).decode(encoding='UTF-8')
 
         c = Component(
@@ -268,7 +268,7 @@ class TestOutputJson(BaseJsonTestCase):
                 responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
             ),
             affects_targets=[
-                BomTarget(ref=c.purl, versions=[
+                BomTarget(ref=c.purl or c.to_package_url().to_string(), versions=[
                     BomTargetVersionRange(version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED)
                 ])
             ]

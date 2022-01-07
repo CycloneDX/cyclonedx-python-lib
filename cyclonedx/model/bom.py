@@ -199,7 +199,7 @@ class Bom:
         """
         return len(self._components)
 
-    def get_component_by_purl(self, purl: str) -> Optional[Component]:
+    def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
         """
         Get a Component already in the Bom by it's PURL
 
@@ -210,9 +210,10 @@ class Bom:
         Returns:
             `Component` or `None`
         """
-        found = list(filter(lambda x: x.purl == purl, self.components))
-        if len(found) == 1:
-            return found[0]
+        if purl:
+            found = list(filter(lambda x: x.purl == purl, self.components))
+            if len(found) == 1:
+                return found[0]
 
         return None
 

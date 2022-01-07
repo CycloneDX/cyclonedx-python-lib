@@ -170,14 +170,14 @@ class TestModelXsUri(TestCase):
 
     def test_note_with_no_locale(self) -> None:
         self.assertIsInstance(
-            Note(text='Something'), Note
+            Note(text=NoteText(content='Something')), Note
         )
 
     def test_note_with_valid_locale(self) -> None:
         self.assertIsInstance(
-            Note(text='Something', locale='en-GB'), Note
+            Note(text=NoteText(content='Something'), locale='en-GB'), Note
         )
 
     def test_note_with_invalid_locale(self) -> None:
         with self.assertRaises(InvalidLocaleTypeException):
-            Note(text='Something', locale='rubbish')
+            Note(text=NoteText(content='Something'), locale='rubbish')

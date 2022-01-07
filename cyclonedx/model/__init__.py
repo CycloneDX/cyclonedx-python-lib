@@ -381,7 +381,7 @@ class IssueTypeSource:
         return self._url
 
     @url.setter
-    def url(self, url: XsUri) -> None:
+    def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
 
@@ -651,7 +651,7 @@ class License:
         return self._url
 
     @url.setter
-    def url(self, url: XsUri) -> None:
+    def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
 

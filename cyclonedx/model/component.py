@@ -197,7 +197,7 @@ class Component:
         return self._mime_type
 
     @mime_type.setter
-    def mime_type(self, mime_type: str) -> None:
+    def mime_type(self, mime_type: Optional[str]) -> None:
         self._mime_type = mime_type
 
     @property
