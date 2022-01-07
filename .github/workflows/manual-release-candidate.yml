@@ -1,7 +1,7 @@
 name: Manual Release Candidate
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       branch:
         description: 'Branch to produce Release Candidate from'
