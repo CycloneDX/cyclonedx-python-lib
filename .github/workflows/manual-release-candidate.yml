@@ -3,10 +3,6 @@ name: Manual Release Candidate
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to produce Release Candidate from'
-        required: true
-        type: string
       rc_number:
         description: 'RC Number'
         default: 0
@@ -14,9 +10,9 @@ on:
         type: number
 
 jobs:
-  release:
+  release_candidate:
     runs-on: ubuntu-latest
-    concurrency: release
+    concurrency: release_candidate
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
