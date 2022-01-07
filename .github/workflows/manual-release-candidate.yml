@@ -31,6 +31,7 @@ jobs:
           RC_VERSION="$(semantic-release --noop --major print-version)-${{ github.event.inputs.release_candidate_suffix }}"
           echo "RC Version will be: ${RC_VERSION}"
           poetry version ${RC_VERSION}
+          poetry build
       - name: Publish Pre Release 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
