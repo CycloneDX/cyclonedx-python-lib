@@ -1,4 +1,4 @@
-name: Manual Release Candidate
+name: Manual Pre Release Publish
 
 on:
   workflow_dispatch:
@@ -26,13 +26,12 @@ jobs:
           poetry config virtualenvs.create false
           poetry install
           python -m pip install python-semantic-release
-      - name: Apply Candidate Version
+      - name: Apply Pre Release Version
         run: |
           RC_VERSION="$(semantic-release --noop --major print-version)-${{ github.event.inputs.release_candidate_suffix }}"
           echo "RC Version will be: ${RC_VERSION}"
           poetry version ${RC_VERSION}
-#      - name: Python Semantic Release
-#        uses: relekang/python-semantic-release@master
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          pypi_token: ${{ secrets.PYPI_TOKEN }}
+      - name: Publish Pre Release 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
