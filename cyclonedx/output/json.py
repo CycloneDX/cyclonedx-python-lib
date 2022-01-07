@@ -69,7 +69,8 @@ class Json(BaseOutput, BaseSchemaVersion):
             del bom_json['metadata']['tools']
         elif not self.bom_metadata_supports_tools_external_references():
             for i in range(len(bom_json['metadata']['tools'])):
-                del bom_json['metadata']['tools'][i]['externalReferences']
+                if 'externalReferences' in bom_json['metadata']['tools'][i].keys():
+                    del bom_json['metadata']['tools'][i]['externalReferences']
 
         # Iterate Components
         for i in range(len(bom_json['components'])):
