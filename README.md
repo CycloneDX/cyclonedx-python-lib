@@ -22,7 +22,7 @@ Additionally, you can use this module yourself in your application to programmat
 
 CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple to parse.
 
-View our documentation [here](https://cyclonedx-python-library.readthedocs.io/en/latest).
+View our documentation [here](https://cyclonedx-python-library.readthedocs.io/).
 
 ## Python Support
 
