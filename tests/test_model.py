@@ -103,7 +103,7 @@ class TestModelNote(TestCase):
 
     def test_note_encoded_text_with_locale(self) -> None:
         text_content: str = base64.b64encode(
-            bytearray('Some simple plain text', encoding='UTF-8')
+            bytes('Some simple plain text', encoding='UTF-8')
         ).decode(encoding='UTF-8')
 
         n = Note(

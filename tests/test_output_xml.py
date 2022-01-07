@@ -312,7 +312,7 @@ class TestOutputXml(BaseXmlTestCase):
         timestamp: datetime = datetime(2021, 12, 31, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
 
         text_content: str = base64.b64encode(
-            bytearray('Some simple plain text', encoding='UTF-8')
+            bytes('Some simple plain text', encoding='UTF-8')
         ).decode(encoding='UTF-8')
 
         c = Component(
