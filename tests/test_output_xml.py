@@ -152,7 +152,7 @@ class TestOutputXml(BaseXmlTestCase):
                 responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
             ),
             affects_targets=[
-                BomTarget(ref=c.purl, versions=[
+                BomTarget(ref=c.purl or c.to_package_url().to_string(), versions=[
                     BomTargetVersionRange(version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED)
                 ])
             ]
