@@ -27,7 +27,7 @@ jobs:
         run: |
           pdoc --template-dir doc/templates --html cyclonedx
       - name: Deploy documentation
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: JamesIves/github-pages-deploy-action@4.2.0
         with:
           branch: gh-pages
           folder: html/cyclonedx
