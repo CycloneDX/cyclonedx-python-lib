@@ -816,7 +816,7 @@ class Note:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
     """
 
-    _LOCALE_TYPE_REGEX = re.compile(r'^([a-z]{2})(-[A-Z]{2})?$')
+    _LOCALE_TYPE_REGEX = re.compile(r'^[a-z]{2}(?:\-[A-Z]{2})?$')
 
     def __init__(self, text: NoteText, locale: Optional[str] = None) -> None:
         self.text = text
