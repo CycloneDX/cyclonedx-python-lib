@@ -206,10 +206,8 @@ class Component:
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
 
-        If none is supplied for this Component, the PURL will be used automatically.
-
         Returns:
-            `str` as a unique identifiers for this Component
+            `str` as a unique identifiers for this Component if set else `None`
         """
         return self._bom_ref
 
