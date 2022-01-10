@@ -38,6 +38,8 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c2.hashes), 0)
         self.assertEqual(len(c2.get_vulnerabilities()), 0)
 
+        self.assertNotEqual(c1, c2)
+
     def test_external_references(self) -> None:
         c = Component(
             name='test-component', version='1.2.3'
@@ -74,3 +76,24 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c.external_references), 0)
         self.assertEqual(len(c.hashes), 0)
         self.assertEqual(len(c.get_vulnerabilities()), 0)
+
+    def test_component_equal(self) -> None:
+        c = Component(
+            name='test-component', version='1.2.3'
+        )
+        c.add_external_reference(ExternalReference(
+            reference_type=ExternalReferenceType.OTHER,
+            url='https://cyclonedx.org',
+            comment='No comment'
+        ))
+
+        c2 = Component(
+            name='test-component', version='1.2.3'
+        )
+        c2.add_external_reference(ExternalReference(
+            reference_type=ExternalReferenceType.OTHER,
+            url='https://cyclonedx.org',
+            comment='No comment'
+        ))
+
+        self.assertEqual(c, c2)

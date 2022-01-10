@@ -537,8 +537,15 @@ class Component:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Component):
-            return other.purl == self.purl
+            return hash(other) == hash(self)
         return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.author, self.bom_ref, self.copyright, self.description, str(self.external_references), self.group,
+            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl,
+            self.release_notes, self.scope, self.supplier, self.type, self.version
+        ))
 
     def __repr__(self) -> str:
         return f'<Component group={self.group}, name={self.name}, version={self.version}>'
