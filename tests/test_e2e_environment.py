@@ -18,16 +18,17 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
+from packageurl import PackageURL
 from unittest import TestCase
 from xml.etree import ElementTree
 
 import pkg_resources
 
 from cyclonedx.model.bom import Bom
+from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat
 from cyclonedx.output.json import Json
 from cyclonedx.output.xml import Xml
-from cyclonedx.parser.environment import EnvironmentParser
 
 OUR_PACKAGE_NAME: str = 'cyclonedx-python-lib'
 OUR_PACKAGE_VERSION: str = pkg_resources.get_distribution(OUR_PACKAGE_NAME).version
@@ -36,8 +37,18 @@ OUR_PACKAGE_AUTHOR: str = 'Paul Horton'
 
 class TestE2EEnvironment(TestCase):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.bom: Bom = Bom()
+        cls.bom.add_component(
+            Component(
+                name=OUR_PACKAGE_NAME, author=OUR_PACKAGE_AUTHOR, version=OUR_PACKAGE_VERSION,
+                purl=PackageURL(type='pypi', name=OUR_PACKAGE_NAME, version=OUR_PACKAGE_VERSION)
+            )
+        )
+
     def test_json_defaults(self) -> None:
-        outputter: Json = get_instance(bom=Bom.from_parser(EnvironmentParser()), output_format=OutputFormat.JSON)
+        outputter: Json = get_instance(bom=TestE2EEnvironment.bom, output_format=OutputFormat.JSON)
         bom_json = json.loads(outputter.output_as_string())
         component_this_library = next(
             (x for x in bom_json['components'] if
@@ -50,7 +61,7 @@ class TestE2EEnvironment(TestCase):
         self.assertEqual(component_this_library['version'], OUR_PACKAGE_VERSION)
 
     def test_xml_defaults(self) -> None:
-        outputter: Xml = get_instance(bom=Bom.from_parser(EnvironmentParser()))
+        outputter: Xml = get_instance(bom=TestE2EEnvironment.bom)
 
         # Check we have cyclonedx-python-lib with Author, Name and Version
         bom_xml_e = ElementTree.fromstring(outputter.output_as_string())
