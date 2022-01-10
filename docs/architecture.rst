@@ -19,7 +19,6 @@ When wishing to generate a BOM, the process is as follows:
    :maxdepth: 2
    :caption: Contents:
 
-   parsing
    modelling
    outputting
 
