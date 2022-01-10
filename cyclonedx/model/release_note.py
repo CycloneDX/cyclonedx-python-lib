@@ -20,7 +20,8 @@
 from datetime import datetime
 from typing import List, Optional
 
-from ..model import IssueType, Note, Property, XsUri
+from ..model import Note, Property, XsUri
+from ..model.issue import IssueType
 
 
 class ReleaseNotes:

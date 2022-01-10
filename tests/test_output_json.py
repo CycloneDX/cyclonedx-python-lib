@@ -21,10 +21,11 @@ from decimal import Decimal
 from datetime import datetime, timezone
 from os.path import dirname, join
 
-from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, IssueClassification, \
-    IssueType, LicenseChoice, Note, NoteText, OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
+from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, LicenseChoice, Note, \
+    NoteText, OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from cyclonedx.model.issue import IssueClassification, IssueType
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.vulnerability import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
     ImpactAnalysisAffectedStatus, Vulnerability, VulnerabilityCredits, VulnerabilityRating, VulnerabilitySeverity, \
