@@ -541,7 +541,7 @@ class Component:
         return False
 
     def __repr__(self) -> str:
-        return f'<Component {self._name}={self._version}>'
+        return f'<Component group={self.group}, name={self.name}, version={self.version}>'
 
     # Deprecated methods
     def get_namespace(self) -> Optional[str]:
