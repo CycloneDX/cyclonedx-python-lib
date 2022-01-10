@@ -23,8 +23,7 @@ from enum import Enum
 from typing import List, Optional, Union
 
 from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException, \
-    MutuallyExclusivePropertiesException
-from ..exception.parser import UnknownHashTypeException
+    MutuallyExclusivePropertiesException, UnknownHashTypeException
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.

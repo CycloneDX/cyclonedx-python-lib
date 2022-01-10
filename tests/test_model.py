@@ -1,8 +1,7 @@
 import base64
 from unittest import TestCase
 
-from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException
-from cyclonedx.exception.parser import UnknownHashTypeException
+from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashAlgorithm, HashType, \
     IssueClassification, IssueType, Note, NoteText, XsUri
