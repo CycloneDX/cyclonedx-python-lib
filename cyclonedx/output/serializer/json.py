@@ -38,12 +38,6 @@ PYTHON_TO_JSON_NAME = compile(r'_([a-z])')
 
 class CycloneDxJSONEncoder(JSONEncoder):
 
-    def iterencode(self, o: object, _one_shot: bool = False) -> Any:
-        if isinstance(o, PackageURL):
-            return o.to_string()
-        else:
-            return super().iterencode(o=o, _one_shot=_one_shot)
-
     def default(self, o: Any) -> Any:
         # datetime
         if isinstance(o, datetime):
