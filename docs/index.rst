@@ -38,6 +38,7 @@ programmatically generate SBOMs.
    install
    architecture
    support
+   changelog
 
 
 .. _CycloneDX Python: https://pypi.org/project/cyclonedx-bom/
