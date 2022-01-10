@@ -79,6 +79,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
 
                 # Skip any None values
                 if v:
+                    if isinstance(v, PackageURL):
+                        # Special handling of PackageURL instances which JSON would otherwise automatically encode to
+                        # an Array
+                        v = str(v.to_string())
                     d[new_key] = v
 
             return d

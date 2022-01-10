@@ -17,6 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+import warnings
 from typing import List, Optional
 from xml.etree import ElementTree
 
@@ -57,11 +58,16 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 # Vulnerabilities are only possible when bom-ref is supported by the main CycloneDX schema version
                 vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
                 for vulnerability in component.get_vulnerabilities():
-                    bom_ref: str = component.purl if component.purl else component.to_package_url().to_string()
-                    vulnerabilities.append(
-                        self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=bom_ref,
-                                                                       vulnerability=vulnerability)
-                    )
+                    if component.bom_ref:
+                        vulnerabilities.append(
+                            self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.bom_ref,
+                                                                           vulnerability=vulnerability)
+                        )
+                    else:
+                        warnings.warn(
+                            f'Unable to include Vulnerability {str(vulnerability)} in generated BOM as the Component'
+                            f'it relates to ({str(component)}) but it has no bom-ref.'
+                        )
             elif component.has_vulnerabilities():
                 has_vulnerabilities = True
 
@@ -109,8 +115,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     def _add_component_element(self, component: Component) -> ElementTree.Element:
         element_attributes = {'type': component.type.value}
-        if self.component_supports_bom_ref_attribute() and component.purl:
-            element_attributes['bom-ref'] = component.purl
+        if self.component_supports_bom_ref_attribute() and component.bom_ref:
+            element_attributes['bom-ref'] = component.bom_ref
         if self.component_supports_mime_type_attribute() and component.mime_type:
             element_attributes['mime-type'] = component.mime_type
 
@@ -134,7 +140,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         else:
             if not component.version:
                 raise ComponentVersionRequiredException(
-                    f'Component "{component.purl}" has no version but the target schema version mandates '
+                    f'Component "{str(component)}" has no version but the target schema version mandates '
                     f'Components have a version specified'
                 )
             ElementTree.SubElement(component_element, 'version').text = component.version
@@ -167,7 +173,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     ElementTree.SubElement(licenses_e, 'expression').text = license.expression
 
         # purl
-        ElementTree.SubElement(component_element, 'purl').text = component.purl
+        if component.purl:
+            ElementTree.SubElement(component_element, 'purl').text = component.purl.to_string()
 
         # modified
         if self.bom_requires_modified():
@@ -257,8 +264,6 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     ).text = prop.get_value()
 
         return component_element
-
-    # ----  ----  ----  ----  ----
 
     def _get_vulnerability_as_xml_element_post_1_4(self, vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element(

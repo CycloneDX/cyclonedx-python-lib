@@ -20,6 +20,7 @@ import base64
 from decimal import Decimal
 from datetime import datetime, timezone
 from os.path import dirname, join
+from packageurl import PackageURL
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, LicenseChoice, Note, \
     NoteText, OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
@@ -40,7 +41,12 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_simple_bom_v1_4(self) -> None:
         bom = Bom()
-        c = Component(name='setuptools', version='50.3.2', package_url_qualifiers='extension=tar.gz')
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
         bom.add_component(c)
 
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
@@ -52,7 +58,12 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_simple_bom_v1_3(self) -> None:
         bom = Bom()
-        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz', license_str='MIT License')
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            ), license_str='MIT License'
+        )
         bom.add_component(c)
 
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
@@ -65,7 +76,12 @@ class TestOutputJson(BaseJsonTestCase):
     def test_simple_bom_v1_2(self) -> None:
         bom = Bom()
         bom.add_component(
-            Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz', author='Test Author')
+            Component(
+                name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+                purl=PackageURL(
+                    type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+                ), author='Test Author'
+            )
         )
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_2)
         self.assertIsInstance(outputter, JsonV1Dot2)
@@ -76,7 +92,12 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_v1_3_with_component_hashes(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_hash(
             HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
         )
@@ -90,7 +111,12 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_v1_3_with_component_external_references(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_hash(
             HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
         )
@@ -116,7 +142,12 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_v1_3_with_component_license(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz', license_str='MIT License')
+        c = Component(
+            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+            ), license_str='MIT License'
+        )
         bom.add_component(c)
         outputter: Json = get_instance(bom=bom, output_format=OutputFormat.JSON)
         self.assertIsInstance(outputter, JsonV1Dot3)
@@ -128,7 +159,12 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_v1_4_no_component_version(self) -> None:
         bom = Bom()
-        c = Component(name='setuptools', package_url_qualifiers='extension=tar.gz')
+        c = Component(
+            name='setuptools', bom_ref='pkg:pypi/setuptools?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', qualifiers='extension=tar.gz'
+            )
+        )
         bom.add_component(c)
 
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
@@ -141,8 +177,10 @@ class TestOutputJson(BaseJsonTestCase):
     def test_with_component_release_notes_pre_1_4(self) -> None:
         bom = Bom()
         c = Component(
-            name='setuptools', version='50.3.2', package_url_qualifiers='extension=tar.gz',
-            release_notes=ReleaseNotes(type='major'), licenses=[LicenseChoice(license_expression='MIT License')]
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            ), release_notes=ReleaseNotes(type='major'), licenses=[LicenseChoice(license_expression='MIT License')]
         )
         bom.add_component(c)
         outputter: Json = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_3)
@@ -161,7 +199,10 @@ class TestOutputJson(BaseJsonTestCase):
         ).decode(encoding='UTF-8')
 
         c = Component(
-            name='setuptools', version='50.3.2', qualifiers='extension=tar.gz',
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            ),
             release_notes=ReleaseNotes(
                 type='major', title="Release Notes Title",
                 featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
@@ -215,7 +256,12 @@ class TestOutputJson(BaseJsonTestCase):
         bom = Bom()
         nvd = VulnerabilitySource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489'))
         owasp = VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
-        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_vulnerability(Vulnerability(
             bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=nvd,
             references=[

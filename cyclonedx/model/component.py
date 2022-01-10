@@ -91,8 +91,10 @@ class Component:
             hashes=[
                 HashType(algorithm=HashAlgorithm.SHA_1, hash_value=sha1_hash)
             ],
-            component_type=ComponentType.FILE,
-            package_url_type='generic'
+            component_type=ComponentType.FILE, purl=PackageURL(
+                type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
+                version='0.0.0-{}'.format(sha1_hash[0:12])
+            )
         )
 
     def __init__(self, name: str, component_type: ComponentType = ComponentType.LIBRARY,
@@ -104,20 +106,12 @@ class Component:
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
-                 package_url_type: str = 'pypi', package_url_qualifiers: Optional[str] = None,
-                 package_url_subpath: Optional[str] = None,
                  # Deprecated parameters kept for backwards compatibility
-                 namespace: Optional[str] = None, qualifiers: Optional[str] = None, subpath: Optional[str] = None,
-                 license_str: Optional[str] = None
+                 namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
-        # Must be first - not part of the CycloneDX Spec, but used by our model
-        self.__purl_qualifiers: Optional[str] = package_url_qualifiers or qualifiers
-        self.__purl_subpath: Optional[str] = package_url_subpath or subpath
-        self.__purl_type: str = package_url_type
-        self.__vulnerabilites: List[Vulnerability] = []
-
         self.type = component_type
         self.mime_type = mime_type
+        self.bom_ref = bom_ref
         self.supplier = supplier
         self.author = author
         self.publisher = publisher
@@ -129,7 +123,7 @@ class Component:
         self.hashes = hashes or []
         self.licenses = licenses or []
         self.copyright = copyright
-        self.purl = purl.to_string() if purl else None
+        self.purl = purl
         self.external_references = external_references if external_references else []
         self.properties = properties
 
@@ -142,18 +136,6 @@ class Component:
             if not group:
                 self.group = namespace
 
-        if qualifiers:
-            warnings.warn(
-                '`qualifiers` is deprecated - if your Component is best represented with qualifiers, provide a '
-                'PackageURL via `purl` or use `package_url_qualifiers`', DeprecationWarning
-            )
-
-        if subpath:
-            warnings.warn(
-                '`subpath` is deprecated - if your Component is best represented with a subpath, provide a '
-                'PackageURL via `purl` or use `package_url_subpath`', DeprecationWarning
-            )
-
         if license_str:
             warnings.warn(
                 '`license_str` is deprecated and has been replaced with `licenses` to align with the CycloneDX '
@@ -165,8 +147,7 @@ class Component:
         # Added for 1.4
         self.release_notes = release_notes
 
-        # Last as depends on others having being set
-        self.bom_ref = bom_ref or self.to_package_url().to_string()
+        self.__vulnerabilites: List[Vulnerability] = []
 
     @property
     def type(self) -> ComponentType:
@@ -275,7 +256,6 @@ class Component:
     @group.setter
     def group(self, group: Optional[str]) -> None:
         self._group = group
-        self._recalculate_purl()
 
     @property
     def name(self) -> str:
@@ -294,7 +274,6 @@ class Component:
     @name.setter
     def name(self, name: str) -> None:
         self._name = name
-        self._recalculate_purl()
 
     @property
     def version(self) -> Optional[str]:
@@ -312,7 +291,6 @@ class Component:
     @version.setter
     def version(self, version: Optional[str]) -> None:
         self._version = version
-        self._recalculate_purl()
 
     @property
     def description(self) -> Optional[str]:
@@ -398,31 +376,21 @@ class Component:
         self._copyright = copyright
 
     @property
-    def purl(self) -> Optional[str]:
+    def purl(self) -> Optional[PackageURL]:
         """
         Specifies the package-url (PURL).
 
         The purl, if specified, must be valid and conform to the specification defined at:
         https://github.com/package-url/purl-spec
 
-        This method returns a string representation as JSON Serialisation would incorrectly encode the PackageURL
-        NamedTuple for us. You can get the PackageURL by calling `Component.to_package_url()`.
-
         Returns:
-            `str`
+            `PackageURL` or `None`
         """
         return self._purl
 
     @purl.setter
-    def purl(self, purl: Optional[str]) -> None:
-        if purl:
-            self._purl = purl
-        else:
-            self._purl = self.to_package_url().to_string()
-
-    def _recalculate_purl(self) -> None:
-        if self.group and self.name and self.version:
-            self.purl = self.to_package_url().to_string()
+    def purl(self, purl: Optional[PackageURL]) -> None:
+        self._purl = purl
 
     @property
     def external_references(self) -> List[ExternalReference]:
@@ -514,26 +482,6 @@ class Component:
             return f'https://pypi.org/project/{self.name}/{self.version}'
         else:
             return f'https://pypi.org/project/{self.name}'
-
-    def get_subpath(self) -> Optional[str]:
-        """
-        Get the subpath of this Component.
-
-        Returns:
-            Declared subpath of this Component as `str` if declared, else `None`.
-        """
-        p = self.to_package_url()
-        return p.subpath if hasattr(p, 'subpath') else None
-
-    def to_package_url(self) -> PackageURL:
-        """
-        Return a PackageURL representation of this Component.
-
-        Returns:
-            `packageurl.PackageURL` instance which represents this Component.
-        """""
-        return PackageURL(type=self.__purl_type, namespace=self.group, name=self.name, version=self.version,
-                          qualifiers=self.__purl_qualifiers, subpath=self.__purl_subpath)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Component):

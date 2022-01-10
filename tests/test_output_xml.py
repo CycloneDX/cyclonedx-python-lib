@@ -20,6 +20,7 @@ import base64
 from datetime import datetime, timezone
 from decimal import Decimal
 from os.path import dirname, join
+from packageurl import PackageURL
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, Note, NoteText, \
     OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
@@ -41,7 +42,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_simple_bom_v1_4(self) -> None:
         bom = Bom()
-        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
         outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_4)
         self.assertIsInstance(outputter, XmlV1Dot4)
         with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools.xml')) as expected_xml:
@@ -52,7 +58,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_simple_bom_v1_3(self) -> None:
         bom = Bom()
-        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
         outputter: Xml = get_instance(bom=bom)
         self.assertIsInstance(outputter, XmlV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')) as expected_xml:
@@ -63,7 +74,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_simple_bom_v1_2(self) -> None:
         bom = Bom()
-        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
         outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
         self.assertIsInstance(outputter, XmlV1Dot2)
         with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools.xml')) as expected_xml:
@@ -74,7 +90,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_simple_bom_v1_1(self) -> None:
         bom = Bom()
-        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
         outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_1)
         self.assertIsInstance(outputter, XmlV1Dot1)
         with open(join(dirname(__file__), 'fixtures/bom_v1.1_setuptools.xml')) as expected_xml:
@@ -85,7 +106,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_simple_bom_v1_0(self) -> None:
         bom = Bom()
-        bom.add_component(Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'))
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
         self.assertEqual(len(bom.components), 1)
         outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_0)
         self.assertIsInstance(outputter, XmlV1Dot0)
@@ -99,7 +125,12 @@ class TestOutputXml(BaseXmlTestCase):
         bom = Bom()
         nvd = VulnerabilitySource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489'))
         owasp = VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
-        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_vulnerability(Vulnerability(
             bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=nvd,
             references=[
@@ -153,7 +184,7 @@ class TestOutputXml(BaseXmlTestCase):
                 responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
             ),
             affects_targets=[
-                BomTarget(ref=c.purl or c.to_package_url().to_string(), versions=[
+                BomTarget(ref=c.bom_ref, versions=[
                     BomTargetVersionRange(version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED)
                 ])
             ]
@@ -171,7 +202,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_simple_bom_v1_3_with_vulnerabilities(self) -> None:
         bom = Bom()
-        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_vulnerability(Vulnerability(
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
@@ -199,7 +235,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_simple_bom_v1_0_with_vulnerabilities(self) -> None:
         bom = Bom()
-        c = Component(name='setuptools', version='50.3.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_vulnerability(Vulnerability(
             id='CVE-2018-7489', source_name='NVD', source_url='https://nvd.nist.gov/vuln/detail/CVE-2018-7489',
             ratings=[
@@ -227,7 +268,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_bom_v1_3_with_component_hashes(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_hash(
             HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
         )
@@ -242,7 +288,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_bom_v1_3_with_component_external_references(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz')
+        c = Component(
+            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+            )
+        )
         c.add_hash(
             HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
         )
@@ -269,7 +320,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_with_component_license(self) -> None:
         bom = Bom()
-        c = Component(name='toml', version='0.10.2', qualifiers='extension=tar.gz', license_str='MIT License')
+        c = Component(
+            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+            ), license_str='MIT License'
+        )
         bom.add_component(c)
         outputter: Xml = get_instance(bom=bom)
         self.assertIsInstance(outputter, XmlV1Dot3)
@@ -282,7 +338,12 @@ class TestOutputXml(BaseXmlTestCase):
 
     def test_with_no_component_version_1_4(self) -> None:
         bom = Bom()
-        bom.add_component(Component(name='setuptools', qualifiers='extension=tar.gz'))
+        bom.add_component(Component(
+            name='setuptools', bom_ref='pkg:pypi/setuptools?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', qualifiers='extension=tar.gz'
+            )
+        ))
         outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_4)
         self.assertIsInstance(outputter, XmlV1Dot4)
         with open(join(dirname(__file__),
@@ -295,8 +356,10 @@ class TestOutputXml(BaseXmlTestCase):
     def test_with_component_release_notes_pre_1_4(self) -> None:
         bom = Bom()
         c = Component(
-            name='toml', version='0.10.2', qualifiers='extension=tar.gz',
-            release_notes=ReleaseNotes(type='major'), license_str='MIT License'
+            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+            ), release_notes=ReleaseNotes(type='major'), license_str='MIT License'
         )
         bom.add_component(c)
         outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_3)
@@ -317,7 +380,10 @@ class TestOutputXml(BaseXmlTestCase):
         ).decode(encoding='UTF-8')
 
         c = Component(
-            name='setuptools', version='50.3.2', qualifiers='extension=tar.gz',
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            ),
             release_notes=ReleaseNotes(
                 type='major', title="Release Notes Title",
                 featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
