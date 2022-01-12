@@ -2,6 +2,7 @@
 
 [![shield_gh-workflow-test]][link_gh-workflow-test]
 [![shield_pypi-version]][link_pypi]
+[![shield_conda-forge-version]][link_conda-forge]
 [![shield_license]][license_file]  
 [![shield_website]][link_website]
 [![shield_slack]][link_slack]
@@ -52,7 +53,8 @@ See the [LICENSE][license_file] file for the full license.
 [contributing_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CONTRIBUTING.md
 
 [shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
-[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=Python&logoColor=white&label=PyPI "PyPI"
+[shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=pypi&logoColor=white&label=PyPI "PyPI"
+[shield_conda-forge-version]: https://img.shields.io/conda/vn/conda-forge/cyclonedx-python-lib?logo=anaconda&logoColor=white&label=conda-forge "conda-forge"
 [shield_license]: https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib "license"
 [shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
 [shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
@@ -60,6 +62,7 @@ See the [LICENSE][license_file] file for the full license.
 [shield_twitter-follow]: https://img.shields.io/badge/Twitter-follow-blue?logo=Twitter&logoColor=white "twitter follow"
 [link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/poetry.yml?query=branch%3Amain
 [link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
+[link_conda-forge]: https://anaconda.org/conda-forge/cyclonedx-python-lib
 [link_website]: https://cyclonedx.org/
 [link_slack]: https://cyclonedx.org/slack/invite
 [link_discussion]: https://groups.io/g/CycloneDX
