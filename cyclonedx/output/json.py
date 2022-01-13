@@ -28,6 +28,13 @@ from .serializer.json import CycloneDxJSONEncoder
 from ..model.bom import Bom
 
 
+ComponentDict = Dict[str, Union[
+    str,
+    List[Dict[str, str]],
+    List[Dict[str, Dict[str, str]]],
+    List[Dict[str, Union[str, List[Dict[str, str]]]]]]]
+
+
 class Json(BaseOutput, BaseSchemaVersion):
 
     def __init__(self, bom: Bom) -> None:
@@ -73,15 +80,19 @@ class Json(BaseOutput, BaseSchemaVersion):
                     del bom_json['metadata']['tools'][i]['externalReferences']
 
         # Iterate Components
-        for i in range(len(bom_json['components'])):
-            if not self.component_supports_author() and 'author' in bom_json['components'][i].keys():
-                del bom_json['components'][i]['author']
+        if 'components' in bom_json.keys():
+            for i in range(len(bom_json['components'])):
+                if not self.component_supports_author() and 'author' in bom_json['components'][i].keys():
+                    del bom_json['components'][i]['author']
 
-            if not self.component_supports_mime_type_attribute() and 'mime-type' in bom_json['components'][i].keys():
-                del bom_json['components'][i]['mime-type']
+                if not self.component_supports_mime_type_attribute() \
+                        and 'mime-type' in bom_json['components'][i].keys():
+                    del bom_json['components'][i]['mime-type']
 
-            if not self.component_supports_release_notes() and 'releaseNotes' in bom_json['components'][i].keys():
-                del bom_json['components'][i]['releaseNotes']
+                if not self.component_supports_release_notes() and 'releaseNotes' in bom_json['components'][i].keys():
+                    del bom_json['components'][i]['releaseNotes']
+        else:
+            bom_json['components'] = []
 
         # Iterate Vulnerabilities
         if 'vulnerabilities' in bom_json.keys():

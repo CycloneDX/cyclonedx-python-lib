@@ -25,7 +25,7 @@ from packageurl import PackageURL
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, Note, NoteText, \
     OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component
+from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.impact_analysis import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
     ImpactAnalysisAffectedStatus
 from cyclonedx.model.issue import IssueClassification, IssueType
@@ -430,6 +430,17 @@ class TestOutputXml(BaseXmlTestCase):
         with open(join(dirname(__file__),
                        'fixtures/bom_v1.4_setuptools_with_release_notes.xml')) as expected_xml:
             self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_bom_v1_3_with_metadata_component(self) -> None:
+        bom = Bom()
+        bom.metadata.component = Component(
+            name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY)
+        outputter: Xml = get_instance(bom=bom)
+        self.assertIsInstance(outputter, XmlV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_with_metadata_component.xml')) as expected_xml:
             self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()

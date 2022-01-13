@@ -41,6 +41,8 @@ class BomMetaData:
         if not self.tools:
             self.add_tool(ThisTool)
 
+        self.component: Optional[Component] = None
+
     @property
     def tools(self) -> List[Tool]:
         """
@@ -79,6 +81,30 @@ class BomMetaData:
     @timestamp.setter
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
+
+    @property
+    def component(self) -> Optional[Component]:
+        """
+        The (optional) component that the BOM describes.
+
+        Returns:
+            `cyclonedx.model.component.Component` instance for this Bom Metadata.
+        """
+        return self._component
+
+    @component.setter
+    def component(self, component: Component) -> None:
+        """
+        The (optional) component that the BOM describes.
+
+        Args:
+            component
+                `cyclonedx.model.component.Component` instance to add to this Bom Metadata.
+
+        Returns:
+            None
+        """
+        self._component = component
 
 
 class Bom:
