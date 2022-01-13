@@ -113,7 +113,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
             for tool in bom_metadata.tools:
                 self._add_tool(parent_element=tools_e, tool=tool)
 
-        if bom_metadata.component is not None:
+        if bom_metadata.component:
             metadata_e.append(self._add_component_element(component=bom_metadata.component))
 
     def _add_component_element(self, component: Component) -> ElementTree.Element:

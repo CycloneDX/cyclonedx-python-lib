@@ -85,7 +85,7 @@ class BomMetaData:
     @property
     def component(self) -> Optional[Component]:
         """
-        Get a Component of this Bom Metadata.
+        The (optional) component that the BOM describes.
 
         Returns:
             `cyclonedx.model.component.Component` instance for this Bom Metadata.
@@ -95,7 +95,7 @@ class BomMetaData:
     @component.setter
     def component(self, component: Component) -> None:
         """
-        Set a Component for this Bom Metadata.
+        The (optional) component that the BOM describes.
 
         Args:
             component
