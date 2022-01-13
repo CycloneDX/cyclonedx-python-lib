@@ -18,16 +18,16 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
-from unittest import TestCase
-from xml.etree import ElementTree
-
 import pkg_resources
+from lxml import etree
+from packageurl import PackageURL
+from unittest import TestCase
 
 from cyclonedx.model.bom import Bom
+from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat
 from cyclonedx.output.json import Json
 from cyclonedx.output.xml import Xml
-from cyclonedx.parser.environment import EnvironmentParser
 
 OUR_PACKAGE_NAME: str = 'cyclonedx-python-lib'
 OUR_PACKAGE_VERSION: str = pkg_resources.get_distribution(OUR_PACKAGE_NAME).version
@@ -36,8 +36,18 @@ OUR_PACKAGE_AUTHOR: str = 'Paul Horton'
 
 class TestE2EEnvironment(TestCase):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.bom: Bom = Bom()
+        cls.bom.add_component(
+            Component(
+                name=OUR_PACKAGE_NAME, author=OUR_PACKAGE_AUTHOR, version=OUR_PACKAGE_VERSION,
+                purl=PackageURL(type='pypi', name=OUR_PACKAGE_NAME, version=OUR_PACKAGE_VERSION)
+            )
+        )
+
     def test_json_defaults(self) -> None:
-        outputter: Json = get_instance(bom=Bom.from_parser(EnvironmentParser()), output_format=OutputFormat.JSON)
+        outputter: Json = get_instance(bom=TestE2EEnvironment.bom, output_format=OutputFormat.JSON)
         bom_json = json.loads(outputter.output_as_string())
         component_this_library = next(
             (x for x in bom_json['components'] if
@@ -50,24 +60,20 @@ class TestE2EEnvironment(TestCase):
         self.assertEqual(component_this_library['version'], OUR_PACKAGE_VERSION)
 
     def test_xml_defaults(self) -> None:
-        outputter: Xml = get_instance(bom=Bom.from_parser(EnvironmentParser()))
+        outputter: Xml = get_instance(bom=TestE2EEnvironment.bom)
 
         # Check we have cyclonedx-python-lib with Author, Name and Version
-        bom_xml_e = ElementTree.fromstring(outputter.output_as_string())
-        component_this_library = bom_xml_e.find('./{{{}}}components/{{{}}}component[@bom-ref=\'pkg:pypi/{}\']'.format(
-            outputter.get_target_namespace(), outputter.get_target_namespace(), '{}@{}'.format(
-                OUR_PACKAGE_NAME, OUR_PACKAGE_VERSION
-            )
-        ))
-
-        author = component_this_library.find('./{{{}}}author'.format(outputter.get_target_namespace()))
-        self.assertIsNotNone(author, 'No author element but one was expected.')
-        self.assertEqual(author.text, OUR_PACKAGE_AUTHOR)
-
-        name = component_this_library.find('./{{{}}}name'.format(outputter.get_target_namespace()))
-        self.assertIsNotNone(name, 'No name element but one was expected.')
-        self.assertEqual(name.text, OUR_PACKAGE_NAME)
-
-        version = component_this_library.find('./{{{}}}version'.format(outputter.get_target_namespace()))
-        self.assertIsNotNone(version, 'No version element but one was expected.')
-        self.assertEqual(version.text, OUR_PACKAGE_VERSION)
+        bom_xml_e: etree.ElementTree = etree.fromstring(bytes(outputter.output_as_string(), encoding='utf-8'))
+        component_this_library: etree.Element = bom_xml_e.xpath(
+            '/cdx:bom/cdx:components/cdx:component',
+            namespaces={
+                'cdx': outputter.get_target_namespace()
+            }
+        )[0]
+        for a in component_this_library:
+            if a.tag == 'author':
+                self.assertEqual(a.text, OUR_PACKAGE_AUTHOR)
+            if a.tag == 'name':
+                self.assertEqual(a.text, OUR_PACKAGE_NAME)
+            if a.tag == 'version':
+                self.assertEqual(a.text, OUR_PACKAGE_VERSION)

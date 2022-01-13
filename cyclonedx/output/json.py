@@ -18,133 +18,122 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
-from typing import Dict, List, Union
+from abc import abstractmethod
+from typing import Any, Dict, List, Optional, Union
 
 from . import BaseOutput
-from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3
-from ..model.component import Component
+from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
+    SchemaVersion1Dot4
+from .serializer.json import CycloneDxJSONEncoder
+from ..model.bom import Bom
 
 
 class Json(BaseOutput, BaseSchemaVersion):
 
+    def __init__(self, bom: Bom) -> None:
+        super().__init__(bom=bom)
+        self._json_output: str = ''
+
+    def generate(self, force_regeneration: bool = False) -> None:
+        if self.generated and not force_regeneration:
+            return
+
+        schema_uri: Optional[str] = self._get_schema_uri()
+        if not schema_uri:
+            # JSON not supported!
+            return
+
+        vulnerabilities: Dict[str, List[Dict[Any, Any]]] = {"vulnerabilities": []}
+        for component in self.get_bom().components:
+            for vulnerability in component.get_vulnerabilities():
+                vulnerabilities['vulnerabilities'].append(
+                    json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
+                )
+
+        bom_json = json.loads(json.dumps(self.get_bom(), cls=CycloneDxJSONEncoder))
+        bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
+        if self.bom_supports_vulnerabilities() and vulnerabilities['vulnerabilities']:
+            self._json_output = json.dumps(
+                {**self._create_bom_element(), **bom_json, **vulnerabilities}
+            )
+        else:
+            self._json_output = json.dumps({**self._create_bom_element(), **bom_json})
+
+        self.generated = True
+
+    def _specialise_output_for_schema_version(self, bom_json: Dict[Any, Any]) -> str:
+        if not self.bom_supports_metadata():
+            if 'metadata' in bom_json.keys():
+                del bom_json['metadata']
+        elif not self.bom_metadata_supports_tools():
+            del bom_json['metadata']['tools']
+        elif not self.bom_metadata_supports_tools_external_references():
+            for i in range(len(bom_json['metadata']['tools'])):
+                if 'externalReferences' in bom_json['metadata']['tools'][i].keys():
+                    del bom_json['metadata']['tools'][i]['externalReferences']
+
+        # Iterate Components
+        for i in range(len(bom_json['components'])):
+            if not self.component_supports_author() and 'author' in bom_json['components'][i].keys():
+                del bom_json['components'][i]['author']
+
+            if not self.component_supports_mime_type_attribute() and 'mime-type' in bom_json['components'][i].keys():
+                del bom_json['components'][i]['mime-type']
+
+            if not self.component_supports_release_notes() and 'releaseNotes' in bom_json['components'][i].keys():
+                del bom_json['components'][i]['releaseNotes']
+
+        # Iterate Vulnerabilities
+        if 'vulnerabilities' in bom_json.keys():
+            for i in range(len(bom_json['vulnerabilities'])):
+                print("Checking " + str(bom_json['vulnerabilities'][i]))
+
+        return json.dumps(bom_json)
+
     def output_as_string(self) -> str:
-        return json.dumps(self._get_json())
+        self.generate()
+        return self._json_output
 
-    def _get_json(self) -> object:
-        components = list(map(self._get_component_as_dict, self.get_bom().get_components()))
-
-        response = {
+    # Builder Methods
+    def _create_bom_element(self) -> Dict[str, Union[str, int]]:
+        return {
+            "$schema": str(self._get_schema_uri()),
             "bomFormat": "CycloneDX",
             "specVersion": str(self.get_schema_version()),
             "serialNumber": self.get_bom().get_urn_uuid(),
-            "version": 1,
-            "components": components
+            "version": 1
         }
 
-        if self.bom_supports_metadata():
-            response['metadata'] = self._get_metadata_as_dict()
-
-        return response
-
-    def _get_component_as_dict(self, component: Component) -> object:
-        c: Dict[str, Union[str, List[Dict[str, str]], List[Dict[str, Dict[str, str]]], List[
-            Dict[str, Union[str, List[Dict[str, str]]]]]]] = {
-            "type": component.get_type().value,
-            "name": component.get_name(),
-            "version": component.get_version(),
-            "purl": component.get_purl()
-        }
-
-        if component.get_namespace():
-            c['group'] = str(component.get_namespace())
-
-        if component.get_hashes():
-            hashes: List[Dict[str, str]] = []
-            for component_hash in component.get_hashes():
-                hashes.append({
-                    "alg": component_hash.get_algorithm().value,
-                    "content": component_hash.get_hash_value()
-                })
-            c['hashes'] = hashes
-
-        if component.get_license():
-            licenses: List[Dict[str, Dict[str, str]]] = [
-                {
-                    "license": {
-                        "name": str(component.get_license())
-                    }
-                }
-            ]
-            c['licenses'] = licenses
-
-        if self.component_supports_author() and component.get_author():
-            c['author'] = str(component.get_author())
-
-        if self.component_supports_external_references() and component.get_external_references():
-            ext_references: List[Dict[str, Union[str, List[Dict[str, str]]]]] = []
-            for ext_ref in component.get_external_references():
-                ref: Dict[str, Union[str, List[Dict[str, str]]]] = {
-                    "type": ext_ref.get_reference_type().value,
-                    "url": ext_ref.get_url()
-                }
-
-                if ext_ref.get_comment():
-                    ref['comment'] = str(ext_ref.get_comment())
-
-                if ext_ref.get_hashes():
-                    ref_hashes: List[Dict[str, str]] = []
-                    for ref_hash in ext_ref.get_hashes():
-                        ref_hashes.append({
-                            "alg": ref_hash.get_algorithm().value,
-                            "content": ref_hash.get_hash_value()
-                        })
-                    ref['hashes'] = ref_hashes
-
-                ext_references.append(ref)
-            c['externalReferences'] = ext_references
-
-        return c
-
-    def _get_metadata_as_dict(self) -> object:
-        bom_metadata = self.get_bom().get_metadata()
-        metadata: Dict[str, Union[str, List[Dict[str, Union[str, List[Dict[str, str]]]]]]] = {
-            "timestamp": bom_metadata.get_timestamp().isoformat()
-        }
-
-        if self.bom_metadata_supports_tools():
-            tools: List[Dict[str, Union[str, List[Dict[str, str]]]]] = []
-            for tool in bom_metadata.get_tools():
-                tool_dict: Dict[str, Union[str, List[Dict[str, str]]]] = {
-                    "vendor": tool.get_vendor(),
-                    "name": tool.get_name(),
-                    "version": tool.get_version()
-                }
-
-                if len(tool.get_hashes()) > 0:
-                    hashes: List[Dict[str, str]] = []
-                    for tool_hash in tool.get_hashes():
-                        hashes.append({
-                            "alg": tool_hash.get_algorithm().value,
-                            "content": tool_hash.get_hash_value()
-                        })
-                    tool_dict['hashes'] = hashes
-                tools.append(tool_dict)
-            metadata['tools'] = tools
-
-        return metadata
+    @abstractmethod
+    def _get_schema_uri(self) -> Optional[str]:
+        pass
 
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return None
 
 
 class JsonV1Dot1(Json, SchemaVersion1Dot1):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return None
 
 
 class JsonV1Dot2(Json, SchemaVersion1Dot2):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return 'http://cyclonedx.org/schema/bom-1.2a.schema.json'
 
 
 class JsonV1Dot3(Json, SchemaVersion1Dot3):
-    pass
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return 'http://cyclonedx.org/schema/bom-1.3.schema.json'
+
+
+class JsonV1Dot4(Json, SchemaVersion1Dot4):
+
+    def _get_schema_uri(self) -> Optional[str]:
+        return 'http://cyclonedx.org/schema/bom-1.4.schema.json'

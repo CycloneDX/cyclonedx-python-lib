@@ -26,3 +26,6 @@ html/
 
 # mypy caches
 /.mypy_cache
+
+# Exlude built docs
+docs/_build

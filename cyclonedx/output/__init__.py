@@ -23,7 +23,7 @@ import importlib
 import os
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import cast, Optional
+from typing import cast
 
 from ..model.bom import Bom
 
@@ -38,22 +38,36 @@ class SchemaVersion(Enum):
     V1_1: str = 'V1Dot1'
     V1_2: str = 'V1Dot2'
     V1_3: str = 'V1Dot3'
+    V1_4: str = 'V1Dot4'
 
 
 DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 
 
 class BaseOutput(ABC):
-    _bom: Bom
 
-    def __init__(self, bom: Bom) -> None:
+    def __init__(self, bom: Bom, **kwargs: int) -> None:
+        super().__init__(**kwargs)
         self._bom = bom
+        self._generated: bool = False
+
+    @property
+    def generated(self) -> bool:
+        return self._generated
+
+    @generated.setter
+    def generated(self, generated: bool) -> None:
+        self._generated = generated
 
     def get_bom(self) -> Bom:
         return self._bom
 
     def set_bom(self, bom: Bom) -> None:
         self._bom = bom
+
+    @abstractmethod
+    def generate(self, force_regeneration: bool = False) -> None:
+        pass
 
     @abstractmethod
     def output_as_string(self) -> str:
@@ -76,7 +90,7 @@ class BaseOutput(ABC):
         f_out.close()
 
 
-def get_instance(bom: Optional[Bom] = None, output_format: OutputFormat = OutputFormat.XML,
+def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = DEFAULT_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.

@@ -17,26 +17,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import os
 from unittest import TestCase
 
 from cyclonedx.model.bom import Bom, ThisTool, Tool
-from cyclonedx.model.component import Component
-from cyclonedx.parser.requirements import RequirementsFileParser
 
 
 class TestBom(TestCase):
-
-    def test_bom_simple(self) -> None:
-        parser = RequirementsFileParser(
-            requirements_file=os.path.join(os.path.dirname(__file__), 'fixtures/requirements-simple.txt')
-        )
-        bom = Bom.from_parser(parser=parser)
-
-        self.assertEqual(bom.component_count(), 1)
-        self.assertTrue(bom.has_component(
-            Component(name='setuptools', version='50.3.2')
-        ))
 
     def test_bom_metadata_tool_this_tool(self) -> None:
         self.assertEqual(ThisTool.get_vendor(), 'CycloneDX')
@@ -45,9 +31,8 @@ class TestBom(TestCase):
 
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()
-        self.assertEqual(len(bom.get_metadata().get_tools()), 1)
-
-        bom.get_metadata().add_tool(Tool(
-            vendor='TestVendor', name='TestTool', version='0.0.0'
-        ))
-        self.assertEqual(len(bom.get_metadata().get_tools()), 2)
+        self.assertEqual(len(bom.metadata.tools), 1)
+        bom.metadata.add_tool(
+            Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
+        )
+        self.assertEqual(len(bom.metadata.tools), 2)

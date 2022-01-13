@@ -25,8 +25,6 @@
                         <v:rating>
                             <v:score>
                                 <v:base>9.8</v:base>
-                                <v:impact>5.9</v:impact>
-                                <v:exploitability>3.0</v:exploitability>
                             </v:score>
                             <v:severity>Critical</v:severity>
                             <v:method>CVSSv3</v:method>

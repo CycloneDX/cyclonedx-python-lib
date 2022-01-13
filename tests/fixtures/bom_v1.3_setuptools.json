@@ -1,4 +1,5 @@
 {
+  "$schema": "http://cyclonedx.org/schema/bom-1.3.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.3",
   "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
@@ -18,7 +19,13 @@
       "type": "library",
       "name": "setuptools",
       "version": "50.3.2",
-      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "licenses": [
+        {
+          "expression": "MIT License"
+        }
+      ]
     }
   ]
 }

@@ -14,12 +14,10 @@
         <component type="library" bom-ref="pkg:pypi/toml@0.10.2?extension=tar.gz">
             <name>toml</name>
             <version>0.10.2</version>
-            <purl>pkg:pypi/toml@0.10.2?extension=tar.gz</purl>
             <licenses>
-                <license>
-                    <name>MIT License</name>
-                </license>
+                <expression>MIT License</expression>
             </licenses>
+            <purl>pkg:pypi/toml@0.10.2?extension=tar.gz</purl>
         </component>
     </components>
 </bom>
