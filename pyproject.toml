@@ -57,7 +57,7 @@ types-toml = "^0.10.0"
 [tool.poetry.dev-dependencies]
 tox = "^3.24.3"
 coverage = "^6.2"
-mypy = "^0.920"
+mypy = "^0.931"
 autopep8 = "^1.6.0"
 flake8 = "^4.0.1"
 flake8-annotations = {version = "^2.7.0", python = ">= 3.6.2"}
