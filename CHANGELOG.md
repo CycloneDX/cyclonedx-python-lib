@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.0 (2022-01-13)
+### Feature
+* Add support for `bom.metadata.component` ([#118](https://github.com/CycloneDX/cyclonedx-python-lib/issues/118)) ([`1ac31f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1ac31f4cb14b6c466e092ff38ee2aa472c883c5d))
+
 ## v1.0.0 (2022-01-13)
 
 Support for CycloneDX schema version 1.4 (#108)
