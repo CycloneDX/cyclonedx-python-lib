@@ -2,6 +2,30 @@
 
 <!--next-version-placeholder-->
 
+## v1.0.0 (2022-01-13)
+
+Support for CycloneDX schema version 1.4 (#108)
+
+### Breaking Changes
+Support for CycloneDX 1.4. This includes:
+* Support for `tools` having `externalReferences`
+* Allowing `version` for a `Component` to be optional in 1.4
+* Support for `releaseNotes` per `Component`
+* Support for the core schema implementation of Vulnerabilities (VEX)
+
+### Features
+* `$schema` is now included in JSON BOMs
+* Concrete Parsers how now been moved into downstream projects to keep this libraries focus on modelling and outputting CycloneDX - see https://github.com/CycloneDX/cyclonedx-python
+
+### Fixes
+* Unit tests now include schema validation (we've left schema validation out of the core library due to dependency bloat)
+* Ensure schema is adhered to in 1.0
+* URIs are now used throughout the library through a new `XsUri` class to provide URI validation
+
+### Other
+* Documentation is now hosted on readthedocs.org (https://cyclonedx-python-library.readthedocs.io/)
+* Added reference to release of this library on Anaconda
+
 ## v0.12.3 (2021-12-15)
 ### Fix
 * Removed requirements-parser as dependency (temp) as not available for Python 3 as Wheel ([#98](https://github.com/CycloneDX/cyclonedx-python-lib/issues/98)) ([`3677d9f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3677d9fd584b7c0eb715954bb7b8adc59c0bc9b1))
