@@ -58,6 +58,9 @@ class BaseSchemaVersion(ABC):
     def component_supports_release_notes(self) -> bool:
         return True
 
+    def bom_supports_dependencies(self) -> bool:
+        return True
+
     @abstractmethod
     def get_schema_version(self) -> str:
         raise NotImplementedError
@@ -131,6 +134,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
     def bom_supports_metadata(self) -> bool:
         return False
 
+    def bom_supports_dependencies(self) -> bool:
+        return False
+
     def component_supports_mime_type_attribute(self) -> bool:
         return False
 
@@ -160,6 +166,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
 
     def bom_requires_modified(self) -> bool:
         return True
+
+    def bom_supports_dependencies(self) -> bool:
+        return False
 
     def component_supports_author(self) -> bool:
         return False

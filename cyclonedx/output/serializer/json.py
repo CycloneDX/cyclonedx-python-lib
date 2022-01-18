@@ -16,16 +16,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
 from json import JSONEncoder
 from re import compile
-from typing import Any, Dict
+from typing import Any, Dict, Union, List
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
+from cyclonedx.model.component import Component
 from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model import XsUri
@@ -59,6 +59,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
         if isinstance(o, XsUri):
             return str(o)
 
+        # PackageURL
+        if isinstance(o, PackageURL):
+            return str(o.to_string())
+
         # Classes
         if isinstance(o, object):
             d: Dict[Any, Any] = {}
@@ -89,3 +93,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
 
         # Fallback to default
         super().default(o=o)
+
+    @classmethod
+    def serialize_component_dependencies(cls, c: Component) -> Dict[str, Union[str, List[str]]]:
+        return {
+            "ref": str(c.purl.to_string()),  # type: ignore [union-attr] # because of explicit check before calling this
+            "dependsOn": [str(obj.purl.to_string()) for obj in c.get_dependencies()]
+        }

@@ -51,6 +51,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         components_element = ElementTree.SubElement(self._root_bom_element, 'components')
 
         has_vulnerabilities: bool = False
+        has_dependencies: bool = False
         for component in self.get_bom().components:
             component_element = self._add_component_element(component=component)
             components_element.append(component_element)
@@ -71,6 +72,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
             elif component.has_vulnerabilities():
                 has_vulnerabilities = True
 
+            if component.has_dependencies():
+                has_dependencies = True
+
         if self.bom_supports_vulnerabilities() and has_vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
             for component in self.get_bom().components:
@@ -78,6 +82,11 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     vulnerabilities_element.append(
                         self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
                     )
+        if self.bom_supports_dependencies() and has_dependencies:
+            dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
+            for component in self.get_bom().components:
+                if component.has_dependencies() and component.purl:
+                    dependencies_element.append(self._construct_component_dependencies_subelement(component))
 
         self.generated = True
 
@@ -543,6 +552,15 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 ElementTree.SubElement(v_source_element, 'name').text = source.name
             if source.url:
                 ElementTree.SubElement(v_source_element, 'url').text = str(source.url)
+
+    @staticmethod
+    def _construct_component_dependencies_subelement(component: Component) -> ElementTree.Element:
+        dependency_element = ElementTree.Element("dependency")
+        # since component.purl can be none there is an explicit check for this before calling this and ignore for error
+        dependency_element.set("ref", str(component.purl.to_string()))  # type: ignore [union-attr]
+        for dependency in component.get_dependencies():
+            ElementTree.SubElement(dependency_element, "dependency", {"ref": dependency.purl})
+        return dependency_element
 
 
 class XmlV1Dot0(Xml, SchemaVersion1Dot0):

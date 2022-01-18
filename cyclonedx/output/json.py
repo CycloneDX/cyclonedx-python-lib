@@ -27,7 +27,6 @@ from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, S
 from .serializer.json import CycloneDxJSONEncoder
 from ..model.bom import Bom
 
-
 ComponentDict = Dict[str, Union[
     str,
     List[Dict[str, str]],
@@ -56,16 +55,22 @@ class Json(BaseOutput, BaseSchemaVersion):
                 vulnerabilities['vulnerabilities'].append(
                     json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
                 )
+        dependencies: Dict[str, List[Dict[Any, Any]]] = {"dependencies": []}
+        for component in self.get_bom().components:
+            if component.has_dependencies() and component.purl:
+                dependencies["dependencies"].append(CycloneDxJSONEncoder.serialize_component_dependencies(component))
 
         bom_json = json.loads(json.dumps(self.get_bom(), cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
-        if self.bom_supports_vulnerabilities() and vulnerabilities['vulnerabilities']:
-            self._json_output = json.dumps(
-                {**self._create_bom_element(), **bom_json, **vulnerabilities}
-            )
-        else:
-            self._json_output = json.dumps({**self._create_bom_element(), **bom_json})
 
+        data_to_generate_json = {**self._create_bom_element(), **bom_json}
+        if self.bom_supports_vulnerabilities() and vulnerabilities['vulnerabilities']:
+            data_to_generate_json.update(vulnerabilities)
+
+        if self.bom_supports_dependencies() and dependencies['dependencies']:
+            data_to_generate_json.update(dependencies)
+
+        self._json_output = json.dumps(data_to_generate_json)
         self.generated = True
 
     def _specialise_output_for_schema_version(self, bom_json: Dict[Any, Any]) -> str:

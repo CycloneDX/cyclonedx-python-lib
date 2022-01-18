@@ -20,6 +20,8 @@ import base64
 from datetime import datetime, timezone
 from decimal import Decimal
 from os.path import dirname, join
+
+from cyclonedx.model.dependency import Dependency
 from packageurl import PackageURL
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, Note, NoteText, \
@@ -117,6 +119,66 @@ class TestOutputXml(BaseXmlTestCase):
         self.assertIsInstance(outputter, XmlV1Dot0)
         with open(join(dirname(__file__), 'fixtures/bom_v1.0_setuptools.xml')) as expected_xml:
             self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_0)
+            self.assertEqualXmlBom(outputter.output_as_string(), expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_4_with_dependencies(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
+        c.add_dependency(Dependency(purl=PackageURL(
+            type='pypi', name='pymongo', version='3.2.1', qualifiers='extension=whl'
+        )))
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, XmlV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools_with_dependencies.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_3_with_dependencies(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
+        c.add_dependency(Dependency(purl=PackageURL(
+            type='pypi', name='pymongo', version='3.2.1', qualifiers='extension=whl'
+        )))
+        bom.add_component(c)
+        outputter: Xml = get_instance(bom=bom)
+        self.assertIsInstance(outputter, XmlV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools_with_dependencies.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_2_with_dependencies(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
+        c.add_dependency(Dependency(purl=PackageURL(
+            type='pypi', name='pymongo', version='3.2.1', qualifiers='extension=whl'
+        )))
+        bom.add_component(c)
+        outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
+        self.assertIsInstance(outputter, XmlV1Dot2)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools_with_dependencies.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_2)
             self.assertEqualXmlBom(outputter.output_as_string(), expected_xml.read(),
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()

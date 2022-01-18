@@ -28,6 +28,7 @@ from packageurl import PackageURL  # type: ignore
 from . import ExternalReference, HashAlgorithm, HashType, OrganizationalEntity, sha1sum, LicenseChoice, Property
 from .release_note import ReleaseNotes
 from .vulnerability import Vulnerability
+from.dependency import Dependency
 
 
 class ComponentScope(Enum):
@@ -106,6 +107,7 @@ class Component:
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
+                 dependencies: Optional[List[Dependency]] = None,
                  # Deprecated parameters kept for backwards compatibility
                  namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
@@ -126,6 +128,7 @@ class Component:
         self.purl = purl
         self.external_references = external_references if external_references else []
         self.properties = properties
+        self.__dependencies = dependencies or []
 
         # Deprecated for 1.4, but kept for some backwards compatibility
         if namespace:
@@ -476,6 +479,37 @@ class Component:
              `True` if this Component has 1 or more vulnerabilities, `False` otherwise.
         """
         return bool(self.get_vulnerabilities())
+
+    def has_dependencies(self) -> bool:
+        """
+        Does this Component have any dependencies?
+
+        Returns:
+             `True` if this Component has 1 or more dependency, `False` otherwise.
+        """
+        return bool(self.__dependencies)
+
+    def get_dependencies(self) -> List[Dependency]:
+        """
+        Get all the Dependencies for this Component.
+
+        Returns:
+             List of `Dependency` objects assigned to this Component.
+        """
+        return self.__dependencies
+
+    def add_dependency(self, dependency: Dependency) -> None:
+        """
+        Add a Dependency to this Component.
+
+        Args:
+            dependency:
+                `cyclonedx.model.dependency.Dependency` instance to add to this Component.
+
+        Returns:
+            None
+        """
+        self.__dependencies.append(dependency)
 
     def get_pypi_url(self) -> str:
         if self.version:

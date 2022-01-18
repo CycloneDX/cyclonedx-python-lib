@@ -20,6 +20,8 @@ import base64
 from decimal import Decimal
 from datetime import datetime, timezone
 from os.path import dirname, join
+
+from cyclonedx.model.dependency import Dependency
 from packageurl import PackageURL
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, LicenseChoice, Note, \
@@ -88,6 +90,68 @@ class TestOutputJson(BaseJsonTestCase):
         with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools.json')) as expected_json:
             self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_2)
             self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
+
+    def test_simple_bom_v1_4_with_dependencies(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
+        c.add_dependency(Dependency(purl=PackageURL(
+            type='pypi', name='pymongo', version='3.2.1', qualifiers='extension=whl'
+        )))
+        bom.add_component(c)
+
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, JsonV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools_with_dependencies.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
+
+    def test_simple_bom_v1_3_with_dependencies(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            ), license_str='MIT License'
+        )
+        c.add_dependency(Dependency(purl=PackageURL(
+            type='pypi', name='pymongo', version='3.2.1', qualifiers='extension=whl'
+        )))
+        bom.add_component(c)
+
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools_with_dependencies.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
+
+    def test_simple_bom_v1_2_with_dependencies(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            ), author='Test Author'
+        )
+        c.add_dependency(Dependency(purl=PackageURL(
+            type='pypi', name='pymongo', version='3.2.1', qualifiers='extension=whl'
+        )))
+        bom.add_component(c)
+
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_2)
+        self.assertIsInstance(outputter, JsonV1Dot2)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools_with_dependencies.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_2)
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+
             expected_json.close()
 
     def test_bom_v1_3_with_component_hashes(self) -> None:
