@@ -27,6 +27,7 @@ from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, S
 from .serializer.json import CycloneDxJSONEncoder
 from ..model.bom import Bom
 
+
 ComponentDict = Dict[str, Union[
     str,
     List[Dict[str, str]],

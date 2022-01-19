@@ -28,7 +28,7 @@ from packageurl import PackageURL  # type: ignore
 from . import ExternalReference, HashAlgorithm, HashType, OrganizationalEntity, sha1sum, LicenseChoice, Property
 from .release_note import ReleaseNotes
 from .vulnerability import Vulnerability
-from.dependency import Dependency
+from .dependency import Dependency
 
 
 class ComponentScope(Enum):
