@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.1 (2022-01-19)
+### Fix
+* Bump dependencies ([#136](https://github.com/CycloneDX/cyclonedx-python-lib/issues/136)) ([`18ec498`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/18ec4987f6aa4a259d30000a19aa6ee1d49681d1))
+
 ## v1.1.0 (2022-01-13)
 ### Feature
 * Add support for `bom.metadata.component` ([#118](https://github.com/CycloneDX/cyclonedx-python-lib/issues/118)) ([`1ac31f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1ac31f4cb14b6c466e092ff38ee2aa472c883c5d))
