@@ -397,7 +397,7 @@ class Component:
     @property
     def cpe(self) -> Optional[str]:
         """
-        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. 
+        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification.
         See https://nvd.nist.gov/products/cpe
 
         Returns:

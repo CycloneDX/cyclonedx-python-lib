@@ -121,6 +121,92 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
+    def test_simple_bom_v1_4_with_cpe(self) -> None:
+        bom = Bom()
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
+        outputter: Xml = get_instance(bom=bom, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, XmlV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools_with_cpe.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_3_with_cpe(self) -> None:
+        bom = Bom()
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
+        outputter: Xml = get_instance(bom=bom)
+        self.assertIsInstance(outputter, XmlV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools_with_cpe.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualXmlBom(a=outputter.output_as_string(), b=expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_2_with_cpe(self) -> None:
+        bom = Bom()
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
+        outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
+        self.assertIsInstance(outputter, XmlV1Dot2)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools_with_cpe.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_2)
+            self.assertEqualXmlBom(outputter.output_as_string(), expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_1_with_cpe(self) -> None:
+        bom = Bom()
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
+        outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_1)
+        self.assertIsInstance(outputter, XmlV1Dot1)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.1_setuptools_with_cpe.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_1)
+            self.assertEqualXmlBom(outputter.output_as_string(), expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
+    def test_simple_bom_v1_0_with_cpe(self) -> None:
+        bom = Bom()
+        bom.add_component(Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        ))
+        self.assertEqual(len(bom.components), 1)
+        outputter = get_instance(bom=bom, schema_version=SchemaVersion.V1_0)
+        self.assertIsInstance(outputter, XmlV1Dot0)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.0_setuptools_with_cpe.xml')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=SchemaVersion.V1_0)
+            self.assertEqualXmlBom(outputter.output_as_string(), expected_xml.read(),
+                                   namespace=outputter.get_target_namespace())
+            expected_xml.close()
+
     def test_simple_bom_v1_4_with_vulnerabilities(self) -> None:
         bom = Bom()
         nvd = VulnerabilitySource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489'))

@@ -175,13 +175,13 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 else:
                     ElementTree.SubElement(licenses_e, 'expression').text = license.expression
 
-        # purl
-        if component.purl:
-            ElementTree.SubElement(component_element, 'purl').text = component.purl.to_string()
-
         # cpe
         if component.cpe:
             ElementTree.SubElement(component_element, 'cpe').text = component.cpe
+
+        # purl
+        if component.purl:
+            ElementTree.SubElement(component_element, 'purl').text = component.purl.to_string()
 
         # modified
         if self.bom_requires_modified():
