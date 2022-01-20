@@ -392,11 +392,11 @@ class Component:
     @purl.setter
     def purl(self, purl: Optional[PackageURL]) -> None:
         self._purl = purl
-        
+
     @property
     def cpe(self) -> Optional[str]:
         """
-        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification.
+        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. See https://nvd.nist.gov/products/cpe
 
         Returns:
             `str` if set else `None`
@@ -405,7 +405,7 @@ class Component:
 
     @cpe.setter
     def cpe(self, cpe: Optional[str]) -> None:
-        self._cpe = cpe        
+        self._cpe = cpe
 
     @property
     def external_references(self) -> List[ExternalReference]:
@@ -506,8 +506,8 @@ class Component:
     def __hash__(self) -> int:
         return hash((
             self.author, self.bom_ref, self.copyright, self.description, str(self.external_references), self.group,
-            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl, self.cpe,
-            self.release_notes, self.scope, self.supplier, self.type, self.version
+            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl, 
+            self.release_notes, self.scope, self.supplier, self.type, self.version, self.cpe
         ))
 
     def __repr__(self) -> str:
