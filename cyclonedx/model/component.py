@@ -106,8 +106,9 @@ class Component:
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
+                 cpe: Optional[str] = None,
                  # Deprecated parameters kept for backwards compatibility
-                 namespace: Optional[str] = None, license_str: Optional[str] = None, cpe: Optional[str] = None
+                 namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
         self.type = component_type
         self.mime_type = mime_type
@@ -396,7 +397,8 @@ class Component:
     @property
     def cpe(self) -> Optional[str]:
         """
-        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. See https://nvd.nist.gov/products/cpe
+        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. 
+        See https://nvd.nist.gov/products/cpe
 
         Returns:
             `str` if set else `None`
@@ -506,7 +508,7 @@ class Component:
     def __hash__(self) -> int:
         return hash((
             self.author, self.bom_ref, self.copyright, self.description, str(self.external_references), self.group,
-            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl, 
+            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl,
             self.release_notes, self.scope, self.supplier, self.type, self.version, self.cpe
         ))
 
