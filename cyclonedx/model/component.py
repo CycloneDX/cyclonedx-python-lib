@@ -103,7 +103,7 @@ class Component:
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
                  hashes: Optional[List[HashType]] = None, licenses: Optional[List[LicenseChoice]] = None,
-                 copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
+                 copyright: Optional[str] = None, purl: Optional[PackageURL] = None, cpe: Optional[str] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  # Deprecated parameters kept for backwards compatibility
@@ -124,6 +124,7 @@ class Component:
         self.licenses = licenses or []
         self.copyright = copyright
         self.purl = purl
+        self.cpe = cpe
         self.external_references = external_references if external_references else []
         self.properties = properties
 
@@ -391,6 +392,20 @@ class Component:
     @purl.setter
     def purl(self, purl: Optional[PackageURL]) -> None:
         self._purl = purl
+        
+    @property
+    def cpe(self) -> Optional[str]:
+        """
+        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._cpe
+
+    @cpe.setter
+    def cpe(self, cpe: Optional[str]) -> None:
+        self._cpe = cpe        
 
     @property
     def external_references(self) -> List[ExternalReference]:
@@ -491,7 +506,7 @@ class Component:
     def __hash__(self) -> int:
         return hash((
             self.author, self.bom_ref, self.copyright, self.description, str(self.external_references), self.group,
-            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl,
+            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl, self.cpe,
             self.release_notes, self.scope, self.supplier, self.type, self.version
         ))
 

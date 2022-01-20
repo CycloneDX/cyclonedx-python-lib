@@ -179,6 +179,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if component.purl:
             ElementTree.SubElement(component_element, 'purl').text = component.purl.to_string()
 
+        # cpe
+        if component.cpe:
+            ElementTree.SubElement(component_element, 'cpe').text = component.cpe
+
         # modified
         if self.bom_requires_modified():
             ElementTree.SubElement(component_element, 'modified').text = 'false'
