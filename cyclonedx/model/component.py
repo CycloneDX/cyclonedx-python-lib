@@ -103,11 +103,11 @@ class Component:
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
                  hashes: Optional[List[HashType]] = None, licenses: Optional[List[LicenseChoice]] = None,
-                 copyright: Optional[str] = None, purl: Optional[PackageURL] = None, cpe: Optional[str] = None,
+                 copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  # Deprecated parameters kept for backwards compatibility
-                 namespace: Optional[str] = None, license_str: Optional[str] = None
+                 namespace: Optional[str] = None, license_str: Optional[str] = None, cpe: Optional[str] = None
                  ) -> None:
         self.type = component_type
         self.mime_type = mime_type
