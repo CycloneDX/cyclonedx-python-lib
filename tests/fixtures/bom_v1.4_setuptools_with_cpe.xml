@@ -40,8 +40,8 @@
         <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
             <name>setuptools</name>
             <version>50.3.2</version>
+            <cpe>cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*</cpe>
             <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
-            <cpe>cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*</cpe>			
         </component>
     </components>
 </bom>
