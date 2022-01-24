@@ -106,6 +106,7 @@ class Component:
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
+                 cpe: Optional[str] = None,
                  # Deprecated parameters kept for backwards compatibility
                  namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
@@ -124,6 +125,7 @@ class Component:
         self.licenses = licenses or []
         self.copyright = copyright
         self.purl = purl
+        self.cpe = cpe
         self.external_references = external_references if external_references else []
         self.properties = properties
 
@@ -393,6 +395,21 @@ class Component:
         self._purl = purl
 
     @property
+    def cpe(self) -> Optional[str]:
+        """
+        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification.
+        See https://nvd.nist.gov/products/cpe
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._cpe
+
+    @cpe.setter
+    def cpe(self, cpe: Optional[str]) -> None:
+        self._cpe = cpe
+
+    @property
     def external_references(self) -> List[ExternalReference]:
         """
         Provides the ability to document external references related to the component or to the project the component
@@ -492,7 +509,7 @@ class Component:
         return hash((
             self.author, self.bom_ref, self.copyright, self.description, str(self.external_references), self.group,
             str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl,
-            self.release_notes, self.scope, self.supplier, self.type, self.version
+            self.release_notes, self.scope, self.supplier, self.type, self.version, self.cpe
         ))
 
     def __repr__(self) -> str:

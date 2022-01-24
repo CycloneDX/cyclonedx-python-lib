@@ -175,6 +175,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 else:
                     ElementTree.SubElement(licenses_e, 'expression').text = license.expression
 
+        # cpe
+        if component.cpe:
+            ElementTree.SubElement(component_element, 'cpe').text = component.cpe
+
         # purl
         if component.purl:
             ElementTree.SubElement(component_element, 'purl').text = component.purl.to_string()

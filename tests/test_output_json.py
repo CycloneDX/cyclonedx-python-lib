@@ -90,6 +90,60 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
             expected_json.close()
 
+    def test_simple_bom_v1_4_with_cpe(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            )
+        )
+        bom.add_component(c)
+
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, JsonV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_setuptools_with_cpe.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
+
+    def test_simple_bom_v1_3_with_cpe(self) -> None:
+        bom = Bom()
+        c = Component(
+            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+            purl=PackageURL(
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+            ), license_str='MIT License'
+        )
+        bom.add_component(c)
+
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_setuptools_with_cpe.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
+
+    def test_simple_bom_v1_2_with_cpe(self) -> None:
+        bom = Bom()
+        bom.add_component(
+            Component(
+                name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+                cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*',
+                purl=PackageURL(
+                    type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+                ), author='Test Author'
+            )
+        )
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_2)
+        self.assertIsInstance(outputter, JsonV1Dot2)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.2_setuptools_with_cpe.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_2)
+            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
+            expected_json.close()
+
     def test_bom_v1_3_with_component_hashes(self) -> None:
         bom = Bom()
         c = Component(
