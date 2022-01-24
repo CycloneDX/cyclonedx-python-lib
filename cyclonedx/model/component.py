@@ -112,7 +112,7 @@ class Component:
                  ) -> None:
         self.type = component_type
         self.mime_type = mime_type
-        self.bom_ref = bom_ref if bom_ref else str(uuid4())
+        self.bom_ref = bom_ref or str(uuid4())
         self.supplier = supplier
         self.author = author
         self.publisher = publisher
