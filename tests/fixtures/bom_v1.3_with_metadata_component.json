@@ -14,6 +14,7 @@
       }
     ],
     "component": {
+      "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
       "type": "library",
       "name": "cyclonedx-python-lib",
       "version": "1.0.0"

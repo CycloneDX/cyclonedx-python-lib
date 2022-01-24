@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from os.path import dirname, join
 from packageurl import PackageURL
+from unittest.mock import Mock, patch
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, Note, NoteText, \
     OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
@@ -434,10 +435,13 @@ class TestOutputXml(BaseXmlTestCase):
                                    namespace=outputter.get_target_namespace())
             expected_xml.close()
 
-    def test_bom_v1_3_with_metadata_component(self) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value='5d82790b-3139-431d-855a-ab63d14a18bb')
+    def test_bom_v1_3_with_metadata_component(self, mock_uuid: Mock) -> None:
         bom = Bom()
         bom.metadata.component = Component(
-            name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY)
+            name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        )
+        mock_uuid.assert_called()
         outputter: Xml = get_instance(bom=bom)
         self.assertIsInstance(outputter, XmlV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_with_metadata_component.xml')) as expected_xml:
