@@ -188,8 +188,10 @@ class Component:
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
 
+        If a value was not provided in the constructor, a UUIDv4 will have been assigned.
+
         Returns:
-            `str` as a unique identifiers for this Component if set else `None`
+            `str` as a unique identifiers for this Component
         """
         return self._bom_ref
 
