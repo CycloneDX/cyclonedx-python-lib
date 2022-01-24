@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.0 (2022-01-24)
+### Feature
+* Add CPE to component ([#138](https://github.com/CycloneDX/cyclonedx-python-lib/issues/138)) ([`269ee15`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/269ee155f203d5771c56edb92f7279466bf2012f))
+
 ## v1.1.1 (2022-01-19)
 ### Fix
 * Bump dependencies ([#136](https://github.com/CycloneDX/cyclonedx-python-lib/issues/136)) ([`18ec498`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/18ec4987f6aa4a259d30000a19aa6ee1d49681d1))
