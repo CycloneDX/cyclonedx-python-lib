@@ -21,6 +21,7 @@ from decimal import Decimal
 from datetime import datetime, timezone
 from os.path import dirname, join
 from packageurl import PackageURL
+from unittest.mock import Mock, patch
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, LicenseChoice, Note, \
     NoteText, OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri
@@ -382,10 +383,13 @@ class TestOutputJson(BaseJsonTestCase):
             self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
             expected_json.close()
 
-    def test_bom_v1_3_with_metadata_component(self) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value='be2c6502-7e9a-47db-9a66-e34f729810a3')
+    def test_bom_v1_3_with_metadata_component(self, mock_uuid: Mock) -> None:
         bom = Bom()
         bom.metadata.component = Component(
-            name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY)
+            name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        )
+        mock_uuid.assert_called()
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON)
         self.assertIsInstance(outputter, JsonV1Dot3)
         with open(join(dirname(__file__), 'fixtures/bom_v1.3_with_metadata_component.json')) as expected_json:

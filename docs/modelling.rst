@@ -15,13 +15,17 @@ Examples
 From a Parser
 ~~~~~~~~~~~~~
 
+    **Note:** Concreate parser implementations were moved out of this library and into `CycloneDX Python`_ as of version
+    ``1.0.0``.
+
 .. code-block:: python
 
     from cyclonedx.model.bom import Bom
-    from cyclonedx.parser.environment import EnvironmentParser
+    from cyclonedx_py.parser.environment import EnvironmentParser
 
     parser = EnvironmentParser()
     bom = Bom.from_parser(parser=parser)
 
 
+.. _CycloneDX Python: https://github.com/CycloneDX/cyclonedx-python
 .. _Jake: https://pypi.org/project/jake
