@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.3.0 (2022-01-24)
+### Feature
+* `bom-ref` for Component and Vulnerability default to a UUID ([#142](https://github.com/CycloneDX/cyclonedx-python-lib/issues/142)) ([`3953bb6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3953bb676f423c325ca4d80f3fcee33ad042ad93))
+
 ## v1.2.0 (2022-01-24)
 ### Feature
 * Add CPE to component ([#138](https://github.com/CycloneDX/cyclonedx-python-lib/issues/138)) ([`269ee15`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/269ee155f203d5771c56edb92f7279466bf2012f))
