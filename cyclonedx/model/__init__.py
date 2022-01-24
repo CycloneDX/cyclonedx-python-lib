@@ -50,6 +50,166 @@ def sha1sum(filename: str) -> str:
             h.update(byte_block)
     return h.hexdigest()
 
+class DataFlow(Enum):
+    """
+    This is out internal representation of the dataFlowType simple type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/xml/#type_dataFlowType
+    """
+    INBOUND = "inbound"
+    OUTBOUND = "outbound"
+    BI_DIRECTIONAL = "bi-directional"
+    UNKNOWN = "unknown"
+
+class Data:
+    """
+    This is our internal representation of the `dataClassificationType` complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema for dataClassificationType: https://cyclonedx.org/docs/1.4/xml/#type_dataClassificationType
+    """
+
+    def __init__(self, flow: DataFlow, classification: str) -> None:
+        if not flow and not classification:
+            raise NoPropertiesProvidedException(
+                'One of `flow` or `classification` must be supplied - neither supplied'
+            )
+
+        self.flow = flow
+        self.classification = classification
+
+    @property
+    def flow(self) -> DataFlow:
+        """
+        Specifies the data flow for the service.
+
+        Returns:
+            `DataFlow`
+        """
+        return self._flow
+
+    @flow.setter
+    def flow(self, flow: DataFlow) -> None:
+        self._flow = flow
+
+    @property
+    def classification(self) -> str:
+        """
+        Specifies the classification of the data for the service.
+
+        Returns:
+            `str`
+        """
+        return self._content_type
+
+    @classification.setter
+    def classification(self, classification: str) -> None:
+        self._classification = classification
+
+class SignatureAlgorithm(Enum):
+    """
+    This is out internal representation of the algorithm simple type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/json/#tab-pane_signature_oneOf_i2_algorithm_oneOf_i0
+    """
+    RS256 = "RS256"
+    RS384 = "RS384"
+    RS512 = "RS512"
+    PS256 = "PS256"
+    PS384 = "PS384"
+    PS512 = "PS512"
+    ES256 = "ES256"
+    ES384 = "ES384"
+    ES512 = "ES512"
+    ED25519 = "Ed25519"
+    ED448 = "Ed448"
+    HS256 = "HS256"
+    HS384 = "HS384"
+    HS512 = "HS512"
+
+class SignaturePublicKeyKty(Enum):
+    """
+    This is our internal representation of the kty simple type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/json/#signature_oneOf_i2_publicKey_kty
+    """
+    EC = "EC"
+    OKP = "OKP"
+    RSA = "RSA"
+
+class SignaturePublicKeyCrv(Enum):
+    """
+    This is our internal representation of the crv simple type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/json/#signature_oneOf_i2_publicKey_allOf_i1_then_crv
+    """
+    ED25519 = "Ed25519"
+    Ed448 = "Ed448"
+
+class SignaturePublicKey:
+    """
+    This is our internal representation of the public key complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/json/#signature_oneOf_i2_publicKey
+        JSON only
+    """
+    def __init__(self, kty: SignaturePublicKeyKty = None, crv: Optional[SignaturePublicKeyCrv] = None,
+                 x: Optional[str] = None, y: Optional[str] = None, 
+                 n: Optional[str] = None, e: Optional[str] = None,
+                 value: str = None) -> None:
+        if not kty and not value:
+            raise NoPropertiesProvidedException(
+                '`kty` must be supplied'
+            )
+        if kty == SignaturePublicKeyKty.EC and not crv and not x and not y:
+            raise NoPropertiesProvidedException(
+                'if `kty` equals EC, `crv`, `x` and `y` must be supplied'
+            )
+        if kty == SignaturePublicKeyKty.OKP and not crv and not x:
+                        raise NoPropertiesProvidedException(
+                'if `kty` equals OKP, `crv`, and `x` must be supplied'
+            )
+        if kty == SignaturePublicKeyKty.RSA and not n and not e:
+                        raise NoPropertiesProvidedException(
+                'if `kty` equals RSA, `n`, and `e` must be supplied'
+            )
+        self.kty = kty
+        self.crv = crv
+        self.x = x
+        self.y = y
+        self.n = n
+        self.e = e
+        self.value = value
+
+class Signature:
+    """
+    This is out internal representation of the signature complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/json/#signature
+        JSON only
+    """
+
+    def __init__(self, algorithm: SignatureAlgorithm, key_id: Optional[str],
+                 public_key: Optional[SignaturePublicKey] = None,
+                 certificate_path: Optional[List[str]] = None,
+                 excludes: Optional[List[str]] = None,
+                 value: str = None) -> None:
+        if not algorithm and not value:
+            raise NoPropertiesProvidedException(
+                'One of `algorithm` or `value` must be supplied - neither supplied'
+            )
+        self.algorithm = algorithm
+        self.key_id = key_id
+        self.public_key = public_key
+        self.certificate_path = certificate_path
+        self.excludes = excludes
+        self.value = value
 
 class Encoding(Enum):
     """

@@ -26,7 +26,7 @@ class IssueClassification(Enum):
     This is out internal representation of the enum `issueClassification`.
 
     .. note::
-        See the CycloneDX Schema definition: hhttps://cyclonedx.org/docs/1.4/xml/#type_issueClassification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueClassification
     """
     DEFECT = 'defect'
     ENHANCEMENT = 'enhancement'
