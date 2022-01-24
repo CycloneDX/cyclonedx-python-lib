@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import Mock, patch
 
 from cyclonedx.model import ExternalReference, ExternalReferenceType
 from cyclonedx.model.component import Component, ComponentType
@@ -6,18 +7,35 @@ from cyclonedx.model.component import Component, ComponentType
 
 class TestModelComponent(TestCase):
 
-    def test_empty_basic_component(self) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
+    def test_empty_basic_component(self, mock_uuid: Mock) -> None:
         c = Component(
             name='test-component', version='1.2.3'
         )
+        mock_uuid.assert_called()
         self.assertEqual(c.name, 'test-component')
-        self.assertEqual(c.version, '1.2.3')
         self.assertEqual(c.type, ComponentType.LIBRARY)
-        self.assertEqual(len(c.external_references), 0)
-        self.assertEqual(len(c.hashes), 0)
+        self.assertIsNone(c.mime_type)
+        self.assertEqual(c.bom_ref, '6f266d1c-760f-4552-ae3b-41a9b74232fa')
+        self.assertIsNone(c.supplier)
+        self.assertIsNone(c.author)
+        self.assertIsNone(c.publisher)
+        self.assertIsNone(c.group)
+        self.assertEqual(c.version, '1.2.3')
+        self.assertIsNone(c.description)
+        self.assertIsNone(c.scope)
+        self.assertListEqual(c.hashes, [])
+        self.assertListEqual(c.licenses, [])
+        self.assertIsNone(c.copyright)
+        self.assertIsNone(c.purl)
+        self.assertListEqual(c.external_references, [])
+        self.assertIsNone(c.properties)
+        self.assertIsNone(c.release_notes)
+
         self.assertEqual(len(c.get_vulnerabilities()), 0)
 
-    def test_multiple_basic_components(self) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
+    def test_multiple_basic_components(self, mock_uuid: Mock) -> None:
         c1 = Component(
             name='test-component', version='1.2.3'
         )
@@ -39,6 +57,8 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c2.get_vulnerabilities()), 0)
 
         self.assertNotEqual(c1, c2)
+
+        mock_uuid.assert_called()
 
     def test_external_references(self) -> None:
         c = Component(

@@ -21,6 +21,7 @@ import warnings
 from enum import Enum
 from os.path import exists
 from typing import List, Optional
+from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
@@ -112,7 +113,7 @@ class Component:
                  ) -> None:
         self.type = component_type
         self.mime_type = mime_type
-        self.bom_ref = bom_ref
+        self.bom_ref = bom_ref or str(uuid4())
         self.supplier = supplier
         self.author = author
         self.publisher = publisher
@@ -189,8 +190,10 @@ class Component:
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
 
+        If a value was not provided in the constructor, a UUIDv4 will have been assigned.
+
         Returns:
-            `str` as a unique identifiers for this Component if set else `None`
+            `str` as a unique identifiers for this Component
         """
         return self._bom_ref
 
@@ -507,7 +510,7 @@ class Component:
 
     def __hash__(self) -> int:
         return hash((
-            self.author, self.bom_ref, self.copyright, self.description, str(self.external_references), self.group,
+            self.author, self.copyright, self.description, str(self.external_references), self.group,
             str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl,
             self.release_notes, self.scope, self.supplier, self.type, self.version, self.cpe
         ))
