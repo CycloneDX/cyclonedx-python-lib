@@ -52,7 +52,7 @@ def sha1sum(filename: str) -> str:
 
 class DataFlow(Enum):
     """
-    This is out internal representation of the dataFlowType simple type within the CycloneDX standard.
+    This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
 
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/xml/#type_dataFlowType
@@ -109,7 +109,7 @@ class Data:
 
 class SignatureAlgorithm(Enum):
     """
-    This is out internal representation of the algorithm simple type within the CycloneDX standard.
+    This is our internal representation of the algorithm simple type within the CycloneDX standard.
 
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/json/#tab-pane_signature_oneOf_i2_algorithm_oneOf_i0
@@ -187,7 +187,7 @@ class SignaturePublicKey:
 
 class Signature:
     """
-    This is out internal representation of the signature complex type within the CycloneDX standard.
+    This is our internal representation of the signature complex type within the CycloneDX standard.
 
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/json/#signature
@@ -211,7 +211,7 @@ class Signature:
 
 class Encoding(Enum):
     """
-    This is out internal representation of the encoding simple type within the CycloneDX standard.
+    This is our internal representation of the encoding simple type within the CycloneDX standard.
 
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/#type_encoding
