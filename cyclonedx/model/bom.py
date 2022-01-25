@@ -24,6 +24,7 @@ from uuid import uuid4, UUID
 from . import ThisTool, Tool
 from .component import Component
 from ..parser import BaseParser
+from .service import Service
 
 
 class BomMetaData:
@@ -143,6 +144,7 @@ class Bom:
         self.uuid = uuid4()
         self.metadata = BomMetaData()
         self._components: List[Component] = []
+        self._services: List[Service] = []
 
     @property
     def uuid(self) -> UUID:
@@ -264,6 +266,69 @@ class Bom:
             `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
         """
         return component in self._components
+
+    @property
+    def services(self) -> List[Service]:
+        """
+        Get all the Services currently in this Bom.
+
+        Returns:
+             List of all Services in this Bom.
+        """
+        return self._services
+
+    @services.setter
+    def services(self, services: List[Service]) -> None:
+        self._services = services
+
+    def add_service(self, service: Service) -> None:
+        """
+        Add a Service to this Bom instance.
+
+        Args:
+            service:
+                `cyclonedx.model.service.Service` instance to add to this Bom.
+
+        Returns:
+            None
+        """
+        if not self.has_component(service=service):
+            self._services.append(service)
+
+    def add_services(self, services: List[Service]) -> None:
+        """
+        Add multiple Services at once to this Bom instance.
+
+        Args:
+            services:
+                List of `cyclonedx.model.service.Service` instances to add to this Bom.
+
+        Returns:
+            None
+        """
+        self.services = self._services + services
+
+    def has_service(self, service: Service) -> bool:
+        """
+        Check whether this Bom contains the provided Service.
+
+        Args:
+            component:
+                The instance of `cyclonedx.model.service.Service` to check if this Bom contains.
+
+        Returns:
+            `bool` - `True` if the supplied Service is part of this Bom, `False` otherwise.
+        """
+        return service in self._services
+
+    def service_count(self) -> int:
+        """
+        Returns the current count of Services within this Bom.
+
+        Returns:
+             The number of Services in this Bom as `int`.
+        """
+        return len(self._services)
 
     def has_vulnerabilities(self) -> bool:
         """
