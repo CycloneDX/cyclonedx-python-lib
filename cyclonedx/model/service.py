@@ -32,9 +32,8 @@ class Service:
         See the CycloneDX schema: https://cyclonedx.org/docs/1.4/#type_vulnerabilityType
     """
 
-    def __init__(self, bom_ref: Optional[str] = None,
+    def __init__(self, name: str, bom_ref: Optional[str] = None,
                  group: Optional[str] = None,
-                 name: str = None,
                  version: Optional[str] = None,
                  description: Optional[str] = None,
                  endpoints: Optional[List[str]] = None,

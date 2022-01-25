@@ -160,9 +160,8 @@ class SignaturePublicKey:
     """
     def __init__(self, kty: SignaturePublicKeyKty = None, crv: Optional[SignaturePublicKeyCrv] = None,
                  x: Optional[str] = None, y: Optional[str] = None, 
-                 n: Optional[str] = None, e: Optional[str] = None,
-                 value: str = None) -> None:
-        if not kty and not value:
+                 n: Optional[str] = None, e: Optional[str] = None) -> None:
+        if not kty:
             raise NoPropertiesProvidedException(
                 '`kty` must be supplied'
             )
@@ -195,11 +194,10 @@ class Signature:
         JSON only
     """
 
-    def __init__(self, algorithm: SignatureAlgorithm, key_id: Optional[str],
+    def __init__(self, algorithm: SignatureAlgorithm, value: str, key_id: Optional[str],
                  public_key: Optional[SignaturePublicKey] = None,
                  certificate_path: Optional[List[str]] = None,
-                 excludes: Optional[List[str]] = None,
-                 value: str = None) -> None:
+                 excludes: Optional[List[str]] = None) -> None:
         if not algorithm and not value:
             raise NoPropertiesProvidedException(
                 'One of `algorithm` or `value` must be supplied - neither supplied'
