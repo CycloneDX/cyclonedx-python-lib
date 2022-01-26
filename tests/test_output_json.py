@@ -17,13 +17,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import base64
-from decimal import Decimal
 from datetime import datetime, timezone
+from decimal import Decimal
 from os.path import dirname, join
 from typing import List
+from unittest.mock import Mock, patch
 
 from packageurl import PackageURL
-from unittest.mock import Mock, patch
 
 from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, LicenseChoice, Note, \
     NoteText, OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri, DataClassification, DataFlow
@@ -379,6 +379,54 @@ class TestOutputJson(BaseJsonTestCase):
         self.assertIsInstance(outputter, JsonV1Dot2)
         with open(join(dirname(__file__), 'fixtures/bom_v1.2_services_complex.json')) as expected_json:
             self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_2)
+            self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
+
+    @patch('cyclonedx.model.component.uuid4', return_value='cd3e9c95-9d41-49e7-9924-8cf0465ae789')
+    @patch('cyclonedx.model.service.uuid4', return_value='bb5911d6-1a1d-41c9-b6e0-46e848d16655')
+    def test_bom_v1_3_services_simple(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
+        bom = TestOutputJson._get_bom_with_services_simple()
+        mock_uuid_c.assert_called()
+        mock_uuid_s.assert_called()
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_3)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_services_simple.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
+
+    @patch('cyclonedx.model.component.uuid4', return_value='df70b5f1-8f53-47a4-be48-669ae78795e6')
+    @patch('cyclonedx.model.service.uuid4', return_value='e9c2e297-eee6-4f45-ac2d-6662b1db77bf')
+    def test_bom_v1_3_services_complex(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
+        bom = TestOutputJson._get_bom_with_services_complex()
+        mock_uuid_c.assert_called()
+        mock_uuid_s.assert_called()
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_3)
+        self.assertIsInstance(outputter, JsonV1Dot3)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.3_services_complex.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_3)
+            self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
+
+    @patch('cyclonedx.model.component.uuid4', return_value='44eba9c8-ccfb-4868-90cb-deb27f72b358')
+    @patch('cyclonedx.model.service.uuid4', return_value='86452881-cb1a-4296-9450-2eb6f3e55744')
+    def test_bom_v1_4_services_simple(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
+        bom = TestOutputJson._get_bom_with_services_simple()
+        mock_uuid_c.assert_called()
+        mock_uuid_s.assert_called()
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, JsonV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_services_simple.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
+            self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
+
+    @patch('cyclonedx.model.component.uuid4', return_value='2a4ec791-4846-4769-8332-06e6ee170395')
+    @patch('cyclonedx.model.service.uuid4', return_value='b1650ab8-33fb-47e3-bc6e-07031054a946')
+    def test_bom_v1_4_services_complex(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
+        bom = TestOutputJson._get_bom_with_services_complex()
+        mock_uuid_c.assert_called()
+        mock_uuid_s.assert_called()
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_4)
+        self.assertIsInstance(outputter, JsonV1Dot4)
+        with open(join(dirname(__file__), 'fixtures/bom_v1.4_services_complex.json')) as expected_json:
+            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=SchemaVersion.V1_4)
             self.assertEqualJsonBom(outputter.output_as_string(), expected_json.read())
 
     @staticmethod

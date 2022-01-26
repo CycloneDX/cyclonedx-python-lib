@@ -1,0 +1,94 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.3.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2021-09-01T10:50:42.051979+00:00",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
+        "version": "VERSION"
+      }
+    ],
+    "component": {
+      "type": "library",
+      "bom-ref": "df70b5f1-8f53-47a4-be48-669ae78795e6",
+      "name": "cyclonedx-python-lib",
+      "version": "1.0.0"
+    }
+  },
+  "components": [],
+  "services": [
+    {
+      "bom-ref": "my-specific-bom-ref-for-my-first-service",
+      "provider": {
+        "contact": [
+          {
+            "email": "paul.horton@owasp.org",
+            "name": "Paul Horton"
+          },
+          {
+            "email": "someone@somewhere.tld",
+            "name": "A N Other",
+            "phone": "+44 (0)1234 567890"
+          }
+        ],
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org"
+        ]
+      },
+      "group": "a-group",
+      "name": "my-first-service",
+      "version": "1.2.3",
+      "description": "Description goes here",
+      "endpoints": [
+        "/api/thing/1",
+        "/api/thing/2"
+      ],
+      "authenticated": false,
+      "x-trust-boundary": true,
+      "data": [
+        {
+          "classification": "public",
+          "flow": "outbound"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "Commercial"
+        }
+      ],
+      "externalReferences": [
+        {
+          "comment": "No comment",
+          "hashes": [
+            {
+              "alg": "SHA-256",
+              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+            }
+          ],
+          "type": "distribution",
+          "url": "https://cyclonedx.org"
+        }
+      ],
+      "properties": [
+        {
+          "name": "key1",
+          "value": "val1"
+        },
+        {
+          "name": "key2",
+          "value": "val2"
+        }
+      ]
+    },
+    {
+      "bom-ref": "e9c2e297-eee6-4f45-ac2d-6662b1db77bf",
+      "name": "my-second-service"
+    }
+  ]
+}
