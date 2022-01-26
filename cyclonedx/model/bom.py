@@ -25,7 +25,6 @@ from . import ThisTool, Tool
 from .component import Component
 from .service import Service
 from ..parser import BaseParser
-from .service import Service
 
 
 class BomMetaData:
@@ -276,17 +275,17 @@ class Bom:
         return component in self.components
 
     @property
-    def services(self) -> List[Service]:
+    def services(self) -> Optional[List[Service]]:
         """
         Get all the Services currently in this Bom.
 
         Returns:
-             List of all Services in this Bom.
+             List of `Service` in this Bom or `None`
         """
         return self._services
 
     @services.setter
-    def services(self, services: List[Service]) -> None:
+    def services(self, services: Optional[List[Service]]) -> None:
         self._services = services
 
     def add_service(self, service: Service) -> None:
@@ -300,8 +299,10 @@ class Bom:
         Returns:
             None
         """
-        if not self.has_component(service=service):
-            self._services.append(service)
+        if not self.services:
+            self.services = [service]
+        elif not self.has_service(service=service):
+            self.services.append(service)
 
     def add_services(self, services: List[Service]) -> None:
         """
@@ -314,20 +315,23 @@ class Bom:
         Returns:
             None
         """
-        self.services = self._services + services
+        self.services = (self.services or []) + services
 
     def has_service(self, service: Service) -> bool:
         """
         Check whether this Bom contains the provided Service.
 
         Args:
-            component:
+            service:
                 The instance of `cyclonedx.model.service.Service` to check if this Bom contains.
 
         Returns:
             `bool` - `True` if the supplied Service is part of this Bom, `False` otherwise.
         """
-        return service in self._services
+        if not self.services:
+            return False
+
+        return service in self.services
 
     def service_count(self) -> int:
         """
@@ -336,7 +340,10 @@ class Bom:
         Returns:
              The number of Services in this Bom as `int`.
         """
-        return len(self._services)
+        if not self.services:
+            return 0
+
+        return len(self.services)
 
     def has_vulnerabilities(self) -> bool:
         """
@@ -352,19 +359,3 @@ class Bom:
                     return True
 
         return False
-
-    @property
-    def services(self) -> Optional[List[Service]]:
-        """
-        A list of services.
-
-        This may include microservices, function-as-a-service, and other types of network or intra-process services.
-
-        Returns:
-             List of `Service` or `None`
-        """
-        return self._services
-
-    @services.setter
-    def services(self, services: Optional[List[Service]]) -> None:
-        self._services = services

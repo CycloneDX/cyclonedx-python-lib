@@ -36,21 +36,10 @@ class Service:
         See the CycloneDX schema: https://cyclonedx.org/docs/1.4/xml/#type_service
     """
 
-<<<<<<< HEAD
     def __init__(self, name: str, bom_ref: Optional[str] = None, provider: Optional[OrganizationalEntity] = None,
                  group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
                  endpoints: Optional[List[XsUri]] = None, authenticated: Optional[bool] = None,
                  x_trust_boundary: Optional[bool] = None, data: Optional[List[DataClassification]] = None,
-=======
-    def __init__(self, name: str, bom_ref: Optional[str] = None,
-                 group: Optional[str] = None,
-                 version: Optional[str] = None,
-                 description: Optional[str] = None,
-                 endpoints: Optional[List[str]] = None,
-                 authenticated: Optional[bool] = None,
-                 x_trust_boundary: Optional[bool] = None,
-                 data: Optional[List[Data]] = None,
->>>>>>> cbebae2 (No default values for required fields)
                  licenses: Optional[List[LicenseChoice]] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None,
