@@ -46,8 +46,7 @@ class Service:
                  # services: Optional[List[Service]] = None, -- I have no clue how to do this,
                  # commenting out so someone else can
                  release_notes: Optional[ReleaseNotes] = None,
-                 # signature: Optional[Signature] = None
-                 ):
+                 ) -> None:
         self.bom_ref = bom_ref or str(uuid4())
         self.provider = provider
         self.group = group
@@ -63,7 +62,6 @@ class Service:
         # self.services = services -- no clue
         self.release_notes = release_notes
         self.properties = properties
-        # self.signature = signature
 
     @property
     def bom_ref(self) -> Optional[str]:
@@ -178,7 +176,7 @@ class Service:
         Returns:
             None
         """
-        self.endpoints = self._endpoints + [endpoint]
+        self.endpoints = (self._endpoints or []) + [endpoint]
 
     @property
     def authenticated(self) -> Optional[bool]:
@@ -294,14 +292,3 @@ class Service:
     @properties.setter
     def properties(self, properties: Optional[List[Property]]) -> None:
         self._properties = properties
-
-    # @property
-    # def signature(self) -> Optional[Signature]:
-    #     """
-    #     A JSF signature for the service as provided by the source.
-    #     """
-    #     return self._signature
-    #
-    # @signature.setter
-    # def signature(self, signature: Optional[Signature]) -> None:
-    #     self._signature = signature

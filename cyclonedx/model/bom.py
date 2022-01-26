@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import cast, List, Optional
 from uuid import uuid4, UUID
 
 from . import ThisTool, Tool
@@ -178,17 +178,17 @@ class Bom:
         self._metadata = metadata
 
     @property
-    def components(self) -> List[Component]:
+    def components(self) -> Optional[List[Component]]:
         """
         Get all the Components currently in this Bom.
 
         Returns:
-             List of all Components in this Bom.
+             List of all Components in this Bom or `None`
         """
         return self._components
 
     @components.setter
-    def components(self, components: List[Component]) -> None:
+    def components(self, components: Optional[List[Component]]) -> None:
         self._components = components
 
     def add_component(self, component: Component) -> None:
@@ -205,7 +205,7 @@ class Bom:
         if not self.components:
             self.components = [component]
         elif not self.has_component(component=component):
-            self._components.append(component)
+            self.components.append(component)
 
     def add_components(self, components: List[Component]) -> None:
         """
@@ -218,7 +218,7 @@ class Bom:
         Returns:
             None
         """
-        self.components = self._components + components
+        self.components = (self._components or []) + components
 
     def component_count(self) -> int:
         """
@@ -227,7 +227,7 @@ class Bom:
         Returns:
              The number of Components in this Bom as `int`.
         """
-        return len(self._components)
+        return len(self._components) if self._components else 0
 
     def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
         """
@@ -240,8 +240,11 @@ class Bom:
         Returns:
             `Component` or `None`
         """
+        if not self._components:
+            return None
+
         if purl:
-            found = list(filter(lambda x: x.purl == purl, self.components))
+            found = list(filter(lambda x: x.purl == purl, cast(List[Component], self.components)))
             if len(found) == 1:
                 return found[0]
 
@@ -279,9 +282,10 @@ class Bom:
             `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
                 `False` otherwise.
         """
-        for c in self.components:
-            if c.has_vulnerabilities():
-                return True
+        if self.components:
+            for c in self.components:
+                if c.has_vulnerabilities():
+                    return True
 
         return False
 
