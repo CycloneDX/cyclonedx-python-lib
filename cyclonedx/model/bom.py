@@ -23,6 +23,7 @@ from uuid import uuid4, UUID
 
 from . import ThisTool, Tool
 from .component import Component
+from .service import Service
 from ..parser import BaseParser
 
 
@@ -133,7 +134,7 @@ class Bom:
         bom.add_components(parser.get_components())
         return bom
 
-    def __init__(self) -> None:
+    def __init__(self, components: Optional[List[Component]] = None, services: Optional[List[Service]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -142,7 +143,8 @@ class Bom:
         """
         self.uuid = uuid4()
         self.metadata = BomMetaData()
-        self._components: List[Component] = []
+        self.components = components
+        self.services = services
 
     @property
     def uuid(self) -> UUID:
@@ -200,7 +202,9 @@ class Bom:
         Returns:
             None
         """
-        if not self.has_component(component=component):
+        if not self.components:
+            self.components = [component]
+        elif not self.has_component(component=component):
             self._components.append(component)
 
     def add_components(self, components: List[Component]) -> None:
@@ -263,7 +267,9 @@ class Bom:
         Returns:
             `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
         """
-        return component in self._components
+        if not self.components:
+            return False
+        return component in self.components
 
     def has_vulnerabilities(self) -> bool:
         """
@@ -278,3 +284,19 @@ class Bom:
                 return True
 
         return False
+
+    @property
+    def services(self) -> Optional[List[Service]]:
+        """
+        A list of services.
+
+        This may include microservices, function-as-a-service, and other types of network or intra-process services.
+
+        Returns:
+             List of `Service` or `None`
+        """
+        return self._services
+
+    @services.setter
+    def services(self, services: Optional[List[Service]]) -> None:
+        self._services = services
