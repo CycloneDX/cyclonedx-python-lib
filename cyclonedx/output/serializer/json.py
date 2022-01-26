@@ -31,7 +31,7 @@ from packageurl import PackageURL  # type: ignore
 from cyclonedx.model import XsUri
 
 HYPHENATED_ATTRIBUTES = [
-    'bom_ref', 'mime_type'
+    'bom_ref', 'mime_type', 'x_trust_boundary'
 ]
 PYTHON_TO_JSON_NAME = compile(r'_([a-z])')
 
@@ -78,7 +78,7 @@ class CycloneDxJSONEncoder(JSONEncoder):
                     new_key = PYTHON_TO_JSON_NAME.sub(lambda x: x.group(1).upper(), new_key)
 
                 # Skip any None values
-                if v:
+                if v or v is False:
                     if isinstance(v, PackageURL):
                         # Special handling of PackageURL instances which JSON would otherwise automatically encode to
                         # an Array
