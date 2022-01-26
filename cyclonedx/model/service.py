@@ -17,7 +17,7 @@
 from typing import List, Optional
 from uuid import uuid4
 
-from . import ExternalReference, DataClassification, LicenseChoice, OrganizationalEntity, Property, XsUri  # , Signature
+from . import ExternalReference, DataClassification, LicenseChoice, OrganizationalEntity, Property, Signature, XsUri
 from .release_note import ReleaseNotes
 
 """
@@ -46,8 +46,8 @@ class Service:
                  # services: Optional[List[Service]] = None, -- I have no clue how to do this,
                  # commenting out so someone else can
                  release_notes: Optional[ReleaseNotes] = None,
-                 # signature: Optional[Signature] = None
-                 ):
+                 signature: Optional[Signature] = None
+                 ) -> None:
         self.bom_ref = bom_ref or str(uuid4())
         self.provider = provider
         self.group = group
@@ -63,7 +63,7 @@ class Service:
         # self.services = services -- no clue
         self.release_notes = release_notes
         self.properties = properties
-        # self.signature = signature
+        self.signature = signature
 
     @property
     def bom_ref(self) -> Optional[str]:
@@ -85,7 +85,7 @@ class Service:
     @property
     def provider(self) -> Optional[OrganizationalEntity]:
         """
-        Get the The organization that provides the service.
+        Get the organization that provides the service.
 
         Returns:
             `OrganizationalEntity` if set else `None`
@@ -295,13 +295,16 @@ class Service:
     def properties(self, properties: Optional[List[Property]]) -> None:
         self._properties = properties
 
-    # @property
-    # def signature(self) -> Optional[Signature]:
-    #     """
-    #     A JSF signature for the service as provided by the source.
-    #     """
-    #     return self._signature
-    #
-    # @signature.setter
-    # def signature(self, signature: Optional[Signature]) -> None:
-    #     self._signature = signature
+    @property
+    def signature(self) -> Optional[Signature]:
+        """
+        Enveloped signature in JSON Signature Format (JSF).
+
+        Returns:
+            `Signature` if set else `None`
+        """
+        return self._signature
+
+    @signature.setter
+    def signature(self, signature: Optional[Signature]) -> None:
+        self._signature = signature

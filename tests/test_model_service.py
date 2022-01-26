@@ -42,4 +42,3 @@ class TestModelService(TestCase):
         self.assertListEqual(s.external_references, [])
         self.assertIsNone(s.release_notes)
         self.assertIsNone(s.properties)
-
