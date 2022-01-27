@@ -22,7 +22,7 @@ from unittest import TestCase
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from cyclonedx.output.xml import XmlV1Dot3, Xml
+from cyclonedx.output.xml import XmlV1Dot3
 
 
 class TestOutputGeneric(TestCase):
