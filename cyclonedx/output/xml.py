@@ -159,6 +159,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         # licenses
         if component.licenses:
+            license_output: bool = False
             licenses_e = ElementTree.SubElement(component_element, 'licenses')
             for license in component.licenses:
                 if license.license:
@@ -177,8 +178,14 @@ class Xml(BaseOutput, BaseSchemaVersion):
                                                license_text_e_attrs).text = license.license.text.content
 
                         ElementTree.SubElement(license_e, 'text').text = license.license.id
+                    license_output = True
                 else:
-                    ElementTree.SubElement(licenses_e, 'expression').text = license.expression
+                    if self.component_supports_licenses_expression():
+                        ElementTree.SubElement(licenses_e, 'expression').text = license.expression
+                        license_output = True
+
+            if not license_output:
+                component_element.remove(licenses_e)
 
         # cpe
         if component.cpe:

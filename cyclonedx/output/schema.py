@@ -65,6 +65,9 @@ class BaseSchemaVersion(ABC):
     def component_supports_mime_type_attribute(self) -> bool:
         return True
 
+    def component_supports_licenses_expression(self) -> bool:
+        return True
+
     def component_version_optional(self) -> bool:
         return False
 
@@ -228,6 +231,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def component_supports_bom_ref_attribute(self) -> bool:
+        return False
+
+    def component_supports_licenses_expression(self) -> bool:
         return False
 
     def component_supports_mime_type_attribute(self) -> bool:
