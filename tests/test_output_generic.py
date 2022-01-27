@@ -19,7 +19,6 @@
 
 from unittest import TestCase
 
-from cyclonedx.exception.output import ComponentVersionRequiredException
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
@@ -46,6 +45,5 @@ class TestOutputGeneric(TestCase):
         self.assertIsInstance(i, XmlV1Dot3)
 
     def test_component_no_version_v1_3(self) -> None:
-        with self.assertRaises(ComponentVersionRequiredException):
-            outputter: Xml = get_instance(bom=TestOutputGeneric._bom, schema_version=SchemaVersion.V1_3)
-            outputter.output_as_string()
+        i = get_instance(bom=TestOutputGeneric._bom, schema_version=SchemaVersion.V1_3)
+        self.assertIsInstance(i, XmlV1Dot3)

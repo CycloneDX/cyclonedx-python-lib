@@ -29,6 +29,7 @@ from uuid import UUID
 from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model import XsUri
+from cyclonedx.model.component import Component
 
 HYPHENATED_ATTRIBUTES = [
     'bom_ref', 'mime_type', 'x_trust_boundary'
