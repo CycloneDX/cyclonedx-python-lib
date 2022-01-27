@@ -18,11 +18,12 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import cast, List, Optional
 from uuid import uuid4, UUID
 
 from . import ThisTool, Tool
 from .component import Component
+from .service import Service
 from ..parser import BaseParser
 
 
@@ -133,7 +134,7 @@ class Bom:
         bom.add_components(parser.get_components())
         return bom
 
-    def __init__(self) -> None:
+    def __init__(self, components: Optional[List[Component]] = None, services: Optional[List[Service]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -142,7 +143,8 @@ class Bom:
         """
         self.uuid = uuid4()
         self.metadata = BomMetaData()
-        self._components: List[Component] = []
+        self.components = components
+        self.services = services
 
     @property
     def uuid(self) -> UUID:
@@ -176,17 +178,17 @@ class Bom:
         self._metadata = metadata
 
     @property
-    def components(self) -> List[Component]:
+    def components(self) -> Optional[List[Component]]:
         """
         Get all the Components currently in this Bom.
 
         Returns:
-             List of all Components in this Bom.
+             List of all Components in this Bom or `None`
         """
         return self._components
 
     @components.setter
-    def components(self, components: List[Component]) -> None:
+    def components(self, components: Optional[List[Component]]) -> None:
         self._components = components
 
     def add_component(self, component: Component) -> None:
@@ -200,8 +202,10 @@ class Bom:
         Returns:
             None
         """
-        if not self.has_component(component=component):
-            self._components.append(component)
+        if not self.components:
+            self.components = [component]
+        elif not self.has_component(component=component):
+            self.components.append(component)
 
     def add_components(self, components: List[Component]) -> None:
         """
@@ -214,7 +218,7 @@ class Bom:
         Returns:
             None
         """
-        self.components = self._components + components
+        self.components = (self._components or []) + components
 
     def component_count(self) -> int:
         """
@@ -223,7 +227,7 @@ class Bom:
         Returns:
              The number of Components in this Bom as `int`.
         """
-        return len(self._components)
+        return len(self._components) if self._components else 0
 
     def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
         """
@@ -236,8 +240,11 @@ class Bom:
         Returns:
             `Component` or `None`
         """
+        if not self._components:
+            return None
+
         if purl:
-            found = list(filter(lambda x: x.purl == purl, self.components))
+            found = list(filter(lambda x: x.purl == purl, cast(List[Component], self.components)))
             if len(found) == 1:
                 return found[0]
 
@@ -263,7 +270,80 @@ class Bom:
         Returns:
             `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
         """
-        return component in self._components
+        if not self.components:
+            return False
+        return component in self.components
+
+    @property
+    def services(self) -> Optional[List[Service]]:
+        """
+        Get all the Services currently in this Bom.
+
+        Returns:
+             List of `Service` in this Bom or `None`
+        """
+        return self._services
+
+    @services.setter
+    def services(self, services: Optional[List[Service]]) -> None:
+        self._services = services
+
+    def add_service(self, service: Service) -> None:
+        """
+        Add a Service to this Bom instance.
+
+        Args:
+            service:
+                `cyclonedx.model.service.Service` instance to add to this Bom.
+
+        Returns:
+            None
+        """
+        if not self.services:
+            self.services = [service]
+        elif not self.has_service(service=service):
+            self.services.append(service)
+
+    def add_services(self, services: List[Service]) -> None:
+        """
+        Add multiple Services at once to this Bom instance.
+
+        Args:
+            services:
+                List of `cyclonedx.model.service.Service` instances to add to this Bom.
+
+        Returns:
+            None
+        """
+        self.services = (self.services or []) + services
+
+    def has_service(self, service: Service) -> bool:
+        """
+        Check whether this Bom contains the provided Service.
+
+        Args:
+            service:
+                The instance of `cyclonedx.model.service.Service` to check if this Bom contains.
+
+        Returns:
+            `bool` - `True` if the supplied Service is part of this Bom, `False` otherwise.
+        """
+        if not self.services:
+            return False
+
+        return service in self.services
+
+    def service_count(self) -> int:
+        """
+        Returns the current count of Services within this Bom.
+
+        Returns:
+             The number of Services in this Bom as `int`.
+        """
+        if not self.services:
+            return 0
+
+        return len(self.services)
 
     def has_vulnerabilities(self) -> bool:
         """
@@ -273,8 +353,9 @@ class Bom:
             `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
                 `False` otherwise.
         """
-        for c in self.components:
-            if c.has_vulnerabilities():
-                return True
+        if self.components:
+            for c in self.components:
+                if c.has_vulnerabilities():
+                    return True
 
         return False

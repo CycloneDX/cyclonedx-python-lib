@@ -19,13 +19,14 @@
 
 import json
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import cast, Any, Dict, List, Optional, Union
 
 from . import BaseOutput
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from .serializer.json import CycloneDxJSONEncoder
 from ..model.bom import Bom
+from ..model.component import Component
 
 
 ComponentDict = Dict[str, Union[
@@ -51,11 +52,12 @@ class Json(BaseOutput, BaseSchemaVersion):
             return
 
         vulnerabilities: Dict[str, List[Dict[Any, Any]]] = {"vulnerabilities": []}
-        for component in self.get_bom().components:
-            for vulnerability in component.get_vulnerabilities():
-                vulnerabilities['vulnerabilities'].append(
-                    json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
-                )
+        if self.get_bom().components:
+            for component in cast(List[Component], self.get_bom().components):
+                for vulnerability in component.get_vulnerabilities():
+                    vulnerabilities['vulnerabilities'].append(
+                        json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
+                    )
 
         bom_json = json.loads(json.dumps(self.get_bom(), cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
@@ -93,6 +95,15 @@ class Json(BaseOutput, BaseSchemaVersion):
                     del bom_json['components'][i]['releaseNotes']
         else:
             bom_json['components'] = []
+
+        # Iterate Services
+        if 'services' in bom_json.keys():
+            for i in range(len(bom_json['services'])):
+                if not self.services_supports_properties() and 'properties' in bom_json['services'][i].keys():
+                    del bom_json['services'][i]['properties']
+
+                if not self.services_supports_release_notes() and 'releaseNotes' in bom_json['services'][i].keys():
+                    del bom_json['services'][i]['releaseNotes']
 
         # Iterate Vulnerabilities
         if 'vulnerabilities' in bom_json.keys():

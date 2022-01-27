@@ -51,9 +51,78 @@ def sha1sum(filename: str) -> str:
     return h.hexdigest()
 
 
+class DataFlow(Enum):
+    """
+    This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/xml/#type_dataFlowType
+    """
+    INBOUND = "inbound"
+    OUTBOUND = "outbound"
+    BI_DIRECTIONAL = "bi-directional"
+    UNKNOWN = "unknown"
+
+
+class DataClassification:
+    """
+    This is our internal representation of the `dataClassificationType` complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema for dataClassificationType:
+        https://cyclonedx.org/docs/1.4/xml/#type_dataClassificationType
+    """
+
+    def __init__(self, flow: DataFlow, classification: str) -> None:
+        if not flow and not classification:
+            raise NoPropertiesProvidedException(
+                'One of `flow` or `classification` must be supplied - neither supplied'
+            )
+
+        self.flow = flow
+        self.classification = classification
+
+    @property
+    def flow(self) -> DataFlow:
+        """
+        Specifies the flow direction of the data.
+
+        Valid values are: inbound, outbound, bi-directional, and unknown.
+
+        Direction is relative to the service.
+
+        - Inbound flow states that data enters the service
+        - Outbound flow states that data leaves the service
+        - Bi-directional states that data flows both ways
+        - Unknown states that the direction is not known
+
+        Returns:
+            `DataFlow`
+        """
+        return self._flow
+
+    @flow.setter
+    def flow(self, flow: DataFlow) -> None:
+        self._flow = flow
+
+    @property
+    def classification(self) -> str:
+        """
+        Data classification tags data according to its type, sensitivity, and value if altered, stolen, or destroyed.
+
+        Returns:
+            `str`
+        """
+        return self._classification
+
+    @classification.setter
+    def classification(self, classification: str) -> None:
+        self._classification = classification
+
+
 class Encoding(Enum):
     """
-    This is out internal representation of the encoding simple type within the CycloneDX standard.
+    This is our internal representation of the encoding simple type within the CycloneDX standard.
 
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/#type_encoding

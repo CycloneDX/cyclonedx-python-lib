@@ -31,6 +31,15 @@ class BaseSchemaVersion(ABC):
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return True
 
+    def bom_supports_services(self) -> bool:
+        return True
+
+    def services_supports_properties(self) -> bool:
+        return True
+
+    def services_supports_release_notes(self) -> bool:
+        return True
+
     def bom_supports_vulnerabilities(self) -> bool:
         return True
 
@@ -77,6 +86,9 @@ class SchemaVersion1Dot3(BaseSchemaVersion):
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return False
 
+    def services_supports_release_notes(self) -> bool:
+        return False
+
     def bom_supports_vulnerabilities(self) -> bool:
         return False
 
@@ -96,6 +108,12 @@ class SchemaVersion1Dot3(BaseSchemaVersion):
 class SchemaVersion1Dot2(BaseSchemaVersion):
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def services_supports_properties(self) -> bool:
+        return False
+
+    def services_supports_release_notes(self) -> bool:
         return False
 
     def bom_supports_vulnerabilities(self) -> bool:
@@ -120,6 +138,15 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
         return False
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def bom_supports_services(self) -> bool:
+        return False
+
+    def services_supports_properties(self) -> bool:
+        return False
+
+    def services_supports_release_notes(self) -> bool:
         return False
 
     def bom_supports_vulnerabilities(self) -> bool:
@@ -150,6 +177,15 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def bom_supports_services(self) -> bool:
+        return False
+
+    def services_supports_properties(self) -> bool:
+        return False
+
+    def services_supports_release_notes(self) -> bool:
         return False
 
     def bom_supports_vulnerabilities(self) -> bool:
