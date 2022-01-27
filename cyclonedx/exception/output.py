@@ -22,14 +22,6 @@ Exceptions that are for specific error scenarios during the output of a Model to
 from . import CycloneDxException
 
 
-class ComponentVersionRequiredException(CycloneDxException):
-    """
-    Exception raised when attempting to output to an SBOM version that mandates a Component has a version,
-    but one is not available/present.
-    """
-    pass
-
-
 class FormatNotSupportedException(CycloneDxException):
     """
     Exception raised when attempting to output a BOM to a format not supported in the requested version.

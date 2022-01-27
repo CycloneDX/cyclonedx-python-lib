@@ -24,7 +24,6 @@ from xml.etree import ElementTree
 from . import BaseOutput, SchemaVersion
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
-from ..exception.output import ComponentVersionRequiredException
 from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
 from ..model.bom import Bom
 from ..model.component import Component
@@ -147,11 +146,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 ElementTree.SubElement(component_element, 'version').text = component.version
         else:
             if not component.version:
-                raise ComponentVersionRequiredException(
-                    f'Component "{str(component)}" has no version but the target schema version mandates '
-                    f'Components have a version specified'
-                )
-            ElementTree.SubElement(component_element, 'version').text = component.version
+                ElementTree.SubElement(component_element, 'version')
+            else:
+                ElementTree.SubElement(component_element, 'version').text = component.version
 
         # hashes
         if component.hashes:
