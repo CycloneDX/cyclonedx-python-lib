@@ -208,7 +208,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 if ext_ref.get_comment():
                     ElementTree.SubElement(external_reference_e, 'comment').text = ext_ref.get_comment()
 
-                if len(ext_ref.get_hashes()) > 0:
+                if self.external_references_supports_hashes() and len(ext_ref.get_hashes()) > 0:
                     Xml._add_hashes_to_element(hashes=ext_ref.get_hashes(), element=external_reference_e)
 
         # releaseNotes
@@ -476,8 +476,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return vulnerability_element
 
-    @staticmethod
-    def _add_external_references_to_element(ext_refs: List[ExternalReference], element: ElementTree.Element) -> None:
+    def _add_external_references_to_element(self, ext_refs: List[ExternalReference],
+                                            element: ElementTree.Element) -> None:
         ext_refs_element = ElementTree.SubElement(element, 'externalReferences')
         for external_reference in ext_refs:
             ext_ref_element = ElementTree.SubElement(
@@ -486,7 +486,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
             ElementTree.SubElement(ext_ref_element, 'url').text = external_reference.get_url()
             if external_reference.get_comment():
                 ElementTree.SubElement(ext_ref_element, 'comment').text = external_reference.get_comment()
-            if external_reference.get_hashes():
+            if self.external_references_supports_hashes() and external_reference.get_hashes():
                 Xml._add_hashes_to_element(hashes=external_reference.get_hashes(), element=ext_ref_element)
 
     @staticmethod
@@ -519,7 +519,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if tool.get_hashes():
             Xml._add_hashes_to_element(hashes=tool.get_hashes(), element=tool_element)
         if self.bom_metadata_supports_tools_external_references() and tool.get_external_references():
-            Xml._add_external_references_to_element(
+            self._add_external_references_to_element(
                 ext_refs=tool.get_external_references(), element=tool_element
             )
 

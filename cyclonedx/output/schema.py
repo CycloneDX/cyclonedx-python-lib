@@ -77,6 +77,9 @@ class BaseSchemaVersion(ABC):
     def component_supports_release_notes(self) -> bool:
         return True
 
+    def external_references_supports_hashes(self) -> bool:
+        return True
+
     @abstractmethod
     def get_schema_version(self) -> str:
         raise NotImplementedError
@@ -150,6 +153,9 @@ class SchemaVersion1Dot2(BaseSchemaVersion):
     def component_supports_release_notes(self) -> bool:
         return False
 
+    def external_references_supports_hashes(self) -> bool:
+        return False
+
     def get_schema_version(self) -> str:
         return '1.2'
 
@@ -191,6 +197,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
         return False
 
     def component_supports_release_notes(self) -> bool:
+        return False
+
+    def external_references_supports_hashes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:
@@ -243,6 +252,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def component_supports_release_notes(self) -> bool:
+        return False
+
+    def external_references_supports_hashes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:
