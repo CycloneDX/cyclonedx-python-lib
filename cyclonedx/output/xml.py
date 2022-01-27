@@ -21,7 +21,7 @@ import warnings
 from typing import cast, List, Optional
 from xml.etree import ElementTree
 
-from . import BaseOutput
+from . import BaseOutput, SchemaVersion
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from ..exception.output import ComponentVersionRequiredException
@@ -38,6 +38,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
     def __init__(self, bom: Bom) -> None:
         super().__init__(bom=bom)
         self._root_bom_element: ElementTree.Element = self._create_bom_element()
+
+    @property
+    def schema_version(self) -> SchemaVersion:
+        return self.schema_version_enum
 
     def generate(self, force_regeneration: bool = False) -> None:
         if self.generated and force_regeneration:

@@ -28,3 +28,12 @@ class ComponentVersionRequiredException(CycloneDxException):
     but one is not available/present.
     """
     pass
+
+
+class FormatNotSupportedException(CycloneDxException):
+    """
+    Exception raised when attempting to output a BOM to a format not supported in the requested version.
+
+    For example, JSON is not supported prior to 1.2.
+    """
+    pass

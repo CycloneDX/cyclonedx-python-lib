@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1">
+    <components>
+        <component type="library" bom-ref="pkg:pypi/setuptools?extension=tar.gz">
+            <name>setuptools</name>
+            <version></version>
+            <licenses>
+                <expression>MIT License</expression>
+            </licenses>
+            <purl>pkg:pypi/setuptools?extension=tar.gz</purl>
+        </component>
+    </components>
+</bom>

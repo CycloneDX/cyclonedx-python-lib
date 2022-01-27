@@ -94,12 +94,12 @@ class TestComponent(TestCase):
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
 
     def test_from_file_with_path_for_bom(self) -> None:
-        test_file = join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')
-        c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_v1.3_setuptools.xml')
-        self.assertEqual(c.name, 'fixtures/bom_v1.3_setuptools.xml')
+        test_file = join(dirname(__file__), 'fixtures/bom_setuptools.xml')
+        c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
+        self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
         self.assertEqual(c.version, '0.0.0-16932e52ed1e')
         purl = PackageURL(
-            type='generic', name='fixtures/bom_v1.3_setuptools.xml', version='0.0.0-16932e52ed1e'
+            type='generic', name='fixtures/bom_setuptools.xml', version='0.0.0-16932e52ed1e'
         )
         self.assertEqual(c.purl, purl)
         self.assertEqual(len(c.hashes), 1)

@@ -40,6 +40,15 @@ class SchemaVersion(Enum):
     V1_3: str = 'V1Dot3'
     V1_4: str = 'V1Dot4'
 
+    def to_version(self) -> str:
+        """
+        Return as a version string - e.g. `1.4`
+
+        Returns:
+            `str` version
+        """
+        return f'{self.value[1]}.{self.value[5]}'
+
 
 DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
 
@@ -50,6 +59,11 @@ class BaseOutput(ABC):
         super().__init__(**kwargs)
         self._bom = bom
         self._generated: bool = False
+
+    @property
+    @abstractmethod
+    def schema_version(self) -> SchemaVersion:
+        pass
 
     @property
     def generated(self) -> bool:

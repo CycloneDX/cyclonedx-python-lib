@@ -1,0 +1,24 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.3.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2021-09-01T10:50:42.051979+00:00",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
+        "version": "VERSION"
+      }
+    ],
+    "component": {
+      "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
+      "type": "library",
+      "name": "cyclonedx-python-lib",
+      "version": "1.0.0"
+    }
+  },
+  "components": []
+}

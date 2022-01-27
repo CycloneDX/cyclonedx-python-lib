@@ -21,13 +21,13 @@ import json
 from abc import abstractmethod
 from typing import cast, Any, Dict, List, Optional, Union
 
-from . import BaseOutput
+from . import BaseOutput, SchemaVersion
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from .serializer.json import CycloneDxJSONEncoder
+from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
 from ..model.component import Component
-
 
 ComponentDict = Dict[str, Union[
     str,
@@ -42,14 +42,19 @@ class Json(BaseOutput, BaseSchemaVersion):
         super().__init__(bom=bom)
         self._json_output: str = ''
 
+    @property
+    def schema_version(self) -> SchemaVersion:
+        return self.schema_version_enum
+
     def generate(self, force_regeneration: bool = False) -> None:
         if self.generated and not force_regeneration:
             return
 
         schema_uri: Optional[str] = self._get_schema_uri()
         if not schema_uri:
-            # JSON not supported!
-            return
+            raise FormatNotSupportedException(
+                f'JSON is not supported by CycloneDX in schema version {self.schema_version.to_version()}'
+            )
 
         vulnerabilities: Dict[str, List[Dict[Any, Any]]] = {"vulnerabilities": []}
         if self.get_bom().components:
