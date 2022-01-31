@@ -64,6 +64,7 @@ class TestModelService(TestCase):
         self.assertIsNone(parent_service.data)
         self.assertListEqual(parent_service.licenses, [])
         self.assertListEqual(parent_service.external_references, [])
+        self.assertIsNotNone(parent_service.services)
         self.assertEqual(len(parent_service.services), 2)
         self.assertIsNone(parent_service.release_notes)
         self.assertIsNone(parent_service.properties)
