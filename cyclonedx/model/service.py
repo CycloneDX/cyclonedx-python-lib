@@ -43,8 +43,7 @@ class Service:
                  licenses: Optional[List[LicenseChoice]] = None,
                  external_references: Optional[List[ExternalReference]] = None,
                  properties: Optional[List[Property]] = None,
-                 # services: Optional[List[Service]] = None, -- I have no clue how to do this,
-                 # commenting out so someone else can
+                 services: Optional[List['Service']] = None,
                  release_notes: Optional[ReleaseNotes] = None,
                  ) -> None:
         self.bom_ref = bom_ref or str(uuid4())
@@ -59,7 +58,7 @@ class Service:
         self.data = data
         self.licenses = licenses or []
         self.external_references = external_references or []
-        # self.services = services -- no clue
+        self.services = services
         self.release_notes = release_notes
         self.properties = properties
 
@@ -265,6 +264,40 @@ class Service:
         self.external_references = self._external_references + [reference]
 
     @property
+    def services(self) -> Optional[List['Service']]:
+        """
+        A list of services included or deployed behind the parent service.
+
+        This is not a dependency tree.
+
+        It provides a way to specify a hierarchical representation of service assemblies.
+
+        Returns:
+            List of `Service`s or `None`
+        """
+        return self._services
+
+    @services.setter
+    def services(self, services: Optional[List['Service']]) -> None:
+        self._services = services
+
+    def has_service(self, service: 'Service') -> bool:
+        """
+        Check whether this Service contains the given Service.
+
+        Args:
+            service:
+                The instance of `cyclonedx.model.service.Service` to check if this Service contains.
+
+        Returns:
+            `bool` - `True` if the supplied Service is part of this Service, `False` otherwise.
+        """
+        if not self.services:
+            return False
+
+        return service in self.services
+
+    @property
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
         Specifies optional release notes.
@@ -292,3 +325,18 @@ class Service:
     @properties.setter
     def properties(self, properties: Optional[List[Property]]) -> None:
         self._properties = properties
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Service):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.authenticated, self.data, self.description, str(self.endpoints),
+            str(self.external_references), self.group, str(self.licenses), self.name, self.properties, self.provider,
+            self.release_notes, str(self.services), self.version, self.x_trust_boundary
+        ))
+
+    def __repr__(self) -> str:
+        return f'<Service name={self.name}, version={self.version}, bom-ref={self.bom_ref}>'

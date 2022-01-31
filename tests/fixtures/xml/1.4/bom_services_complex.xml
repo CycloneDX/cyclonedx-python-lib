@@ -35,12 +35,56 @@
                 </externalReferences>
             </tool>
         </tools>
+        <component bom-ref="df70b5f1-8f53-47a4-be48-669ae78795e6" type="library">
+            <name>cyclonedx-python-lib</name>
+            <version>1.0.0</version>
+        </component>
     </metadata>
-    <components>
-        <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
-            <name>setuptools</name>
-            <version>50.3.2</version>
-            <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+    <components/>
+    <services>
+        <service bom-ref="my-specific-bom-ref-for-my-first-service">
+            <provider>
+                <name>CycloneDX</name>
+                <url>https://cyclonedx.org</url>
+                <contact>
+                    <name>Paul Horton</name>
+                    <email>paul.horton@owasp.org</email>
+                </contact>
+                <contact>
+                    <name>A N Other</name>
+                    <email>someone@somewhere.tld</email>
+                    <phone>+44 (0)1234 567890</phone>
+                </contact>
+            </provider>
+            <group>a-group</group>
+            <name>my-first-service</name>
+            <version>1.2.3</version>
+            <description>Description goes here</description>
+            <endpoints>
+                <endpoint>/api/thing/1</endpoint>
+                <endpoint>/api/thing/2</endpoint>
+            </endpoints>
+            <authenticated>false</authenticated>
+            <x-trust-boundary>true</x-trust-boundary>
+            <data>
+                <classification flow="outbound">public</classification>
+            </data>
+            <licenses>
+                <expression>Commercial</expression>
+            </licenses>
+            <externalReferences>
+                <reference type="distribution">
+                    <url>https://cyclonedx.org</url>
+                    <comment>No comment</comment>
+                    <hashes>
+                        <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+                    </hashes>
+                </reference>
+            </externalReferences>
+            <properties>
+                <property name="key1">val1</property>
+                <property name="key2">val2</property>
+            </properties>
             <releaseNotes>
                 <type>major</type>
                 <title>Release Notes Title</title>
@@ -85,6 +129,9 @@
                     <property name="key2">val2</property>
                 </properties>
             </releaseNotes>
-        </component>
-    </components>
+        </service>
+        <service bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
+            <name>my-second-service</name>
+        </service>
+    </services>
 </bom>

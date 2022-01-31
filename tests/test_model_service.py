@@ -40,5 +40,31 @@ class TestModelService(TestCase):
         self.assertIsNone(s.data)
         self.assertListEqual(s.licenses, [])
         self.assertListEqual(s.external_references, [])
+        self.assertIsNone(s.services)
         self.assertIsNone(s.release_notes)
         self.assertIsNone(s.properties)
+
+    @patch('cyclonedx.model.service.uuid4', return_value='859ff614-35a7-4d37-803b-d89130cb2577')
+    def test_service_with_services(self, mock_uuid: Mock) -> None:
+        parent_service = Service(name='parent-service')
+        parent_service.services = [
+            Service(name='child-service-1'),
+            Service(name='child-service-2')
+        ]
+        mock_uuid.assert_called()
+        self.assertEqual(parent_service.name, 'parent-service')
+        self.assertEqual(parent_service.bom_ref, '859ff614-35a7-4d37-803b-d89130cb2577')
+        self.assertIsNone(parent_service.provider)
+        self.assertIsNone(parent_service.group)
+        self.assertIsNone(parent_service.version)
+        self.assertIsNone(parent_service.description)
+        self.assertIsNone(parent_service.endpoints)
+        self.assertIsNone(parent_service.authenticated)
+        self.assertIsNone(parent_service.x_trust_boundary)
+        self.assertIsNone(parent_service.data)
+        self.assertListEqual(parent_service.licenses, [])
+        self.assertListEqual(parent_service.external_references, [])
+        self.assertEqual(len(parent_service.services), 2)
+        self.assertIsNone(parent_service.release_notes)
+        self.assertIsNone(parent_service.properties)
+        self.assertTrue(parent_service.has_service(service=Service(name='child-service-1')))

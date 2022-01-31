@@ -24,9 +24,11 @@ from xml.etree import ElementTree
 from . import BaseOutput, SchemaVersion
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
-from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Tool
+from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Property, Tool
 from ..model.bom import Bom
 from ..model.component import Component
+from ..model.release_note import ReleaseNotes
+from ..model.service import Service
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySource, BomTargetVersionRange
 
 
@@ -75,13 +77,19 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 elif component.has_vulnerabilities():
                     has_vulnerabilities = True
 
-            if self.bom_supports_vulnerabilities() and has_vulnerabilities:
-                vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
-                for component in cast(List[Component], self.get_bom().components):
-                    for vulnerability in component.get_vulnerabilities():
-                        vulnerabilities_element.append(
-                            self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
-                        )
+        if self.bom_supports_services():
+            if self.get_bom().services:
+                services_element = ElementTree.SubElement(self._root_bom_element, 'services')
+                for service in cast(List[Service], self.get_bom().services):
+                    services_element.append(self._add_service_element(service=service))
+
+        if self.bom_supports_vulnerabilities() and has_vulnerabilities:
+            vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
+            for component in cast(List[Component], self.get_bom().components):
+                for vulnerability in component.get_vulnerabilities():
+                    vulnerabilities_element.append(
+                        self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
+                    )
 
         self.generated = True
 
@@ -213,73 +221,171 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         # releaseNotes
         if self.component_supports_release_notes() and component.release_notes:
-            release_notes_e = ElementTree.SubElement(component_element, 'releaseNotes')
-            release_notes = component.release_notes
-
-            ElementTree.SubElement(release_notes_e, 'type').text = release_notes.type
-            if release_notes.title:
-                ElementTree.SubElement(release_notes_e, 'title').text = release_notes.title
-            if release_notes.featured_image:
-                ElementTree.SubElement(release_notes_e,
-                                       'featuredImage').text = str(release_notes.featured_image)
-            if release_notes.social_image:
-                ElementTree.SubElement(release_notes_e,
-                                       'socialImage').text = str(release_notes.social_image)
-            if release_notes.description:
-                ElementTree.SubElement(release_notes_e,
-                                       'description').text = release_notes.description
-            if release_notes.timestamp:
-                ElementTree.SubElement(release_notes_e, 'timestamp').text = release_notes.timestamp.isoformat()
-            if release_notes.aliases:
-                release_notes_aliases_e = ElementTree.SubElement(release_notes_e, 'aliases')
-                for alias in release_notes.aliases:
-                    ElementTree.SubElement(release_notes_aliases_e, 'alias').text = alias
-            if release_notes.tags:
-                release_notes_tags_e = ElementTree.SubElement(release_notes_e, 'tags')
-                for tag in release_notes.tags:
-                    ElementTree.SubElement(release_notes_tags_e, 'tag').text = tag
-            if release_notes.resolves:
-                release_notes_resolves_e = ElementTree.SubElement(release_notes_e, 'resolves')
-                for issue in release_notes.resolves:
-                    issue_e = ElementTree.SubElement(
-                        release_notes_resolves_e, 'issue', {'type': issue.get_classification().value}
-                    )
-                    if issue.get_id():
-                        ElementTree.SubElement(issue_e, 'id').text = issue.get_id()
-                    if issue.get_name():
-                        ElementTree.SubElement(issue_e, 'name').text = issue.get_name()
-                    if issue.get_description():
-                        ElementTree.SubElement(issue_e, 'description').text = issue.get_description()
-                    if issue.source:
-                        issue_source_e = ElementTree.SubElement(issue_e, 'source')
-                        if issue.source.name:
-                            ElementTree.SubElement(issue_source_e, 'name').text = issue.source.name
-                        if issue.source.url:
-                            ElementTree.SubElement(issue_source_e, 'url').text = str(issue.source.url)
-                    if issue.get_references():
-                        issue_references_e = ElementTree.SubElement(issue_e, 'references')
-                        for reference in issue.get_references():
-                            ElementTree.SubElement(issue_references_e, 'url').text = str(reference)
-            if release_notes.notes:
-                release_notes_notes_e = ElementTree.SubElement(release_notes_e, 'notes')
-                for note in release_notes.notes:
-                    note_e = ElementTree.SubElement(release_notes_notes_e, 'note')
-                    if note.locale:
-                        ElementTree.SubElement(note_e, 'locale').text = note.locale
-                    text_attrs = {}
-                    if note.text.content_type:
-                        text_attrs['content-type'] = note.text.content_type
-                    if note.text.encoding:
-                        text_attrs['encoding'] = note.text.encoding.value
-                    ElementTree.SubElement(note_e, 'text', text_attrs).text = note.text.content
-            if release_notes.properties:
-                release_notes_properties_e = ElementTree.SubElement(release_notes_e, 'properties')
-                for prop in release_notes.properties:
-                    ElementTree.SubElement(
-                        release_notes_properties_e, 'property', {'name': prop.get_name()}
-                    ).text = prop.get_value()
+            Xml._add_release_notes_element(release_notes=component.release_notes, parent_element=component_element)
 
         return component_element
+
+    @staticmethod
+    def _add_release_notes_element(release_notes: ReleaseNotes, parent_element: ElementTree.Element) -> None:
+        release_notes_e = ElementTree.SubElement(parent_element, 'releaseNotes')
+
+        ElementTree.SubElement(release_notes_e, 'type').text = release_notes.type
+        if release_notes.title:
+            ElementTree.SubElement(release_notes_e, 'title').text = release_notes.title
+        if release_notes.featured_image:
+            ElementTree.SubElement(release_notes_e,
+                                   'featuredImage').text = str(release_notes.featured_image)
+        if release_notes.social_image:
+            ElementTree.SubElement(release_notes_e,
+                                   'socialImage').text = str(release_notes.social_image)
+        if release_notes.description:
+            ElementTree.SubElement(release_notes_e,
+                                   'description').text = release_notes.description
+        if release_notes.timestamp:
+            ElementTree.SubElement(release_notes_e, 'timestamp').text = release_notes.timestamp.isoformat()
+        if release_notes.aliases:
+            release_notes_aliases_e = ElementTree.SubElement(release_notes_e, 'aliases')
+            for alias in release_notes.aliases:
+                ElementTree.SubElement(release_notes_aliases_e, 'alias').text = alias
+        if release_notes.tags:
+            release_notes_tags_e = ElementTree.SubElement(release_notes_e, 'tags')
+            for tag in release_notes.tags:
+                ElementTree.SubElement(release_notes_tags_e, 'tag').text = tag
+        if release_notes.resolves:
+            release_notes_resolves_e = ElementTree.SubElement(release_notes_e, 'resolves')
+            for issue in release_notes.resolves:
+                issue_e = ElementTree.SubElement(
+                    release_notes_resolves_e, 'issue', {'type': issue.get_classification().value}
+                )
+                if issue.get_id():
+                    ElementTree.SubElement(issue_e, 'id').text = issue.get_id()
+                if issue.get_name():
+                    ElementTree.SubElement(issue_e, 'name').text = issue.get_name()
+                if issue.get_description():
+                    ElementTree.SubElement(issue_e, 'description').text = issue.get_description()
+                if issue.source:
+                    issue_source_e = ElementTree.SubElement(issue_e, 'source')
+                    if issue.source.name:
+                        ElementTree.SubElement(issue_source_e, 'name').text = issue.source.name
+                    if issue.source.url:
+                        ElementTree.SubElement(issue_source_e, 'url').text = str(issue.source.url)
+                if issue.get_references():
+                    issue_references_e = ElementTree.SubElement(issue_e, 'references')
+                    for reference in issue.get_references():
+                        ElementTree.SubElement(issue_references_e, 'url').text = str(reference)
+        if release_notes.notes:
+            release_notes_notes_e = ElementTree.SubElement(release_notes_e, 'notes')
+            for note in release_notes.notes:
+                note_e = ElementTree.SubElement(release_notes_notes_e, 'note')
+                if note.locale:
+                    ElementTree.SubElement(note_e, 'locale').text = note.locale
+                text_attrs = {}
+                if note.text.content_type:
+                    text_attrs['content-type'] = note.text.content_type
+                if note.text.encoding:
+                    text_attrs['encoding'] = note.text.encoding.value
+                ElementTree.SubElement(note_e, 'text', text_attrs).text = note.text.content
+        if release_notes.properties:
+            Xml._add_properties_element(properties=release_notes.properties, parent_element=release_notes_e)
+
+    @staticmethod
+    def _add_properties_element(properties: List[Property], parent_element: ElementTree.Element) -> None:
+        properties_e = ElementTree.SubElement(parent_element, 'properties')
+        for property in properties:
+            ElementTree.SubElement(
+                properties_e, 'property', {'name': property.get_name()}
+            ).text = property.get_value()
+
+    def _add_service_element(self, service: Service) -> ElementTree.Element:
+        element_attributes = {}
+        if service.bom_ref:
+            element_attributes['bom-ref'] = service.bom_ref
+
+        service_element = ElementTree.Element('service', element_attributes)
+
+        # provider
+        if service.provider:
+            self._add_organizational_entity(
+                parent_element=service_element, organization=service.provider, tag_name='provider'
+            )
+
+        # group
+        if service.group:
+            ElementTree.SubElement(service_element, 'group').text = service.group
+
+        # name
+        ElementTree.SubElement(service_element, 'name').text = service.name
+
+        # version
+        if service.version:
+            ElementTree.SubElement(service_element, 'version').text = service.version
+
+        # description
+        if service.description:
+            ElementTree.SubElement(service_element, 'description').text = service.description
+
+        # endpoints
+        if service.endpoints:
+            endpoints_e = ElementTree.SubElement(service_element, 'endpoints')
+            for endpoint in service.endpoints:
+                ElementTree.SubElement(endpoints_e, 'endpoint').text = str(endpoint)
+
+        # authenticated
+        if isinstance(service.authenticated, bool):
+            ElementTree.SubElement(service_element, 'authenticated').text = str(service.authenticated).lower()
+
+        # x-trust-boundary
+        if isinstance(service.x_trust_boundary, bool):
+            ElementTree.SubElement(service_element, 'x-trust-boundary').text = str(service.x_trust_boundary).lower()
+
+        # data
+        if service.data:
+            data_e = ElementTree.SubElement(service_element, 'data')
+            for data in service.data:
+                ElementTree.SubElement(data_e, 'classification', {'flow': data.flow.value}).text = data.classification
+
+        # licenses
+        if service.licenses:
+            licenses_e = ElementTree.SubElement(service_element, 'licenses')
+            for license in service.licenses:
+                if license.license:
+                    license_e = ElementTree.SubElement(licenses_e, 'license')
+                    if license.license.id:
+                        ElementTree.SubElement(license_e, 'id').text = license.license.id
+                    elif license.license.name:
+                        ElementTree.SubElement(license_e, 'name').text = license.license.name
+                    if license.license.text:
+                        license_text_e_attrs = {}
+                        if license.license.text.content_type:
+                            license_text_e_attrs['content-type'] = license.license.text.content_type
+                        if license.license.text.encoding:
+                            license_text_e_attrs['encoding'] = license.license.text.encoding.value
+                        ElementTree.SubElement(license_e, 'text',
+                                               license_text_e_attrs).text = license.license.text.content
+
+                        ElementTree.SubElement(license_e, 'text').text = license.license.id
+                else:
+                    ElementTree.SubElement(licenses_e, 'expression').text = license.expression
+
+        # externalReferences
+        if service.external_references:
+            self._add_external_references_to_element(ext_refs=service.external_references, element=service_element)
+
+        # properties
+        if service.properties and self.services_supports_properties():
+            Xml._add_properties_element(properties=service.properties, parent_element=service_element)
+
+        # services
+        if service.services:
+            services_element = ElementTree.SubElement(service_element, 'services')
+            for sub_service in service.services:
+                services_element.append(self._add_service_element(service=sub_service))
+
+        # releaseNotes
+        if service.release_notes and self.services_supports_release_notes():
+            Xml._add_release_notes_element(release_notes=service.release_notes, parent_element=service_element)
+
+        return service_element
 
     def _get_vulnerability_as_xml_element_post_1_4(self, vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element(

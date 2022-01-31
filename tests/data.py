@@ -226,6 +226,56 @@ def get_bom_with_services_complex() -> Bom:
     return bom
 
 
+def get_bom_with_nested_services() -> Bom:
+    bom = Bom(services=[
+        Service(
+            name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service',
+            provider=get_org_entity_1(), group='a-group', version='1.2.3',
+            description='Description goes here', endpoints=[
+                XsUri('/api/thing/1'),
+                XsUri('/api/thing/2')
+            ],
+            authenticated=False, x_trust_boundary=True, data=[
+                DataClassification(flow=DataFlow.OUTBOUND, classification='public')
+            ],
+            licenses=[
+                LicenseChoice(license_expression='Commercial')
+            ],
+            external_references=[
+                get_external_reference_1()
+            ],
+            properties=get_properties_1(),
+            services=[
+                Service(
+                    name='first-nested-service'
+                ),
+                Service(
+                    name='second-nested-service', bom_ref='my-specific-bom-ref-for-second-nested-service',
+                    provider=get_org_entity_1(), group='no-group', version='3.2.1',
+                    authenticated=True, x_trust_boundary=False,
+                )
+            ],
+            release_notes=get_release_notes()
+        ),
+        Service(
+            name='my-second-service',
+            services=[
+                Service(
+                    name='yet-another-nested-service', provider=get_org_entity_1(), group='what-group', version='6.5.4'
+                ),
+                Service(
+                    name='another-nested-service',
+                    bom_ref='my-specific-bom-ref-for-another-nested-service',
+                )
+            ],
+        )
+    ])
+    bom.metadata.component = Component(
+        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+    )
+    return bom
+
+
 def get_external_reference_1() -> ExternalReference:
     return ExternalReference(
         reference_type=ExternalReferenceType.DISTRIBUTION,

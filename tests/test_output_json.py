@@ -27,7 +27,7 @@ from data import get_bom_with_component_setuptools_basic, get_bom_with_component
     get_bom_with_component_setuptools_no_component_version, \
     get_bom_with_component_setuptools_with_release_notes, get_bom_with_component_setuptools_with_vulnerability, \
     MOCK_UUID_1, get_bom_just_complete_metadata, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, \
-    get_bom_with_services_complex, MOCK_UUID_6
+    get_bom_with_services_complex, MOCK_UUID_6, get_bom_with_nested_services
 from tests.base import BaseJsonTestCase
 
 
@@ -220,6 +220,36 @@ class TestOutputJson(BaseJsonTestCase):
         self._validate_json_bom(
             bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_2,
             fixture='bom_services_complex.json'
+        )
+        mock_uuid_c.assert_called()
+        mock_uuid_s.assert_called()
+
+    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_1)
+    @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_2)
+    def test_bom_v1_4_services_nested(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
+        self._validate_json_bom(
+            bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_services_nested.json'
+        )
+        mock_uuid_c.assert_called()
+        mock_uuid_s.assert_called()
+
+    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_3)
+    @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_4)
+    def test_bom_v1_3_services_nested(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
+        self._validate_json_bom(
+            bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_services_nested.json'
+        )
+        mock_uuid_c.assert_called()
+        mock_uuid_s.assert_called()
+
+    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_5)
+    @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_6)
+    def test_bom_v1_2_services_nested(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
+        self._validate_json_bom(
+            bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_services_nested.json'
         )
         mock_uuid_c.assert_called()
         mock_uuid_s.assert_called()

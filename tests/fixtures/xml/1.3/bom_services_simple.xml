@@ -9,10 +9,18 @@
                 <version>VERSION</version>
             </tool>
         </tools>
-        <component type="library" bom-ref="5d82790b-3139-431d-855a-ab63d14a18bb">
+        <component bom-ref="bb5911d6-1a1d-41c9-b6e0-46e848d16655" type="library">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
     </metadata>
-    <components/>
+    <components />
+    <services>
+        <service bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
+            <name>my-first-service</name>
+        </service>
+        <service bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda">
+            <name>my-second-service</name>
+        </service>
+    </services>
 </bom>
