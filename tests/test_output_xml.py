@@ -17,7 +17,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from os.path import dirname, join
-from typing import List
 from unittest.mock import Mock, patch
 
 from cyclonedx.model.bom import Bom
@@ -29,22 +28,12 @@ from data import get_bom_with_component_setuptools_basic, get_bom_with_component
     get_bom_with_nested_services, get_bom_with_services_simple, get_bom_with_services_complex
 from tests.base import BaseXmlTestCase
 
+TEST_UUIDS = [
+    MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6
+]
+
 
 class TestOutputXml(BaseXmlTestCase):
-
-    UUID_INDEX: int = 0
-    UUIDS: List[str] = [
-        MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6
-    ]
-
-    def setUp(self) -> None:
-        TestOutputXml.UUID_INDEX = 0
-
-    @staticmethod
-    def iter_uuid() -> str:
-        uuid = TestOutputXml.UUIDS[TestOutputXml.UUID_INDEX]
-        TestOutputXml.UUID_INDEX += 1
-        return uuid
 
     def test_simple_bom_v1_4(self) -> None:
         self._validate_xml_bom(
@@ -249,7 +238,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_6)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_4_services_simple(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_4,
@@ -259,7 +248,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_5)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_3_services_simple(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_3,
@@ -269,7 +258,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_4)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_2_services_simple(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_2,
@@ -279,7 +268,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_1)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_1_services_simple(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_1,
@@ -289,7 +278,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_1)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_0_services_simple(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_0,
@@ -299,7 +288,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_6)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_4_services_complex(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_4,
@@ -309,7 +298,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_5)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_3_services_complex(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_3,
@@ -319,7 +308,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_4)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_2_services_complex(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_2,
@@ -329,7 +318,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_3)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_1_services_complex(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_1,
@@ -339,7 +328,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_6)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_4_services_nested(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_4,
@@ -349,7 +338,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_5)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_3_services_nested(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_3,
@@ -359,7 +348,7 @@ class TestOutputXml(BaseXmlTestCase):
         mock_uuid_s.assert_called()
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_4)
-    @patch('cyclonedx.model.service.uuid4', side_effect=iter_uuid)
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_2_services_nested(self, mock_uuid_c: Mock, mock_uuid_s: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_2,

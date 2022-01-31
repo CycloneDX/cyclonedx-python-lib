@@ -117,7 +117,8 @@ class BaseXmlTestCase(TestCase):
 
         if not schema_validates:
             print(xml_schema.error_log.last_error)
-        self.assertTrue(schema_validates, 'Failed to validate Generated SBOM against XSD Schema')
+        self.assertTrue(schema_validates, f'Failed to validate Generated SBOM against XSD Schema:'
+                                          f'{bom_xml}')
 
     def assertEqualXml(self, a: str, b: str) -> None:
         da, db = minidom.parseString(a), minidom.parseString(b)
