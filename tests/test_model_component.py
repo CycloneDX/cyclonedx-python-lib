@@ -16,10 +16,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+from typing import List
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from cyclonedx.model import ExternalReference, ExternalReferenceType
+from cyclonedx.model import ExternalReference, ExternalReferenceType, Property
 from cyclonedx.model.component import Component, ComponentType
 
 
@@ -115,7 +116,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c.hashes), 0)
         self.assertEqual(len(c.get_vulnerabilities()), 0)
 
-    def test_component_equal(self) -> None:
+    def test_component_equal_1(self) -> None:
         c = Component(
             name='test-component', version='1.2.3'
         )
@@ -135,3 +136,34 @@ class TestModelComponent(TestCase):
         ))
 
         self.assertEqual(c, c2)
+
+    def test_component_equal_2(self) -> None:
+        props: List[Property] = [
+            Property(name='prop1', value='val1'),
+            Property(name='prop2', value='val2')
+        ]
+
+        c = Component(
+            name='test-component', version='1.2.3', properties=props
+        )
+        c2 = Component(
+            name='test-component', version='1.2.3', properties=props
+        )
+
+        self.assertEqual(c, c2)
+
+    def test_component_equal_3(self) -> None:
+        c = Component(
+            name='test-component', version='1.2.3', properties=[
+                Property(name='prop1', value='val1'),
+                Property(name='prop2', value='val2')
+            ]
+        )
+        c2 = Component(
+            name='test-component', version='1.2.3', properties=[
+                Property(name='prop3', value='val3'),
+                Property(name='prop4', value='val4')
+            ]
+        )
+
+        self.assertNotEqual(c, c2)

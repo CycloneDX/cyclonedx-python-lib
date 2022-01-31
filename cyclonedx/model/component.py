@@ -511,8 +511,8 @@ class Component:
     def __hash__(self) -> int:
         return hash((
             self.author, self.copyright, self.description, str(self.external_references), self.group,
-            str(self.hashes), str(self.licenses), self.mime_type, self.name, self.properties, self.publisher, self.purl,
-            self.release_notes, self.scope, self.supplier, self.type, self.version, self.cpe
+            str(self.hashes), str(self.licenses), self.mime_type, self.name, str(self.properties), self.publisher,
+            self.purl, self.release_notes, self.scope, self.supplier, self.type, self.version, self.cpe
         ))
 
     def __repr__(self) -> str:
