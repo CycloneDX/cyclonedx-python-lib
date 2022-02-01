@@ -14,11 +14,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-
 import hashlib
 import re
 import sys
 import warnings
+from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -129,6 +129,17 @@ class Encoding(Enum):
     """
     BASE_64 = 'base64'
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Encoding):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.value)
+
+    def __repr__(self) -> str:
+        return f'<Encoding name={self.name}, value={self.value}>'
+
 
 class AttachedText:
     """
@@ -190,6 +201,17 @@ class AttachedText:
     @content.setter
     def content(self, content: str) -> None:
         self._content = content
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, AttachedText):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.content, self.content_type, self.encoding))
+
+    def __repr__(self) -> str:
+        return f'<AttachedText content-type={self.content_type}, encoding={self.encoding}>'
 
 
 class HashAlgorithm(Enum):
@@ -322,11 +344,14 @@ class XsUri:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, XsUri):
-            return str(self) == str(other)
+            return hash(other) == hash(self)
         return False
 
+    def __hash__(self) -> int:
+        return hash(self._uri)
+
     def __repr__(self) -> str:
-        return self._uri
+        return f'<XsUri uri={self._uri}>'
 
 
 class ExternalReference:
@@ -878,6 +903,116 @@ class Tool:
 
     def __repr__(self) -> str:
         return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
+
+
+class IdentifiableAction:
+    """
+    This is out internal representation of the `identifiableActionType` complex type.
+
+    .. note::
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_identifiableActionType
+    """
+
+    def __init__(self, timestamp: Optional[datetime] = None, name: Optional[str] = None,
+                 email: Optional[str] = None) -> None:
+        if not timestamp and not name and not email:
+            raise NoPropertiesProvidedException(
+                'At least one of `timestamp`, `name` or `email` must be provided for an `IdentifiableAction`.'
+            )
+
+        self.timestamp = timestamp
+        self.name = name
+        self.email = email
+
+    @property
+    def timestamp(self) -> Optional[datetime]:
+        """
+        The timestamp in which the action occurred.
+
+        Returns:
+            `datetime` if set else `None`
+        """
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, timestamp: Optional[datetime]) -> None:
+        self._timestamp = timestamp
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        The name of the individual who performed the action.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    def email(self) -> Optional[str]:
+        """
+        The email address of the individual who performed the action.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._email
+
+    @email.setter
+    def email(self, email: Optional[str]) -> None:
+        self._email = email
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, IdentifiableAction):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((hash(self.timestamp), self.name, self.email))
+
+    def __repr__(self) -> str:
+        return f'<IdentifiableAction name={self.name}, email={self.email}>'
+
+
+class Copyright:
+    """
+    This is out internal representation of the `copyrightsType` complex type.
+
+    .. note::
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_copyrightsType
+    """
+
+    def __init__(self, text: str) -> None:
+        self.text = text
+
+    @property
+    def text(self) -> str:
+        """
+        Copyright statement.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._text
+
+    @text.setter
+    def text(self, text: str) -> None:
+        self._text = text
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Copyright):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.text)
+
+    def __repr__(self) -> str:
+        return f'<Copyright text={self.text}>'
 
 
 if sys.version_info >= (3, 8):
