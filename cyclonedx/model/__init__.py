@@ -292,6 +292,14 @@ class HashType:
     def get_hash_value(self) -> str:
         return self._content
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, HashType):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self._alg, self._content))
+
     def __repr__(self) -> str:
         return f'<Hash {self._alg.value}:{self._content}>'
 
@@ -351,7 +359,7 @@ class XsUri:
         return hash(self._uri)
 
     def __repr__(self) -> str:
-        return f'<XsUri uri={self._uri}>'
+        return self._uri
 
 
 class ExternalReference:
@@ -416,8 +424,19 @@ class ExternalReference:
         """
         return self._url
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ExternalReference):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self._type, self._url, self._comment,
+            tuple([hash(hash_) for hash_ in set(self._hashes)]) if self._hashes else None
+        ))
+
     def __repr__(self) -> str:
-        return f'<ExternalReference {self._type.name}, {self._url}> {self._hashes}'
+        return f'<ExternalReference {self._type.name}, {self._url}>'
 
 
 class License:
@@ -503,6 +522,17 @@ class License:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, License):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.id, self.name, self.text, self.url))
+
+    def __repr__(self) -> str:
+        return f'<License id={self.id}, name={self.name}>'
+
 
 class LicenseChoice:
     """
@@ -558,6 +588,17 @@ class LicenseChoice:
     @expression.setter
     def expression(self, expression: Optional[str]) -> None:
         self._expression = expression
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, LicenseChoice):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.license, self.expression))
+
+    def __repr__(self) -> str:
+        return f'<LicenseChoice license={self.license}, expression={self.expression}>'
 
 
 class Property:

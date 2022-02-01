@@ -26,8 +26,8 @@ from uuid import uuid4
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
-from . import AttachedText, ExternalReference, HashAlgorithm, HashType, LicenseChoice, OrganizationalEntity, Property, \
-    sha1sum, XsUri, IdentifiableAction, Copyright
+from . import AttachedText, Copyright, ExternalReference, HashAlgorithm, HashType, IdentifiableAction, LicenseChoice, \
+    OrganizationalEntity, Property, sha1sum, XsUri
 from .issue import IssueType
 from .release_note import ReleaseNotes
 from .vulnerability import Vulnerability
@@ -151,6 +151,11 @@ class ComponentEvidence:
 
     def __init__(self, licenses: Optional[List[LicenseChoice]] = None,
                  copyright_: Optional[List[Copyright]] = None) -> None:
+        if not licenses and not copyright_:
+            raise NoPropertiesProvidedException(
+                'At least one of `licenses` or `copyright_` must be supplied for a `ComponentEvidence`.'
+            )
+
         self.licenses = licenses
         self.copyright = copyright_
 
@@ -372,7 +377,10 @@ class Patch:
         return False
 
     def __hash__(self) -> int:
-        return hash((hash(self.type), hash(self.diff), str(self.resolves)))
+        return hash((
+            hash(self.type), hash(self.diff),
+            tuple([hash(issue) for issue in set(self.resolves)]) if self.resolves else None
+        ))
 
     def __repr__(self) -> str:
         return f'<Patch type={self.type}, id={id(self)}>'
@@ -559,7 +567,11 @@ class Pedigree:
 
     def __hash__(self) -> int:
         return hash((
-            str(self.ancestors), str(self.descendants), str(self.variants), str(self.commits), str(self.patches),
+            tuple([hash(ancestor) for ancestor in set(self.ancestors)]) if self.ancestors else None,
+            tuple([hash(descendant) for descendant in set(self.descendants)]) if self.descendants else None,
+            tuple([hash(variant) for variant in set(self.variants)]) if self.variants else None,
+            tuple([hash(commit) for commit in set(self.commits)]) if self.commits else None,
+            tuple([hash(patch) for patch in set(self.patches)]) if self.patches else None,
             self.notes
         ))
 
@@ -1220,9 +1232,15 @@ class Component:
 
     def __hash__(self) -> int:
         return hash((
-            self.author, self.copyright, self.description, str(self.external_references), self.group,
-            str(self.hashes), str(self.licenses), self.mime_type, self.name, str(self.properties), self.publisher,
-            self.purl, self.release_notes, self.scope, self.supplier, self.type, self.version, self.cpe
+            self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
+            self.version, self.description, self.scope,
+            tuple([hash(hash_) for hash_ in set(self.hashes)]) if self.hashes else None,
+            tuple([hash(license_) for license_ in set(self.licenses)]) if self.licenses else None,
+            self.copyright, self.cpe, self.purl, self.swid, self.pedigree,
+            tuple([hash(ref) for ref in set(self.external_references)]) if self.external_references else None,
+            tuple([hash(prop) for prop in set(self.properties)]) if self.properties else None,
+            tuple([hash(component) for component in set(self.components)]) if self.components else None,
+            self.evidence, self.release_notes
         ))
 
     def __repr__(self) -> str:

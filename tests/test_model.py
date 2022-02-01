@@ -17,13 +17,29 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import base64
+import datetime
 from unittest import TestCase
 
-from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
-
-from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashAlgorithm, HashType, Note, \
-    NoteText, XsUri
+from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException, \
+    NoPropertiesProvidedException
+from cyclonedx.model import Copyright, Encoding, ExternalReference, ExternalReferenceType, HashAlgorithm, HashType, \
+    IdentifiableAction, Note, NoteText, XsUri
 from cyclonedx.model.issue import IssueClassification, IssueType
+
+
+class TestModelCopyright(TestCase):
+
+    def test_same(self) -> None:
+        copy_1 = Copyright(text='Copyright (c) OWASP Foundation. All Rights Reserved.')
+        copy_2 = Copyright(text='Copyright (c) OWASP Foundation. All Rights Reserved.')
+        self.assertEqual(hash(copy_1), hash(copy_2))
+        self.assertTrue(copy_1 == copy_2)
+
+    def test_not_same(self) -> None:
+        copy_1 = Copyright(text='Copyright (c) OWASP Foundation. All Rights Reserved.')
+        copy_2 = Copyright(text='Copyright (c) OWASP Foundation.')
+        self.assertNotEqual(hash(copy_1), hash(copy_2))
+        self.assertFalse(copy_1 == copy_2)
 
 
 class TestModelExternalReference(TestCase):
@@ -42,6 +58,36 @@ class TestModelExternalReference(TestCase):
         self.assertEqual(e.get_comment(), '')
         self.assertListEqual(e.get_hashes(), [])
 
+    def test_same(self) -> None:
+        ref_1 = ExternalReference(
+            reference_type=ExternalReferenceType.OTHER,
+            url='https://cyclonedx.org',
+            comment='No comment'
+        )
+        ref_2 = ExternalReference(
+            reference_type=ExternalReferenceType.OTHER,
+            url='https://cyclonedx.org',
+            comment='No comment'
+        )
+        self.assertNotEqual(id(ref_1), id(ref_2))
+        self.assertEqual(hash(ref_1), hash(ref_2))
+        self.assertTrue(ref_1 == ref_2)
+
+    def test_not_same(self) -> None:
+        ref_1 = ExternalReference(
+            reference_type=ExternalReferenceType.OTHER,
+            url='https://cyclonedx.org',
+            comment='No comment'
+        )
+        ref_2 = ExternalReference(
+            reference_type=ExternalReferenceType.OTHER,
+            url='https://cyclonedx.org/',
+            comment='No comment'
+        )
+        self.assertNotEqual(id(ref_1), id(ref_2))
+        self.assertNotEqual(hash(ref_1), hash(ref_2))
+        self.assertFalse(ref_1 == ref_2)
+
 
 class TestModelHashType(TestCase):
 
@@ -58,6 +104,26 @@ class TestModelHashType(TestCase):
     def test_hash_type_from_unknown(self) -> None:
         with self.assertRaises(UnknownHashTypeException):
             HashType.from_composite_str('unknown:dc26cd71b80d6757139f38156a43c545')
+
+
+class TestModelIdentifiableAction(TestCase):
+
+    def test_no_params(self) -> None:
+        with self.assertRaises(NoPropertiesProvidedException):
+            IdentifiableAction()
+
+    def test_same(self) -> None:
+        ts = datetime.datetime.utcnow()
+        ia_1 = IdentifiableAction(timestamp=ts, name='A Name', email='something@somewhere.tld')
+        ia_2 = IdentifiableAction(timestamp=ts, name='A Name', email='something@somewhere.tld')
+        self.assertEqual(hash(ia_1), hash(ia_2))
+        self.assertTrue(ia_1 == ia_2)
+
+    def test_not_same(self) -> None:
+        ia_1 = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='A Name', email='something@somewhere.tld')
+        ia_2 = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='A Name', email='something@somewhere.tld')
+        self.assertNotEqual(hash(ia_1), hash(ia_2))
+        self.assertFalse(ia_1 == ia_2)
 
 
 class TestModelIssueType(TestCase):
