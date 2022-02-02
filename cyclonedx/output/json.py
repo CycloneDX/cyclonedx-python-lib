@@ -89,8 +89,8 @@ class Json(BaseOutput, BaseSchemaVersion):
         # Iterate Components
         if 'components' in bom_json.keys():
             for i in range(len(bom_json['components'])):
-                if 'version' not in bom_json['components'][i].keys() and not self.component_version_optional():
-                    bom_json['components'][i]['version'] = ''
+                if self.component_version_optional() and bom_json['components'][i]['version'] == "":
+                    del bom_json['components'][i]['version']
 
                 if not self.component_supports_author() and 'author' in bom_json['components'][i].keys():
                     del bom_json['components'][i]['author']

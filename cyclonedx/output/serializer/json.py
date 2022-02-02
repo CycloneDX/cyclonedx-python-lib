@@ -29,6 +29,7 @@ from uuid import UUID
 from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model import XsUri
+from cyclonedx.model.component import Component
 
 HYPHENATED_ATTRIBUTES = [
     'bom_ref', 'mime_type', 'x_trust_boundary'
@@ -77,8 +78,11 @@ class CycloneDxJSONEncoder(JSONEncoder):
                 elif '_' in new_key:
                     new_key = PYTHON_TO_JSON_NAME.sub(lambda x: x.group(1).upper(), new_key)
 
-                # Skip any None values
-                if v or v is False:
+                # Inject '' for Component.version if it's None
+                if isinstance(o, Component) and new_key == 'version' and v is None:
+                    d[new_key] = ""
+                elif v or v is False:
+                    # Skip any None values (exception 'version')
                     if isinstance(v, PackageURL):
                         # Special handling of PackageURL instances which JSON would otherwise automatically encode to
                         # an Array
