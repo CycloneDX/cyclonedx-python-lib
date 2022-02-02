@@ -122,7 +122,7 @@ class TestModelIdentifiableAction(TestCase):
 
     def test_not_same(self) -> None:
         ia_1 = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='A Name', email='something@somewhere.tld')
-        sleep(secs=1)
+        sleep(1)
         ia_2 = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='A Name', email='something@somewhere.tld')
         self.assertNotEqual(hash(ia_1), hash(ia_2))
         self.assertFalse(ia_1 == ia_2)
