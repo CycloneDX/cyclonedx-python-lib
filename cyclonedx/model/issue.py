@@ -283,7 +283,7 @@ class IssueType:
     def __hash__(self) -> int:
         return hash((
             self._type, self._id, self._name, self._description, self._source,
-            tuple([hash(ref) for ref in set(self._references)]) if self._references else None
+            tuple([hash(ref) for ref in set(sorted(self._references, key=hash))]) if self._references else None
         ))
 
     def __repr__(self) -> str:

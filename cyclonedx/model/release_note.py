@@ -238,3 +238,21 @@ class ReleaseNotes:
     @properties.setter
     def properties(self, properties: Optional[List[Property]]) -> None:
         self._properties = properties
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ReleaseNotes):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.type, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
+            tuple([hash(alias) for alias in set(sorted(self.aliases, key=hash))]) if self.aliases else None,
+            tuple([hash(tag) for tag in set(sorted(self.tags, key=hash))]) if self.tags else None,
+            tuple([hash(issue) for issue in set(sorted(self.resolves, key=hash))]) if self.resolves else None,
+            tuple([hash(note) for note in set(sorted(self.notes, key=hash))]) if self.notes else None,
+            tuple([hash(prop) for prop in set(sorted(self._properties, key=hash))]) if self._properties else None
+        ))
+
+    def __repr__(self) -> str:
+        return f'<ReleaseNotes type={self.type}, title={self.title}>'

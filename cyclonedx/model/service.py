@@ -333,9 +333,14 @@ class Service:
 
     def __hash__(self) -> int:
         return hash((
-            self.authenticated, self.data, self.description, str(self.endpoints),
-            str(self.external_references), self.group, str(self.licenses), self.name, self.properties, self.provider,
-            self.release_notes, str(self.services), self.version, self.x_trust_boundary
+            self.authenticated, self.data, self.description,
+            tuple([hash(uri) for uri in set(sorted(self.endpoints, key=hash))]) if self.endpoints else None,
+            tuple([hash(ref) for ref in
+                   set(sorted(self.external_references, key=hash))]) if self.external_references else None,
+            self.group, str(self.licenses), self.name, self.properties, self.provider,
+            self.release_notes,
+            tuple([hash(service) for service in set(sorted(self.services, key=hash))]) if self.services else None,
+            self.version, self.x_trust_boundary
         ))
 
     def __repr__(self) -> str:

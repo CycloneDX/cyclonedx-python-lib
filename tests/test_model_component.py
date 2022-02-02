@@ -286,6 +286,23 @@ class TestModelPatch(TestCase):
         self.assertNotEqual(id(p1), id(p2))
         self.assertTrue(p1 == p2)
 
+    def test_multiple_times_same(self) -> None:
+        i = 0
+        while i < 1000:
+            p1 = Patch(
+                type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
+                resolves=[get_issue_1(), get_issue_2()]
+            )
+            p2 = Patch(
+                type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
+                resolves=[get_issue_2(), get_issue_1()]
+            )
+            self.assertEqual(hash(p1), hash(p2))
+            self.assertNotEqual(id(p1), id(p2))
+            self.assertTrue(p1 == p2)
+
+            i += 1
+
     def test_not_same_1(self) -> None:
         p1 = Patch(
             type_=PatchClassification.MONKEY, diff=Diff(url=XsUri('https://cyclonedx.org/')),

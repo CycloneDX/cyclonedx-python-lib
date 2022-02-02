@@ -119,6 +119,17 @@ class DataClassification:
     def classification(self, classification: str) -> None:
         self._classification = classification
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, DataClassification):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.flow, self.classification))
+
+    def __repr__(self) -> str:
+        return f'<DataClassification flow={self.flow}>'
+
 
 class Encoding(Enum):
     """
@@ -128,17 +139,6 @@ class Encoding(Enum):
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/#type_encoding
     """
     BASE_64 = 'base64'
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Encoding):
-            return hash(other) == hash(self)
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self.value)
-
-    def __repr__(self) -> str:
-        return f'<Encoding name={self.name}, value={self.value}>'
 
 
 class AttachedText:
@@ -301,7 +301,7 @@ class HashType:
         return hash((self._alg, self._content))
 
     def __repr__(self) -> str:
-        return f'<Hash {self._alg.value}:{self._content}>'
+        return f'<HashType {self._alg.value}:{self._content}>'
 
 
 class ExternalReferenceType(Enum):
@@ -328,6 +328,17 @@ class ExternalReferenceType(Enum):
     SUPPORT = 'support'
     VCS = 'vcs'
     WEBSITE = 'website'
+
+    # def __eq__(self, other: object) -> bool:
+    #     if isinstance(other, ExternalReferenceType):
+    #         return hash(other) == hash(self)
+    #     return False
+    #
+    # def __hash__(self) -> int:
+    #     return hash(self.value)
+    #
+    # def __repr__(self) -> str:
+    #     return f'<ExternalReferenceType name={self.name}, value={self.value}>'
 
 
 class XsUri:
@@ -432,7 +443,7 @@ class ExternalReference:
     def __hash__(self) -> int:
         return hash((
             self._type, self._url, self._comment,
-            tuple([hash(hash_) for hash_ in set(self._hashes)]) if self._hashes else None
+            tuple([hash(hash_) for hash_ in set(sorted(self._hashes, key=hash))]) if self._hashes else None
         ))
 
     def __repr__(self) -> str:
@@ -634,6 +645,17 @@ class Property:
         """
         return self._value
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Property):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self._name, self._value))
+
+    def __repr__(self) -> str:
+        return f'<Property name={self._name}>'
+
 
 class NoteText:
     """
@@ -696,6 +718,17 @@ class NoteText:
     def encoding(self, encoding: Optional[Encoding]) -> None:
         self._encoding = encoding
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, NoteText):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.content, self.content_type, self.encoding))
+
+    def __repr__(self) -> str:
+        return f'<NoteText content_type={self.content_type}, encoding={self.encoding}>'
+
 
 class Note:
     """
@@ -752,6 +785,17 @@ class Note:
                     f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
                 )
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Note):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((hash(self.text), self.locale))
+
+    def __repr__(self) -> str:
+        return f'<Note id={id(self)}, locale={self.locale}>'
+
 
 class OrganizationalContact:
     """
@@ -800,6 +844,17 @@ class OrganizationalContact:
             `str` if set else `None`
         """
         return self._phone
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, OrganizationalContact):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.name, self.phone, self.email))
+
+    def __repr__(self) -> str:
+        return f'<OrganizationalContact name={self.name}>'
 
 
 class OrganizationalEntity:
@@ -850,6 +905,21 @@ class OrganizationalEntity:
             `List[OrganizationalContact]` if set else `None`
         """
         return self._contact
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, OrganizationalEntity):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.name,
+            tuple([hash(url) for url in set(sorted(self.urls, key=hash))]) if self.urls else None,
+            tuple([hash(contact) for contact in set(sorted(self.contacts, key=hash))]) if self.contacts else None
+        ))
+
+    def __repr__(self) -> str:
+        return f'<OrganizationalEntity name={self.name}>'
 
 
 class Tool:
@@ -942,8 +1012,21 @@ class Tool:
         """
         return self._version
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Tool):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self._vendor, self._name, self._version,
+            tuple([hash(hash_) for hash_ in set(sorted(self._hashes, key=hash))]) if self._hashes else None,
+            tuple([hash(ref) for ref in
+                   set(sorted(self._external_references, key=hash))]) if self._external_references else None
+        ))
+
     def __repr__(self) -> str:
-        return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
+        return f'<Tool name={self._name}, version={self._version}, vendor={self._vendor}>'
 
 
 class IdentifiableAction:

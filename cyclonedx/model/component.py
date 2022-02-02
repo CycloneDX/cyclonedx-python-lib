@@ -194,8 +194,9 @@ class ComponentEvidence:
 
     def __hash__(self) -> int:
         return hash((
-            tuple([hash(licence) for licence in set(self.licenses)]) if self.licenses else None,
-            tuple([hash(copyright_) for copyright_ in set(self.copyright)]) if self.copyright else None
+            tuple([hash(licence) for licence in set(sorted(self.licenses, key=hash))]) if self.licenses else None,
+            tuple(
+                [hash(copyright_) for copyright_ in set(sorted(self.copyright, key=hash))]) if self.copyright else None
         ))
 
     def __repr__(self) -> str:
@@ -379,7 +380,7 @@ class Patch:
     def __hash__(self) -> int:
         return hash((
             hash(self.type), hash(self.diff),
-            tuple([hash(issue) for issue in set(self.resolves)]) if self.resolves else None
+            tuple([hash(issue) for issue in set(sorted(self.resolves, key=hash))]) if self.resolves else None
         ))
 
     def __repr__(self) -> str:
@@ -567,11 +568,12 @@ class Pedigree:
 
     def __hash__(self) -> int:
         return hash((
-            tuple([hash(ancestor) for ancestor in set(self.ancestors)]) if self.ancestors else None,
-            tuple([hash(descendant) for descendant in set(self.descendants)]) if self.descendants else None,
-            tuple([hash(variant) for variant in set(self.variants)]) if self.variants else None,
-            tuple([hash(commit) for commit in set(self.commits)]) if self.commits else None,
-            tuple([hash(patch) for patch in set(self.patches)]) if self.patches else None,
+            tuple([hash(ancestor) for ancestor in set(sorted(self.ancestors, key=hash))]) if self.ancestors else None,
+            tuple([hash(descendant) for descendant in
+                   set(sorted(self.descendants, key=hash))]) if self.descendants else None,
+            tuple([hash(variant) for variant in set(sorted(self.variants, key=hash))]) if self.variants else None,
+            tuple([hash(commit) for commit in set(sorted(self.commits, key=hash))]) if self.commits else None,
+            tuple([hash(patch) for patch in set(sorted(self.patches, key=hash))]) if self.patches else None,
             self.notes
         ))
 
@@ -1234,12 +1236,14 @@ class Component:
         return hash((
             self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
             self.version, self.description, self.scope,
-            tuple([hash(hash_) for hash_ in set(self.hashes)]) if self.hashes else None,
-            tuple([hash(license_) for license_ in set(self.licenses)]) if self.licenses else None,
+            tuple([hash(hash_) for hash_ in set(sorted(self.hashes, key=hash))]) if self.hashes else None,
+            tuple([hash(license_) for license_ in set(sorted(self.licenses, key=hash))]) if self.licenses else None,
             self.copyright, self.cpe, self.purl, self.swid, self.pedigree,
-            tuple([hash(ref) for ref in set(self.external_references)]) if self.external_references else None,
-            tuple([hash(prop) for prop in set(self.properties)]) if self.properties else None,
-            tuple([hash(component) for component in set(self.components)]) if self.components else None,
+            tuple([hash(ref) for ref in
+                   set(sorted(self.external_references, key=hash))]) if self.external_references else None,
+            tuple([hash(prop) for prop in set(sorted(self.properties, key=hash))]) if self.properties else None,
+            tuple(
+                [hash(component) for component in set(sorted(self.components, key=hash))]) if self.components else None,
             self.evidence, self.release_notes
         ))
 
