@@ -154,6 +154,13 @@ def get_bom_just_complete_metadata() -> Bom:
     return bom
 
 
+def get_bom_with_external_references() -> Bom:
+    bom = Bom(external_references=[
+        get_external_reference_1(), get_external_reference_2()
+    ])
+    return bom
+
+
 def get_bom_with_services_simple() -> Bom:
     bom = Bom(services=[
         Service(name='my-first-service'),
@@ -285,6 +292,13 @@ def get_external_reference_1() -> ExternalReference:
             HashType.from_composite_str(
                 'sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
         ]
+    )
+
+
+def get_external_reference_2() -> ExternalReference:
+    return ExternalReference(
+        reference_type=ExternalReferenceType.WEBSITE,
+        url='https://cyclonedx.org'
     )
 
 

@@ -84,6 +84,13 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 for service in cast(List[Service], self.get_bom().services):
                     services_element.append(self._add_service_element(service=service))
 
+        if self.bom_supports_external_references():
+            if self.get_bom().external_references:
+                self._add_external_references_to_element(
+                    ext_refs=cast(List[ExternalReference], self.get_bom().external_references),
+                    element=self._root_bom_element
+                )
+
         if self.bom_supports_vulnerabilities() and has_vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
             for component in cast(List[Component], self.get_bom().components):
@@ -276,18 +283,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         # externalReferences
         if self.component_supports_external_references() and len(component.external_references) > 0:
-            external_references_e = ElementTree.SubElement(component_element, 'externalReferences')
-            for ext_ref in component.external_references:
-                external_reference_e = ElementTree.SubElement(
-                    external_references_e, 'reference', {'type': ext_ref.get_reference_type().value}
-                )
-                ElementTree.SubElement(external_reference_e, 'url').text = ext_ref.get_url()
-
-                if ext_ref.get_comment():
-                    ElementTree.SubElement(external_reference_e, 'comment').text = ext_ref.get_comment()
-
-                if self.external_references_supports_hashes() and len(ext_ref.get_hashes()) > 0:
-                    Xml._add_hashes_to_element(hashes=ext_ref.get_hashes(), element=external_reference_e)
+            self._add_external_references_to_element(ext_refs=component.external_references, element=component_element)
 
         # releaseNotes
         if self.component_supports_release_notes() and component.release_notes:

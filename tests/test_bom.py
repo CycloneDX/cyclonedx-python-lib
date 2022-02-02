@@ -46,3 +46,11 @@ class TestBom(TestCase):
         metadata.component = hextech
         self.assertFalse(metadata.component is None)
         self.assertEquals(metadata.component, hextech)
+
+    def test_empty_bom(self) -> None:
+        bom = Bom()
+        self.assertIsNotNone(bom.uuid)
+        self.assertIsNotNone(bom.metadata)
+        self.assertIsNone(bom.components)
+        self.assertIsNone(bom.services)
+        self.assertIsNone(bom.external_references)

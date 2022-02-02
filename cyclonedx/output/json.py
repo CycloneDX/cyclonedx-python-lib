@@ -113,6 +113,13 @@ class Json(BaseOutput, BaseSchemaVersion):
                 if not self.services_supports_release_notes() and 'releaseNotes' in bom_json['services'][i].keys():
                     del bom_json['services'][i]['releaseNotes']
 
+        # Iterate externalReferences
+        if 'externalReferences' in bom_json.keys():
+            for i in range(len(bom_json['externalReferences'])):
+                if not self.external_references_supports_hashes() \
+                        and 'hashes' in bom_json['externalReferences'][i].keys():
+                    del bom_json['externalReferences'][i]['hashes']
+
         # Iterate Vulnerabilities
         if 'vulnerabilities' in bom_json.keys():
             for i in range(len(bom_json['vulnerabilities'])):

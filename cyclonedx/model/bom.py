@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 from typing import cast, List, Optional
 from uuid import uuid4, UUID
 
-from . import ThisTool, Tool
+from . import ExternalReference, ThisTool, Tool
 from .component import Component
 from .service import Service
 from ..parser import BaseParser
@@ -149,7 +149,8 @@ class Bom:
         bom.add_components(parser.get_components())
         return bom
 
-    def __init__(self, components: Optional[List[Component]] = None, services: Optional[List[Service]] = None) -> None:
+    def __init__(self, components: Optional[List[Component]] = None, services: Optional[List[Service]] = None,
+                 external_references: Optional[List[ExternalReference]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -160,6 +161,7 @@ class Bom:
         self.metadata = BomMetaData()
         self.components = components
         self.services = services
+        self.external_references = external_references
 
     @property
     def uuid(self) -> UUID:
@@ -359,6 +361,33 @@ class Bom:
             return 0
 
         return len(self.services)
+
+    @property
+    def external_references(self) -> Optional[List[ExternalReference]]:
+        """
+        Provides the ability to document external references related to the BOM or to the project the BOM describes.
+
+        Returns:
+            List of `ExternalReference` else `None`
+        """
+        return self._external_references
+
+    @external_references.setter
+    def external_references(self, external_references: Optional[List[ExternalReference]]) -> None:
+        self._external_references = external_references
+
+    def add_external_reference(self, external_reference: ExternalReference) -> None:
+        """
+        Add an external reference to this Bom.
+
+        Args:
+            external_reference:
+                `ExternalReference` to add to this Bom.
+
+        Returns:
+            None
+        """
+        self.external_references = (self.external_references or []) + [external_reference]
 
     def has_vulnerabilities(self) -> bool:
         """
