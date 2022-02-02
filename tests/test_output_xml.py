@@ -102,29 +102,29 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_setuptools_complete.xml'
         )
 
-    # def test_simple_bom_v1_3(self) -> None:
-    #     self._validate_xml_bom(
-    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_3,
-    #         fixture='bom_setuptools.xml'
-    #     )
-    #
-    # def test_simple_bom_v1_2(self) -> None:
-    #     self._validate_xml_bom(
-    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_2,
-    #         fixture='bom_setuptools.xml'
-    #     )
-    #
-    # def test_simple_bom_v1_1(self) -> None:
-    #     self._validate_xml_bom(
-    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_1,
-    #         fixture='bom_setuptools.xml'
-    #     )
-    #
-    # def test_simple_bom_v1_0(self) -> None:
-    #     self._validate_xml_bom(
-    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_0,
-    #         fixture='bom_setuptools.xml'
-    #     )
+    def test_bom_v1_3_full_component(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_setuptools_complete.xml'
+        )
+
+    def test_bom_v1_2_full_component(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_setuptools_complete.xml'
+        )
+
+    def test_bom_v1_1_full_component(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_1,
+            fixture='bom_setuptools_complete.xml'
+        )
+
+    def test_bom_v1_0_full_component(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_0,
+            fixture='bom_setuptools_complete.xml'
+        )
 
     def test_bom_v1_4_component_hashes_external_references(self) -> None:
         self._validate_xml_bom(

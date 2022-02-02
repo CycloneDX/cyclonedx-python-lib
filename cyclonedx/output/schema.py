@@ -77,6 +77,9 @@ class BaseSchemaVersion(ABC):
     def component_supports_pedigree(self) -> bool:
         return True
 
+    def pedigree_supports_patches(self) -> bool:
+        return True
+
     def component_supports_external_references(self) -> bool:
         return True
 
@@ -182,6 +185,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
         return False
 
     def services_supports_properties(self) -> bool:
+        return False
+
+    def pedigree_supports_patches(self) -> bool:
         return False
 
     def services_supports_release_notes(self) -> bool:

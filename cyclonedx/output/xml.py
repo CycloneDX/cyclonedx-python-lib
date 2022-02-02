@@ -267,7 +267,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
                         ))
                     if commit.message:
                         ElementTree.SubElement(commit_element, 'message').text = commit.message
-            if component.pedigree.patches:
+            if self.pedigree_supports_patches() and component.pedigree.patches:
                 patches_element = ElementTree.SubElement(pedigree_element, 'patches')
                 for patch in component.pedigree.patches:
                     patches_element.append(Xml.add_patch_element(patch=patch))
