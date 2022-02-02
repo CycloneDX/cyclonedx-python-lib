@@ -78,6 +78,17 @@ class IssueTypeSource:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, IssueTypeSource):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.name, self.url))
+
+    def __repr__(self) -> str:
+        return f'<IssueTypeSource name={self._name}, url={self.url}>'
+
 
 class IssueType:
     """
@@ -263,3 +274,17 @@ class IssueType:
             self._source.url = source_url
         else:
             self._source = IssueTypeSource(url=source_url)
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, IssueType):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self._type, self._id, self._name, self._description, self._source,
+            tuple([hash(ref) for ref in set(sorted(self._references, key=hash))]) if self._references else None
+        ))
+
+    def __repr__(self) -> str:
+        return f'<IssueType type={self._type}, id={self._id}, name={self._name}>'

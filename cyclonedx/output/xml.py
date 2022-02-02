@@ -24,9 +24,10 @@ from xml.etree import ElementTree
 from . import BaseOutput, SchemaVersion
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
-from ..model import ExternalReference, HashType, OrganizationalEntity, OrganizationalContact, Property, Tool
+from ..model import AttachedText, ExternalReference, HashType, IdentifiableAction, OrganizationalEntity, \
+    OrganizationalContact, Property, Tool
 from ..model.bom import Bom
-from ..model.component import Component
+from ..model.component import Component, Patch
 from ..model.release_note import ReleaseNotes
 from ..model.service import Service
 from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySource, BomTargetVersionRange
@@ -114,6 +115,17 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return ElementTree.Element('bom', root_attributes)
 
+    @staticmethod
+    def _add_identifiable_action_element(identifiable_action: IdentifiableAction, tag_name: str) -> ElementTree.Element:
+        ia_element = ElementTree.Element(tag_name)
+        if identifiable_action.timestamp:
+            ElementTree.SubElement(ia_element, 'timestamp').text = identifiable_action.timestamp.isoformat()
+        if identifiable_action.name:
+            ElementTree.SubElement(ia_element, 'name').text = identifiable_action.name
+        if identifiable_action.email:
+            ElementTree.SubElement(ia_element, 'email').text = identifiable_action.email
+        return ia_element
+
     def _add_metadata_element(self) -> None:
         bom_metadata = self.get_bom().metadata
         metadata_e = ElementTree.SubElement(self._root_bom_element, 'metadata')
@@ -200,9 +212,67 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if component.purl:
             ElementTree.SubElement(component_element, 'purl').text = component.purl.to_string()
 
+        # swid
+        if self.component_supports_swid() and component.swid:
+            swid_attrs = {
+                "tagId": component.swid.tag_id,
+                "name": component.swid.name
+            }
+            if component.swid.version:
+                swid_attrs['version'] = component.swid.version
+            if component.swid.tag_version:
+                swid_attrs['tagVersion'] = str(component.swid.tag_version)
+            if component.swid.patch is not None:
+                swid_attrs['patch'] = str(component.swid.patch).lower()
+            swid_element = ElementTree.SubElement(component_element, 'swid', swid_attrs)
+            if component.swid.text:
+                swid_element.append(Xml._add_attached_text(attached_text=component.swid.text))
+            if component.swid.url:
+                ElementTree.SubElement(swid_element, 'url').text = str(component.swid.url)
+
         # modified
         if self.bom_requires_modified():
             ElementTree.SubElement(component_element, 'modified').text = 'false'
+
+        # pedigree
+        if self.component_supports_pedigree() and component.pedigree:
+            pedigree_element = ElementTree.SubElement(component_element, 'pedigree')
+            if component.pedigree.ancestors:
+                ancestors_element = ElementTree.SubElement(pedigree_element, 'ancestors')
+                for ancestor in component.pedigree.ancestors:
+                    ancestors_element.append(self._add_component_element(component=ancestor))
+            if component.pedigree.descendants:
+                descendants_element = ElementTree.SubElement(pedigree_element, 'descendants')
+                for descendant in component.pedigree.descendants:
+                    descendants_element.append(self._add_component_element(component=descendant))
+            if component.pedigree.variants:
+                variants_element = ElementTree.SubElement(pedigree_element, 'variants')
+                for variant in component.pedigree.variants:
+                    variants_element.append(self._add_component_element(component=variant))
+            if component.pedigree.commits:
+                commits_element = ElementTree.SubElement(pedigree_element, 'commits')
+                for commit in component.pedigree.commits:
+                    commit_element = ElementTree.SubElement(commits_element, 'commit')
+                    if commit.uid:
+                        ElementTree.SubElement(commit_element, 'uid').text = commit.uid
+                    if commit.url:
+                        ElementTree.SubElement(commit_element, 'url').text = str(commit.url)
+                    if commit.author:
+                        commit_element.append(Xml._add_identifiable_action_element(
+                            identifiable_action=commit.author, tag_name='author'
+                        ))
+                    if commit.committer:
+                        commit_element.append(Xml._add_identifiable_action_element(
+                            identifiable_action=commit.committer, tag_name='committer'
+                        ))
+                    if commit.message:
+                        ElementTree.SubElement(commit_element, 'message').text = commit.message
+            if self.pedigree_supports_patches() and component.pedigree.patches:
+                patches_element = ElementTree.SubElement(pedigree_element, 'patches')
+                for patch in component.pedigree.patches:
+                    patches_element.append(Xml.add_patch_element(patch=patch))
+            if component.pedigree.notes:
+                ElementTree.SubElement(pedigree_element, 'notes').text = component.pedigree.notes
 
         # externalReferences
         if self.component_supports_external_references() and len(component.external_references) > 0:
@@ -287,6 +357,18 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 ElementTree.SubElement(note_e, 'text', text_attrs).text = note.text.content
         if release_notes.properties:
             Xml._add_properties_element(properties=release_notes.properties, parent_element=release_notes_e)
+
+    @staticmethod
+    def add_patch_element(patch: Patch) -> ElementTree.Element:
+        patch_element = ElementTree.Element('patch', {"type": patch.type.value})
+        if patch.diff:
+            diff_element = ElementTree.SubElement(patch_element, 'diff')
+            if patch.diff.text:
+                diff_element.append(Xml._add_attached_text(attached_text=patch.diff.text))
+            if patch.diff.url:
+                ElementTree.SubElement(diff_element, 'url').text = str(patch.diff.url)
+
+        return patch_element
 
     @staticmethod
     def _add_properties_element(properties: List[Property], parent_element: ElementTree.Element) -> None:
@@ -594,6 +676,17 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 ElementTree.SubElement(ext_ref_element, 'comment').text = external_reference.get_comment()
             if self.external_references_supports_hashes() and external_reference.get_hashes():
                 Xml._add_hashes_to_element(hashes=external_reference.get_hashes(), element=ext_ref_element)
+
+    @staticmethod
+    def _add_attached_text(attached_text: AttachedText, tag_name: str = 'text') -> ElementTree.Element:
+        element_attributes = {}
+        if attached_text.content_type:
+            element_attributes['content-type'] = attached_text.content_type
+        if attached_text.encoding:
+            element_attributes['encoding'] = attached_text.encoding.value
+        at_element = ElementTree.Element(tag_name, element_attributes)
+        at_element.text = attached_text.content
+        return at_element
 
     @staticmethod
     def _add_hashes_to_element(hashes: List[HashType], element: ElementTree.Element) -> None:

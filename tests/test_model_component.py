@@ -16,12 +16,40 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+import datetime
 from typing import List
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from cyclonedx.model import ExternalReference, ExternalReferenceType, Property
-from cyclonedx.model.component import Component, ComponentType
+from cyclonedx.exception.model import NoPropertiesProvidedException
+from cyclonedx.model import AttachedText, Copyright, ExternalReference, ExternalReferenceType, \
+    IdentifiableAction, Property, XsUri
+from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Diff, Patch, \
+    PatchClassification, Pedigree
+from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version, \
+    get_component_toml_with_hashes_with_references, get_issue_1, get_issue_2, get_pedigree_1, get_swid_1, get_swid_2
+
+
+class TestModelCommit(TestCase):
+
+    def test_no_parameters(self) -> None:
+        with self.assertRaises(NoPropertiesProvidedException):
+            Commit()
+
+    def test_same(self) -> None:
+        ia_comitter = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Committer')
+        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
+        c2 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
+        self.assertEqual(hash(c1), hash(c2))
+        self.assertTrue(c1 == c2)
+
+    def test_not_same(self) -> None:
+        ia_author = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Author')
+        ia_comitter = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Committer')
+        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
+        c2 = Commit(uid='a-random-uid', author=ia_author, committer=ia_comitter, message="A commit message")
+        self.assertNotEqual(hash(c1), hash(c2))
+        self.assertFalse(c1 == c2)
 
 
 class TestModelComponent(TestCase):
@@ -167,3 +195,169 @@ class TestModelComponent(TestCase):
         )
 
         self.assertNotEqual(c, c2)
+
+    def test_same_1(self) -> None:
+        c1 = get_component_setuptools_simple()
+        c2 = get_component_setuptools_simple()
+        self.assertNotEqual(id(c1), id(c2))
+        self.assertEqual(hash(c1), hash(c2))
+        self.assertTrue(c1 == c2)
+
+    def test_same_2(self) -> None:
+        c1 = get_component_toml_with_hashes_with_references()
+        c2 = get_component_toml_with_hashes_with_references()
+        self.assertNotEqual(id(c1), id(c2))
+        self.assertEqual(hash(c1), hash(c2))
+        self.assertTrue(c1 == c2)
+
+    def test_same_3(self) -> None:
+        c1 = get_component_setuptools_simple_no_version()
+        c2 = get_component_setuptools_simple_no_version()
+        self.assertNotEqual(id(c1), id(c2))
+        self.assertEqual(hash(c1), hash(c2))
+        self.assertTrue(c1 == c2)
+
+    def test_not_same_1(self) -> None:
+        c1 = get_component_setuptools_simple()
+        c2 = get_component_setuptools_simple_no_version()
+        self.assertNotEqual(id(c1), id(c2))
+        self.assertNotEqual(hash(c1), hash(c2))
+        self.assertFalse(c1 == c2)
+
+
+class TestModelComponentEvidence(TestCase):
+
+    def test_no_params(self) -> None:
+        with self.assertRaises(NoPropertiesProvidedException):
+            ComponentEvidence()
+
+    def test_same_1(self) -> None:
+        ce_1 = ComponentEvidence(copyright_=[Copyright(text='Commercial')])
+        ce_2 = ComponentEvidence(copyright_=[Copyright(text='Commercial')])
+        self.assertEqual(hash(ce_1), hash(ce_2))
+        self.assertTrue(ce_1 == ce_2)
+
+    def test_same_2(self) -> None:
+        ce_1 = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
+        ce_2 = ComponentEvidence(copyright_=[Copyright(text='Commercial 2'), Copyright(text='Commercial')])
+        self.assertEqual(hash(ce_1), hash(ce_2))
+        self.assertTrue(ce_1 == ce_2)
+
+    def test_not_same_1(self) -> None:
+        ce_1 = ComponentEvidence(copyright_=[Copyright(text='Commercial')])
+        ce_2 = ComponentEvidence(copyright_=[Copyright(text='Commercial 2')])
+        self.assertNotEqual(hash(ce_1), hash(ce_2))
+        self.assertFalse(ce_1 == ce_2)
+
+
+class TestModelDiff(TestCase):
+
+    def test_no_params(self) -> None:
+        with self.assertRaises(NoPropertiesProvidedException):
+            Diff()
+
+    def test_same(self) -> None:
+        at = AttachedText(content='A very long diff')
+        diff_1 = Diff(text=at, url=XsUri('https://cyclonedx.org'))
+        diff_2 = Diff(text=at, url=XsUri('https://cyclonedx.org'))
+        self.assertEqual(hash(diff_1), hash(diff_2))
+        self.assertTrue(diff_1 == diff_2)
+
+    def test_not_same(self) -> None:
+        at = AttachedText(content='A very long diff')
+        diff_1 = Diff(text=at, url=XsUri('https://cyclonedx.org/'))
+        diff_2 = Diff(text=at, url=XsUri('https://cyclonedx.org'))
+        self.assertNotEqual(hash(diff_1), hash(diff_2))
+        self.assertFalse(diff_1 == diff_2)
+
+
+class TestModelPatch(TestCase):
+
+    def test_same_1(self) -> None:
+        p1 = Patch(
+            type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
+            resolves=[get_issue_1(), get_issue_2()]
+        )
+        p2 = Patch(
+            type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
+            resolves=[get_issue_2(), get_issue_1()]
+        )
+        self.assertEqual(hash(p1), hash(p2))
+        self.assertNotEqual(id(p1), id(p2))
+        self.assertTrue(p1 == p2)
+
+    def test_multiple_times_same(self) -> None:
+        i = 0
+        while i < 1000:
+            p1 = Patch(
+                type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
+                resolves=[get_issue_1(), get_issue_2()]
+            )
+            p2 = Patch(
+                type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
+                resolves=[get_issue_2(), get_issue_1()]
+            )
+            self.assertEqual(hash(p1), hash(p2))
+            self.assertNotEqual(id(p1), id(p2))
+            self.assertTrue(p1 == p2)
+
+            i += 1
+
+    def test_not_same_1(self) -> None:
+        p1 = Patch(
+            type_=PatchClassification.MONKEY, diff=Diff(url=XsUri('https://cyclonedx.org/')),
+            resolves=[get_issue_1(), get_issue_2()]
+        )
+        p2 = Patch(
+            type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
+            resolves=[get_issue_2(), get_issue_1()]
+        )
+        self.assertNotEqual(hash(p1), hash(p2))
+        self.assertNotEqual(id(p1), id(p2))
+        self.assertFalse(p1 == p2)
+
+
+class TestModelPedigree(TestCase):
+
+    def test_no_params(self) -> None:
+        with self.assertRaises(NoPropertiesProvidedException):
+            Pedigree()
+
+    def test_same_1(self) -> None:
+        p1 = get_pedigree_1()
+        p2 = get_pedigree_1()
+        self.assertNotEqual(id(p1), id(p2))
+        self.assertEqual(hash(p1), hash(p2))
+        self.assertTrue(p1 == p2)
+
+    def test_not_same_1(self) -> None:
+        p1 = get_pedigree_1()
+        p2 = get_pedigree_1()
+        p2.notes = 'Some other notes here'
+        self.assertNotEqual(id(p1), id(p2))
+        self.assertNotEqual(hash(p1), hash(p2))
+        self.assertFalse(p1 == p2)
+
+
+class TestModelSwid(TestCase):
+
+    def test_same_1(self) -> None:
+        sw_1 = get_swid_1()
+        sw_2 = get_swid_1()
+        self.assertNotEqual(id(sw_1), id(sw_2))
+        self.assertEqual(hash(sw_1), hash(sw_2))
+        self.assertTrue(sw_1 == sw_2)
+
+    def test_same_2(self) -> None:
+        sw_1 = get_swid_2()
+        sw_2 = get_swid_2()
+        self.assertNotEqual(id(sw_1), id(sw_2))
+        self.assertEqual(hash(sw_1), hash(sw_2))
+        self.assertTrue(sw_1 == sw_2)
+
+    def test_not_same(self) -> None:
+        sw_1 = get_swid_1()
+        sw_2 = get_swid_2()
+        self.assertNotEqual(id(sw_1), id(sw_2))
+        self.assertNotEqual(hash(sw_1), hash(sw_2))
+        self.assertFalse(sw_1 == sw_2)

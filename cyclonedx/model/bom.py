@@ -107,6 +107,21 @@ class BomMetaData:
         """
         self._component = component
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, BomMetaData):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.timestamp,
+            tuple([hash(tool) for tool in set(sorted(self.tools, key=hash))]) if self.tools else None,
+            hash(self.component)
+        ))
+
+    def __repr__(self) -> str:
+        return f'<BomMetaData timestamp={self.timestamp.utcnow()}>'
+
 
 class Bom:
     """
@@ -359,3 +374,18 @@ class Bom:
                     return True
 
         return False
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Bom):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.uuid, hash(self.metadata),
+            tuple([hash(c) for c in set(sorted(self.components, key=hash))]) if self.components else None,
+            tuple([hash(s) for s in set(sorted(self.services, key=hash))]) if self.services else None
+        ))
+
+    def __repr__(self) -> str:
+        return f'<Bom uuid={self.uuid}>'

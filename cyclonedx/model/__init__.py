@@ -14,11 +14,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-
 import hashlib
 import re
 import sys
 import warnings
+from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -119,6 +119,17 @@ class DataClassification:
     def classification(self, classification: str) -> None:
         self._classification = classification
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, DataClassification):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.flow, self.classification))
+
+    def __repr__(self) -> str:
+        return f'<DataClassification flow={self.flow}>'
+
 
 class Encoding(Enum):
     """
@@ -190,6 +201,17 @@ class AttachedText:
     @content.setter
     def content(self, content: str) -> None:
         self._content = content
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, AttachedText):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.content, self.content_type, self.encoding))
+
+    def __repr__(self) -> str:
+        return f'<AttachedText content-type={self.content_type}, encoding={self.encoding}>'
 
 
 class HashAlgorithm(Enum):
@@ -270,8 +292,16 @@ class HashType:
     def get_hash_value(self) -> str:
         return self._content
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, HashType):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self._alg, self._content))
+
     def __repr__(self) -> str:
-        return f'<Hash {self._alg.value}:{self._content}>'
+        return f'<HashType {self._alg.value}:{self._content}>'
 
 
 class ExternalReferenceType(Enum):
@@ -299,6 +329,17 @@ class ExternalReferenceType(Enum):
     VCS = 'vcs'
     WEBSITE = 'website'
 
+    # def __eq__(self, other: object) -> bool:
+    #     if isinstance(other, ExternalReferenceType):
+    #         return hash(other) == hash(self)
+    #     return False
+    #
+    # def __hash__(self) -> int:
+    #     return hash(self.value)
+    #
+    # def __repr__(self) -> str:
+    #     return f'<ExternalReferenceType name={self.name}, value={self.value}>'
+
 
 class XsUri:
     """
@@ -322,8 +363,11 @@ class XsUri:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, XsUri):
-            return str(self) == str(other)
+            return hash(other) == hash(self)
         return False
+
+    def __hash__(self) -> int:
+        return hash(self._uri)
 
     def __repr__(self) -> str:
         return self._uri
@@ -391,8 +435,19 @@ class ExternalReference:
         """
         return self._url
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ExternalReference):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self._type, self._url, self._comment,
+            tuple([hash(hash_) for hash_ in set(sorted(self._hashes, key=hash))]) if self._hashes else None
+        ))
+
     def __repr__(self) -> str:
-        return f'<ExternalReference {self._type.name}, {self._url}> {self._hashes}'
+        return f'<ExternalReference {self._type.name}, {self._url}>'
 
 
 class License:
@@ -478,6 +533,17 @@ class License:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, License):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.id, self.name, self.text, self.url))
+
+    def __repr__(self) -> str:
+        return f'<License id={self.id}, name={self.name}>'
+
 
 class LicenseChoice:
     """
@@ -534,6 +600,17 @@ class LicenseChoice:
     def expression(self, expression: Optional[str]) -> None:
         self._expression = expression
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, LicenseChoice):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.license, self.expression))
+
+    def __repr__(self) -> str:
+        return f'<LicenseChoice license={self.license}, expression={self.expression}>'
+
 
 class Property:
     """
@@ -567,6 +644,17 @@ class Property:
             Value of this Property as `str`.
         """
         return self._value
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Property):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self._name, self._value))
+
+    def __repr__(self) -> str:
+        return f'<Property name={self._name}>'
 
 
 class NoteText:
@@ -630,6 +718,17 @@ class NoteText:
     def encoding(self, encoding: Optional[Encoding]) -> None:
         self._encoding = encoding
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, NoteText):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.content, self.content_type, self.encoding))
+
+    def __repr__(self) -> str:
+        return f'<NoteText content_type={self.content_type}, encoding={self.encoding}>'
+
 
 class Note:
     """
@@ -686,6 +785,17 @@ class Note:
                     f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
                 )
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Note):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((hash(self.text), self.locale))
+
+    def __repr__(self) -> str:
+        return f'<Note id={id(self)}, locale={self.locale}>'
+
 
 class OrganizationalContact:
     """
@@ -734,6 +844,17 @@ class OrganizationalContact:
             `str` if set else `None`
         """
         return self._phone
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, OrganizationalContact):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((self.name, self.phone, self.email))
+
+    def __repr__(self) -> str:
+        return f'<OrganizationalContact name={self.name}>'
 
 
 class OrganizationalEntity:
@@ -784,6 +905,21 @@ class OrganizationalEntity:
             `List[OrganizationalContact]` if set else `None`
         """
         return self._contact
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, OrganizationalEntity):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.name,
+            tuple([hash(url) for url in set(sorted(self.urls, key=hash))]) if self.urls else None,
+            tuple([hash(contact) for contact in set(sorted(self.contacts, key=hash))]) if self.contacts else None
+        ))
+
+    def __repr__(self) -> str:
+        return f'<OrganizationalEntity name={self.name}>'
 
 
 class Tool:
@@ -876,8 +1012,131 @@ class Tool:
         """
         return self._version
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Tool):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self._vendor, self._name, self._version,
+            tuple([hash(hash_) for hash_ in set(sorted(self._hashes, key=hash))]) if self._hashes else None,
+            tuple([hash(ref) for ref in
+                   set(sorted(self._external_references, key=hash))]) if self._external_references else None
+        ))
+
     def __repr__(self) -> str:
-        return '<Tool {}:{}:{}>'.format(self._vendor, self._name, self._version)
+        return f'<Tool name={self._name}, version={self._version}, vendor={self._vendor}>'
+
+
+class IdentifiableAction:
+    """
+    This is out internal representation of the `identifiableActionType` complex type.
+
+    .. note::
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_identifiableActionType
+    """
+
+    def __init__(self, timestamp: Optional[datetime] = None, name: Optional[str] = None,
+                 email: Optional[str] = None) -> None:
+        if not timestamp and not name and not email:
+            raise NoPropertiesProvidedException(
+                'At least one of `timestamp`, `name` or `email` must be provided for an `IdentifiableAction`.'
+            )
+
+        self.timestamp = timestamp
+        self.name = name
+        self.email = email
+
+    @property
+    def timestamp(self) -> Optional[datetime]:
+        """
+        The timestamp in which the action occurred.
+
+        Returns:
+            `datetime` if set else `None`
+        """
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, timestamp: Optional[datetime]) -> None:
+        self._timestamp = timestamp
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        The name of the individual who performed the action.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    def email(self) -> Optional[str]:
+        """
+        The email address of the individual who performed the action.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._email
+
+    @email.setter
+    def email(self, email: Optional[str]) -> None:
+        self._email = email
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, IdentifiableAction):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((hash(self.timestamp), self.name, self.email))
+
+    def __repr__(self) -> str:
+        return f'<IdentifiableAction name={self.name}, email={self.email}>'
+
+
+class Copyright:
+    """
+    This is out internal representation of the `copyrightsType` complex type.
+
+    .. note::
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_copyrightsType
+    """
+
+    def __init__(self, text: str) -> None:
+        self.text = text
+
+    @property
+    def text(self) -> str:
+        """
+        Copyright statement.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._text
+
+    @text.setter
+    def text(self, text: str) -> None:
+        self._text = text
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Copyright):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.text)
+
+    def __repr__(self) -> str:
+        return f'<Copyright text={self.text}>'
 
 
 if sys.version_info >= (3, 8):

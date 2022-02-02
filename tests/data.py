@@ -19,14 +19,16 @@
 import base64
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List
+from typing import List, Optional
 
 from packageurl import PackageURL
 
-from cyclonedx.model import Encoding, ExternalReference, ExternalReferenceType, HashType, LicenseChoice, Note, \
-    NoteText, OrganizationalContact, OrganizationalEntity, Property, Tool, XsUri, DataClassification, DataFlow
+from cyclonedx.model import AttachedText, DataClassification, DataFlow, Encoding, ExternalReference, \
+    ExternalReferenceType, HashType, LicenseChoice, Note, NoteText, OrganizationalContact, OrganizationalEntity, \
+    Property, Tool, XsUri
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component, ComponentType
+from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Copyright, Patch, \
+    PatchClassification, Pedigree, Swid
 from cyclonedx.model.issue import IssueClassification, IssueType
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -45,63 +47,41 @@ MOCK_UUID_6 = 'df70b5f1-8f53-47a4-be48-669ae78795e6'
 
 
 def get_bom_with_component_setuptools_basic() -> Bom:
-    bom = Bom(
-        components=[Component(
-            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
-            purl=PackageURL(
-                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-            ), license_str='MIT License', author='Test Author'
-        )]
-    )
-    return bom
+    return Bom(components=[get_component_setuptools_simple()])
 
 
 def get_bom_with_component_setuptools_with_cpe() -> Bom:
-    bom = Bom(
-        components=[Component(
-            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
-            purl=PackageURL(
-                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-            ), license_str='MIT License', author='Test Author',
-            cpe='cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
-        )]
-    )
-    return bom
+    component = get_component_setuptools_simple()
+    component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
+    return Bom(components=[component])
 
 
 def get_bom_with_component_setuptools_no_component_version() -> Bom:
-    bom = Bom(
-        components=[Component(
-            name='setuptools', bom_ref='pkg:pypi/setuptools?extension=tar.gz',
-            purl=PackageURL(
-                type='pypi', name='setuptools', qualifiers='extension=tar.gz'
-            ), license_str='MIT License', author='Test Author'
-        )]
-    )
-    return bom
+    return Bom(components=[get_component_setuptools_simple_no_version()])
 
 
 def get_bom_with_component_setuptools_with_release_notes() -> Bom:
-    bom = Bom(
-        components=[Component(
-            name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
-            purl=PackageURL(
-                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-            ), license_str='MIT License', author='Test Author',
-            release_notes=get_release_notes()
-        )]
-    )
-    return bom
+    component = get_component_setuptools_simple()
+    component.release_notes = get_release_notes()
+    return Bom(components=[component])
+
+
+def get_bom_with_component_setuptools_complete() -> Bom:
+    component = get_component_setuptools_simple()
+    component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
+    component.swid = get_swid_1()
+    component.pedigree = get_pedigree_1()
+    component.components = [
+        get_component_setuptools_simple(),
+        get_component_toml_with_hashes_with_references()
+    ]
+    component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
+    return Bom(components=[component])
 
 
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom = Bom()
-    component = Component(
-        name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
-        purl=PackageURL(
-            type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-        ), license_str='MIT License', author='Test Author'
-    )
+    component = get_component_setuptools_simple()
     vulnerability = Vulnerability(
         bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=get_vulnerability_source_nvd(),
         references=[
@@ -163,19 +143,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
 
 
 def get_bom_with_component_toml_1() -> Bom:
-    bom = Bom(components=[
-        Component(
-            name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
-            purl=PackageURL(
-                type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
-            ), hashes=[
-                HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
-            ], external_references=[
-                get_external_reference_1()
-            ]
-        )
-    ])
-    return bom
+    return Bom(components=[get_component_toml_with_hashes_with_references()])
 
 
 def get_bom_just_complete_metadata() -> Bom:
@@ -276,6 +244,38 @@ def get_bom_with_nested_services() -> Bom:
     return bom
 
 
+def get_component_setuptools_simple(bom_ref: Optional[str] = None) -> Component:
+    return Component(
+        name='setuptools', version='50.3.2',
+        bom_ref=bom_ref or 'pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+        purl=PackageURL(
+            type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+        ), license_str='MIT License', author='Test Author'
+    )
+
+
+def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) -> Component:
+    return Component(
+        name='setuptools', bom_ref=bom_ref or 'pkg:pypi/setuptools?extension=tar.gz',
+        purl=PackageURL(
+            type='pypi', name='setuptools', qualifiers='extension=tar.gz'
+        ), license_str='MIT License', author='Test Author'
+    )
+
+
+def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None) -> Component:
+    return Component(
+        name='toml', version='0.10.2', bom_ref=bom_ref or 'pkg:pypi/toml@0.10.2?extension=tar.gz',
+        purl=PackageURL(
+            type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
+        ), hashes=[
+            HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
+        ], external_references=[
+            get_external_reference_1()
+        ]
+    )
+
+
 def get_external_reference_1() -> ExternalReference:
     return ExternalReference(
         reference_type=ExternalReferenceType.DISTRIBUTION,
@@ -288,6 +288,30 @@ def get_external_reference_1() -> ExternalReference:
     )
 
 
+def get_issue_1() -> IssueType:
+    return IssueType(
+        classification=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
+        description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
+        source_name='NVD', source_url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'),
+        references=[
+            XsUri('https://logging.apache.org/log4j/2.x/security.html'),
+            XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
+        ]
+    )
+
+
+def get_issue_2() -> IssueType:
+    return IssueType(
+        classification=IssueClassification.SECURITY, id='CVE-2021-44229', name='Apache Log4Shell',
+        description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
+        source_name='NVD', source_url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'),
+        references=[
+            XsUri('https://logging.apache.org/log4j/2.x/security.html'),
+            XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
+        ]
+    )
+
+
 def get_org_entity_1() -> OrganizationalEntity:
     return OrganizationalEntity(
         name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[
@@ -295,6 +319,26 @@ def get_org_entity_1() -> OrganizationalEntity:
             OrganizationalContact(name='A N Other', email='someone@somewhere.tld',
                                   phone='+44 (0)1234 567890')
         ]
+    )
+
+
+def get_pedigree_1() -> Pedigree:
+    return Pedigree(
+        ancestors=[
+            get_component_setuptools_simple(bom_ref='ccc8d7ee-4b9c-4750-aee0-a72585152291'),
+            get_component_setuptools_simple_no_version(bom_ref='8a3893b3-9923-4adb-a1d3-47456636ba0a')
+        ],
+        descendants=[
+            get_component_setuptools_simple_no_version(bom_ref='28b2d8ce-def0-446f-a221-58dee0b44acc'),
+            get_component_toml_with_hashes_with_references(bom_ref='555ca729-93c6-48f3-956e-bdaa4a2f0bfa')
+        ],
+        variants=[
+            get_component_toml_with_hashes_with_references(bom_ref='e7abdcca-5ba2-4f29-b2cf-b1e1ef788e66'),
+            get_component_setuptools_simple(bom_ref='ded1d73e-1fca-4302-b520-f1bc53979958')
+        ],
+        commits=[Commit(uid='a-random-uid', message="A commit message")],
+        patches=[Patch(type_=PatchClassification.BACKPORT)],
+        notes='Some notes here please'
     )
 
 
@@ -319,17 +363,7 @@ def get_release_notes() -> ReleaseNotes:
             "First Test Release"
         ],
         tags=['test', 'alpha'],
-        resolves=[
-            IssueType(
-                classification=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
-                description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
-                source_name='NVD', source_url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'),
-                references=[
-                    XsUri('https://logging.apache.org/log4j/2.x/security.html'),
-                    XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
-                ]
-            )
-        ],
+        resolves=[get_issue_1()],
         notes=[
             Note(
                 text=NoteText(
@@ -345,6 +379,30 @@ def get_release_notes() -> ReleaseNotes:
             )
         ],
         properties=get_properties_1()
+    )
+
+
+def get_swid_1() -> Swid:
+    return Swid(
+        tag_id='swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1', name='Test Application',
+        version='3.4.5', text=AttachedText(
+            content='PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiID8+CjxTb2Z0d2FyZUlkZW50aXR5IHhtbDpsYW5nPSJFTiIgbm'
+                    'FtZT0iQWNtZSBBcHBsaWNhdGlvbiIgdmVyc2lvbj0iOS4xLjEiIAogdmVyc2lvblNjaGVtZT0ibXVsdGlwYXJ0bnVtZXJpYyIg'
+                    'CiB0YWdJZD0ic3dpZGdlbi1iNTk1MWFjOS00MmMwLWYzODItM2YxZS1iYzdhMmE0NDk3Y2JfOS4xLjEiIAogeG1sbnM9Imh0dH'
+                    'A6Ly9zdGFuZGFyZHMuaXNvLm9yZy9pc28vMTk3NzAvLTIvMjAxNS9zY2hlbWEueHNkIj4gCiB4bWxuczp4c2k9Imh0dHA6Ly93'
+                    'd3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiAKIHhzaTpzY2hlbWFMb2NhdGlvbj0iaHR0cDovL3N0YW5kYXJkcy'
+                    '5pc28ub3JnL2lzby8xOTc3MC8tMi8yMDE1LWN1cnJlbnQvc2NoZW1hLnhzZCBzY2hlbWEueHNkIiA+CiAgPE1ldGEgZ2VuZXJh'
+                    'dG9yPSJTV0lEIFRhZyBPbmxpbmUgR2VuZXJhdG9yIHYwLjEiIC8+IAogIDxFbnRpdHkgbmFtZT0iQWNtZSwgSW5jLiIgcmVnaW'
+                    'Q9ImV4YW1wbGUuY29tIiByb2xlPSJ0YWdDcmVhdG9yIiAvPiAKPC9Tb2Z0d2FyZUlkZW50aXR5Pg==',
+            content_type='text/xml', encoding=Encoding.BASE_64
+        )
+    )
+
+
+def get_swid_2() -> Swid:
+    return Swid(
+        tag_id='swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1', name='Test Application',
+        version='3.4.5', url=XsUri('https://cyclonedx.org')
     )
 
 

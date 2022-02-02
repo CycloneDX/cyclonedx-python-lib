@@ -71,6 +71,15 @@ class BaseSchemaVersion(ABC):
     def component_version_optional(self) -> bool:
         return False
 
+    def component_supports_swid(self) -> bool:
+        return True
+
+    def component_supports_pedigree(self) -> bool:
+        return True
+
+    def pedigree_supports_patches(self) -> bool:
+        return True
+
     def component_supports_external_references(self) -> bool:
         return True
 
@@ -178,6 +187,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
     def services_supports_properties(self) -> bool:
         return False
 
+    def pedigree_supports_patches(self) -> bool:
+        return False
+
     def services_supports_release_notes(self) -> bool:
         return False
 
@@ -194,6 +206,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
         return False
 
     def component_supports_author(self) -> bool:
+        return False
+
+    def component_supports_swid(self) -> bool:
         return False
 
     def component_supports_release_notes(self) -> bool:
@@ -246,6 +261,12 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def component_supports_mime_type_attribute(self) -> bool:
+        return False
+
+    def component_supports_swid(self) -> bool:
+        return False
+
+    def component_supports_pedigree(self) -> bool:
         return False
 
     def component_supports_external_references(self) -> bool:
