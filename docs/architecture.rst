@@ -20,6 +20,7 @@ When wishing to generate a BOM, the process is as follows:
    :caption: Contents:
 
    modelling
+   schema-support
    outputting
 
 .. _cyclondex-python: https://pypi.org/project/cyclonedx-bom/
