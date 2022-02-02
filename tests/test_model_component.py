@@ -22,12 +22,12 @@ from unittest import TestCase
 from unittest.mock import Mock, patch
 
 from cyclonedx.exception.model import NoPropertiesProvidedException
-from cyclonedx.model import AttachedText, Copyright, Encoding, ExternalReference, ExternalReferenceType, \
+from cyclonedx.model import AttachedText, Copyright, ExternalReference, ExternalReferenceType, \
     IdentifiableAction, Property, XsUri
-from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentScope, ComponentType, Diff, Patch, \
+from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Diff, Patch, \
     PatchClassification, Pedigree
 from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version, \
-    get_component_toml_with_hashes_with_references, get_issue_1, get_issue_2, get_swid_1, get_swid_2
+    get_component_toml_with_hashes_with_references, get_issue_1, get_issue_2, get_pedigree_1, get_swid_1, get_swid_2
 
 
 class TestModelCommit(TestCase):
@@ -307,47 +307,16 @@ class TestModelPedigree(TestCase):
             Pedigree()
 
     def test_same_1(self) -> None:
-        p1 = Pedigree(
-            ancestors=[get_component_setuptools_simple(), get_component_setuptools_simple_no_version()],
-            descendants=[get_component_setuptools_simple_no_version(),
-                         get_component_toml_with_hashes_with_references()],
-            variants=[get_component_toml_with_hashes_with_references(), get_component_setuptools_simple()],
-            commits=[Commit(uid='a-random-uid', message="A commit message")],
-            patches=[Patch(type_=PatchClassification.BACKPORT)],
-            notes='Some notes here please'
-        )
-        p2 = Pedigree(
-            ancestors=[get_component_setuptools_simple(), get_component_setuptools_simple_no_version()],
-            descendants=[get_component_setuptools_simple_no_version(),
-                         get_component_toml_with_hashes_with_references()],
-            variants=[get_component_toml_with_hashes_with_references(), get_component_setuptools_simple()],
-            commits=[Commit(uid='a-random-uid', message="A commit message")],
-            patches=[Patch(type_=PatchClassification.BACKPORT)],
-            notes='Some notes here please'
-        )
+        p1 = get_pedigree_1()
+        p2 = get_pedigree_1()
         self.assertNotEqual(id(p1), id(p2))
         self.assertEqual(hash(p1), hash(p2))
         self.assertTrue(p1 == p2)
 
     def test_not_same_1(self) -> None:
-        p1 = Pedigree(
-            ancestors=[get_component_setuptools_simple(), get_component_setuptools_simple_no_version()],
-            descendants=[get_component_setuptools_simple_no_version(),
-                         get_component_toml_with_hashes_with_references()],
-            variants=[get_component_toml_with_hashes_with_references(), get_component_setuptools_simple()],
-            commits=[Commit(uid='a-random-uid', message="A commit message")],
-            patches=[Patch(type_=PatchClassification.BACKPORT)],
-            notes='Some notes here please'
-        )
-        p2 = Pedigree(
-            ancestors=[get_component_setuptools_simple(), get_component_setuptools_simple_no_version()],
-            descendants=[get_component_setuptools_simple_no_version(),
-                         get_component_toml_with_hashes_with_references()],
-            variants=[get_component_toml_with_hashes_with_references(), get_component_setuptools_simple()],
-            commits=[Commit(uid='a-random-other-uid', message="A commit message")],
-            patches=[Patch(type_=PatchClassification.BACKPORT)],
-            notes='Some notes here please'
-        )
+        p1 = get_pedigree_1()
+        p2 = get_pedigree_1()
+        p2.notes = 'Some other notes here'
         self.assertNotEqual(id(p1), id(p2))
         self.assertNotEqual(hash(p1), hash(p2))
         self.assertFalse(p1 == p2)

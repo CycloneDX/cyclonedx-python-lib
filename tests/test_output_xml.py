@@ -25,7 +25,8 @@ from data import get_bom_with_component_setuptools_basic, get_bom_with_component
     get_bom_with_component_toml_1, get_bom_with_component_setuptools_no_component_version, \
     get_bom_with_component_setuptools_with_release_notes, get_bom_with_component_setuptools_with_vulnerability, \
     MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6, get_bom_just_complete_metadata, \
-    get_bom_with_nested_services, get_bom_with_services_simple, get_bom_with_services_complex
+    get_bom_with_nested_services, get_bom_with_services_simple, get_bom_with_services_complex, \
+    get_bom_with_component_setuptools_complete
 from tests.base import BaseXmlTestCase
 
 TEST_UUIDS = [
@@ -94,6 +95,36 @@ class TestOutputXml(BaseXmlTestCase):
             bom=get_bom_with_component_setuptools_with_cpe(), schema_version=SchemaVersion.V1_0,
             fixture='bom_setuptools_with_cpe.xml'
         )
+
+    def test_bom_v1_4_full_component(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_setuptools_complete.xml'
+        )
+
+    # def test_simple_bom_v1_3(self) -> None:
+    #     self._validate_xml_bom(
+    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_3,
+    #         fixture='bom_setuptools.xml'
+    #     )
+    #
+    # def test_simple_bom_v1_2(self) -> None:
+    #     self._validate_xml_bom(
+    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_2,
+    #         fixture='bom_setuptools.xml'
+    #     )
+    #
+    # def test_simple_bom_v1_1(self) -> None:
+    #     self._validate_xml_bom(
+    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_1,
+    #         fixture='bom_setuptools.xml'
+    #     )
+    #
+    # def test_simple_bom_v1_0(self) -> None:
+    #     self._validate_xml_bom(
+    #         bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_0,
+    #         fixture='bom_setuptools.xml'
+    #     )
 
     def test_bom_v1_4_component_hashes_external_references(self) -> None:
         self._validate_xml_bom(

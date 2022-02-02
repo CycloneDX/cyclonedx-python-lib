@@ -19,7 +19,7 @@
 import base64
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List
+from typing import List, Optional
 
 from packageurl import PackageURL
 
@@ -27,7 +27,8 @@ from cyclonedx.model import AttachedText, DataClassification, DataFlow, Encoding
     ExternalReferenceType, HashType, LicenseChoice, Note, NoteText, OrganizationalContact, OrganizationalEntity, \
     Property, Tool, XsUri
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component, ComponentType, Swid
+from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Copyright, Patch, \
+    PatchClassification, Pedigree, Swid
 from cyclonedx.model.issue import IssueClassification, IssueType
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -62,6 +63,19 @@ def get_bom_with_component_setuptools_no_component_version() -> Bom:
 def get_bom_with_component_setuptools_with_release_notes() -> Bom:
     component = get_component_setuptools_simple()
     component.release_notes = get_release_notes()
+    return Bom(components=[component])
+
+
+def get_bom_with_component_setuptools_complete() -> Bom:
+    component = get_component_setuptools_simple()
+    component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
+    component.swid = get_swid_1()
+    component.pedigree = get_pedigree_1()
+    component.components = [
+        get_component_setuptools_simple(),
+        get_component_toml_with_hashes_with_references()
+    ]
+    component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
     return Bom(components=[component])
 
 
@@ -230,27 +244,28 @@ def get_bom_with_nested_services() -> Bom:
     return bom
 
 
-def get_component_setuptools_simple() -> Component:
+def get_component_setuptools_simple(bom_ref: Optional[str] = None) -> Component:
     return Component(
-        name='setuptools', version='50.3.2', bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+        name='setuptools', version='50.3.2',
+        bom_ref=bom_ref or 'pkg:pypi/setuptools@50.3.2?extension=tar.gz',
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ), license_str='MIT License', author='Test Author'
     )
 
 
-def get_component_setuptools_simple_no_version() -> Component:
+def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) -> Component:
     return Component(
-        name='setuptools', bom_ref='pkg:pypi/setuptools?extension=tar.gz',
+        name='setuptools', bom_ref=bom_ref or 'pkg:pypi/setuptools?extension=tar.gz',
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ), license_str='MIT License', author='Test Author'
     )
 
 
-def get_component_toml_with_hashes_with_references() -> Component:
+def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None) -> Component:
     return Component(
-        name='toml', version='0.10.2', bom_ref='pkg:pypi/toml@0.10.2?extension=tar.gz',
+        name='toml', version='0.10.2', bom_ref=bom_ref or 'pkg:pypi/toml@0.10.2?extension=tar.gz',
         purl=PackageURL(
             type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
         ), hashes=[
@@ -304,6 +319,26 @@ def get_org_entity_1() -> OrganizationalEntity:
             OrganizationalContact(name='A N Other', email='someone@somewhere.tld',
                                   phone='+44 (0)1234 567890')
         ]
+    )
+
+
+def get_pedigree_1() -> Pedigree:
+    return Pedigree(
+        ancestors=[
+            get_component_setuptools_simple(bom_ref='ccc8d7ee-4b9c-4750-aee0-a72585152291'),
+            get_component_setuptools_simple_no_version(bom_ref='8a3893b3-9923-4adb-a1d3-47456636ba0a')
+        ],
+        descendants=[
+            get_component_setuptools_simple_no_version(bom_ref='28b2d8ce-def0-446f-a221-58dee0b44acc'),
+            get_component_toml_with_hashes_with_references(bom_ref='555ca729-93c6-48f3-956e-bdaa4a2f0bfa')
+        ],
+        variants=[
+            get_component_toml_with_hashes_with_references(bom_ref='e7abdcca-5ba2-4f29-b2cf-b1e1ef788e66'),
+            get_component_setuptools_simple(bom_ref='ded1d73e-1fca-4302-b520-f1bc53979958')
+        ],
+        commits=[Commit(uid='a-random-uid', message="A commit message")],
+        patches=[Patch(type_=PatchClassification.BACKPORT)],
+        notes='Some notes here please'
     )
 
 
@@ -362,6 +397,7 @@ def get_swid_1() -> Swid:
             content_type='text/xml', encoding=Encoding.BASE_64
         )
     )
+
 
 def get_swid_2() -> Swid:
     return Swid(
