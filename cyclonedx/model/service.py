@@ -337,8 +337,9 @@ class Service:
             tuple([hash(uri) for uri in set(sorted(self.endpoints, key=hash))]) if self.endpoints else None,
             tuple([hash(ref) for ref in
                    set(sorted(self.external_references, key=hash))]) if self.external_references else None,
-            self.group, str(self.licenses), self.name, self.properties, self.provider,
-            self.release_notes,
+            self.group,
+            tuple([hash(license_) for license_ in set(sorted(self.licenses, key=hash))]) if self.licenses else None,
+            self.name, self.properties, self.provider, self.release_notes,
             tuple([hash(service) for service in set(sorted(self.services, key=hash))]) if self.services else None,
             self.version, self.x_trust_boundary
         ))

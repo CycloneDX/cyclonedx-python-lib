@@ -775,7 +775,7 @@ class Note:
         return False
 
     def __hash__(self) -> int:
-        return hash((hash(self.text), self.locale))
+        return hash((self.text, self.locale))
 
     def __repr__(self) -> str:
         return f'<Note id={id(self)}, locale={self.locale}>'
@@ -1080,7 +1080,7 @@ class IdentifiableAction:
         return False
 
     def __hash__(self) -> int:
-        return hash((hash(self.timestamp), self.name, self.email))
+        return hash((self.timestamp, self.name, self.email))
 
     def __repr__(self) -> str:
         return f'<IdentifiableAction name={self.name}, email={self.email}>'

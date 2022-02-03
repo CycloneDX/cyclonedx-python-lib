@@ -133,7 +133,7 @@ class Commit:
         return False
 
     def __hash__(self) -> int:
-        return hash((self.uid, hash(self.url), hash(self.author), hash(self.committer), self.message))
+        return hash((self.uid, self.url, self.author, self.committer, self.message))
 
     def __repr__(self) -> str:
         return f'<Commit uid={self.uid}, url={self.url}, message={self.message}>'
@@ -283,7 +283,7 @@ class Diff:
         return False
 
     def __hash__(self) -> int:
-        return hash((hash(self.text), hash(self.url)))
+        return hash((self.text, self.url))
 
     def __repr__(self) -> str:
         return f'<Diff url={self.url}>'
@@ -379,7 +379,7 @@ class Patch:
 
     def __hash__(self) -> int:
         return hash((
-            hash(self.type), hash(self.diff),
+            self.type, self.diff,
             tuple([hash(issue) for issue in set(sorted(self.resolves, key=hash))]) if self.resolves else None
         ))
 
@@ -705,9 +705,7 @@ class Swid:
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            self.tag_id, self.name, self.version, self.tag_version, self.patch, hash(self.text), hash(self.url)
-        ))
+        return hash((self.tag_id, self.name, self.version, self.tag_version, self.patch, self.text, self.url))
 
     def __repr__(self) -> str:
         return f'<Swid tagId={self.tag_id}, name={self.name}, version={self.version}>'

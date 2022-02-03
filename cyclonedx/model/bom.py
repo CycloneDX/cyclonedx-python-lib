@@ -116,7 +116,7 @@ class BomMetaData:
         return hash((
             self.timestamp,
             tuple([hash(tool) for tool in set(sorted(self.tools, key=hash))]) if self.tools else None,
-            hash(self.component)
+            self.component
         ))
 
     def __repr__(self) -> str:
@@ -411,7 +411,7 @@ class Bom:
 
     def __hash__(self) -> int:
         return hash((
-            self.uuid, hash(self.metadata),
+            self.uuid, self.metadata,
             tuple([hash(c) for c in set(sorted(self.components, key=hash))]) if self.components else None,
             tuple([hash(s) for s in set(sorted(self.services, key=hash))]) if self.services else None
         ))
