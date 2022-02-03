@@ -295,7 +295,7 @@ class TestModelPatch(TestCase):
             )
             p2 = Patch(
                 type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
-                resolves=[get_issue_2(), get_issue_1()]
+                resolves=[get_issue_2(), get_issue_1(), get_issue_1(), get_issue_1(), get_issue_2()]
             )
             self.assertEqual(hash(p1), hash(p2))
             self.assertNotEqual(id(p1), id(p2))

@@ -60,6 +60,11 @@ class CycloneDxJSONEncoder(JSONEncoder):
         if isinstance(o, XsUri):
             return str(o)
 
+        # set
+        if isinstance(o, set):
+            print(f'we have a set: {o}')
+            return list(o)
+
         # Classes
         if isinstance(o, object):
             d: Dict[Any, Any] = {}

@@ -13,14 +13,14 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-#
 import hashlib
 import re
 import sys
 import warnings
+from collections.abc import Iterable
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Union
+from typing import Optional, Set
 
 from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException, \
     MutuallyExclusivePropertiesException, UnknownHashTypeException
@@ -278,14 +278,36 @@ class HashType:
         raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
     def __init__(self, *, algorithm: HashAlgorithm, hash_value: str) -> None:
-        self._alg = algorithm
-        self._content = hash_value
+        self.alg = algorithm
+        self.content = hash_value
 
-    def get_algorithm(self) -> HashAlgorithm:
+    @property
+    def alg(self) -> HashAlgorithm:
+        """
+        Specifies the algorithm used to create the hash.
+
+        Returns:
+            `HashAlgorithm`
+        """
         return self._alg
 
-    def get_hash_value(self) -> str:
+    @alg.setter
+    def alg(self, alg: HashAlgorithm) -> None:
+        self._alg = alg
+
+    @property
+    def content(self) -> str:
+        """
+        Hash value content.
+
+        Returns:
+            `str`
+        """
         return self._content
+
+    @content.setter
+    def content(self, content: str) -> None:
+        self._content = content
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, HashType):
@@ -293,10 +315,10 @@ class HashType:
         return False
 
     def __hash__(self) -> int:
-        return hash((self._alg, self._content))
+        return hash((self.alg, self.content))
 
     def __repr__(self) -> str:
-        return f'<HashType {self._alg.value}:{self._content}>'
+        return f'<HashType {self.alg.name}:{self.content}>'
 
 
 class ExternalReferenceType(Enum):
@@ -366,58 +388,71 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, *, reference_type: ExternalReferenceType, url: Union[str, XsUri], comment: str = '',
-                 hashes: Optional[List[HashType]] = None) -> None:
-        self._type: ExternalReferenceType = reference_type
-        self._url = str(url)
-        self._comment = comment
-        self._hashes: List[HashType] = hashes if hashes else []
+    def __init__(self, *, reference_type: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
+                 hashes: Optional[Iterable[HashType]] = None) -> None:
+        self.url = url
+        self.comment = comment
+        self.type = reference_type
+        self.hashes = set(hashes or {})
 
-    def add_hash(self, our_hash: HashType) -> None:
+    @property
+    def url(self) -> XsUri:
         """
-        Adds a hash that pins/identifies this External Reference.
-
-        Args:
-            our_hash:
-                `HashType` instance
-        """
-        self._hashes.append(our_hash)
-
-    def get_comment(self) -> Union[str, None]:
-        """
-        Get the comment for this External Reference.
+        The URL to the external reference.
 
         Returns:
-            Any comment as a `str` else `None`.
+            `XsUri`
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url: XsUri) -> None:
+        self._url = url
+
+    @property
+    def comment(self) -> Optional[str]:
+        """
+        An optional comment describing the external reference.
+
+        Returns:
+            `str` if set else `None`
         """
         return self._comment
 
-    def get_hashes(self) -> List[HashType]:
+    @comment.setter
+    def comment(self, comment: Optional[str]) -> None:
+        self._comment = comment
+
+    @property
+    def type(self) -> ExternalReferenceType:
         """
-        List of cryptographic hashes that identify this External Reference.
+        Specifies the type of external reference.
+
+        There are built-in types to describe common references. If a type does not exist for the reference being
+        referred to, use the "other" type.
 
         Returns:
-            `List` of `HashType` objects where there are any hashes, else an empty `List`.
-        """
-        return self._hashes
-
-    def get_reference_type(self) -> ExternalReferenceType:
-        """
-        Get the type of this External Reference.
-
-        Returns:
-            `ExternalReferenceType` that represents the type of this External Reference.
+            `ExternalReferenceType`
         """
         return self._type
 
-    def get_url(self) -> str:
+    @type.setter
+    def type(self, type_: ExternalReferenceType) -> None:
+        self._type = type_
+
+    @property
+    def hashes(self) -> Set[HashType]:
         """
-        Get the URL/URI for this External Reference.
+        The hashes of the external reference (if applicable).
 
         Returns:
-            URI as a `str`.
+            Set of `HashType`
         """
-        return self._url
+        return self._hashes
+
+    @hashes.setter
+    def hashes(self, hashes: Iterable[HashType]) -> None:
+        self._hashes = set(hashes)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ExternalReference):
@@ -427,7 +462,7 @@ class ExternalReference:
     def __hash__(self) -> int:
         return hash((
             self._type, self._url, self._comment,
-            tuple([hash(hash_) for hash_ in set(sorted(self._hashes, key=hash))]) if self._hashes else None
+            tuple(sorted(self._hashes, key=hash))
         ))
 
     def __repr__(self) -> str:
@@ -443,17 +478,17 @@ class License:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
     """
 
-    def __init__(self, *, spxd_license_id: Optional[str] = None, license_name: Optional[str] = None,
+    def __init__(self, *, spdx_license_id: Optional[str] = None, license_name: Optional[str] = None,
                  license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> None:
-        if not spxd_license_id and not license_name:
-            raise MutuallyExclusivePropertiesException('Either `spxd_license_id` or `license_name` MUST be supplied')
-        if spxd_license_id and license_name:
+        if not spdx_license_id and not license_name:
+            raise MutuallyExclusivePropertiesException('Either `spdx_license_id` or `license_name` MUST be supplied')
+        if spdx_license_id and license_name:
             warnings.warn(
-                'Both `spxd_license_id` and `license_name` have been supplied - `license_name` will be ignored!',
+                'Both `spdx_license_id` and `license_name` have been supplied - `license_name` will be ignored!',
                 RuntimeWarning
             )
-        self.id = spxd_license_id
-        if not spxd_license_id:
+        self.id = spdx_license_id
+        if not spdx_license_id:
             self.name = license_name
         else:
             self.name = None
@@ -538,18 +573,18 @@ class LicenseChoice:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
     """
 
-    def __init__(self, *, license: Optional[License] = None, license_expression: Optional[str] = None) -> None:
-        if not license and not license_expression:
+    def __init__(self, *, license_: Optional[License] = None, license_expression: Optional[str] = None) -> None:
+        if not license_ and not license_expression:
             raise NoPropertiesProvidedException(
                 'One of `license` or `license_expression` must be supplied - neither supplied'
             )
-        if license and license_expression:
+        if license_ and license_expression:
             warnings.warn(
                 'Both `license` and `license_expression` have been supplied - `license` will take precedence',
                 RuntimeWarning
             )
-        self.license = license
-        if not license:
+        self.license = license_
+        if not license_:
             self.expression = license_expression
         else:
             self.expression = None
@@ -565,8 +600,8 @@ class LicenseChoice:
         return self._license
 
     @license.setter
-    def license(self, license: Optional[License]) -> None:
-        self._license = license
+    def license(self, license_: Optional[License]) -> None:
+        self._license = license_
 
     @property
     def expression(self) -> Optional[str]:
@@ -795,9 +830,9 @@ class OrganizationalContact:
             raise NoPropertiesProvidedException(
                 'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
             )
-        self._name: Optional[str] = name
-        self._email: Optional[str] = email
-        self._phone: Optional[str] = phone
+        self.name = name
+        self.email = email
+        self.phone = phone
 
     @property
     def name(self) -> Optional[str]:
@@ -809,6 +844,10 @@ class OrganizationalContact:
         """
         return self._name
 
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
     @property
     def email(self) -> Optional[str]:
         """
@@ -819,6 +858,10 @@ class OrganizationalContact:
         """
         return self._email
 
+    @email.setter
+    def email(self, email: Optional[str]) -> None:
+        self._email = email
+
     @property
     def phone(self) -> Optional[str]:
         """
@@ -828,6 +871,10 @@ class OrganizationalContact:
             `str` if set else `None`
         """
         return self._phone
+
+    @phone.setter
+    def phone(self, phone: Optional[str]) -> None:
+        self._phone = phone
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, OrganizationalContact):
@@ -850,15 +897,15 @@ class OrganizationalEntity:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
     """
 
-    def __init__(self, *, name: Optional[str] = None, urls: Optional[List[XsUri]] = None,
-                 contacts: Optional[List[OrganizationalContact]] = None) -> None:
+    def __init__(self, *, name: Optional[str] = None, urls: Optional[Iterable[XsUri]] = None,
+                 contacts: Optional[Iterable[OrganizationalContact]] = None) -> None:
         if not name and not urls and not contacts:
             raise NoPropertiesProvidedException(
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
-        self._name: Optional[str] = name
-        self._url: Optional[List[XsUri]] = urls
-        self._contact: Optional[List[OrganizationalContact]] = contacts
+        self.name = name
+        self.url = set(urls or {})
+        self.contact = set(contacts or {})
 
     @property
     def name(self) -> Optional[str]:
@@ -870,25 +917,37 @@ class OrganizationalEntity:
         """
         return self._name
 
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
     @property
-    def urls(self) -> Optional[List[XsUri]]:
+    def url(self) -> Set[XsUri]:
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
 
         Returns:
-            `List[XsUri]` if set else `None`
+            Set of `XsUri`
         """
         return self._url
 
+    @url.setter
+    def url(self, urls: Iterable[XsUri]) -> None:
+        self._url = set(urls)
+
     @property
-    def contacts(self) -> Optional[List[OrganizationalContact]]:
+    def contact(self) -> Set[OrganizationalContact]:
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
 
         Returns:
-            `List[OrganizationalContact]` if set else `None`
+            Set of `OrganizationalContact`
         """
         return self._contact
+
+    @contact.setter
+    def contact(self, contacts: Iterable[OrganizationalContact]) -> None:
+        self._contact = set(contacts)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, OrganizationalEntity):
@@ -896,11 +955,7 @@ class OrganizationalEntity:
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            self.name,
-            tuple([hash(url) for url in set(sorted(self.urls, key=hash))]) if self.urls else None,
-            tuple([hash(contact) for contact in set(sorted(self.contacts, key=hash))]) if self.contacts else None
-        ))
+        return hash((self.name, tuple(self.url), tuple(self.contact)))
 
     def __repr__(self) -> str:
         return f'<OrganizationalEntity name={self.name}>'
@@ -917,84 +972,84 @@ class Tool:
     """
 
     def __init__(self, *, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
-                 hashes: Optional[List[HashType]] = None,
-                 external_references: Optional[List[ExternalReference]] = None) -> None:
-        self._vendor = vendor
-        self._name = name
-        self._version = version
-        self._hashes: List[HashType] = hashes or []
-        self._external_references: List[ExternalReference] = external_references or []
+                 hashes: Optional[Iterable[HashType]] = None,
+                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+        self.vendor = vendor
+        self.name = name
+        self.version = version
+        self.hashes = set(hashes or {})
+        self.external_references = set(external_references or {})
 
-    def add_external_reference(self, reference: ExternalReference) -> None:
+    @property
+    def vendor(self) -> Optional[str]:
         """
-        Add an external reference to this Tool.
-
-        Args:
-            reference:
-                `ExternalReference` to add to this Tool.
+        The name of the vendor who created the tool.
 
         Returns:
-            None
-        """
-        self._external_references.append(reference)
-
-    def add_external_references(self, references: List[ExternalReference]) -> None:
-        """
-        Add a list of external reference to this Tool.
-
-        Args:
-            references:
-                List of `ExternalReference` to add to this Tool.
-
-        Returns:
-            None
-        """
-        self._external_references = self._external_references + references
-
-    def get_external_references(self) -> List[ExternalReference]:
-        """
-        List of External References that relate to this Tool.
-
-        Returns:
-            `List` of `ExternalReference` objects where there are, else an empty `List`.
-        """
-        return self._external_references
-
-    def get_hashes(self) -> List[HashType]:
-        """
-        List of cryptographic hashes that identify this version of this Tool.
-
-        Returns:
-            `List` of `HashType` objects where there are any hashes, else an empty `List`.
-        """
-        return self._hashes
-
-    def get_name(self) -> Optional[str]:
-        """
-        The name of this Tool.
-
-        Returns:
-            `str` representing the name of the Tool
-        """
-        return self._name
-
-    def get_vendor(self) -> Optional[str]:
-        """
-        The vendor of this Tool.
-
-        Returns:
-            `str` representing the vendor of the Tool
+            `str` if set else `None`
         """
         return self._vendor
 
-    def get_version(self) -> Optional[str]:
+    @vendor.setter
+    def vendor(self, vendor: Optional[str]) -> None:
+        self._vendor = vendor
+
+    @property
+    def name(self) -> Optional[str]:
         """
-        The version of this Tool.
+        The name of the tool.
 
         Returns:
-            `str` representing the version of the Tool
+             `str` if set else `None`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    def version(self) -> Optional[str]:
+        """
+        The version of the tool.
+
+        Returns:
+             `str` if set else `None`
         """
         return self._version
+
+    @version.setter
+    def version(self, version: Optional[str]) -> None:
+        self._version = version
+
+    @property
+    def hashes(self) -> Set[HashType]:
+        """
+        The hashes of the tool (if applicable).
+
+        Returns:
+            Set of `HashType`
+        """
+        return self._hashes
+
+    @hashes.setter
+    def hashes(self, hashes: Iterable[HashType]) -> None:
+        self._hashes = set(hashes)
+
+    @property
+    def external_references(self) -> Set[ExternalReference]:
+        """
+        External References provide a way to document systems, sites, and information that may be relevant but which
+        are not included with the BOM.
+
+        Returns:
+            Set of `ExternalReference`
+        """
+        return self._external_references
+
+    @external_references.setter
+    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
+        self._external_references = set(external_references)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Tool):
@@ -1002,15 +1057,10 @@ class Tool:
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            self._vendor, self._name, self._version,
-            tuple([hash(hash_) for hash_ in set(sorted(self._hashes, key=hash))]) if self._hashes else None,
-            tuple([hash(ref) for ref in
-                   set(sorted(self._external_references, key=hash))]) if self._external_references else None
-        ))
+        return hash((self.vendor, self.name, self.version, tuple(self.hashes), tuple(self.external_references)))
 
     def __repr__(self) -> str:
-        return f'<Tool name={self._name}, version={self._version}, vendor={self._vendor}>'
+        return f'<Tool name={self.name}, version={self.version}, vendor={self.vendor}>'
 
 
 class IdentifiableAction:
@@ -1133,7 +1183,7 @@ try:
 except Exception:
     __ThisToolVersion = None
 ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
-ThisTool.add_external_references(references=[
+ThisTool.external_references.update([
     ExternalReference(
         reference_type=ExternalReferenceType.BUILD_SYSTEM,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')

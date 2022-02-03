@@ -33,7 +33,7 @@ class TestBom(TestCase):
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()
         self.assertEqual(len(bom.metadata.tools), 1)
-        bom.metadata.add_tool(
+        bom.metadata.tools.add(
             Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
         )
         self.assertEqual(len(bom.metadata.tools), 2)
@@ -41,8 +41,7 @@ class TestBom(TestCase):
     def test_metadata_component(self) -> None:
         metadata = Bom().metadata
         self.assertTrue(metadata.component is None)
-        hextech = Component(name='Hextech', version='1.0.0',
-                            component_type=ComponentType.LIBRARY)
+        hextech = Component(name='Hextech', version='1.0.0', component_type=ComponentType.LIBRARY)
         metadata.component = hextech
         self.assertFalse(metadata.component is None)
         self.assertEquals(metadata.component, hextech)
@@ -51,6 +50,6 @@ class TestBom(TestCase):
         bom = Bom()
         self.assertIsNotNone(bom.uuid)
         self.assertIsNotNone(bom.metadata)
-        self.assertIsNone(bom.components)
-        self.assertIsNone(bom.services)
-        self.assertIsNone(bom.external_references)
+        self.assertFalse(bom.components)
+        self.assertFalse(bom.services)
+        self.assertFalse(bom.external_references)
