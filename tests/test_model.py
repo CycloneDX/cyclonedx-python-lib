@@ -177,7 +177,7 @@ class TestModelIssueType(TestCase):
 class TestModelNote(TestCase):
 
     def test_note_plain_text(self) -> None:
-        n = Note(text=NoteText('Some simple plain text'))
+        n = Note(text=NoteText(content='Some simple plain text'))
         self.assertEqual(n.text.content, 'Some simple plain text')
         self.assertEqual(n.text.content_type, NoteText.DEFAULT_CONTENT_TYPE)
         self.assertIsNone(n.locale)

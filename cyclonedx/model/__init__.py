@@ -73,12 +73,7 @@ class DataClassification:
         https://cyclonedx.org/docs/1.4/xml/#type_dataClassificationType
     """
 
-    def __init__(self, flow: DataFlow, classification: str) -> None:
-        if not flow and not classification:
-            raise NoPropertiesProvidedException(
-                'One of `flow` or `classification` must be supplied - neither supplied'
-            )
-
+    def __init__(self, *, flow: DataFlow, classification: str) -> None:
         self.flow = flow
         self.classification = classification
 
@@ -151,7 +146,7 @@ class AttachedText:
 
     DEFAULT_CONTENT_TYPE = 'text/plain'
 
-    def __init__(self, content: str, content_type: str = DEFAULT_CONTENT_TYPE,
+    def __init__(self, *, content: str, content_type: str = DEFAULT_CONTENT_TYPE,
                  encoding: Optional[Encoding] = None) -> None:
         self.content_type = content_type
         self.encoding = encoding
@@ -282,7 +277,7 @@ class HashType:
 
         raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
-    def __init__(self, algorithm: HashAlgorithm, hash_value: str) -> None:
+    def __init__(self, *, algorithm: HashAlgorithm, hash_value: str) -> None:
         self._alg = algorithm
         self._content = hash_value
 
@@ -329,17 +324,6 @@ class ExternalReferenceType(Enum):
     VCS = 'vcs'
     WEBSITE = 'website'
 
-    # def __eq__(self, other: object) -> bool:
-    #     if isinstance(other, ExternalReferenceType):
-    #         return hash(other) == hash(self)
-    #     return False
-    #
-    # def __hash__(self) -> int:
-    #     return hash(self.value)
-    #
-    # def __repr__(self) -> str:
-    #     return f'<ExternalReferenceType name={self.name}, value={self.value}>'
-
 
 class XsUri:
     """
@@ -382,7 +366,7 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, reference_type: ExternalReferenceType, url: Union[str, XsUri], comment: str = '',
+    def __init__(self, *, reference_type: ExternalReferenceType, url: Union[str, XsUri], comment: str = '',
                  hashes: Optional[List[HashType]] = None) -> None:
         self._type: ExternalReferenceType = reference_type
         self._url = str(url)
@@ -459,7 +443,7 @@ class License:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
     """
 
-    def __init__(self, spxd_license_id: Optional[str] = None, license_name: Optional[str] = None,
+    def __init__(self, *, spxd_license_id: Optional[str] = None, license_name: Optional[str] = None,
                  license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> None:
         if not spxd_license_id and not license_name:
             raise MutuallyExclusivePropertiesException('Either `spxd_license_id` or `license_name` MUST be supplied')
@@ -554,7 +538,7 @@ class LicenseChoice:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
     """
 
-    def __init__(self, license: Optional[License] = None, license_expression: Optional[str] = None) -> None:
+    def __init__(self, *, license: Optional[License] = None, license_expression: Optional[str] = None) -> None:
         if not license and not license_expression:
             raise NoPropertiesProvidedException(
                 'One of `license` or `license_expression` must be supplied - neither supplied'
@@ -623,7 +607,7 @@ class Property:
     Specifies an individual property with a name and value.
     """
 
-    def __init__(self, name: str, value: str) -> None:
+    def __init__(self, *, name: str, value: str) -> None:
         self._name = name
         self._value = value
 
@@ -668,7 +652,7 @@ class NoteText:
 
     DEFAULT_CONTENT_TYPE: str = 'text/plain'
 
-    def __init__(self, content: str, content_type: Optional[str] = None,
+    def __init__(self, *, content: str, content_type: Optional[str] = None,
                  content_encoding: Optional[Encoding] = None) -> None:
         self.content = content
         self.content_type = content_type or NoteText.DEFAULT_CONTENT_TYPE
@@ -741,7 +725,7 @@ class Note:
 
     _LOCALE_TYPE_REGEX = re.compile(r'^[a-z]{2}(?:\-[A-Z]{2})?$')
 
-    def __init__(self, text: NoteText, locale: Optional[str] = None) -> None:
+    def __init__(self, *, text: NoteText, locale: Optional[str] = None) -> None:
         self.text = text
         self.locale = locale
 
@@ -806,7 +790,7 @@ class OrganizationalContact:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalContact
     """
 
-    def __init__(self, name: Optional[str] = None, phone: Optional[str] = None, email: Optional[str] = None) -> None:
+    def __init__(self, *, name: Optional[str] = None, phone: Optional[str] = None, email: Optional[str] = None) -> None:
         if not name and not phone and not email:
             raise NoPropertiesProvidedException(
                 'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
@@ -866,7 +850,7 @@ class OrganizationalEntity:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
     """
 
-    def __init__(self, name: Optional[str] = None, urls: Optional[List[XsUri]] = None,
+    def __init__(self, *, name: Optional[str] = None, urls: Optional[List[XsUri]] = None,
                  contacts: Optional[List[OrganizationalContact]] = None) -> None:
         if not name and not urls and not contacts:
             raise NoPropertiesProvidedException(
@@ -932,7 +916,7 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
+    def __init__(self, *, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
                  hashes: Optional[List[HashType]] = None,
                  external_references: Optional[List[ExternalReference]] = None) -> None:
         self._vendor = vendor
@@ -1037,7 +1021,7 @@ class IdentifiableAction:
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_identifiableActionType
     """
 
-    def __init__(self, timestamp: Optional[datetime] = None, name: Optional[str] = None,
+    def __init__(self, *, timestamp: Optional[datetime] = None, name: Optional[str] = None,
                  email: Optional[str] = None) -> None:
         if not timestamp and not name and not email:
             raise NoPropertiesProvidedException(
@@ -1110,7 +1094,7 @@ class Copyright:
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_copyrightsType
     """
 
-    def __init__(self, text: str) -> None:
+    def __init__(self, *, text: str) -> None:
         self.text = text
 
     @property

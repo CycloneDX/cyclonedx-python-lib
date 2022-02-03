@@ -42,7 +42,7 @@ class Commit:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_commitType
     """
 
-    def __init__(self, uid: Optional[str] = None, url: Optional[XsUri] = None,
+    def __init__(self, *, uid: Optional[str] = None, url: Optional[XsUri] = None,
                  author: Optional[IdentifiableAction] = None, committer: Optional[IdentifiableAction] = None,
                  message: Optional[str] = None) -> None:
         if not uid and not url and not author and not committer and not message:
@@ -149,7 +149,7 @@ class ComponentEvidence:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
     """
 
-    def __init__(self, licenses: Optional[List[LicenseChoice]] = None,
+    def __init__(self, *, licenses: Optional[List[LicenseChoice]] = None,
                  copyright_: Optional[List[Copyright]] = None) -> None:
         if not licenses and not copyright_:
             raise NoPropertiesProvidedException(
@@ -240,7 +240,7 @@ class Diff:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_diffType
     """
 
-    def __init__(self, text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(self, *, text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
         if not text and not url:
             raise NoPropertiesProvidedException(
                 'At least one of `text` or `url` must be provided for a `Diff`.'
@@ -310,7 +310,7 @@ class Patch:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_patchType
     """
 
-    def __init__(self, type_: PatchClassification, diff: Optional[Diff] = None,
+    def __init__(self, *, type_: PatchClassification, diff: Optional[Diff] = None,
                  resolves: Optional[List[IssueType]] = None) -> None:
         self.type = type_
         self.diff = diff
@@ -400,9 +400,10 @@ class Pedigree:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_pedigreeType
     """
 
-    def __init__(self, ancestors: Optional[List['Component']] = None, descendants: Optional[List['Component']] = None,
-                 variants: Optional[List['Component']] = None, commits: Optional[List[Commit]] = None,
-                 patches: Optional[List[Patch]] = None, notes: Optional[str] = None) -> None:
+    def __init__(self, *, ancestors: Optional[List['Component']] = None,
+                 descendants: Optional[List['Component']] = None, variants: Optional[List['Component']] = None,
+                 commits: Optional[List[Commit]] = None, patches: Optional[List[Patch]] = None,
+                 notes: Optional[str] = None) -> None:
         if not ancestors and not descendants and not variants and not commits and not patches and not notes:
             raise NoPropertiesProvidedException(
                 'At least one of `ancestors`, `descendants`, `variants`, `commits`, `patches` or `notes` must be '
@@ -589,7 +590,7 @@ class Swid:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_swidType
     """
 
-    def __init__(self, tag_id: str, name: str, version: Optional[str] = None,
+    def __init__(self, *, tag_id: str, name: str, version: Optional[str] = None,
                  tag_version: Optional[int] = None, patch: Optional[bool] = None,
                  text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
         self.tag_id = tag_id
@@ -750,7 +751,7 @@ class Component:
             )
         )
 
-    def __init__(self, name: str, component_type: ComponentType = ComponentType.LIBRARY,
+    def __init__(self, *, name: str, component_type: ComponentType = ComponentType.LIBRARY,
                  mime_type: Optional[str] = None, bom_ref: Optional[str] = None,
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,

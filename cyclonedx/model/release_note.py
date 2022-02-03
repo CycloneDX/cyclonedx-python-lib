@@ -32,7 +32,7 @@ class ReleaseNotes:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_releaseNotesType
     """
 
-    def __init__(self, type: str, title: Optional[str] = None, featured_image: Optional[XsUri] = None,
+    def __init__(self, *, type: str, title: Optional[str] = None, featured_image: Optional[XsUri] = None,
                  social_image: Optional[XsUri] = None, description: Optional[str] = None,
                  timestamp: Optional[datetime] = None, aliases: Optional[List[str]] = None,
                  tags: Optional[List[str]] = None, resolves: Optional[List[IssueType]] = None,
