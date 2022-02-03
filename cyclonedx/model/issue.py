@@ -42,7 +42,7 @@ class IssueTypeSource:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, name: Optional[str] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(self, *, name: Optional[str] = None, url: Optional[XsUri] = None) -> None:
         if not name and not url:
             raise NoPropertiesProvidedException(
                 'Neither `name` nor `url` were provided - at least one must be provided.'
@@ -99,7 +99,7 @@ class IssueType:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, classification: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
+    def __init__(self, *, classification: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
                  description: Optional[str] = None, source_name: Optional[str] = None,
                  source_url: Optional[XsUri] = None, references: Optional[List[XsUri]] = None) -> None:
         self._type: IssueClassification = classification

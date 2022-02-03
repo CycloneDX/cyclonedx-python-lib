@@ -35,7 +35,7 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
     """
 
-    def __init__(self, tools: Optional[List[Tool]] = None) -> None:
+    def __init__(self, *, tools: Optional[List[Tool]] = None) -> None:
         self.timestamp = datetime.now(tz=timezone.utc)
         self.tools = tools if tools else []
 
@@ -149,7 +149,7 @@ class Bom:
         bom.add_components(parser.get_components())
         return bom
 
-    def __init__(self, components: Optional[List[Component]] = None, services: Optional[List[Service]] = None,
+    def __init__(self, *, components: Optional[List[Component]] = None, services: Optional[List[Service]] = None,
                  external_references: Optional[List[ExternalReference]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
