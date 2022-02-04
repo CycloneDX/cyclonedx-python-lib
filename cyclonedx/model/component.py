@@ -156,8 +156,8 @@ class ComponentEvidence:
                 'At least one of `licenses` or `copyright_` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.licenses = set(licenses or {})
-        self.copyright = set(copyright_ or {})
+        self.licenses = set(licenses or [])
+        self.copyright = set(copyright_ or [])
 
     @property
     def licenses(self) -> Set[LicenseChoice]:
@@ -310,7 +310,7 @@ class Patch:
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
         self.type = type_
         self.diff = diff
-        self.resolves = set(resolves or {})
+        self.resolves = set(resolves or [])
 
     @property
     def type(self) -> PatchClassification:
@@ -393,11 +393,11 @@ class Pedigree:
                 'provided for `Pedigree`'
             )
 
-        self.ancestors = set(ancestors or {})
-        self.descendants = set(descendants or {})
-        self.variants = set(variants or {})
-        self.commits = set(commits or {})
-        self.patches = set(patches or {})
+        self.ancestors = set(ancestors or [])
+        self.descendants = set(descendants or [])
+        self.variants = set(variants or [])
+        self.commits = set(commits or [])
+        self.patches = set(patches or [])
         self.notes = notes
 
     @property
@@ -702,16 +702,16 @@ class Component:
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = set(hashes or {})
-        self.licenses = set(licenses or {})
+        self.hashes = set(hashes or [])
+        self.licenses = set(licenses or [])
         self.copyright = copyright_
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
         self.pedigree = pedigree
-        self.external_references = set(external_references or {})
-        self.properties = set(properties or {})
-        self.components = set(components or {})
+        self.external_references = set(external_references or [])
+        self.properties = set(properties or [])
+        self.components = set(components or [])
         self.evidence = evidence
         self.release_notes = release_notes
 

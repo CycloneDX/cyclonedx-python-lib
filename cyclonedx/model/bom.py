@@ -37,7 +37,7 @@ class BomMetaData:
 
     def __init__(self, *, tools: Optional[Iterable[Tool]] = None) -> None:
         self.timestamp = datetime.now(tz=timezone.utc)
-        self.tools = set(tools or {})
+        self.tools = set(tools or [])
 
         if not self.tools:
             self.tools.add(ThisTool)
@@ -147,9 +147,9 @@ class Bom:
         """
         self.uuid = uuid4()
         self.metadata = BomMetaData()
-        self.components = set(components or {})
-        self.services = set(services or {})
-        self.external_references = set(external_references or {})
+        self.components = set(components or [])
+        self.services = set(services or [])
+        self.external_references = set(external_references or [])
 
     @property
     def uuid(self) -> UUID:
