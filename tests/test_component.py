@@ -108,8 +108,7 @@ class TestComponent(TestCase):
 
     def test_has_component_1(self) -> None:
         bom = Bom()
-        bom.add_component(component=TestComponent._component)
-        bom.add_component(component=TestComponent._component_2)
+        bom.components.update([TestComponent._component, TestComponent._component_2])
         self.assertEqual(len(bom.components), 2)
         self.assertTrue(bom.has_component(component=TestComponent._component_2))
         self.assertIsNot(TestComponent._component, TestComponent._component_2)

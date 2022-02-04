@@ -22,13 +22,13 @@ import os
 import sys
 import xml.etree.ElementTree
 from datetime import datetime, timezone
-from lxml import etree
-from typing import Any
 from unittest import TestCase
 from uuid import uuid4
-from xml.dom import minidom
 
+from lxml import etree
 from lxml.etree import DocumentInvalid
+from xmldiff import main
+from xmldiff.actions import MoveNode
 
 from cyclonedx.output import SchemaVersion
 
@@ -121,15 +121,16 @@ class BaseXmlTestCase(TestCase):
                                           f'{bom_xml}')
 
     def assertEqualXml(self, a: str, b: str) -> None:
-        da, db = minidom.parseString(a), minidom.parseString(b)
-        self.assertTrue(self._is_equal_xml_element(da.documentElement, db.documentElement),
-                        'XML Documents are not equal: \n{}\n{}'.format(da.toxml(), db.toxml()))
+        diff_results = main.diff_texts(a, b, diff_options={'F': 0.5})
+        diff_results = list(filter(lambda o: not isinstance(o, MoveNode), diff_results))
+        self.assertEqual(len(diff_results), 0)
 
     def assertEqualXmlBom(self, a: str, b: str, namespace: str) -> None:
         """
         Sanitise some fields such as timestamps which cannot have their values directly compared for equality.
         """
-        ba, bb = xml.etree.ElementTree.fromstring(a), xml.etree.ElementTree.fromstring(b)
+        ba = xml.etree.ElementTree.fromstring(a, etree.XMLParser(remove_blank_text=True, remove_comments=True))
+        bb = xml.etree.ElementTree.fromstring(b, etree.XMLParser(remove_blank_text=True, remove_comments=True))
 
         # Align serialNumbers
         ba.set('serialNumber', single_uuid)
@@ -147,42 +148,13 @@ class BaseXmlTestCase(TestCase):
 
         # Align 'this' Tool Version
         this_tool = ba.find('.//*/{{{}}}tool[{{{}}}version="VERSION"]'.format(namespace, namespace))
-        if this_tool:
+        if this_tool is not None:
             this_tool.find('./{{{}}}version'.format(namespace)).text = cyclonedx_lib_version
         this_tool = bb.find('.//*/{{{}}}tool[{{{}}}version="VERSION"]'.format(namespace, namespace))
-        if this_tool:
+        if this_tool is not None:
             this_tool.find('./{{{}}}version'.format(namespace)).text = cyclonedx_lib_version
 
         self.assertEqualXml(
             xml.etree.ElementTree.tostring(ba, 'unicode'),
             xml.etree.ElementTree.tostring(bb, 'unicode')
         )
-
-    def _is_equal_xml_element(self, a: Any, b: Any) -> bool:
-        if a.tagName != b.tagName:
-            return False
-        if sorted(a.attributes.items()) != sorted(b.attributes.items()):
-            return False
-
-        """
-        Remove any pure whitespace Dom Text Nodes before we compare
-
-        See: https://xml-sig.python.narkive.com/8o0UIicu
-        """
-        for n in a.childNodes:
-            if n.nodeType == n.TEXT_NODE and n.data.strip() == '':
-                a.removeChild(n)
-        for n in b.childNodes:
-            if n.nodeType == n.TEXT_NODE and n.data.strip() == '':
-                b.removeChild(n)
-
-        if len(a.childNodes) != len(b.childNodes):
-            return False
-        for ac, bc in zip(a.childNodes, b.childNodes):
-            if ac.nodeType != bc.nodeType:
-                return False
-            if ac.nodeType == ac.TEXT_NODE and ac.data != bc.data:
-                return False
-            if ac.nodeType == ac.ELEMENT_NODE and not self._is_equal_xml_element(ac, bc):
-                return False
-        return True

@@ -30,7 +30,7 @@ class TestOutputGeneric(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls._bom = Bom()
-        cls._bom.add_component(Component(name='setuptools'))
+        cls._bom.components.add(Component(name='setuptools'))
 
     def test_get_instance_default(self) -> None:
         i = get_instance(bom=TestOutputGeneric._bom)

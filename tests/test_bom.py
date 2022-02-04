@@ -16,7 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 from unittest import TestCase
 
 from cyclonedx.model.bom import Bom, ThisTool, Tool
@@ -26,9 +25,9 @@ from cyclonedx.model.component import Component, ComponentType
 class TestBom(TestCase):
 
     def test_bom_metadata_tool_this_tool(self) -> None:
-        self.assertEqual(ThisTool.get_vendor(), 'CycloneDX')
-        self.assertEqual(ThisTool.get_name(), 'cyclonedx-python-lib')
-        self.assertNotEqual(ThisTool.get_version(), 'UNKNOWN')
+        self.assertEqual(ThisTool.vendor, 'CycloneDX')
+        self.assertEqual(ThisTool.name, 'cyclonedx-python-lib')
+        self.assertNotEqual(ThisTool.version, 'UNKNOWN')
 
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()

@@ -643,26 +643,38 @@ class Property:
     """
 
     def __init__(self, *, name: str, value: str) -> None:
-        self._name = name
-        self._value = value
+        self.name = name
+        self.value = value
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         """
-        Get the name of this Property.
+        The name of the property.
+
+        Duplicate names are allowed, each potentially having a different value.
 
         Returns:
-            Name of this Property as `str`.
+            `str`
         """
         return self._name
 
-    def get_value(self) -> str:
+    @name.setter
+    def name(self, name: str) -> None:
+        self._name = name
+
+    @property
+    def value(self) -> str:
         """
-        Get the value of this Property.
+        Value of this Property.
 
         Returns:
-            Value of this Property as `str`.
+             `str`
         """
         return self._value
+
+    @value.setter
+    def value(self, value: str) -> None:
+        self._value = value
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Property):
@@ -670,10 +682,10 @@ class Property:
         return False
 
     def __hash__(self) -> int:
-        return hash((self._name, self._value))
+        return hash((self.name, self.value))
 
     def __repr__(self) -> str:
-        return f'<Property name={self._name}>'
+        return f'<Property name={self.name}>'
 
 
 class NoteText:
