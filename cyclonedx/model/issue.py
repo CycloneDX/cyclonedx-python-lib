@@ -176,7 +176,7 @@ class IssueType:
         return self._source
 
     @source.setter
-    def source(self, source: IssueTypeSource) -> None:
+    def source(self, source: Optional[IssueTypeSource]) -> None:
         self._source = source
 
     @property
