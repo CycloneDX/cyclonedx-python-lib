@@ -117,11 +117,11 @@ class IssueType:
         Returns:
             `IssueClassification`
         """
-        return self._classification
+        return self._type
 
     @type.setter
     def type(self, classification: IssueClassification) -> None:
-        self._classification = classification
+        self._type = classification
 
     @property
     def id(self) -> Optional[str]:

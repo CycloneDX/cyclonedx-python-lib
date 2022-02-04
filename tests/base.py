@@ -68,8 +68,8 @@ class BaseJsonTestCase(TestCase):
 
     def assertEqualJson(self, a: str, b: str) -> None:
         self.assertEqual(
-            json.dumps(json.loads(a), sort_keys=True),
-            json.dumps(json.loads(b), sort_keys=True)
+            json.dumps(sorted(json.loads(a)), sort_keys=True),
+            json.dumps(sorted(json.loads(b)), sort_keys=True)
         )
 
     def assertEqualJsonBom(self, a: str, b: str) -> None:

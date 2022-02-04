@@ -52,6 +52,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
         if isinstance(o, Enum):
             return o.value
 
+        # Set
+        if isinstance(o, set):
+            return list(o)
+
         # UUID
         if isinstance(o, UUID):
             return str(o)
@@ -59,11 +63,6 @@ class CycloneDxJSONEncoder(JSONEncoder):
         # XsUri
         if isinstance(o, XsUri):
             return str(o)
-
-        # set
-        if isinstance(o, set):
-            print(f'we have a set: {o}')
-            return list(o)
 
         # Classes
         if isinstance(o, object):

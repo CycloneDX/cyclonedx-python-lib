@@ -307,8 +307,8 @@ class Service:
 
     def __hash__(self) -> int:
         return hash((
-            self.authenticated, self.data, self.description, tuple(self.endpoints), tuple(self.external_references),
-            self.group, tuple(self.licenses), self.name, self.properties, self.provider, self.release_notes,
+            self.authenticated, tuple(self.data), self.description, tuple(self.endpoints), tuple(self.external_references),
+            self.group, tuple(self.licenses), self.name, tuple(self.properties), self.provider, self.release_notes,
             tuple(self.services), self.version, self.x_trust_boundary
         ))
 
