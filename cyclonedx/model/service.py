@@ -13,8 +13,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-from collections.abc import Iterable
-from typing import Optional, Set
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+from typing import Iterable, Optional, Set
 from uuid import uuid4
 
 from . import ExternalReference, DataClassification, LicenseChoice, OrganizationalEntity, Property, XsUri

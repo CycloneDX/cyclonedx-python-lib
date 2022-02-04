@@ -13,14 +13,14 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
 import hashlib
 import re
 import sys
 import warnings
-from collections.abc import Iterable
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Set
+from typing import Iterable, Optional, Set
 
 from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException, \
     MutuallyExclusivePropertiesException, UnknownHashTypeException

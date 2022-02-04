@@ -17,10 +17,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
-from collections.abc import Iterable
 from enum import Enum
 from os.path import exists
-from typing import Optional, Set
+from typing import Iterable, Optional, Set
 from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65

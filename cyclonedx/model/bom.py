@@ -16,9 +16,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-from collections.abc import Iterable
 from datetime import datetime, timezone
-from typing import Optional, Set
+from typing import Iterable, Optional, Set
 from uuid import uuid4, UUID
 
 from . import ExternalReference, ThisTool, Tool

@@ -16,9 +16,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-from collections.abc import Iterable
 from datetime import datetime
-from typing import Optional, Set
+from typing import Iterable, Optional, Set
 
 from ..model import Note, Property, XsUri
 from ..model.issue import IssueType
