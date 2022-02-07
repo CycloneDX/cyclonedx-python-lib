@@ -258,19 +258,6 @@ class Service:
     def services(self, services: Iterable['Service']) -> None:
         self._services = set(services)
 
-    def has_service(self, service: 'Service') -> bool:
-        """
-        Check whether this Service contains the given Service.
-
-        Args:
-            service:
-                The instance of `cyclonedx.model.service.Service` to check if this Service contains.
-
-        Returns:
-            `bool` - `True` if the supplied Service is part of this Service, `False` otherwise.
-        """
-        return service in self.services
-
     @property
     def release_notes(self) -> Optional[ReleaseNotes]:
         """

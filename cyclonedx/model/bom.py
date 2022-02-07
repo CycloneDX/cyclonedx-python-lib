@@ -195,15 +195,6 @@ class Bom:
     def components(self, components: Iterable[Component]) -> None:
         self._components = set(components)
 
-    def component_count(self) -> int:
-        """
-        Returns the current count of Components within this Bom.
-
-        Returns:
-             The number of Components in this BOM as `int`.
-        """
-        return len(self.components)
-
     def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
         """
         Get a Component already in the Bom by its PURL
@@ -257,28 +248,6 @@ class Bom:
     @services.setter
     def services(self, services: Iterable[Service]) -> None:
         self._services = set(services)
-
-    def has_service(self, service: Service) -> bool:
-        """
-        Check whether this Bom contains the provided Service.
-
-        Args:
-            service:
-                The instance of `cyclonedx.model.service.Service` to check if this Bom contains.
-
-        Returns:
-            `bool` - `True` if the supplied Service is part of this Bom, `False` otherwise.
-        """
-        return service in self.services
-
-    def service_count(self) -> int:
-        """
-        Returns the current count of Services within this Bom.
-
-        Returns:
-             The number of Services in this Bom as `int`.
-        """
-        return len(self.services)
 
     @property
     def external_references(self) -> Set[ExternalReference]:

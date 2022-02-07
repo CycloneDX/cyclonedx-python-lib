@@ -68,4 +68,4 @@ class TestModelService(TestCase):
         self.assertEqual(len(parent_service.services), 2)
         self.assertIsNone(parent_service.release_notes)
         self.assertFalse(parent_service.properties)
-        self.assertTrue(parent_service.has_service(service=Service(name='child-service-1')))
+        self.assertTrue(Service(name='child-service-1') in parent_service.services)
