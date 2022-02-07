@@ -20,6 +20,7 @@ from unittest import TestCase
 
 from cyclonedx.model.bom import Bom, ThisTool, Tool
 from cyclonedx.model.component import Component, ComponentType
+from data import get_bom_with_component_setuptools_with_vulnerability
 
 
 class TestBom(TestCase):
@@ -52,3 +53,7 @@ class TestBom(TestCase):
         self.assertFalse(bom.components)
         self.assertFalse(bom.services)
         self.assertFalse(bom.external_references)
+
+    def test_bom_with_vulnerabilities(self) -> None:
+        bom = get_bom_with_component_setuptools_with_vulnerability()
+        self.assertTrue(bom.has_vulnerabilities())

@@ -302,11 +302,7 @@ class Bom:
             `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
                 `False` otherwise.
         """
-        for c in self.components:
-            if c.has_vulnerabilities():
-                return True
-
-        return False
+        return any(c.has_vulnerabilities() for c in self.components)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):
