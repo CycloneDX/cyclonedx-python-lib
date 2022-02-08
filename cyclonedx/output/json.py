@@ -16,7 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 import json
 from abc import abstractmethod
 from typing import cast, Any, Dict, List, Optional, Union
@@ -79,12 +78,19 @@ class Json(BaseOutput, BaseSchemaVersion):
         if not self.bom_supports_metadata():
             if 'metadata' in bom_json.keys():
                 del bom_json['metadata']
-        elif not self.bom_metadata_supports_tools():
+
+        if not self.bom_metadata_supports_tools():
             del bom_json['metadata']['tools']
         elif not self.bom_metadata_supports_tools_external_references():
             for i in range(len(bom_json['metadata']['tools'])):
                 if 'externalReferences' in bom_json['metadata']['tools'][i].keys():
                     del bom_json['metadata']['tools'][i]['externalReferences']
+
+        if not self.bom_metadata_supports_licenses() and 'licenses' in bom_json['metadata'].keys():
+            del bom_json['metadata']['licenses']
+
+        if not self.bom_metadata_supports_properties() and 'properties' in bom_json['metadata'].keys():
+            del bom_json['metadata']['properties']
 
         # Iterate Components
         if 'components' in bom_json.keys():

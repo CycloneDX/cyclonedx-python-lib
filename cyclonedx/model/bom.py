@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from typing import Iterable, Optional, Set
 from uuid import uuid4, UUID
 
-from . import ExternalReference, ThisTool, Tool
+from . import ExternalReference, OrganizationalContact, OrganizationalEntity, LicenseChoice, Property, ThisTool, Tool
 from .component import Component
 from .service import Service
 from ..parser import BaseParser
@@ -31,17 +31,40 @@ class BomMetaData:
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
+        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.4/#type_metadata
     """
 
-    def __init__(self, *, tools: Optional[Iterable[Tool]] = None) -> None:
+    def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
+                 authors: Iterable[OrganizationalContact] = None, component: Optional[Component] = None,
+                 manufacture: Optional[OrganizationalEntity] = None,
+                 supplier: Optional[OrganizationalEntity] = None,
+                 licenses: Optional[Iterable[LicenseChoice]] = None,
+                 properties: Optional[Iterable[Property]] = None) -> None:
         self.timestamp = datetime.now(tz=timezone.utc)
         self.tools = set(tools or [])
+        self.authors = set(authors or [])
+        self.component = component
+        self.manufacture = manufacture
+        self.supplier = supplier
+        self.licenses = set(licenses or [])
+        self.properties = set(properties or [])
 
         if not self.tools:
             self.tools.add(ThisTool)
 
-        self.component: Optional[Component] = None
+    @property
+    def timestamp(self) -> datetime:
+        """
+        The date and time (in UTC) when this BomMetaData was created.
+
+        Returns:
+            `datetime` instance in UTC timezone
+        """
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, timestamp: datetime) -> None:
+        self._timestamp = timestamp
 
     @property
     def tools(self) -> Set[Tool]:
@@ -58,18 +81,22 @@ class BomMetaData:
         self._tools = set(tools)
 
     @property
-    def timestamp(self) -> datetime:
+    def authors(self) -> Set[OrganizationalContact]:
         """
-        The date and time (in UTC) when this BomMetaData was created.
+        The person(s) who created the BOM.
+
+        Authors are common in BOMs created through manual processes.
+
+        BOMs created through automated means may not have authors.
 
         Returns:
-            `datetime` instance in UTC timezone
+            Set of `OrganizationalContact`
         """
-        return self._timestamp
+        return self._authors
 
-    @timestamp.setter
-    def timestamp(self, timestamp: datetime) -> None:
-        self._timestamp = timestamp
+    @authors.setter
+    def authors(self, authors: Iterable[OrganizationalContact]) -> None:
+        self._authors = set(authors)
 
     @property
     def component(self) -> Optional[Component]:
@@ -94,6 +121,68 @@ class BomMetaData:
             None
         """
         self._component = component
+
+    @property
+    def manufacture(self) -> Optional[OrganizationalEntity]:
+        """
+        The organization that manufactured the component that the BOM describes.
+
+        Returns:
+            `OrganizationalEntity` if set else `None`
+        """
+        return self._manufacture
+
+    @manufacture.setter
+    def manufacture(self, manufacture: Optional[OrganizationalEntity]) -> None:
+        self._manufacture = manufacture
+
+    @property
+    def supplier(self) -> Optional[OrganizationalEntity]:
+        """
+        The organization that supplied the component that the BOM describes.
+
+        The supplier may often be the manufacturer, but may also be a distributor or repackager.
+
+        Returns:
+            `OrganizationalEntity` if set else `None`
+        """
+        return self._supplier
+
+    @supplier.setter
+    def supplier(self, supplier: Optional[OrganizationalEntity]) -> None:
+        self._supplier = supplier
+
+    @property
+    def licenses(self) -> Set[LicenseChoice]:
+        """
+        A optional list of statements about how this BOM is licensed.
+
+        Returns:
+            Set of `LicenseChoice`
+        """
+        return self._licenses
+
+    @licenses.setter
+    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+        self._licenses = set(licenses)
+
+    @property
+    def properties(self) -> Set[Property]:
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Property names of interest to the general public are encouraged to be registered in the CycloneDX Property
+        Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy. Formal registration is OPTIONAL.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = set(properties)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomMetaData):

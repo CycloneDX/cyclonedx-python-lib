@@ -38,6 +38,12 @@ class BaseSchemaVersion(ABC):
     def bom_metadata_supports_tools_external_references(self) -> bool:
         return True
 
+    def bom_metadata_supports_licenses(self) -> bool:
+        return True
+
+    def bom_metadata_supports_properties(self) -> bool:
+        return True
+
     def bom_supports_services(self) -> bool:
         return True
 
@@ -145,6 +151,12 @@ class SchemaVersion1Dot2(BaseSchemaVersion):
         return SchemaVersion.V1_2
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def bom_metadata_supports_licenses(self) -> bool:
+        return False
+
+    def bom_metadata_supports_properties(self) -> bool:
         return False
 
     def services_supports_properties(self) -> bool:

@@ -47,12 +47,68 @@
         ]
       }
     ],
+    "authors": [
+      {
+        "name": "Paul Horton",
+        "email": "paul.horton@owasp.org"
+      },
+      {
+        "name": "A N Other",
+        "email": "someone@somewhere.tld",
+        "phone": "+44 (0)1234 567890"
+      }
+    ],
     "component": {
       "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
       "type": "library",
       "name": "cyclonedx-python-lib",
       "version": "1.0.0"
-    }
+    },
+    "manufacture": {
+      "name": "CycloneDX",
+      "url": [
+        "https://cyclonedx.org"
+      ],
+      "contact": [
+        {
+          "name": "Paul Horton",
+          "email": "paul.horton@owasp.org"
+        },
+        {
+          "name": "A N Other",
+          "email": "someone@somewhere.tld",
+          "phone": "+44 (0)1234 567890"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Cyclone DX",
+      "url": [
+        "https://cyclonedx.org/"
+      ],
+      "contact": [
+        {
+          "name": "A N Other",
+          "email": "someone@somewhere.tld",
+          "phone": "+44 (0)1234 567890"
+        }
+      ]
+    },
+    "licenses": [
+      {
+        "expression": "Commercial"
+      }
+    ],
+    "properties": [
+      {
+        "name": "key1",
+        "value": "val1"
+      },
+      {
+        "name": "key2",
+        "value": "val2"
+      }
+    ]
   },
   "components": []
 }

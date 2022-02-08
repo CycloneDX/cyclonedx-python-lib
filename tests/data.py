@@ -117,9 +117,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             organizations=[
                 get_org_entity_1()
             ],
-            individuals=[
-                OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890'),
-            ]
+            individuals=[get_org_contact_2()]
         ),
         tools=[
             Tool(vendor='CycloneDX', name='cyclonedx-python-lib')
@@ -148,9 +146,14 @@ def get_bom_with_component_toml_1() -> Bom:
 
 def get_bom_just_complete_metadata() -> Bom:
     bom = Bom()
+    bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
     bom.metadata.component = Component(
         name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
     )
+    bom.metadata.manufacture = get_org_entity_1()
+    bom.metadata.supplier = get_org_entity_2()
+    bom.metadata.licenses = [LicenseChoice(license_expression='Commercial')]
+    bom.metadata.properties = get_properties_1()
     return bom
 
 
@@ -326,13 +329,23 @@ def get_issue_2() -> IssueType:
     )
 
 
+def get_org_contact_1() -> OrganizationalContact:
+    return OrganizationalContact(name='Paul Horton', email='paul.horton@owasp.org')
+
+
+def get_org_contact_2() -> OrganizationalContact:
+    return OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890')
+
+
 def get_org_entity_1() -> OrganizationalEntity:
     return OrganizationalEntity(
-        name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[
-            OrganizationalContact(name='Paul Horton', email='paul.horton@owasp.org'),
-            OrganizationalContact(name='A N Other', email='someone@somewhere.tld',
-                                  phone='+44 (0)1234 567890')
-        ]
+        name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[get_org_contact_1(), get_org_contact_2()]
+    )
+
+
+def get_org_entity_2() -> OrganizationalEntity:
+    return OrganizationalEntity(
+        name='Cyclone DX', urls=[XsUri('https://cyclonedx.org/')], contacts=[get_org_contact_2()]
     )
 
 

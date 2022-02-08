@@ -9,10 +9,43 @@
                 <version>VERSION</version>
             </tool>
         </tools>
+        <authors>
+            <author>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
+            </author>
+            <author>
+                <name>A N Other</name>
+                <email>someone@somewhere.tld</email>
+                <phone>+44 (0)1234 567890</phone>
+            </author>
+        </authors>
         <component type="library" bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
+        <manufacture>
+            <name>CycloneDX</name>
+            <url>https://cyclonedx.org</url>
+            <contact>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
+            </contact>
+            <contact>
+                <name>A N Other</name>
+                <email>someone@somewhere.tld</email>
+                <phone>+44 (0)1234 567890</phone>
+            </contact>
+        </manufacture>
+        <supplier>
+            <name>Cyclone DX</name>
+            <url>https://cyclonedx.org/</url>
+            <contact>
+                <name>A N Other</name>
+                <email>someone@somewhere.tld</email>
+                <phone>+44 (0)1234 567890</phone>
+            </contact>
+        </supplier>
     </metadata>
     <components/>
 </bom>

@@ -22,6 +22,7 @@ import os
 import sys
 import xml.etree.ElementTree
 from datetime import datetime, timezone
+from typing import Any
 from unittest import TestCase
 from uuid import uuid4
 
@@ -66,10 +67,19 @@ class BaseJsonTestCase(TestCase):
         else:
             self.assertTrue(True, 'JSON Schema Validation is not possible in Python < 3.7')
 
+    @staticmethod
+    def _sort_json_dict(item: object) -> Any:
+        if isinstance(item, dict):
+            return sorted((key, BaseJsonTestCase._sort_json_dict(values)) for key, values in item.items())
+        if isinstance(item, list):
+            return sorted(BaseJsonTestCase._sort_json_dict(x) for x in item)
+        else:
+            return item
+
     def assertEqualJson(self, a: str, b: str) -> None:
         self.assertEqual(
-            json.dumps(sorted(json.loads(a)), sort_keys=True),
-            json.dumps(sorted(json.loads(b)), sort_keys=True)
+            BaseJsonTestCase._sort_json_dict(json.loads(a)),
+            BaseJsonTestCase._sort_json_dict(json.loads(b))
         )
 
     def assertEqualJsonBom(self, a: str, b: str) -> None:
@@ -123,7 +133,7 @@ class BaseXmlTestCase(TestCase):
     def assertEqualXml(self, a: str, b: str) -> None:
         diff_results = main.diff_texts(a, b, diff_options={'F': 0.5})
         diff_results = list(filter(lambda o: not isinstance(o, MoveNode), diff_results))
-        self.assertEqual(len(diff_results), 0)
+        self.assertEqual(len(diff_results), 0, f'There are XML differences: {diff_results}')
 
     def assertEqualXmlBom(self, a: str, b: str, namespace: str) -> None:
         """

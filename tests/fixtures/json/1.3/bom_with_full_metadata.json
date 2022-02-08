@@ -13,12 +13,68 @@
         "version": "VERSION"
       }
     ],
+    "authors": [
+      {
+        "name": "Paul Horton",
+        "email": "paul.horton@owasp.org"
+      },
+      {
+        "name": "A N Other",
+        "email": "someone@somewhere.tld",
+        "phone": "+44 (0)1234 567890"
+      }
+    ],
     "component": {
       "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
       "type": "library",
       "name": "cyclonedx-python-lib",
       "version": "1.0.0"
-    }
+    },
+    "manufacture": {
+      "name": "CycloneDX",
+      "url": [
+        "https://cyclonedx.org"
+      ],
+      "contact": [
+        {
+          "name": "Paul Horton",
+          "email": "paul.horton@owasp.org"
+        },
+        {
+          "name": "A N Other",
+          "email": "someone@somewhere.tld",
+          "phone": "+44 (0)1234 567890"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "Cyclone DX",
+      "url": [
+        "https://cyclonedx.org/"
+      ],
+      "contact": [
+        {
+          "name": "A N Other",
+          "email": "someone@somewhere.tld",
+          "phone": "+44 (0)1234 567890"
+        }
+      ]
+    },
+    "licenses": [
+      {
+        "expression": "Commercial"
+      }
+    ],
+    "properties": [
+      {
+        "name": "key1",
+        "value": "val1"
+      },
+      {
+        "name": "key2",
+        "value": "val2"
+      }
+    ]
   },
   "components": []
 }
