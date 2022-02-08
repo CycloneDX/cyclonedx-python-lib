@@ -144,8 +144,32 @@ class Xml(BaseOutput, BaseSchemaVersion):
             for tool in bom_metadata.tools:
                 self._add_tool(parent_element=tools_e, tool=tool)
 
+        if bom_metadata.authors:
+            authors_e = ElementTree.SubElement(metadata_e, 'authors')
+            for author in bom_metadata.authors:
+                Xml._add_organizational_contact(
+                    parent_element=authors_e, contact=author, tag_name='author'
+                )
+
         if bom_metadata.component:
             metadata_e.append(self._add_component_element(component=bom_metadata.component))
+
+        if bom_metadata.manufacture:
+            Xml._add_organizational_entity(
+                parent_element=metadata_e, organization=bom_metadata.manufacture, tag_name='manufacture'
+            )
+
+        if bom_metadata.supplier:
+            Xml._add_organizational_entity(
+                parent_element=metadata_e, organization=bom_metadata.supplier, tag_name='supplier'
+            )
+
+        if self.bom_metadata_supports_licenses() and bom_metadata.licenses:
+            licenses_e = ElementTree.SubElement(metadata_e, 'licenses')
+            self._add_licenses_to_element(licenses=bom_metadata.licenses, parent_element=licenses_e)
+
+        if self.bom_metadata_supports_properties() and bom_metadata.properties:
+            Xml._add_properties_element(properties=bom_metadata.properties, parent_element=metadata_e)
 
     def _add_component_element(self, component: Component) -> ElementTree.Element:
         element_attributes = {'type': component.type.value}
