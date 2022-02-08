@@ -16,24 +16,24 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 from unittest import TestCase
 
 from cyclonedx.model.bom import Bom, ThisTool, Tool
 from cyclonedx.model.component import Component, ComponentType
+from data import get_bom_with_component_setuptools_with_vulnerability
 
 
 class TestBom(TestCase):
 
     def test_bom_metadata_tool_this_tool(self) -> None:
-        self.assertEqual(ThisTool.get_vendor(), 'CycloneDX')
-        self.assertEqual(ThisTool.get_name(), 'cyclonedx-python-lib')
-        self.assertNotEqual(ThisTool.get_version(), 'UNKNOWN')
+        self.assertEqual(ThisTool.vendor, 'CycloneDX')
+        self.assertEqual(ThisTool.name, 'cyclonedx-python-lib')
+        self.assertNotEqual(ThisTool.version, 'UNKNOWN')
 
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()
         self.assertEqual(len(bom.metadata.tools), 1)
-        bom.metadata.add_tool(
+        bom.metadata.tools.add(
             Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
         )
         self.assertEqual(len(bom.metadata.tools), 2)
@@ -41,8 +41,7 @@ class TestBom(TestCase):
     def test_metadata_component(self) -> None:
         metadata = Bom().metadata
         self.assertTrue(metadata.component is None)
-        hextech = Component(name='Hextech', version='1.0.0',
-                            component_type=ComponentType.LIBRARY)
+        hextech = Component(name='Hextech', version='1.0.0', component_type=ComponentType.LIBRARY)
         metadata.component = hextech
         self.assertFalse(metadata.component is None)
         self.assertEquals(metadata.component, hextech)
@@ -51,6 +50,10 @@ class TestBom(TestCase):
         bom = Bom()
         self.assertIsNotNone(bom.uuid)
         self.assertIsNotNone(bom.metadata)
-        self.assertIsNone(bom.components)
-        self.assertIsNone(bom.services)
-        self.assertIsNone(bom.external_references)
+        self.assertFalse(bom.components)
+        self.assertFalse(bom.services)
+        self.assertFalse(bom.external_references)
+
+    def test_bom_with_vulnerabilities(self) -> None:
+        bom = get_bom_with_component_setuptools_with_vulnerability()
+        self.assertTrue(bom.has_vulnerabilities())

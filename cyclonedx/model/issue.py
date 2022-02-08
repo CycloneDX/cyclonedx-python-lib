@@ -13,9 +13,9 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-
+# Copyright (c) OWASP Foundation. All Rights Reserved.
 from enum import Enum
-from typing import List, Optional
+from typing import Iterable, Optional, Set
 
 from . import XsUri
 from ..exception.model import NoPropertiesProvidedException
@@ -99,181 +99,99 @@ class IssueType:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, *, classification: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
-                 description: Optional[str] = None, source_name: Optional[str] = None,
-                 source_url: Optional[XsUri] = None, references: Optional[List[XsUri]] = None) -> None:
-        self._type: IssueClassification = classification
-        self._id: Optional[str] = id
-        self._name: Optional[str] = name
-        self._description: Optional[str] = description
-        self._source: Optional[IssueTypeSource] = None
-        self._references: List[XsUri] = references or []
-        if source_name or source_url:
-            self._source = IssueTypeSource(
-                name=source_name, url=source_url
-            )
+    def __init__(self, *, classification: IssueClassification, id_: Optional[str] = None, name: Optional[str] = None,
+                 description: Optional[str] = None, source: Optional[IssueTypeSource] = None,
+                 references: Optional[Iterable[XsUri]] = None) -> None:
+        self.type = classification
+        self.id = id_
+        self.name = name
+        self.description = description
+        self.source = source
+        self.references = set(references or [])
 
     @property
-    def source(self) -> Optional[IssueTypeSource]:
-        return self._source
-
-    @source.setter
-    def source(self, source: IssueTypeSource) -> None:
-        self._source = source
-
-    def add_reference(self, reference: XsUri) -> None:
+    def type(self) -> IssueClassification:
         """
-        Add a reference URL to this Issue.
-
-        Args:
-            reference:
-                `XsUri` Reference URL to add
-        """
-        self._references.append(reference)
-
-    def get_classification(self) -> IssueClassification:
-        """
-        Get the classification of this IssueType.
+        Specifies the type of issue.
 
         Returns:
-            `IssueClassification` that represents the classification of this `IssueType`.
+            `IssueClassification`
         """
         return self._type
 
-    def get_id(self) -> Optional[str]:
+    @type.setter
+    def type(self, classification: IssueClassification) -> None:
+        self._type = classification
+
+    @property
+    def id(self) -> Optional[str]:
         """
-        Get the ID of this IssueType.
+        The identifier of the issue assigned by the source of the issue.
 
         Returns:
-            `str` that represents the ID of this `IssueType` if set else `None`.
+            `str` if set else `None`
         """
         return self._id
 
-    def get_name(self) -> Optional[str]:
+    @id.setter
+    def id(self, id_: Optional[str]) -> None:
+        self._id = id_
+
+    @property
+    def name(self) -> Optional[str]:
         """
-        Get the name of this IssueType.
+        The name of the issue.
 
         Returns:
-            `str` that represents the name of this `IssueType` if set else `None`.
+            `str` if set else `None`
         """
         return self._name
 
-    def get_description(self) -> Optional[str]:
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    def description(self) -> Optional[str]:
         """
-        Get the description of this IssueType.
+        A description of the issue.
 
         Returns:
-            `str` that represents the description of this `IssueType` if set else `None`.
+            `str` if set else `None`
         """
         return self._description
 
-    def get_source_name(self) -> Optional[str]:
-        """
-        Get the source_name of this IssueType.
+    @description.setter
+    def description(self, description: Optional[str]) -> None:
+        self._description = description
 
-        For example, this might be "NVD" or "National Vulnerability Database".
+    @property
+    def source(self) -> Optional[IssueTypeSource]:
+        """
+        The source of this issue.
 
         Returns:
-            `str` that represents the source_name of this `IssueType` if set else `None`.
+            `IssueTypeSource` if set else `None`
         """
-        if self._source:
-            return self._source.name
-        return None
+        return self._source
 
-    def get_source_url(self) -> Optional[XsUri]:
+    @source.setter
+    def source(self, source: Optional[IssueTypeSource]) -> None:
+        self._source = source
+
+    @property
+    def references(self) -> Set[XsUri]:
         """
-        Get the source_url of this IssueType.
-
-        For example, this would likely be a URL to the issue on the NVD.
+        Any reference URLs related to this issue.
 
         Returns:
-            `XsUri` that represents the source_url of this `IssueType` if set else `None`.
-        """
-        if self._source:
-            return self._source.url
-        return None
-
-    def get_references(self) -> List[XsUri]:
-        """
-        Get any references for this IssueType.
-
-        References are an arbitrary list of URIs that relate to this issue.
-
-        Returns:
-            List of `XsUri` objects.
+            Set of `XsUri`
         """
         return self._references
 
-    def set_id(self, id: str) -> None:
-        """
-        Set the ID of this Issue.
-
-        Args:
-            id:
-                `str` the Issue ID
-
-        Returns:
-            None
-        """
-        self._id = id
-
-    def set_name(self, name: str) -> None:
-        """
-        Set the name of this Issue.
-
-        Args:
-            name:
-                `str` the name of this Issue
-
-        Returns:
-            None
-        """
-        self._name = name
-
-    def set_description(self, description: str) -> None:
-        """
-        Set the description of this Issue.
-
-        Args:
-            description:
-                `str` the description of this Issue
-
-        Returns:
-            None
-        """
-        self._description = description
-
-    def set_source_name(self, source_name: str) -> None:
-        """
-        Set the name of the source of this Issue.
-
-        Args:
-            source_name:
-                `str` For example, this might be "NVD" or "National Vulnerability Database"
-
-        Returns:
-            None
-        """
-        if self._source:
-            self._source.name = source_name
-        else:
-            self._source = IssueTypeSource(name=source_name)
-
-    def set_source_url(self, source_url: XsUri) -> None:
-        """
-        Set the URL for the source of this Issue.
-
-        Args:
-            source_url:
-                `XsUri` For example, this would likely be a URL to the issue on the NVD
-
-        Returns:
-            None
-        """
-        if self._source:
-            self._source.url = source_url
-        else:
-            self._source = IssueTypeSource(url=source_url)
+    @references.setter
+    def references(self, references: Iterable[XsUri]) -> None:
+        self._references = set(references)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, IssueType):
@@ -282,9 +200,8 @@ class IssueType:
 
     def __hash__(self) -> int:
         return hash((
-            self._type, self._id, self._name, self._description, self._source,
-            tuple([hash(ref) for ref in set(sorted(self._references, key=hash))]) if self._references else None
+            self.type, self.id, self.name, self.description, self.source, tuple(self.references)
         ))
 
     def __repr__(self) -> str:
-        return f'<IssueType type={self._type}, id={self._id}, name={self._name}>'
+        return f'<IssueType type={self.type}, id={self.id}, name={self.name}>'

@@ -18,14 +18,14 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import warnings
-from typing import cast, List, Optional
+from typing import Optional, Set
 from xml.etree import ElementTree
 
 from . import BaseOutput, SchemaVersion
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
-from ..model import AttachedText, ExternalReference, HashType, IdentifiableAction, OrganizationalEntity, \
-    OrganizationalContact, Property, Tool
+from ..model import AttachedText, ExternalReference, HashType, IdentifiableAction, LicenseChoice, \
+    OrganizationalEntity, OrganizationalContact, Property, Tool
 from ..model.bom import Bom
 from ..model.component import Component, Patch
 from ..model.release_note import ReleaseNotes
@@ -58,7 +58,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         has_vulnerabilities: bool = False
         if self.get_bom().components:
-            for component in cast(List[Component], self.get_bom().components):
+            for component in self.get_bom().components:
                 component_element = self._add_component_element(component=component)
                 components_element.append(component_element)
                 if self.bom_supports_vulnerabilities_via_extension() and component.has_vulnerabilities():
@@ -67,8 +67,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     for vulnerability in component.get_vulnerabilities():
                         if component.bom_ref:
                             vulnerabilities.append(
-                                self._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.bom_ref,
-                                                                               vulnerability=vulnerability)
+                                Xml._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.bom_ref,
+                                                                              vulnerability=vulnerability)
                             )
                         else:
                             warnings.warn(
@@ -81,19 +81,19 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.bom_supports_services():
             if self.get_bom().services:
                 services_element = ElementTree.SubElement(self._root_bom_element, 'services')
-                for service in cast(List[Service], self.get_bom().services):
+                for service in self.get_bom().services:
                     services_element.append(self._add_service_element(service=service))
 
         if self.bom_supports_external_references():
             if self.get_bom().external_references:
                 self._add_external_references_to_element(
-                    ext_refs=cast(List[ExternalReference], self.get_bom().external_references),
+                    ext_refs=self.get_bom().external_references,
                     element=self._root_bom_element
                 )
 
         if self.bom_supports_vulnerabilities() and has_vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
-            for component in cast(List[Component], self.get_bom().components):
+            for component in self.get_bom().components:
                 for vulnerability in component.get_vulnerabilities():
                     vulnerabilities_element.append(
                         self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
@@ -183,31 +183,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         # licenses
         if component.licenses:
-            license_output: bool = False
             licenses_e = ElementTree.SubElement(component_element, 'licenses')
-            for license in component.licenses:
-                if license.license:
-                    license_e = ElementTree.SubElement(licenses_e, 'license')
-                    if license.license.id:
-                        ElementTree.SubElement(license_e, 'id').text = license.license.id
-                    elif license.license.name:
-                        ElementTree.SubElement(license_e, 'name').text = license.license.name
-                    if license.license.text:
-                        license_text_e_attrs = {}
-                        if license.license.text.content_type:
-                            license_text_e_attrs['content-type'] = license.license.text.content_type
-                        if license.license.text.encoding:
-                            license_text_e_attrs['encoding'] = license.license.text.encoding.value
-                        ElementTree.SubElement(license_e, 'text',
-                                               license_text_e_attrs).text = license.license.text.content
-
-                        ElementTree.SubElement(license_e, 'text').text = license.license.id
-                    license_output = True
-                else:
-                    if self.component_supports_licenses_expression():
-                        ElementTree.SubElement(licenses_e, 'expression').text = license.expression
-                        license_output = True
-
+            license_output: bool = self._add_licenses_to_element(licenses=component.licenses, parent_element=licenses_e)
             if not license_output:
                 component_element.remove(licenses_e)
 
@@ -291,6 +268,32 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return component_element
 
+    def _add_licenses_to_element(self, licenses: Set[LicenseChoice], parent_element: ElementTree.Element) -> bool:
+        license_output = False
+        for license_ in licenses:
+            if license_.license:
+                license_e = ElementTree.SubElement(parent_element, 'license')
+                if license_.license.id:
+                    ElementTree.SubElement(license_e, 'id').text = license_.license.id
+                elif license_.license.name:
+                    ElementTree.SubElement(license_e, 'name').text = license_.license.name
+                if license_.license.text:
+                    license_text_e_attrs = {}
+                    if license_.license.text.content_type:
+                        license_text_e_attrs['content-type'] = license_.license.text.content_type
+                    if license_.license.text.encoding:
+                        license_text_e_attrs['encoding'] = license_.license.text.encoding.value
+                    ElementTree.SubElement(license_e, 'text',
+                                           license_text_e_attrs).text = license_.license.text.content
+
+                    ElementTree.SubElement(license_e, 'text').text = license_.license.id
+                license_output = True
+            else:
+                if self.license_supports_expression():
+                    ElementTree.SubElement(parent_element, 'expression').text = license_.expression
+                    license_output = True
+        return license_output
+
     @staticmethod
     def _add_release_notes_element(release_notes: ReleaseNotes, parent_element: ElementTree.Element) -> None:
         release_notes_e = ElementTree.SubElement(parent_element, 'releaseNotes')
@@ -321,23 +324,23 @@ class Xml(BaseOutput, BaseSchemaVersion):
             release_notes_resolves_e = ElementTree.SubElement(release_notes_e, 'resolves')
             for issue in release_notes.resolves:
                 issue_e = ElementTree.SubElement(
-                    release_notes_resolves_e, 'issue', {'type': issue.get_classification().value}
+                    release_notes_resolves_e, 'issue', {'type': issue.type.value}
                 )
-                if issue.get_id():
-                    ElementTree.SubElement(issue_e, 'id').text = issue.get_id()
-                if issue.get_name():
-                    ElementTree.SubElement(issue_e, 'name').text = issue.get_name()
-                if issue.get_description():
-                    ElementTree.SubElement(issue_e, 'description').text = issue.get_description()
+                if issue.id:
+                    ElementTree.SubElement(issue_e, 'id').text = issue.id
+                if issue.name:
+                    ElementTree.SubElement(issue_e, 'name').text = issue.name
+                if issue.description:
+                    ElementTree.SubElement(issue_e, 'description').text = issue.description
                 if issue.source:
                     issue_source_e = ElementTree.SubElement(issue_e, 'source')
                     if issue.source.name:
                         ElementTree.SubElement(issue_source_e, 'name').text = issue.source.name
                     if issue.source.url:
                         ElementTree.SubElement(issue_source_e, 'url').text = str(issue.source.url)
-                if issue.get_references():
+                if issue.references:
                     issue_references_e = ElementTree.SubElement(issue_e, 'references')
-                    for reference in issue.get_references():
+                    for reference in issue.references:
                         ElementTree.SubElement(issue_references_e, 'url').text = str(reference)
         if release_notes.notes:
             release_notes_notes_e = ElementTree.SubElement(release_notes_e, 'notes')
@@ -367,12 +370,12 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return patch_element
 
     @staticmethod
-    def _add_properties_element(properties: List[Property], parent_element: ElementTree.Element) -> None:
+    def _add_properties_element(properties: Set[Property], parent_element: ElementTree.Element) -> None:
         properties_e = ElementTree.SubElement(parent_element, 'properties')
-        for property in properties:
+        for property_ in properties:
             ElementTree.SubElement(
-                properties_e, 'property', {'name': property.get_name()}
-            ).text = property.get_value()
+                properties_e, 'property', {'name': property_.name}
+            ).text = property_.value
 
     def _add_service_element(self, service: Service) -> ElementTree.Element:
         element_attributes = {}
@@ -425,25 +428,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # licenses
         if service.licenses:
             licenses_e = ElementTree.SubElement(service_element, 'licenses')
-            for license in service.licenses:
-                if license.license:
-                    license_e = ElementTree.SubElement(licenses_e, 'license')
-                    if license.license.id:
-                        ElementTree.SubElement(license_e, 'id').text = license.license.id
-                    elif license.license.name:
-                        ElementTree.SubElement(license_e, 'name').text = license.license.name
-                    if license.license.text:
-                        license_text_e_attrs = {}
-                        if license.license.text.content_type:
-                            license_text_e_attrs['content-type'] = license.license.text.content_type
-                        if license.license.text.encoding:
-                            license_text_e_attrs['encoding'] = license.license.text.encoding.value
-                        ElementTree.SubElement(license_e, 'text',
-                                               license_text_e_attrs).text = license.license.text.content
-
-                        ElementTree.SubElement(license_e, 'text').text = license.license.id
-                else:
-                    ElementTree.SubElement(licenses_e, 'expression').text = license.expression
+            license_output: bool = self._add_licenses_to_element(licenses=service.licenses, parent_element=licenses_e)
+            if not license_output:
+                service_element.remove(licenses_e)
 
         # externalReferences
         if service.external_references:
@@ -596,7 +583,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return vulnerability_element
 
-    def _get_vulnerability_as_xml_element_pre_1_3(self, bom_ref: str,
+    @staticmethod
+    def _get_vulnerability_as_xml_element_pre_1_3(bom_ref: str,
                                                   vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element('v:vulnerability', {
             'ref': bom_ref
@@ -660,18 +648,18 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return vulnerability_element
 
-    def _add_external_references_to_element(self, ext_refs: List[ExternalReference],
+    def _add_external_references_to_element(self, ext_refs: Set[ExternalReference],
                                             element: ElementTree.Element) -> None:
         ext_refs_element = ElementTree.SubElement(element, 'externalReferences')
         for external_reference in ext_refs:
             ext_ref_element = ElementTree.SubElement(
-                ext_refs_element, 'reference', {'type': external_reference.get_reference_type().value}
+                ext_refs_element, 'reference', {'type': external_reference.type.value}
             )
-            ElementTree.SubElement(ext_ref_element, 'url').text = external_reference.get_url()
-            if external_reference.get_comment():
-                ElementTree.SubElement(ext_ref_element, 'comment').text = external_reference.get_comment()
-            if self.external_references_supports_hashes() and external_reference.get_hashes():
-                Xml._add_hashes_to_element(hashes=external_reference.get_hashes(), element=ext_ref_element)
+            ElementTree.SubElement(ext_ref_element, 'url').text = str(external_reference.url)
+            if external_reference.comment:
+                ElementTree.SubElement(ext_ref_element, 'comment').text = external_reference.comment
+            if self.external_references_supports_hashes() and external_reference.hashes:
+                Xml._add_hashes_to_element(hashes=external_reference.hashes, element=ext_ref_element)
 
     @staticmethod
     def _add_attached_text(attached_text: AttachedText, tag_name: str = 'text') -> ElementTree.Element:
@@ -685,12 +673,12 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return at_element
 
     @staticmethod
-    def _add_hashes_to_element(hashes: List[HashType], element: ElementTree.Element) -> None:
+    def _add_hashes_to_element(hashes: Set[HashType], element: ElementTree.Element) -> None:
         hashes_e = ElementTree.SubElement(element, 'hashes')
         for h in hashes:
             ElementTree.SubElement(
-                hashes_e, 'hash', {'alg': h.get_algorithm().value}
-            ).text = h.get_hash_value()
+                hashes_e, 'hash', {'alg': h.alg.value}
+            ).text = h.content
 
     @staticmethod
     def _add_bom_target_version_range(parent_element: ElementTree.Element, version: BomTargetVersionRange) -> None:
@@ -705,18 +693,16 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     def _add_tool(self, parent_element: ElementTree.Element, tool: Tool, tag_name: str = 'tool') -> None:
         tool_element = ElementTree.SubElement(parent_element, tag_name)
-        if tool.get_vendor():
-            ElementTree.SubElement(tool_element, 'vendor').text = tool.get_vendor()
-        if tool.get_name():
-            ElementTree.SubElement(tool_element, 'name').text = tool.get_name()
-        if tool.get_version():
-            ElementTree.SubElement(tool_element, 'version').text = tool.get_version()
-        if tool.get_hashes():
-            Xml._add_hashes_to_element(hashes=tool.get_hashes(), element=tool_element)
-        if self.bom_metadata_supports_tools_external_references() and tool.get_external_references():
-            self._add_external_references_to_element(
-                ext_refs=tool.get_external_references(), element=tool_element
-            )
+        if tool.vendor:
+            ElementTree.SubElement(tool_element, 'vendor').text = tool.vendor
+        if tool.name:
+            ElementTree.SubElement(tool_element, 'name').text = tool.name
+        if tool.version:
+            ElementTree.SubElement(tool_element, 'version').text = tool.version
+        if tool.hashes:
+            Xml._add_hashes_to_element(hashes=tool.hashes, element=tool_element)
+        if self.bom_metadata_supports_tools_external_references() and tool.external_references:
+            self._add_external_references_to_element(ext_refs=tool.external_references, element=tool_element)
 
     @staticmethod
     def _add_organizational_contact(parent_element: ElementTree.Element, contact: OrganizationalContact,
@@ -735,11 +721,11 @@ class Xml(BaseOutput, BaseSchemaVersion):
         oe_element = ElementTree.SubElement(parent_element, tag_name)
         if organization.name:
             ElementTree.SubElement(oe_element, 'name').text = organization.name
-        if organization.urls:
-            for url in organization.urls:
+        if organization.url:
+            for url in organization.url:
                 ElementTree.SubElement(oe_element, 'url').text = str(url)
-        if organization.contacts:
-            for contact in organization.contacts:
+        if organization.contact:
+            for contact in organization.contact:
                 Xml._add_organizational_contact(parent_element=oe_element, contact=contact, tag_name='contact')
 
     @staticmethod

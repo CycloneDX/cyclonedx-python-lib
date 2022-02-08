@@ -16,9 +16,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 from datetime import datetime, timezone
-from typing import cast, List, Optional
+from typing import Iterable, Optional, Set
 from uuid import uuid4, UUID
 
 from . import ExternalReference, ThisTool, Tool
@@ -35,39 +34,28 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
     """
 
-    def __init__(self, *, tools: Optional[List[Tool]] = None) -> None:
+    def __init__(self, *, tools: Optional[Iterable[Tool]] = None) -> None:
         self.timestamp = datetime.now(tz=timezone.utc)
-        self.tools = tools if tools else []
+        self.tools = set(tools or [])
 
         if not self.tools:
-            self.add_tool(ThisTool)
+            self.tools.add(ThisTool)
 
         self.component: Optional[Component] = None
 
     @property
-    def tools(self) -> List[Tool]:
+    def tools(self) -> Set[Tool]:
         """
         Tools used to create this BOM.
 
         Returns:
-            `List` of `Tool` objects where there are any, else an empty `List`.
+            `Set` of `Tool` objects.
         """
         return self._tools
 
     @tools.setter
-    def tools(self, tools: List[Tool]) -> None:
-        self._tools = tools
-
-    def add_tool(self, tool: Tool) -> None:
-        """
-        Add a Tool definition to this Bom Metadata. The `cyclonedx-python-lib` is automatically added - you do not need
-        to add this yourself.
-
-        Args:
-            tool:
-                Instance of `Tool` that represents the tool you are using.
-        """
-        self._tools.append(tool)
+    def tools(self, tools: Iterable[Tool]) -> None:
+        self._tools = set(tools)
 
     @property
     def timestamp(self) -> datetime:
@@ -114,9 +102,7 @@ class BomMetaData:
 
     def __hash__(self) -> int:
         return hash((
-            self.timestamp,
-            tuple([hash(tool) for tool in set(sorted(self.tools, key=hash))]) if self.tools else None,
-            self.component
+            self.timestamp, self.tools, self.component
         ))
 
     def __repr__(self) -> str:
@@ -146,11 +132,12 @@ class Bom:
             `cyclonedx.model.bom.Bom`: A Bom instance that represents the valid data held in the supplied parser.
         """
         bom = Bom()
-        bom.add_components(parser.get_components())
+        bom.components.update(parser.get_components())
         return bom
 
-    def __init__(self, *, components: Optional[List[Component]] = None, services: Optional[List[Service]] = None,
-                 external_references: Optional[List[ExternalReference]] = None) -> None:
+    def __init__(self, *, components: Optional[Iterable[Component]] = None,
+                 services: Optional[Iterable[Service]] = None,
+                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -159,9 +146,9 @@ class Bom:
         """
         self.uuid = uuid4()
         self.metadata = BomMetaData()
-        self.components = components
-        self.services = services
-        self.external_references = external_references
+        self.components = set(components or [])
+        self.services = set(services or [])
+        self.external_references = set(external_references or [])
 
     @property
     def uuid(self) -> UUID:
@@ -195,60 +182,22 @@ class Bom:
         self._metadata = metadata
 
     @property
-    def components(self) -> Optional[List[Component]]:
+    def components(self) -> Set[Component]:
         """
         Get all the Components currently in this Bom.
 
         Returns:
-             List of all Components in this Bom or `None`
+             Set of `Component` in this Bom
         """
         return self._components
 
     @components.setter
-    def components(self, components: Optional[List[Component]]) -> None:
-        self._components = components
-
-    def add_component(self, component: Component) -> None:
-        """
-        Add a Component to this Bom instance.
-
-        Args:
-            component:
-                `cyclonedx.model.component.Component` instance to add to this Bom.
-
-        Returns:
-            None
-        """
-        if not self.components:
-            self.components = [component]
-        elif not self.has_component(component=component):
-            self.components.append(component)
-
-    def add_components(self, components: List[Component]) -> None:
-        """
-        Add multiple Components at once to this Bom instance.
-
-        Args:
-            components:
-                List of `cyclonedx.model.component.Component` instances to add to this Bom.
-
-        Returns:
-            None
-        """
-        self.components = (self._components or []) + components
-
-    def component_count(self) -> int:
-        """
-        Returns the current count of Components within this Bom.
-
-        Returns:
-             The number of Components in this Bom as `int`.
-        """
-        return len(self._components) if self._components else 0
+    def components(self, components: Iterable[Component]) -> None:
+        self._components = set(components)
 
     def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
         """
-        Get a Component already in the Bom by it's PURL
+        Get a Component already in the Bom by its PURL
 
         Args:
              purl:
@@ -257,11 +206,8 @@ class Bom:
         Returns:
             `Component` or `None`
         """
-        if not self._components:
-            return None
-
         if purl:
-            found = list(filter(lambda x: x.purl == purl, cast(List[Component], self.components)))
+            found = list(filter(lambda x: x.purl == purl, self.components))
             if len(found) == 1:
                 return found[0]
 
@@ -287,107 +233,35 @@ class Bom:
         Returns:
             `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
         """
-        if not self.components:
-            return False
         return component in self.components
 
     @property
-    def services(self) -> Optional[List[Service]]:
+    def services(self) -> Set[Service]:
         """
         Get all the Services currently in this Bom.
 
         Returns:
-             List of `Service` in this Bom or `None`
+             Set of `Service` in this BOM
         """
         return self._services
 
     @services.setter
-    def services(self, services: Optional[List[Service]]) -> None:
-        self._services = services
-
-    def add_service(self, service: Service) -> None:
-        """
-        Add a Service to this Bom instance.
-
-        Args:
-            service:
-                `cyclonedx.model.service.Service` instance to add to this Bom.
-
-        Returns:
-            None
-        """
-        if not self.services:
-            self.services = [service]
-        elif not self.has_service(service=service):
-            self.services.append(service)
-
-    def add_services(self, services: List[Service]) -> None:
-        """
-        Add multiple Services at once to this Bom instance.
-
-        Args:
-            services:
-                List of `cyclonedx.model.service.Service` instances to add to this Bom.
-
-        Returns:
-            None
-        """
-        self.services = (self.services or []) + services
-
-    def has_service(self, service: Service) -> bool:
-        """
-        Check whether this Bom contains the provided Service.
-
-        Args:
-            service:
-                The instance of `cyclonedx.model.service.Service` to check if this Bom contains.
-
-        Returns:
-            `bool` - `True` if the supplied Service is part of this Bom, `False` otherwise.
-        """
-        if not self.services:
-            return False
-
-        return service in self.services
-
-    def service_count(self) -> int:
-        """
-        Returns the current count of Services within this Bom.
-
-        Returns:
-             The number of Services in this Bom as `int`.
-        """
-        if not self.services:
-            return 0
-
-        return len(self.services)
+    def services(self, services: Iterable[Service]) -> None:
+        self._services = set(services)
 
     @property
-    def external_references(self) -> Optional[List[ExternalReference]]:
+    def external_references(self) -> Set[ExternalReference]:
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
 
         Returns:
-            List of `ExternalReference` else `None`
+            Set of `ExternalReference`
         """
         return self._external_references
 
     @external_references.setter
-    def external_references(self, external_references: Optional[List[ExternalReference]]) -> None:
-        self._external_references = external_references
-
-    def add_external_reference(self, external_reference: ExternalReference) -> None:
-        """
-        Add an external reference to this Bom.
-
-        Args:
-            external_reference:
-                `ExternalReference` to add to this Bom.
-
-        Returns:
-            None
-        """
-        self.external_references = (self.external_references or []) + [external_reference]
+    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
+        self._external_references = set(external_references)
 
     def has_vulnerabilities(self) -> bool:
         """
@@ -397,12 +271,7 @@ class Bom:
             `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
                 `False` otherwise.
         """
-        if self.components:
-            for c in self.components:
-                if c.has_vulnerabilities():
-                    return True
-
-        return False
+        return any(c.has_vulnerabilities() for c in self.components)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):
@@ -411,9 +280,7 @@ class Bom:
 
     def __hash__(self) -> int:
         return hash((
-            self.uuid, self.metadata,
-            tuple([hash(c) for c in set(sorted(self.components, key=hash))]) if self.components else None,
-            tuple([hash(s) for s in set(sorted(self.services, key=hash))]) if self.services else None
+            self.uuid, self.metadata, tuple(self.components), tuple(self.services), tuple(self.external_references)
         ))
 
     def __repr__(self) -> str:

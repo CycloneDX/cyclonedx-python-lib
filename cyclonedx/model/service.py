@@ -13,11 +13,11 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-
-from typing import List, Optional
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+from typing import Iterable, Optional, Set
 from uuid import uuid4
 
-from . import ExternalReference, DataClassification, LicenseChoice, OrganizationalEntity, Property, XsUri  # , Signature
+from . import ExternalReference, DataClassification, LicenseChoice, OrganizationalEntity, Property, XsUri
 from .release_note import ReleaseNotes
 
 """
@@ -38,12 +38,12 @@ class Service:
 
     def __init__(self, *, name: str, bom_ref: Optional[str] = None, provider: Optional[OrganizationalEntity] = None,
                  group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
-                 endpoints: Optional[List[XsUri]] = None, authenticated: Optional[bool] = None,
-                 x_trust_boundary: Optional[bool] = None, data: Optional[List[DataClassification]] = None,
-                 licenses: Optional[List[LicenseChoice]] = None,
-                 external_references: Optional[List[ExternalReference]] = None,
-                 properties: Optional[List[Property]] = None,
-                 services: Optional[List['Service']] = None,
+                 endpoints: Optional[Iterable[XsUri]] = None, authenticated: Optional[bool] = None,
+                 x_trust_boundary: Optional[bool] = None, data: Optional[Iterable[DataClassification]] = None,
+                 licenses: Optional[Iterable[LicenseChoice]] = None,
+                 external_references: Optional[Iterable[ExternalReference]] = None,
+                 properties: Optional[Iterable[Property]] = None,
+                 services: Optional[Iterable['Service']] = None,
                  release_notes: Optional[ReleaseNotes] = None,
                  ) -> None:
         self.bom_ref = bom_ref or str(uuid4())
@@ -52,15 +52,15 @@ class Service:
         self.name = name
         self.version = version
         self.description = description
-        self.endpoints = endpoints
+        self.endpoints = set(endpoints or [])
         self.authenticated = authenticated
         self.x_trust_boundary = x_trust_boundary
-        self.data = data
-        self.licenses = licenses or []
-        self.external_references = external_references or []
-        self.services = services
+        self.data = set(data or [])
+        self.licenses = set(licenses or [])
+        self.external_references = set(external_references or [])
+        self.services = set(services or [])
         self.release_notes = release_notes
-        self.properties = properties
+        self.properties = set(properties or [])
 
     @property
     def bom_ref(self) -> Optional[str]:
@@ -151,31 +151,18 @@ class Service:
         self._description = description
 
     @property
-    def endpoints(self) -> Optional[List[XsUri]]:
+    def endpoints(self) -> Set[XsUri]:
         """
         A list of endpoints URI's this service provides.
 
         Returns:
-            List of `XsUri` else `None`
+            Set of `XsUri`
         """
         return self._endpoints
 
     @endpoints.setter
-    def endpoints(self, endpoints: Optional[List[XsUri]]) -> None:
-        self._endpoints = endpoints
-
-    def add_endpoint(self, endpoint: XsUri) -> None:
-        """
-        Add an endpoint URI for this Service.
-
-        Args:
-            endpoint:
-                `XsUri` instance to add
-
-        Returns:
-            None
-        """
-        self.endpoints = (self._endpoints or []) + [endpoint]
+    def endpoints(self, endpoints: Iterable[XsUri]) -> None:
+        self._endpoints = set(endpoints)
 
     @property
     def authenticated(self) -> Optional[bool]:
@@ -212,59 +199,49 @@ class Service:
         self._x_trust_boundary = x_trust_boundary
 
     @property
-    def data(self) -> Optional[List[DataClassification]]:
+    def data(self) -> Set[DataClassification]:
         """
         Specifies the data classification.
 
         Returns:
-            List of `DataClassificiation` or `None`
+            Set of `DataClassification`
         """
         return self._data
 
     @data.setter
-    def data(self, data: Optional[List[DataClassification]]) -> None:
-        self._data = data
+    def data(self, data: Iterable[DataClassification]) -> None:
+        self._data = set(data)
 
     @property
-    def licenses(self) -> List[LicenseChoice]:
+    def licenses(self) -> Set[LicenseChoice]:
         """
         A optional list of statements about how this Service is licensed.
 
         Returns:
-            List of `LicenseChoice` else `None`
+            Set of `LicenseChoice`
         """
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: List[LicenseChoice]) -> None:
-        self._licenses = licenses
+    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+        self._licenses = set(licenses)
 
     @property
-    def external_references(self) -> List[ExternalReference]:
+    def external_references(self) -> Set[ExternalReference]:
         """
         Provides the ability to document external references related to the Service.
 
         Returns:
-            List of `ExternalReference`s
+            Set of `ExternalReference`
         """
         return self._external_references
 
     @external_references.setter
-    def external_references(self, external_references: List[ExternalReference]) -> None:
-        self._external_references = external_references
-
-    def add_external_reference(self, reference: ExternalReference) -> None:
-        """
-        Add an `ExternalReference` to this `Service`.
-
-        Args:
-            reference:
-                `ExternalReference` instance to add.
-        """
-        self.external_references = self._external_references + [reference]
+    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
+        self._external_references = set(external_references)
 
     @property
-    def services(self) -> Optional[List['Service']]:
+    def services(self) -> Set['Service']:
         """
         A list of services included or deployed behind the parent service.
 
@@ -273,29 +250,13 @@ class Service:
         It provides a way to specify a hierarchical representation of service assemblies.
 
         Returns:
-            List of `Service`s or `None`
+            Set of `Service`
         """
         return self._services
 
     @services.setter
-    def services(self, services: Optional[List['Service']]) -> None:
-        self._services = services
-
-    def has_service(self, service: 'Service') -> bool:
-        """
-        Check whether this Service contains the given Service.
-
-        Args:
-            service:
-                The instance of `cyclonedx.model.service.Service` to check if this Service contains.
-
-        Returns:
-            `bool` - `True` if the supplied Service is part of this Service, `False` otherwise.
-        """
-        if not self.services:
-            return False
-
-        return service in self.services
+    def services(self, services: Iterable['Service']) -> None:
+        self._services = set(services)
 
     @property
     def release_notes(self) -> Optional[ReleaseNotes]:
@@ -312,19 +273,19 @@ class Service:
         self._release_notes = release_notes
 
     @property
-    def properties(self) -> Optional[List[Property]]:
+    def properties(self) -> Set[Property]:
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
 
         Return:
-            List of `Property` or `None`
+            Set of `Property`
         """
         return self._properties
 
     @properties.setter
-    def properties(self, properties: Optional[List[Property]]) -> None:
-        self._properties = properties
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = set(properties)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Service):
@@ -333,15 +294,9 @@ class Service:
 
     def __hash__(self) -> int:
         return hash((
-            self.authenticated, self.data, self.description,
-            tuple([hash(uri) for uri in set(sorted(self.endpoints, key=hash))]) if self.endpoints else None,
-            tuple([hash(ref) for ref in
-                   set(sorted(self.external_references, key=hash))]) if self.external_references else None,
-            self.group,
-            tuple([hash(license_) for license_ in set(sorted(self.licenses, key=hash))]) if self.licenses else None,
-            self.name, self.properties, self.provider, self.release_notes,
-            tuple([hash(service) for service in set(sorted(self.services, key=hash))]) if self.services else None,
-            self.version, self.x_trust_boundary
+            self.authenticated, tuple(self.data), self.description, tuple(self.endpoints),
+            tuple(self.external_references), self.group, tuple(self.licenses), self.name, tuple(self.properties),
+            self.provider, self.release_notes, tuple(self.services), self.version, self.x_trust_boundary
         ))
 
     def __repr__(self) -> str:

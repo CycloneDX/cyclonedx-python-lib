@@ -52,6 +52,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
         if isinstance(o, Enum):
             return o.value
 
+        # Set
+        if isinstance(o, set):
+            return list(o)
+
         # UUID
         if isinstance(o, UUID):
             return str(o)

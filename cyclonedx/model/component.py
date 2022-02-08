@@ -16,11 +16,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 import warnings
 from enum import Enum
 from os.path import exists
-from typing import List, Optional
+from typing import Iterable, Optional, Set
 from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -149,43 +148,43 @@ class ComponentEvidence:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
     """
 
-    def __init__(self, *, licenses: Optional[List[LicenseChoice]] = None,
-                 copyright_: Optional[List[Copyright]] = None) -> None:
+    def __init__(self, *, licenses: Optional[Iterable[LicenseChoice]] = None,
+                 copyright_: Optional[Iterable[Copyright]] = None) -> None:
         if not licenses and not copyright_:
             raise NoPropertiesProvidedException(
                 'At least one of `licenses` or `copyright_` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.licenses = licenses
-        self.copyright = copyright_
+        self.licenses = set(licenses or [])
+        self.copyright = set(copyright_ or [])
 
     @property
-    def licenses(self) -> Optional[List[LicenseChoice]]:
+    def licenses(self) -> Set[LicenseChoice]:
         """
         Optional list of licenses obtained during analysis.
 
         Returns:
-            List of `LicenseChoice` if set else `None`
+            Set of `LicenseChoice`
         """
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Optional[List[LicenseChoice]]) -> None:
-        self._licenses = licenses
+    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+        self._licenses = set(licenses)
 
     @property
-    def copyright(self) -> Optional[List[Copyright]]:
+    def copyright(self) -> Set[Copyright]:
         """
         Optional list of copyright statements.
 
         Returns:
-             List of `Copyright` if set else `None`
+             Set of `Copyright`
         """
         return self._copyright
 
     @copyright.setter
-    def copyright(self, copyright_: Optional[List[Copyright]]) -> None:
-        self._copyright = copyright_
+    def copyright(self, copyright_: Iterable[Copyright]) -> None:
+        self._copyright = set(copyright_)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ComponentEvidence):
@@ -193,11 +192,7 @@ class ComponentEvidence:
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            tuple([hash(licence) for licence in set(sorted(self.licenses, key=hash))]) if self.licenses else None,
-            tuple(
-                [hash(copyright_) for copyright_ in set(sorted(self.copyright, key=hash))]) if self.copyright else None
-        ))
+        return hash((tuple(self.licenses), tuple(self.copyright)))
 
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
@@ -311,10 +306,10 @@ class Patch:
     """
 
     def __init__(self, *, type_: PatchClassification, diff: Optional[Diff] = None,
-                 resolves: Optional[List[IssueType]] = None) -> None:
+                 resolves: Optional[Iterable[IssueType]] = None) -> None:
         self.type = type_
         self.diff = diff
-        self.resolves = resolves
+        self.resolves = set(resolves or [])
 
     @property
     def type(self) -> PatchClassification:
@@ -349,28 +344,18 @@ class Patch:
         self._diff = diff
 
     @property
-    def resolves(self) -> Optional[List[IssueType]]:
+    def resolves(self) -> Set[IssueType]:
         """
         Optional list of issues resolved by this patch.
 
         Returns:
-            List of `IssueType` if set else `None`
+            Set of `IssueType`
         """
         return self._resolves
 
     @resolves.setter
-    def resolves(self, resolves: Optional[List[IssueType]]) -> None:
-        self._resolves = resolves
-
-    def add_resolves(self, issue: IssueType) -> None:
-        """
-        Add an Issue to the list that this patch resolves.
-
-        Args:
-            issue:
-                `IssueType`
-        """
-        self.resolves = (self.resolves or []) + [issue]
+    def resolves(self, resolves: Iterable[IssueType]) -> None:
+        self._resolves = set(resolves)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Patch):
@@ -378,10 +363,7 @@ class Patch:
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            self.type, self.diff,
-            tuple([hash(issue) for issue in set(sorted(self.resolves, key=hash))]) if self.resolves else None
-        ))
+        return hash((self.type, self.diff, tuple(self.resolves)))
 
     def __repr__(self) -> str:
         return f'<Patch type={self.type}, id={id(self)}>'
@@ -400,9 +382,9 @@ class Pedigree:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_pedigreeType
     """
 
-    def __init__(self, *, ancestors: Optional[List['Component']] = None,
-                 descendants: Optional[List['Component']] = None, variants: Optional[List['Component']] = None,
-                 commits: Optional[List[Commit]] = None, patches: Optional[List[Patch]] = None,
+    def __init__(self, *, ancestors: Optional[Iterable['Component']] = None,
+                 descendants: Optional[Iterable['Component']] = None, variants: Optional[Iterable['Component']] = None,
+                 commits: Optional[Iterable[Commit]] = None, patches: Optional[Iterable[Patch]] = None,
                  notes: Optional[str] = None) -> None:
         if not ancestors and not descendants and not variants and not commits and not patches and not notes:
             raise NoPropertiesProvidedException(
@@ -410,15 +392,15 @@ class Pedigree:
                 'provided for `Pedigree`'
             )
 
-        self.ancestors = ancestors
-        self.descendants = descendants
-        self.variants = variants
-        self.commits = commits
-        self.patches = patches
+        self.ancestors = set(ancestors or [])
+        self.descendants = set(descendants or [])
+        self.variants = set(variants or [])
+        self.commits = set(commits or [])
+        self.patches = set(patches or [])
         self.notes = notes
 
     @property
-    def ancestors(self) -> Optional[List['Component']]:
+    def ancestors(self) -> Set['Component']:
         """
         Describes zero or more components in which a component is derived from. This is commonly used to describe forks
         from existing projects where the forked version contains a ancestor node containing the original component it
@@ -429,124 +411,74 @@ class Pedigree:
         original component from which Component B is derived from.
 
         Returns:
-            List of `Component` if set else `None`
+            Set of `Component`
         """
         return self._ancestors
 
     @ancestors.setter
-    def ancestors(self, ancestors: Optional[List['Component']]) -> None:
-        self._ancestors = ancestors
-
-    def add_ancestor(self, ancestor: 'Component') -> None:
-        """
-        Adds an ancestor.
-
-        Args:
-            ancestor:
-                `Component`
-        """
-        self.ancestors = (self.ancestors or []) + [ancestor]
+    def ancestors(self, ancestors: Iterable['Component']) -> None:
+        self._ancestors = set(ancestors)
 
     @property
-    def descendants(self) -> Optional[List['Component']]:
+    def descendants(self) -> Set['Component']:
         """
         Descendants are the exact opposite of ancestors. This provides a way to document all forks (and their forks) of
         an original or root component.
 
         Returns:
-            List of `Component` if set else `None`
+            Set of `Component`
         """
         return self._descendants
 
     @descendants.setter
-    def descendants(self, descendants: Optional[List['Component']]) -> None:
-        self._descendants = descendants
-
-    def add_descendant(self, descendant: 'Component') -> None:
-        """
-        Adds an descendant.
-
-        Args:
-            descendant:
-                `Component`
-        """
-        self.descendants = (self.descendants or []) + [descendant]
+    def descendants(self, descendants: Iterable['Component']) -> None:
+        self._descendants = set(descendants)
 
     @property
-    def variants(self) -> Optional[List['Component']]:
+    def variants(self) -> Set['Component']:
         """
         Variants describe relations where the relationship between the components are not known. For example, if
         Component A contains nearly identical code to Component B. They are both related, but it is unclear if one is
         derived from the other, or if they share a common ancestor.
 
         Returns:
-            List of `Component` if set else `None`
+            Set of `Component`
         """
         return self._variants
 
     @variants.setter
-    def variants(self, variants: Optional[List['Component']]) -> None:
-        self._variants = variants
-
-    def add_variant(self, variant: 'Component') -> None:
-        """
-        Adds an variant.
-
-        Args:
-            variant:
-                `Component`
-        """
-        self.variants = (self.variants or []) + [variant]
+    def variants(self, variants: Iterable['Component']) -> None:
+        self._variants = set(variants)
 
     @property
-    def commits(self) -> Optional[List[Commit]]:
+    def commits(self) -> Set[Commit]:
         """
         A list of zero or more commits which provide a trail describing how the component deviates from an ancestor,
         descendant, or variant.
 
         Returns:
-            List of `Commit` if set else `None`
+            Set of `Commit`
         """
         return self._commits
 
     @commits.setter
-    def commits(self, commits: Optional[List[Commit]]) -> None:
-        self._commits = commits
-
-    def add_commit(self, commit: Commit) -> None:
-        """
-        Adds a Commit.
-
-        Args:
-            commit:
-                `Commit`
-        """
-        self.commits = (self.commits or []) + [commit]
+    def commits(self, commits: Iterable[Commit]) -> None:
+        self._commits = set(commits)
 
     @property
-    def patches(self) -> Optional[List[Patch]]:
+    def patches(self) -> Set[Patch]:
         """
         A list of zero or more patches describing how the component deviates from an ancestor, descendant, or variant.
         Patches may be complimentary to commits or may be used in place of commits.
 
         Returns:
-            List of `Patch` if present else `None`
+            Set of `Patch`
         """
         return self._patches
 
     @patches.setter
-    def patches(self, patches: Optional[List[Patch]]) -> None:
-        self._patches = patches
-
-    def add_patch(self, patch: Patch) -> None:
-        """
-        Adds a Patch.
-
-        Args:
-            patch:
-                `Patch`
-        """
-        self.patches = (self.patches or []) + [patch]
+    def patches(self, patches: Iterable[Patch]) -> None:
+        self._patches = set(patches)
 
     @property
     def notes(self) -> Optional[str]:
@@ -569,13 +501,8 @@ class Pedigree:
 
     def __hash__(self) -> int:
         return hash((
-            tuple([hash(ancestor) for ancestor in set(sorted(self.ancestors, key=hash))]) if self.ancestors else None,
-            tuple([hash(descendant) for descendant in
-                   set(sorted(self.descendants, key=hash))]) if self.descendants else None,
-            tuple([hash(variant) for variant in set(sorted(self.variants, key=hash))]) if self.variants else None,
-            tuple([hash(commit) for commit in set(sorted(self.commits, key=hash))]) if self.commits else None,
-            tuple([hash(patch) for patch in set(sorted(self.patches, key=hash))]) if self.patches else None,
-            self.notes
+            tuple(self.ancestors), tuple(self.descendants), tuple(self.variants), tuple(self.commits),
+            tuple(self.patches), self.notes
         ))
 
     def __repr__(self) -> str:
@@ -754,12 +681,12 @@ class Component:
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
-                 hashes: Optional[List[HashType]] = None, licenses: Optional[List[LicenseChoice]] = None,
+                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[LicenseChoice]] = None,
                  copyright_: Optional[str] = None, purl: Optional[PackageURL] = None,
-                 external_references: Optional[List[ExternalReference]] = None,
-                 properties: Optional[List[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
+                 external_references: Optional[Iterable[ExternalReference]] = None,
+                 properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
-                 components: Optional[List['Component']] = None, evidence: Optional[ComponentEvidence] = None,
+                 components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
                  # Deprecated parameters kept for backwards compatibility
                  namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
@@ -774,16 +701,16 @@ class Component:
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = hashes or []
-        self.licenses = licenses or []
+        self.hashes = set(hashes or [])
+        self.licenses = set(licenses or [])
         self.copyright = copyright_
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
         self.pedigree = pedigree
-        self.external_references = external_references if external_references else []
-        self.properties = properties
-        self.components = components
+        self.external_references = set(external_references or [])
+        self.properties = set(properties or [])
+        self.components = set(components or [])
         self.evidence = evidence
         self.release_notes = release_notes
 
@@ -802,9 +729,9 @@ class Component:
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = [LicenseChoice(license_expression=license_str)]
+                self.licenses = {LicenseChoice(license_expression=license_str)}
 
-        self.__vulnerabilites: List[Vulnerability] = []
+        self.__vulnerabilites: Set[Vulnerability] = set()
 
     @property
     def type(self) -> ComponentType:
@@ -982,42 +909,32 @@ class Component:
         self._scope = scope
 
     @property
-    def hashes(self) -> List[HashType]:
+    def hashes(self) -> Set[HashType]:
         """
-        Optional list of hashes that help specifiy the integrity of this Component.
+        Optional list of hashes that help specify the integrity of this Component.
 
         Returns:
-             List of `HashType` or `None`
+             Set of `HashType`
         """
         return self._hashes
 
     @hashes.setter
-    def hashes(self, hashes: List[HashType]) -> None:
-        self._hashes = hashes
-
-    def add_hash(self, a_hash: HashType) -> None:
-        """
-        Adds a hash that pins/identifies this Component.
-
-        Args:
-            a_hash:
-                `HashType` instance
-        """
-        self.hashes = self.hashes + [a_hash]
+    def hashes(self, hashes: Iterable[HashType]) -> None:
+        self._hashes = set(hashes)
 
     @property
-    def licenses(self) -> List[LicenseChoice]:
+    def licenses(self) -> Set[LicenseChoice]:
         """
         A optional list of statements about how this Component is licensed.
 
         Returns:
-            List of `LicenseChoice` else `None`
+            Set of `LicenseChoice`
         """
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: List[LicenseChoice]) -> None:
-        self._licenses = licenses
+    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+        self._licenses = set(licenses)
 
     @property
     def copyright(self) -> Optional[str]:
@@ -1031,8 +948,8 @@ class Component:
         return self._copyright
 
     @copyright.setter
-    def copyright(self, copyright: Optional[str]) -> None:
-        self._copyright = copyright
+    def copyright(self, copyright_: Optional[str]) -> None:
+        self._copyright = copyright_
 
     @property
     def cpe(self) -> Optional[str]:
@@ -1096,70 +1013,50 @@ class Component:
         self._pedigree = pedigree
 
     @property
-    def external_references(self) -> List[ExternalReference]:
+    def external_references(self) -> Set[ExternalReference]:
         """
         Provides the ability to document external references related to the component or to the project the component
         describes.
 
         Returns:
-            List of `ExternalReference`s
+            Set of `ExternalReference`
         """
         return self._external_references
 
     @external_references.setter
-    def external_references(self, external_references: List[ExternalReference]) -> None:
-        self._external_references = external_references
-
-    def add_external_reference(self, reference: ExternalReference) -> None:
-        """
-        Add an `ExternalReference` to this `Component`.
-
-        Args:
-            reference:
-                `ExternalReference` instance to add.
-        """
-        self.external_references = self._external_references + [reference]
+    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
+        self._external_references = set(external_references)
 
     @property
-    def properties(self) -> Optional[List[Property]]:
+    def properties(self) -> Set[Property]:
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
 
         Return:
-            List of `Property` or `None`
+            Set of `Property`
         """
         return self._properties
 
     @properties.setter
-    def properties(self, properties: Optional[List[Property]]) -> None:
-        self._properties = properties
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = set(properties)
 
     @property
-    def components(self) -> Optional[List['Component']]:
+    def components(self) -> Set['Component']:
         """
         A list of software and hardware components included in the parent component. This is not a dependency tree. It
         provides a way to specify a hierarchical representation of component assemblies, similar to system -> subsystem
         -> parts assembly in physical supply chains.
 
         Returns:
-            List of `Component` if set else `None`
+            Set of `Component`
         """
         return self._components
 
     @components.setter
-    def components(self, components: Optional[List['Component']]) -> None:
-        self._components = components
-
-    def add_component(self, component: 'Component') -> None:
-        """
-        Add aa `Component` that is part of this parent `Component`.
-
-        Args:
-            component:
-                `Component` to add
-        """
-        self.components = (self.components or []) + [component]
+    def components(self, components: Iterable['Component']) -> None:
+        self._components = set(components)
 
     @property
     def evidence(self) -> Optional[ComponentEvidence]:
@@ -1200,14 +1097,14 @@ class Component:
         Returns:
             None
         """
-        self.__vulnerabilites.append(vulnerability)
+        self.__vulnerabilites.add(vulnerability)
 
-    def get_vulnerabilities(self) -> List[Vulnerability]:
+    def get_vulnerabilities(self) -> Set[Vulnerability]:
         """
         Get all the Vulnerabilities for this Component.
 
         Returns:
-             List of `Vulnerability` objects assigned to this Component.
+             Set of `Vulnerability`
         """
         return self.__vulnerabilites
 
@@ -1234,16 +1131,9 @@ class Component:
     def __hash__(self) -> int:
         return hash((
             self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
-            self.version, self.description, self.scope,
-            tuple([hash(hash_) for hash_ in set(sorted(self.hashes, key=hash))]) if self.hashes else None,
-            tuple([hash(license_) for license_ in set(sorted(self.licenses, key=hash))]) if self.licenses else None,
-            self.copyright, self.cpe, self.purl, self.swid, self.pedigree,
-            tuple([hash(ref) for ref in
-                   set(sorted(self.external_references, key=hash))]) if self.external_references else None,
-            tuple([hash(prop) for prop in set(sorted(self.properties, key=hash))]) if self.properties else None,
-            tuple(
-                [hash(component) for component in set(sorted(self.components, key=hash))]) if self.components else None,
-            self.evidence, self.release_notes
+            self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
+            self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
+            tuple(self.components), self.evidence, self.release_notes
         ))
 
     def __repr__(self) -> str:

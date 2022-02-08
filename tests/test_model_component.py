@@ -71,12 +71,12 @@ class TestModelComponent(TestCase):
         self.assertEqual(c.version, '1.2.3')
         self.assertIsNone(c.description)
         self.assertIsNone(c.scope)
-        self.assertListEqual(c.hashes, [])
-        self.assertListEqual(c.licenses, [])
+        self.assertSetEqual(c.hashes, set())
+        self.assertSetEqual(c.licenses, set())
         self.assertIsNone(c.copyright)
         self.assertIsNone(c.purl)
-        self.assertListEqual(c.external_references, [])
-        self.assertIsNone(c.properties)
+        self.assertSetEqual(c.external_references, set())
+        self.assertFalse(c.properties)
         self.assertIsNone(c.release_notes)
 
         self.assertEqual(len(c.get_vulnerabilities()), 0)
@@ -111,9 +111,9 @@ class TestModelComponent(TestCase):
         c = Component(
             name='test-component', version='1.2.3'
         )
-        c.add_external_reference(ExternalReference(
+        c.external_references.add(ExternalReference(
             reference_type=ExternalReferenceType.OTHER,
-            url='https://cyclonedx.org',
+            url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
         self.assertEqual(c.name, 'test-component')
@@ -148,18 +148,18 @@ class TestModelComponent(TestCase):
         c = Component(
             name='test-component', version='1.2.3'
         )
-        c.add_external_reference(ExternalReference(
+        c.external_references.add(ExternalReference(
             reference_type=ExternalReferenceType.OTHER,
-            url='https://cyclonedx.org',
+            url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
 
         c2 = Component(
             name='test-component', version='1.2.3'
         )
-        c2.add_external_reference(ExternalReference(
+        c2.external_references.add(ExternalReference(
             reference_type=ExternalReferenceType.OTHER,
-            url='https://cyclonedx.org',
+            url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
 
@@ -295,7 +295,7 @@ class TestModelPatch(TestCase):
             )
             p2 = Patch(
                 type_=PatchClassification.BACKPORT, diff=Diff(url=XsUri('https://cyclonedx.org')),
-                resolves=[get_issue_2(), get_issue_1()]
+                resolves=[get_issue_2(), get_issue_1(), get_issue_1(), get_issue_1(), get_issue_2()]
             )
             self.assertEqual(hash(p1), hash(p2))
             self.assertNotEqual(id(p1), id(p2))

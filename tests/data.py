@@ -29,7 +29,7 @@ from cyclonedx.model import AttachedText, DataClassification, DataFlow, Encoding
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Copyright, Patch, \
     PatchClassification, Pedigree, Swid
-from cyclonedx.model.issue import IssueClassification, IssueType
+from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
@@ -71,10 +71,10 @@ def get_bom_with_component_setuptools_complete() -> Bom:
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
     component.swid = get_swid_1()
     component.pedigree = get_pedigree_1()
-    component.components = [
+    component.components.update([
         get_component_setuptools_simple(),
         get_component_toml_with_hashes_with_references()
-    ]
+    ])
     component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
     return Bom(components=[component])
 
@@ -130,7 +130,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ),
         affects_targets=[
             BomTarget(
-                ref=component.purl.to_string() if component.purl else component.to_package_url().to_string(),
+                ref=component.purl.to_string() if component.purl else None,
                 versions=[BomTargetVersionRange(
                     version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
@@ -138,7 +138,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ]
     )
     component.add_vulnerability(vulnerability=vulnerability)
-    bom.add_component(component=component)
+    bom.components.add(component)
     return bom
 
 
@@ -286,7 +286,7 @@ def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None
 def get_external_reference_1() -> ExternalReference:
     return ExternalReference(
         reference_type=ExternalReferenceType.DISTRIBUTION,
-        url='https://cyclonedx.org',
+        url=XsUri('https://cyclonedx.org'),
         comment='No comment',
         hashes=[
             HashType.from_composite_str(
@@ -298,15 +298,15 @@ def get_external_reference_1() -> ExternalReference:
 def get_external_reference_2() -> ExternalReference:
     return ExternalReference(
         reference_type=ExternalReferenceType.WEBSITE,
-        url='https://cyclonedx.org'
+        url=XsUri('https://cyclonedx.org')
     )
 
 
 def get_issue_1() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
+        classification=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
-        source_name='NVD', source_url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'),
+        source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
             XsUri('https://logging.apache.org/log4j/2.x/security.html'),
             XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
@@ -316,9 +316,9 @@ def get_issue_1() -> IssueType:
 
 def get_issue_2() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id='CVE-2021-44229', name='Apache Log4Shell',
+        classification=IssueClassification.SECURITY, id_='CVE-2021-44229', name='Apache Log4Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
-        source_name='NVD', source_url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'),
+        source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
             XsUri('https://logging.apache.org/log4j/2.x/security.html'),
             XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
@@ -369,7 +369,7 @@ def get_release_notes() -> ReleaseNotes:
     ).decode(encoding='UTF-8')
 
     return ReleaseNotes(
-        type='major', title="Release Notes Title",
+        type_='major', title="Release Notes Title",
         featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
         social_image=XsUri('https://cyclonedx.org/cyclonedx-icon.png'),
         description="This release is a test release", timestamp=MOCK_TIMESTAMP,
