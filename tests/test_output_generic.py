@@ -22,7 +22,7 @@ from unittest import TestCase
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from cyclonedx.output.xml import XmlV1Dot3
+from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot4
 
 
 class TestOutputGeneric(TestCase):
@@ -34,11 +34,11 @@ class TestOutputGeneric(TestCase):
 
     def test_get_instance_default(self) -> None:
         i = get_instance(bom=TestOutputGeneric._bom)
-        self.assertIsInstance(i, XmlV1Dot3)
+        self.assertIsInstance(i, XmlV1Dot4)
 
-    def test_get_instance_xml(self) -> None:
+    def test_get_instance_xml_default(self) -> None:
         i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML)
-        self.assertIsInstance(i, XmlV1Dot3)
+        self.assertIsInstance(i, XmlV1Dot4)
 
     def test_get_instance_xml_v1_3(self) -> None:
         i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)

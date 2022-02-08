@@ -50,7 +50,7 @@ class SchemaVersion(Enum):
         return f'{self.value[1]}.{self.value[5]}'
 
 
-DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_3
+DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_4
 
 
 class BaseOutput(ABC):
