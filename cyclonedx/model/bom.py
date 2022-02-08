@@ -35,7 +35,7 @@ class BomMetaData:
     """
 
     def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
-                 authors: Iterable[OrganizationalContact] = None, component: Optional[Component] = None,
+                 authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
                  manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[LicenseChoice]] = None,
