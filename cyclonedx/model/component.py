@@ -766,7 +766,7 @@ class Component:
         self._mime_type = mime_type
 
     @property
-    def bom_ref(self) -> Optional[str]:
+    def bom_ref(self) -> str:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
@@ -779,7 +779,7 @@ class Component:
         return self._bom_ref
 
     @bom_ref.setter
-    def bom_ref(self, bom_ref: Optional[str]) -> None:
+    def bom_ref(self, bom_ref: str) -> None:
         self._bom_ref = bom_ref
 
     @property
