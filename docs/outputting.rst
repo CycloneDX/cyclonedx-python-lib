@@ -23,7 +23,7 @@ We provide two helper methods:
 * Output to string (for you to do with as you require)
 * Output directly to a filename you provide
 
-The default output will be in XML at Schema Version 1.4.
+By default output will be in XML at latest supported schema version - see :py:mod:`cyclonedx.output.LATEST_SUPPORTED_SCHEMA_VERSION`.
 
 Supported CycloneDX Schema Versions
 -----------------------------------
@@ -34,12 +34,12 @@ This library supports the following schema versions:
 * 1.1 (XML) - `(note, 1.1 schema version has no support for JSON)`
 * 1.2 (XML, JSON)
 * 1.3 (XML, JSON)
-* 1.4 (XML, JSON)
+* 1.4 (XML, JSON) - the latest supported schema version
 
 Outputting to JSON
 ------------------
 
-The below example relies on the default schema version being 1.4, but sets the output format to JSON. Output is returned
+The below example relies on the latest schema version, but sets the output format to JSON. Output is returned
 as a ``str``.
 
 .. code-block:: python
