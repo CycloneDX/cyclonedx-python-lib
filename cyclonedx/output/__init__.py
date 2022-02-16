@@ -50,7 +50,7 @@ class SchemaVersion(Enum):
         return f'{self.value[1]}.{self.value[5]}'
 
 
-DEFAULT_SCHEMA_VERSION = SchemaVersion.V1_4
+LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_4
 
 
 class BaseOutput(ABC):
@@ -105,7 +105,7 @@ class BaseOutput(ABC):
 
 
 def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
-                 schema_version: SchemaVersion = DEFAULT_SCHEMA_VERSION) -> BaseOutput:
+                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.
 
