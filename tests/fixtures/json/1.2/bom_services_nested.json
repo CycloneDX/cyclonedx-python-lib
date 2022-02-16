@@ -1,8 +1,6 @@
 {
   "$schema": "http://cyclonedx.org/schema/bom-1.2a.schema.json",
   "bomFormat": "CycloneDX",
-  "components": [
-  ],
   "metadata": {
     "component": {
       "bom-ref": "bb5911d6-1a1d-41c9-b6e0-46e848d16655",

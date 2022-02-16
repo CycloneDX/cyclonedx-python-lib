@@ -17,15 +17,36 @@
   "components": [
     {
       "type": "library",
-      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "bom-ref": "df70b5f1-8f53-47a4-be48-669ae78795e6",
+      "supplier": {
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org"
+        ],
+        "contact": [
+          {
+            "name": "Paul Horton",
+            "email": "paul.horton@owasp.org"
+          },
+          {
+            "name": "A N Other",
+            "email": "someone@somewhere.tld",
+            "phone": "+44 (0)1234 567890"
+          }
+        ]
+      },
       "author": "Test Author",
+      "publisher": "CycloneDX",
       "name": "setuptools",
       "version": "50.3.2",
+      "description": "This component is awesome",
+      "scope": "required",
       "licenses": [
         {
           "expression": "MIT License"
         }
       ],
+      "copyright": "Apache 2.0 baby!",
       "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
       "swid": {
@@ -162,6 +183,19 @@
         ],
         "notes": "Some notes here please"
       },
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://cyclonedx.org",
+          "comment": "No comment",
+          "hashes": [
+            {
+              "alg": "SHA-256",
+              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+            }
+          ]
+        }
+      ],
       "components": [
         {
           "type": "library",
@@ -212,7 +246,17 @@
             "text": "Commercial 2"
           }
         ]
-      }
+      },
+      "properties": [
+        {
+          "name": "key1",
+          "value": "val1"
+        },
+        {
+          "name": "key2",
+          "value": "val2"
+        }
+      ]
     }
   ]
 }

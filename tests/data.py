@@ -28,7 +28,7 @@ from cyclonedx.model import AttachedText, DataClassification, DataFlow, Encoding
     Property, Tool, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Copyright, Patch, \
-    PatchClassification, Pedigree, Swid
+    PatchClassification, Pedigree, Swid, ComponentScope
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -67,15 +67,25 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
 
 
 def get_bom_with_component_setuptools_complete() -> Bom:
-    component = get_component_setuptools_simple()
+    component = get_component_setuptools_simple(bom_ref=MOCK_UUID_6)
+    component.supplier = get_org_entity_1()
+    component.publisher = 'CycloneDX'
+    component.description = 'This component is awesome'
+    component.scope = ComponentScope.REQUIRED
+    component.copyright = 'Apache 2.0 baby!'
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
     component.swid = get_swid_1()
     component.pedigree = get_pedigree_1()
+    component.external_references.add(
+        get_external_reference_1()
+    )
+    component.properties = get_properties_1()
     component.components.update([
         get_component_setuptools_simple(),
         get_component_toml_with_hashes_with_references()
     ])
     component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
+    component.release_notes = get_release_notes()
     return Bom(components=[component])
 
 

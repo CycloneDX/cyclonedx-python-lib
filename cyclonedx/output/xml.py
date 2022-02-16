@@ -180,8 +180,19 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         component_element = ElementTree.Element('component', element_attributes)
 
+        # supplier
+        if self.component_supports_supplier() and component.supplier:
+            self._add_organizational_entity(
+                parent_element=component_element, organization=component.supplier, tag_name='supplier'
+            )
+
+        # author
         if self.component_supports_author() and component.author is not None:
             ElementTree.SubElement(component_element, 'author').text = component.author
+
+        # publisher
+        if component.publisher:
+            ElementTree.SubElement(component_element, 'publisher').text = component.publisher
 
         # group
         if component.group:
@@ -201,6 +212,14 @@ class Xml(BaseOutput, BaseSchemaVersion):
             else:
                 ElementTree.SubElement(component_element, 'version').text = component.version
 
+        # description
+        if component.description:
+            ElementTree.SubElement(component_element, 'description').text = component.description
+
+        # scope
+        if component.scope:
+            ElementTree.SubElement(component_element, 'scope').text = component.scope.value
+
         # hashes
         if component.hashes:
             Xml._add_hashes_to_element(hashes=component.hashes, element=component_element)
@@ -211,6 +230,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
             license_output: bool = self._add_licenses_to_element(licenses=component.licenses, parent_element=licenses_e)
             if not license_output:
                 component_element.remove(licenses_e)
+
+        # copyright
+        if component.copyright:
+            ElementTree.SubElement(component_element, 'copyright').text = component.copyright
 
         # cpe
         if component.cpe:
@@ -285,6 +308,29 @@ class Xml(BaseOutput, BaseSchemaVersion):
         # externalReferences
         if self.component_supports_external_references() and len(component.external_references) > 0:
             self._add_external_references_to_element(ext_refs=component.external_references, element=component_element)
+
+        # properties
+        if self.component_supports_properties() and component.properties:
+            Xml._add_properties_element(properties=component.properties, parent_element=component_element)
+
+        # components
+        if component.components:
+            components_element = ElementTree.SubElement(component_element, 'components')
+            for nested_component in component.components:
+                components_element.append(self._add_component_element(component=nested_component))
+
+        # evidence
+        if self.component_supports_evidence() and component.evidence:
+            evidence_element = ElementTree.SubElement(component_element, 'evidence')
+            if component.evidence.licenses:
+                evidence_licenses_element = ElementTree.SubElement(evidence_element, 'licenses')
+                self._add_licenses_to_element(
+                    licenses=component.evidence.licenses, parent_element=evidence_licenses_element
+                )
+            if component.evidence.copyright:
+                evidence_copyrights_element = ElementTree.SubElement(evidence_element, 'copyright')
+                for evidence_copyright in component.evidence.copyright:
+                    ElementTree.SubElement(evidence_copyrights_element, 'text').text = evidence_copyright.text
 
         # releaseNotes
         if self.component_supports_release_notes() and component.release_notes:

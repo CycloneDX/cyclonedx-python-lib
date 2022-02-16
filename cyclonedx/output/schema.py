@@ -65,6 +65,9 @@ class BaseSchemaVersion(ABC):
     def bom_requires_modified(self) -> bool:
         return False
 
+    def component_supports_supplier(self) -> bool:
+        return True
+
     def component_supports_author(self) -> bool:
         return True
 
@@ -90,6 +93,12 @@ class BaseSchemaVersion(ABC):
         return True
 
     def component_supports_external_references(self) -> bool:
+        return True
+
+    def component_supports_properties(self) -> bool:
+        return True
+
+    def component_supports_evidence(self) -> bool:
         return True
 
     def component_supports_release_notes(self) -> bool:
@@ -174,6 +183,12 @@ class SchemaVersion1Dot2(BaseSchemaVersion):
     def component_supports_mime_type_attribute(self) -> bool:
         return False
 
+    def component_supports_properties(self) -> bool:
+        return False
+
+    def component_supports_evidence(self) -> bool:
+        return False
+
     def component_supports_release_notes(self) -> bool:
         return False
 
@@ -220,10 +235,19 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
     def component_supports_mime_type_attribute(self) -> bool:
         return False
 
+    def component_supports_supplier(self) -> bool:
+        return False
+
     def component_supports_author(self) -> bool:
         return False
 
     def component_supports_swid(self) -> bool:
+        return False
+
+    def component_supports_properties(self) -> bool:
+        return False
+
+    def component_supports_evidence(self) -> bool:
         return False
 
     def component_supports_release_notes(self) -> bool:
@@ -281,6 +305,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
     def component_supports_mime_type_attribute(self) -> bool:
         return False
 
+    def component_supports_supplier(self) -> bool:
+        return False
+
     def component_supports_swid(self) -> bool:
         return False
 
@@ -288,6 +315,12 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def component_supports_external_references(self) -> bool:
+        return False
+
+    def component_supports_properties(self) -> bool:
+        return False
+
+    def component_supports_evidence(self) -> bool:
         return False
 
     def component_supports_release_notes(self) -> bool:
