@@ -526,7 +526,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
     def _get_vulnerability_as_xml_element_post_1_4(self, vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element(
             'vulnerability',
-            {'bom-ref': vulnerability.bom_ref} if vulnerability.bom_ref else {}
+            {'bom-ref': str(vulnerability.bom_ref)} if vulnerability.bom_ref else {}
         )
 
         # id
