@@ -15,9 +15,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from typing import Iterable, Optional, Set
-from uuid import uuid4
 
 from . import ExternalReference, DataClassification, LicenseChoice, OrganizationalEntity, Property, XsUri
+from .bom_ref import BomRef
 from .release_note import ReleaseNotes
 
 """
@@ -46,7 +46,7 @@ class Service:
                  services: Optional[Iterable['Service']] = None,
                  release_notes: Optional[ReleaseNotes] = None,
                  ) -> None:
-        self.bom_ref = bom_ref or str(uuid4())
+        self._bom_ref = BomRef(value=bom_ref)
         self.provider = provider
         self.group = group
         self.name = name
@@ -63,7 +63,7 @@ class Service:
         self.properties = set(properties or [])
 
     @property
-    def bom_ref(self) -> Optional[str]:
+    def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the service elsewhere in the BOM. Uniqueness is enforced
         within all elements and children of the root-level bom element.
@@ -71,13 +71,9 @@ class Service:
         If a value was not provided in the constructor, a UUIDv4 will have been assigned.
 
         Returns:
-           `str` unique identifier for this Service
+           `BomRef` unique identifier for this Service
         """
         return self._bom_ref
-
-    @bom_ref.setter
-    def bom_ref(self, bom_ref: Optional[str]) -> None:
-        self._bom_ref = bom_ref
 
     @property
     def provider(self) -> Optional[OrganizationalEntity]:

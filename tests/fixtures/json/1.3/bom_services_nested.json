@@ -3,7 +3,7 @@
   "bomFormat": "CycloneDX",
   "metadata": {
     "component": {
-      "bom-ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857",
+      "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
       "name": "cyclonedx-python-lib",
       "type": "library",
       "version": "1.0.0"
@@ -82,7 +82,7 @@
       },
       "services": [
         {
-          "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
+          "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
           "name": "first-nested-service"
         },
         {
@@ -115,11 +115,11 @@
       "x-trust-boundary": true
     },
     {
-      "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
+      "bom-ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857",
       "name": "my-second-service",
       "services": [
         {
-          "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
+          "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
           "group": "what-group",
           "name": "yet-another-nested-service",
           "provider": {
