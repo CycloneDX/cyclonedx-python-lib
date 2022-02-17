@@ -16,7 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
@@ -28,8 +27,9 @@ from uuid import UUID
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
-from cyclonedx.model import XsUri
-from cyclonedx.model.component import Component
+from ...model import XsUri
+from ...model.bom_ref import BomRef
+from ...model.component import Component
 
 HYPHENATED_ATTRIBUTES = [
     'bom_ref', 'mime_type', 'x_trust_boundary'
@@ -40,6 +40,10 @@ PYTHON_TO_JSON_NAME = compile(r'_([a-z])')
 class CycloneDxJSONEncoder(JSONEncoder):
 
     def default(self, o: Any) -> Any:
+        # BomRef
+        if isinstance(o, BomRef):
+            return str(o)
+
         # datetime
         if isinstance(o, datetime):
             return o.isoformat()

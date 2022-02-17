@@ -49,7 +49,7 @@
     ],
     "component": {
       "type": "library",
-      "bom-ref": "df70b5f1-8f53-47a4-be48-669ae78795e6",
+      "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
       "name": "cyclonedx-python-lib",
       "version": "1.0.0"
     }
@@ -179,7 +179,7 @@
       ]
     },
     {
-      "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
+      "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
       "name": "my-second-service"
     }
   ]

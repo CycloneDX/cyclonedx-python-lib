@@ -45,6 +45,10 @@ MOCK_UUID_4 = 'cd3e9c95-9d41-49e7-9924-8cf0465ae789'
 MOCK_UUID_5 = 'bb5911d6-1a1d-41c9-b6e0-46e848d16655'
 MOCK_UUID_6 = 'df70b5f1-8f53-47a4-be48-669ae78795e6'
 
+TEST_UUIDS = [
+    MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6
+]
+
 
 def get_bom_with_component_setuptools_basic() -> Bom:
     return Bom(components=[get_component_setuptools_simple()])

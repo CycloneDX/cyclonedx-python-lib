@@ -54,7 +54,7 @@ class TestModelCommit(TestCase):
 
 class TestModelComponent(TestCase):
 
-    @patch('cyclonedx.model.component.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
+    @patch('cyclonedx.model.bom_ref.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
     def test_empty_basic_component(self, mock_uuid: Mock) -> None:
         c = Component(
             name='test-component', version='1.2.3'
@@ -63,7 +63,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertIsNone(c.mime_type)
-        self.assertEqual(c.bom_ref, '6f266d1c-760f-4552-ae3b-41a9b74232fa')
+        self.assertEqual(str(c.bom_ref), '6f266d1c-760f-4552-ae3b-41a9b74232fa')
         self.assertIsNone(c.supplier)
         self.assertIsNone(c.author)
         self.assertIsNone(c.publisher)
@@ -81,7 +81,7 @@ class TestModelComponent(TestCase):
 
         self.assertEqual(len(c.get_vulnerabilities()), 0)
 
-    @patch('cyclonedx.model.component.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
+    @patch('cyclonedx.model.bom_ref.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
     def test_multiple_basic_components(self, mock_uuid: Mock) -> None:
         c1 = Component(
             name='test-component', version='1.2.3'

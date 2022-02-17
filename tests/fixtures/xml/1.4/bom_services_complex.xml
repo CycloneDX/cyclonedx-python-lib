@@ -35,7 +35,7 @@
                 </externalReferences>
             </tool>
         </tools>
-        <component bom-ref="df70b5f1-8f53-47a4-be48-669ae78795e6" type="library">
+        <component bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda" type="library">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>

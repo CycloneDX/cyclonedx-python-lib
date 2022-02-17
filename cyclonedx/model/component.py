@@ -20,13 +20,13 @@ import warnings
 from enum import Enum
 from os.path import exists
 from typing import Iterable, Optional, Set
-from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
 from . import AttachedText, Copyright, ExternalReference, HashAlgorithm, HashType, IdentifiableAction, LicenseChoice, \
     OrganizationalEntity, Property, sha1sum, XsUri
+from .bom_ref import BomRef
 from .issue import IssueType
 from .release_note import ReleaseNotes
 from .vulnerability import Vulnerability
@@ -692,7 +692,7 @@ class Component:
                  ) -> None:
         self.type = component_type
         self.mime_type = mime_type
-        self.bom_ref = bom_ref or str(uuid4())
+        self._bom_ref = BomRef(value=bom_ref)
         self.supplier = supplier
         self.author = author
         self.publisher = publisher
@@ -766,7 +766,7 @@ class Component:
         self._mime_type = mime_type
 
     @property
-    def bom_ref(self) -> str:
+    def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
@@ -774,13 +774,9 @@ class Component:
         If a value was not provided in the constructor, a UUIDv4 will have been assigned.
 
         Returns:
-            `str` as a unique identifiers for this Component
+            `BomRef`
         """
         return self._bom_ref
-
-    @bom_ref.setter
-    def bom_ref(self, bom_ref: str) -> None:
-        self._bom_ref = bom_ref
 
     @property
     def supplier(self) -> Optional[OrganizationalEntity]:

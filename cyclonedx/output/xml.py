@@ -27,6 +27,7 @@ from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, S
 from ..model import AttachedText, ExternalReference, HashType, IdentifiableAction, LicenseChoice, \
     OrganizationalEntity, OrganizationalContact, Property, Tool
 from ..model.bom import Bom
+from ..model.bom_ref import BomRef
 from ..model.component import Component, Patch
 from ..model.release_note import ReleaseNotes
 from ..model.service import Service
@@ -174,7 +175,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
     def _add_component_element(self, component: Component) -> ElementTree.Element:
         element_attributes = {'type': component.type.value}
         if self.component_supports_bom_ref_attribute() and component.bom_ref:
-            element_attributes['bom-ref'] = component.bom_ref
+            element_attributes['bom-ref'] = str(component.bom_ref)
         if self.component_supports_mime_type_attribute() and component.mime_type:
             element_attributes['mime-type'] = component.mime_type
 
@@ -450,7 +451,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
     def _add_service_element(self, service: Service) -> ElementTree.Element:
         element_attributes = {}
         if service.bom_ref:
-            element_attributes['bom-ref'] = service.bom_ref
+            element_attributes['bom-ref'] = str(service.bom_ref)
 
         service_element = ElementTree.Element('service', element_attributes)
 
@@ -654,10 +655,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return vulnerability_element
 
     @staticmethod
-    def _get_vulnerability_as_xml_element_pre_1_3(bom_ref: str,
+    def _get_vulnerability_as_xml_element_pre_1_3(bom_ref: BomRef,
                                                   vulnerability: Vulnerability) -> ElementTree.Element:
         vulnerability_element = ElementTree.Element('v:vulnerability', {
-            'ref': bom_ref
+            'ref': str(bom_ref)
         })
 
         # id

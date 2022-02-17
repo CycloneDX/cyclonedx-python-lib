@@ -9,7 +9,7 @@
                 <version>VERSION</version>
             </tool>
         </tools>
-        <component bom-ref="bb5911d6-1a1d-41c9-b6e0-46e848d16655" type="library">
+        <component bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789" type="library">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
