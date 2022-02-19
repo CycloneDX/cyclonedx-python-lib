@@ -204,14 +204,14 @@ python-versions = "*"
 
 [[package]]
 name = "packageurl-python"
-version = "0.9.6"
+version = "0.9.9"
 description = "A purl aka. Package URL parser and builder"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-test = ["pytest", "isort"]
+test = ["isort", "pytest"]
 
 [[package]]
 name = "packaging"
@@ -597,8 +597,8 @@ mypy-extensions = [
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
 ]
 packageurl-python = [
-    {file = "packageurl-python-0.9.6.tar.gz", hash = "sha256:c01fbaf62ad2eb791e97158d1f30349e830bee2dd3e9503a87f6c3ffae8d1cf0"},
-    {file = "packageurl_python-0.9.6-py3-none-any.whl", hash = "sha256:676dcb8278721df952e2444bfcd8d7bf3518894498050f0c6a5faddbe0860cd0"},
+    {file = "packageurl-python-0.9.9.tar.gz", hash = "sha256:872a0434b9a448b3fa97571711f69dd2a3fb72345ad66c90b17d827afea82f09"},
+    {file = "packageurl_python-0.9.9-py3-none-any.whl", hash = "sha256:07aa852d1c48b0e86e625f6a32d83f96427739806b269d0f8142788ee807114b"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
