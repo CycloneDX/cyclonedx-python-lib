@@ -356,8 +356,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
                         license_text_e_attrs['encoding'] = license_.license.text.encoding.value
                     ElementTree.SubElement(license_e, 'text',
                                            license_text_e_attrs).text = license_.license.text.content
+                if license_.license.url:
+                    ElementTree.SubElement(license_e, 'url').text = str(license_.license.url)
 
-                    ElementTree.SubElement(license_e, 'text').text = license_.license.id
                 license_output = True
             else:
                 if self.license_supports_expression():

@@ -24,8 +24,8 @@ from typing import List, Optional
 from packageurl import PackageURL
 
 from cyclonedx.model import AttachedText, DataClassification, DataFlow, Encoding, ExternalReference, \
-    ExternalReferenceType, HashType, LicenseChoice, Note, NoteText, OrganizationalContact, OrganizationalEntity, \
-    Property, Tool, XsUri
+    ExternalReferenceType, HashType, LicenseChoice, License, Note, NoteText, OrganizationalContact, \
+    OrganizationalEntity, Property, Tool, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Copyright, Patch, \
     PatchClassification, Pedigree, Swid, ComponentScope
@@ -166,7 +166,11 @@ def get_bom_just_complete_metadata() -> Bom:
     )
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
-    bom.metadata.licenses = [LicenseChoice(license_expression='Commercial')]
+    bom.metadata.licenses = [LicenseChoice(license_=License(
+        spdx_license_id='Apache-2.0', license_text=AttachedText(
+            content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
+        ), license_url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
+    ))]
     bom.metadata.properties = get_properties_1()
     return bom
 

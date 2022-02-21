@@ -62,7 +62,15 @@
     },
     "licenses": [
       {
-        "expression": "Commercial"
+        "license": {
+          "id": "Apache-2.0",
+          "text": {
+            "contentType": "text/plain",
+            "encoding": "base64",
+            "content": "VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE="
+          },
+          "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
       }
     ],
     "properties": [
