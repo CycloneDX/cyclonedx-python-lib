@@ -2,6 +2,30 @@
 
 <!--next-version-placeholder-->
 
+## v2.0.0 (2022-02-21)
+### Feature
+* Bump dependencies ([`da3f0ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/da3f0ca3e8b90b37301c03f889eb089bca649b09))
+* Completed work on #155 ([#172](https://github.com/CycloneDX/cyclonedx-python-lib/issues/172)) ([`a926b34`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a926b34c7facb8b3709936fe00b62a0b80338f31))
+* Support complete model for `bom.metadata` ([#162](https://github.com/CycloneDX/cyclonedx-python-lib/issues/162)) ([`2938a6c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2938a6c001a5b0b25477241d4ad6601030c55165))
+* Support for `bom.externalReferences` in JSON and XML #124 ([`1b733d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1b733d75a78e3757010a8049cab5c7d4656dc2a5))
+* Complete support for `bom.components` ([#155](https://github.com/CycloneDX/cyclonedx-python-lib/issues/155)) ([`32c0139`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/32c01396251834c69a5b23c82a5554faf8447f61))
+* Support services in XML BOMs ([`9edf6c9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9edf6c940d20a44f5b99c557392a9fa4532b332e))
+
+### Fix
+* `license_url` not serialised in XML output #179 ([#180](https://github.com/CycloneDX/cyclonedx-python-lib/issues/180)) ([`f014d7c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f014d7c4411de9ed5e9cb877878ae416d85b2d92))
+* `Component.bom_ref` is not Optional in our model implementation (in the schema it is) - we generate a UUID if `bom_ref` is not supplied explicitly ([`5c954d1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5c954d1e39ce8509ab36e6de7d521927ad3c997c))
+* Temporary fix for `__hash__` of Component with `properties` #153 ([`a51766d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a51766d202c3774003dd7cd8c115b2d9b3da1f50))
+* Further fix for #150 ([`1f55f3e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f55f3edfeacfc515ef0b5e493c27dd6e14861d6))
+* Regression introduced by first fix for #150 ([`c09e396`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c09e396b98c484d1d3d509a5c41746133fe41276))
+* Components with no version (optional since 1.4) produce invalid BOM output in XML #150 ([`70d25c8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/70d25c8c162e05a5992761ccddbad617558346d1))
+* `expression` not supported in Component Licsnes for version 1.0 ([`15b081b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/15b081bd1891566dbe00e18a8b21d3be87154f72))
+
+### Breaking
+* Adopt PEP-3102 ([`da3f0ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/da3f0ca3e8b90b37301c03f889eb089bca649b09))
+* Optional Lists are now non-optional Sets ([`da3f0ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/da3f0ca3e8b90b37301c03f889eb089bca649b09))
+* Remove concept of DEFAULT schema version - replaced with LATEST schema version ([`da3f0ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/da3f0ca3e8b90b37301c03f889eb089bca649b09))
+* Added `BomRef` data type ([`da3f0ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/da3f0ca3e8b90b37301c03f889eb089bca649b09))
+
 ## v1.3.0 (2022-01-24)
 ### Feature
 * `bom-ref` for Component and Vulnerability default to a UUID ([#142](https://github.com/CycloneDX/cyclonedx-python-lib/issues/142)) ([`3953bb6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3953bb676f423c325ca4d80f3fcee33ad042ad93))
