@@ -19,8 +19,15 @@
 
 from abc import ABC, abstractmethod
 
+from . import SchemaVersion
+
 
 class BaseSchemaVersion(ABC):
+
+    @property
+    @abstractmethod
+    def schema_version_enum(self) -> SchemaVersion:
+        pass
 
     def bom_supports_metadata(self) -> bool:
         return True
@@ -29,6 +36,24 @@ class BaseSchemaVersion(ABC):
         return True
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return True
+
+    def bom_metadata_supports_licenses(self) -> bool:
+        return True
+
+    def bom_metadata_supports_properties(self) -> bool:
+        return True
+
+    def bom_supports_services(self) -> bool:
+        return True
+
+    def bom_supports_external_references(self) -> bool:
+        return True
+
+    def services_supports_properties(self) -> bool:
+        return True
+
+    def services_supports_release_notes(self) -> bool:
         return True
 
     def bom_supports_vulnerabilities(self) -> bool:
@@ -40,6 +65,9 @@ class BaseSchemaVersion(ABC):
     def bom_requires_modified(self) -> bool:
         return False
 
+    def component_supports_supplier(self) -> bool:
+        return True
+
     def component_supports_author(self) -> bool:
         return True
 
@@ -49,13 +77,34 @@ class BaseSchemaVersion(ABC):
     def component_supports_mime_type_attribute(self) -> bool:
         return True
 
+    def license_supports_expression(self) -> bool:
+        return True
+
     def component_version_optional(self) -> bool:
         return False
+
+    def component_supports_swid(self) -> bool:
+        return True
+
+    def component_supports_pedigree(self) -> bool:
+        return True
+
+    def pedigree_supports_patches(self) -> bool:
+        return True
 
     def component_supports_external_references(self) -> bool:
         return True
 
+    def component_supports_properties(self) -> bool:
+        return True
+
+    def component_supports_evidence(self) -> bool:
+        return True
+
     def component_supports_release_notes(self) -> bool:
+        return True
+
+    def external_references_supports_hashes(self) -> bool:
         return True
 
     @abstractmethod
@@ -64,6 +113,10 @@ class BaseSchemaVersion(ABC):
 
 
 class SchemaVersion1Dot4(BaseSchemaVersion):
+
+    @property
+    def schema_version_enum(self) -> SchemaVersion:
+        return SchemaVersion.V1_4
 
     def get_schema_version(self) -> str:
         return '1.4'
@@ -74,7 +127,14 @@ class SchemaVersion1Dot4(BaseSchemaVersion):
 
 class SchemaVersion1Dot3(BaseSchemaVersion):
 
+    @property
+    def schema_version_enum(self) -> SchemaVersion:
+        return SchemaVersion.V1_3
+
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def services_supports_release_notes(self) -> bool:
         return False
 
     def bom_supports_vulnerabilities(self) -> bool:
@@ -95,7 +155,23 @@ class SchemaVersion1Dot3(BaseSchemaVersion):
 
 class SchemaVersion1Dot2(BaseSchemaVersion):
 
+    @property
+    def schema_version_enum(self) -> SchemaVersion:
+        return SchemaVersion.V1_2
+
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def bom_metadata_supports_licenses(self) -> bool:
+        return False
+
+    def bom_metadata_supports_properties(self) -> bool:
+        return False
+
+    def services_supports_properties(self) -> bool:
+        return False
+
+    def services_supports_release_notes(self) -> bool:
         return False
 
     def bom_supports_vulnerabilities(self) -> bool:
@@ -107,7 +183,16 @@ class SchemaVersion1Dot2(BaseSchemaVersion):
     def component_supports_mime_type_attribute(self) -> bool:
         return False
 
+    def component_supports_properties(self) -> bool:
+        return False
+
+    def component_supports_evidence(self) -> bool:
+        return False
+
     def component_supports_release_notes(self) -> bool:
+        return False
+
+    def external_references_supports_hashes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:
@@ -116,10 +201,26 @@ class SchemaVersion1Dot2(BaseSchemaVersion):
 
 class SchemaVersion1Dot1(BaseSchemaVersion):
 
+    @property
+    def schema_version_enum(self) -> SchemaVersion:
+        return SchemaVersion.V1_1
+
     def bom_metadata_supports_tools(self) -> bool:
         return False
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def bom_supports_services(self) -> bool:
+        return False
+
+    def services_supports_properties(self) -> bool:
+        return False
+
+    def pedigree_supports_patches(self) -> bool:
+        return False
+
+    def services_supports_release_notes(self) -> bool:
         return False
 
     def bom_supports_vulnerabilities(self) -> bool:
@@ -134,10 +235,25 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
     def component_supports_mime_type_attribute(self) -> bool:
         return False
 
+    def component_supports_supplier(self) -> bool:
+        return False
+
     def component_supports_author(self) -> bool:
         return False
 
+    def component_supports_swid(self) -> bool:
+        return False
+
+    def component_supports_properties(self) -> bool:
+        return False
+
+    def component_supports_evidence(self) -> bool:
+        return False
+
     def component_supports_release_notes(self) -> bool:
+        return False
+
+    def external_references_supports_hashes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:
@@ -146,10 +262,26 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
 
 class SchemaVersion1Dot0(BaseSchemaVersion):
 
+    @property
+    def schema_version_enum(self) -> SchemaVersion:
+        return SchemaVersion.V1_0
+
     def bom_metadata_supports_tools(self) -> bool:
         return False
 
     def bom_metadata_supports_tools_external_references(self) -> bool:
+        return False
+
+    def bom_supports_services(self) -> bool:
+        return False
+
+    def bom_supports_external_references(self) -> bool:
+        return False
+
+    def services_supports_properties(self) -> bool:
+        return False
+
+    def services_supports_release_notes(self) -> bool:
         return False
 
     def bom_supports_vulnerabilities(self) -> bool:
@@ -167,13 +299,34 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
     def component_supports_bom_ref_attribute(self) -> bool:
         return False
 
+    def license_supports_expression(self) -> bool:
+        return False
+
     def component_supports_mime_type_attribute(self) -> bool:
+        return False
+
+    def component_supports_supplier(self) -> bool:
+        return False
+
+    def component_supports_swid(self) -> bool:
+        return False
+
+    def component_supports_pedigree(self) -> bool:
         return False
 
     def component_supports_external_references(self) -> bool:
         return False
 
+    def component_supports_properties(self) -> bool:
+        return False
+
+    def component_supports_evidence(self) -> bool:
+        return False
+
     def component_supports_release_notes(self) -> bool:
+        return False
+
+    def external_references_supports_hashes(self) -> bool:
         return False
 
     def get_schema_version(self) -> str:

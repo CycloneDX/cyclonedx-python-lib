@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1">
+    <components />
+    <externalReferences>
+        <reference type="distribution">
+            <url>https://cyclonedx.org</url>
+            <comment>No comment</comment>
+        </reference>
+        <reference type="website">
+            <url>https://cyclonedx.org</url>
+        </reference>
+    </externalReferences>
+</bom>

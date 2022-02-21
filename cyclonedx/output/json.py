@@ -16,17 +16,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 import json
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import cast, Any, Dict, List, Optional, Union
 
-from . import BaseOutput
+from . import BaseOutput, SchemaVersion
 from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
     SchemaVersion1Dot4
 from .serializer.json import CycloneDxJSONEncoder
+from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
-
+from ..model.component import Component
 
 ComponentDict = Dict[str, Union[
     str,
@@ -41,21 +41,27 @@ class Json(BaseOutput, BaseSchemaVersion):
         super().__init__(bom=bom)
         self._json_output: str = ''
 
+    @property
+    def schema_version(self) -> SchemaVersion:
+        return self.schema_version_enum
+
     def generate(self, force_regeneration: bool = False) -> None:
         if self.generated and not force_regeneration:
             return
 
         schema_uri: Optional[str] = self._get_schema_uri()
         if not schema_uri:
-            # JSON not supported!
-            return
+            raise FormatNotSupportedException(
+                f'JSON is not supported by CycloneDX in schema version {self.schema_version.to_version()}'
+            )
 
         vulnerabilities: Dict[str, List[Dict[Any, Any]]] = {"vulnerabilities": []}
-        for component in self.get_bom().components:
-            for vulnerability in component.get_vulnerabilities():
-                vulnerabilities['vulnerabilities'].append(
-                    json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
-                )
+        if self.get_bom().components:
+            for component in cast(List[Component], self.get_bom().components):
+                for vulnerability in component.get_vulnerabilities():
+                    vulnerabilities['vulnerabilities'].append(
+                        json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
+                    )
 
         bom_json = json.loads(json.dumps(self.get_bom(), cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
@@ -72,32 +78,38 @@ class Json(BaseOutput, BaseSchemaVersion):
         if not self.bom_supports_metadata():
             if 'metadata' in bom_json.keys():
                 del bom_json['metadata']
-        elif not self.bom_metadata_supports_tools():
+
+        if not self.bom_metadata_supports_tools():
             del bom_json['metadata']['tools']
         elif not self.bom_metadata_supports_tools_external_references():
             for i in range(len(bom_json['metadata']['tools'])):
                 if 'externalReferences' in bom_json['metadata']['tools'][i].keys():
                     del bom_json['metadata']['tools'][i]['externalReferences']
 
+        if not self.bom_metadata_supports_licenses() and 'licenses' in bom_json['metadata'].keys():
+            del bom_json['metadata']['licenses']
+
+        if not self.bom_metadata_supports_properties() and 'properties' in bom_json['metadata'].keys():
+            del bom_json['metadata']['properties']
+
         # Iterate Components
-        if 'components' in bom_json.keys():
-            for i in range(len(bom_json['components'])):
-                if not self.component_supports_author() and 'author' in bom_json['components'][i].keys():
-                    del bom_json['components'][i]['author']
+        bom_json = self._recurse_specialise_component(bom_json=bom_json)
 
-                if not self.component_supports_mime_type_attribute() \
-                        and 'mime-type' in bom_json['components'][i].keys():
-                    del bom_json['components'][i]['mime-type']
+        # Iterate Services
+        if 'services' in bom_json.keys():
+            for i in range(len(bom_json['services'])):
+                if not self.services_supports_properties() and 'properties' in bom_json['services'][i].keys():
+                    del bom_json['services'][i]['properties']
 
-                if not self.component_supports_release_notes() and 'releaseNotes' in bom_json['components'][i].keys():
-                    del bom_json['components'][i]['releaseNotes']
-        else:
-            bom_json['components'] = []
+                if not self.services_supports_release_notes() and 'releaseNotes' in bom_json['services'][i].keys():
+                    del bom_json['services'][i]['releaseNotes']
 
-        # Iterate Vulnerabilities
-        if 'vulnerabilities' in bom_json.keys():
-            for i in range(len(bom_json['vulnerabilities'])):
-                print("Checking " + str(bom_json['vulnerabilities'][i]))
+        # Iterate externalReferences
+        if 'externalReferences' in bom_json.keys():
+            for i in range(len(bom_json['externalReferences'])):
+                if not self.external_references_supports_hashes() \
+                        and 'hashes' in bom_json['externalReferences'][i].keys():
+                    del bom_json['externalReferences'][i]['hashes']
 
         return json.dumps(bom_json)
 
@@ -118,6 +130,61 @@ class Json(BaseOutput, BaseSchemaVersion):
     @abstractmethod
     def _get_schema_uri(self) -> Optional[str]:
         pass
+
+    def _recurse_specialise_component(self, bom_json: Dict[Any, Any], base_key: str = 'components') -> Dict[Any, Any]:
+        if base_key in bom_json.keys():
+            for i in range(len(bom_json[base_key])):
+                if not self.component_supports_mime_type_attribute() \
+                        and 'mime-type' in bom_json[base_key][i].keys():
+                    del bom_json[base_key][i]['mime-type']
+
+                if not self.component_supports_supplier() and 'supplier' in bom_json[base_key][i].keys():
+                    del bom_json[base_key][i]['supplier']
+
+                if not self.component_supports_author() and 'author' in bom_json[base_key][i].keys():
+                    del bom_json[base_key][i]['author']
+
+                if self.component_version_optional() and bom_json[base_key][i]['version'] == "":
+                    del bom_json[base_key][i]['version']
+
+                if not self.component_supports_pedigree() and 'pedigree' in bom_json[base_key][i].keys():
+                    del bom_json[base_key][i]['pedigree']
+                elif 'pedigree' in bom_json[base_key][i].keys():
+                    if 'ancestors' in bom_json[base_key][i]['pedigree'].keys():
+                        # recurse into ancestors
+                        bom_json[base_key][i]['pedigree'] = self._recurse_specialise_component(
+                            bom_json=bom_json[base_key][i]['pedigree'], base_key='ancestors'
+                        )
+                    if 'descendants' in bom_json[base_key][i]['pedigree'].keys():
+                        # recurse into descendants
+                        bom_json[base_key][i]['pedigree'] = self._recurse_specialise_component(
+                            bom_json=bom_json[base_key][i]['pedigree'], base_key='descendants'
+                        )
+                    if 'variants' in bom_json[base_key][i]['pedigree'].keys():
+                        # recurse into variants
+                        bom_json[base_key][i]['pedigree'] = self._recurse_specialise_component(
+                            bom_json=bom_json[base_key][i]['pedigree'], base_key='variants'
+                        )
+
+                if not self.external_references_supports_hashes() and 'externalReferences' \
+                        in bom_json[base_key][i].keys():
+                    for j in range(len(bom_json[base_key][i]['externalReferences'])):
+                        del bom_json[base_key][i]['externalReferences'][j]['hashes']
+
+                if not self.component_supports_properties() and 'properties' in bom_json[base_key][i].keys():
+                    del bom_json[base_key][i]['properties']
+
+                # recurse
+                if 'components' in bom_json[base_key][i].keys():
+                    bom_json[base_key][i] = self._recurse_specialise_component(bom_json=bom_json[base_key][i])
+
+                if not self.component_supports_evidence() and 'evidence' in bom_json[base_key][i].keys():
+                    del bom_json[base_key][i]['evidence']
+
+                if not self.component_supports_release_notes() and 'releaseNotes' in bom_json[base_key][i].keys():
+                    del bom_json[base_key][i]['releaseNotes']
+
+        return bom_json
 
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):

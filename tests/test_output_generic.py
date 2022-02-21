@@ -19,11 +19,10 @@
 
 from unittest import TestCase
 
-from cyclonedx.exception.output import ComponentVersionRequiredException
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from cyclonedx.output.xml import XmlV1Dot3, Xml
+from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot4
 
 
 class TestOutputGeneric(TestCase):
@@ -31,21 +30,20 @@ class TestOutputGeneric(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls._bom = Bom()
-        cls._bom.add_component(Component(name='setuptools'))
+        cls._bom.components.add(Component(name='setuptools'))
 
     def test_get_instance_default(self) -> None:
         i = get_instance(bom=TestOutputGeneric._bom)
-        self.assertIsInstance(i, XmlV1Dot3)
+        self.assertIsInstance(i, XmlV1Dot4)
 
-    def test_get_instance_xml(self) -> None:
+    def test_get_instance_xml_default(self) -> None:
         i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML)
-        self.assertIsInstance(i, XmlV1Dot3)
+        self.assertIsInstance(i, XmlV1Dot4)
 
     def test_get_instance_xml_v1_3(self) -> None:
         i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
         self.assertIsInstance(i, XmlV1Dot3)
 
     def test_component_no_version_v1_3(self) -> None:
-        with self.assertRaises(ComponentVersionRequiredException):
-            outputter: Xml = get_instance(bom=TestOutputGeneric._bom, schema_version=SchemaVersion.V1_3)
-            outputter.output_as_string()
+        i = get_instance(bom=TestOutputGeneric._bom, schema_version=SchemaVersion.V1_3)
+        self.assertIsInstance(i, XmlV1Dot3)

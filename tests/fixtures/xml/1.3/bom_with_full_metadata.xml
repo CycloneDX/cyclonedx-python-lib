@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.3" version="1">
+    <metadata>
+        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <tools>
+            <tool>
+                <vendor>CycloneDX</vendor>
+                <name>cyclonedx-python-lib</name>
+                <version>VERSION</version>
+            </tool>
+        </tools>
+        <authors>
+            <author>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
+            </author>
+            <author>
+                <name>A N Other</name>
+                <email>someone@somewhere.tld</email>
+                <phone>+44 (0)1234 567890</phone>
+            </author>
+        </authors>
+        <component type="library" bom-ref="bb5911d6-1a1d-41c9-b6e0-46e848d16655">
+            <name>cyclonedx-python-lib</name>
+            <version>1.0.0</version>
+        </component>
+        <manufacture>
+            <name>CycloneDX</name>
+            <url>https://cyclonedx.org</url>
+            <contact>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
+            </contact>
+            <contact>
+                <name>A N Other</name>
+                <email>someone@somewhere.tld</email>
+                <phone>+44 (0)1234 567890</phone>
+            </contact>
+        </manufacture>
+        <supplier>
+            <name>Cyclone DX</name>
+            <url>https://cyclonedx.org/</url>
+            <contact>
+                <name>A N Other</name>
+                <email>someone@somewhere.tld</email>
+                <phone>+44 (0)1234 567890</phone>
+            </contact>
+        </supplier>
+        <licenses>
+            <license>
+                <id>Apache-2.0</id>
+                <text content-type="text/plain" encoding="base64">VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=</text>
+                <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            </license>
+        </licenses>
+        <properties>
+            <property name="key1">val1</property>
+            <property name="key2">val2</property>
+        </properties>
+    </metadata>
+    <components/>
+</bom>

@@ -16,7 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
@@ -28,10 +27,12 @@ from uuid import UUID
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
-from cyclonedx.model import XsUri
+from ...model import XsUri
+from ...model.bom_ref import BomRef
+from ...model.component import Component
 
 HYPHENATED_ATTRIBUTES = [
-    'bom_ref', 'mime_type'
+    'bom_ref', 'mime_type', 'x_trust_boundary'
 ]
 PYTHON_TO_JSON_NAME = compile(r'_([a-z])')
 
@@ -39,6 +40,10 @@ PYTHON_TO_JSON_NAME = compile(r'_([a-z])')
 class CycloneDxJSONEncoder(JSONEncoder):
 
     def default(self, o: Any) -> Any:
+        # BomRef
+        if isinstance(o, BomRef):
+            return str(o)
+
         # datetime
         if isinstance(o, datetime):
             return o.isoformat()
@@ -50,6 +55,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
         # Enum
         if isinstance(o, Enum):
             return o.value
+
+        # Set
+        if isinstance(o, set):
+            return list(o)
 
         # UUID
         if isinstance(o, UUID):
@@ -77,8 +86,11 @@ class CycloneDxJSONEncoder(JSONEncoder):
                 elif '_' in new_key:
                     new_key = PYTHON_TO_JSON_NAME.sub(lambda x: x.group(1).upper(), new_key)
 
-                # Skip any None values
-                if v:
+                # Inject '' for Component.version if it's None
+                if isinstance(o, Component) and new_key == 'version' and v is None:
+                    d[new_key] = ""
+                elif v or v is False:
+                    # Skip any None values (exception 'version')
                     if isinstance(v, PackageURL):
                         # Special handling of PackageURL instances which JSON would otherwise automatically encode to
                         # an Array

@@ -16,7 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 import json
 import pkg_resources
 from lxml import etree
@@ -39,7 +38,7 @@ class TestE2EEnvironment(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.bom: Bom = Bom()
-        cls.bom.add_component(
+        cls.bom.components.add(
             Component(
                 name=OUR_PACKAGE_NAME, author=OUR_PACKAGE_AUTHOR, version=OUR_PACKAGE_VERSION,
                 purl=PackageURL(type='pypi', name=OUR_PACKAGE_NAME, version=OUR_PACKAGE_VERSION)

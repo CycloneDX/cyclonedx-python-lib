@@ -24,6 +24,8 @@ from packageurl import PackageURL
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 
+FIXTURES_DIRECTORY = 'fixtures/xml/1.4'
+
 
 class TestComponent(TestCase):
 
@@ -94,20 +96,19 @@ class TestComponent(TestCase):
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
 
     def test_from_file_with_path_for_bom(self) -> None:
-        test_file = join(dirname(__file__), 'fixtures/bom_v1.3_setuptools.xml')
-        c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_v1.3_setuptools.xml')
-        self.assertEqual(c.name, 'fixtures/bom_v1.3_setuptools.xml')
-        self.assertEqual(c.version, '0.0.0-16932e52ed1e')
+        test_file = join(dirname(__file__), FIXTURES_DIRECTORY, 'bom_setuptools.xml')
+        c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
+        self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
+        self.assertEqual(c.version, '0.0.0-38165abddb68')
         purl = PackageURL(
-            type='generic', name='fixtures/bom_v1.3_setuptools.xml', version='0.0.0-16932e52ed1e'
+            type='generic', name='fixtures/bom_setuptools.xml', version='0.0.0-38165abddb68'
         )
         self.assertEqual(c.purl, purl)
         self.assertEqual(len(c.hashes), 1)
 
     def test_has_component_1(self) -> None:
         bom = Bom()
-        bom.add_component(component=TestComponent._component)
-        bom.add_component(component=TestComponent._component_2)
+        bom.components.update([TestComponent._component, TestComponent._component_2])
         self.assertEqual(len(bom.components), 2)
         self.assertTrue(bom.has_component(component=TestComponent._component_2))
         self.assertIsNot(TestComponent._component, TestComponent._component_2)

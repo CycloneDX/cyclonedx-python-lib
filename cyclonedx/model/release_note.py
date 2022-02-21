@@ -16,9 +16,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 from datetime import datetime
-from typing import List, Optional
+from typing import Iterable, Optional, Set
 
 from ..model import Note, Property, XsUri
 from ..model.issue import IssueType
@@ -32,22 +31,22 @@ class ReleaseNotes:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_releaseNotesType
     """
 
-    def __init__(self, type: str, title: Optional[str] = None, featured_image: Optional[XsUri] = None,
+    def __init__(self, *, type_: str, title: Optional[str] = None, featured_image: Optional[XsUri] = None,
                  social_image: Optional[XsUri] = None, description: Optional[str] = None,
-                 timestamp: Optional[datetime] = None, aliases: Optional[List[str]] = None,
-                 tags: Optional[List[str]] = None, resolves: Optional[List[IssueType]] = None,
-                 notes: Optional[List[Note]] = None, properties: Optional[List[Property]] = None) -> None:
-        self.type = type
+                 timestamp: Optional[datetime] = None, aliases: Optional[Iterable[str]] = None,
+                 tags: Optional[Iterable[str]] = None, resolves: Optional[Iterable[IssueType]] = None,
+                 notes: Optional[Iterable[Note]] = None, properties: Optional[Iterable[Property]] = None) -> None:
+        self.type = type_
         self.title = title
         self.featured_image = featured_image
         self.social_image = social_image
         self.description = description
         self.timestamp = timestamp
-        self.aliases = aliases
-        self.tags = tags
-        self.resolves = resolves
-        self.notes = notes
-        self._properties: Optional[List[Property]] = properties or None
+        self.aliases = set(aliases or [])
+        self.tags = set(tags or [])
+        self.resolves = set(resolves or [])
+        self.notes = set(notes or [])
+        self.properties = set(properties or [])
 
     @property
     def type(self) -> str:
@@ -71,8 +70,8 @@ class ReleaseNotes:
         return self._type
 
     @type.setter
-    def type(self, type: str) -> None:
-        self._type = type
+    def type(self, type_: str) -> None:
+        self._type = type_
 
     @property
     def title(self) -> Optional[str]:
@@ -130,111 +129,89 @@ class ReleaseNotes:
         self._timestamp = timestamp
 
     @property
-    def aliases(self) -> Optional[List[str]]:
+    def aliases(self) -> Set[str]:
         """
         One or more alternate names the release may be referred to. This may include unofficial terms used by
         development and marketing teams (e.g. code names).
+
+        Returns:
+            Set of `str`
         """
         return self._aliases
 
     @aliases.setter
-    def aliases(self, aliases: Optional[List[str]]) -> None:
-        if not aliases:
-            aliases = None
-        self._aliases = aliases
-
-    def add_alias(self, alias: str) -> None:
-        """
-        Adds an alias to this Release.
-
-        Args:
-            alias:
-                `str` alias
-        """
-        self.aliases = (self.aliases or []) + [alias]
+    def aliases(self, aliases: Iterable[str]) -> None:
+        self._aliases = set(aliases)
 
     @property
-    def tags(self) -> Optional[List[str]]:
+    def tags(self) -> Set[str]:
         """
         One or more tags that may aid in search or retrieval of the release note.
+
+        Returns:
+            Set of `str`
         """
         return self._tags
 
     @tags.setter
-    def tags(self, tags: Optional[List[str]]) -> None:
-        if not tags:
-            tags = None
-        self._tags = tags
-
-    def add_tag(self, tag: str) -> None:
-        """
-        Add a tag to this Release.
-
-        Args:
-            tag:
-                `str` tag to add
-        """
-        self.tags = (self.tags or []) + [tag]
+    def tags(self, tags: Iterable[str]) -> None:
+        self._tags = set(tags)
 
     @property
-    def resolves(self) -> Optional[List[IssueType]]:
+    def resolves(self) -> Set[IssueType]:
         """
         A collection of issues that have been resolved.
+
+        Returns:
+            Set of `IssueType`
         """
         return self._resolves
 
     @resolves.setter
-    def resolves(self, resolves: Optional[List[IssueType]]) -> None:
-        if not resolves:
-            resolves = None
-        self._resolves = resolves
-
-    def add_resolves(self, issue: IssueType) -> None:
-        """
-        Adds an issue that this Release resolves.
-
-        Args:
-            issue:
-                `IssueType` object that is resolved by this Release
-        """
-        self.resolves = (self.resolves or []) + [issue]
+    def resolves(self, resolves: Iterable[IssueType]) -> None:
+        self._resolves = set(resolves)
 
     @property
-    def notes(self) -> Optional[List[Note]]:
+    def notes(self) -> Set[Note]:
         """
         Zero or more release notes containing the locale and content. Multiple note elements may be specified to support
         release notes in a wide variety of languages.
+
+        Returns:
+            Set of `Note`
         """
         return self._notes
 
     @notes.setter
-    def notes(self, notes: Optional[List[Note]]) -> None:
-        if not notes:
-            notes = None
-        self._notes = notes
-
-    def add_note(self, note: Note) -> None:
-        """
-        Adds a release note to this Release.
-
-        Args:
-            note:
-                `Note` to be added
-        """
-        self.notes = (self.notes or []) + [note]
+    def notes(self, notes: Iterable[Note]) -> None:
+        self._notes = set(notes)
 
     @property
-    def properties(self) -> Optional[List[Property]]:
+    def properties(self) -> Set[Property]:
         """
         Provides the ability to document properties in a name-value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions. Unlike
         key-value stores, properties support duplicate names, each potentially having different values.
 
         Returns:
-            List of `Property` or `None`
+            Set of `Property`
         """
         return self._properties
 
     @properties.setter
-    def properties(self, properties: Optional[List[Property]]) -> None:
-        self._properties = properties
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = set(properties)
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ReleaseNotes):
+            return hash(other) == hash(self)
+        return False
+
+    def __hash__(self) -> int:
+        return hash((
+            self.type, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
+            tuple(self.aliases), tuple(self.tags), tuple(self.resolves), tuple(self.notes), tuple(self.properties)
+        ))
+
+    def __repr__(self) -> str:
+        return f'<ReleaseNotes type={self.type}, title={self.title}>'
