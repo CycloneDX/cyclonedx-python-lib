@@ -73,7 +73,11 @@
             </contact>
         </supplier>
         <licenses>
-            <expression>Commercial</expression>
+            <license>
+                <id>Apache-2.0</id>
+                <text content-type="text/plain" encoding="base64">VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=</text>
+                <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            </license>
         </licenses>
         <properties>
             <property name="key1">val1</property>

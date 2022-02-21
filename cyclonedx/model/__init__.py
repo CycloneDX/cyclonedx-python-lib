@@ -376,6 +376,9 @@ class XsUri:
         return hash(self._uri)
 
     def __repr__(self) -> str:
+        return f'<XsUri {self._uri}>'
+
+    def __str__(self) -> str:
         return self._uri
 
 
