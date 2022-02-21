@@ -50,4 +50,7 @@ class BomRef:
         return hash(self.value)
 
     def __repr__(self) -> str:
+        return f'<BomRef {self.value}'
+
+    def __str__(self) -> str:
         return self.value
