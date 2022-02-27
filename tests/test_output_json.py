@@ -16,18 +16,32 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from os.path import dirname, join
 from unittest.mock import Mock, patch
 
+from data import (
+    MOCK_UUID_1,
+    MOCK_UUID_2,
+    MOCK_UUID_3,
+    TEST_UUIDS,
+    get_bom_just_complete_metadata,
+    get_bom_with_component_setuptools_basic,
+    get_bom_with_component_setuptools_complete,
+    get_bom_with_component_setuptools_no_component_version,
+    get_bom_with_component_setuptools_with_cpe,
+    get_bom_with_component_setuptools_with_release_notes,
+    get_bom_with_component_setuptools_with_vulnerability,
+    get_bom_with_component_toml_1,
+    get_bom_with_external_references,
+    get_bom_with_nested_services,
+    get_bom_with_services_complex,
+    get_bom_with_services_simple,
+)
+
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
-from data import get_bom_with_component_setuptools_basic, get_bom_with_component_setuptools_with_cpe, \
-    get_bom_with_services_simple, get_bom_with_component_toml_1, \
-    get_bom_with_component_setuptools_no_component_version, \
-    get_bom_with_component_setuptools_with_release_notes, get_bom_with_component_setuptools_with_vulnerability, \
-    MOCK_UUID_1, get_bom_just_complete_metadata, MOCK_UUID_2, MOCK_UUID_3, TEST_UUIDS, get_bom_with_services_complex, \
-    get_bom_with_nested_services, get_bom_with_component_setuptools_complete, get_bom_with_external_references
+from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
 from tests.base import BaseJsonTestCase
 
 

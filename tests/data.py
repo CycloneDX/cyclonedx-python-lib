@@ -16,6 +16,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import base64
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -23,19 +24,57 @@ from typing import List, Optional
 
 from packageurl import PackageURL
 
-from cyclonedx.model import AttachedText, DataClassification, DataFlow, Encoding, ExternalReference, \
-    ExternalReferenceType, HashType, LicenseChoice, License, Note, NoteText, OrganizationalContact, \
-    OrganizationalEntity, Property, Tool, XsUri
+from cyclonedx.model import (
+    AttachedText,
+    DataClassification,
+    DataFlow,
+    Encoding,
+    ExternalReference,
+    ExternalReferenceType,
+    HashType,
+    License,
+    LicenseChoice,
+    Note,
+    NoteText,
+    OrganizationalContact,
+    OrganizationalEntity,
+    Property,
+    Tool,
+    XsUri,
+)
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Copyright, Patch, \
-    PatchClassification, Pedigree, Swid, ComponentScope
+from cyclonedx.model.component import (
+    Commit,
+    Component,
+    ComponentEvidence,
+    ComponentScope,
+    ComponentType,
+    Copyright,
+    Patch,
+    PatchClassification,
+    Pedigree,
+    Swid,
+)
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
-from cyclonedx.model.vulnerability import ImpactAnalysisState, ImpactAnalysisJustification, ImpactAnalysisResponse, \
-    ImpactAnalysisAffectedStatus, Vulnerability, VulnerabilityCredits, VulnerabilityRating, VulnerabilitySeverity, \
-    VulnerabilitySource, VulnerabilityScoreSource, VulnerabilityAdvisory, VulnerabilityReference, \
-    VulnerabilityAnalysis, BomTarget, BomTargetVersionRange
+from cyclonedx.model.vulnerability import (
+    BomTarget,
+    BomTargetVersionRange,
+    ImpactAnalysisAffectedStatus,
+    ImpactAnalysisJustification,
+    ImpactAnalysisResponse,
+    ImpactAnalysisState,
+    Vulnerability,
+    VulnerabilityAdvisory,
+    VulnerabilityAnalysis,
+    VulnerabilityCredits,
+    VulnerabilityRating,
+    VulnerabilityReference,
+    VulnerabilityScoreSource,
+    VulnerabilitySeverity,
+    VulnerabilitySource,
+)
 
 MOCK_TIMESTAMP: datetime = datetime(2021, 12, 31, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
 MOCK_UUID_1 = 'be2c6502-7e9a-47db-9a66-e34f729810a3'

@@ -21,17 +21,32 @@ import warnings
 from typing import Optional, Set
 from xml.etree import ElementTree
 
-from . import BaseOutput, SchemaVersion
-from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
-    SchemaVersion1Dot4
-from ..model import AttachedText, ExternalReference, HashType, IdentifiableAction, LicenseChoice, \
-    OrganizationalEntity, OrganizationalContact, Property, Tool
+from ..model import (
+    AttachedText,
+    ExternalReference,
+    HashType,
+    IdentifiableAction,
+    LicenseChoice,
+    OrganizationalContact,
+    OrganizationalEntity,
+    Property,
+    Tool,
+)
 from ..model.bom import Bom
 from ..model.bom_ref import BomRef
 from ..model.component import Component, Patch
 from ..model.release_note import ReleaseNotes
 from ..model.service import Service
-from ..model.vulnerability import Vulnerability, VulnerabilityRating, VulnerabilitySource, BomTargetVersionRange
+from ..model.vulnerability import BomTargetVersionRange, Vulnerability, VulnerabilityRating, VulnerabilitySource
+from . import BaseOutput, SchemaVersion
+from .schema import (
+    BaseSchemaVersion,
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+)
 
 
 class Xml(BaseOutput, BaseSchemaVersion):

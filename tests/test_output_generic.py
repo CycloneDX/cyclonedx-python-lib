@@ -21,7 +21,7 @@ from unittest import TestCase
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
-from cyclonedx.output import get_instance, OutputFormat, SchemaVersion
+from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
 from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot4
 
 

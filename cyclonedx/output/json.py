@@ -16,17 +16,24 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import json
 from abc import abstractmethod
-from typing import cast, Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, cast
 
-from . import BaseOutput, SchemaVersion
-from .schema import BaseSchemaVersion, SchemaVersion1Dot0, SchemaVersion1Dot1, SchemaVersion1Dot2, SchemaVersion1Dot3, \
-    SchemaVersion1Dot4
-from .serializer.json import CycloneDxJSONEncoder
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
 from ..model.component import Component
+from . import BaseOutput, SchemaVersion
+from .schema import (
+    BaseSchemaVersion,
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+)
+from .serializer.json import CycloneDxJSONEncoder
 
 ComponentDict = Dict[str, Union[
     str,

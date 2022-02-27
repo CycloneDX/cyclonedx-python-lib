@@ -16,15 +16,30 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import base64
 import datetime
 from time import sleep
 from unittest import TestCase
 
-from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException, \
-    NoPropertiesProvidedException
-from cyclonedx.model import Copyright, Encoding, ExternalReference, ExternalReferenceType, HashAlgorithm, HashType, \
-    IdentifiableAction, Note, NoteText, XsUri
+from cyclonedx.exception.model import (
+    InvalidLocaleTypeException,
+    InvalidUriException,
+    NoPropertiesProvidedException,
+    UnknownHashTypeException,
+)
+from cyclonedx.model import (
+    Copyright,
+    Encoding,
+    ExternalReference,
+    ExternalReferenceType,
+    HashAlgorithm,
+    HashType,
+    IdentifiableAction,
+    Note,
+    NoteText,
+    XsUri,
+)
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 
 

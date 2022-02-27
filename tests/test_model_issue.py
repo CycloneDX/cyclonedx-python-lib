@@ -16,13 +16,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from unittest import TestCase
+
+from data import get_issue_1, get_issue_2
 
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import XsUri
 from cyclonedx.model.issue import IssueTypeSource
-
-from data import get_issue_1, get_issue_2
 
 
 class TestModelIssueType(TestCase):

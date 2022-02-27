@@ -16,14 +16,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from datetime import datetime, timezone
 from typing import Iterable, Optional, Set
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 
-from . import ExternalReference, OrganizationalContact, OrganizationalEntity, LicenseChoice, Property, ThisTool, Tool
+from ..parser import BaseParser
+from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .component import Component
 from .service import Service
-from ..parser import BaseParser
 
 
 class BomMetaData:

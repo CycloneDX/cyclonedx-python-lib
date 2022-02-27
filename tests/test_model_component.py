@@ -16,18 +16,43 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import datetime
 from typing import List
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
+from data import (
+    get_component_setuptools_simple,
+    get_component_setuptools_simple_no_version,
+    get_component_toml_with_hashes_with_references,
+    get_issue_1,
+    get_issue_2,
+    get_pedigree_1,
+    get_swid_1,
+    get_swid_2,
+)
+
 from cyclonedx.exception.model import NoPropertiesProvidedException
-from cyclonedx.model import AttachedText, Copyright, ExternalReference, ExternalReferenceType, \
-    IdentifiableAction, Property, XsUri
-from cyclonedx.model.component import Commit, Component, ComponentEvidence, ComponentType, Diff, Patch, \
-    PatchClassification, Pedigree
-from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version, \
-    get_component_toml_with_hashes_with_references, get_issue_1, get_issue_2, get_pedigree_1, get_swid_1, get_swid_2
+from cyclonedx.model import (
+    AttachedText,
+    Copyright,
+    ExternalReference,
+    ExternalReferenceType,
+    IdentifiableAction,
+    Property,
+    XsUri,
+)
+from cyclonedx.model.component import (
+    Commit,
+    Component,
+    ComponentEvidence,
+    ComponentType,
+    Diff,
+    Patch,
+    PatchClassification,
+    Pedigree,
+)
 
 
 class TestModelCommit(TestCase):
