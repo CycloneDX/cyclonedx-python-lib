@@ -26,6 +26,20 @@ poetry run isort .
 poetry run autopep8 --in-place -r .
 ```
 
+## Documentation
+
+This project uses [Sphinx] to generate documentation which is automatically published to [readthedocs.io].
+
+Source for documentation is stored in the `docs` folder in [RST] format.
+
+You can generate the documentation locally by running:
+
+```shell
+cd docs
+pip install -r requirements.txt
+make html
+```
+
 ## Testing
 
 Run all tests in dedicated environments, via:
@@ -45,3 +59,6 @@ git commit --signed-off ...
 
 [poetry]: https://python-poetry.org
 [PEP8]: https://www.python.org/dev/peps/pep-0008
+[Sphinx]: https://www.sphinx-doc.org/
+[readthedocs.io]: https://cyclonedx-python-library.readthedocs.io/
+[RST]: https://en.wikipedia.org/wiki/ReStructuredText
