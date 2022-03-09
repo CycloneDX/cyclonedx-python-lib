@@ -16,6 +16,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import io
 import json
 import os
@@ -34,7 +35,7 @@ from xmldiff.actions import MoveNode
 from cyclonedx.output import SchemaVersion
 
 if sys.version_info >= (3, 7):
-    from jsonschema import validate as json_validate, ValidationError
+    from jsonschema import ValidationError, validate as json_validate
 
 if sys.version_info >= (3, 8, 0):
     from importlib.metadata import version

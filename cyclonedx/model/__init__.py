@@ -14,6 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import hashlib
 import re
 import sys
@@ -22,8 +23,13 @@ from datetime import datetime
 from enum import Enum
 from typing import Iterable, Optional, Set
 
-from ..exception.model import InvalidLocaleTypeException, InvalidUriException, NoPropertiesProvidedException, \
-    MutuallyExclusivePropertiesException, UnknownHashTypeException
+from ..exception.model import (
+    InvalidLocaleTypeException,
+    InvalidUriException,
+    MutuallyExclusivePropertiesException,
+    NoPropertiesProvidedException,
+    UnknownHashTypeException,
+)
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.

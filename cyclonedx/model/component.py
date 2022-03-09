@@ -16,6 +16,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import warnings
 from enum import Enum
 from os.path import exists
@@ -24,13 +25,24 @@ from typing import Iterable, Optional, Set
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
-from . import AttachedText, Copyright, ExternalReference, HashAlgorithm, HashType, IdentifiableAction, LicenseChoice, \
-    OrganizationalEntity, Property, sha1sum, XsUri
+from ..exception.model import NoPropertiesProvidedException
+from . import (
+    AttachedText,
+    Copyright,
+    ExternalReference,
+    HashAlgorithm,
+    HashType,
+    IdentifiableAction,
+    LicenseChoice,
+    OrganizationalEntity,
+    Property,
+    XsUri,
+    sha1sum,
+)
 from .bom_ref import BomRef
 from .issue import IssueType
 from .release_note import ReleaseNotes
 from .vulnerability import Vulnerability
-from ..exception.model import NoPropertiesProvidedException
 
 
 class Commit:

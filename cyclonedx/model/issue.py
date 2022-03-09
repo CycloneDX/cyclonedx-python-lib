@@ -14,11 +14,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from enum import Enum
 from typing import Iterable, Optional, Set
 
-from . import XsUri
 from ..exception.model import NoPropertiesProvidedException
+from . import XsUri
 
 
 class IssueClassification(Enum):

@@ -14,9 +14,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from typing import Iterable, Optional, Set
 
-from . import ExternalReference, DataClassification, LicenseChoice, OrganizationalEntity, Property, XsUri
+from . import DataClassification, ExternalReference, LicenseChoice, OrganizationalEntity, Property, XsUri
 from .bom_ref import BomRef
 from .release_note import ReleaseNotes
 

@@ -16,17 +16,32 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from os.path import dirname, join
 from unittest.mock import Mock, patch
 
+from data import (
+    MOCK_UUID_1,
+    MOCK_UUID_4,
+    MOCK_UUID_5,
+    MOCK_UUID_6,
+    TEST_UUIDS,
+    get_bom_just_complete_metadata,
+    get_bom_with_component_setuptools_basic,
+    get_bom_with_component_setuptools_complete,
+    get_bom_with_component_setuptools_no_component_version,
+    get_bom_with_component_setuptools_with_cpe,
+    get_bom_with_component_setuptools_with_release_notes,
+    get_bom_with_component_setuptools_with_vulnerability,
+    get_bom_with_component_toml_1,
+    get_bom_with_external_references,
+    get_bom_with_nested_services,
+    get_bom_with_services_complex,
+    get_bom_with_services_simple,
+)
+
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import get_instance, SchemaVersion
-from data import get_bom_with_component_setuptools_basic, get_bom_with_component_setuptools_with_cpe, \
-    get_bom_with_component_toml_1, get_bom_with_component_setuptools_no_component_version, \
-    get_bom_with_component_setuptools_with_release_notes, get_bom_with_component_setuptools_with_vulnerability, \
-    MOCK_UUID_1, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6, TEST_UUIDS, get_bom_just_complete_metadata, \
-    get_bom_with_nested_services, get_bom_with_services_simple, get_bom_with_services_complex, \
-    get_bom_with_component_setuptools_complete, get_bom_with_external_references
+from cyclonedx.output import SchemaVersion, get_instance
 from tests.base import BaseXmlTestCase
 
 

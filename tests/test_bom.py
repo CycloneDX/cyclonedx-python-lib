@@ -16,11 +16,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from unittest import TestCase
+
+from data import get_bom_with_component_setuptools_with_vulnerability
 
 from cyclonedx.model.bom import Bom, ThisTool, Tool
 from cyclonedx.model.component import Component, ComponentType
-from data import get_bom_with_component_setuptools_with_vulnerability
 
 
 class TestBom(TestCase):

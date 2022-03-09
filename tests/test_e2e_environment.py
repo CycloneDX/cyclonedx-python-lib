@@ -16,15 +16,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import json
+from unittest import TestCase
+
 import pkg_resources
 from lxml import etree
 from packageurl import PackageURL
-from unittest import TestCase
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
-from cyclonedx.output import get_instance, OutputFormat
+from cyclonedx.output import OutputFormat, get_instance
 from cyclonedx.output.json import Json
 from cyclonedx.output.xml import Xml
 
