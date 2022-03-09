@@ -57,8 +57,20 @@ to show that you agree to publish your changes under the current terms and licen
 git commit --signed-off ...
 ```
 
+## Pre-commit hooks
+
+If you like to take advantage of [pre-commit hooks], you can do so to cover most of the topics on this page when
+contributing.
+
+```shell
+pre-commit install
+```
+
+All our pre-commit checks will run locally before you can commit!
+
 [poetry]: https://python-poetry.org
 [PEP8]: https://www.python.org/dev/peps/pep-0008
 [Sphinx]: https://www.sphinx-doc.org/
 [readthedocs.io]: https://cyclonedx-python-library.readthedocs.io/
 [RST]: https://en.wikipedia.org/wiki/ReStructuredText
+[pre-commit hooks]: https://pre-commit.com
