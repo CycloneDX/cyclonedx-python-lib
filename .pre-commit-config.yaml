@@ -14,3 +14,10 @@ repos:
         entry: poetry run isort .
         pass_filenames: false
         language: system
+  - repo: local
+    hooks:
+      - id: system
+        name: autopep8
+        entry: poetry run autopep8 --in-place -r cyclonedx tests
+        pass_filenames: false
+        language: system
