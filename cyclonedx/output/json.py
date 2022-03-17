@@ -151,7 +151,8 @@ class Json(BaseOutput, BaseSchemaVersion):
                 if not self.component_supports_author() and 'author' in bom_json[base_key][i].keys():
                     del bom_json[base_key][i]['author']
 
-                if self.component_version_optional() and bom_json[base_key][i]['version'] == "":
+                if self.component_version_optional() and 'version' in bom_json[base_key][i].keys() and \
+                        bom_json[base_key][i]['version'] == "":
                     del bom_json[base_key][i]['version']
 
                 if not self.component_supports_pedigree() and 'pedigree' in bom_json[base_key][i].keys():
