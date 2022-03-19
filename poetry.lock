@@ -395,7 +395,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "types-setuptools"
-version = "57.4.10"
+version = "57.4.11"
 description = "Typing stubs for setuptools"
 category = "main"
 optional = false
@@ -766,8 +766,8 @@ typed-ast = [
     {file = "typed_ast-1.5.2.tar.gz", hash = "sha256:525a2d4088e70a9f75b08b3f87a51acc9cde640e19cc523c7e41aa355564ae27"},
 ]
 types-setuptools = [
-    {file = "types-setuptools-57.4.10.tar.gz", hash = "sha256:9a13513679c640f6616e2d9ab50d431c99ca8ae9848a97243f887c80fd5cf294"},
-    {file = "types_setuptools-57.4.10-py3-none-any.whl", hash = "sha256:ddc98da82c12e1208012d65276641a132d3aadc78ecfff68fd3e17d85933a3c1"},
+    {file = "types-setuptools-57.4.11.tar.gz", hash = "sha256:262f7406e0c7d705ad6bb4526b5b761fa500bf99eab74de85ac3592187d62935"},
+    {file = "types_setuptools-57.4.11-py3-none-any.whl", hash = "sha256:fbb0647569d6fb2f6bc472402265250c0ffa53e60180d2cbfee9e84f085921f0"},
 ]
 types-toml = [
     {file = "types-toml-0.10.4.tar.gz", hash = "sha256:9340e7c1587715581bb13905b3af30b79fe68afaccfca377665d5e63b694129a"},
