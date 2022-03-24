@@ -93,10 +93,10 @@ class BaseOutput(ABC):
         output_directory = os.path.dirname(output_filename)
 
         if not os.access(output_directory, os.W_OK):
-            raise PermissionError
+            raise PermissionError(output_directory)
 
         if os.path.exists(output_filename) and not allow_overwrite:
-            raise FileExistsError
+            raise FileExistsError(output_filename)
 
         with open(output_filename, mode='wb') as f_out:
             f_out.write(self.output_as_string().encode('utf-8'))
