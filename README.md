@@ -1,10 +1,10 @@
 # Python Library for generating CycloneDX
 
 [![shield_gh-workflow-test]][link_gh-workflow-test]
+[![shield_rtfd]][link_rtfd]
 [![shield_pypi-version]][link_pypi]
 [![shield_conda-forge-version]][link_conda-forge]
-[![shiled_rtd]][link_rtd]
-[![shield_license]][license_file]
+[![shield_license]][license_file]  
 [![shield_website]][link_website]
 [![shield_slack]][link_slack]
 [![shield_groups]][link_discussion]
@@ -56,8 +56,8 @@ See the [LICENSE][license_file] file for the full license.
 [shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
 [shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=pypi&logoColor=white&label=PyPI "PyPI"
 [shield_conda-forge-version]: https://img.shields.io/conda/vn/conda-forge/cyclonedx-python-lib?logo=anaconda&logoColor=white&label=conda-forge "conda-forge"
-[shiled_rtd]: https://readthedocs.org/projects/cyclonedx-python-library/badge/?version=latest "Read the Docs"
-[shield_license]: https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib "license"
+[shield_rtfd]: https://img.shields.io/readthedocs/cyclonedx-python-library?logo=readthedocs&logoColor=white "Read the Docs"
+[shield_license]: https://img.shields.io/github/license/CycloneDX/cyclonedx-python-lib?logo=open%20source%20initiative&logoColor=white "license"
 [shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
 [shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
 [shield_groups]: https://img.shields.io/badge/discussion-groups.io-blue.svg "groups discussion"
@@ -65,7 +65,7 @@ See the [LICENSE][license_file] file for the full license.
 [link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/poetry.yml?query=branch%3Amain
 [link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
 [link_conda-forge]: https://anaconda.org/conda-forge/cyclonedx-python-lib
-[link_rtd]: https://cyclonedx-python-library.readthedocs.io/en/latest/?badge=latest
+[link_rtfd]: https://cyclonedx-python-library.readthedocs.io/en/latest/?badge=latest
 [link_website]: https://cyclonedx.org/
 [link_slack]: https://cyclonedx.org/slack/invite
 [link_discussion]: https://groups.io/g/CycloneDX
