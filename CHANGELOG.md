@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v2.1.1 (2022-04-05)
+### Fix
+* Prevent error if `version` not set ([`b9a84b5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b9a84b5b39fe6cb1560764e86f8bd144f2a901e3))
+* `version` being optional in JSON output can raise error ([`ba0c82f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ba0c82fbde7ba47502c45caf4fa89e9e4381f482))
+
 ## v2.1.0 (2022-03-28)
 ### Feature
 * Output errors are verbose ([`bfe8fb1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bfe8fb18825251fd9f146458122aa06137ec27c0))
