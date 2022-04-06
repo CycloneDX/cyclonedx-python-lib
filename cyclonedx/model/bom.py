@@ -45,13 +45,13 @@ class BomMetaData:
                  licenses: Optional[Iterable[LicenseChoice]] = None,
                  properties: Optional[Iterable[Property]] = None) -> None:
         self.timestamp = datetime.now(tz=timezone.utc)
-        self.tools = SortedSet(tools or [])
-        self.authors = SortedSet(authors or [])
+        self.tools = tools or []  # type: ignore
+        self.authors = authors or []  # type: ignore
         self.component = component
         self.manufacture = manufacture
         self.supplier = supplier
-        self.licenses = SortedSet(licenses or [])
-        self.properties = SortedSet(properties or [])
+        self.licenses = licenses or []  # type: ignore
+        self.properties = properties or []  # type: ignore
 
         if not tools:
             self.tools.add(ThisTool)
@@ -239,9 +239,9 @@ class Bom:
         """
         self.uuid = uuid4()
         self.metadata = BomMetaData()
-        self.components = SortedSet(components or [])
-        self.services = SortedSet(services or [])
-        self.external_references = SortedSet(external_references or [])
+        self.components = components or []  # type: ignore
+        self.services = services or []  # type: ignore
+        self.external_references = external_references or []  # type: ignore
 
     @property
     def uuid(self) -> UUID:

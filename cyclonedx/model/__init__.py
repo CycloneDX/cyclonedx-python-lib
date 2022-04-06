@@ -457,7 +457,7 @@ class ExternalReference:
         self.url = url
         self.comment = comment
         self.type = reference_type
-        self.hashes = SortedSet(hashes or [])
+        self.hashes = hashes or []  # type: ignore
 
     @property
     def url(self) -> XsUri:
@@ -1018,8 +1018,8 @@ class OrganizationalEntity:
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
         self.name = name
-        self.url = SortedSet(urls or [])
-        self.contact = SortedSet(contacts or [])
+        self.url = urls or []  # type: ignore
+        self.contact = contacts or []  # type: ignore
 
     @property
     def name(self) -> Optional[str]:
@@ -1091,8 +1091,8 @@ class Tool:
         self.vendor = vendor
         self.name = name
         self.version = version
-        self.hashes = SortedSet(hashes or [])
-        self.external_references = SortedSet(external_references or [])
+        self.hashes = hashes or []  # type: ignore
+        self.external_references = external_references or []  # type: ignore
 
     @property
     def vendor(self) -> Optional[str]:

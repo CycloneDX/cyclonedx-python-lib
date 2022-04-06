@@ -45,11 +45,11 @@ class ReleaseNotes:
         self.social_image = social_image
         self.description = description
         self.timestamp = timestamp
-        self.aliases = SortedSet(aliases or [])
-        self.tags = SortedSet(tags or [])
-        self.resolves = SortedSet(resolves or [])
-        self.notes = SortedSet(notes or [])
-        self.properties = SortedSet(properties or [])
+        self.aliases = aliases or []  # type: ignore
+        self.tags = tags or []  # type: ignore
+        self.resolves = resolves or []  # type: ignore
+        self.notes = notes or []  # type: ignore
+        self.properties = properties or []  # type: ignore
 
     @property
     def type(self) -> str:

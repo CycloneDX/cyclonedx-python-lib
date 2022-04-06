@@ -175,8 +175,8 @@ class ComponentEvidence:
                 'At least one of `licenses` or `copyright_` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.licenses = SortedSet(licenses or [])
-        self.copyright = SortedSet(copyright_ or [])
+        self.licenses = licenses or []  # type: ignore
+        self.copyright = copyright_ or []  # type: ignore
 
     @property
     def licenses(self) -> "SortedSet[LicenseChoice]":
@@ -334,7 +334,7 @@ class Patch:
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
         self.type = type_
         self.diff = diff
-        self.resolves = SortedSet(resolves or [])
+        self.resolves = resolves or []  # type: ignore
 
     @property
     def type(self) -> PatchClassification:
@@ -423,11 +423,11 @@ class Pedigree:
                 'provided for `Pedigree`'
             )
 
-        self.ancestors = SortedSet(ancestors or [])
-        self.descendants = SortedSet(descendants or [])
-        self.variants = SortedSet(variants or [])
-        self.commits = SortedSet(commits or [])
-        self.patches = SortedSet(patches or [])
+        self.ancestors = ancestors or []  # type: ignore
+        self.descendants = descendants or []  # type: ignore
+        self.variants = variants or []  # type: ignore
+        self.commits = commits or []  # type: ignore
+        self.patches = patches or []  # type: ignore
         self.notes = notes
 
     @property
@@ -732,16 +732,16 @@ class Component:
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = SortedSet(hashes or [])
-        self.licenses = SortedSet(licenses or [])
+        self.hashes = hashes or []  # type: ignore
+        self.licenses = licenses or []  # type: ignore
         self.copyright = copyright_
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
         self.pedigree = pedigree
-        self.external_references = SortedSet(external_references or [])
-        self.properties = SortedSet(properties or [])
-        self.components = SortedSet(components or [])
+        self.external_references = external_references or []  # type: ignore
+        self.properties = properties or []  # type: ignore
+        self.components = components or []  # type: ignore
         self.evidence = evidence
         self.release_notes = release_notes
 
@@ -760,7 +760,7 @@ class Component:
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = SortedSet([LicenseChoice(license_expression=license_str)])
+                self.licenses = [LicenseChoice(license_expression=license_str)]  # type: ignore
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
         self.__vulnerabilites: "SortedSet[Vulnerability]" = SortedSet()

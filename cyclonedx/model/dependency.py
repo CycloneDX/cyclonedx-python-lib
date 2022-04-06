@@ -34,7 +34,7 @@ class Dependency:
 
     def __init__(self, *, ref: BomRef, depends_on: Optional[Iterable[BomRef]] = None) -> None:
         self._ref = ref
-        self.depends_on = SortedSet(depends_on or [])
+        self.depends_on = depends_on or []  # type: ignore
 
     @property
     def ref(self) -> BomRef:

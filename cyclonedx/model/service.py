@@ -63,15 +63,15 @@ class Service:
         self.name = name
         self.version = version
         self.description = description
-        self.endpoints = SortedSet(endpoints or [])
+        self.endpoints = endpoints or []  # type: ignore
         self.authenticated = authenticated
         self.x_trust_boundary = x_trust_boundary
-        self.data = SortedSet(data or [])
-        self.licenses = SortedSet(licenses or [])
-        self.external_references = SortedSet(external_references or [])
-        self.services = SortedSet(services or [])
+        self.data = data or []  # type: ignore
+        self.licenses = licenses or []  # type: ignore
+        self.external_references = external_references or []  # type: ignore
+        self.services = services or []  # type: ignore
         self.release_notes = release_notes
-        self.properties = SortedSet(properties or [])
+        self.properties = properties or []  # type: ignore
 
     @property
     def bom_ref(self) -> BomRef:
