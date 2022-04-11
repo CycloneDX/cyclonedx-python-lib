@@ -6,6 +6,7 @@ on:
   push:
     branches: ["master", "main"]
   pull_request:
+    branches-ignore: ['dependabot/**']
   workflow_dispatch:
   schedule:
     # schedule weekly tests, since some dependencies are not intended to be pinned
@@ -21,6 +22,7 @@ jobs:
   coding-standards:
     name: Linting & CodingStandards
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
@@ -44,6 +46,7 @@ jobs:
   static-code-analysis:
     name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -77,6 +80,7 @@ jobs:
   build-and-test:
     name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factor }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     env:
       REPORTS_ARTIFACT: tests-reports
     strategy:
@@ -95,7 +99,6 @@ jobs:
             os: 'ubuntu-latest'
             python-version: '3.6'
             toxenv: 'lowest'
-    timeout-minutes: 30
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
