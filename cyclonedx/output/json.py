@@ -210,13 +210,13 @@ class JsonV1Dot1(Json, SchemaVersion1Dot1):
 class JsonV1Dot2(Json, SchemaVersion1Dot2):
 
     def _get_schema_uri(self) -> Optional[str]:
-        return 'http://cyclonedx.org/schema/bom-1.2a.schema.json'
+        return 'http://cyclonedx.org/schema/bom-1.2b.schema.json'
 
 
 class JsonV1Dot3(Json, SchemaVersion1Dot3):
 
     def _get_schema_uri(self) -> Optional[str]:
-        return 'http://cyclonedx.org/schema/bom-1.3.schema.json'
+        return 'http://cyclonedx.org/schema/bom-1.3a.schema.json'
 
 
 class JsonV1Dot4(Json, SchemaVersion1Dot4):
