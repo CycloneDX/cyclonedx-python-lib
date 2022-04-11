@@ -37,6 +37,7 @@ programmatically generate SBOMs.
 
    install
    architecture
+   contributing
    support
    changelog
 
