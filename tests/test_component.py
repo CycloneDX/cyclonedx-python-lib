@@ -70,9 +70,9 @@ class TestComponent(TestCase):
         test_file = join(dirname(__file__), FIXTURES_DIRECTORY, 'bom_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
         self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
-        self.assertEqual(c.version, '0.0.0-38165abddb68')
+        self.assertEqual(c.version, '0.0.0-266f32655dc7')
         purl = PackageURL(
-            type='generic', name='fixtures/bom_setuptools.xml', version='0.0.0-38165abddb68'
+            type='generic', name='fixtures/bom_setuptools.xml', version='0.0.0-266f32655dc7'
         )
         self.assertEqual(c.purl, purl)
         self.assertEqual(len(c.hashes), 1)
