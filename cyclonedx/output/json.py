@@ -66,11 +66,16 @@ class Json(BaseOutput, BaseSchemaVersion):
         extras = {}
         if self.bom_supports_dependencies():
             dependencies: List[Dict[str, Union[str, List[str]]]] = []
+            if self.get_bom().metadata.component:
+                dependencies.append({
+                    'ref': str(cast(Component, self.get_bom().metadata.component).bom_ref),
+                    'dependsOn': []
+                })
             if self.get_bom().components:
                 for component in self.get_bom().components:
                     dependencies.append({
                         'ref': str(component.bom_ref),
-                        'dependsOn': list(map(lambda x: str(x), component.dependencies))
+                        'dependsOn': [*map(str, component.dependencies)]
                     })
             if dependencies:
                 extras["dependencies"] = dependencies

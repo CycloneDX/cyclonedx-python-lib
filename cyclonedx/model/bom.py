@@ -16,7 +16,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
+import warnings
 from datetime import datetime, timezone
 from typing import Iterable, Optional, Set
 from uuid import UUID, uuid4
@@ -374,13 +374,25 @@ class Bom:
         """
 
         # 1. Make sure dependencies are all in this Bom.
-        all_component_bom_refs = set(map(lambda c: c.bom_ref, self.components))
+        all_bom_refs = set([self.metadata.component.bom_ref] if self.metadata.component else []).union(
+            set(map(lambda c: c.bom_ref, self.components)),
+            set(map(lambda s: s.bom_ref, self.services))
+        )
         all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
-        dependency_diff = list(all_dependency_bom_refs.difference(all_component_bom_refs))
+        dependency_diff = list(all_dependency_bom_refs.difference(all_bom_refs))
         if len(dependency_diff) > 0:
             raise UnknownComponentDependencyException(
-                f'One or more Components have Dependency references to Components that are not known in this BOM. '
-                f'They are: {dependency_diff}')
+                f'One or more Components have Dependency references to Components/Services that are not known in this '
+                f'BOM. They are: {dependency_diff}')
+
+        # 2. Dependencies should exist for the Component this BOM is describing, if one is set
+        if self.metadata.component and not self.metadata.component.dependencies:
+            warnings.warn(
+                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies'
+                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
+                f'to complete the Dependency Graph data.',
+                UserWarning
+            )
 
         return True
 
