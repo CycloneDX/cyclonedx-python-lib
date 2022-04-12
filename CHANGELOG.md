@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v2.2.0 (2022-04-12)
+### Feature
+* Bump XML schemas to latest fix version for 1.2-1.4 - see: ([`bd2e756`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bd2e756de15c37b34d2866e8de521556420bd5d3))
+* Bump JSON schemas to latest fix verison for 1.2 and 1.3 - see: ([`bd6a088`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bd6a088d51c995c0f08271f56aedb456c60c1a2e))
+
 ## v2.1.1 (2022-04-05)
 ### Fix
 * Prevent error if `version` not set ([`b9a84b5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b9a84b5b39fe6cb1560764e86f8bd144f2a901e3))
