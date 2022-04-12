@@ -23,11 +23,8 @@ Vulnerabilities are supported by the Model as of version 0.3.0.
     **Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library
     will not source them for you. Perhaps look at `Jake`_ if you're interested in this.
 
-Examples
---------
-
-From a Parser
-~~~~~~~~~~~~~
+Example BOM using a Parser
+--------------------------
 
     **Note:** Concreate parser implementations were moved out of this library and into `CycloneDX Python`_ as of version
     ``1.0.0``.
@@ -40,6 +37,19 @@ From a Parser
     parser = EnvironmentParser()
     bom = Bom.from_parser(parser=parser)
 
+Example BOM created programmatically
+------------------------------------
+
+.. note::
+
+    It is recommended that you have a good understanding of the `CycloneDX Schema`_ before attempting to create a BOM
+    programmatically with this library.
+
+
+For the most up-to-date in-depth examples, look at our `Unit Tests`_.
+
 
 .. _CycloneDX Python: https://github.com/CycloneDX/cyclonedx-python
 .. _Jake: https://pypi.org/project/jake
+.. _CycloneDX Schema: https://cyclonedx.org/docs/latest
+.. _Unit Tests: https://github.com/CycloneDX/cyclonedx-python-lib/tree/main/tests
