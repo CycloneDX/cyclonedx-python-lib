@@ -63,5 +63,11 @@
       "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
       "name": "my-second-service"
     }
+  ],
+  "dependencies": [
+    {
+      "ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857",
+      "dependsOn": []
+    }
   ]
 }

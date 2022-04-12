@@ -242,5 +242,11 @@
     }
   ],
   "specVersion": "1.4",
-  "version": 1
+  "version": 1,
+  "dependencies": [
+    {
+      "ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
+      "dependsOn": []
+    }
+  ]
 }

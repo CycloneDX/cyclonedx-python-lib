@@ -83,5 +83,11 @@
         "value": "val2"
       }
     ]
-  }
+  },
+  "dependencies": [
+    {
+      "ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
+      "dependsOn": []
+    }
+  ]
 }

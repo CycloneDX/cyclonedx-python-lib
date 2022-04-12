@@ -109,7 +109,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     element=self._root_bom_element
                 )
 
-        if self.bom_supports_dependencies() and self.get_bom().components:
+        if self.bom_supports_dependencies() and (self.get_bom().metadata.component or self.get_bom().components):
             dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
             if self.get_bom().metadata.component:
                 ElementTree.SubElement(dependencies_element, 'dependency', {
