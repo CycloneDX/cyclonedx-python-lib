@@ -112,9 +112,13 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.bom_supports_dependencies() and (self.get_bom().metadata.component or self.get_bom().components):
             dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
             if self.get_bom().metadata.component:
-                ElementTree.SubElement(dependencies_element, 'dependency', {
+                dependency_element = ElementTree.SubElement(dependencies_element, 'dependency', {
                     'ref': str(cast(Component, self.get_bom().metadata.component).bom_ref)
                 })
+                for dependency in cast(Component, self.get_bom().metadata.component).dependencies:
+                    ElementTree.SubElement(dependency_element, 'dependency', {
+                        'ref': str(dependency)
+                    })
             for component in self.get_bom().components:
                 dependency_element = ElementTree.SubElement(dependencies_element, 'dependency', {
                     'ref': str(component.bom_ref)

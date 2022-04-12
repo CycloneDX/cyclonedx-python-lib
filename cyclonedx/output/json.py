@@ -69,7 +69,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             if self.get_bom().metadata.component:
                 dependencies.append({
                     'ref': str(cast(Component, self.get_bom().metadata.component).bom_ref),
-                    'dependsOn': []
+                    'dependsOn': [*map(str, cast(Component, self.get_bom().metadata.component).dependencies)]
                 })
             if self.get_bom().components:
                 for component in self.get_bom().components:

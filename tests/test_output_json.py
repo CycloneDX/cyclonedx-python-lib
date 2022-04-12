@@ -36,6 +36,7 @@ from data import (
     get_bom_with_dependencies_invalid,
     get_bom_with_dependencies_valid,
     get_bom_with_external_references,
+    get_bom_with_metadata_component_and_dependencies,
     get_bom_with_nested_services,
     get_bom_with_services_complex,
     get_bom_with_services_simple,
@@ -306,6 +307,24 @@ class TestOutputJson(BaseJsonTestCase):
         self._validate_json_bom(
             bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_2,
             fixture='bom_dependencies.json'
+        )
+
+    def test_bom_v1_4_dependencies_for_bom_component(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_dependencies_component.json'
+        )
+
+    def test_bom_v1_3_dependencies_for_bom_component(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_dependencies_component.json'
+        )
+
+    def test_bom_v1_2_dependencies_for_bom_component(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_dependencies_component.json'
         )
 
     def test_bom_v1_4_dependencies_invalid(self) -> None:

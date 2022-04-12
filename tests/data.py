@@ -130,6 +130,13 @@ def get_bom_with_dependencies_invalid() -> Bom:
     ])
 
 
+def get_bom_with_metadata_component_and_dependencies() -> Bom:
+    bom = Bom(components=[get_component_toml_with_hashes_with_references()])
+    bom.metadata.component = get_component_setuptools_simple()
+    bom.metadata.component.dependencies.update([get_component_toml_with_hashes_with_references().bom_ref])
+    return bom
+
+
 def get_bom_with_component_setuptools_complete() -> Bom:
     component = get_component_setuptools_simple(bom_ref=MOCK_UUID_6)
     component.supplier = get_org_entity_1()
