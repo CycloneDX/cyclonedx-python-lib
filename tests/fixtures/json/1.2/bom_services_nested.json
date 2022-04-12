@@ -1,5 +1,5 @@
 {
-  "$schema": "http://cyclonedx.org/schema/bom-1.2a.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
   "metadata": {
     "component": {
