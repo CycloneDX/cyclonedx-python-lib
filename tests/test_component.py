@@ -20,11 +20,7 @@
 from os.path import dirname, join
 from unittest import TestCase
 
-from data import (
-    get_component_setuptools_simple,
-    get_component_setuptools_simple_no_version,
-    get_component_toml_with_hashes_with_references,
-)
+from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
