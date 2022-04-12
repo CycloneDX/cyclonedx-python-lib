@@ -34,12 +34,15 @@ from data import (
     get_bom_with_component_setuptools_with_release_notes,
     get_bom_with_component_setuptools_with_vulnerability,
     get_bom_with_component_toml_1,
+    get_bom_with_dependencies_invalid,
+    get_bom_with_dependencies_valid,
     get_bom_with_external_references,
     get_bom_with_nested_services,
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
 
+from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import SchemaVersion, get_instance
 from tests.base import BaseXmlTestCase
@@ -404,6 +407,37 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_services_nested.xml'
         )
         mock_uuid.assert_called()
+
+    def test_bom_v1_4_dependencies(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_dependencies.xml'
+        )
+
+    def test_bom_v1_3_dependencies(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_dependencies.xml'
+        )
+
+    def test_bom_v1_2_dependencies(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_dependencies.xml'
+        )
+
+    def test_bom_v1_1_dependencies(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_1,
+            fixture='bom_dependencies.xml'
+        )
+
+    def test_bom_v1_4_dependencies_invalid(self) -> None:
+        with self.assertRaises(UnknownComponentDependencyException):
+            self._validate_xml_bom(
+                bom=get_bom_with_dependencies_invalid(), schema_version=SchemaVersion.V1_4,
+                fixture='bom_dependencies.xml'
+            )
 
     # Helper methods
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:

@@ -67,6 +67,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
         elif self.generated:
             return
 
+        self.get_bom().validate()
+
         if self.bom_supports_metadata():
             self._add_metadata_element()
 
@@ -106,6 +108,17 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     ext_refs=self.get_bom().external_references,
                     element=self._root_bom_element
                 )
+
+        if self.bom_supports_dependencies() and self.get_bom().components:
+            dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
+            for component in self.get_bom().components:
+                dependency_element = ElementTree.SubElement(dependencies_element, 'dependency', {
+                    'ref': str(component.bom_ref)
+                })
+                for dependency in component.dependencies:
+                    ElementTree.SubElement(dependency_element, 'dependency', {
+                        'ref': str(dependency)
+                    })
 
         if self.bom_supports_vulnerabilities() and has_vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')

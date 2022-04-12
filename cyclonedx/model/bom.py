@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 from typing import Iterable, Optional, Set
 from uuid import UUID, uuid4
 
+from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .component import Component
@@ -362,6 +363,26 @@ class Bom:
                 `False` otherwise.
         """
         return any(c.has_vulnerabilities() for c in self.components)
+
+    def validate(self) -> bool:
+        """
+        Perform data-model level validations to make sure we have some known data integrity prior to attempting output
+        of this `Bom`
+
+        Returns:
+             `bool`
+        """
+
+        # 1. Make sure dependencies are all in this Bom.
+        all_component_bom_refs = set(map(lambda c: c.bom_ref, self.components))
+        all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
+        dependency_diff = list(all_dependency_bom_refs.difference(all_component_bom_refs))
+        if len(dependency_diff) > 0:
+            raise UnknownComponentDependencyException(
+                f'One or more Components have Dependency references to Components that are not known in this BOM. '
+                f'They are: {dependency_diff}')
+
+        return True
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):

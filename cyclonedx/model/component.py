@@ -743,6 +743,7 @@ class Component:
             if not licenses:
                 self.licenses = {LicenseChoice(license_expression=license_str)}
 
+        self.__dependencies: Set[BomRef] = set()
         self.__vulnerabilites: Set[Vulnerability] = set()
 
     @property
@@ -1093,6 +1094,20 @@ class Component:
     @release_notes.setter
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
+
+    @property
+    def dependencies(self) -> Set[BomRef]:
+        """
+        Set of `BomRef` that this Component depends on.
+
+        Returns:
+             Set of `BomRef`
+        """
+        return self.__dependencies
+
+    @dependencies.setter
+    def dependencies(self, dependencies: Iterable[BomRef]) -> None:
+        self.__dependencies = set(dependencies)
 
     def add_vulnerability(self, vulnerability: Vulnerability) -> None:
         """

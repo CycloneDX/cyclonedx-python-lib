@@ -214,5 +214,11 @@
         }
       ]
     }
+  ],
+  "dependencies": [
+    {
+      "ref": "df70b5f1-8f53-47a4-be48-669ae78795e6",
+      "dependsOn": []
+    }
   ]
 }

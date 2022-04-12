@@ -56,28 +56,39 @@ class Json(BaseOutput, BaseSchemaVersion):
         if self.generated and not force_regeneration:
             return
 
+        self.get_bom().validate()
+
         schema_uri: Optional[str] = self._get_schema_uri()
         if not schema_uri:
             raise FormatNotSupportedException(
-                f'JSON is not supported by CycloneDX in schema version {self.schema_version.to_version()}'
-            )
+                f'JSON is not supported by CycloneDX in schema version {self.schema_version.to_version()}')
 
-        vulnerabilities: Dict[str, List[Dict[Any, Any]]] = {"vulnerabilities": []}
-        if self.get_bom().components:
-            for component in cast(List[Component], self.get_bom().components):
-                for vulnerability in component.get_vulnerabilities():
-                    vulnerabilities['vulnerabilities'].append(
-                        json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
-                    )
+        extras = {}
+        if self.bom_supports_dependencies():
+            dependencies: List[Dict[str, Union[str, List[str]]]] = []
+            if self.get_bom().components:
+                for component in self.get_bom().components:
+                    dependencies.append({
+                        'ref': str(component.bom_ref),
+                        'dependsOn': list(map(lambda x: str(x), component.dependencies))
+                    })
+            if dependencies:
+                extras["dependencies"] = dependencies
+
+        if self.bom_supports_vulnerabilities():
+            vulnerabilities: List[Dict[Any, Any]] = []
+            if self.get_bom().components:
+                for component in cast(List[Component], self.get_bom().components):
+                    for vulnerability in component.get_vulnerabilities():
+                        vulnerabilities.append(
+                            json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
+                        )
+            if vulnerabilities:
+                extras["vulnerabilities"] = vulnerabilities
 
         bom_json = json.loads(json.dumps(self.get_bom(), cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
-        if self.bom_supports_vulnerabilities() and vulnerabilities['vulnerabilities']:
-            self._json_output = json.dumps(
-                {**self._create_bom_element(), **bom_json, **vulnerabilities}
-            )
-        else:
-            self._json_output = json.dumps({**self._create_bom_element(), **bom_json})
+        self._json_output = json.dumps({**self._create_bom_element(), **bom_json, **extras})
 
         self.generated = True
 

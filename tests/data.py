@@ -109,6 +109,27 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
     return Bom(components=[component])
 
 
+def get_bom_with_dependencies_valid() -> Bom:
+    c1 = get_component_setuptools_simple()
+    c1.dependencies.update([
+        get_component_toml_with_hashes_with_references().bom_ref
+    ])
+    return Bom(components=[
+        c1,
+        get_component_toml_with_hashes_with_references()
+    ])
+
+
+def get_bom_with_dependencies_invalid() -> Bom:
+    c1 = get_component_setuptools_simple()
+    c1.dependencies.update([
+        get_component_toml_with_hashes_with_references().bom_ref
+    ])
+    return Bom(components=[
+        c1
+    ])
+
+
 def get_bom_with_component_setuptools_complete() -> Bom:
     component = get_component_setuptools_simple(bom_ref=MOCK_UUID_6)
     component.supplier = get_org_entity_1()
