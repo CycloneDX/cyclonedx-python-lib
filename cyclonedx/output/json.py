@@ -19,7 +19,7 @@
 
 import json
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
@@ -56,7 +56,8 @@ class Json(BaseOutput, BaseSchemaVersion):
         if self.generated and not force_regeneration:
             return
 
-        self.get_bom().validate()
+        bom = self.get_bom()
+        bom.validate()
 
         schema_uri: Optional[str] = self._get_schema_uri()
         if not schema_uri:
@@ -65,24 +66,23 @@ class Json(BaseOutput, BaseSchemaVersion):
 
         extras = {}
         if self.bom_supports_dependencies():
-            dependencies: List[Dict[str, Union[str, List[str]]]] = []
-            if self.get_bom().metadata.component:
-                dependencies.append({
-                    'ref': str(cast(Component, self.get_bom().metadata.component).bom_ref),
-                    'dependsOn': [*map(str, cast(Component, self.get_bom().metadata.component).dependencies)]
-                })
-            for component in self.get_bom().components:
+            dep_components: Iterable[Component] = bom.components
+            if bom.metadata.component:
+                dep_components = [bom.metadata.component, *dep_components]
+            dependencies = []
+            for component in dep_components:
                 dependencies.append({
                     'ref': str(component.bom_ref),
                     'dependsOn': [*map(str, component.dependencies)]
                 })
             if dependencies:
                 extras["dependencies"] = dependencies
+            del dep_components
 
         if self.bom_supports_vulnerabilities():
             vulnerabilities: List[Dict[Any, Any]] = []
-            if self.get_bom().components:
-                for component in cast(List[Component], self.get_bom().components):
+            if bom.components:
+                for component in bom.components:
                     for vulnerability in component.get_vulnerabilities():
                         vulnerabilities.append(
                             json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
@@ -90,7 +90,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             if vulnerabilities:
                 extras["vulnerabilities"] = vulnerabilities
 
-        bom_json = json.loads(json.dumps(self.get_bom(), cls=CycloneDxJSONEncoder))
+        bom_json = json.loads(json.dumps(bom, cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
         self._json_output = json.dumps({**self._create_bom_element(), **bom_json, **extras})
 

@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import warnings
-from typing import Optional, Set, cast
+from typing import Iterable, Optional, Set
 from xml.etree import ElementTree
 
 from ..model import (
@@ -67,16 +67,17 @@ class Xml(BaseOutput, BaseSchemaVersion):
         elif self.generated:
             return
 
-        self.get_bom().validate()
+        bom = self.get_bom()
+        bom.validate()
 
         if self.bom_supports_metadata():
             self._add_metadata_element()
 
-        components_element = ElementTree.SubElement(self._root_bom_element, 'components')
-
         has_vulnerabilities: bool = False
-        if self.get_bom().components:
-            for component in self.get_bom().components:
+
+        components_element = ElementTree.SubElement(self._root_bom_element, 'components')
+        if bom.components:
+            for component in bom.components:
                 component_element = self._add_component_element(component=component)
                 components_element.append(component_element)
                 if self.bom_supports_vulnerabilities_via_extension() and component.has_vulnerabilities():
@@ -96,30 +97,23 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 elif component.has_vulnerabilities():
                     has_vulnerabilities = True
 
-        if self.bom_supports_services():
-            if self.get_bom().services:
-                services_element = ElementTree.SubElement(self._root_bom_element, 'services')
-                for service in self.get_bom().services:
-                    services_element.append(self._add_service_element(service=service))
+        if self.bom_supports_services() and bom.services:
+            services_element = ElementTree.SubElement(self._root_bom_element, 'services')
+            for service in bom.services:
+                services_element.append(self._add_service_element(service=service))
 
-        if self.bom_supports_external_references():
-            if self.get_bom().external_references:
-                self._add_external_references_to_element(
-                    ext_refs=self.get_bom().external_references,
-                    element=self._root_bom_element
-                )
+        if self.bom_supports_external_references() and bom.external_references:
+            self._add_external_references_to_element(
+                ext_refs=bom.external_references,
+                element=self._root_bom_element
+            )
 
-        if self.bom_supports_dependencies() and (self.get_bom().metadata.component or self.get_bom().components):
+        if self.bom_supports_dependencies() and (bom.metadata.component or bom.components):
+            dep_components: Iterable[Component] = bom.components
+            if bom.metadata.component:
+                dep_components = [bom.metadata.component, *dep_components]
             dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
-            if self.get_bom().metadata.component:
-                dependency_element = ElementTree.SubElement(dependencies_element, 'dependency', {
-                    'ref': str(cast(Component, self.get_bom().metadata.component).bom_ref)
-                })
-                for dependency in cast(Component, self.get_bom().metadata.component).dependencies:
-                    ElementTree.SubElement(dependency_element, 'dependency', {
-                        'ref': str(dependency)
-                    })
-            for component in self.get_bom().components:
+            for component in dep_components:
                 dependency_element = ElementTree.SubElement(dependencies_element, 'dependency', {
                     'ref': str(component.bom_ref)
                 })
@@ -127,10 +121,11 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     ElementTree.SubElement(dependency_element, 'dependency', {
                         'ref': str(dependency)
                     })
+            del dep_components
 
         if self.bom_supports_vulnerabilities() and has_vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
-            for component in self.get_bom().components:
+            for component in bom.components:
                 for vulnerability in component.get_vulnerabilities():
                     vulnerabilities_element.append(
                         self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
@@ -147,13 +142,14 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     # Builder Methods
     def _create_bom_element(self) -> ElementTree.Element:
+        bom = self.get_bom()
         root_attributes = {
             'xmlns': self.get_target_namespace(),
             'version': '1',
-            'serialNumber': self.get_bom().get_urn_uuid()
+            'serialNumber': bom.get_urn_uuid()
         }
 
-        if self.bom_supports_vulnerabilities_via_extension() and self.get_bom().has_vulnerabilities():
+        if self.bom_supports_vulnerabilities_via_extension() and bom.has_vulnerabilities():
             root_attributes['xmlns:v'] = Xml.VULNERABILITY_EXTENSION_NAMESPACE
             ElementTree.register_namespace('v', Xml.VULNERABILITY_EXTENSION_NAMESPACE)
 
