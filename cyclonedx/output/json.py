@@ -71,12 +71,11 @@ class Json(BaseOutput, BaseSchemaVersion):
                     'ref': str(cast(Component, self.get_bom().metadata.component).bom_ref),
                     'dependsOn': [*map(str, cast(Component, self.get_bom().metadata.component).dependencies)]
                 })
-            if self.get_bom().components:
-                for component in self.get_bom().components:
-                    dependencies.append({
-                        'ref': str(component.bom_ref),
-                        'dependsOn': [*map(str, component.dependencies)]
-                    })
+            for component in self.get_bom().components:
+                dependencies.append({
+                    'ref': str(component.bom_ref),
+                    'dependsOn': [*map(str, component.dependencies)]
+                })
             if dependencies:
                 extras["dependencies"] = dependencies
 
