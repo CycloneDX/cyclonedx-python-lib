@@ -374,12 +374,11 @@ class Bom:
         """
 
         # 1. Make sure dependencies are all in this Bom.
-        all_bom_refs = set([self.metadata.component.bom_ref] if self.metadata.component else []).union(
-            set(map(lambda c: c.bom_ref, self.components)),
-            set(map(lambda s: s.bom_ref, self.services))
-        )
+        all_bom_refs = set([self.metadata.component.bom_ref] if self.metadata.component else []) | set(
+            map(lambda c: c.bom_ref, self.components)) | set(map(lambda s: s.bom_ref, self.services))
+
         all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
-        dependency_diff = list(all_dependency_bom_refs.difference(all_bom_refs))
+        dependency_diff = all_dependency_bom_refs - all_bom_refs
         if len(dependency_diff) > 0:
             raise UnknownComponentDependencyException(
                 f'One or more Components have Dependency references to Components/Services that are not known in this '
