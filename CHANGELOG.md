@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v2.3.0 (2022-04-20)
+### Feature
+* Add support for Dependency Graph in Model and output serialisation ([`ea34513`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ea34513f8229a909007793288ace2f6f51684333))
+
 ## v2.2.0 (2022-04-12)
 ### Feature
 * Bump XML schemas to latest fix version for 1.2-1.4 - see: ([`bd2e756`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bd2e756de15c37b34d2866e8de521556420bd5d3))
