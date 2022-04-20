@@ -21,4 +21,7 @@
             <purl>pkg:pypi/setuptools?extension=tar.gz</purl>
         </component>
     </components>
+    <dependencies>
+        <dependency ref="pkg:pypi/setuptools?extension=tar.gz"></dependency>
+    </dependencies>
 </bom>

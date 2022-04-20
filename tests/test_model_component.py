@@ -249,6 +249,31 @@ class TestModelComponent(TestCase):
         self.assertNotEqual(hash(c1), hash(c2))
         self.assertFalse(c1 == c2)
 
+    def test_zero_dependencies(self) -> None:
+        self.assertSetEqual(get_component_setuptools_simple_no_version().dependencies, set())
+
+    def test_with_dependencies(self) -> None:
+        c = get_component_setuptools_simple_no_version()
+        c.dependencies.update([
+            get_component_setuptools_simple_no_version().bom_ref,
+            get_component_toml_with_hashes_with_references().bom_ref
+        ])
+        self.assertEqual(len(c.dependencies), 2)
+        self.assertTrue(get_component_setuptools_simple_no_version().bom_ref in c.dependencies)
+        self.assertTrue(get_component_toml_with_hashes_with_references().bom_ref in c.dependencies)
+
+    def test_with_duplicate_dependencies(self) -> None:
+        c = get_component_setuptools_simple_no_version()
+        c.dependencies.update([
+            get_component_setuptools_simple_no_version().bom_ref,
+            get_component_toml_with_hashes_with_references().bom_ref,
+            get_component_setuptools_simple_no_version().bom_ref,
+            get_component_toml_with_hashes_with_references().bom_ref
+        ])
+        self.assertEqual(len(c.dependencies), 2)
+        self.assertTrue(get_component_setuptools_simple_no_version().bom_ref in c.dependencies)
+        self.assertTrue(get_component_toml_with_hashes_with_references().bom_ref in c.dependencies)
+
 
 class TestModelComponentEvidence(TestCase):
 

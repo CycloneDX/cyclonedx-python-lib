@@ -69,6 +69,12 @@ class NoPropertiesProvidedException(CycloneDxModelException):
     pass
 
 
+class UnknownComponentDependencyException(CycloneDxModelException):
+    """
+    Exception raised when a dependency has been noted for a Component that is NOT a Component BomRef in this Bom.
+    """
+
+
 class UnknownHashTypeException(CycloneDxModelException):
     """
     Exception raised when we are unable to determine the type of hash from a composite hash string.

@@ -29,4 +29,7 @@
             </externalReferences>
         </component>
     </components>
+    <dependencies>
+        <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"></dependency>
+    </dependencies>
 </bom>

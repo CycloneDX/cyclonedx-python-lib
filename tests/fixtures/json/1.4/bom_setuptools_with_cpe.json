@@ -63,5 +63,11 @@
       "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
     }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "dependsOn": []
+    }
   ]
 }

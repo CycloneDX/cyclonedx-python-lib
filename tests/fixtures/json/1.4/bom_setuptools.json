@@ -62,5 +62,11 @@
       ],
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
     }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "dependsOn": []
+    }
   ]
 }

@@ -16,11 +16,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
+import warnings
 from datetime import datetime, timezone
 from typing import Iterable, Optional, Set
 from uuid import UUID, uuid4
 
+from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .component import Component
@@ -362,6 +363,37 @@ class Bom:
                 `False` otherwise.
         """
         return any(c.has_vulnerabilities() for c in self.components)
+
+    def validate(self) -> bool:
+        """
+        Perform data-model level validations to make sure we have some known data integrity prior to attempting output
+        of this `Bom`
+
+        Returns:
+             `bool`
+        """
+
+        # 1. Make sure dependencies are all in this Bom.
+        all_bom_refs = set([self.metadata.component.bom_ref] if self.metadata.component else []) | set(
+            map(lambda c: c.bom_ref, self.components)) | set(map(lambda s: s.bom_ref, self.services))
+
+        all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
+        dependency_diff = all_dependency_bom_refs - all_bom_refs
+        if len(dependency_diff) > 0:
+            raise UnknownComponentDependencyException(
+                f'One or more Components have Dependency references to Components/Services that are not known in this '
+                f'BOM. They are: {dependency_diff}')
+
+        # 2. Dependencies should exist for the Component this BOM is describing, if one is set
+        if self.metadata.component and not self.metadata.component.dependencies:
+            warnings.warn(
+                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies'
+                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
+                f'to complete the Dependency Graph data.',
+                UserWarning
+            )
+
+        return True
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):

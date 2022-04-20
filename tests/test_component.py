@@ -20,7 +20,10 @@
 from os.path import dirname, join
 from unittest import TestCase
 
-from packageurl import PackageURL
+from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version
+
+# See https://github.com/package-url/packageurl-python/issues/65
+from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
@@ -30,32 +33,12 @@ FIXTURES_DIRECTORY = 'fixtures/xml/1.4'
 
 class TestComponent(TestCase):
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls._component: Component = Component(
-            name='setuptools', version='50.3.2', purl=PackageURL(
-                type='pypi', name='setuptools', version='50.3.2'
-            )
-        )
-        cls._component_2: Component = Component(name='setuptools', version='50.3.2')
-        cls._component_with_qualifiers: Component = Component(
-            name='setuptools', version='50.3.2', purl=PackageURL(
-                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-            )
-        )
-        cls._component_generic_file: Component = Component(name='/test.py', version='UNKNOWN')
-        cls._component_purl_spec_no_subpath: Component = Component(
-            namespace='name-space', name='setuptools', version='50.0.1', purl=PackageURL(
-                type='pypi', namespace='name-space', name='setuptools', version='50.0.1', qualifiers='extension=whl'
-            )
-        )
-
     def test_purl_correct(self) -> None:
         self.assertEqual(
             PackageURL(
-                type='pypi', name='setuptools', version='50.3.2'
+                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
             ),
-            TestComponent._component.purl
+            get_component_setuptools_simple().purl
         )
 
     def test_purl_incorrect_version(self) -> None:
@@ -64,7 +47,7 @@ class TestComponent(TestCase):
         )
         self.assertNotEqual(
             str(purl),
-            str(TestComponent._component.purl)
+            str(get_component_setuptools_simple().purl)
         )
         self.assertEqual(purl.type, 'pypi')
         self.assertEqual(purl.name, 'setuptools')
@@ -72,50 +55,31 @@ class TestComponent(TestCase):
 
     def test_purl_incorrect_name(self) -> None:
         purl = PackageURL(
-            type='pypi', name='setuptoolz', version='50.3.2'
+            type='pypi', name='setuptoolz', version='50.3.2', qualifiers='extension=tar.gz'
         )
         self.assertNotEqual(
             str(purl),
-            str(TestComponent._component.purl)
+            str(get_component_setuptools_simple().purl)
         )
         self.assertEqual(purl.type, 'pypi')
         self.assertEqual(purl.name, 'setuptoolz')
         self.assertEqual(purl.version, '50.3.2')
-
-    def test_purl_with_qualifiers(self) -> None:
-        purl = PackageURL(
-            type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-        )
-        self.assertEqual(
-            purl,
-            TestComponent._component_with_qualifiers.purl
-        )
-        self.assertNotEqual(
-            purl,
-            TestComponent._component.purl
-        )
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
 
     def test_from_file_with_path_for_bom(self) -> None:
         test_file = join(dirname(__file__), FIXTURES_DIRECTORY, 'bom_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
         self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
-        self.assertEqual(c.version, '0.0.0-38165abddb68')
+        self.assertEqual(c.version, '0.0.0-266f32655dc7')
         purl = PackageURL(
-            type='generic', name='fixtures/bom_setuptools.xml', version='0.0.0-38165abddb68'
+            type='generic', name='fixtures/bom_setuptools.xml', version='0.0.0-266f32655dc7'
         )
         self.assertEqual(c.purl, purl)
         self.assertEqual(len(c.hashes), 1)
 
     def test_has_component_1(self) -> None:
         bom = Bom()
-        bom.components.update([TestComponent._component, TestComponent._component_2])
+        bom.components.update([get_component_setuptools_simple(), get_component_setuptools_simple_no_version()])
         self.assertEqual(len(bom.components), 2)
-        self.assertTrue(bom.has_component(component=TestComponent._component_2))
-        self.assertIsNot(TestComponent._component, TestComponent._component_2)
-
-    def test_full_purl_spec_no_subpath(self) -> None:
-        self.assertEqual(
-            TestComponent._component_purl_spec_no_subpath.purl.to_string(),
-            'pkg:pypi/name-space/setuptools@50.0.1?extension=whl'
-        )
+        self.assertTrue(bom.has_component(component=get_component_setuptools_simple_no_version()))
+        self.assertIsNot(get_component_setuptools_simple(), get_component_setuptools_simple_no_version())

@@ -41,5 +41,11 @@
         }
       ]
     }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+      "dependsOn": []
+    }
   ]
 }

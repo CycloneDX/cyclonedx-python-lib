@@ -50,6 +50,9 @@ class BaseSchemaVersion(ABC):
     def bom_supports_external_references(self) -> bool:
         return True
 
+    def bom_supports_dependencies(self) -> bool:
+        return True
+
     def services_supports_properties(self) -> bool:
         return True
 
@@ -223,6 +226,9 @@ class SchemaVersion1Dot1(BaseSchemaVersion):
     def services_supports_release_notes(self) -> bool:
         return False
 
+    def bom_supports_dependencies(self) -> bool:
+        return False
+
     def bom_supports_vulnerabilities(self) -> bool:
         return False
 
@@ -276,6 +282,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return False
 
     def bom_supports_external_references(self) -> bool:
+        return False
+
+    def bom_supports_dependencies(self) -> bool:
         return False
 
     def services_supports_properties(self) -> bool:

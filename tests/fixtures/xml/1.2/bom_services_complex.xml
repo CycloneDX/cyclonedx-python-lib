@@ -57,4 +57,7 @@
             <name>my-second-service</name>
         </service>
     </services>
+    <dependencies>
+        <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda" />
+    </dependencies>
 </bom>

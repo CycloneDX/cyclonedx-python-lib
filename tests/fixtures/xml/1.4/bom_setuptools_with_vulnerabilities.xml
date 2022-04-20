@@ -47,6 +47,9 @@
             <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
         </component>
     </components>
+    <dependencies>
+        <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz"></dependency>
+    </dependencies>
     <vulnerabilities>
         <vulnerability bom-ref="my-vuln-ref-1">
             <id>CVE-2018-7489</id>

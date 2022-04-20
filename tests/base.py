@@ -134,7 +134,7 @@ class BaseXmlTestCase(TestCase):
     def assertEqualXml(self, a: str, b: str) -> None:
         diff_results = main.diff_texts(a, b, diff_options={'F': 0.5})
         diff_results = list(filter(lambda o: not isinstance(o, MoveNode), diff_results))
-        self.assertEqual(len(diff_results), 0, f'There are XML differences: {diff_results}')
+        self.assertEqual(len(diff_results), 0, f'There are XML differences: {diff_results}\n- {a}\n+ {b}')
 
     def assertEqualXmlBom(self, a: str, b: str, namespace: str) -> None:
         """
