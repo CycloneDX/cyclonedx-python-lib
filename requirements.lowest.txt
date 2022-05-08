@@ -7,4 +7,4 @@ importlib-metadata == 3.4.0 # ; python_version < '3.8'
 toml == 0.10.0
 typing-extensions == 3.10.0 # ; python_version < '3.8'
 types-setuptools == 57.0.0
-types-toml == 0.10.7
+types-toml == 0.10.0
