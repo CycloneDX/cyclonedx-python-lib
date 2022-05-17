@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v2.4.0 (2022-05-17)
+### Feature
+* **deps:** Remove unused `typing-extensions` constraints ([`2ce358a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2ce358a37e6ce5f06aa9297aed17f8f5bea38e93))
+
 ## v2.3.0 (2022-04-20)
 ### Feature
 * Add support for Dependency Graph in Model and output serialisation ([`ea34513`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ea34513f8229a909007793288ace2f6f51684333))
