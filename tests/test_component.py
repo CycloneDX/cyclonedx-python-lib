@@ -25,6 +25,7 @@ from data import get_component_setuptools_simple, get_component_setuptools_simpl
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
+from cyclonedx.model import sha1sum
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 
@@ -69,10 +70,12 @@ class TestComponent(TestCase):
     def test_from_file_with_path_for_bom(self) -> None:
         test_file = join(dirname(__file__), FIXTURES_DIRECTORY, 'bom_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
+        sha1_hash: str = sha1sum(filename=test_file)
+        expected_version = '0.0.0-{}'.format(sha1_hash[0:12])
         self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
-        self.assertEqual(c.version, '0.0.0-266f32655dc7')
+        self.assertEqual(c.version, expected_version)
         purl = PackageURL(
-            type='generic', name='fixtures/bom_setuptools.xml', version='0.0.0-266f32655dc7'
+            type='generic', name='fixtures/bom_setuptools.xml', version=expected_version
         )
         self.assertEqual(c.purl, purl)
         self.assertEqual(len(c.hashes), 1)
