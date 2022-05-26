@@ -24,7 +24,7 @@ from . import XsUri
 
 class IssueClassification(Enum):
     """
-    This is out internal representation of the enum `issueClassification`.
+    This is our internal representation of the enum `issueClassification`.
 
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueClassification
@@ -36,7 +36,7 @@ class IssueClassification(Enum):
 
 class IssueTypeSource:
     """
-    This is out internal representation ofa source within the IssueType complex type that can be used in multiple
+    This is our internal representation ofa source within the IssueType complex type that can be used in multiple
     places within a CycloneDX BOM document.
 
     .. note::
@@ -93,7 +93,7 @@ class IssueTypeSource:
 
 class IssueType:
     """
-    This is out internal representation of an IssueType complex type that can be used in multiple places within
+    This is our internal representation of an IssueType complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::

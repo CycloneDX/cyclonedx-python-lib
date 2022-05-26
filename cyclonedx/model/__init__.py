@@ -217,7 +217,7 @@ class AttachedText:
 
 class HashAlgorithm(Enum):
     """
-    This is out internal representation of the hashAlg simple type within the CycloneDX standard.
+    This is our internal representation of the hashAlg simple type within the CycloneDX standard.
 
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.3/#type_hashAlg
@@ -390,7 +390,7 @@ class XsUri:
 
 class ExternalReference:
     """
-    This is out internal representation of an ExternalReference complex type that can be used in multiple places within
+    This is our internal representation of an ExternalReference complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
@@ -480,7 +480,7 @@ class ExternalReference:
 
 class License:
     """
-    This is out internal representation of `licenseType` complex type that can be used in multiple places within
+    This is our internal representation of `licenseType` complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
@@ -575,7 +575,7 @@ class License:
 
 class LicenseChoice:
     """
-    This is out internal representation of `licenseChoiceType` complex type that can be used in multiple places within
+    This is our internal representation of `licenseChoiceType` complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
@@ -642,7 +642,7 @@ class LicenseChoice:
 
 class Property:
     """
-    This is out internal representation of `propertyType` complex type that can be used in multiple places within
+    This is our internal representation of `propertyType` complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
@@ -699,7 +699,7 @@ class Property:
 
 class NoteText:
     """
-    This is out internal representation of the Note.text complex type that can be used in multiple places within
+    This is our internal representation of the Note.text complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
@@ -772,7 +772,7 @@ class NoteText:
 
 class Note:
     """
-    This is out internal representation of the Note complex type that can be used in multiple places within
+    This is our internal representation of the Note complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
@@ -839,7 +839,7 @@ class Note:
 
 class OrganizationalContact:
     """
-    This is out internal representation of the `organizationalContact` complex type that can be used in multiple places
+    This is our internal representation of the `organizationalContact` complex type that can be used in multiple places
     within a CycloneDX BOM document.
 
     .. note::
@@ -911,7 +911,7 @@ class OrganizationalContact:
 
 class OrganizationalEntity:
     """
-    This is out internal representation of the `organizationalEntity` complex type that can be used in multiple places
+    This is our internal representation of the `organizationalEntity` complex type that can be used in multiple places
     within a CycloneDX BOM document.
 
     .. note::
@@ -984,7 +984,7 @@ class OrganizationalEntity:
 
 class Tool:
     """
-    This is out internal representation of the `toolType` complex type within the CycloneDX standard.
+    This is our internal representation of the `toolType` complex type within the CycloneDX standard.
 
     Tool(s) are the things used in the creation of the BOM.
 
@@ -1086,7 +1086,7 @@ class Tool:
 
 class IdentifiableAction:
     """
-    This is out internal representation of the `identifiableActionType` complex type.
+    This is our internal representation of the `identifiableActionType` complex type.
 
     .. note::
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_identifiableActionType
@@ -1159,7 +1159,7 @@ class IdentifiableAction:
 
 class Copyright:
     """
-    This is out internal representation of the `copyrightsType` complex type.
+    This is our internal representation of the `copyrightsType` complex type.
 
     .. note::
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_copyrightsType
