@@ -397,7 +397,7 @@ python-versions = ">=3.6"
 name = "types-setuptools"
 version = "57.4.12"
 description = "Typing stubs for setuptools"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -405,7 +405,7 @@ python-versions = "*"
 name = "types-toml"
 version = "0.10.4"
 description = "Typing stubs for toml"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -464,7 +464,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "fc30fe864bbb03530811d7e92028f222de26252b34ab73cb121368d897eb60f6"
+content-hash = "308fbcb98c2c2a40e1577c8b4cba6583d80df81e56ca47c2b9fe20295abe2b9e"
 
 [metadata.files]
 attrs = [
