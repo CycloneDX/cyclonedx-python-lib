@@ -4,8 +4,8 @@
 #  https://github.com/althonos/python-sortedcontainers/blob/d0a225d7fd0fb4c54532b8798af3cbeebf97e2d5/sortedcontainers/sortedset.pyi
 
 from typing import (
-    Any,
     AbstractSet,
+    Any,
     Callable,
     Generic,
     Hashable,
@@ -15,9 +15,9 @@ from typing import (
     MutableSet,
     Optional,
     Sequence,
+    Set,
     Tuple,
     Type,
-    Set,
     TypeVar,
     Union,
     overload,

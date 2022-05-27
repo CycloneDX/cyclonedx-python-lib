@@ -345,8 +345,8 @@ def get_component_setuptools_simple(bom_ref: Optional[str] = None) -> Component:
         bom_ref=bom_ref or 'pkg:pypi/setuptools@50.3.2?extension=tar.gz',
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-        ), 
-        licenses=[LicenseChoice(license_expression='MIT License')], 
+        ),
+        licenses=[LicenseChoice(license_expression='MIT License')],
         author='Test Author'
     )
 
@@ -356,8 +356,8 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         name='setuptools', bom_ref=bom_ref or 'pkg:pypi/setuptools?extension=tar.gz',
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
-        ), 
-        licenses=[LicenseChoice(license_expression='MIT License')], 
+        ),
+        licenses=[LicenseChoice(license_expression='MIT License')],
         author='Test Author'
     )
 

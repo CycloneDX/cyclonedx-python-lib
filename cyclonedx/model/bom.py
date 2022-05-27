@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
 from datetime import datetime, timezone
-from typing import Iterable, Optional, Set
+from typing import Iterable, Optional
 from uuid import UUID, uuid4
 
 from sortedcontainers import SortedSet

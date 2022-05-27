@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from datetime import datetime
-from typing import Iterable, Optional, Set
+from typing import Iterable, Optional
 
 from sortedcontainers import SortedSet
 

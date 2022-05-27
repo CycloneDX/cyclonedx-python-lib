@@ -20,7 +20,7 @@
 import warnings
 from enum import Enum
 from os.path import exists
-from typing import Any, Iterable, Optional, Set
+from typing import Any, Iterable, Optional
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore

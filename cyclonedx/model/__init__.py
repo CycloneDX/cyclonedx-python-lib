@@ -21,7 +21,7 @@ import sys
 import warnings
 from datetime import datetime
 from enum import Enum
-from typing import Any, Iterable, Optional, Set, TypeVar
+from typing import Any, Iterable, Optional
 
 from sortedcontainers import SortedSet
 

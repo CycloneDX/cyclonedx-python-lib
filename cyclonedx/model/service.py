@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Iterable, Optional, Set
+from typing import Any, Iterable, Optional
 
 from sortedcontainers import SortedSet
 
