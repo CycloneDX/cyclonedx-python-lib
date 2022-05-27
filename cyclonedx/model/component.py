@@ -147,7 +147,8 @@ class Commit:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
-            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
+            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < \
+                ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -178,7 +179,7 @@ class ComponentEvidence:
         self.copyright = SortedSet(copyright_ or [])
 
     @property
-    def licenses(self) -> Set[LicenseChoice]:
+    def licenses(self) -> SortedSet[LicenseChoice]:
         """
         Optional list of licenses obtained during analysis.
 
@@ -192,7 +193,7 @@ class ComponentEvidence:
         self._licenses = SortedSet(licenses)
 
     @property
-    def copyright(self) -> Set[Copyright]:
+    def copyright(self) -> SortedSet[Copyright]:
         """
         Optional list of copyright statements.
 
@@ -368,7 +369,7 @@ class Patch:
         self._diff = diff
 
     @property
-    def resolves(self) -> Set[IssueType]:
+    def resolves(self) -> SortedSet[IssueType]:
         """
         Optional list of issues resolved by this patch.
 
@@ -388,7 +389,8 @@ class Patch:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < ComparableTuple((other.type, other.diff, ComparableTuple(other.resolves)))
+            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < \
+                ComparableTuple((other.type, other.diff, ComparableTuple(other.resolves)))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -429,7 +431,7 @@ class Pedigree:
         self.notes = notes
 
     @property
-    def ancestors(self) -> Set['Component']:
+    def ancestors(self) -> SortedSet['Component']:
         """
         Describes zero or more components in which a component is derived from. This is commonly used to describe forks
         from existing projects where the forked version contains a ancestor node containing the original component it
@@ -449,7 +451,7 @@ class Pedigree:
         self._ancestors = SortedSet(ancestors)
 
     @property
-    def descendants(self) -> Set['Component']:
+    def descendants(self) -> SortedSet['Component']:
         """
         Descendants are the exact opposite of ancestors. This provides a way to document all forks (and their forks) of
         an original or root component.
@@ -464,7 +466,7 @@ class Pedigree:
         self._descendants = SortedSet(descendants)
 
     @property
-    def variants(self) -> Set['Component']:
+    def variants(self) -> SortedSet['Component']:
         """
         Variants describe relations where the relationship between the components are not known. For example, if
         Component A contains nearly identical code to Component B. They are both related, but it is unclear if one is
@@ -480,7 +482,7 @@ class Pedigree:
         self._variants = SortedSet(variants)
 
     @property
-    def commits(self) -> Set[Commit]:
+    def commits(self) -> SortedSet[Commit]:
         """
         A list of zero or more commits which provide a trail describing how the component deviates from an ancestor,
         descendant, or variant.
@@ -495,7 +497,7 @@ class Pedigree:
         self._commits = SortedSet(commits)
 
     @property
-    def patches(self) -> Set[Patch]:
+    def patches(self) -> SortedSet[Patch]:
         """
         A list of zero or more patches describing how the component deviates from an ancestor, descendant, or variant.
         Patches may be complimentary to commits or may be used in place of commits.
@@ -758,10 +760,10 @@ class Component:
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = {LicenseChoice(license_expression=license_str)}
+                self.licenses = SortedSet([LicenseChoice(license_expression=license_str)])
 
-        self.__dependencies: Set[BomRef] = SortedSet()
-        self.__vulnerabilites: Set[Vulnerability] = SortedSet()
+        self.__dependencies: SortedSet[BomRef] = SortedSet()
+        self.__vulnerabilites: SortedSet[Vulnerability] = SortedSet()
 
     @property
     def type(self) -> ComponentType:
@@ -935,7 +937,7 @@ class Component:
         self._scope = scope
 
     @property
-    def hashes(self) -> Set[HashType]:
+    def hashes(self) -> SortedSet[HashType]:
         """
         Optional list of hashes that help specify the integrity of this Component.
 
@@ -949,7 +951,7 @@ class Component:
         self._hashes = SortedSet(hashes)
 
     @property
-    def licenses(self) -> Set[LicenseChoice]:
+    def licenses(self) -> SortedSet[LicenseChoice]:
         """
         A optional list of statements about how this Component is licensed.
 
@@ -1039,7 +1041,7 @@ class Component:
         self._pedigree = pedigree
 
     @property
-    def external_references(self) -> Set[ExternalReference]:
+    def external_references(self) -> SortedSet[ExternalReference]:
         """
         Provides the ability to document external references related to the component or to the project the component
         describes.
@@ -1054,7 +1056,7 @@ class Component:
         self._external_references = SortedSet(external_references)
 
     @property
-    def properties(self) -> Set[Property]:
+    def properties(self) -> SortedSet[Property]:
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
@@ -1069,7 +1071,7 @@ class Component:
         self._properties = SortedSet(properties)
 
     @property
-    def components(self) -> Set['Component']:
+    def components(self) -> SortedSet['Component']:
         """
         A list of software and hardware components included in the parent component. This is not a dependency tree. It
         provides a way to specify a hierarchical representation of component assemblies, similar to system -> subsystem
@@ -1113,7 +1115,7 @@ class Component:
         self._release_notes = release_notes
 
     @property
-    def dependencies(self) -> Set[BomRef]:
+    def dependencies(self) -> SortedSet[BomRef]:
         """
         Set of `BomRef` that this Component depends on.
 
@@ -1139,7 +1141,7 @@ class Component:
         """
         self.__vulnerabilites.add(vulnerability)
 
-    def get_vulnerabilities(self) -> Set[Vulnerability]:
+    def get_vulnerabilities(self) -> SortedSet[Vulnerability]:
         """
         Get all the Vulnerabilities for this Component.
 
@@ -1170,7 +1172,8 @@ class Component:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return ComparableTuple((self.type, self.group, self.name, self.version)) < ComparableTuple((other.type, other.group, other.name, other.version))
+            return ComparableTuple((self.type, self.group, self.name, self.version)) < \
+                ComparableTuple((other.type, other.group, other.name, other.version))
         return NotImplemented
 
     def __hash__(self) -> int:

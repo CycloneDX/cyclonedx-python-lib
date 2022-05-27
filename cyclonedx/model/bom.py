@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from typing import Iterable, Optional, Set
 from uuid import UUID, uuid4
 
+from sortedcontainers import SortedSet
+
 from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
@@ -43,13 +45,13 @@ class BomMetaData:
                  licenses: Optional[Iterable[LicenseChoice]] = None,
                  properties: Optional[Iterable[Property]] = None) -> None:
         self.timestamp = datetime.now(tz=timezone.utc)
-        self.tools = set(tools or [])
-        self.authors = set(authors or [])
+        self.tools = SortedSet(tools or [])
+        self.authors = SortedSet(authors or [])
         self.component = component
         self.manufacture = manufacture
         self.supplier = supplier
-        self.licenses = set(licenses or [])
-        self.properties = set(properties or [])
+        self.licenses = SortedSet(licenses or [])
+        self.properties = SortedSet(properties or [])
 
         if not tools:
             self.tools.add(ThisTool)
@@ -69,7 +71,7 @@ class BomMetaData:
         self._timestamp = timestamp
 
     @property
-    def tools(self) -> Set[Tool]:
+    def tools(self) -> SortedSet[Tool]:
         """
         Tools used to create this BOM.
 
@@ -80,10 +82,10 @@ class BomMetaData:
 
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
-        self._tools = set(tools)
+        self._tools = SortedSet(tools)
 
     @property
-    def authors(self) -> Set[OrganizationalContact]:
+    def authors(self) -> SortedSet[OrganizationalContact]:
         """
         The person(s) who created the BOM.
 
@@ -98,7 +100,7 @@ class BomMetaData:
 
     @authors.setter
     def authors(self, authors: Iterable[OrganizationalContact]) -> None:
-        self._authors = set(authors)
+        self._authors = SortedSet(authors)
 
     @property
     def component(self) -> Optional[Component]:
@@ -155,7 +157,7 @@ class BomMetaData:
         self._supplier = supplier
 
     @property
-    def licenses(self) -> Set[LicenseChoice]:
+    def licenses(self) -> SortedSet[LicenseChoice]:
         """
         A optional list of statements about how this BOM is licensed.
 
@@ -166,10 +168,10 @@ class BomMetaData:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = set(licenses)
+        self._licenses = SortedSet(licenses)
 
     @property
-    def properties(self) -> Set[Property]:
+    def properties(self) -> SortedSet[Property]:
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
@@ -184,7 +186,7 @@ class BomMetaData:
 
     @properties.setter
     def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = set(properties)
+        self._properties = SortedSet(properties)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomMetaData):
@@ -237,9 +239,9 @@ class Bom:
         """
         self.uuid = uuid4()
         self.metadata = BomMetaData()
-        self.components = set(components or [])
-        self.services = set(services or [])
-        self.external_references = set(external_references or [])
+        self.components = SortedSet(components or [])
+        self.services = SortedSet(services or [])
+        self.external_references = SortedSet(external_references or [])
 
     @property
     def uuid(self) -> UUID:
@@ -273,7 +275,7 @@ class Bom:
         self._metadata = metadata
 
     @property
-    def components(self) -> Set[Component]:
+    def components(self) -> SortedSet[Component]:
         """
         Get all the Components currently in this Bom.
 
@@ -284,7 +286,7 @@ class Bom:
 
     @components.setter
     def components(self, components: Iterable[Component]) -> None:
-        self._components = set(components)
+        self._components = SortedSet(components)
 
     def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
         """
@@ -327,7 +329,7 @@ class Bom:
         return component in self.components
 
     @property
-    def services(self) -> Set[Service]:
+    def services(self) -> SortedSet[Service]:
         """
         Get all the Services currently in this Bom.
 
@@ -338,10 +340,10 @@ class Bom:
 
     @services.setter
     def services(self, services: Iterable[Service]) -> None:
-        self._services = set(services)
+        self._services = SortedSet(services)
 
     @property
-    def external_references(self) -> Set[ExternalReference]:
+    def external_references(self) -> SortedSet[ExternalReference]:
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
 
@@ -352,7 +354,7 @@ class Bom:
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = set(external_references)
+        self._external_references = SortedSet(external_references)
 
     def has_vulnerabilities(self) -> bool:
         """

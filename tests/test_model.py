@@ -20,7 +20,6 @@
 import base64
 import datetime
 from enum import Enum
-from time import sleep
 from unittest import TestCase
 
 from cyclonedx.exception.model import (

@@ -188,7 +188,7 @@ class IssueType:
         self._source = source
 
     @property
-    def references(self) -> Set[XsUri]:
+    def references(self) -> SortedSet[XsUri]:
         """
         Any reference URLs related to this issue.
 
@@ -208,7 +208,8 @@ class IssueType:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
-            return ComparableTuple((self.type, self.id, self.name, self.description, self.source)) < ComparableTuple((other.type, other.id, other.name, other.description, other.source))
+            return ComparableTuple((self.type, self.id, self.name, self.description, self.source)) < \
+                ComparableTuple((other.type, other.id, other.name, other.description, other.source))
         return NotImplemented
 
     def __hash__(self) -> int:

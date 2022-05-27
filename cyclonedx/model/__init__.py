@@ -21,7 +21,7 @@ import sys
 import warnings
 from datetime import datetime
 from enum import Enum
-from typing import Any, Iterable, Optional, Set
+from typing import Any, Iterable, Optional, Set, TypeVar
 
 from sortedcontainers import SortedSet
 
@@ -496,7 +496,7 @@ class ExternalReference:
         self._type = type_
 
     @property
-    def hashes(self) -> Set[HashType]:
+    def hashes(self) -> SortedSet[HashType]:
         """
         The hashes of the external reference (if applicable).
 
@@ -516,7 +516,8 @@ class ExternalReference:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ExternalReference):
-            return ComparableTuple((self._type, self._url, self._comment)) < ComparableTuple((other._type, other._url, other._comment))
+            return ComparableTuple((self._type, self._url, self._comment)) < \
+                ComparableTuple((other._type, other._url, other._comment))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -831,7 +832,8 @@ class NoteText:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, NoteText):
-            return ComparableTuple((self.content, self.content_type, self.encoding)) < ComparableTuple((other.content, other.content_type, other.encoding))
+            return ComparableTuple((self.content, self.content_type, self.encoding)) < \
+                ComparableTuple((other.content, other.content_type, other.encoding))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -980,7 +982,8 @@ class OrganizationalContact:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, OrganizationalContact):
-            return ComparableTuple((self.name, self.email, self.phone)) < ComparableTuple((other.name, other.email, other.phone))
+            return ComparableTuple((self.name, self.email, self.phone)) < \
+                ComparableTuple((other.name, other.email, other.phone))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1024,7 +1027,7 @@ class OrganizationalEntity:
         self._name = name
 
     @property
-    def url(self) -> Set[XsUri]:
+    def url(self) -> SortedSet[XsUri]:
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
 
@@ -1038,7 +1041,7 @@ class OrganizationalEntity:
         self._url = SortedSet(urls)
 
     @property
-    def contact(self) -> Set[OrganizationalContact]:
+    def contact(self) -> SortedSet[OrganizationalContact]:
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
 
@@ -1125,7 +1128,7 @@ class Tool:
         self._version = version
 
     @property
-    def hashes(self) -> Set[HashType]:
+    def hashes(self) -> SortedSet[HashType]:
         """
         The hashes of the tool (if applicable).
 
@@ -1139,7 +1142,7 @@ class Tool:
         self._hashes = SortedSet(hashes)
 
     @property
-    def external_references(self) -> Set[ExternalReference]:
+    def external_references(self) -> SortedSet[ExternalReference]:
         """
         External References provide a way to document systems, sites, and information that may be relevant but which
         are not included with the BOM.
@@ -1160,7 +1163,8 @@ class Tool:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Tool):
-            return ComparableTuple((self.vendor, self.name, self.version)) < ComparableTuple((other.vendor, other.name, other.version))
+            return ComparableTuple((self.vendor, self.name, self.version)) < \
+                ComparableTuple((other.vendor, other.name, other.version))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1238,7 +1242,8 @@ class IdentifiableAction:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IdentifiableAction):
-            return ComparableTuple((self.timestamp, self.name, self.email)) < ComparableTuple((other.timestamp, other.name, other.email))
+            return ComparableTuple((self.timestamp, self.name, self.email)) < \
+                ComparableTuple((other.timestamp, other.name, other.email))
         return NotImplemented
 
     def __hash__(self) -> int:

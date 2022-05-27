@@ -132,7 +132,7 @@ class ReleaseNotes:
         self._timestamp = timestamp
 
     @property
-    def aliases(self) -> Set[str]:
+    def aliases(self) -> SortedSet[str]:
         """
         One or more alternate names the release may be referred to. This may include unofficial terms used by
         development and marketing teams (e.g. code names).
@@ -147,7 +147,7 @@ class ReleaseNotes:
         self._aliases = SortedSet(aliases)
 
     @property
-    def tags(self) -> Set[str]:
+    def tags(self) -> SortedSet[str]:
         """
         One or more tags that may aid in search or retrieval of the release note.
 
@@ -161,7 +161,7 @@ class ReleaseNotes:
         self._tags = SortedSet(tags)
 
     @property
-    def resolves(self) -> Set[IssueType]:
+    def resolves(self) -> SortedSet[IssueType]:
         """
         A collection of issues that have been resolved.
 
@@ -175,7 +175,7 @@ class ReleaseNotes:
         self._resolves = SortedSet(resolves)
 
     @property
-    def notes(self) -> Set[Note]:
+    def notes(self) -> SortedSet[Note]:
         """
         Zero or more release notes containing the locale and content. Multiple note elements may be specified to support
         release notes in a wide variety of languages.
@@ -190,7 +190,7 @@ class ReleaseNotes:
         self._notes = SortedSet(notes)
 
     @property
-    def properties(self) -> Set[Property]:
+    def properties(self) -> SortedSet[Property]:
         """
         Provides the ability to document properties in a name-value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions. Unlike

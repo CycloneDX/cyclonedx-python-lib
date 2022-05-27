@@ -103,7 +103,7 @@ class TestBom(TestCase):
         hextech = Component(name='Hextech', version='1.0.0', component_type=ComponentType.LIBRARY)
         metadata.component = hextech
         self.assertFalse(metadata.component is None)
-        self.assertEquals(metadata.component, hextech)
+        self.assertEqual(metadata.component, hextech)
 
     def test_empty_bom(self) -> None:
         bom = Bom()
