@@ -20,7 +20,7 @@
 import base64
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional, Sequence, TypeVar
+from typing import List, Optional, TypeVar
 
 from packageurl import PackageURL
 
@@ -529,7 +529,7 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
 T = TypeVar('T')
 
 
-def reorder(items: Sequence[T], indexes: Sequence[int]) -> Sequence[T]:
+def reorder(items: List[T], indexes: List[int]) -> List[T]:
     '''
     Return list of items in the order indicated by indexes.
     '''
