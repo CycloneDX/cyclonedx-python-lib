@@ -19,6 +19,7 @@
 
 import base64
 import datetime
+from enum import Enum
 from time import sleep
 from unittest import TestCase
 
@@ -29,6 +30,7 @@ from cyclonedx.exception.model import (
     UnknownHashTypeException,
 )
 from cyclonedx.model import (
+    ComparableTuple,
     Copyright,
     Encoding,
     ExternalReference,
@@ -36,11 +38,153 @@ from cyclonedx.model import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
+    License,
+    LicenseChoice,
     Note,
     NoteText,
+    OrganizationalContact,
+    Property,
+    Tool,
     XsUri,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
+from tests.data import reorder
+
+
+class DummyStringEnum(str, Enum):
+    FIRST = 'first'
+    SECOND = 'second'
+    THIRD = 'third'
+    FOURTH = 'fourth'
+
+
+class TestStringEnum(TestCase):
+
+    def test_sort(self) -> None:
+        enums = [
+            DummyStringEnum.FIRST,
+            DummyStringEnum.SECOND,
+            DummyStringEnum.THIRD,
+            DummyStringEnum.FOURTH,
+        ]
+        sorted_enums = sorted(enums)
+        expected_enums = [
+            DummyStringEnum.FIRST,
+            DummyStringEnum.FOURTH,
+            DummyStringEnum.SECOND,
+            DummyStringEnum.THIRD,
+        ]
+        self.assertListEqual(sorted_enums, expected_enums)
+
+
+class TestComparableTuple(TestCase):
+
+    def test_equal_self(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        self.assertEqual(tuple1, tuple1)
+
+    def test_equal(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        tuple2 = ComparableTuple((1, 2, 3, 4, 5))
+        self.assertEqual(tuple1, tuple2)
+        self.assertEqual(tuple2, tuple1)
+
+    def test_equal_none(self) -> None:
+        tuple1 = ComparableTuple((1, 2, None, 4, 5))
+        tuple2 = ComparableTuple((1, 2, None, 4, 5))
+        self.assertEqual(tuple1, tuple2)
+        self.assertEqual(tuple2, tuple1)
+
+    def test_compare_first_item(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        tuple2 = ComparableTuple((2, 2, 3, 4, 5))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
+    def test_compare_mixed(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 1))
+        tuple2 = ComparableTuple((2, 1, 2))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
+    def test_compare_first_item_none(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        tuple2 = ComparableTuple((None, 2, 3, 4, 5))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
+    def test_compare_last_item(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        tuple2 = ComparableTuple((1, 2, 3, 4, 10))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
+    def test_compare_last_item_none(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        tuple2 = ComparableTuple((1, 2, 3, 4, None))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
+    def test_compare_enum(self) -> None:
+        tuple1 = ComparableTuple((DummyStringEnum.FIRST, ))
+        tuple2 = ComparableTuple((DummyStringEnum.SECOND, ))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
+    def test_compare_enum_then_none(self) -> None:
+        tuple1 = ComparableTuple((DummyStringEnum.FIRST, None))
+        tuple2 = ComparableTuple((DummyStringEnum.SECOND, 'a'))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
+
+class TestModelLicense(TestCase):
+
+    def test_sort(self) -> None:
+        # expected sort order: ([id], [name])
+        expected_order = [1, 0, 3, 2]
+        licenses = [
+            License(spdx_license_id='MIT'),
+            License(spdx_license_id='Apache-2.0'),
+            License(license_name='MIT'),
+            License(license_name='Apache-2.0'),
+        ]
+        sorted_licenses = sorted(licenses)
+        expected_licenses = reorder(licenses, expected_order)
+        self.assertListEqual(sorted_licenses, expected_licenses)
+
+
+class TestModelLicenseChoice(TestCase):
+
+    def test_sort(self) -> None:
+        license_a = License(spdx_license_id='Apache-2.0'),
+        license_b = License(spdx_license_id='MIT'),
+
+        # expected sort order: ([license], [expression])
+        expected_order = [1, 0, 3, 2]
+        licenses = [
+            LicenseChoice(license_=license_b),
+            LicenseChoice(license_=license_a),
+            LicenseChoice(license_expression='MIT'),
+            LicenseChoice(license_expression='Apache-2.0'),
+        ]
+        sorted_licenses = sorted(licenses)
+        expected_licenses = reorder(licenses, expected_order)
+        self.assertListEqual(sorted_licenses, expected_licenses)
 
 
 class TestModelCopyright(TestCase):
@@ -56,6 +200,20 @@ class TestModelCopyright(TestCase):
         copy_2 = Copyright(text='Copyright (c) OWASP Foundation.')
         self.assertNotEqual(hash(copy_1), hash(copy_2))
         self.assertFalse(copy_1 == copy_2)
+
+    def test_sort(self) -> None:
+        # expected sort order: (text)
+        expected_order = [0, 1, 2, 4, 3]
+        copyrights = [
+            Copyright(text='a'),
+            Copyright(text='b'),
+            Copyright(text='c'),
+            Copyright(text='f'),
+            Copyright(text='d'),
+        ]
+        sorted_copyrights = sorted(copyrights)
+        expected_copyrights = reorder(copyrights, expected_order)
+        self.assertListEqual(sorted_copyrights, expected_copyrights)
 
 
 class TestModelExternalReference(TestCase):
@@ -97,6 +255,21 @@ class TestModelExternalReference(TestCase):
         self.assertNotEqual(hash(ref_1), hash(ref_2))
         self.assertFalse(ref_1 == ref_2)
 
+    def test_sort(self) -> None:
+        # expected sort order: (type, url, [comment])
+        expected_order = [5, 4, 0, 1, 3, 2]
+        refs = [
+            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('a'), comment='a'),
+            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('a'), comment='b'),
+            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('b')),
+            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('b'), comment='a'),
+            ExternalReference(reference_type=ExternalReferenceType.LICENSE, url=XsUri('b'), comment='a'),
+            ExternalReference(reference_type=ExternalReferenceType.BUILD_SYSTEM, url=XsUri('b'), comment='a'),
+        ]
+        sorted_refs = sorted(refs)
+        expected_refs = reorder(refs, expected_order)
+        self.assertListEqual(sorted_refs, expected_refs)
+
 
 class TestModelHashType(TestCase):
 
@@ -114,6 +287,21 @@ class TestModelHashType(TestCase):
         with self.assertRaises(UnknownHashTypeException):
             HashType.from_composite_str('unknown:dc26cd71b80d6757139f38156a43c545')
 
+    def test_sort(self) -> None:
+        # expected sort order: (alg, content)
+        expected_order = [5, 3, 4, 1, 2, 0]
+        hashes = [
+            HashType(algorithm=HashAlgorithm.SHA_256, hash_value='c'),
+            HashType(algorithm=HashAlgorithm.SHA_256, hash_value='a'),
+            HashType(algorithm=HashAlgorithm.SHA_256, hash_value='b'),
+            HashType(algorithm=HashAlgorithm.SHA_1, hash_value='a'),
+            HashType(algorithm=HashAlgorithm.SHA_1, hash_value='b'),
+            HashType(algorithm=HashAlgorithm.MD5, hash_value='a'),
+        ]
+        sorted_hashes = sorted(hashes)
+        expected_hashes = reorder(hashes, expected_order)
+        self.assertListEqual(sorted_hashes, expected_hashes)
+
 
 class TestModelIdentifiableAction(TestCase):
 
@@ -129,11 +317,30 @@ class TestModelIdentifiableAction(TestCase):
         self.assertTrue(ia_1 == ia_2)
 
     def test_not_same(self) -> None:
-        ia_1 = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='A Name', email='something@somewhere.tld')
-        sleep(1)
-        ia_2 = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='A Name', email='something@somewhere.tld')
+        now = datetime.datetime.utcnow()
+        not_now = now + datetime.timedelta(seconds=1)
+        ia_1 = IdentifiableAction(timestamp=now, name='A Name', email='something@somewhere.tld')
+        ia_2 = IdentifiableAction(timestamp=not_now, name='A Name', email='something@somewhere.tld')
         self.assertNotEqual(hash(ia_1), hash(ia_2))
         self.assertFalse(ia_1 == ia_2)
+
+    def test_sort(self) -> None:
+        now = datetime.datetime.utcnow()
+        now_plus_one = now + datetime.timedelta(seconds=1)
+        # expected sort order: ([timestamp], [name], [email])
+        expected_order = [2, 3, 5, 4, 6, 0, 1]
+        actions = [
+            IdentifiableAction(timestamp=now_plus_one, name='a', email='a'),
+            IdentifiableAction(timestamp=now_plus_one, name='a', email='b'),
+            IdentifiableAction(timestamp=now, name='a', email='a'),
+            IdentifiableAction(timestamp=now, name='a', email='b'),
+            IdentifiableAction(timestamp=now, name='b', email='a'),
+            IdentifiableAction(timestamp=now, name='a'),
+            IdentifiableAction(timestamp=now),
+        ]
+        sorted_notes = sorted(actions)
+        expected_notes = reorder(actions, expected_order)
+        self.assertListEqual(sorted_notes, expected_notes)
 
 
 class TestModelIssueType(TestCase):
@@ -205,6 +412,59 @@ class TestModelNote(TestCase):
         self.assertEqual(n.locale, 'en-GB')
         self.assertEqual(n.text.encoding, Encoding.BASE_64)
 
+    def test_sort(self) -> None:
+        # expected sort order: ([locale], text)
+        expected_order = [1, 2, 0, 3, 5, 4]
+        notes = [
+            Note(text=NoteText(content='c'), locale='en-GB'),
+            Note(text=NoteText(content='a'), locale='en-GB'),
+            Note(text=NoteText(content='b'), locale='en-GB'),
+            Note(text=NoteText(content='d'), locale='en-GB'),
+            Note(text=NoteText(content='a')),
+            Note(text=NoteText(content='a'), locale='en-US'),
+        ]
+        sorted_notes = sorted(notes)
+        expected_notes = reorder(notes, expected_order)
+        self.assertListEqual(sorted_notes, expected_notes)
+
+
+class TestModelNoteText(TestCase):
+
+    def test_sort(self) -> None:
+        # expected sort order: (content, [content_type], [encoding])
+        expected_order = [1, 7, 4, 5, 6, 2, 0, 3]
+        notes = [
+            NoteText(content='c'),
+            NoteText(content='a'),
+            NoteText(content='b'),
+            NoteText(content='d'),
+            NoteText(content='b', content_type='a'),
+            NoteText(content='b', content_type='b'),
+            NoteText(content='b', content_type='c'),
+            NoteText(content='b', content_type='a', content_encoding=Encoding.BASE_64),
+        ]
+        sorted_notes = sorted(notes)
+        expected_notes = reorder(notes, expected_order)
+        self.assertListEqual(sorted_notes, expected_notes)
+
+
+class TestModelOrganizationalContact(TestCase):
+
+    def test_sort(self) -> None:
+        # expected sort order: ([name], [email], [phone])
+        expected_order = [0, 3, 2, 1, 5, 4]
+        contacts = [
+            OrganizationalContact(name='a', email='a', phone='a'),
+            OrganizationalContact(name='b', email='a', phone='a'),
+            OrganizationalContact(name='a', email='b', phone='a'),
+            OrganizationalContact(name='a', email='a', phone='b'),
+            OrganizationalContact(phone='a'),
+            OrganizationalContact(email='a'),
+        ]
+        sorted_contacts = sorted(contacts)
+        expected_contacts = reorder(contacts, expected_order)
+        self.assertListEqual(sorted_contacts, expected_contacts)
+
 
 class TestModelXsUri(TestCase):
 
@@ -270,3 +530,53 @@ class TestModelXsUri(TestCase):
     def test_note_with_invalid_locale(self) -> None:
         with self.assertRaises(InvalidLocaleTypeException):
             Note(text=NoteText(content='Something'), locale='rubbish')
+
+    def test_sort(self) -> None:
+        # expected sort order: (uri)
+        expected_order = [2, 1, 3, 0]
+        uris = [
+            XsUri(uri="d"),
+            XsUri(uri="b"),
+            XsUri(uri="a"),
+            XsUri(uri="c"),
+        ]
+        sorted_uris = sorted(uris)
+        expected_uris = reorder(uris, expected_order)
+        self.assertListEqual(sorted_uris, expected_uris)
+
+
+class TestModelProperty(TestCase):
+
+    def test_sort(self) -> None:
+        # expected sort order: (name, value)
+        expected_order = [0, 5, 2, 3, 4, 1]
+        props = [
+            Property(name='a', value='a'),
+            Property(name='b', value='b'),
+            Property(name='a', value='c'),
+            Property(name='a', value=None),
+            Property(name='b', value='a'),
+            Property(name='a', value='b'),
+        ]
+        sorted_props = sorted(props)
+        expected_props = reorder(props, expected_order)
+        self.assertListEqual(sorted_props, expected_props)
+
+
+class TestModelTool(TestCase):
+
+    def test_sort(self) -> None:
+        # expected sort order: (vendor, name, version)
+        expected_order = [0, 1, 2, 3, 4, 5, 6]
+        tools = [
+            Tool(vendor='a', name='a', version='1.0.0'),
+            Tool(vendor='a', name='a', version='2.0.0'),
+            Tool(vendor='a', name='b', version='1.0.0'),
+            Tool(vendor='a', name='b'),
+            Tool(vendor='b', name='a'),
+            Tool(vendor='b', name='b', version='1.0.0'),
+            Tool(name='b'),
+        ]
+        sorted_tools = sorted(tools)
+        expected_tools = reorder(tools, expected_order)
+        self.assertListEqual(sorted_tools, expected_tools)

@@ -28,12 +28,12 @@ from typing import cast
 from ..model.bom import Bom
 
 
-class OutputFormat(Enum):
+class OutputFormat(str, Enum):
     JSON: str = 'Json'
     XML: str = 'Xml'
 
 
-class SchemaVersion(Enum):
+class SchemaVersion(str, Enum):
     V1_0: str = 'V1Dot0'
     V1_1: str = 'V1Dot1'
     V1_2: str = 'V1Dot2'

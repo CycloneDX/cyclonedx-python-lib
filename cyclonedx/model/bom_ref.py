@@ -47,6 +47,11 @@ class BomRef:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, BomRef):
+            return self.value < other.value
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.value)
 

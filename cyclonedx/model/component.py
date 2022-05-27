@@ -24,10 +24,12 @@ from typing import Iterable, Optional, Set
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
+from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
 from . import (
     AttachedText,
+    ComparableTuple,
     Copyright,
     ExternalReference,
     HashAlgorithm,
@@ -143,6 +145,11 @@ class Commit:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Commit):
+            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.uid, self.url, self.author, self.committer, self.message))
 
@@ -167,8 +174,8 @@ class ComponentEvidence:
                 'At least one of `licenses` or `copyright_` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.licenses = set(licenses or [])
-        self.copyright = set(copyright_ or [])
+        self.licenses = SortedSet(licenses or [])
+        self.copyright = SortedSet(copyright_ or [])
 
     @property
     def licenses(self) -> Set[LicenseChoice]:
@@ -182,7 +189,7 @@ class ComponentEvidence:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = set(licenses)
+        self._licenses = SortedSet(licenses)
 
     @property
     def copyright(self) -> Set[Copyright]:
@@ -196,7 +203,7 @@ class ComponentEvidence:
 
     @copyright.setter
     def copyright(self, copyright_: Iterable[Copyright]) -> None:
-        self._copyright = set(copyright_)
+        self._copyright = SortedSet(copyright_)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ComponentEvidence):
@@ -210,7 +217,7 @@ class ComponentEvidence:
         return f'<ComponentEvidence id={id(self)}>'
 
 
-class ComponentScope(Enum):
+class ComponentScope(str, Enum):
     """
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
 
@@ -222,7 +229,7 @@ class ComponentScope(Enum):
     EXCLUDED = 'excluded'
 
 
-class ComponentType(Enum):
+class ComponentType(str, Enum):
     """
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
 
@@ -289,6 +296,11 @@ class Diff:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Diff):
+            return ComparableTuple((self.url, self.text)) < ComparableTuple((other.url, other.text))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.text, self.url))
 
@@ -296,7 +308,7 @@ class Diff:
         return f'<Diff url={self.url}>'
 
 
-class PatchClassification(Enum):
+class PatchClassification(str, Enum):
     """
     Enum object that defines the permissible `patchClassification`s.
 
@@ -321,7 +333,7 @@ class Patch:
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
         self.type = type_
         self.diff = diff
-        self.resolves = set(resolves or [])
+        self.resolves = SortedSet(resolves or [])
 
     @property
     def type(self) -> PatchClassification:
@@ -367,12 +379,17 @@ class Patch:
 
     @resolves.setter
     def resolves(self, resolves: Iterable[IssueType]) -> None:
-        self._resolves = set(resolves)
+        self._resolves = SortedSet(resolves)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Patch):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Patch):
+            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < ComparableTuple((other.type, other.diff, ComparableTuple(other.resolves)))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.type, self.diff, tuple(self.resolves)))
@@ -404,11 +421,11 @@ class Pedigree:
                 'provided for `Pedigree`'
             )
 
-        self.ancestors = set(ancestors or [])
-        self.descendants = set(descendants or [])
-        self.variants = set(variants or [])
-        self.commits = set(commits or [])
-        self.patches = set(patches or [])
+        self.ancestors = SortedSet(ancestors or [])
+        self.descendants = SortedSet(descendants or [])
+        self.variants = SortedSet(variants or [])
+        self.commits = SortedSet(commits or [])
+        self.patches = SortedSet(patches or [])
         self.notes = notes
 
     @property
@@ -429,7 +446,7 @@ class Pedigree:
 
     @ancestors.setter
     def ancestors(self, ancestors: Iterable['Component']) -> None:
-        self._ancestors = set(ancestors)
+        self._ancestors = SortedSet(ancestors)
 
     @property
     def descendants(self) -> Set['Component']:
@@ -444,7 +461,7 @@ class Pedigree:
 
     @descendants.setter
     def descendants(self, descendants: Iterable['Component']) -> None:
-        self._descendants = set(descendants)
+        self._descendants = SortedSet(descendants)
 
     @property
     def variants(self) -> Set['Component']:
@@ -460,7 +477,7 @@ class Pedigree:
 
     @variants.setter
     def variants(self, variants: Iterable['Component']) -> None:
-        self._variants = set(variants)
+        self._variants = SortedSet(variants)
 
     @property
     def commits(self) -> Set[Commit]:
@@ -475,7 +492,7 @@ class Pedigree:
 
     @commits.setter
     def commits(self, commits: Iterable[Commit]) -> None:
-        self._commits = set(commits)
+        self._commits = SortedSet(commits)
 
     @property
     def patches(self) -> Set[Patch]:
@@ -490,7 +507,7 @@ class Pedigree:
 
     @patches.setter
     def patches(self, patches: Iterable[Patch]) -> None:
-        self._patches = set(patches)
+        self._patches = SortedSet(patches)
 
     @property
     def notes(self) -> Optional[str]:
@@ -713,16 +730,16 @@ class Component:
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = set(hashes or [])
-        self.licenses = set(licenses or [])
+        self.hashes = SortedSet(hashes or [])
+        self.licenses = SortedSet(licenses or [])
         self.copyright = copyright_
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
         self.pedigree = pedigree
-        self.external_references = set(external_references or [])
-        self.properties = set(properties or [])
-        self.components = set(components or [])
+        self.external_references = SortedSet(external_references or [])
+        self.properties = SortedSet(properties or [])
+        self.components = SortedSet(components or [])
         self.evidence = evidence
         self.release_notes = release_notes
 
@@ -743,8 +760,8 @@ class Component:
             if not licenses:
                 self.licenses = {LicenseChoice(license_expression=license_str)}
 
-        self.__dependencies: Set[BomRef] = set()
-        self.__vulnerabilites: Set[Vulnerability] = set()
+        self.__dependencies: Set[BomRef] = SortedSet()
+        self.__vulnerabilites: Set[Vulnerability] = SortedSet()
 
     @property
     def type(self) -> ComponentType:
@@ -929,7 +946,7 @@ class Component:
 
     @hashes.setter
     def hashes(self, hashes: Iterable[HashType]) -> None:
-        self._hashes = set(hashes)
+        self._hashes = SortedSet(hashes)
 
     @property
     def licenses(self) -> Set[LicenseChoice]:
@@ -943,7 +960,7 @@ class Component:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = set(licenses)
+        self._licenses = SortedSet(licenses)
 
     @property
     def copyright(self) -> Optional[str]:
@@ -1034,7 +1051,7 @@ class Component:
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = set(external_references)
+        self._external_references = SortedSet(external_references)
 
     @property
     def properties(self) -> Set[Property]:
@@ -1049,7 +1066,7 @@ class Component:
 
     @properties.setter
     def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = set(properties)
+        self._properties = SortedSet(properties)
 
     @property
     def components(self) -> Set['Component']:
@@ -1065,7 +1082,7 @@ class Component:
 
     @components.setter
     def components(self, components: Iterable['Component']) -> None:
-        self._components = set(components)
+        self._components = SortedSet(components)
 
     @property
     def evidence(self) -> Optional[ComponentEvidence]:
@@ -1107,7 +1124,7 @@ class Component:
 
     @dependencies.setter
     def dependencies(self, dependencies: Iterable[BomRef]) -> None:
-        self.__dependencies = set(dependencies)
+        self.__dependencies = SortedSet(dependencies)
 
     def add_vulnerability(self, vulnerability: Vulnerability) -> None:
         """
@@ -1151,6 +1168,11 @@ class Component:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Component):
+            return ComparableTuple((self.type, self.group, self.name, self.version)) < ComparableTuple((other.type, other.group, other.name, other.version))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((
             self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
@@ -1160,7 +1182,7 @@ class Component:
         ))
 
     def __repr__(self) -> str:
-        return f'<Component group={self.group}, name={self.name}, version={self.version}>'
+        return f'<Component group={self.group}, name={self.name}, version={self.version}, type={self.type}>'
 
     # Deprecated methods
     def get_namespace(self) -> Optional[str]:

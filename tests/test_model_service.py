@@ -21,6 +21,7 @@ from unittest import TestCase
 from unittest.mock import Mock, patch
 
 from cyclonedx.model.service import Service
+from tests.data import reorder
 
 
 class TestModelService(TestCase):
@@ -70,3 +71,18 @@ class TestModelService(TestCase):
         self.assertIsNone(parent_service.release_notes)
         self.assertFalse(parent_service.properties)
         self.assertTrue(Service(name='child-service-1') in parent_service.services)
+
+    def test_sort(self) -> None:
+        # expected sort order: ([group], name, [version])
+        expected_order = [0, 1, 3, 4, 2, 5]
+        services = [
+            Service(name='service-a', group='group-a'),
+            Service(name='service-b', group='group-a', version='1.0.0'),
+            Service(name='service-c', version='2.0.0'),
+            Service(name='service-b', group='group-a'),
+            Service(name='service-c', version='1.0.0'),
+            Service(name='service-d', ),
+        ]
+        sorted_services = sorted(services)
+        expected_services = reorder(services, expected_order)
+        self.assertListEqual(sorted_services, expected_services)

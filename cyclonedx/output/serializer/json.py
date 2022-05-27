@@ -27,6 +27,7 @@ from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
+from sortedcontainers import SortedSet
 
 from ...model import XsUri
 from ...model.bom_ref import BomRef
@@ -59,6 +60,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
 
         # Set
         if isinstance(o, set):
+            return list(o)
+
+        # SortedSet
+        if isinstance(o, SortedSet):
             return list(o)
 
         # UUID

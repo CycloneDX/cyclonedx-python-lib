@@ -29,7 +29,7 @@ Impact Analysis is new for CycloneDX schema version 1.
 """
 
 
-class ImpactAnalysisAffectedStatus(Enum):
+class ImpactAnalysisAffectedStatus(str, Enum):
     """
     Enum object that defines the permissible impact analysis affected states.
 
@@ -50,7 +50,7 @@ class ImpactAnalysisAffectedStatus(Enum):
     UNKNOWN = 'unknown'
 
 
-class ImpactAnalysisJustification(Enum):
+class ImpactAnalysisJustification(str, Enum):
     """
     Enum object that defines the rationale of why the impact analysis state was asserted.
 
@@ -69,7 +69,7 @@ class ImpactAnalysisJustification(Enum):
     REQUIRES_ENVIRONMENT = 'requires_environment'
 
 
-class ImpactAnalysisResponse(Enum):
+class ImpactAnalysisResponse(str, Enum):
     """
     Enum object that defines the valid rationales as to why the impact analysis state was asserted.
 
@@ -84,7 +84,7 @@ class ImpactAnalysisResponse(Enum):
     WORKAROUND_AVAILABLE = 'workaround_available'
 
 
-class ImpactAnalysisState(Enum):
+class ImpactAnalysisState(str, Enum):
     """
     Enum object that defines the permissible impact analysis states.
 

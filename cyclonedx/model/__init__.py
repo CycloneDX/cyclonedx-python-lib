@@ -23,6 +23,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Iterable, Optional, Set
 
+from sortedcontainers import SortedSet
+
 from ..exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
@@ -57,7 +59,41 @@ def sha1sum(filename: str) -> str:
     return h.hexdigest()
 
 
-class DataFlow(Enum):
+class ComparableTuple(tuple):
+    """
+    Allows comparison of tuples, allowing for None values.
+    """
+
+    def __lt__(self, other: object) -> bool:
+        for s, o in zip(self, other):
+            if s == o:
+                continue
+            if s is None:
+                return False
+            if o is None:
+                return True
+            if s < o:
+                return True
+            if s > o:
+                return False
+        return False
+
+    def __gt__(self, other: object) -> bool:
+        for s, o in zip(self, other):
+            if s == o:
+                continue
+            if s is None:
+                return True
+            if o is None:
+                return False
+            if s < o:
+                return False
+            if s > o:
+                return True
+        return False
+
+
+class DataFlow(str, Enum):
     """
     This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
 
@@ -132,7 +168,7 @@ class DataClassification:
         return f'<DataClassification flow={self.flow}>'
 
 
-class Encoding(Enum):
+class Encoding(str, Enum):
     """
     This is our internal representation of the encoding simple type within the CycloneDX standard.
 
@@ -215,7 +251,7 @@ class AttachedText:
         return f'<AttachedText content-type={self.content_type}, encoding={self.encoding}>'
 
 
-class HashAlgorithm(Enum):
+class HashAlgorithm(str, Enum):
     """
     This is our internal representation of the hashAlg simple type within the CycloneDX standard.
 
@@ -320,6 +356,11 @@ class HashType:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, HashType):
+            return ComparableTuple((self.alg, self.content)) < ComparableTuple((other.alg, other.content))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.alg, self.content))
 
@@ -327,7 +368,7 @@ class HashType:
         return f'<HashType {self.alg.name}:{self.content}>'
 
 
-class ExternalReferenceType(Enum):
+class ExternalReferenceType(str, Enum):
     """
     Enum object that defines the permissible 'types' for an External Reference according to the CycloneDX schema.
 
@@ -378,6 +419,11 @@ class XsUri:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, XsUri):
+            return self._uri < other._uri
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self._uri)
 
@@ -402,7 +448,7 @@ class ExternalReference:
         self.url = url
         self.comment = comment
         self.type = reference_type
-        self.hashes = set(hashes or [])
+        self.hashes = SortedSet(hashes or [])
 
     @property
     def url(self) -> XsUri:
@@ -461,12 +507,17 @@ class ExternalReference:
 
     @hashes.setter
     def hashes(self, hashes: Iterable[HashType]) -> None:
-        self._hashes = set(hashes)
+        self._hashes = SortedSet(hashes)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ExternalReference):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, ExternalReference):
+            return ComparableTuple((self._type, self._url, self._comment)) < ComparableTuple((other._type, other._url, other._comment))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
@@ -566,6 +617,11 @@ class License:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, License):
+            return ComparableTuple((self.id, self.name)) < ComparableTuple((other.id, other.name))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.id, self.name, self.text, self.url))
 
@@ -633,6 +689,11 @@ class LicenseChoice:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, LicenseChoice):
+            return ComparableTuple((self.license, self.expression)) < ComparableTuple((other.license, other.expression))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.license, self.expression))
 
@@ -689,6 +750,11 @@ class Property:
         if isinstance(other, Property):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Property):
+            return ComparableTuple((self.name, self.value)) < ComparableTuple((other.name, other.value))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.name, self.value))
@@ -763,6 +829,11 @@ class NoteText:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, NoteText):
+            return ComparableTuple((self.content, self.content_type, self.encoding)) < ComparableTuple((other.content, other.content_type, other.encoding))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.content, self.content_type, self.encoding))
 
@@ -829,6 +900,11 @@ class Note:
         if isinstance(other, Note):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Note):
+            return ComparableTuple((self.locale, self.text)) < ComparableTuple((other.locale, other.text))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.text, self.locale))
@@ -902,11 +978,16 @@ class OrganizationalContact:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, OrganizationalContact):
+            return ComparableTuple((self.name, self.email, self.phone)) < ComparableTuple((other.name, other.email, other.phone))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.name, self.phone, self.email))
 
     def __repr__(self) -> str:
-        return f'<OrganizationalContact name={self.name}>'
+        return f'<OrganizationalContact name={self.name}, email={self.email}, phone={self.phone}>'
 
 
 class OrganizationalEntity:
@@ -925,8 +1006,8 @@ class OrganizationalEntity:
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
         self.name = name
-        self.url = set(urls or [])
-        self.contact = set(contacts or [])
+        self.url = SortedSet(urls or [])
+        self.contact = SortedSet(contacts or [])
 
     @property
     def name(self) -> Optional[str]:
@@ -954,7 +1035,7 @@ class OrganizationalEntity:
 
     @url.setter
     def url(self, urls: Iterable[XsUri]) -> None:
-        self._url = set(urls)
+        self._url = SortedSet(urls)
 
     @property
     def contact(self) -> Set[OrganizationalContact]:
@@ -968,7 +1049,7 @@ class OrganizationalEntity:
 
     @contact.setter
     def contact(self, contacts: Iterable[OrganizationalContact]) -> None:
-        self._contact = set(contacts)
+        self._contact = SortedSet(contacts)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, OrganizationalEntity):
@@ -998,8 +1079,8 @@ class Tool:
         self.vendor = vendor
         self.name = name
         self.version = version
-        self.hashes = set(hashes or [])
-        self.external_references = set(external_references or [])
+        self.hashes = SortedSet(hashes or [])
+        self.external_references = SortedSet(external_references or [])
 
     @property
     def vendor(self) -> Optional[str]:
@@ -1055,7 +1136,7 @@ class Tool:
 
     @hashes.setter
     def hashes(self, hashes: Iterable[HashType]) -> None:
-        self._hashes = set(hashes)
+        self._hashes = SortedSet(hashes)
 
     @property
     def external_references(self) -> Set[ExternalReference]:
@@ -1070,12 +1151,17 @@ class Tool:
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = set(external_references)
+        self._external_references = SortedSet(external_references)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Tool):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Tool):
+            return ComparableTuple((self.vendor, self.name, self.version)) < ComparableTuple((other.vendor, other.name, other.version))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.vendor, self.name, self.version, tuple(self.hashes), tuple(self.external_references)))
@@ -1150,6 +1236,11 @@ class IdentifiableAction:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, IdentifiableAction):
+            return ComparableTuple((self.timestamp, self.name, self.email)) < ComparableTuple((other.timestamp, other.name, other.email))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.timestamp, self.name, self.email))
 
@@ -1186,6 +1277,11 @@ class Copyright:
         if isinstance(other, Copyright):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Copyright):
+            return self.text < other.text
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash(self.text)

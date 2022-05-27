@@ -51,7 +51,7 @@ class BomMetaData:
         self.licenses = set(licenses or [])
         self.properties = set(properties or [])
 
-        if not self.tools:
+        if not tools:
             self.tools.add(ThisTool)
 
     @property

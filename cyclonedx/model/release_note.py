@@ -20,6 +20,8 @@
 from datetime import datetime
 from typing import Iterable, Optional, Set
 
+from sortedcontainers import SortedSet
+
 from ..model import Note, Property, XsUri
 from ..model.issue import IssueType
 
@@ -43,11 +45,11 @@ class ReleaseNotes:
         self.social_image = social_image
         self.description = description
         self.timestamp = timestamp
-        self.aliases = set(aliases or [])
-        self.tags = set(tags or [])
-        self.resolves = set(resolves or [])
-        self.notes = set(notes or [])
-        self.properties = set(properties or [])
+        self.aliases = SortedSet(aliases or [])
+        self.tags = SortedSet(tags or [])
+        self.resolves = SortedSet(resolves or [])
+        self.notes = SortedSet(notes or [])
+        self.properties = SortedSet(properties or [])
 
     @property
     def type(self) -> str:
@@ -142,7 +144,7 @@ class ReleaseNotes:
 
     @aliases.setter
     def aliases(self, aliases: Iterable[str]) -> None:
-        self._aliases = set(aliases)
+        self._aliases = SortedSet(aliases)
 
     @property
     def tags(self) -> Set[str]:
@@ -156,7 +158,7 @@ class ReleaseNotes:
 
     @tags.setter
     def tags(self, tags: Iterable[str]) -> None:
-        self._tags = set(tags)
+        self._tags = SortedSet(tags)
 
     @property
     def resolves(self) -> Set[IssueType]:
@@ -170,7 +172,7 @@ class ReleaseNotes:
 
     @resolves.setter
     def resolves(self, resolves: Iterable[IssueType]) -> None:
-        self._resolves = set(resolves)
+        self._resolves = SortedSet(resolves)
 
     @property
     def notes(self) -> Set[Note]:
@@ -185,7 +187,7 @@ class ReleaseNotes:
 
     @notes.setter
     def notes(self, notes: Iterable[Note]) -> None:
-        self._notes = set(notes)
+        self._notes = SortedSet(notes)
 
     @property
     def properties(self) -> Set[Property]:
@@ -201,7 +203,7 @@ class ReleaseNotes:
 
     @properties.setter
     def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = set(properties)
+        self._properties = SortedSet(properties)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ReleaseNotes):

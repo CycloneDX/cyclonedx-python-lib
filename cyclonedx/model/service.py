@@ -17,7 +17,17 @@
 
 from typing import Iterable, Optional, Set
 
-from . import DataClassification, ExternalReference, LicenseChoice, OrganizationalEntity, Property, XsUri
+from sortedcontainers import SortedSet
+
+from . import (
+    ComparableTuple,
+    DataClassification,
+    ExternalReference,
+    LicenseChoice,
+    OrganizationalEntity,
+    Property,
+    XsUri,
+)
 from .bom_ref import BomRef
 from .release_note import ReleaseNotes
 
@@ -53,15 +63,15 @@ class Service:
         self.name = name
         self.version = version
         self.description = description
-        self.endpoints = set(endpoints or [])
+        self.endpoints = SortedSet(endpoints or [])
         self.authenticated = authenticated
         self.x_trust_boundary = x_trust_boundary
-        self.data = set(data or [])
-        self.licenses = set(licenses or [])
-        self.external_references = set(external_references or [])
-        self.services = set(services or [])
+        self.data = SortedSet(data or [])
+        self.licenses = SortedSet(licenses or [])
+        self.external_references = SortedSet(external_references or [])
+        self.services = SortedSet(services or [])
         self.release_notes = release_notes
-        self.properties = set(properties or [])
+        self.properties = SortedSet(properties or [])
 
     @property
     def bom_ref(self) -> BomRef:
@@ -159,7 +169,7 @@ class Service:
 
     @endpoints.setter
     def endpoints(self, endpoints: Iterable[XsUri]) -> None:
-        self._endpoints = set(endpoints)
+        self._endpoints = SortedSet(endpoints)
 
     @property
     def authenticated(self) -> Optional[bool]:
@@ -207,7 +217,7 @@ class Service:
 
     @data.setter
     def data(self, data: Iterable[DataClassification]) -> None:
-        self._data = set(data)
+        self._data = SortedSet(data)
 
     @property
     def licenses(self) -> Set[LicenseChoice]:
@@ -221,7 +231,7 @@ class Service:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = set(licenses)
+        self._licenses = SortedSet(licenses)
 
     @property
     def external_references(self) -> Set[ExternalReference]:
@@ -235,7 +245,7 @@ class Service:
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = set(external_references)
+        self._external_references = SortedSet(external_references)
 
     @property
     def services(self) -> Set['Service']:
@@ -253,7 +263,7 @@ class Service:
 
     @services.setter
     def services(self, services: Iterable['Service']) -> None:
-        self._services = set(services)
+        self._services = SortedSet(services)
 
     @property
     def release_notes(self) -> Optional[ReleaseNotes]:
@@ -282,12 +292,17 @@ class Service:
 
     @properties.setter
     def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = set(properties)
+        self._properties = SortedSet(properties)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Service):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Service):
+            return ComparableTuple((self.group, self.name, self.version)) < ComparableTuple((other.group, other.name, other.version))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
@@ -297,4 +312,4 @@ class Service:
         ))
 
     def __repr__(self) -> str:
-        return f'<Service name={self.name}, version={self.version}, bom-ref={self.bom_ref}>'
+        return f'<Service group={self.group}, name={self.name}, version={self.version}, bom-ref={self.bom_ref}>'
