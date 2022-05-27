@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 
@@ -47,7 +47,7 @@ class BomRef:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, BomRef):
             return self.value < other.value
         return NotImplemented

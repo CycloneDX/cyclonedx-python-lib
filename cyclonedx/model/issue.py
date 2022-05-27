@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from enum import Enum
-from typing import Iterable, Optional, Set
+from typing import Any, Iterable, Optional, Set
 
 from sortedcontainers import SortedSet
 
@@ -86,7 +86,7 @@ class IssueTypeSource:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueTypeSource):
             return ComparableTuple((self.name, self.url)) < ComparableTuple((other.name, other.url))
         return NotImplemented
@@ -206,7 +206,7 @@ class IssueType:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
             return ComparableTuple((self.type, self.id, self.name, self.description, self.source)) < ComparableTuple((other.type, other.id, other.name, other.description, other.source))
         return NotImplemented

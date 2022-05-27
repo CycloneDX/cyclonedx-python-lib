@@ -21,7 +21,7 @@ import sys
 import warnings
 from datetime import datetime
 from enum import Enum
-from typing import Iterable, Optional, Set
+from typing import Any, Iterable, Optional, Set
 
 from sortedcontainers import SortedSet
 
@@ -64,7 +64,7 @@ class ComparableTuple(tuple):
     Allows comparison of tuples, allowing for None values.
     """
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         for s, o in zip(self, other):
             if s == o:
                 continue
@@ -78,7 +78,7 @@ class ComparableTuple(tuple):
                 return False
         return False
 
-    def __gt__(self, other: object) -> bool:
+    def __gt__(self, other: Any) -> bool:
         for s, o in zip(self, other):
             if s == o:
                 continue
@@ -356,7 +356,7 @@ class HashType:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, HashType):
             return ComparableTuple((self.alg, self.content)) < ComparableTuple((other.alg, other.content))
         return NotImplemented
@@ -419,7 +419,7 @@ class XsUri:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
             return self._uri < other._uri
         return NotImplemented
@@ -514,7 +514,7 @@ class ExternalReference:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, ExternalReference):
             return ComparableTuple((self._type, self._url, self._comment)) < ComparableTuple((other._type, other._url, other._comment))
         return NotImplemented
@@ -617,7 +617,7 @@ class License:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, License):
             return ComparableTuple((self.id, self.name)) < ComparableTuple((other.id, other.name))
         return NotImplemented
@@ -689,7 +689,7 @@ class LicenseChoice:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, LicenseChoice):
             return ComparableTuple((self.license, self.expression)) < ComparableTuple((other.license, other.expression))
         return NotImplemented
@@ -751,7 +751,7 @@ class Property:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Property):
             return ComparableTuple((self.name, self.value)) < ComparableTuple((other.name, other.value))
         return NotImplemented
@@ -829,7 +829,7 @@ class NoteText:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, NoteText):
             return ComparableTuple((self.content, self.content_type, self.encoding)) < ComparableTuple((other.content, other.content_type, other.encoding))
         return NotImplemented
@@ -901,7 +901,7 @@ class Note:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Note):
             return ComparableTuple((self.locale, self.text)) < ComparableTuple((other.locale, other.text))
         return NotImplemented
@@ -978,7 +978,7 @@ class OrganizationalContact:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, OrganizationalContact):
             return ComparableTuple((self.name, self.email, self.phone)) < ComparableTuple((other.name, other.email, other.phone))
         return NotImplemented
@@ -1158,7 +1158,7 @@ class Tool:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Tool):
             return ComparableTuple((self.vendor, self.name, self.version)) < ComparableTuple((other.vendor, other.name, other.version))
         return NotImplemented
@@ -1236,7 +1236,7 @@ class IdentifiableAction:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, IdentifiableAction):
             return ComparableTuple((self.timestamp, self.name, self.email)) < ComparableTuple((other.timestamp, other.name, other.email))
         return NotImplemented
@@ -1278,7 +1278,7 @@ class Copyright:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Copyright):
             return self.text < other.text
         return NotImplemented

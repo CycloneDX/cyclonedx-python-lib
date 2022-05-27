@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Iterable, Optional, Set
+from typing import Any, Iterable, Optional, Set
 
 from sortedcontainers import SortedSet
 
@@ -299,7 +299,7 @@ class Service:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Service):
             return ComparableTuple((self.group, self.name, self.version)) < ComparableTuple((other.group, other.name, other.version))
         return NotImplemented

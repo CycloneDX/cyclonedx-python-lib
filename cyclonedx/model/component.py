@@ -20,7 +20,7 @@
 import warnings
 from enum import Enum
 from os.path import exists
-from typing import Iterable, Optional, Set
+from typing import Any, Iterable, Optional, Set
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
@@ -145,7 +145,7 @@ class Commit:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
             return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
         return NotImplemented
@@ -296,7 +296,7 @@ class Diff:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Diff):
             return ComparableTuple((self.url, self.text)) < ComparableTuple((other.url, other.text))
         return NotImplemented
@@ -386,7 +386,7 @@ class Patch:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
             return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < ComparableTuple((other.type, other.diff, ComparableTuple(other.resolves)))
         return NotImplemented
@@ -1168,7 +1168,7 @@ class Component:
             return hash(other) == hash(self)
         return False
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
             return ComparableTuple((self.type, self.group, self.name, self.version)) < ComparableTuple((other.type, other.group, other.name, other.version))
         return NotImplemented
