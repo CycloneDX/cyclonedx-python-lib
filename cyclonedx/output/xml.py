@@ -373,7 +373,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return component_element
 
-    def _add_licenses_to_element(self, licenses: SortedSet[LicenseChoice], parent_element: ElementTree.Element) -> bool:
+    def _add_licenses_to_element(self, licenses: "SortedSet[LicenseChoice]", parent_element: ElementTree.Element) -> bool:
         license_output = False
         for license_ in licenses:
             if license_.license:
@@ -476,7 +476,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return patch_element
 
     @staticmethod
-    def _add_properties_element(properties: SortedSet[Property], parent_element: ElementTree.Element) -> None:
+    def _add_properties_element(properties: "SortedSet[Property]", parent_element: ElementTree.Element) -> None:
         properties_e = ElementTree.SubElement(parent_element, 'properties')
         for property_ in properties:
             ElementTree.SubElement(
@@ -754,7 +754,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return vulnerability_element
 
-    def _add_external_references_to_element(self, ext_refs: SortedSet[ExternalReference],
+    def _add_external_references_to_element(self, ext_refs: "SortedSet[ExternalReference]",
                                             element: ElementTree.Element) -> None:
         ext_refs_element = ElementTree.SubElement(element, 'externalReferences')
         for external_reference in ext_refs:
@@ -779,7 +779,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return at_element
 
     @staticmethod
-    def _add_hashes_to_element(hashes: SortedSet[HashType], element: ElementTree.Element) -> None:
+    def _add_hashes_to_element(hashes: "SortedSet[HashType]", element: ElementTree.Element) -> None:
         hashes_e = ElementTree.SubElement(element, 'hashes')
         for h in hashes:
             ElementTree.SubElement(
