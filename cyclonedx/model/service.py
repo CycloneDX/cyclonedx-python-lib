@@ -158,7 +158,7 @@ class Service:
         self._description = description
 
     @property
-    def endpoints(self) -> SortedSet[XsUri]:
+    def endpoints(self) -> "SortedSet[XsUri]":
         """
         A list of endpoints URI's this service provides.
 
@@ -206,7 +206,7 @@ class Service:
         self._x_trust_boundary = x_trust_boundary
 
     @property
-    def data(self) -> SortedSet[DataClassification]:
+    def data(self) -> "SortedSet[DataClassification]":
         """
         Specifies the data classification.
 
@@ -220,7 +220,7 @@ class Service:
         self._data = SortedSet(data)
 
     @property
-    def licenses(self) -> SortedSet[LicenseChoice]:
+    def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this Service is licensed.
 
@@ -234,7 +234,7 @@ class Service:
         self._licenses = SortedSet(licenses)
 
     @property
-    def external_references(self) -> SortedSet[ExternalReference]:
+    def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the Service.
 
@@ -248,7 +248,7 @@ class Service:
         self._external_references = SortedSet(external_references)
 
     @property
-    def services(self) -> SortedSet['Service']:
+    def services(self) -> "SortedSet['Service']":
         """
         A list of services included or deployed behind the parent service.
 
@@ -280,7 +280,7 @@ class Service:
         self._release_notes = release_notes
 
     @property
-    def properties(self) -> SortedSet[Property]:
+    def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.

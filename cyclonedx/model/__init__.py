@@ -505,7 +505,7 @@ class ExternalReference:
         self._type = type_
 
     @property
-    def hashes(self) -> SortedSet[HashType]:
+    def hashes(self) -> "SortedSet[HashType]":
         """
         The hashes of the external reference (if applicable).
 
@@ -1036,7 +1036,7 @@ class OrganizationalEntity:
         self._name = name
 
     @property
-    def url(self) -> SortedSet[XsUri]:
+    def url(self) -> "SortedSet[XsUri]":
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
 
@@ -1050,7 +1050,7 @@ class OrganizationalEntity:
         self._url = SortedSet(urls)
 
     @property
-    def contact(self) -> SortedSet[OrganizationalContact]:
+    def contact(self) -> "SortedSet[OrganizationalContact]":
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
 
@@ -1137,7 +1137,7 @@ class Tool:
         self._version = version
 
     @property
-    def hashes(self) -> SortedSet[HashType]:
+    def hashes(self) -> "SortedSet[HashType]":
         """
         The hashes of the tool (if applicable).
 
@@ -1151,7 +1151,7 @@ class Tool:
         self._hashes = SortedSet(hashes)
 
     @property
-    def external_references(self) -> SortedSet[ExternalReference]:
+    def external_references(self) -> "SortedSet[ExternalReference]":
         """
         External References provide a way to document systems, sites, and information that may be relevant but which
         are not included with the BOM.

@@ -188,7 +188,7 @@ class IssueType:
         self._source = source
 
     @property
-    def references(self) -> SortedSet[XsUri]:
+    def references(self) -> "SortedSet[XsUri]":
         """
         Any reference URLs related to this issue.
 

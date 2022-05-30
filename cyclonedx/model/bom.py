@@ -71,7 +71,7 @@ class BomMetaData:
         self._timestamp = timestamp
 
     @property
-    def tools(self) -> SortedSet[Tool]:
+    def tools(self) -> "SortedSet[Tool]":
         """
         Tools used to create this BOM.
 
@@ -85,7 +85,7 @@ class BomMetaData:
         self._tools = SortedSet(tools)
 
     @property
-    def authors(self) -> SortedSet[OrganizationalContact]:
+    def authors(self) -> "SortedSet[OrganizationalContact]":
         """
         The person(s) who created the BOM.
 
@@ -157,7 +157,7 @@ class BomMetaData:
         self._supplier = supplier
 
     @property
-    def licenses(self) -> SortedSet[LicenseChoice]:
+    def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this BOM is licensed.
 
@@ -171,7 +171,7 @@ class BomMetaData:
         self._licenses = SortedSet(licenses)
 
     @property
-    def properties(self) -> SortedSet[Property]:
+    def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
@@ -275,7 +275,7 @@ class Bom:
         self._metadata = metadata
 
     @property
-    def components(self) -> SortedSet[Component]:
+    def components(self) -> "SortedSet[Component]":
         """
         Get all the Components currently in this Bom.
 
@@ -329,7 +329,7 @@ class Bom:
         return component in self.components
 
     @property
-    def services(self) -> SortedSet[Service]:
+    def services(self) -> "SortedSet[Service]":
         """
         Get all the Services currently in this Bom.
 
@@ -343,7 +343,7 @@ class Bom:
         self._services = SortedSet(services)
 
     @property
-    def external_references(self) -> SortedSet[ExternalReference]:
+    def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
 

@@ -41,7 +41,7 @@ class Dependency:
         return self._ref
 
     @property
-    def depends_on(self) -> SortedSet[BomRef]:
+    def depends_on(self) -> "SortedSet[BomRef]":
         return self._depends_on
 
     @depends_on.setter
