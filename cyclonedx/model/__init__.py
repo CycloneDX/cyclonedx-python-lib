@@ -62,7 +62,7 @@ def sha1sum(filename: str) -> str:
 _T = TypeVar('_T')
 
 
-class ComparableTuple(Tuple[_T, ...]):
+class ComparableTuple(Tuple[Optional[_T], ...]):
     """
     Allows comparison of tuples, allowing for None values.
     """
