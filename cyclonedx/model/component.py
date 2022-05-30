@@ -762,8 +762,8 @@ class Component:
             if not licenses:
                 self.licenses = SortedSet([LicenseChoice(license_expression=license_str)])
 
-        self.__dependencies: SortedSet[BomRef] = SortedSet()
-        self.__vulnerabilites: SortedSet[Vulnerability] = SortedSet()
+        self.__dependencies: "SortedSet[BomRef]" = SortedSet()
+        self.__vulnerabilites: "SortedSet[Vulnerability]" = SortedSet()
 
     @property
     def type(self) -> ComponentType:
