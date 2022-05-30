@@ -373,7 +373,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
         return component_element
 
-    def _add_licenses_to_element(self, licenses: "SortedSet[LicenseChoice]", parent_element: ElementTree.Element) -> bool:
+    def _add_licenses_to_element(self, licenses: "SortedSet[LicenseChoice]",
+                                 parent_element: ElementTree.Element) -> bool:
         license_output = False
         for license_ in licenses:
             if license_.license:
