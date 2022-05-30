@@ -170,8 +170,8 @@ class TestModelLicense(TestCase):
 class TestModelLicenseChoice(TestCase):
 
     def test_sort(self) -> None:
-        license_a = License(spdx_license_id='Apache-2.0'),
-        license_b = License(spdx_license_id='MIT'),
+        license_a = License(spdx_license_id='Apache-2.0')
+        license_b = License(spdx_license_id='MIT')
 
         # expected sort order: ([license], [expression])
         expected_order = [1, 0, 3, 2]
@@ -553,7 +553,7 @@ class TestModelProperty(TestCase):
             Property(name='a', value='a'),
             Property(name='b', value='b'),
             Property(name='a', value='c'),
-            Property(name='a', value=None),
+            Property(name='a', value='d'),
             Property(name='b', value='a'),
             Property(name='a', value='b'),
         ]
