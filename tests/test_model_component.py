@@ -37,6 +37,7 @@ from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
     AttachedText,
     Copyright,
+    Encoding,
     ExternalReference,
     ExternalReferenceType,
     IdentifiableAction,
@@ -364,19 +365,39 @@ class TestModelDiff(TestCase):
         self.assertFalse(diff_1 == diff_2)
 
     def test_sort(self) -> None:
+        text_a = AttachedText(content='a')
+        text_b = AttachedText(content='b')
+
         # expected sort order: ([url], [text])
         expected_order = [1, 0, 5, 2, 3, 4]
         diffs = [
-            Diff(url=XsUri('a'), text='b'),
-            Diff(url=XsUri('a'), text='a'),
-            Diff(url=XsUri('b'), text='a'),
-            Diff(text='a'),
-            Diff(text='b'),
+            Diff(url=XsUri('a'), text=text_b),
+            Diff(url=XsUri('a'), text=text_a),
+            Diff(url=XsUri('b'), text=text_a),
+            Diff(text=text_a),
+            Diff(text=text_b),
             Diff(url=XsUri('a')),
         ]
         sorted_diffs = sorted(diffs)
         expected_diffs = reorder(diffs, expected_order)
         self.assertListEqual(sorted_diffs, expected_diffs)
+
+
+class TestModelAttachedText(TestCase):
+
+    def test_sort(self) -> None:
+        # expected sort order: (content_type, content, encoding)
+        expected_order = [0, 4, 2, 1, 3]
+        text = [
+            AttachedText(content='a', content_type='a', encoding=Encoding.BASE_64),
+            AttachedText(content='a', content_type='b', encoding=Encoding.BASE_64),
+            AttachedText(content='b', content_type='a', encoding=Encoding.BASE_64),
+            AttachedText(content='b', content_type='b', encoding=Encoding.BASE_64),
+            AttachedText(content='a', content_type='a'),
+        ]
+        sorted_text = sorted(text)
+        expected_text = reorder(text, expected_order)
+        self.assertListEqual(sorted_text, expected_text)
 
 
 class TestModelPatch(TestCase):
@@ -425,8 +446,8 @@ class TestModelPatch(TestCase):
         self.assertFalse(p1 == p2)
 
     def test_sort(self) -> None:
-        diff_a = Diff(text='a')
-        diff_b = Diff(text='b')
+        diff_a = Diff(text=AttachedText(content='a'))
+        diff_b = Diff(text=AttachedText(content='b'))
 
         resolves_a = [
             IssueType(classification=IssueClassification.DEFECT),

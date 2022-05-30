@@ -21,7 +21,7 @@ import sys
 import warnings
 from datetime import datetime
 from enum import Enum
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, Tuple, TypeVar
 
 from sortedcontainers import SortedSet
 
@@ -59,7 +59,10 @@ def sha1sum(filename: str) -> str:
     return h.hexdigest()
 
 
-class ComparableTuple(tuple):
+_T = TypeVar('_T')
+
+
+class ComparableTuple(Tuple[_T, ...]):
     """
     Allows comparison of tuples, allowing for None values.
     """
@@ -243,6 +246,12 @@ class AttachedText:
         if isinstance(other, AttachedText):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, AttachedText):
+            return ComparableTuple((self.content_type, self.content, self.encoding)) < \
+                ComparableTuple((other.content_type, other.content, other.encoding))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.content, self.content_type, self.encoding))
