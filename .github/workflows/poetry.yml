@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e flake8
+        run: poetry run tox -e flake8 -s false
 
   static-code-analysis:
     name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
@@ -75,7 +75,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e mypy-${{ matrix.toxenv-factor }}
+        run: poetry run tox -e mypy-${{ matrix.toxenv-factor }} -s false
 
   build-and-test:
     name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factor }})
@@ -98,7 +98,7 @@ jobs:
           - # test with the lowest dependencies
             os: 'ubuntu-latest'
             python-version: '3.6'
-            toxenv: 'lowest'
+            toxenv-factor: 'lowest'
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
@@ -131,7 +131,7 @@ jobs:
       - name: Generate coverage reports
         run: >
           poetry run coverage report &&
-          poetry run coverage xml -o ${{ env.REPORTS_DIR }}/coverage-${{ matrix.os }}-${{ matrix.python-version }}.xml &&
+          poetry run coverage xml -o ${{ env.REPORTS_DIR }}/coverage-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.toxenv-factor }}.xml &&
           poetry run coverage html -d ${{ env.REPORTS_DIR }}
       - name: Artifact reports
         if: ${{ ! cancelled() }}

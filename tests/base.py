@@ -37,10 +37,10 @@ from cyclonedx.output import SchemaVersion
 if sys.version_info >= (3, 7):
     from jsonschema import ValidationError, validate as json_validate
 
-if sys.version_info >= (3, 8, 0):
+if sys.version_info >= (3, 8):
     from importlib.metadata import version
 else:
-    from importlib_metadata import version  # type: ignore
+    from importlib_metadata import version
 
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
 cyclonedx_lib_version: str = version(cyclonedx_lib_name)
