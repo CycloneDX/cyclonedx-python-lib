@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v2.5.1 (2022-06-10)
+### Fix
+* Add missing `Vulnerability` comparator for sorting ([#246](https://github.com/CycloneDX/cyclonedx-python-lib/issues/246)) ([`c3f3d0d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c3f3d0d105f0dcf991175040b6d6c2b6e7e25d8f))
+
 ## v2.5.0 (2022-06-10)
 ### Feature
 * Use `SortedSet` in model to improve reproducibility - this will provide predictable ordering of various items in generated CycloneDX documents - thanks to @RodneyRichardson ([`8a1c404`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8a1c4043f502292b32c4ab36a8618cf3f67ac8df))
