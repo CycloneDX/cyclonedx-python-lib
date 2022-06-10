@@ -47,6 +47,7 @@ packageurl-python = ">= 0.9"
 importlib-metadata = { version = ">= 3.4", python = "< 3.8" }
 setuptools = ">= 47.0.0"
 toml = "^0.10.0"
+sortedcontainers = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.25.0"

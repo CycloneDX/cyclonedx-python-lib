@@ -23,7 +23,8 @@ from data import get_issue_1, get_issue_2
 
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import XsUri
-from cyclonedx.model.issue import IssueTypeSource
+from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
+from tests.data import reorder
 
 
 class TestModelIssueType(TestCase):
@@ -41,6 +42,25 @@ class TestModelIssueType(TestCase):
         self.assertNotEqual(id(i_1), id(i_2))
         self.assertNotEqual(hash(i_1), hash(i_2))
         self.assertFalse(i_1 == i_2)
+
+    def test_sort(self) -> None:
+        source_a = IssueTypeSource(name='a')
+        source_b = IssueTypeSource(name='b')
+
+        # expected sort order: (type/classification, id, name, description, source)
+        expected_order = [6, 5, 0, 1, 2, 3, 4]
+        issues = [
+            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a', description='a', source=source_a),
+            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a', description='a', source=source_b),
+            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a', description='a'),
+            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a'),
+            IssueType(classification=IssueClassification.SECURITY, id_='a'),
+            IssueType(classification=IssueClassification.DEFECT, id_='a', name='a', description='a', source=source_b),
+            IssueType(classification=IssueClassification.DEFECT, id_='a', name='a', description='a', source=source_a),
+        ]
+        sorted_issues = sorted(issues)
+        expected_issues = reorder(issues, expected_order)
+        self.assertListEqual(sorted_issues, expected_issues)
 
 
 class TestModelIssueTypeSource(TestCase):
@@ -62,3 +82,18 @@ class TestModelIssueTypeSource(TestCase):
         self.assertNotEqual(id(its_1), id(its_2))
         self.assertNotEqual(hash(its_1), hash(its_2))
         self.assertFalse(its_1 == its_2)
+
+    def test_sort(self) -> None:
+        # expected sort order: ([name], [url])
+        expected_order = [0, 1, 3, 2, 5, 4]
+        sources = [
+            IssueTypeSource(name='a', url=XsUri('a')),
+            IssueTypeSource(name='a', url=XsUri('b')),
+            IssueTypeSource(name='b'),
+            IssueTypeSource(name='a'),
+            IssueTypeSource(url=XsUri('b')),
+            IssueTypeSource(url=XsUri('a')),
+        ]
+        sorted_sources = sorted(sources)
+        expected_sources = reorder(sources, expected_order)
+        self.assertListEqual(sorted_sources, expected_sources)

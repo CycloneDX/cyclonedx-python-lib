@@ -17,7 +17,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Iterable, Optional, Set
+from typing import Iterable, Optional
+
+from sortedcontainers import SortedSet
 
 from .bom_ref import BomRef
 
@@ -32,16 +34,16 @@ class Dependency:
 
     def __init__(self, *, ref: BomRef, depends_on: Optional[Iterable[BomRef]] = None) -> None:
         self._ref = ref
-        self.depends_on = set(depends_on or [])
+        self.depends_on = SortedSet(depends_on or [])
 
     @property
     def ref(self) -> BomRef:
         return self._ref
 
     @property
-    def depends_on(self) -> Set[BomRef]:
+    def depends_on(self) -> "SortedSet[BomRef]":
         return self._depends_on
 
     @depends_on.setter
     def depends_on(self, depends_on: Iterable[BomRef]) -> None:
-        self._depends_on = set(depends_on)
+        self._depends_on = SortedSet(depends_on)

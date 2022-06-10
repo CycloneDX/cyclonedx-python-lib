@@ -15,9 +15,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Iterable, Optional, Set
+from typing import Any, Iterable, Optional
 
-from . import DataClassification, ExternalReference, LicenseChoice, OrganizationalEntity, Property, XsUri
+from sortedcontainers import SortedSet
+
+from . import (
+    ComparableTuple,
+    DataClassification,
+    ExternalReference,
+    LicenseChoice,
+    OrganizationalEntity,
+    Property,
+    XsUri,
+)
 from .bom_ref import BomRef
 from .release_note import ReleaseNotes
 
@@ -53,15 +63,15 @@ class Service:
         self.name = name
         self.version = version
         self.description = description
-        self.endpoints = set(endpoints or [])
+        self.endpoints = SortedSet(endpoints or [])
         self.authenticated = authenticated
         self.x_trust_boundary = x_trust_boundary
-        self.data = set(data or [])
-        self.licenses = set(licenses or [])
-        self.external_references = set(external_references or [])
-        self.services = set(services or [])
+        self.data = SortedSet(data or [])
+        self.licenses = SortedSet(licenses or [])
+        self.external_references = SortedSet(external_references or [])
+        self.services = SortedSet(services or [])
         self.release_notes = release_notes
-        self.properties = set(properties or [])
+        self.properties = SortedSet(properties or [])
 
     @property
     def bom_ref(self) -> BomRef:
@@ -148,7 +158,7 @@ class Service:
         self._description = description
 
     @property
-    def endpoints(self) -> Set[XsUri]:
+    def endpoints(self) -> "SortedSet[XsUri]":
         """
         A list of endpoints URI's this service provides.
 
@@ -159,7 +169,7 @@ class Service:
 
     @endpoints.setter
     def endpoints(self, endpoints: Iterable[XsUri]) -> None:
-        self._endpoints = set(endpoints)
+        self._endpoints = SortedSet(endpoints)
 
     @property
     def authenticated(self) -> Optional[bool]:
@@ -196,7 +206,7 @@ class Service:
         self._x_trust_boundary = x_trust_boundary
 
     @property
-    def data(self) -> Set[DataClassification]:
+    def data(self) -> "SortedSet[DataClassification]":
         """
         Specifies the data classification.
 
@@ -207,10 +217,10 @@ class Service:
 
     @data.setter
     def data(self, data: Iterable[DataClassification]) -> None:
-        self._data = set(data)
+        self._data = SortedSet(data)
 
     @property
-    def licenses(self) -> Set[LicenseChoice]:
+    def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this Service is licensed.
 
@@ -221,10 +231,10 @@ class Service:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = set(licenses)
+        self._licenses = SortedSet(licenses)
 
     @property
-    def external_references(self) -> Set[ExternalReference]:
+    def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the Service.
 
@@ -235,10 +245,10 @@ class Service:
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = set(external_references)
+        self._external_references = SortedSet(external_references)
 
     @property
-    def services(self) -> Set['Service']:
+    def services(self) -> "SortedSet['Service']":
         """
         A list of services included or deployed behind the parent service.
 
@@ -253,7 +263,7 @@ class Service:
 
     @services.setter
     def services(self, services: Iterable['Service']) -> None:
-        self._services = set(services)
+        self._services = SortedSet(services)
 
     @property
     def release_notes(self) -> Optional[ReleaseNotes]:
@@ -270,7 +280,7 @@ class Service:
         self._release_notes = release_notes
 
     @property
-    def properties(self) -> Set[Property]:
+    def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
@@ -282,12 +292,18 @@ class Service:
 
     @properties.setter
     def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = set(properties)
+        self._properties = SortedSet(properties)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Service):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Service):
+            return ComparableTuple((self.group, self.name, self.version)) < \
+                ComparableTuple((other.group, other.name, other.version))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
@@ -297,4 +313,4 @@ class Service:
         ))
 
     def __repr__(self) -> str:
-        return f'<Service name={self.name}, version={self.version}, bom-ref={self.bom_ref}>'
+        return f'<Service group={self.group}, name={self.name}, version={self.version}, bom-ref={self.bom_ref}>'

@@ -37,6 +37,7 @@ from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
     AttachedText,
     Copyright,
+    Encoding,
     ExternalReference,
     ExternalReferenceType,
     IdentifiableAction,
@@ -53,6 +54,8 @@ from cyclonedx.model.component import (
     PatchClassification,
     Pedigree,
 )
+from cyclonedx.model.issue import IssueClassification, IssueType
+from tests.data import reorder
 
 
 class TestModelCommit(TestCase):
@@ -75,6 +78,31 @@ class TestModelCommit(TestCase):
         c2 = Commit(uid='a-random-uid', author=ia_author, committer=ia_comitter, message="A commit message")
         self.assertNotEqual(hash(c1), hash(c2))
         self.assertFalse(c1 == c2)
+
+    def test_sort(self) -> None:
+        url_a = XsUri('a')
+        url_b = XsUri('b')
+        action_a = IdentifiableAction(name='a')
+        action_b = IdentifiableAction(name='b')
+
+        # expected sort order: ([uid], [url], [author], [committer], [message])
+        expected_order = [0, 1, 6, 2, 7, 3, 8, 4, 9, 5, 10]
+        commits = [
+            Commit(uid='a', url=url_a, author=action_a, committer=action_a, message='a'),
+            Commit(uid='a', url=url_a, author=action_a, committer=action_a, message='b'),
+            Commit(uid='a', url=url_a, author=action_a, committer=action_b, message='a'),
+            Commit(uid='a', url=url_a, author=action_b, committer=action_a, message='a'),
+            Commit(uid='a', url=url_b, author=action_a, committer=action_a, message='a'),
+            Commit(uid='b', url=url_a, author=action_a, committer=action_a, message='a'),
+            Commit(uid='a', url=url_a, author=action_a, committer=action_a),
+            Commit(uid='a', url=url_a, author=action_a),
+            Commit(uid='a', url=url_a),
+            Commit(uid='a'),
+            Commit(message='a'),
+        ]
+        sorted_commits = sorted(commits)
+        expected_commits = reorder(commits, expected_order)
+        self.assertListEqual(sorted_commits, expected_commits)
 
 
 class TestModelComponent(TestCase):
@@ -274,6 +302,22 @@ class TestModelComponent(TestCase):
         self.assertTrue(get_component_setuptools_simple_no_version().bom_ref in c.dependencies)
         self.assertTrue(get_component_toml_with_hashes_with_references().bom_ref in c.dependencies)
 
+    def test_sort(self) -> None:
+        # expected sort order: (type, [group], name, [version])
+        expected_order = [6, 4, 5, 3, 2, 1, 0]
+        components = [
+            Component(name='component-c', component_type=ComponentType.LIBRARY),
+            Component(name='component-a', component_type=ComponentType.LIBRARY),
+            Component(name='component-b', component_type=ComponentType.LIBRARY, group='group-2'),
+            Component(name='component-a', component_type=ComponentType.LIBRARY, group='group-2'),
+            Component(name='component-a', component_type=ComponentType.FILE),
+            Component(name='component-b', component_type=ComponentType.FILE),
+            Component(name='component-a', component_type=ComponentType.FILE, version="1.0.0"),
+        ]
+        sorted_components = sorted(components)
+        expected_components = reorder(components, expected_order)
+        self.assertListEqual(sorted_components, expected_components)
+
 
 class TestModelComponentEvidence(TestCase):
 
@@ -320,6 +364,41 @@ class TestModelDiff(TestCase):
         self.assertNotEqual(hash(diff_1), hash(diff_2))
         self.assertFalse(diff_1 == diff_2)
 
+    def test_sort(self) -> None:
+        text_a = AttachedText(content='a')
+        text_b = AttachedText(content='b')
+
+        # expected sort order: ([url], [text])
+        expected_order = [1, 0, 5, 2, 3, 4]
+        diffs = [
+            Diff(url=XsUri('a'), text=text_b),
+            Diff(url=XsUri('a'), text=text_a),
+            Diff(url=XsUri('b'), text=text_a),
+            Diff(text=text_a),
+            Diff(text=text_b),
+            Diff(url=XsUri('a')),
+        ]
+        sorted_diffs = sorted(diffs)
+        expected_diffs = reorder(diffs, expected_order)
+        self.assertListEqual(sorted_diffs, expected_diffs)
+
+
+class TestModelAttachedText(TestCase):
+
+    def test_sort(self) -> None:
+        # expected sort order: (content_type, content, encoding)
+        expected_order = [0, 4, 2, 1, 3]
+        text = [
+            AttachedText(content='a', content_type='a', encoding=Encoding.BASE_64),
+            AttachedText(content='a', content_type='b', encoding=Encoding.BASE_64),
+            AttachedText(content='b', content_type='a', encoding=Encoding.BASE_64),
+            AttachedText(content='b', content_type='b', encoding=Encoding.BASE_64),
+            AttachedText(content='a', content_type='a'),
+        ]
+        sorted_text = sorted(text)
+        expected_text = reorder(text, expected_order)
+        self.assertListEqual(sorted_text, expected_text)
+
 
 class TestModelPatch(TestCase):
 
@@ -365,6 +444,29 @@ class TestModelPatch(TestCase):
         self.assertNotEqual(hash(p1), hash(p2))
         self.assertNotEqual(id(p1), id(p2))
         self.assertFalse(p1 == p2)
+
+    def test_sort(self) -> None:
+        diff_a = Diff(text=AttachedText(content='a'))
+        diff_b = Diff(text=AttachedText(content='b'))
+
+        resolves_a = [
+            IssueType(classification=IssueClassification.DEFECT),
+            IssueType(classification=IssueClassification.SECURITY)
+        ]
+
+        # expected sort order: (type, [diff], sorted(resolves))
+        expected_order = [5, 4, 2, 3, 1, 0]
+        patches = [
+            Patch(type_=PatchClassification.MONKEY),
+            Patch(type_=PatchClassification.MONKEY, diff=diff_b),
+            Patch(type_=PatchClassification.MONKEY, diff=diff_a),
+            Patch(type_=PatchClassification.MONKEY, diff=diff_a, resolves=resolves_a),
+            Patch(type_=PatchClassification.BACKPORT),
+            Patch(type_=PatchClassification.BACKPORT, diff=diff_a),
+        ]
+        sorted_patches = sorted(patches)
+        expected_patches = reorder(patches, expected_order)
+        self.assertListEqual(sorted_patches, expected_patches)
 
 
 class TestModelPedigree(TestCase):

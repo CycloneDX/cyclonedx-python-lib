@@ -20,14 +20,16 @@
 import warnings
 from enum import Enum
 from os.path import exists
-from typing import Iterable, Optional, Set
+from typing import Any, Iterable, Optional
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
+from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
 from . import (
     AttachedText,
+    ComparableTuple,
     Copyright,
     ExternalReference,
     HashAlgorithm,
@@ -143,6 +145,12 @@ class Commit:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Commit):
+            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < \
+                ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.uid, self.url, self.author, self.committer, self.message))
 
@@ -167,11 +175,11 @@ class ComponentEvidence:
                 'At least one of `licenses` or `copyright_` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.licenses = set(licenses or [])
-        self.copyright = set(copyright_ or [])
+        self.licenses = SortedSet(licenses or [])
+        self.copyright = SortedSet(copyright_ or [])
 
     @property
-    def licenses(self) -> Set[LicenseChoice]:
+    def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         Optional list of licenses obtained during analysis.
 
@@ -182,10 +190,10 @@ class ComponentEvidence:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = set(licenses)
+        self._licenses = SortedSet(licenses)
 
     @property
-    def copyright(self) -> Set[Copyright]:
+    def copyright(self) -> "SortedSet[Copyright]":
         """
         Optional list of copyright statements.
 
@@ -196,7 +204,7 @@ class ComponentEvidence:
 
     @copyright.setter
     def copyright(self, copyright_: Iterable[Copyright]) -> None:
-        self._copyright = set(copyright_)
+        self._copyright = SortedSet(copyright_)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ComponentEvidence):
@@ -210,7 +218,7 @@ class ComponentEvidence:
         return f'<ComponentEvidence id={id(self)}>'
 
 
-class ComponentScope(Enum):
+class ComponentScope(str, Enum):
     """
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
 
@@ -222,7 +230,7 @@ class ComponentScope(Enum):
     EXCLUDED = 'excluded'
 
 
-class ComponentType(Enum):
+class ComponentType(str, Enum):
     """
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
 
@@ -289,6 +297,11 @@ class Diff:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Diff):
+            return ComparableTuple((self.url, self.text)) < ComparableTuple((other.url, other.text))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.text, self.url))
 
@@ -296,7 +309,7 @@ class Diff:
         return f'<Diff url={self.url}>'
 
 
-class PatchClassification(Enum):
+class PatchClassification(str, Enum):
     """
     Enum object that defines the permissible `patchClassification`s.
 
@@ -321,7 +334,7 @@ class Patch:
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
         self.type = type_
         self.diff = diff
-        self.resolves = set(resolves or [])
+        self.resolves = SortedSet(resolves or [])
 
     @property
     def type(self) -> PatchClassification:
@@ -356,7 +369,7 @@ class Patch:
         self._diff = diff
 
     @property
-    def resolves(self) -> Set[IssueType]:
+    def resolves(self) -> "SortedSet[IssueType]":
         """
         Optional list of issues resolved by this patch.
 
@@ -367,12 +380,18 @@ class Patch:
 
     @resolves.setter
     def resolves(self, resolves: Iterable[IssueType]) -> None:
-        self._resolves = set(resolves)
+        self._resolves = SortedSet(resolves)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Patch):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Patch):
+            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < \
+                ComparableTuple((other.type, other.diff, ComparableTuple(other.resolves)))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.type, self.diff, tuple(self.resolves)))
@@ -404,15 +423,15 @@ class Pedigree:
                 'provided for `Pedigree`'
             )
 
-        self.ancestors = set(ancestors or [])
-        self.descendants = set(descendants or [])
-        self.variants = set(variants or [])
-        self.commits = set(commits or [])
-        self.patches = set(patches or [])
+        self.ancestors = SortedSet(ancestors or [])
+        self.descendants = SortedSet(descendants or [])
+        self.variants = SortedSet(variants or [])
+        self.commits = SortedSet(commits or [])
+        self.patches = SortedSet(patches or [])
         self.notes = notes
 
     @property
-    def ancestors(self) -> Set['Component']:
+    def ancestors(self) -> "SortedSet['Component']":
         """
         Describes zero or more components in which a component is derived from. This is commonly used to describe forks
         from existing projects where the forked version contains a ancestor node containing the original component it
@@ -429,10 +448,10 @@ class Pedigree:
 
     @ancestors.setter
     def ancestors(self, ancestors: Iterable['Component']) -> None:
-        self._ancestors = set(ancestors)
+        self._ancestors = SortedSet(ancestors)
 
     @property
-    def descendants(self) -> Set['Component']:
+    def descendants(self) -> "SortedSet['Component']":
         """
         Descendants are the exact opposite of ancestors. This provides a way to document all forks (and their forks) of
         an original or root component.
@@ -444,10 +463,10 @@ class Pedigree:
 
     @descendants.setter
     def descendants(self, descendants: Iterable['Component']) -> None:
-        self._descendants = set(descendants)
+        self._descendants = SortedSet(descendants)
 
     @property
-    def variants(self) -> Set['Component']:
+    def variants(self) -> "SortedSet['Component']":
         """
         Variants describe relations where the relationship between the components are not known. For example, if
         Component A contains nearly identical code to Component B. They are both related, but it is unclear if one is
@@ -460,10 +479,10 @@ class Pedigree:
 
     @variants.setter
     def variants(self, variants: Iterable['Component']) -> None:
-        self._variants = set(variants)
+        self._variants = SortedSet(variants)
 
     @property
-    def commits(self) -> Set[Commit]:
+    def commits(self) -> "SortedSet[Commit]":
         """
         A list of zero or more commits which provide a trail describing how the component deviates from an ancestor,
         descendant, or variant.
@@ -475,10 +494,10 @@ class Pedigree:
 
     @commits.setter
     def commits(self, commits: Iterable[Commit]) -> None:
-        self._commits = set(commits)
+        self._commits = SortedSet(commits)
 
     @property
-    def patches(self) -> Set[Patch]:
+    def patches(self) -> "SortedSet[Patch]":
         """
         A list of zero or more patches describing how the component deviates from an ancestor, descendant, or variant.
         Patches may be complimentary to commits or may be used in place of commits.
@@ -490,7 +509,7 @@ class Pedigree:
 
     @patches.setter
     def patches(self, patches: Iterable[Patch]) -> None:
-        self._patches = set(patches)
+        self._patches = SortedSet(patches)
 
     @property
     def notes(self) -> Optional[str]:
@@ -713,16 +732,16 @@ class Component:
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = set(hashes or [])
-        self.licenses = set(licenses or [])
+        self.hashes = SortedSet(hashes or [])
+        self.licenses = SortedSet(licenses or [])
         self.copyright = copyright_
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
         self.pedigree = pedigree
-        self.external_references = set(external_references or [])
-        self.properties = set(properties or [])
-        self.components = set(components or [])
+        self.external_references = SortedSet(external_references or [])
+        self.properties = SortedSet(properties or [])
+        self.components = SortedSet(components or [])
         self.evidence = evidence
         self.release_notes = release_notes
 
@@ -741,10 +760,10 @@ class Component:
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = {LicenseChoice(license_expression=license_str)}
+                self.licenses = SortedSet([LicenseChoice(license_expression=license_str)])
 
-        self.__dependencies: Set[BomRef] = set()
-        self.__vulnerabilites: Set[Vulnerability] = set()
+        self.__dependencies: "SortedSet[BomRef]" = SortedSet()
+        self.__vulnerabilites: "SortedSet[Vulnerability]" = SortedSet()
 
     @property
     def type(self) -> ComponentType:
@@ -918,7 +937,7 @@ class Component:
         self._scope = scope
 
     @property
-    def hashes(self) -> Set[HashType]:
+    def hashes(self) -> "SortedSet[HashType]":
         """
         Optional list of hashes that help specify the integrity of this Component.
 
@@ -929,10 +948,10 @@ class Component:
 
     @hashes.setter
     def hashes(self, hashes: Iterable[HashType]) -> None:
-        self._hashes = set(hashes)
+        self._hashes = SortedSet(hashes)
 
     @property
-    def licenses(self) -> Set[LicenseChoice]:
+    def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this Component is licensed.
 
@@ -943,7 +962,7 @@ class Component:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = set(licenses)
+        self._licenses = SortedSet(licenses)
 
     @property
     def copyright(self) -> Optional[str]:
@@ -1022,7 +1041,7 @@ class Component:
         self._pedigree = pedigree
 
     @property
-    def external_references(self) -> Set[ExternalReference]:
+    def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the component or to the project the component
         describes.
@@ -1034,10 +1053,10 @@ class Component:
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = set(external_references)
+        self._external_references = SortedSet(external_references)
 
     @property
-    def properties(self) -> Set[Property]:
+    def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
@@ -1049,10 +1068,10 @@ class Component:
 
     @properties.setter
     def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = set(properties)
+        self._properties = SortedSet(properties)
 
     @property
-    def components(self) -> Set['Component']:
+    def components(self) -> "SortedSet['Component']":
         """
         A list of software and hardware components included in the parent component. This is not a dependency tree. It
         provides a way to specify a hierarchical representation of component assemblies, similar to system -> subsystem
@@ -1065,7 +1084,7 @@ class Component:
 
     @components.setter
     def components(self, components: Iterable['Component']) -> None:
-        self._components = set(components)
+        self._components = SortedSet(components)
 
     @property
     def evidence(self) -> Optional[ComponentEvidence]:
@@ -1096,7 +1115,7 @@ class Component:
         self._release_notes = release_notes
 
     @property
-    def dependencies(self) -> Set[BomRef]:
+    def dependencies(self) -> "SortedSet[BomRef]":
         """
         Set of `BomRef` that this Component depends on.
 
@@ -1107,7 +1126,7 @@ class Component:
 
     @dependencies.setter
     def dependencies(self, dependencies: Iterable[BomRef]) -> None:
-        self.__dependencies = set(dependencies)
+        self.__dependencies = SortedSet(dependencies)
 
     def add_vulnerability(self, vulnerability: Vulnerability) -> None:
         """
@@ -1122,7 +1141,7 @@ class Component:
         """
         self.__vulnerabilites.add(vulnerability)
 
-    def get_vulnerabilities(self) -> Set[Vulnerability]:
+    def get_vulnerabilities(self) -> "SortedSet[Vulnerability]":
         """
         Get all the Vulnerabilities for this Component.
 
@@ -1151,6 +1170,12 @@ class Component:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Component):
+            return ComparableTuple((self.type, self.group, self.name, self.version)) < \
+                ComparableTuple((other.type, other.group, other.name, other.version))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((
             self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
@@ -1160,7 +1185,7 @@ class Component:
         ))
 
     def __repr__(self) -> str:
-        return f'<Component group={self.group}, name={self.name}, version={self.version}>'
+        return f'<Component group={self.group}, name={self.name}, version={self.version}, type={self.type}>'
 
     # Deprecated methods
     def get_namespace(self) -> Optional[str]:

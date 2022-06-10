@@ -20,7 +20,7 @@
 import base64
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional
+from typing import List, Optional, TypeVar
 
 from packageurl import PackageURL
 
@@ -345,7 +345,9 @@ def get_component_setuptools_simple(bom_ref: Optional[str] = None) -> Component:
         bom_ref=bom_ref or 'pkg:pypi/setuptools@50.3.2?extension=tar.gz',
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-        ), license_str='MIT License', author='Test Author'
+        ),
+        licenses=[LicenseChoice(license_expression='MIT License')],
+        author='Test Author'
     )
 
 
@@ -354,7 +356,9 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         name='setuptools', bom_ref=bom_ref or 'pkg:pypi/setuptools?extension=tar.gz',
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
-        ), license_str='MIT License', author='Test Author'
+        ),
+        licenses=[LicenseChoice(license_expression='MIT License')],
+        author='Test Author'
     )
 
 
@@ -524,3 +528,16 @@ def get_vulnerability_source_nvd() -> VulnerabilitySource:
 
 def get_vulnerability_source_owasp() -> VulnerabilitySource:
     return VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
+
+
+T = TypeVar('T')
+
+
+def reorder(items: List[T], indexes: List[int]) -> List[T]:
+    '''
+    Return list of items in the order indicated by indexes.
+    '''
+    reordered_items = []
+    for i in range(len(items)):
+        reordered_items.append(items[indexes[i]])
+    return reordered_items

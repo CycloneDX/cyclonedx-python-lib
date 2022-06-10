@@ -16,13 +16,15 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from enum import Enum
-from typing import Iterable, Optional, Set
+from typing import Any, Iterable, Optional
+
+from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
-from . import XsUri
+from . import ComparableTuple, XsUri
 
 
-class IssueClassification(Enum):
+class IssueClassification(str, Enum):
     """
     This is our internal representation of the enum `issueClassification`.
 
@@ -84,6 +86,11 @@ class IssueTypeSource:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, IssueTypeSource):
+            return ComparableTuple((self.name, self.url)) < ComparableTuple((other.name, other.url))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.name, self.url))
 
@@ -108,7 +115,7 @@ class IssueType:
         self.name = name
         self.description = description
         self.source = source
-        self.references = set(references or [])
+        self.references = SortedSet(references or [])
 
     @property
     def type(self) -> IssueClassification:
@@ -181,7 +188,7 @@ class IssueType:
         self._source = source
 
     @property
-    def references(self) -> Set[XsUri]:
+    def references(self) -> "SortedSet[XsUri]":
         """
         Any reference URLs related to this issue.
 
@@ -192,12 +199,18 @@ class IssueType:
 
     @references.setter
     def references(self, references: Iterable[XsUri]) -> None:
-        self._references = set(references)
+        self._references = SortedSet(references)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, IssueType):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, IssueType):
+            return ComparableTuple((self.type, self.id, self.name, self.description, self.source)) < \
+                ComparableTuple((other.type, other.id, other.name, other.description, other.source))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
