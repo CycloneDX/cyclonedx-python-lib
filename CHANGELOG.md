@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v2.5.0 (2022-06-10)
+### Feature
+* Use `SortedSet` in model to improve reproducibility - this will provide predictable ordering of various items in generated CycloneDX documents - thanks to @RodneyRichardson ([`8a1c404`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8a1c4043f502292b32c4ab36a8618cf3f67ac8df))
+
+### Documentation
+* Fix typo  "This is out" -> "This is our" ([`ef0278a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ef0278a2044147e73a281c5a59f95049d4af7641))
+
 ## v2.4.0 (2022-05-17)
 ### Feature
 * **deps:** Remove unused `typing-extensions` constraints ([`2ce358a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2ce358a37e6ce5f06aa9297aed17f8f5bea38e93))
