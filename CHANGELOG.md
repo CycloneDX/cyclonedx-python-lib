@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v2.5.2 (2022-06-15)
+### Fix
+* Add expected lower-than comparators for `OrganizationalEntity` and `VulnerabilityCredits` ([#248](https://github.com/CycloneDX/cyclonedx-python-lib/issues/248)) ([`0046ee1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0046ee19547be8dafe5d73bad886b9c5f725f26e))
+
 ## v2.5.1 (2022-06-10)
 ### Fix
 * Add missing `Vulnerability` comparator for sorting ([#246](https://github.com/CycloneDX/cyclonedx-python-lib/issues/246)) ([`c3f3d0d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c3f3d0d105f0dcf991175040b6d6c2b6e7e25d8f))
