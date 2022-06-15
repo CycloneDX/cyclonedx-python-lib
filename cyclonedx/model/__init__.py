@@ -1068,6 +1068,11 @@ class OrganizationalEntity:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, OrganizationalEntity):
+            return hash(self) < hash(other)
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.name, tuple(self.url), tuple(self.contact)))
 
