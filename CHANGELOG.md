@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v2.6.0 (2022-06-20)
+### Feature
+* Reduce unnessessarry type casting of `set`/`SortedSet` ([#203](https://github.com/CycloneDX/cyclonedx-python-lib/issues/203)) ([`089d971`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/089d9714f8f9f8c70076e48baa18340899cc29fa))
+
 ## v2.5.2 (2022-06-15)
 ### Fix
 * Add expected lower-than comparators for `OrganizationalEntity` and `VulnerabilityCredits` ([#248](https://github.com/CycloneDX/cyclonedx-python-lib/issues/248)) ([`0046ee1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0046ee19547be8dafe5d73bad886b9c5f725f26e))
