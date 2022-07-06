@@ -763,7 +763,7 @@ class Component:
                 self.licenses = [LicenseChoice(license_expression=license_str)]  # type: ignore
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
-        self.__vulnerabilites: "SortedSet[Vulnerability]" = SortedSet()
+        # self.__vulnerabilites: "SortedSet[Vulnerability]" = SortedSet()
 
     @property
     def type(self) -> ComponentType:
@@ -1139,7 +1139,11 @@ class Component:
         Returns:
             None
         """
-        self.__vulnerabilites.add(vulnerability)
+        warnings.warn(
+            '`Component.add_vulnerability()` was deprecated in release 3.0.0. Vulnerability should be added to the root'
+            'Bom using `Bom.vulnerabilities.add()`', DeprecationWarning
+        )
+        # self.__vulnerabilites.add(vulnerability)
 
     def get_vulnerabilities(self) -> "SortedSet[Vulnerability]":
         """
@@ -1148,7 +1152,12 @@ class Component:
         Returns:
              Set of `Vulnerability`
         """
-        return self.__vulnerabilites
+        warnings.warn(
+            '`Component.get_vulnerabilities()` was deprecated in release 3.0.0. Vulnerability are now at the root'
+            'Bom using. See `Bom.vulnerabilities`', DeprecationWarning
+        )
+        return SortedSet()
+        # return self.__vulnerabilites
 
     def has_vulnerabilities(self) -> bool:
         """
@@ -1157,7 +1166,12 @@ class Component:
         Returns:
              `True` if this Component has 1 or more vulnerabilities, `False` otherwise.
         """
-        return bool(self.get_vulnerabilities())
+        warnings.warn(
+            '`Component.has_vulnerabilities()` was deprecated in release 3.0.0. Vulnerability are now at the root'
+            'Bom using. See `Bom.vulnerabilities`', DeprecationWarning
+        )
+        return False
+        # return bool(self.get_vulnerabilities())
 
     def get_pypi_url(self) -> str:
         if self.version:

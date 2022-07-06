@@ -79,17 +79,6 @@ class Json(BaseOutput, BaseSchemaVersion):
                 extras["dependencies"] = dependencies
             del dep_components
 
-        if self.bom_supports_vulnerabilities():
-            vulnerabilities: List[Dict[Any, Any]] = []
-            if bom.components:
-                for component in bom.components:
-                    for vulnerability in component.get_vulnerabilities():
-                        vulnerabilities.append(
-                            json.loads(json.dumps(vulnerability, cls=CycloneDxJSONEncoder))
-                        )
-            if vulnerabilities:
-                extras["vulnerabilities"] = vulnerabilities
-
         bom_json = json.loads(json.dumps(bom, cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
         self._json_output = json.dumps({**self._create_bom_element(), **bom_json, **extras})
@@ -132,6 +121,10 @@ class Json(BaseOutput, BaseSchemaVersion):
                 if not self.external_references_supports_hashes() \
                         and 'hashes' in bom_json['externalReferences'][i].keys():
                     del bom_json['externalReferences'][i]['hashes']
+
+        # Remove Vulnerabilities if not supported
+        if not self.bom_supports_vulnerabilities() and 'vulnerabilities' in bom_json.keys():
+            del bom_json['vulnerabilities']
 
         return json.dumps(bom_json)
 

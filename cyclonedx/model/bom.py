@@ -16,6 +16,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import warnings
 from datetime import datetime, timezone
 from typing import Iterable, Optional
@@ -28,6 +29,7 @@ from ..parser import BaseParser
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .component import Component
 from .service import Service
+from .vulnerability import Vulnerability
 
 
 class BomMetaData:
@@ -242,6 +244,7 @@ class Bom:
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
+        self.vulnerabilities = SortedSet()
 
     @property
     def uuid(self) -> UUID:
@@ -366,6 +369,20 @@ class Bom:
         """
         return any(c.has_vulnerabilities() for c in self.components)
 
+    @property
+    def vulnerabilities(self) -> "SortedSet[Vulnerability]":
+        """
+        Get all the Vulnerabilities in this BOM.
+
+        Returns:
+             Set of `Vulnerability`
+        """
+        return self._vulnerabilities
+
+    @vulnerabilities.setter
+    def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
+        self._vulnerabilities = SortedSet(vulnerabilities)
+
     def validate(self) -> bool:
         """
         Perform data-model level validations to make sure we have some known data integrity prior to attempting output
@@ -389,7 +406,7 @@ class Bom:
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
         if self.metadata.component and not self.metadata.component.dependencies:
             warnings.warn(
-                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies'
+                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
                 f'to complete the Dependency Graph data.',
                 UserWarning
