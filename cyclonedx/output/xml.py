@@ -82,7 +82,6 @@ class Xml(BaseOutput, BaseSchemaVersion):
             for component in bom.components:
                 component_element = self._add_component_element(component=component)
                 components_element.append(component_element)
-                component_vulnerabilities = bom.get_vulnerabilities_for_bom_ref(bom_ref=component.bom_ref)
                 if self.bom_supports_vulnerabilities_via_extension():
                     component_vulnerabilities = bom.get_vulnerabilities_for_bom_ref(bom_ref=component.bom_ref)
                     if component_vulnerabilities:
