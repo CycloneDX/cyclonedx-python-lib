@@ -27,6 +27,7 @@ from sortedcontainers import SortedSet
 from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
+from .bom_ref import BomRef
 from .component import Component
 from .service import Service
 from .vulnerability import Vulnerability
@@ -359,15 +360,32 @@ class Bom:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> "SortedSet[Vulnerability]":
+        """
+        Get all known Vulnerabilities that affect the supplied bom_ref.
+
+        Args:
+            bom_ref: `BomRef`
+
+        Returns:
+            `SortedSet` of `Vulnerability`
+        """
+
+        vulnerabilities: SortedSet[Vulnerability] = SortedSet()
+        for v in self.vulnerabilities:
+            for target in v.affects:
+                if target.ref == bom_ref.value:
+                    vulnerabilities.add(v)
+        return vulnerabilities
+
     def has_vulnerabilities(self) -> bool:
         """
         Check whether this Bom has any declared vulnerabilities.
 
         Returns:
-            `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
-                `False` otherwise.
+            `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
         """
-        return any(c.has_vulnerabilities() for c in self.components)
+        return bool(self.vulnerabilities)
 
     @property
     def vulnerabilities(self) -> "SortedSet[Vulnerability]":

@@ -23,6 +23,7 @@ from data import get_bom_with_component_setuptools_with_vulnerability
 
 from cyclonedx.model import License, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property
 from cyclonedx.model.bom import Bom, BomMetaData, ThisTool, Tool
+from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
 
 
@@ -116,3 +117,13 @@ class TestBom(TestCase):
     def test_bom_with_vulnerabilities(self) -> None:
         bom = get_bom_with_component_setuptools_with_vulnerability()
         self.assertTrue(bom.has_vulnerabilities())
+
+    def test_bom_get_vulnerabilities_by_bom_ref(self) -> None:
+        bom = get_bom_with_component_setuptools_with_vulnerability()
+        vulns = bom.get_vulnerabilities_for_bom_ref(bom_ref=BomRef(value='pkg:pypi/setuptools@50.3.2?extension=tar.gz'))
+        self.assertEqual(len(vulns), 1)
+
+    def test_bom_get_vulnerabilities_by_bom_ref_negative(self) -> None:
+        bom = get_bom_with_component_setuptools_with_vulnerability()
+        vulns = bom.get_vulnerabilities_for_bom_ref(bom_ref=BomRef(value='pkg:pypi/setuptools@50.3.1?extension=tar.gz'))
+        self.assertEqual(len(vulns), 0)
