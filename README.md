@@ -17,7 +17,8 @@ project dependencies.
 
 This module is not designed for standalone use.
 
-If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout: [CycloneDX Python][cyclonedx-python]
+If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout 
+[CycloneDX Python][cyclonedx-python].
 
 Additionally, the following tool can be used as well (and this library was written to help improve it) [Jake][jake].
 
