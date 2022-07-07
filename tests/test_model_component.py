@@ -132,8 +132,6 @@ class TestModelComponent(TestCase):
         self.assertFalse(c.properties)
         self.assertIsNone(c.release_notes)
 
-        self.assertEqual(len(c.get_vulnerabilities()), 0)
-
     @patch('cyclonedx.model.bom_ref.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
     def test_multiple_basic_components(self, mock_uuid: Mock) -> None:
         c1 = Component(
@@ -144,7 +142,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(c1.type, ComponentType.LIBRARY)
         self.assertEqual(len(c1.external_references), 0)
         self.assertEqual(len(c1.hashes), 0)
-        self.assertEqual(len(c1.get_vulnerabilities()), 0)
 
         c2 = Component(
             name='test2-component', version='3.2.1'
@@ -154,7 +151,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(c2.type, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
-        self.assertEqual(len(c2.get_vulnerabilities()), 0)
 
         self.assertNotEqual(c1, c2)
 
@@ -174,7 +170,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 1)
         self.assertEqual(len(c.hashes), 0)
-        self.assertEqual(len(c.get_vulnerabilities()), 0)
 
         c2 = Component(
             name='test2-component', version='3.2.1'
@@ -184,7 +179,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(c2.type, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
-        self.assertEqual(len(c2.get_vulnerabilities()), 0)
 
     def test_empty_basic_component_no_version(self) -> None:
         c = Component(
@@ -195,7 +189,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 0)
         self.assertEqual(len(c.hashes), 0)
-        self.assertEqual(len(c.get_vulnerabilities()), 0)
 
     def test_component_equal_1(self) -> None:
         c = Component(
