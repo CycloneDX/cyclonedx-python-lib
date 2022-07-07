@@ -763,7 +763,6 @@ class Component:
                 self.licenses = [LicenseChoice(license_expression=license_str)]  # type: ignore
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
-        # self.__vulnerabilites: "SortedSet[Vulnerability]" = SortedSet()
 
     @property
     def type(self) -> ComponentType:
@@ -1127,51 +1126,6 @@ class Component:
     @dependencies.setter
     def dependencies(self, dependencies: Iterable[BomRef]) -> None:
         self.__dependencies = SortedSet(dependencies)
-
-    def add_vulnerability(self, vulnerability: Vulnerability) -> None:
-        """
-        Add a Vulnerability to this Component.
-
-        Args:
-            vulnerability:
-                `cyclonedx.model.vulnerability.Vulnerability` instance to add to this Component.
-
-        Returns:
-            None
-        """
-        warnings.warn(
-            '`Component.add_vulnerability()` was deprecated in release 3.0.0. Vulnerability should be added to the root'
-            'Bom using `Bom.vulnerabilities.add()`', DeprecationWarning
-        )
-        # self.__vulnerabilites.add(vulnerability)
-
-    def get_vulnerabilities(self) -> "SortedSet[Vulnerability]":
-        """
-        Get all the Vulnerabilities for this Component.
-
-        Returns:
-             Set of `Vulnerability`
-        """
-        warnings.warn(
-            '`Component.get_vulnerabilities()` was deprecated in release 3.0.0. Vulnerability are now at the root'
-            'Bom using. See `Bom.vulnerabilities`', DeprecationWarning
-        )
-        return SortedSet()
-        # return self.__vulnerabilites
-
-    def has_vulnerabilities(self) -> bool:
-        """
-        Does this Component have any vulnerabilities?
-
-        Returns:
-             `True` if this Component has 1 or more vulnerabilities, `False` otherwise.
-        """
-        warnings.warn(
-            '`Component.has_vulnerabilities()` was deprecated in release 3.0.0. Vulnerability are now at the root'
-            'Bom using. See `Bom.vulnerabilities`', DeprecationWarning
-        )
-        return False
-        # return bool(self.get_vulnerabilities())
 
     def get_pypi_url(self) -> str:
         if self.version:
