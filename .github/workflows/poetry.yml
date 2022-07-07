@@ -80,7 +80,7 @@ jobs:
   build-and-test:
     name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factor }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       REPORTS_ARTIFACT: tests-reports
     strategy:
