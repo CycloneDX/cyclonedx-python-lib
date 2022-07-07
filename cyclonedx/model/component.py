@@ -44,7 +44,6 @@ from . import (
 from .bom_ref import BomRef
 from .issue import IssueType
 from .release_note import ReleaseNotes
-from .vulnerability import Vulnerability
 
 
 class Commit:
