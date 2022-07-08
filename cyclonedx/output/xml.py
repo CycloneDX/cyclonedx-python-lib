@@ -75,8 +75,6 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.bom_supports_metadata():
             self._add_metadata_element()
 
-        # has_vulnerabilities: bool = False
-
         components_element = ElementTree.SubElement(self._root_bom_element, 'components')
         if bom.components:
             for component in bom.components:
