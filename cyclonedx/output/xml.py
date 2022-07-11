@@ -75,29 +75,28 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.bom_supports_metadata():
             self._add_metadata_element()
 
-        has_vulnerabilities: bool = False
-
         components_element = ElementTree.SubElement(self._root_bom_element, 'components')
         if bom.components:
             for component in bom.components:
                 component_element = self._add_component_element(component=component)
                 components_element.append(component_element)
-                if self.bom_supports_vulnerabilities_via_extension() and component.has_vulnerabilities():
-                    # Vulnerabilities are only possible when bom-ref is supported by the main CycloneDX schema version
-                    vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
-                    for vulnerability in component.get_vulnerabilities():
-                        if component.bom_ref:
-                            vulnerabilities.append(
-                                Xml._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.bom_ref,
-                                                                              vulnerability=vulnerability)
-                            )
-                        else:
-                            warnings.warn(
-                                f'Unable to include Vulnerability {str(vulnerability)} in generated BOM as the '
-                                f'Component it relates to ({str(component)}) but it has no bom-ref.'
-                            )
-                elif component.has_vulnerabilities():
-                    has_vulnerabilities = True
+                if self.bom_supports_vulnerabilities_via_extension():
+                    component_vulnerabilities = bom.get_vulnerabilities_for_bom_ref(bom_ref=component.bom_ref)
+                    if component_vulnerabilities:
+                        # Vulnerabilities are only possible when bom-ref is supported by the main CycloneDX schema
+                        # version
+                        vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
+                        for vulnerability in component_vulnerabilities:
+                            if component.bom_ref:
+                                vulnerabilities.append(
+                                    Xml._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.bom_ref,
+                                                                                  vulnerability=vulnerability)
+                                )
+                            else:
+                                warnings.warn(
+                                    f'Unable to include Vulnerability {str(vulnerability)} in generated BOM as the '
+                                    f'Component it relates to ({str(component)}) but it has no bom-ref.'
+                                )
 
         if self.bom_supports_services() and bom.services:
             services_element = ElementTree.SubElement(self._root_bom_element, 'services')
@@ -125,13 +124,12 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     })
             del dep_components
 
-        if self.bom_supports_vulnerabilities() and has_vulnerabilities:
+        if self.bom_supports_vulnerabilities() and bom.vulnerabilities:
             vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
-            for component in bom.components:
-                for vulnerability in component.get_vulnerabilities():
-                    vulnerabilities_element.append(
-                        self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
-                    )
+            for vulnerability in bom.vulnerabilities:
+                vulnerabilities_element.append(
+                    self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
+                )
 
         self.generated = True
 

@@ -44,7 +44,6 @@ from . import (
 from .bom_ref import BomRef
 from .issue import IssueType
 from .release_note import ReleaseNotes
-from .vulnerability import Vulnerability
 
 
 class Commit:
@@ -763,7 +762,6 @@ class Component:
                 self.licenses = [LicenseChoice(license_expression=license_str)]  # type: ignore
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
-        self.__vulnerabilites: "SortedSet[Vulnerability]" = SortedSet()
 
     @property
     def type(self) -> ComponentType:
@@ -1127,37 +1125,6 @@ class Component:
     @dependencies.setter
     def dependencies(self, dependencies: Iterable[BomRef]) -> None:
         self.__dependencies = SortedSet(dependencies)
-
-    def add_vulnerability(self, vulnerability: Vulnerability) -> None:
-        """
-        Add a Vulnerability to this Component.
-
-        Args:
-            vulnerability:
-                `cyclonedx.model.vulnerability.Vulnerability` instance to add to this Component.
-
-        Returns:
-            None
-        """
-        self.__vulnerabilites.add(vulnerability)
-
-    def get_vulnerabilities(self) -> "SortedSet[Vulnerability]":
-        """
-        Get all the Vulnerabilities for this Component.
-
-        Returns:
-             Set of `Vulnerability`
-        """
-        return self.__vulnerabilites
-
-    def has_vulnerabilities(self) -> bool:
-        """
-        Does this Component have any vulnerabilities?
-
-        Returns:
-             `True` if this Component has 1 or more vulnerabilities, `False` otherwise.
-        """
-        return bool(self.get_vulnerabilities())
 
     def get_pypi_url(self) -> str:
         if self.version:

@@ -13,20 +13,21 @@
 ----
 
 This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all
-project dependencies.
+project dependencies. CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple 
+to parse.
 
-This module is not designed for standalone use.
+**This module is not designed for standalone use.**
+
+As of version `3.0.0`, the internal data model was adjusted to allow CycloneDX VEX documents to be produced as per
+[official examples](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) linking a VEX 
+documents to a separate BOM document.
 
 If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout 
-[CycloneDX Python][cyclonedx-python].
+[CycloneDX Python][cyclonedx-python] or [Jake][jake].
 
-Additionally, the following tool can be used as well (and this library was written to help improve it) [Jake][jake].
+Alternatively, you can use this module yourself in your application to programmatically generate CycloneDX BOMs.
 
-Additionally, you can use this module yourself in your application to programmatically generate SBOMs.
-
-CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple to parse.
-
-View our documentation [here](https://cyclonedx-python-library.readthedocs.io/).
+View the documentation [here](https://cyclonedx-python-library.readthedocs.io/).
 
 ## Python Support
 
