@@ -18,6 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from unittest import TestCase
+from uuid import uuid4
 
 from data import get_bom_with_component_setuptools_with_vulnerability
 
@@ -96,6 +97,7 @@ class TestBom(TestCase):
         bom.metadata.tools.add(
             Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
         )
+        self.assertEqual(bom.version, 1)
         self.assertEqual(len(bom.metadata.tools), 2)
 
     def test_metadata_component(self) -> None:
@@ -108,11 +110,28 @@ class TestBom(TestCase):
 
     def test_empty_bom(self) -> None:
         bom = Bom()
+        self.assertEqual(bom.version, 1)
         self.assertIsNotNone(bom.uuid)
         self.assertIsNotNone(bom.metadata)
         self.assertFalse(bom.components)
         self.assertFalse(bom.services)
         self.assertFalse(bom.external_references)
+
+    def test_empty_bom_defined_serial(self) -> None:
+        serial_number = uuid4()
+        bom = Bom(serial_number=serial_number)
+        self.assertEqual(bom.uuid, serial_number)
+        self.assertEqual(bom.get_urn_uuid(), serial_number.urn)
+        self.assertEqual(bom.version, 1)
+        self.assertEqual(bom.urn(), f'urn:cdx:{serial_number}/1')
+
+    def test_empty_bom_defined_serial_and_version(self) -> None:
+        serial_number = uuid4()
+        bom = Bom(serial_number=serial_number, version=2)
+        self.assertEqual(bom.uuid, serial_number)
+        self.assertEqual(bom.get_urn_uuid(), serial_number.urn)
+        self.assertEqual(bom.version, 2)
+        self.assertEqual(bom.urn(), f'urn:cdx:{serial_number}/2')
 
     def test_bom_with_vulnerabilities(self) -> None:
         bom = get_bom_with_component_setuptools_with_vulnerability()
