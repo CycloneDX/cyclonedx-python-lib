@@ -22,7 +22,8 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional, TypeVar
 
-from packageurl import PackageURL
+# See https://github.com/package-url/packageurl-python/issues/65
+from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model import (
     AttachedText,
@@ -163,7 +164,8 @@ def get_bom_with_component_setuptools_complete() -> Bom:
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom = Bom()
     component = get_component_setuptools_simple()
-    vulnerability = Vulnerability(
+    bom.components.add(component)
+    bom.vulnerabilities.add(Vulnerability(
         bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=get_vulnerability_source_nvd(),
         references=[
             VulnerabilityReference(id='SOME-OTHER-ID', source=VulnerabilitySource(
@@ -215,9 +217,9 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
                 )]
             )
         ]
-    )
-    component.add_vulnerability(vulnerability=vulnerability)
-    bom.components.add(component)
+    ))
+    # component.add_vulnerability(vulnerability=vulnerability)
+
     return bom
 
 

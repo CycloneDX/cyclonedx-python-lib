@@ -44,7 +44,7 @@ class BomRef:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomRef):
-            return hash(other) == hash(self)
+            return other.value == self.value
         return False
 
     def __lt__(self, other: Any) -> bool:

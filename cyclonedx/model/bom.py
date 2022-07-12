@@ -16,6 +16,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import warnings
 from datetime import datetime, timezone
 from typing import Iterable, Optional
@@ -26,8 +27,10 @@ from sortedcontainers import SortedSet
 from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
+from .bom_ref import BomRef
 from .component import Component
 from .service import Service
+from .vulnerability import Vulnerability
 
 
 class BomMetaData:
@@ -230,18 +233,21 @@ class Bom:
 
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+                 external_references: Optional[Iterable[ExternalReference]] = None,
+                 serial_number: Optional[UUID] = None, version: int = 1) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
         Returns:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
-        self.uuid = uuid4()
+        self.uuid = serial_number or uuid4()
         self.metadata = BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
+        self.vulnerabilities = SortedSet()
+        self.version = version
 
     @property
     def uuid(self) -> UUID:
@@ -313,7 +319,7 @@ class Bom:
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
         """
-        return 'urn:uuid:{}'.format(self.__uuid)
+        return self.__uuid.urn
 
     def has_component(self, component: Component) -> bool:
         """
@@ -356,15 +362,57 @@ class Bom:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> "SortedSet[Vulnerability]":
+        """
+        Get all known Vulnerabilities that affect the supplied bom_ref.
+
+        Args:
+            bom_ref: `BomRef`
+
+        Returns:
+            `SortedSet` of `Vulnerability`
+        """
+
+        vulnerabilities: SortedSet[Vulnerability] = SortedSet()
+        for v in self.vulnerabilities:
+            for target in v.affects:
+                if target.ref == bom_ref.value:
+                    vulnerabilities.add(v)
+        return vulnerabilities
+
     def has_vulnerabilities(self) -> bool:
         """
         Check whether this Bom has any declared vulnerabilities.
 
         Returns:
-            `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
-                `False` otherwise.
+            `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
         """
-        return any(c.has_vulnerabilities() for c in self.components)
+        return bool(self.vulnerabilities)
+
+    @property
+    def vulnerabilities(self) -> "SortedSet[Vulnerability]":
+        """
+        Get all the Vulnerabilities in this BOM.
+
+        Returns:
+             Set of `Vulnerability`
+        """
+        return self._vulnerabilities
+
+    @vulnerabilities.setter
+    def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
+        self._vulnerabilities = SortedSet(vulnerabilities)
+
+    @property
+    def version(self) -> int:
+        return self._version
+
+    @version.setter
+    def version(self, version: int) -> None:
+        self._version = version
+
+    def urn(self) -> str:
+        return f'urn:cdx:{self.uuid}/{self.version}'
 
     def validate(self) -> bool:
         """
@@ -389,7 +437,7 @@ class Bom:
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
         if self.metadata.component and not self.metadata.component.dependencies:
             warnings.warn(
-                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies'
+                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
                 f'to complete the Dependency Graph data.',
                 UserWarning
