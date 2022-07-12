@@ -233,19 +233,21 @@ class Bom:
 
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+                 external_references: Optional[Iterable[ExternalReference]] = None,
+                 serial_number: Optional[UUID] = None, version: int = 1) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
         Returns:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
-        self.uuid = uuid4()
+        self.uuid = serial_number or uuid4()
         self.metadata = BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
         self.vulnerabilities = SortedSet()
+        self.version = version
 
     @property
     def uuid(self) -> UUID:
@@ -317,7 +319,7 @@ class Bom:
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
         """
-        return 'urn:uuid:{}'.format(self.__uuid)
+        return self.__uuid.urn
 
     def has_component(self, component: Component) -> bool:
         """
@@ -400,6 +402,17 @@ class Bom:
     @vulnerabilities.setter
     def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
         self._vulnerabilities = SortedSet(vulnerabilities)
+
+    @property
+    def version(self) -> int:
+        return self._version
+
+    @version.setter
+    def version(self, version: int) -> None:
+        self._version = version
+
+    def urn(self) -> str:
+        return f'urn:cdx:{self.uuid}/{self.version}'
 
     def validate(self) -> bool:
         """
