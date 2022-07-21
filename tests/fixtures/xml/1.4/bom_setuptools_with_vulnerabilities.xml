@@ -157,6 +157,10 @@
                     </versions>
                 </target>
             </affects>
+            <properties>
+                <property name="key1">val1</property>
+                <property name="key2">val2</property>
+            </properties>
         </vulnerability>
     </vulnerabilities>
 </bom>
