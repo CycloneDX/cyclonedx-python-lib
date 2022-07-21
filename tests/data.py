@@ -214,7 +214,8 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
                     version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
             )
-        ]
+        ],
+        properties=get_properties_1()
     )
     component.add_vulnerability(vulnerability=vulnerability)
     bom.components.add(component)

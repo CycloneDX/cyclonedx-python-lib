@@ -688,6 +688,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
                     for version in target.versions:
                         Xml._add_bom_target_version_range(parent_element=v_target_versions_element, version=version)
 
+        # properties
+        if vulnerability.properties:
+            Xml._add_properties_element(properties=vulnerability.properties, parent_element=vulnerability_element)
+
         return vulnerability_element
 
     @staticmethod
