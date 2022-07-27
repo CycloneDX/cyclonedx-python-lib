@@ -337,18 +337,18 @@ def get_bom_for_issue_275_components() -> Bom:
     return bom
 
 
-def get_bom_for_issue_275_services() -> Bom:
-    app = Component(name="app", version="1.0.0")
-    serv_a = Service(name='Service A')
-    serv_b = Service(name='Service B')
-    serv_c = Service(name='Service C')
-
-    serv_b.services.add(serv_c)
-    serv_b.dependencies.add(serv_c.bom_ref)
-
-    bom = Bom(services=[serv_a, serv_b])
-    bom.metadata.component = app
-    return bom
+# def get_bom_for_issue_275_services() -> Bom:
+#     app = Component(name="app", version="1.0.0")
+#     serv_a = Service(name='Service A')
+#     serv_b = Service(name='Service B')
+#     serv_c = Service(name='Service C')
+#
+#     serv_b.services.add(serv_c)
+#     serv_b.dependencies.add(serv_c.bom_ref)
+#
+#     bom = Bom(services=[serv_a, serv_b])
+#     bom.metadata.component = app
+#     return bom
 
 
 def get_component_setuptools_complete(include_pedigree: bool = True) -> Component:
