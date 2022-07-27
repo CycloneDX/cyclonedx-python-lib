@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1">
     <components>
-        <component type="library" bom-ref="df70b5f1-8f53-47a4-be48-669ae78795e6">
+        <component type="library" bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
             <publisher>CycloneDX</publisher>
             <name>setuptools</name>
             <version>50.3.2</version>
