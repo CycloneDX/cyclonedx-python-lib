@@ -47,6 +47,7 @@ from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
 from tests.base import BaseJsonTestCase
+from tests.data import get_bom_for_issue_275_components
 
 
 class TestOutputJson(BaseJsonTestCase):
@@ -333,6 +334,12 @@ class TestOutputJson(BaseJsonTestCase):
                 bom=get_bom_with_dependencies_invalid(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_dependencies.json'
             )
+
+    def test_bom_v1_4_issue_275_components(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_275_components.json'
+        )
 
     # Helper methods
     def _validate_json_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:

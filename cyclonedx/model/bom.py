@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
 from datetime import datetime, timezone
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Set
 from uuid import UUID, uuid4
 
 from sortedcontainers import SortedSet
@@ -356,6 +356,16 @@ class Bom:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    def _get_all_components(self) -> Set[Component]:
+        components: Set[Component] = set()
+        if self.metadata.component:
+            components.update(self.metadata.component.get_all_nested_components(include_self=True))
+
+        for c in self.components:
+            components.update(c.get_all_nested_components(include_self=True))
+
+        return components
+
     def has_vulnerabilities(self) -> bool:
         """
         Check whether this Bom has any declared vulnerabilities.
@@ -376,8 +386,8 @@ class Bom:
         """
 
         # 1. Make sure dependencies are all in this Bom.
-        all_bom_refs = set([self.metadata.component.bom_ref] if self.metadata.component else []) | set(
-            map(lambda c: c.bom_ref, self.components)) | set(map(lambda s: s.bom_ref, self.services))
+        all_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
+            map(lambda s: s.bom_ref, self.services))
 
         all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
         dependency_diff = all_dependency_bom_refs - all_bom_refs
@@ -389,9 +399,9 @@ class Bom:
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
         if self.metadata.component and not self.metadata.component.dependencies:
             warnings.warn(
-                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies'
-                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
-                f'to complete the Dependency Graph data.',
+                f'The Component this BOM is describing (PURL={self.metadata.component.purl}) has no defined '
+                f'dependencies which means the Dependency Graph is incomplete - you should add direct dependencies to '
+                f'this Component to complete the Dependency Graph data.',
                 UserWarning
             )
 

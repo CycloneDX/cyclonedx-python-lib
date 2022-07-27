@@ -138,26 +138,7 @@ def get_bom_with_metadata_component_and_dependencies() -> Bom:
 
 
 def get_bom_with_component_setuptools_complete() -> Bom:
-    component = get_component_setuptools_simple(bom_ref=MOCK_UUID_6)
-    component.supplier = get_org_entity_1()
-    component.publisher = 'CycloneDX'
-    component.description = 'This component is awesome'
-    component.scope = ComponentScope.REQUIRED
-    component.copyright = 'Apache 2.0 baby!'
-    component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
-    component.swid = get_swid_1()
-    component.pedigree = get_pedigree_1()
-    component.external_references.add(
-        get_external_reference_1()
-    )
-    component.properties = get_properties_1()
-    component.components.update([
-        get_component_setuptools_simple(),
-        get_component_toml_with_hashes_with_references()
-    ])
-    component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
-    component.release_notes = get_release_notes()
-    return Bom(components=[component])
+    return Bom(components=[get_component_setuptools_complete()])
 
 
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
@@ -229,9 +210,7 @@ def get_bom_with_component_toml_1() -> Bom:
 def get_bom_just_complete_metadata() -> Bom:
     bom = Bom()
     bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
-    bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
-    )
+    bom.metadata.component = get_component_setuptools_complete(include_pedigree=False)
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
     bom.metadata.licenses = [LicenseChoice(license_=License(
@@ -340,10 +319,67 @@ def get_bom_with_nested_services() -> Bom:
     return bom
 
 
-def get_component_setuptools_simple(bom_ref: Optional[str] = None) -> Component:
+def get_bom_for_issue_275_components() -> Bom:
+    app = Component(bom_ref=MOCK_UUID_1, name="app", version="1.0.0")
+    comp_a = Component(bom_ref=MOCK_UUID_2, name="comp_a", version="1.0.0")
+    comp_b = Component(bom_ref=MOCK_UUID_3, name="comp_b", version="1.0.0")
+    comp_c = Component(bom_ref=MOCK_UUID_4, name="comp_c", version="1.0.0")
+
+    comp_b.components.add(comp_c)
+    comp_b.dependencies.add(comp_c.bom_ref)
+
+    libs = [comp_a, comp_b]
+    app.dependencies.add(comp_a.bom_ref)
+    app.dependencies.add(comp_b.bom_ref)
+
+    bom = Bom(components=libs)
+    bom.metadata.component = app
+    return bom
+
+
+def get_bom_for_issue_275_services() -> Bom:
+    app = Component(name="app", version="1.0.0")
+    serv_a = Service(name='Service A')
+    serv_b = Service(name='Service B')
+    serv_c = Service(name='Service C')
+
+    serv_b.services.add(serv_c)
+    serv_b.dependencies.add(serv_c.bom_ref)
+
+    bom = Bom(services=[serv_a, serv_b])
+    bom.metadata.component = app
+    return bom
+
+
+def get_component_setuptools_complete(include_pedigree: bool = True) -> Component:
+    component = get_component_setuptools_simple(bom_ref=None)
+    component.supplier = get_org_entity_1()
+    component.publisher = 'CycloneDX'
+    component.description = 'This component is awesome'
+    component.scope = ComponentScope.REQUIRED
+    component.copyright = 'Apache 2.0 baby!'
+    component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
+    component.swid = get_swid_1()
+    if include_pedigree:
+        component.pedigree = get_pedigree_1()
+    component.external_references.add(
+        get_external_reference_1()
+    )
+    component.properties = get_properties_1()
+    component.components.update([
+        get_component_setuptools_simple(),
+        get_component_toml_with_hashes_with_references()
+    ])
+    component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
+    component.release_notes = get_release_notes()
+    return component
+
+
+def get_component_setuptools_simple(
+        bom_ref: Optional[str] = 'pkg:pypi/setuptools@50.3.2?extension=tar.gz') -> Component:
     return Component(
         name='setuptools', version='50.3.2',
-        bom_ref=bom_ref or 'pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+        bom_ref=bom_ref,
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
