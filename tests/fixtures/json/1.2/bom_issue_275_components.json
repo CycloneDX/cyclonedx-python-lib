@@ -1,0 +1,64 @@
+{
+    "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+    "bomFormat": "CycloneDX",
+    "components": [
+        {
+            "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
+            "name": "comp_a",
+            "type": "library",
+            "version": "1.0.0"
+        },
+        {
+            "bom-ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857",
+            "components": [
+                {
+                    "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
+                    "name": "comp_c",
+                    "type": "library",
+                    "version": "1.0.0"
+                }
+            ],
+            "name": "comp_b",
+            "type": "library",
+            "version": "1.0.0"
+        }
+    ],
+    "dependencies": [
+        {
+            "dependsOn": [
+                "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
+                "0b049d09-64c0-4490-a0f5-c84d9aacf857"
+            ],
+            "ref": "be2c6502-7e9a-47db-9a66-e34f729810a3"
+        },
+        {
+            "dependsOn": [],
+            "ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"
+        },
+        {
+            "dependsOn": [
+                "cd3e9c95-9d41-49e7-9924-8cf0465ae789"
+            ],
+            "ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857"
+        }
+    ],
+    "metadata": {
+        "component": {
+            "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
+            "name": "app",
+            "type": "library",
+            "version": "1.0.0"
+        },
+        "timestamp": "2022-07-27T10:06:17.101289+00:00",
+        "tools": [
+            {
+                "name": "cyclonedx-python-lib",
+                "vendor": "CycloneDX",
+                "version": "0.11.0"
+            }
+        ]
+    },
+    "serialNumber": "urn:uuid:b1d647c9-e4c5-4d8f-be8a-1751ac3ad4d5",
+    "specVersion": "1.2",
+    "version": 1
+}

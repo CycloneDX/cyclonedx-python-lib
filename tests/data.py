@@ -210,7 +210,7 @@ def get_bom_with_component_toml_1() -> Bom:
 def get_bom_just_complete_metadata() -> Bom:
     bom = Bom()
     bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
-    bom.metadata.component = get_component_setuptools_complete(include_pedigree=False)
+    bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
     bom.metadata.licenses = [LicenseChoice(license_=License(
