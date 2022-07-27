@@ -49,6 +49,7 @@ from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import SchemaVersion, get_instance
 from tests.base import BaseXmlTestCase
+from tests.data import get_bom_for_issue_275_components
 
 
 class TestOutputXml(BaseXmlTestCase):
@@ -484,6 +485,36 @@ class TestOutputXml(BaseXmlTestCase):
                 bom=get_bom_with_dependencies_invalid(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_dependencies.xml'
             )
+
+    def test_bom_v1_4_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_3_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_2_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_1_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_1,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_0_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_0,
+            fixture='bom_issue_275_components.xml'
+        )
 
     # Helper methods
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
