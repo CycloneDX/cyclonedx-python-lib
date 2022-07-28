@@ -20,6 +20,10 @@
 from os.path import dirname, join
 from unittest.mock import Mock, patch
 
+from cyclonedx.exception.model import UnknownComponentDependencyException
+from cyclonedx.exception.output import FormatNotSupportedException
+from cyclonedx.model.bom import Bom
+from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
 from data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
@@ -42,11 +46,6 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-
-from cyclonedx.exception.model import UnknownComponentDependencyException
-from cyclonedx.exception.output import FormatNotSupportedException
-from cyclonedx.model.bom import Bom
-from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
 from tests.base import BaseJsonTestCase
 from tests.data import get_bom_for_issue_275_components
 
