@@ -50,7 +50,7 @@ toml = "^0.10.0"
 sortedcontainers = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
-tox = "^3.25.0"
+tox = "^3.25.1"
 coverage = "^6.2"
 mypy = ">= 0.920, < 1.00"
 autopep8 = "^1.6.0"
