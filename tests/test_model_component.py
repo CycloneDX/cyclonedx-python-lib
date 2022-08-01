@@ -22,17 +22,6 @@ from typing import List
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from data import (
-    get_component_setuptools_simple,
-    get_component_setuptools_simple_no_version,
-    get_component_toml_with_hashes_with_references,
-    get_issue_1,
-    get_issue_2,
-    get_pedigree_1,
-    get_swid_1,
-    get_swid_2,
-)
-
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
     AttachedText,
@@ -55,6 +44,16 @@ from cyclonedx.model.component import (
     Pedigree,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
+from data import (
+    get_component_setuptools_simple,
+    get_component_setuptools_simple_no_version,
+    get_component_toml_with_hashes_with_references,
+    get_issue_1,
+    get_issue_2,
+    get_pedigree_1,
+    get_swid_1,
+    get_swid_2,
+)
 from tests.data import reorder
 
 
@@ -131,7 +130,8 @@ class TestModelComponent(TestCase):
         self.assertSetEqual(c.external_references, set())
         self.assertFalse(c.properties)
         self.assertIsNone(c.release_notes)
-
+        self.assertEqual(0, len(c.components))
+        self.assertEqual(0, len(c.get_all_nested_components()))
         self.assertEqual(len(c.get_vulnerabilities()), 0)
 
     @patch('cyclonedx.model.bom_ref.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
@@ -317,6 +317,28 @@ class TestModelComponent(TestCase):
         sorted_components = sorted(components)
         expected_components = reorder(components, expected_order)
         self.assertListEqual(sorted_components, expected_components)
+
+    def test_nested_components_1(self) -> None:
+        comp_b = Component(name="comp_b", version="1.0.0")
+        comp_c = Component(name="comp_c", version="1.0.0")
+        comp_b.components.add(comp_c)
+        comp_b.dependencies.add(comp_c.bom_ref)
+
+        self.assertEqual(1, len(comp_b.components))
+        self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=True)))
+        self.assertEqual(1, len(comp_b.get_all_nested_components(include_self=False)))
+
+    def test_nested_components_2(self) -> None:
+        comp_a = Component(name="comp_a", version="1.2.3")
+        comp_b = Component(name="comp_b", version="1.0.0")
+        comp_c = Component(name="comp_c", version="1.0.0")
+        comp_b.components.add(comp_c)
+        comp_b.dependencies.add(comp_c.bom_ref)
+        comp_b.components.add(comp_a)
+
+        self.assertEqual(2, len(comp_b.components))
+        self.assertEqual(3, len(comp_b.get_all_nested_components(include_self=True)))
+        self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=False)))
 
 
 class TestModelComponentEvidence(TestCase):

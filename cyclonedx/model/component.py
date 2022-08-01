@@ -20,7 +20,7 @@
 import warnings
 from enum import Enum
 from os.path import exists
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, Set
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
@@ -1158,6 +1158,16 @@ class Component:
              `True` if this Component has 1 or more vulnerabilities, `False` otherwise.
         """
         return bool(self.get_vulnerabilities())
+
+    def get_all_nested_components(self, include_self: bool = False) -> Set["Component"]:
+        components = set()
+        if include_self:
+            components.add(self)
+
+        for c in self.components:
+            components.update(c.get_all_nested_components(include_self=True))
+
+        return components
 
     def get_pypi_url(self) -> str:
         if self.version:

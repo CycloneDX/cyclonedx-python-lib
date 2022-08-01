@@ -11,7 +11,7 @@
         </tools>
     </metadata>
     <components>
-        <component type="library" bom-ref="df70b5f1-8f53-47a4-be48-669ae78795e6">
+        <component type="library" bom-ref="0b049d09-64c0-4490-a0f5-c84d9aacf857">
             <supplier>
                 <name>CycloneDX</name>
                 <url>https://cyclonedx.org</url>
@@ -178,6 +178,6 @@
         </component>
     </components>
     <dependencies>
-        <dependency ref="df70b5f1-8f53-47a4-be48-669ae78795e6"></dependency>
+        <dependency ref="0b049d09-64c0-4490-a0f5-c84d9aacf857"/>
     </dependencies>
 </bom>
