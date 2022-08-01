@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v2.7.1 (2022-08-01)
+### Fix
+* BOM validation fails when Components or Services are nested [#275](https://github.com/CycloneDX/cyclonedx-python-lib/issues/275)
+* updated dependencies [#271](https://github.com/CycloneDX/cyclonedx-python-lib/issues/271), [#270](https://github.com/CycloneDX/cyclonedx-python-lib/issues/270), [#269](https://github.com/CycloneDX/cyclonedx-python-lib/issues/269) and [#256](https://github.com/CycloneDX/cyclonedx-python-lib/issues/256)
+
 ## v2.7.0 (2022-07-21)
 ### Feature
 * Support for CycloneDX schema `1.4.2` - adds `vulnerability.properties` to the schema ([`32e7929`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/32e792928bdf37133e966ef72ec01b0bc698482d))
