@@ -2,6 +2,9 @@
 
 <!--next-version-placeholder-->
 
+## v3.0.0 (2022-08-01)
+
+
 ## v2.7.1 (2022-08-01)
 ### Fix
 * BOM validation fails when Components or Services are nested [#275](https://github.com/CycloneDX/cyclonedx-python-lib/issues/275)
