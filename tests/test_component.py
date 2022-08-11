@@ -20,14 +20,13 @@
 from os.path import dirname, join
 from unittest import TestCase
 
-from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version
-
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model import sha1sum
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version
 
 FIXTURES_DIRECTORY = 'fixtures/xml/1.4'
 

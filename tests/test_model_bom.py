@@ -20,12 +20,11 @@
 from unittest import TestCase
 from uuid import uuid4
 
-from data import get_bom_with_component_setuptools_with_vulnerability
-
 from cyclonedx.model import License, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property
 from cyclonedx.model.bom import Bom, BomMetaData, ThisTool, Tool
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
+from data import get_bom_for_issue_275_components, get_bom_with_component_setuptools_with_vulnerability
 
 
 class TestBomMetaData(TestCase):
@@ -146,3 +145,15 @@ class TestBom(TestCase):
         bom = get_bom_with_component_setuptools_with_vulnerability()
         vulns = bom.get_vulnerabilities_for_bom_ref(bom_ref=BomRef(value='pkg:pypi/setuptools@50.3.1?extension=tar.gz'))
         self.assertEqual(len(vulns), 0)
+
+    def test_bom_nested_components_issue_275(self) -> None:
+        bom = get_bom_for_issue_275_components()
+        self.assertIsInstance(bom.metadata.component, Component)
+        self.assertEqual(2, len(bom.components))
+        bom.validate()
+
+    # def test_bom_nested_services_issue_275(self) -> None:
+    #     bom = get_bom_for_issue_275_services()
+    #     self.assertIsInstance(bom.metadata.component, Component)
+    #     self.assertEqual(2, len(bom.services))
+    #     bom.validate()

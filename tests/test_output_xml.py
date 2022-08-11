@@ -20,8 +20,13 @@
 from os.path import dirname, join
 from unittest.mock import Mock, patch
 
+from cyclonedx.exception.model import UnknownComponentDependencyException
+from cyclonedx.model.bom import Bom
+from cyclonedx.output import SchemaVersion, get_instance
 from data import (
     MOCK_UUID_1,
+    MOCK_UUID_2,
+    MOCK_UUID_3,
     MOCK_UUID_4,
     MOCK_UUID_5,
     MOCK_UUID_6,
@@ -42,11 +47,8 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-
-from cyclonedx.exception.model import UnknownComponentDependencyException
-from cyclonedx.model.bom import Bom
-from cyclonedx.output import SchemaVersion, get_instance
 from tests.base import BaseXmlTestCase
+from tests.data import get_bom_for_issue_275_components
 
 
 class TestOutputXml(BaseXmlTestCase):
@@ -141,29 +143,37 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_setuptools_with_cpe.xml'
         )
 
-    def test_bom_v1_4_full_component(self) -> None:
+    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_4)
+    def test_bom_v1_4_full_component(self, mock_uuid: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_4,
             fixture='bom_setuptools_complete.xml'
         )
+        mock_uuid.assert_called()
 
-    def test_bom_v1_3_full_component(self) -> None:
+    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_3)
+    def test_bom_v1_3_full_component(self, mock_uuid: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_3,
             fixture='bom_setuptools_complete.xml'
         )
+        mock_uuid.assert_called()
 
-    def test_bom_v1_2_full_component(self) -> None:
+    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_2)
+    def test_bom_v1_2_full_component(self, mock_uuid: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_2,
             fixture='bom_setuptools_complete.xml'
         )
+        mock_uuid.assert_called()
 
-    def test_bom_v1_1_full_component(self) -> None:
+    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_1)
+    def test_bom_v1_1_full_component(self, mock_uuid: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_1,
             fixture='bom_setuptools_complete.xml'
         )
+        mock_uuid.assert_called()
 
     def test_bom_v1_0_full_component(self) -> None:
         self._validate_xml_bom(
@@ -275,139 +285,156 @@ class TestOutputXml(BaseXmlTestCase):
 
     @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_6)
     def test_bom_v1_4_with_metadata_component(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_4,
-            fixture='bom_with_full_metadata.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_4,
+                fixture='bom_with_full_metadata.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_5)
     def test_bom_v1_3_with_metadata_component(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_3,
-            fixture='bom_with_full_metadata.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_3,
+                fixture='bom_with_full_metadata.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_4)
     def test_bom_v1_2_with_metadata_component(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_2,
-            fixture='bom_with_full_metadata.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_2,
+                fixture='bom_with_full_metadata.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_1)
     def test_bom_v1_1_with_metadata_component(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_1,
-            fixture='bom_empty.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_1,
+                fixture='bom_empty.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_1)
     def test_bom_v1_0_with_metadata_component(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_0,
-            fixture='bom_empty.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_just_complete_metadata(), schema_version=SchemaVersion.V1_0,
+                fixture='bom_empty.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_4_services_simple(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_4,
-            fixture='bom_services_simple.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_4,
+                fixture='bom_services_simple.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_3_services_simple(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_3,
-            fixture='bom_services_simple.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_3,
+                fixture='bom_services_simple.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_2_services_simple(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_2,
-            fixture='bom_services_simple.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_2,
+                fixture='bom_services_simple.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_1_services_simple(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_1,
-            fixture='bom_empty.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_1,
+                fixture='bom_empty.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_0_services_simple(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_0,
-            fixture='bom_empty.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_0,
+                fixture='bom_empty.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_4_services_complex(self, mock_uuid4: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_4,
-            fixture='bom_services_complex.xml'
-        )
-        mock_uuid4.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_4,
+                fixture='bom_services_complex.xml'
+            )
+            mock_uuid4.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_3_services_complex(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_3,
-            fixture='bom_services_complex.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_3,
+                fixture='bom_services_complex.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_2_services_complex(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_2,
-            fixture='bom_services_complex.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_2,
+                fixture='bom_services_complex.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_1_services_complex(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_1,
-            fixture='bom_empty.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_1,
+                fixture='bom_empty.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_4_services_nested(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_4,
-            fixture='bom_services_nested.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_4,
+                fixture='bom_services_nested.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_3_services_nested(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_3,
-            fixture='bom_services_nested.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_3,
+                fixture='bom_services_nested.xml'
+            )
+            mock_uuid.assert_called()
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
     def test_bom_v1_2_services_nested(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_2,
-            fixture='bom_services_nested.xml'
-        )
-        mock_uuid.assert_called()
+        with self.assertWarns(UserWarning):
+            self._validate_xml_bom(
+                bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_2,
+                fixture='bom_services_nested.xml'
+            )
+            mock_uuid.assert_called()
 
     def test_bom_v1_4_dependencies(self) -> None:
         self._validate_xml_bom(
@@ -457,6 +484,36 @@ class TestOutputXml(BaseXmlTestCase):
                 bom=get_bom_with_dependencies_invalid(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_dependencies.xml'
             )
+
+    def test_bom_v1_4_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_3_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_2_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_1_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_1,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_0_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_0,
+            fixture='bom_issue_275_components.xml'
+        )
 
     # Helper methods
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:

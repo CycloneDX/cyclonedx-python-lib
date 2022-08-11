@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v2.7.1 (2022-08-01)
+### Fix
+* BOM validation fails when Components or Services are nested [#275](https://github.com/CycloneDX/cyclonedx-python-lib/issues/275)
+* updated dependencies [#271](https://github.com/CycloneDX/cyclonedx-python-lib/issues/271), [#270](https://github.com/CycloneDX/cyclonedx-python-lib/issues/270), [#269](https://github.com/CycloneDX/cyclonedx-python-lib/issues/269) and [#256](https://github.com/CycloneDX/cyclonedx-python-lib/issues/256)
+
+## v2.7.0 (2022-07-21)
+### Feature
+* Support for CycloneDX schema `1.4.2` - adds `vulnerability.properties` to the schema ([`32e7929`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/32e792928bdf37133e966ef72ec01b0bc698482d))
+* Support for CycloneDX schema version `1.4.2` ([`db7445c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/db7445cd343fc35c6d6fc9f5af3e28cf97a19732))
+* Added updated CycloneDX 1.4.2 schemas ([`7fb27ae`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7fb27aed58f7de10f8c6b703699bba315af353e7))
+
 ## v2.6.0 (2022-06-20)
 ### Feature
 * Reduce unnessessarry type casting of `set`/`SortedSet` ([#203](https://github.com/CycloneDX/cyclonedx-python-lib/issues/203)) ([`089d971`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/089d9714f8f9f8c70076e48baa18340899cc29fa))

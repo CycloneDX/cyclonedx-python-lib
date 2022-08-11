@@ -19,7 +19,7 @@
 
 import warnings
 from datetime import datetime, timezone
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Set
 from uuid import UUID, uuid4
 
 from sortedcontainers import SortedSet
@@ -362,6 +362,16 @@ class Bom:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    def _get_all_components(self) -> Set[Component]:
+        components: Set[Component] = set()
+        if self.metadata.component:
+            components.update(self.metadata.component.get_all_nested_components(include_self=True))
+
+        for c in self.components:
+            components.update(c.get_all_nested_components(include_self=True))
+
+        return components
+
     def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> "SortedSet[Vulnerability]":
         """
         Get all known Vulnerabilities that affect the supplied bom_ref.
@@ -424,8 +434,8 @@ class Bom:
         """
 
         # 1. Make sure dependencies are all in this Bom.
-        all_bom_refs = set([self.metadata.component.bom_ref] if self.metadata.component else []) | set(
-            map(lambda c: c.bom_ref, self.components)) | set(map(lambda s: s.bom_ref, self.services))
+        all_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
+            map(lambda s: s.bom_ref, self.services))
 
         all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
         dependency_diff = all_dependency_bom_refs - all_bom_refs

@@ -104,6 +104,9 @@ class Json(BaseOutput, BaseSchemaVersion):
             del bom_json['metadata']['properties']
 
         # Iterate Components
+        if self.get_bom().metadata.component:
+            bom_json['metadata'] = self._recurse_specialise_component(bom_json=bom_json['metadata'],
+                                                                      base_key='component')
         bom_json = self._recurse_specialise_component(bom_json=bom_json)
 
         # Iterate Services
@@ -148,59 +151,66 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     def _recurse_specialise_component(self, bom_json: Dict[Any, Any], base_key: str = 'components') -> Dict[Any, Any]:
         if base_key in bom_json.keys():
-            for i in range(len(bom_json[base_key])):
-                if not self.component_supports_mime_type_attribute() \
-                        and 'mime-type' in bom_json[base_key][i].keys():
-                    del bom_json[base_key][i]['mime-type']
-
-                if not self.component_supports_supplier() and 'supplier' in bom_json[base_key][i].keys():
-                    del bom_json[base_key][i]['supplier']
-
-                if not self.component_supports_author() and 'author' in bom_json[base_key][i].keys():
-                    del bom_json[base_key][i]['author']
-
-                if self.component_version_optional() and 'version' in bom_json[base_key][i] \
-                        and bom_json[base_key][i].get('version', '') == "":
-                    del bom_json[base_key][i]['version']
-
-                if not self.component_supports_pedigree() and 'pedigree' in bom_json[base_key][i].keys():
-                    del bom_json[base_key][i]['pedigree']
-                elif 'pedigree' in bom_json[base_key][i].keys():
-                    if 'ancestors' in bom_json[base_key][i]['pedigree'].keys():
-                        # recurse into ancestors
-                        bom_json[base_key][i]['pedigree'] = self._recurse_specialise_component(
-                            bom_json=bom_json[base_key][i]['pedigree'], base_key='ancestors'
-                        )
-                    if 'descendants' in bom_json[base_key][i]['pedigree'].keys():
-                        # recurse into descendants
-                        bom_json[base_key][i]['pedigree'] = self._recurse_specialise_component(
-                            bom_json=bom_json[base_key][i]['pedigree'], base_key='descendants'
-                        )
-                    if 'variants' in bom_json[base_key][i]['pedigree'].keys():
-                        # recurse into variants
-                        bom_json[base_key][i]['pedigree'] = self._recurse_specialise_component(
-                            bom_json=bom_json[base_key][i]['pedigree'], base_key='variants'
-                        )
-
-                if not self.external_references_supports_hashes() and 'externalReferences' \
-                        in bom_json[base_key][i].keys():
-                    for j in range(len(bom_json[base_key][i]['externalReferences'])):
-                        del bom_json[base_key][i]['externalReferences'][j]['hashes']
-
-                if not self.component_supports_properties() and 'properties' in bom_json[base_key][i].keys():
-                    del bom_json[base_key][i]['properties']
-
-                # recurse
-                if 'components' in bom_json[base_key][i].keys():
-                    bom_json[base_key][i] = self._recurse_specialise_component(bom_json=bom_json[base_key][i])
-
-                if not self.component_supports_evidence() and 'evidence' in bom_json[base_key][i].keys():
-                    del bom_json[base_key][i]['evidence']
-
-                if not self.component_supports_release_notes() and 'releaseNotes' in bom_json[base_key][i].keys():
-                    del bom_json[base_key][i]['releaseNotes']
+            if isinstance(bom_json[base_key], dict):
+                bom_json[base_key] = self._specialise_component_data(component_json=bom_json[base_key])
+            else:
+                for i in range(len(bom_json[base_key])):
+                    bom_json[base_key][i] = self._specialise_component_data(component_json=bom_json[base_key][i])
 
         return bom_json
+
+    def _specialise_component_data(self, component_json: Dict[Any, Any]) -> Dict[Any, Any]:
+        if not self.component_supports_mime_type_attribute() and 'mime-type' in component_json.keys():
+            del component_json['mime-type']
+
+        if not self.component_supports_supplier() and 'supplier' in component_json.keys():
+            del component_json['supplier']
+
+        if not self.component_supports_author() and 'author' in component_json.keys():
+            del component_json['author']
+
+        if self.component_version_optional() and 'version' in component_json \
+                and component_json.get('version', '') == "":
+            del component_json['version']
+
+        if not self.component_supports_pedigree() and 'pedigree' in component_json.keys():
+            del component_json['pedigree']
+        elif 'pedigree' in component_json.keys():
+            if 'ancestors' in component_json['pedigree'].keys():
+                # recurse into ancestors
+                component_json['pedigree'] = self._recurse_specialise_component(
+                    bom_json=component_json['pedigree'], base_key='ancestors'
+                )
+            if 'descendants' in component_json['pedigree'].keys():
+                # recurse into descendants
+                component_json['pedigree'] = self._recurse_specialise_component(
+                    bom_json=component_json['pedigree'], base_key='descendants'
+                )
+            if 'variants' in component_json['pedigree'].keys():
+                # recurse into variants
+                component_json['pedigree'] = self._recurse_specialise_component(
+                    bom_json=component_json['pedigree'], base_key='variants'
+                )
+
+        if not self.external_references_supports_hashes() and 'externalReferences' \
+                in component_json.keys():
+            for j in range(len(component_json['externalReferences'])):
+                del component_json['externalReferences'][j]['hashes']
+
+        if not self.component_supports_properties() and 'properties' in component_json.keys():
+            del component_json['properties']
+
+        # recurse
+        if 'components' in component_json.keys():
+            component_json = self._recurse_specialise_component(bom_json=component_json)
+
+        if not self.component_supports_evidence() and 'evidence' in component_json.keys():
+            del component_json['evidence']
+
+        if not self.component_supports_release_notes() and 'releaseNotes' in component_json.keys():
+            del component_json['releaseNotes']
+
+        return component_json
 
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):
