@@ -218,20 +218,20 @@ class TestModelCopyright(TestCase):
 class TestModelExternalReference(TestCase):
 
     def test_external_reference_with_xsuri(self) -> None:
-        e = ExternalReference(reference_type=ExternalReferenceType.VCS, url=XsUri('https://www.google.com'))
-        self.assertEqual(e.type, ExternalReferenceType.VCS)
+        e = ExternalReference(type_=ExternalReferenceType.VCS, url=XsUri('https://www.google.com'))
+        self.assertEqual(e.type_, ExternalReferenceType.VCS)
         self.assertEqual(e.url, XsUri('https://www.google.com'))
         self.assertIsNone(e.comment)
         self.assertSetEqual(e.hashes, set())
 
     def test_same(self) -> None:
         ref_1 = ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         )
         ref_2 = ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         )
@@ -241,12 +241,12 @@ class TestModelExternalReference(TestCase):
 
     def test_not_same(self) -> None:
         ref_1 = ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         )
         ref_2 = ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org/'),
             comment='No comment'
         )
@@ -258,12 +258,12 @@ class TestModelExternalReference(TestCase):
         # expected sort order: (type, url, [comment])
         expected_order = [5, 4, 0, 1, 3, 2]
         refs = [
-            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('a'), comment='a'),
-            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('a'), comment='b'),
-            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('b')),
-            ExternalReference(reference_type=ExternalReferenceType.OTHER, url=XsUri('b'), comment='a'),
-            ExternalReference(reference_type=ExternalReferenceType.LICENSE, url=XsUri('b'), comment='a'),
-            ExternalReference(reference_type=ExternalReferenceType.BUILD_SYSTEM, url=XsUri('b'), comment='a'),
+            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('a'), comment='a'),
+            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('a'), comment='b'),
+            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('b')),
+            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('b'), comment='a'),
+            ExternalReference(type_=ExternalReferenceType.LICENSE, url=XsUri('b'), comment='a'),
+            ExternalReference(type_=ExternalReferenceType.BUILD_SYSTEM, url=XsUri('b'), comment='a'),
         ]
         sorted_refs = sorted(refs)
         expected_refs = reorder(refs, expected_order)
@@ -290,12 +290,12 @@ class TestModelHashType(TestCase):
         # expected sort order: (alg, content)
         expected_order = [5, 3, 4, 1, 2, 0]
         hashes = [
-            HashType(algorithm=HashAlgorithm.SHA_256, hash_value='c'),
-            HashType(algorithm=HashAlgorithm.SHA_256, hash_value='a'),
-            HashType(algorithm=HashAlgorithm.SHA_256, hash_value='b'),
-            HashType(algorithm=HashAlgorithm.SHA_1, hash_value='a'),
-            HashType(algorithm=HashAlgorithm.SHA_1, hash_value='b'),
-            HashType(algorithm=HashAlgorithm.MD5, hash_value='a'),
+            HashType(alg=HashAlgorithm.SHA_256, content='c'),
+            HashType(alg=HashAlgorithm.SHA_256, content='a'),
+            HashType(alg=HashAlgorithm.SHA_256, content='b'),
+            HashType(alg=HashAlgorithm.SHA_1, content='a'),
+            HashType(alg=HashAlgorithm.SHA_1, content='b'),
+            HashType(alg=HashAlgorithm.MD5, content='a'),
         ]
         sorted_hashes = sorted(hashes)
         expected_hashes = reorder(hashes, expected_order)

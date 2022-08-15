@@ -23,13 +23,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Iterable, Optional, Tuple, TypeVar
 
-from serializable import (
-    AnySerializable,
-    JsonSerializableObject,
-    SimpleSerializable,
-    XmlArraySerializationType,
-    XmlSerializableObject,
-)
+from serializable import JsonSerializableObject, XmlArraySerializationType, XmlSerializableObject
 from sortedcontainers import SortedSet
 
 from ..exception.model import (

@@ -23,11 +23,9 @@ from os.path import dirname, join
 from unittest.mock import Mock, patch
 from uuid import UUID
 
-from serializable.formatters import CurrentFormatter
-
 from cyclonedx.model import ThisTool
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
+from cyclonedx.output import SchemaVersion
 from data import MOCK_BOM_UUID_1, get_bom_with_external_references
 from tests.base import BaseJsonTestCase
 

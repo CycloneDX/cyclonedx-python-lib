@@ -162,7 +162,7 @@ class TestModelComponent(TestCase):
             name='test-component', version='1.2.3'
         )
         c.external_references.add(ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
@@ -196,7 +196,7 @@ class TestModelComponent(TestCase):
             name='test-component', version='1.2.3'
         )
         c.external_references.add(ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
@@ -205,7 +205,7 @@ class TestModelComponent(TestCase):
             name='test-component', version='1.2.3'
         )
         c2.external_references.add(ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))

@@ -264,7 +264,6 @@ class Bom(JsonSerializableObject, XmlSerializableObject):
         """
         super().__init__()
         self.serial_number = serial_number or uuid4()
-        print(self.serial_number.__class__)
         self.metadata = metadata or BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
