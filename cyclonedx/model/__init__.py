@@ -21,8 +21,15 @@ import sys
 import warnings
 from datetime import datetime
 from enum import Enum
-from typing import Any, Iterable, Optional, Tuple, TypeVar
+from typing import Any, Dict, Iterable, Optional, Tuple, TypeVar
 
+from serializable import (
+    AnySerializable,
+    JsonSerializableObject,
+    SimpleSerializable,
+    XmlArraySerializationType,
+    XmlSerializableObject,
+)
 from sortedcontainers import SortedSet
 
 from ..exception.model import (
@@ -282,7 +289,7 @@ class HashAlgorithm(str, Enum):
     SHA3_512 = 'SHA3-512'
 
 
-class HashType:
+class HashType(JsonSerializableObject, XmlSerializableObject):
     """
     This is our internal representation of the hashType complex type within the CycloneDX standard.
 
@@ -312,25 +319,26 @@ class HashType:
         algorithm_prefix = parts[0].lower()
         if algorithm_prefix == 'md5':
             return HashType(
-                algorithm=HashAlgorithm.MD5,
-                hash_value=parts[1].lower()
+                alg=HashAlgorithm.MD5,
+                content=parts[1].lower()
             )
         elif algorithm_prefix[0:3] == 'sha':
             return HashType(
-                algorithm=getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:])),
-                hash_value=parts[1].lower()
+                alg=getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:])),
+                content=parts[1].lower()
             )
         elif algorithm_prefix[0:6] == 'blake2':
             return HashType(
-                algorithm=getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:])),
-                hash_value=parts[1].lower()
+                alg=getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:])),
+                content=parts[1].lower()
             )
 
         raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
-    def __init__(self, *, algorithm: HashAlgorithm, hash_value: str) -> None:
-        self.alg = algorithm
-        self.content = hash_value
+    def __init__(self, *, alg: HashAlgorithm, content: str) -> None:
+        super().__init__()
+        self.alg = alg
+        self.content = content
 
     @property
     def alg(self) -> HashAlgorithm:
@@ -360,6 +368,12 @@ class HashType:
     def content(self, content: str) -> None:
         self._content = content
 
+    # @staticmethod
+    # def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
+    #     return {
+    #         "alg": HashAlgorithm,
+    #     }
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, HashType):
             return hash(other) == hash(self)
@@ -384,6 +398,7 @@ class ExternalReferenceType(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReferenceType
     """
+
     ADVISORIES = 'advisories'
     BOM = 'bom'
     BUILD_META = 'build-meta'
@@ -443,7 +458,7 @@ class XsUri:
         return self._uri
 
 
-class ExternalReference:
+class ExternalReference(JsonSerializableObject, XmlSerializableObject):
     """
     This is our internal representation of an ExternalReference complex type that can be used in multiple places within
     a CycloneDX BOM document.
@@ -452,11 +467,12 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, *, reference_type: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
+    def __init__(self, *, type_: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
                  hashes: Optional[Iterable[HashType]] = None) -> None:
+        super().__init__()
         self.url = url
         self.comment = comment
-        self.type = reference_type
+        self.type_ = type_
         self.hashes = hashes or []  # type: ignore
 
     @property
@@ -488,7 +504,7 @@ class ExternalReference:
         self._comment = comment
 
     @property
-    def type(self) -> ExternalReferenceType:
+    def type_(self) -> ExternalReferenceType:
         """
         Specifies the type of external reference.
 
@@ -498,11 +514,11 @@ class ExternalReference:
         Returns:
             `ExternalReferenceType`
         """
-        return self._type
+        return self._type_
 
-    @type.setter
-    def type(self, type_: ExternalReferenceType) -> None:
-        self._type = type_
+    @type_.setter
+    def type_(self, type_: ExternalReferenceType) -> None:
+        self._type_ = type_
 
     @property
     def hashes(self) -> "SortedSet[HashType]":
@@ -518,6 +534,16 @@ class ExternalReference:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
+    @classmethod
+    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
+        """
+
+        :return:
+        """
+        return {
+            'hashes': (XmlArraySerializationType.NESTED, 'hash', HashType)
+        }
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ExternalReference):
             return hash(other) == hash(self)
@@ -525,18 +551,18 @@ class ExternalReference:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ExternalReference):
-            return ComparableTuple((self._type, self._url, self._comment)) < \
-                ComparableTuple((other._type, other._url, other._comment))
+            return ComparableTuple((self._type_, self._url, self._comment)) < \
+                ComparableTuple((other._type_, other._url, other._comment))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
-            self._type, self._url, self._comment,
+            self._type_, self._url, self._comment,
             tuple(sorted(self._hashes, key=hash))
         ))
 
     def __repr__(self) -> str:
-        return f'<ExternalReference {self._type.name}, {self._url}>'
+        return f'<ExternalReference {self.type_.name}, {self.url}>'
 
 
 class License:
@@ -1080,7 +1106,7 @@ class OrganizationalEntity:
         return f'<OrganizationalEntity name={self.name}>'
 
 
-class Tool:
+class Tool(JsonSerializableObject, XmlSerializableObject):
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
 
@@ -1093,6 +1119,7 @@ class Tool:
     def __init__(self, *, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
                  hashes: Optional[Iterable[HashType]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+        super().__init__()
         self.vendor = vendor
         self.name = name
         self.version = version
@@ -1169,6 +1196,16 @@ class Tool:
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
+
+    @classmethod
+    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
+        """
+
+        :return:
+        """
+        return {
+            'external_references': (XmlArraySerializationType.NESTED, 'reference', ExternalReference)
+        }
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Tool):
@@ -1321,35 +1358,35 @@ except Exception:
 ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
 ThisTool.external_references.update([
     ExternalReference(
-        reference_type=ExternalReferenceType.BUILD_SYSTEM,
+        type_=ExternalReferenceType.BUILD_SYSTEM,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.DISTRIBUTION,
+        type_=ExternalReferenceType.DISTRIBUTION,
         url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.DOCUMENTATION,
+        type_=ExternalReferenceType.DOCUMENTATION,
         url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.ISSUE_TRACKER,
+        type_=ExternalReferenceType.ISSUE_TRACKER,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.LICENSE,
+        type_=ExternalReferenceType.LICENSE,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.RELEASE_NOTES,
+        type_=ExternalReferenceType.RELEASE_NOTES,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.VCS,
+        type_=ExternalReferenceType.VCS,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.WEBSITE,
+        type_=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
     )
 ])

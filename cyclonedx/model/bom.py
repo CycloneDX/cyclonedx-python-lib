@@ -16,12 +16,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
 import warnings
 from datetime import datetime, timezone
-from typing import Iterable, Optional, Set
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 from uuid import UUID, uuid4
 
+from serializable import AnySerializable, JsonSerializableObject, XmlArraySerializationType, XmlSerializableObject
+from serializable.helpers import XsdDateTime
 from sortedcontainers import SortedSet
 
 from ..exception.model import UnknownComponentDependencyException
@@ -33,7 +34,7 @@ from .service import Service
 from .vulnerability import Vulnerability
 
 
-class BomMetaData:
+class BomMetaData(JsonSerializableObject, XmlSerializableObject):
     """
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
@@ -46,8 +47,10 @@ class BomMetaData:
                  manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[LicenseChoice]] = None,
-                 properties: Optional[Iterable[Property]] = None) -> None:
-        self.timestamp = datetime.now(tz=timezone.utc)
+                 properties: Optional[Iterable[Property]] = None,
+                 timestamp: Optional[datetime] = None) -> None:
+        super().__init__()
+        self.timestamp = timestamp or datetime.now(tz=timezone.utc)
         self.tools = tools or []  # type: ignore
         self.authors = authors or []  # type: ignore
         self.component = component
@@ -191,6 +194,22 @@ class BomMetaData:
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
+    @classmethod
+    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
+        """
+
+        :return:
+        """
+        return {
+            'tools': (XmlArraySerializationType.NESTED, 'tool', Tool)
+        }
+
+    @staticmethod
+    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
+        return {
+            "timestamp": XsdDateTime
+        }
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomMetaData):
             return hash(other) == hash(self)
@@ -198,14 +217,15 @@ class BomMetaData:
 
     def __hash__(self) -> int:
         return hash((
-            self.timestamp, self.tools, self.component
+            tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
+            self.supplier, self.timestamp, tuple(self.tools)
         ))
 
     def __repr__(self) -> str:
-        return f'<BomMetaData timestamp={self.timestamp.utcnow()}>'
+        return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
 
 
-class Bom:
+class Bom(JsonSerializableObject, XmlSerializableObject):
     """
     This is our internal representation of a bill-of-materials (BOM).
 
@@ -234,15 +254,18 @@ class Bom:
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
-                 serial_number: Optional[UUID] = None, version: int = 1) -> None:
+                 serial_number: Optional[UUID] = None, version: int = 1,
+                 metadata: Optional[BomMetaData] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
         Returns:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
-        self.uuid = serial_number or uuid4()
-        self.metadata = BomMetaData()
+        super().__init__()
+        self.serial_number = serial_number or uuid4()
+        print(self.serial_number.__class__)
+        self.metadata = metadata or BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
@@ -250,18 +273,18 @@ class Bom:
         self.version = version
 
     @property
-    def uuid(self) -> UUID:
+    def serial_number(self) -> UUID:
         """
         Unique UUID for this BOM
 
         Returns:
             `UUID` instance
         """
-        return self.__uuid
+        return self._serial_number
 
-    @uuid.setter
-    def uuid(self, uuid: UUID) -> None:
-        self.__uuid = uuid
+    @serial_number.setter
+    def serial_number(self, serial_number: UUID) -> None:
+        self._serial_number = serial_number
 
     @property
     def metadata(self) -> BomMetaData:
@@ -319,7 +342,7 @@ class Bom:
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
         """
-        return self.__uuid.urn
+        return self.serial_number.urn
 
     def has_component(self, component: Component) -> bool:
         """
@@ -422,7 +445,7 @@ class Bom:
         self._version = version
 
     def urn(self) -> str:
-        return f'urn:cdx:{self.uuid}/{self.version}'
+        return f'urn:cdx:{self.serial_number}/{self.version}'
 
     def validate(self) -> bool:
         """
@@ -455,6 +478,27 @@ class Bom:
 
         return True
 
+    @classmethod
+    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
+        """
+
+        :return:
+        """
+        return {
+            'external_references': (XmlArraySerializationType.NESTED, 'reference', ExternalReference)
+        }
+
+    @staticmethod
+    def get_json_key_removals() -> List[str]:
+        return ['$schema', 'bomFormat', 'specVersion']
+
+    @staticmethod
+    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
+        return {
+            "serial_number": UUID,
+            "metadata": BomMetaData
+        }
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):
             return hash(other) == hash(self)
@@ -462,8 +506,9 @@ class Bom:
 
     def __hash__(self) -> int:
         return hash((
-            self.uuid, self.metadata, tuple(self.components), tuple(self.services), tuple(self.external_references)
+            self.serial_number, self.version, self.metadata, tuple(self.components), tuple(self.services),
+            tuple(self.external_references), tuple(self.vulnerabilities)
         ))
 
     def __repr__(self) -> str:
-        return f'<Bom uuid={self.uuid}>'
+        return f'<Bom uuid={self.serial_number}>'

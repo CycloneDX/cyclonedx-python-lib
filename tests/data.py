@@ -84,6 +84,7 @@ MOCK_UUID_3 = '0b049d09-64c0-4490-a0f5-c84d9aacf857'
 MOCK_UUID_4 = 'cd3e9c95-9d41-49e7-9924-8cf0465ae789'
 MOCK_UUID_5 = 'bb5911d6-1a1d-41c9-b6e0-46e848d16655'
 MOCK_UUID_6 = 'df70b5f1-8f53-47a4-be48-669ae78795e6'
+MOCK_BOM_UUID_1 = '3e671687-395b-41f5-a30f-a58921a69b79'
 
 TEST_UUIDS = [
     MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6
@@ -414,7 +415,7 @@ def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None
 
 def get_external_reference_1() -> ExternalReference:
     return ExternalReference(
-        reference_type=ExternalReferenceType.DISTRIBUTION,
+        type_=ExternalReferenceType.DISTRIBUTION,
         url=XsUri('https://cyclonedx.org'),
         comment='No comment',
         hashes=[
@@ -426,7 +427,7 @@ def get_external_reference_1() -> ExternalReference:
 
 def get_external_reference_2() -> ExternalReference:
     return ExternalReference(
-        reference_type=ExternalReferenceType.WEBSITE,
+        type_=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
     )
 

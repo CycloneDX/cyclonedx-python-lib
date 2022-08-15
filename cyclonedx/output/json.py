@@ -81,7 +81,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
         bom_json = json.loads(json.dumps(bom, cls=CycloneDxJSONEncoder))
         bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
-        self._json_output = json.dumps({**self._create_bom_element(), **bom_json, **extras})
+        self._json_output = json.dumps({**bom_json, **self._create_bom_element(), **extras})
 
         self.generated = True
 

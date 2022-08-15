@@ -762,7 +762,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         ext_refs_element = ElementTree.SubElement(element, 'externalReferences')
         for external_reference in ext_refs:
             ext_ref_element = ElementTree.SubElement(
-                ext_refs_element, 'reference', {'type': external_reference.type.value}
+                ext_refs_element, 'reference', {'type': external_reference.type_.value}
             )
             ElementTree.SubElement(ext_ref_element, 'url').text = str(external_reference.url)
             if external_reference.comment:

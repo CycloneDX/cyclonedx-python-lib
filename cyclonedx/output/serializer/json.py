@@ -27,6 +27,7 @@ from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
+from serializable.formatters import BaseNameFormatter
 from sortedcontainers import SortedSet
 
 from ...model import XsUri
@@ -91,6 +92,10 @@ class CycloneDxJSONEncoder(JSONEncoder):
                     new_key = new_key.replace('_', '-')
                 elif '_' in new_key:
                     new_key = PYTHON_TO_JSON_NAME.sub(lambda x: x.group(1).upper(), new_key)
+
+                # -- TEMP --
+                new_key = BaseNameFormatter.encode_handle_python_builtins_and_keywords(name=new_key)
+                # -- END TEMP --
 
                 # Inject '' for Component.version if it's None
                 if isinstance(o, Component) and new_key == 'version' and v is None:

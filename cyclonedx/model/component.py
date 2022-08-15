@@ -698,7 +698,7 @@ class Component:
             name=path_for_bom if path_for_bom else absolute_file_path,
             version='0.0.0-{}'.format(sha1_hash[0:12]),
             hashes=[
-                HashType(algorithm=HashAlgorithm.SHA_1, hash_value=sha1_hash)
+                HashType(alg=HashAlgorithm.SHA_1, content=sha1_hash)
             ],
             component_type=ComponentType.FILE, purl=PackageURL(
                 type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
