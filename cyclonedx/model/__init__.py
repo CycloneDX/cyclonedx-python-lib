@@ -21,9 +21,9 @@ import sys
 import warnings
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, Iterable, Optional, Tuple, TypeVar
+from typing import Any, Dict, Iterable, Optional, Set, Tuple, TypeVar
 
-from serializable import JsonSerializableObject, XmlArraySerializationType, XmlSerializableObject
+from serializable import AnySerializable, JsonSerializableObject, XmlArraySerializationType, XmlSerializableObject
 from sortedcontainers import SortedSet
 
 from ..exception.model import (
@@ -362,11 +362,27 @@ class HashType(JsonSerializableObject, XmlSerializableObject):
     def content(self, content: str) -> None:
         self._content = content
 
-    # @staticmethod
-    # def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
-    #     return {
-    #         "alg": HashAlgorithm,
-    #     }
+    @staticmethod
+    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
+        return {
+            "alg": HashAlgorithm,
+        }
+
+    @staticmethod
+    def get_property_key_mappings() -> Dict[str, str]:
+        return {
+            "content": "."
+        }
+
+    @classmethod
+    def properties_as_attributes(cls) -> Set[str]:
+        """
+        A set of Property names that should be attributes on this class object when (de-)serialized as XML.
+
+        Returns:
+            `Set[str]`
+        """
+        return {'alg'}
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, HashType):
@@ -537,6 +553,22 @@ class ExternalReference(JsonSerializableObject, XmlSerializableObject):
         return {
             'hashes': (XmlArraySerializationType.NESTED, 'hash', HashType)
         }
+
+    @staticmethod
+    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
+        return {
+            "type_": ExternalReferenceType,
+        }
+
+    @classmethod
+    def properties_as_attributes(cls) -> Set[str]:
+        """
+        A set of Property names that should be attributes on this class object when (de-)serialized as XML.
+
+        Returns:
+            `Set[str]`
+        """
+        return {'type_'}
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ExternalReference):
