@@ -9,8 +9,9 @@ maintainers = [
 ]
 license = "Apache-2.0"
 readme = "README.md"
-homepage = "https://github.com/CycloneDX/cyclonedx-python-lib"
+homepage = "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
 repository = "https://github.com/CycloneDX/cyclonedx-python-lib"
+documentation = "https://cyclonedx-python-library.readthedocs.io/"
 packages = [
   { include = "cyclonedx" }
 ]
