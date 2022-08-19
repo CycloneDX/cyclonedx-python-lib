@@ -205,7 +205,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
             Xml._add_properties_element(properties=bom_metadata.properties, parent_element=metadata_e)
 
     def _add_component_element(self, component: Component) -> ElementTree.Element:
-        element_attributes = {'type': component.type.value}
+        element_attributes = {'type': component.type_.value}
         if self.component_supports_bom_ref_attribute() and component.bom_ref:
             element_attributes['bom-ref'] = str(component.bom_ref)
         if self.component_supports_mime_type_attribute() and component.mime_type:

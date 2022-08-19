@@ -102,7 +102,7 @@ class TestBom(TestCase):
     def test_metadata_component(self) -> None:
         metadata = Bom().metadata
         self.assertTrue(metadata.component is None)
-        hextech = Component(name='Hextech', version='1.0.0', component_type=ComponentType.LIBRARY)
+        hextech = Component(name='Hextech', version='1.0.0', type_=ComponentType.LIBRARY)
         metadata.component = hextech
         self.assertFalse(metadata.component is None)
         self.assertEqual(metadata.component, hextech)

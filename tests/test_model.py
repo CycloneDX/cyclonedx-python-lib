@@ -178,8 +178,8 @@ class TestModelLicenseChoice(TestCase):
         licenses = [
             LicenseChoice(license_=license_b),
             LicenseChoice(license_=license_a),
-            LicenseChoice(license_expression='MIT'),
-            LicenseChoice(license_expression='Apache-2.0'),
+            LicenseChoice(expression='MIT'),
+            LicenseChoice(expression='Apache-2.0'),
         ]
         sorted_licenses = sorted(licenses)
         expected_licenses = reorder(licenses, expected_order)

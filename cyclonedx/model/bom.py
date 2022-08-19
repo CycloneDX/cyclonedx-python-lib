@@ -21,8 +21,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 from uuid import UUID, uuid4
 
-from serializable import AnySerializable, JsonSerializableObject, XmlArraySerializationType, XmlSerializableObject
-from serializable.helpers import XsdDateTime
+import serializable
 from sortedcontainers import SortedSet
 
 from ..exception.model import UnknownComponentDependencyException
@@ -34,7 +33,8 @@ from .service import Service
 from .vulnerability import Vulnerability
 
 
-class BomMetaData(JsonSerializableObject, XmlSerializableObject):
+@serializable.serializable_class
+class BomMetaData:
     """
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
@@ -49,7 +49,6 @@ class BomMetaData(JsonSerializableObject, XmlSerializableObject):
                  licenses: Optional[Iterable[LicenseChoice]] = None,
                  properties: Optional[Iterable[Property]] = None,
                  timestamp: Optional[datetime] = None) -> None:
-        super().__init__()
         self.timestamp = timestamp or datetime.now(tz=timezone.utc)
         self.tools = tools or []  # type: ignore
         self.authors = authors or []  # type: ignore
@@ -62,7 +61,8 @@ class BomMetaData(JsonSerializableObject, XmlSerializableObject):
         if not tools:
             self.tools.add(ThisTool)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
     def timestamp(self) -> datetime:
         """
         The date and time (in UTC) when this BomMetaData was created.
@@ -76,7 +76,8 @@ class BomMetaData(JsonSerializableObject, XmlSerializableObject):
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     def tools(self) -> "SortedSet[Tool]":
         """
         Tools used to create this BOM.
@@ -194,22 +195,6 @@ class BomMetaData(JsonSerializableObject, XmlSerializableObject):
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
-    @classmethod
-    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
-        """
-
-        :return:
-        """
-        return {
-            'tools': (XmlArraySerializationType.NESTED, 'tool', Tool)
-        }
-
-    @staticmethod
-    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
-        return {
-            "timestamp": XsdDateTime
-        }
-
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomMetaData):
             return hash(other) == hash(self)
@@ -225,7 +210,9 @@ class BomMetaData(JsonSerializableObject, XmlSerializableObject):
         return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
 
 
-class Bom(JsonSerializableObject, XmlSerializableObject):
+@serializable.serializable_class(
+    ignore_during_deserialization=['$schema', 'bom_format', 'spec_version', 'dependencies'])  # type: ignore[misc]
+class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
 
@@ -234,6 +221,9 @@ class Bom(JsonSerializableObject, XmlSerializableObject):
 
     Once you have an instance of `cyclonedx.model.bom.Bom`, you can pass this to an instance of
     `cyclonedx.output.BaseOutput` to produce a CycloneDX document according to a specific schema version and format.
+
+    @todo: Handle different Spec Versions during (de-)serialization
+    @todo: Support dependencies during (de-)serialization
     """
 
     @staticmethod
@@ -262,7 +252,6 @@ class Bom(JsonSerializableObject, XmlSerializableObject):
         Returns:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
-        super().__init__()
         self.serial_number = serial_number or uuid4()
         self.metadata = metadata or BomMetaData()
         self.components = components or []  # type: ignore
@@ -370,7 +359,8 @@ class Bom(JsonSerializableObject, XmlSerializableObject):
     def services(self, services: Iterable[Service]) -> None:
         self._services = SortedSet(services)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
@@ -476,27 +466,6 @@ class Bom(JsonSerializableObject, XmlSerializableObject):
             )
 
         return True
-
-    @classmethod
-    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
-        """
-
-        :return:
-        """
-        return {
-            'external_references': (XmlArraySerializationType.NESTED, 'reference', ExternalReference)
-        }
-
-    @staticmethod
-    def get_json_key_removals() -> List[str]:
-        return ['$schema', 'bomFormat', 'specVersion']
-
-    @staticmethod
-    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
-        return {
-            "serial_number": UUID,
-            "metadata": BomMetaData
-        }
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):

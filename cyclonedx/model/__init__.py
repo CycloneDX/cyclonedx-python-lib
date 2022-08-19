@@ -23,7 +23,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Iterable, Optional, Set, Tuple, TypeVar
 
-from serializable import AnySerializable, JsonSerializableObject, XmlArraySerializationType, XmlSerializableObject
+import serializable
 from sortedcontainers import SortedSet
 
 from ..exception.model import (
@@ -283,7 +283,8 @@ class HashAlgorithm(str, Enum):
     SHA3_512 = 'SHA3-512'
 
 
-class HashType(JsonSerializableObject, XmlSerializableObject):
+@serializable.serializable_class
+class HashType:
     """
     This is our internal representation of the hashType complex type within the CycloneDX standard.
 
@@ -330,11 +331,11 @@ class HashType(JsonSerializableObject, XmlSerializableObject):
         raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
     def __init__(self, *, alg: HashAlgorithm, content: str) -> None:
-        super().__init__()
         self.alg = alg
         self.content = content
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def alg(self) -> HashAlgorithm:
         """
         Specifies the algorithm used to create the hash.
@@ -348,7 +349,8 @@ class HashType(JsonSerializableObject, XmlSerializableObject):
     def alg(self, alg: HashAlgorithm) -> None:
         self._alg = alg
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('.')
     def content(self) -> str:
         """
         Hash value content.
@@ -361,28 +363,6 @@ class HashType(JsonSerializableObject, XmlSerializableObject):
     @content.setter
     def content(self, content: str) -> None:
         self._content = content
-
-    @staticmethod
-    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
-        return {
-            "alg": HashAlgorithm,
-        }
-
-    @staticmethod
-    def get_property_key_mappings() -> Dict[str, str]:
-        return {
-            "content": "."
-        }
-
-    @classmethod
-    def properties_as_attributes(cls) -> Set[str]:
-        """
-        A set of Property names that should be attributes on this class object when (de-)serialized as XML.
-
-        Returns:
-            `Set[str]`
-        """
-        return {'alg'}
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, HashType):
@@ -468,7 +448,8 @@ class XsUri:
         return self._uri
 
 
-class ExternalReference(JsonSerializableObject, XmlSerializableObject):
+@serializable.serializable_class
+class ExternalReference:
     """
     This is our internal representation of an ExternalReference complex type that can be used in multiple places within
     a CycloneDX BOM document.
@@ -479,7 +460,6 @@ class ExternalReference(JsonSerializableObject, XmlSerializableObject):
 
     def __init__(self, *, type_: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
                  hashes: Optional[Iterable[HashType]] = None) -> None:
-        super().__init__()
         self.url = url
         self.comment = comment
         self.type_ = type_
@@ -513,7 +493,8 @@ class ExternalReference(JsonSerializableObject, XmlSerializableObject):
     def comment(self, comment: Optional[str]) -> None:
         self._comment = comment
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def type_(self) -> ExternalReferenceType:
         """
         Specifies the type of external reference.
@@ -530,8 +511,9 @@ class ExternalReference(JsonSerializableObject, XmlSerializableObject):
     def type_(self, type_: ExternalReferenceType) -> None:
         self._type_ = type_
 
-    @property
-    def hashes(self) -> "SortedSet[HashType]":
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    def hashes(self) -> "Optional[SortedSet[HashType]]":
         """
         The hashes of the external reference (if applicable).
 
@@ -543,32 +525,6 @@ class ExternalReference(JsonSerializableObject, XmlSerializableObject):
     @hashes.setter
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
-
-    @classmethod
-    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
-        """
-
-        :return:
-        """
-        return {
-            'hashes': (XmlArraySerializationType.NESTED, 'hash', HashType)
-        }
-
-    @staticmethod
-    def get_property_data_class_mappings() -> Dict[str, AnySerializable]:
-        return {
-            "type_": ExternalReferenceType,
-        }
-
-    @classmethod
-    def properties_as_attributes(cls) -> Set[str]:
-        """
-        A set of Property names that should be attributes on this class object when (de-)serialized as XML.
-
-        Returns:
-            `Set[str]`
-        """
-        return {'type_'}
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ExternalReference):
@@ -691,6 +647,7 @@ class License:
         return f'<License id={self.id}, name={self.name}>'
 
 
+@serializable.serializable_class
 class LicenseChoice:
     """
     This is our internal representation of `licenseChoiceType` complex type that can be used in multiple places within
@@ -700,19 +657,19 @@ class LicenseChoice:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
     """
 
-    def __init__(self, *, license_: Optional[License] = None, license_expression: Optional[str] = None) -> None:
-        if not license_ and not license_expression:
+    def __init__(self, *, license_: Optional[License] = None, expression: Optional[str] = None) -> None:
+        if not license_ and not expression:
             raise NoPropertiesProvidedException(
                 'One of `license` or `license_expression` must be supplied - neither supplied'
             )
-        if license_ and license_expression:
+        if license_ and expression:
             warnings.warn(
                 'Both `license` and `license_expression` have been supplied - `license` will take precedence',
                 RuntimeWarning
             )
         self.license = license_
         if not license_:
-            self.expression = license_expression
+            self.expression = expression
         else:
             self.expression = None
 
@@ -1132,7 +1089,8 @@ class OrganizationalEntity:
         return f'<OrganizationalEntity name={self.name}>'
 
 
-class Tool(JsonSerializableObject, XmlSerializableObject):
+@serializable.serializable_class
+class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
 
@@ -1145,7 +1103,6 @@ class Tool(JsonSerializableObject, XmlSerializableObject):
     def __init__(self, *, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
                  hashes: Optional[Iterable[HashType]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None) -> None:
-        super().__init__()
         self.vendor = vendor
         self.name = name
         self.version = version
@@ -1208,7 +1165,8 @@ class Tool(JsonSerializableObject, XmlSerializableObject):
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         External References provide a way to document systems, sites, and information that may be relevant but which
@@ -1222,16 +1180,6 @@ class Tool(JsonSerializableObject, XmlSerializableObject):
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
-
-    @classmethod
-    def get_array_property_configuration(cls) -> Dict[str, Tuple[XmlArraySerializationType, str, Any]]:
-        """
-
-        :return:
-        """
-        return {
-            'external_references': (XmlArraySerializationType.NESTED, 'reference', ExternalReference)
-        }
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Tool):

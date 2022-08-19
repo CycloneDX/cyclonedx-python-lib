@@ -300,13 +300,13 @@ class TestModelComponent(TestCase):
         # expected sort order: (type, [group], name, [version])
         expected_order = [6, 4, 5, 3, 2, 1, 0]
         components = [
-            Component(name='component-c', component_type=ComponentType.LIBRARY),
-            Component(name='component-a', component_type=ComponentType.LIBRARY),
-            Component(name='component-b', component_type=ComponentType.LIBRARY, group='group-2'),
-            Component(name='component-a', component_type=ComponentType.LIBRARY, group='group-2'),
-            Component(name='component-a', component_type=ComponentType.FILE),
-            Component(name='component-b', component_type=ComponentType.FILE),
-            Component(name='component-a', component_type=ComponentType.FILE, version="1.0.0"),
+            Component(name='component-c', type_=ComponentType.LIBRARY),
+            Component(name='component-a', type_=ComponentType.LIBRARY),
+            Component(name='component-b', type_=ComponentType.LIBRARY, group='group-2'),
+            Component(name='component-a', type_=ComponentType.LIBRARY, group='group-2'),
+            Component(name='component-a', type_=ComponentType.FILE),
+            Component(name='component-b', type_=ComponentType.FILE),
+            Component(name='component-a', type_=ComponentType.FILE, version="1.0.0"),
         ]
         sorted_components = sorted(components)
         expected_components = reorder(components, expected_order)

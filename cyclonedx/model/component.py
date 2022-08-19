@@ -23,10 +23,12 @@ from os.path import exists
 from typing import Any, Iterable, Optional, Set
 
 # See https://github.com/package-url/packageurl-python/issues/65
+import serializable
 from packageurl import PackageURL  # type: ignore
 from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
+from ..serialization import PackageUrl
 from . import (
     AttachedText,
     ComparableTuple,
@@ -668,6 +670,7 @@ class Swid:
         return f'<Swid tagId={self.tag_id}, name={self.name}, version={self.version}>'
 
 
+@serializable.serializable_class
 class Component:
     """
     This is our internal representation of a Component within a Bom.
@@ -700,13 +703,13 @@ class Component:
             hashes=[
                 HashType(alg=HashAlgorithm.SHA_1, content=sha1_hash)
             ],
-            component_type=ComponentType.FILE, purl=PackageURL(
+            type_=ComponentType.FILE, purl=PackageURL(
                 type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
                 version='0.0.0-{}'.format(sha1_hash[0:12])
             )
         )
 
-    def __init__(self, *, name: str, component_type: ComponentType = ComponentType.LIBRARY,
+    def __init__(self, *, name: str, type_: ComponentType = ComponentType.LIBRARY,
                  mime_type: Optional[str] = None, bom_ref: Optional[str] = None,
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
@@ -720,7 +723,7 @@ class Component:
                  # Deprecated parameters kept for backwards compatibility
                  namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
-        self.type = component_type
+        self.type_ = type_
         self.mime_type = mime_type
         self._bom_ref = BomRef(value=bom_ref)
         self.supplier = supplier
@@ -759,23 +762,23 @@ class Component:
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = [LicenseChoice(license_expression=license_str)]  # type: ignore
+                self.licenses = [LicenseChoice(expression=license_str)]  # type: ignore
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
 
     @property
-    def type(self) -> ComponentType:
+    def type_(self) -> ComponentType:
         """
         Get the type of this Component.
 
         Returns:
             Declared type of this Component as `ComponentType`.
         """
-        return self._type
+        return self._type_
 
-    @type.setter
-    def type(self, component_type: ComponentType) -> None:
-        self._type = component_type
+    @type_.setter
+    def type_(self, component_type: ComponentType) -> None:
+        self._type_ = component_type
 
     @property
     def mime_type(self) -> Optional[str]:
@@ -795,7 +798,8 @@ class Component:
     def mime_type(self, mime_type: Optional[str]) -> None:
         self._mime_type = mime_type
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.json_name('bom-ref')
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
@@ -992,7 +996,8 @@ class Component:
     def cpe(self, cpe: Optional[str]) -> None:
         self._cpe = cpe
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.type_mapping(PackageUrl)
     def purl(self) -> Optional[PackageURL]:
         """
         Specifies the package-url (PURL).
@@ -1149,20 +1154,20 @@ class Component:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return ComparableTuple((self.type, self.group, self.name, self.version)) < \
-                ComparableTuple((other.type, other.group, other.name, other.version))
+            return ComparableTuple((self.type_, self.group, self.name, self.version)) < \
+                ComparableTuple((other.type_, other.group, other.name, other.version))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
-            self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
+            self.type_, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
             self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
             self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
             tuple(self.components), self.evidence, self.release_notes
         ))
 
     def __repr__(self) -> str:
-        return f'<Component group={self.group}, name={self.name}, version={self.version}, type={self.type}>'
+        return f'<Component group={self.group}, name={self.name}, version={self.version}, type={self.type_}>'
 
     # Deprecated methods
     def get_namespace(self) -> Optional[str]:
