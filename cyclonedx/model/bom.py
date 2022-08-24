@@ -91,7 +91,8 @@ class BomMetaData:
     def tools(self, tools: Iterable[Tool]) -> None:
         self._tools = SortedSet(tools)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
     def authors(self) -> "SortedSet[OrganizationalContact]":
         """
         The person(s) who created the BOM.
@@ -163,7 +164,8 @@ class BomMetaData:
     def supplier(self, supplier: Optional[OrganizationalEntity]) -> None:
         self._supplier = supplier
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, '')
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this BOM is licensed.
@@ -177,7 +179,8 @@ class BomMetaData:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not

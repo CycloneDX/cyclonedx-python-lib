@@ -17,7 +17,10 @@
 
 from typing import Any, Iterable, Optional
 
+import serializable
 from sortedcontainers import SortedSet
+
+from cyclonedx.serialization import BomRefHelper
 
 from . import (
     ComparableTuple,
@@ -39,6 +42,7 @@ This set of classes represents the data that is possible about known Services.
 """
 
 
+@serializable.serializable_class
 class Service:
     """
     Class that models the `service` complex type in the CycloneDX schema.
@@ -73,7 +77,11 @@ class Service:
         self.release_notes = release_notes
         self.properties = properties or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRefHelper)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the service elsewhere in the BOM. Uniqueness is enforced
@@ -157,7 +165,8 @@ class Service:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'endpoint')
     def endpoints(self) -> "SortedSet[XsUri]":
         """
         A list of endpoints URI's this service provides.
@@ -188,7 +197,8 @@ class Service:
     def authenticated(self, authenticated: Optional[bool]) -> None:
         self._authenticated = authenticated
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('x-trust-boundary')
     def x_trust_boundary(self) -> Optional[bool]:
         """
         A boolean value indicating if use of the service crosses a trust zone or boundary. A value of true indicates
@@ -205,7 +215,8 @@ class Service:
     def x_trust_boundary(self, x_trust_boundary: Optional[bool]) -> None:
         self._x_trust_boundary = x_trust_boundary
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
     def data(self) -> "SortedSet[DataClassification]":
         """
         Specifies the data classification.
@@ -219,7 +230,8 @@ class Service:
     def data(self, data: Iterable[DataClassification]) -> None:
         self._data = SortedSet(data)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, '')
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this Service is licensed.
@@ -233,7 +245,8 @@ class Service:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the Service.
@@ -247,7 +260,8 @@ class Service:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     def services(self) -> "SortedSet['Service']":
         """
         A list of services included or deployed behind the parent service.
@@ -279,7 +293,8 @@ class Service:
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -313,4 +328,4 @@ class Service:
         ))
 
     def __repr__(self) -> str:
-        return f'<Service group={self.group}, name={self.name}, version={self.version}, bom-ref={self.bom_ref}>'
+        return f'<Service bom-ref={self.bom_ref.value}, group={self.group}, name={self.name}, version={self.version}>'
