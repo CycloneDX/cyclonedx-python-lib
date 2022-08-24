@@ -125,7 +125,7 @@ class TestModelComponent(TestCase):
         self.assertIsNone(c.scope)
         self.assertSetEqual(c.hashes, set())
         self.assertSetEqual(c.licenses, set())
-        self.assertIsNone(c.copyright)
+        self.assertIsNone(c.copyright_)
         self.assertIsNone(c.purl)
         self.assertSetEqual(c.external_references, set())
         self.assertFalse(c.properties)
@@ -466,8 +466,8 @@ class TestModelPatch(TestCase):
         diff_b = Diff(text=AttachedText(content='b'))
 
         resolves_a = [
-            IssueType(classification=IssueClassification.DEFECT),
-            IssueType(classification=IssueClassification.SECURITY)
+            IssueType(type_=IssueClassification.DEFECT),
+            IssueType(type_=IssueClassification.SECURITY)
         ]
 
         # expected sort order: (type, [diff], sorted(resolves))

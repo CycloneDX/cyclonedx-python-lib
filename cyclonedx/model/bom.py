@@ -291,7 +291,8 @@ class Bom:
     def metadata(self, metadata: BomMetaData) -> None:
         self._metadata = metadata
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     def components(self) -> "SortedSet[Component]":
         """
         Get all the Components currently in this Bom.
@@ -345,7 +346,8 @@ class Bom:
         """
         return component in self.components
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     def services(self) -> "SortedSet[Service]":
         """
         Get all the Services currently in this Bom.
@@ -411,7 +413,8 @@ class Bom:
         """
         return bool(self.vulnerabilities)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
     def vulnerabilities(self) -> "SortedSet[Vulnerability]":
         """
         Get all the Vulnerabilities in this BOM.
@@ -479,4 +482,4 @@ class Bom:
         ))
 
     def __repr__(self) -> str:
-        return f'<Bom uuid={self.serial_number}>'
+        return f'<Bom uuid={self.serial_number}, hash={hash(self)}>'

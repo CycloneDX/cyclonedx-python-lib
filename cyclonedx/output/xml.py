@@ -265,8 +265,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 component_element.remove(licenses_e)
 
         # copyright
-        if component.copyright:
-            ElementTree.SubElement(component_element, 'copyright').text = component.copyright
+        if component.copyright_:
+            ElementTree.SubElement(component_element, 'copyright').text = component.copyright_
 
         # cpe
         if component.cpe:
@@ -360,9 +360,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 self._add_licenses_to_element(
                     licenses=component.evidence.licenses, parent_element=evidence_licenses_element
                 )
-            if component.evidence.copyright:
+            if component.evidence.copyright_:
                 evidence_copyrights_element = ElementTree.SubElement(evidence_element, 'copyright')
-                for evidence_copyright in component.evidence.copyright:
+                for evidence_copyright in component.evidence.copyright_:
                     ElementTree.SubElement(evidence_copyrights_element, 'text').text = evidence_copyright.text
 
         # releaseNotes
@@ -375,22 +375,22 @@ class Xml(BaseOutput, BaseSchemaVersion):
                                  parent_element: ElementTree.Element) -> bool:
         license_output = False
         for license_ in licenses:
-            if license_.license:
+            if license_.license_:
                 license_e = ElementTree.SubElement(parent_element, 'license')
-                if license_.license.id:
-                    ElementTree.SubElement(license_e, 'id').text = license_.license.id
-                elif license_.license.name:
-                    ElementTree.SubElement(license_e, 'name').text = license_.license.name
-                if license_.license.text:
+                if license_.license_.id_:
+                    ElementTree.SubElement(license_e, 'id').text = license_.license_.id_
+                elif license_.license_.name:
+                    ElementTree.SubElement(license_e, 'name').text = license_.license_.name
+                if license_.license_.text:
                     license_text_e_attrs = {}
-                    if license_.license.text.content_type:
-                        license_text_e_attrs['content-type'] = license_.license.text.content_type
-                    if license_.license.text.encoding:
-                        license_text_e_attrs['encoding'] = license_.license.text.encoding.value
+                    if license_.license_.text.content_type:
+                        license_text_e_attrs['content-type'] = license_.license_.text.content_type
+                    if license_.license_.text.encoding:
+                        license_text_e_attrs['encoding'] = license_.license_.text.encoding.value
                     ElementTree.SubElement(license_e, 'text',
-                                           license_text_e_attrs).text = license_.license.text.content
-                if license_.license.url:
-                    ElementTree.SubElement(license_e, 'url').text = str(license_.license.url)
+                                           license_text_e_attrs).text = license_.license_.text.content
+                if license_.license_.url:
+                    ElementTree.SubElement(license_e, 'url').text = str(license_.license_.url)
 
                 license_output = True
             else:
@@ -403,7 +403,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
     def _add_release_notes_element(release_notes: ReleaseNotes, parent_element: ElementTree.Element) -> None:
         release_notes_e = ElementTree.SubElement(parent_element, 'releaseNotes')
 
-        ElementTree.SubElement(release_notes_e, 'type').text = release_notes.type
+        ElementTree.SubElement(release_notes_e, 'type').text = release_notes.type_
         if release_notes.title:
             ElementTree.SubElement(release_notes_e, 'title').text = release_notes.title
         if release_notes.featured_image:
@@ -429,10 +429,10 @@ class Xml(BaseOutput, BaseSchemaVersion):
             release_notes_resolves_e = ElementTree.SubElement(release_notes_e, 'resolves')
             for issue in release_notes.resolves:
                 issue_e = ElementTree.SubElement(
-                    release_notes_resolves_e, 'issue', {'type': issue.type.value}
+                    release_notes_resolves_e, 'issue', {'type': issue.type_.value}
                 )
-                if issue.id:
-                    ElementTree.SubElement(issue_e, 'id').text = issue.id
+                if issue.id_:
+                    ElementTree.SubElement(issue_e, 'id').text = issue.id_
                 if issue.name:
                     ElementTree.SubElement(issue_e, 'name').text = issue.name
                 if issue.description:
@@ -464,7 +464,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     @staticmethod
     def add_patch_element(patch: Patch) -> ElementTree.Element:
-        patch_element = ElementTree.Element('patch', {"type": patch.type.value})
+        patch_element = ElementTree.Element('patch', {"type": patch.type_.value})
         if patch.diff:
             diff_element = ElementTree.SubElement(patch_element, 'diff')
             if patch.diff.text:
@@ -830,11 +830,11 @@ class Xml(BaseOutput, BaseSchemaVersion):
         oe_element = ElementTree.SubElement(parent_element, tag_name)
         if organization.name:
             ElementTree.SubElement(oe_element, 'name').text = organization.name
-        if organization.url:
-            for url in organization.url:
+        if organization.urls:
+            for url in organization.urls:
                 ElementTree.SubElement(oe_element, 'url').text = str(url)
-        if organization.contact:
-            for contact in organization.contact:
+        if organization.contacts:
+            for contact in organization.contacts:
                 Xml._add_organizational_contact(parent_element=oe_element, contact=contact, tag_name='contact')
 
     @staticmethod

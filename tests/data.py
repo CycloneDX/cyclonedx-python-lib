@@ -215,9 +215,9 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
     bom.metadata.licenses = [LicenseChoice(license_=License(
-        spdx_license_id='Apache-2.0', license_text=AttachedText(
+        spdx_license_id='Apache-2.0', text=AttachedText(
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
-        ), license_url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
+        ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
     ))]
     bom.metadata.properties = get_properties_1()
     return bom
@@ -358,7 +358,7 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     component.publisher = 'CycloneDX'
     component.description = 'This component is awesome'
     component.scope = ComponentScope.REQUIRED
-    component.copyright = 'Apache 2.0 baby!'
+    component.copyright_ = 'Apache 2.0 baby!'
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
     component.swid = get_swid_1()
     if include_pedigree:
@@ -434,7 +434,7 @@ def get_external_reference_2() -> ExternalReference:
 
 def get_issue_1() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
+        type_=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -446,7 +446,7 @@ def get_issue_1() -> IssueType:
 
 def get_issue_2() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id_='CVE-2021-44229', name='Apache Log4Shell',
+        type_=IssueClassification.SECURITY, id_='CVE-2021-44229', name='Apache Log4Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -522,13 +522,13 @@ def get_release_notes() -> ReleaseNotes:
             Note(
                 text=NoteText(
                     content=text_content, content_type='text/plain; charset=UTF-8',
-                    content_encoding=Encoding.BASE_64
+                    encoding=Encoding.BASE_64
                 ), locale='en-GB'
             ),
             Note(
                 text=NoteText(
                     content=text_content, content_type='text/plain; charset=UTF-8',
-                    content_encoding=Encoding.BASE_64
+                    encoding=Encoding.BASE_64
                 ), locale='en-US'
             )
         ],

@@ -20,12 +20,14 @@
 from datetime import datetime
 from typing import Iterable, Optional
 
+import serializable
 from sortedcontainers import SortedSet
 
 from ..model import Note, Property, XsUri
 from ..model.issue import IssueType
 
 
+@serializable.serializable_class
 class ReleaseNotes:
     """
     This is our internal representation of a `releaseNotesType` for a Component in a BOM.
@@ -39,7 +41,7 @@ class ReleaseNotes:
                  timestamp: Optional[datetime] = None, aliases: Optional[Iterable[str]] = None,
                  tags: Optional[Iterable[str]] = None, resolves: Optional[Iterable[IssueType]] = None,
                  notes: Optional[Iterable[Note]] = None, properties: Optional[Iterable[Property]] = None) -> None:
-        self.type = type_
+        self.type_ = type_
         self.title = title
         self.featured_image = featured_image
         self.social_image = social_image
@@ -52,7 +54,7 @@ class ReleaseNotes:
         self.properties = properties or []  # type: ignore
 
     @property
-    def type(self) -> str:
+    def type_(self) -> str:
         """
         The software versioning type.
 
@@ -72,8 +74,8 @@ class ReleaseNotes:
         """
         return self._type
 
-    @type.setter
-    def type(self, type_: str) -> None:
+    @type_.setter
+    def type_(self, type_: str) -> None:
         self._type = type_
 
     @property
@@ -120,7 +122,8 @@ class ReleaseNotes:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
     def timestamp(self) -> Optional[datetime]:
         """
         The date and time (timestamp) when the release note was created.
@@ -131,7 +134,8 @@ class ReleaseNotes:
     def timestamp(self, timestamp: Optional[datetime]) -> None:
         self._timestamp = timestamp
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'alias')
     def aliases(self) -> "SortedSet[str]":
         """
         One or more alternate names the release may be referred to. This may include unofficial terms used by
@@ -146,7 +150,8 @@ class ReleaseNotes:
     def aliases(self, aliases: Iterable[str]) -> None:
         self._aliases = SortedSet(aliases)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
     def tags(self) -> "SortedSet[str]":
         """
         One or more tags that may aid in search or retrieval of the release note.
@@ -160,7 +165,8 @@ class ReleaseNotes:
     def tags(self, tags: Iterable[str]) -> None:
         self._tags = SortedSet(tags)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'issue')
     def resolves(self) -> "SortedSet[IssueType]":
         """
         A collection of issues that have been resolved.
@@ -174,7 +180,8 @@ class ReleaseNotes:
     def resolves(self, resolves: Iterable[IssueType]) -> None:
         self._resolves = SortedSet(resolves)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'note')
     def notes(self) -> "SortedSet[Note]":
         """
         Zero or more release notes containing the locale and content. Multiple note elements may be specified to support
@@ -189,7 +196,8 @@ class ReleaseNotes:
     def notes(self, notes: Iterable[Note]) -> None:
         self._notes = SortedSet(notes)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a name-value store. This provides flexibility to include data not
@@ -212,9 +220,9 @@ class ReleaseNotes:
 
     def __hash__(self) -> int:
         return hash((
-            self.type, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
+            self.type_, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
             tuple(self.aliases), tuple(self.tags), tuple(self.resolves), tuple(self.notes), tuple(self.properties)
         ))
 
     def __repr__(self) -> str:
-        return f'<ReleaseNotes type={self.type}, title={self.title}>'
+        return f'<ReleaseNotes type={self.type_}, title={self.title}>'

@@ -159,8 +159,8 @@ class TestModelLicense(TestCase):
         licenses = [
             License(spdx_license_id='MIT'),
             License(spdx_license_id='Apache-2.0'),
-            License(license_name='MIT'),
-            License(license_name='Apache-2.0'),
+            License(name='MIT'),
+            License(name='Apache-2.0'),
         ]
         sorted_licenses = sorted(licenses)
         expected_licenses = reorder(licenses, expected_order)
@@ -346,7 +346,7 @@ class TestModelIssueType(TestCase):
 
     def test_issue_type(self) -> None:
         it = IssueType(
-            classification=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
+            type_=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
             description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features used in '
                         'configuration, log messages, and parameters do not protect against attacker controlled LDAP '
                         'and other JNDI related endpoints. An attacker who can control log messages or log message '
@@ -361,8 +361,8 @@ class TestModelIssueType(TestCase):
                 XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
             ]
         )
-        self.assertEqual(it.type, IssueClassification.SECURITY),
-        self.assertEqual(it.id, 'CVE-2021-44228'),
+        self.assertEqual(it.type_, IssueClassification.SECURITY),
+        self.assertEqual(it.id_, 'CVE-2021-44228'),
         self.assertEqual(it.name, 'Apache Log3Shell')
         self.assertEqual(
             it.description,
@@ -403,7 +403,7 @@ class TestModelNote(TestCase):
 
         n = Note(
             text=NoteText(
-                content=text_content, content_type='text/plain; charset=UTF-8', content_encoding=Encoding.BASE_64
+                content=text_content, content_type='text/plain; charset=UTF-8', encoding=Encoding.BASE_64
             ), locale='en-GB'
         )
         self.assertEqual(n.text.content, text_content)
@@ -440,7 +440,7 @@ class TestModelNoteText(TestCase):
             NoteText(content='b', content_type='a'),
             NoteText(content='b', content_type='b'),
             NoteText(content='b', content_type='c'),
-            NoteText(content='b', content_type='a', content_encoding=Encoding.BASE_64),
+            NoteText(content='b', content_type='a', encoding=Encoding.BASE_64),
         ]
         sorted_notes = sorted(notes)
         expected_notes = reorder(notes, expected_order)

@@ -27,6 +27,8 @@ import serializable
 from packageurl import PackageURL  # type: ignore
 from sortedcontainers import SortedSet
 
+from cyclonedx.serialization import BomRefHelper
+
 from ..exception.model import NoPropertiesProvidedException
 from ..serialization import PackageUrl
 from . import (
@@ -48,6 +50,7 @@ from .issue import IssueType
 from .release_note import ReleaseNotes
 
 
+@serializable.serializable_class
 class Commit:
     """
     Our internal representation of the `commitType` complex type.
@@ -159,6 +162,7 @@ class Commit:
         return f'<Commit uid={self.uid}, url={self.url}, message={self.message}>'
 
 
+@serializable.serializable_class
 class ComponentEvidence:
     """
     Our internal representation of the `componentEvidenceType` complex type.
@@ -177,9 +181,10 @@ class ComponentEvidence:
             )
 
         self.licenses = licenses or []  # type: ignore
-        self.copyright = copyright_ or []  # type: ignore
+        self.copyright_ = copyright_ or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'license')
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         Optional list of licenses obtained during analysis.
@@ -193,8 +198,9 @@ class ComponentEvidence:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property
-    def copyright(self) -> "SortedSet[Copyright]":
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
+    def copyright_(self) -> "SortedSet[Copyright]":
         """
         Optional list of copyright statements.
 
@@ -203,8 +209,8 @@ class ComponentEvidence:
         """
         return self._copyright
 
-    @copyright.setter
-    def copyright(self, copyright_: Iterable[Copyright]) -> None:
+    @copyright_.setter
+    def copyright_(self, copyright_: Iterable[Copyright]) -> None:
         self._copyright = SortedSet(copyright_)
 
     def __eq__(self, other: object) -> bool:
@@ -213,7 +219,7 @@ class ComponentEvidence:
         return False
 
     def __hash__(self) -> int:
-        return hash((tuple(self.licenses), tuple(self.copyright)))
+        return hash((tuple(self.licenses), tuple(self.copyright_)))
 
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
@@ -323,6 +329,7 @@ class PatchClassification(str, Enum):
     UNOFFICIAL = 'unofficial'
 
 
+@serializable.serializable_class
 class Patch:
     """
     Our internal representation of the `patchType` complex type.
@@ -333,12 +340,13 @@ class Patch:
 
     def __init__(self, *, type_: PatchClassification, diff: Optional[Diff] = None,
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
-        self.type = type_
+        self.type_ = type_
         self.diff = diff
         self.resolves = resolves or []  # type: ignore
 
-    @property
-    def type(self) -> PatchClassification:
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
+    def type_(self) -> PatchClassification:
         """
         Specifies the purpose for the patch including the resolution of defects, security issues, or new behavior or
         functionality.
@@ -348,8 +356,8 @@ class Patch:
         """
         return self._type
 
-    @type.setter
-    def type(self, type_: PatchClassification) -> None:
+    @type_.setter
+    def type_(self, type_: PatchClassification) -> None:
         self._type = type_
 
     @property
@@ -390,17 +398,18 @@ class Patch:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < \
-                ComparableTuple((other.type, other.diff, ComparableTuple(other.resolves)))
+            return ComparableTuple((self.type_, self.diff, ComparableTuple(self.resolves))) < \
+                ComparableTuple((other.type_, other.diff, ComparableTuple(other.resolves)))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.type, self.diff, tuple(self.resolves)))
+        return hash((self.type_, self.diff, tuple(self.resolves)))
 
     def __repr__(self) -> str:
-        return f'<Patch type={self.type}, id={id(self)}>'
+        return f'<Patch type={self.type_}, id={id(self)}>'
 
 
+@serializable.serializable_class
 class Pedigree:
     """
     Our internal representation of the `pedigreeType` complex type.
@@ -431,7 +440,8 @@ class Pedigree:
         self.patches = patches or []  # type: ignore
         self.notes = notes
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     def ancestors(self) -> "SortedSet['Component']":
         """
         Describes zero or more components in which a component is derived from. This is commonly used to describe forks
@@ -451,7 +461,8 @@ class Pedigree:
     def ancestors(self, ancestors: Iterable['Component']) -> None:
         self._ancestors = SortedSet(ancestors)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     def descendants(self) -> "SortedSet['Component']":
         """
         Descendants are the exact opposite of ancestors. This provides a way to document all forks (and their forks) of
@@ -466,7 +477,8 @@ class Pedigree:
     def descendants(self, descendants: Iterable['Component']) -> None:
         self._descendants = SortedSet(descendants)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     def variants(self) -> "SortedSet['Component']":
         """
         Variants describe relations where the relationship between the components are not known. For example, if
@@ -482,7 +494,8 @@ class Pedigree:
     def variants(self, variants: Iterable['Component']) -> None:
         self._variants = SortedSet(variants)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'commit')
     def commits(self) -> "SortedSet[Commit]":
         """
         A list of zero or more commits which provide a trail describing how the component deviates from an ancestor,
@@ -497,7 +510,8 @@ class Pedigree:
     def commits(self, commits: Iterable[Commit]) -> None:
         self._commits = SortedSet(commits)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     def patches(self) -> "SortedSet[Patch]":
         """
         A list of zero or more patches describing how the component deviates from an ancestor, descendant, or variant.
@@ -538,9 +552,10 @@ class Pedigree:
         ))
 
     def __repr__(self) -> str:
-        return f'<Pedigree id={id(self)}>'
+        return f'<Pedigree id={id(self)}, hash={hash(self)}>'
 
 
+@serializable.serializable_class
 class Swid:
     """
     Our internal representation of the `swidType` complex type.
@@ -560,7 +575,8 @@ class Swid:
         self.text = text
         self.url = url
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def tag_id(self) -> str:
         """
         Maps to the tagId of a SoftwareIdentity.
@@ -574,7 +590,8 @@ class Swid:
     def tag_id(self, tag_id: str) -> None:
         self._tag_id = tag_id
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def name(self) -> str:
         """
         Maps to the name of a SoftwareIdentity.
@@ -588,7 +605,8 @@ class Swid:
     def name(self, name: str) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def version(self) -> Optional[str]:
         """
         Maps to the version of a SoftwareIdentity.
@@ -602,7 +620,8 @@ class Swid:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def tag_version(self) -> Optional[int]:
         """
         Maps to the tagVersion of a SoftwareIdentity.
@@ -616,7 +635,8 @@ class Swid:
     def tag_version(self, tag_version: Optional[int]) -> None:
         self._tag_version = tag_version
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def patch(self) -> Optional[bool]:
         """
         Maps to the patch of a SoftwareIdentity.
@@ -736,7 +756,7 @@ class Component:
         self.scope = scope
         self.hashes = hashes or []  # type: ignore
         self.licenses = licenses or []  # type: ignore
-        self.copyright = copyright_
+        self.copyright_ = copyright_
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
@@ -800,6 +820,9 @@ class Component:
 
     @property  # type: ignore[misc]
     @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRefHelper)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
@@ -938,7 +961,8 @@ class Component:
     def scope(self, scope: Optional[ComponentScope]) -> None:
         self._scope = scope
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     def hashes(self) -> "SortedSet[HashType]":
         """
         Optional list of hashes that help specify the integrity of this Component.
@@ -952,7 +976,8 @@ class Component:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, '')
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this Component is licensed.
@@ -967,7 +992,7 @@ class Component:
         self._licenses = SortedSet(licenses)
 
     @property
-    def copyright(self) -> Optional[str]:
+    def copyright_(self) -> Optional[str]:
         """
         An optional copyright notice informing users of the underlying claims to copyright ownership in a published
         work.
@@ -975,11 +1000,11 @@ class Component:
         Returns:
             `str` or `None`
         """
-        return self._copyright
+        return self._copyright_
 
-    @copyright.setter
-    def copyright(self, copyright_: Optional[str]) -> None:
-        self._copyright = copyright_
+    @copyright_.setter
+    def copyright_(self, copyright_: Optional[str]) -> None:
+        self._copyright_ = copyright_
 
     @property
     def cpe(self) -> Optional[str]:
@@ -1043,7 +1068,8 @@ class Component:
     def pedigree(self, pedigree: Optional[Pedigree]) -> None:
         self._pedigree = pedigree
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the component or to the project the component
@@ -1058,7 +1084,8 @@ class Component:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -1073,7 +1100,8 @@ class Component:
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     def components(self) -> "SortedSet['Component']":
         """
         A list of software and hardware components included in the parent component. This is not a dependency tree. It
@@ -1161,13 +1189,13 @@ class Component:
     def __hash__(self) -> int:
         return hash((
             self.type_, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
-            self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
+            self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright_,
             self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
             tuple(self.components), self.evidence, self.release_notes
         ))
 
     def __repr__(self) -> str:
-        return f'<Component group={self.group}, name={self.name}, version={self.version}, type={self.type_}>'
+        return f'<Component bom-ref={self.bom_ref.value}, group={self.group}, name={self.name}, version={self.version}, type={self.type_}>'
 
     # Deprecated methods
     def get_namespace(self) -> Optional[str]:
