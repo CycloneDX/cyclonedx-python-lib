@@ -157,8 +157,8 @@ class TestModelLicense(TestCase):
         # expected sort order: ([id], [name])
         expected_order = [1, 0, 3, 2]
         licenses = [
-            License(spdx_license_id='MIT'),
-            License(spdx_license_id='Apache-2.0'),
+            License(id_='MIT'),
+            License(id_='Apache-2.0'),
             License(name='MIT'),
             License(name='Apache-2.0'),
         ]
@@ -170,8 +170,8 @@ class TestModelLicense(TestCase):
 class TestModelLicenseChoice(TestCase):
 
     def test_sort(self) -> None:
-        license_a = License(spdx_license_id='Apache-2.0')
-        license_b = License(spdx_license_id='MIT')
+        license_a = License(id_='Apache-2.0')
+        license_b = License(id_='MIT')
 
         # expected sort order: ([license], [expression])
         expected_order = [1, 0, 3, 2]

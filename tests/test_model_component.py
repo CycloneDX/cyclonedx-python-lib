@@ -113,7 +113,7 @@ class TestModelComponent(TestCase):
         )
         mock_uuid.assert_called()
         self.assertEqual(c.name, 'test-component')
-        self.assertEqual(c.type, ComponentType.LIBRARY)
+        self.assertEqual(c.type_, ComponentType.LIBRARY)
         self.assertIsNone(c.mime_type)
         self.assertEqual(str(c.bom_ref), '6f266d1c-760f-4552-ae3b-41a9b74232fa')
         self.assertIsNone(c.supplier)
@@ -140,7 +140,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c1.name, 'test-component')
         self.assertEqual(c1.version, '1.2.3')
-        self.assertEqual(c1.type, ComponentType.LIBRARY)
+        self.assertEqual(c1.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c1.external_references), 0)
         self.assertEqual(len(c1.hashes), 0)
 
@@ -149,7 +149,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c2.name, 'test2-component')
         self.assertEqual(c2.version, '3.2.1')
-        self.assertEqual(c2.type, ComponentType.LIBRARY)
+        self.assertEqual(c2.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
 
@@ -168,7 +168,7 @@ class TestModelComponent(TestCase):
         ))
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.version, '1.2.3')
-        self.assertEqual(c.type, ComponentType.LIBRARY)
+        self.assertEqual(c.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 1)
         self.assertEqual(len(c.hashes), 0)
 
@@ -177,7 +177,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c2.name, 'test2-component')
         self.assertEqual(c2.version, '3.2.1')
-        self.assertEqual(c2.type, ComponentType.LIBRARY)
+        self.assertEqual(c2.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
 
@@ -187,7 +187,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c.name, 'test-component')
         self.assertIsNone(c.version, None)
-        self.assertEqual(c.type, ComponentType.LIBRARY)
+        self.assertEqual(c.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 0)
         self.assertEqual(len(c.hashes), 0)
 

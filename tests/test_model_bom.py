@@ -54,8 +54,8 @@ class TestBomMetaData(TestCase):
         manufacturer = OrganizationalEntity(name='test_manufacturer')
         supplier = OrganizationalEntity(name='test_supplier')
         licenses = [
-            LicenseChoice(license_=License(spdx_license_id='MIT')),
-            LicenseChoice(license_=License(spdx_license_id='Apache-2.0')),
+            LicenseChoice(license_=License(id_='MIT')),
+            LicenseChoice(license_=License(id_='Apache-2.0')),
         ]
         properties = [
             Property(name='property_1', value='value_1'),
