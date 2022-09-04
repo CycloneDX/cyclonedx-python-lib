@@ -21,8 +21,9 @@ Use a Parser instead of programmatically creating a Bom as a developer.
 """
 
 from abc import ABC
-from typing import List
+from typing import List, Optional
 
+from ..model.bom_meta import BomMetaData
 from ..model.component import Component
 
 
@@ -67,3 +68,6 @@ class BaseParser(ABC):
 
     def has_warnings(self) -> bool:
         return len(self._warnings) > 0
+
+    def get_metadata(self) -> Optional[BomMetaData]:
+        return None

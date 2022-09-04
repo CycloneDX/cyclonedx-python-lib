@@ -19,8 +19,17 @@
 
 from unittest import TestCase
 
-from cyclonedx.model import License, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property
-from cyclonedx.model.bom import Bom, BomMetaData, ThisTool, Tool
+from cyclonedx.model import (
+    License,
+    LicenseChoice,
+    OrganizationalContact,
+    OrganizationalEntity,
+    Property,
+    ThisTool,
+    Tool,
+)
+from cyclonedx.model.bom import Bom
+from cyclonedx.model.bom_meta import BomMetaData
 from cyclonedx.model.component import Component, ComponentType
 from data import get_bom_for_issue_275_components, get_bom_with_component_setuptools_with_vulnerability
 
