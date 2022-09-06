@@ -21,6 +21,7 @@ Set of helper classes for use with ``serializable`` when conducting (de-)seriali
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 from serializable.helpers import BaseHelper
+from uuid import UUID
 
 from ..model.bom_ref import BomRef
 
@@ -58,19 +59,19 @@ class PackageUrl(BaseHelper):
         except ValueError:
             raise ValueError(f'PURL string supplied ({o}) does not parse!')
 
-#
-# class XsUriHelper(BaseHelper):
-#
-#     @classmethod
-#     def serialize(cls, o: object) -> str:
-#         if isinstance(o, XsUri):
-#             return str(o)
-#
-#         raise ValueError(f'Attempt to serialize a non-XsUri: {o.__class__}')
-#
-#     @classmethod
-#     def deserialize(cls, o: object) -> XsUri:
-#         try:
-#             return XsUri(uri=str(o))
-#         except ValueError:
-#             raise ValueError(f'XsUri string supplied ({o}) does not parse!')
+
+class UrnUuidHelper(BaseHelper):
+
+    @classmethod
+    def serialize(cls, o: object) -> str:
+        if isinstance(o, UUID):
+            return o.urn
+
+        raise ValueError(f'Attempt to serialize a non-UUID: {o.__class__}')
+
+    @classmethod
+    def deserialize(cls, o: object) -> PackageURL:
+        try:
+            return UUID(str(o))
+        except ValueError:
+            raise ValueError(f'UUID string supplied ({o}) does not parse!')

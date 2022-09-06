@@ -521,6 +521,7 @@ class TestOutputXml(BaseXmlTestCase):
         self.assertEqual(outputter.schema_version, schema_version)
         with open(
                 join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as expected_xml:
+            print(outputter.output_as_string())
             self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=schema_version)
             self.assertEqualXmlBom(
                 expected_xml.read(), outputter.output_as_string(), namespace=outputter.get_target_namespace()

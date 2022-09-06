@@ -56,6 +56,7 @@ from cyclonedx.model.component import (
     Pedigree,
     Swid,
 )
+from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -113,23 +114,20 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
 
 def get_bom_with_dependencies_valid() -> Bom:
     c1 = get_component_setuptools_simple()
-    c1.dependencies.update([
-        get_component_toml_with_hashes_with_references().bom_ref
-    ])
     return Bom(components=[
         c1,
         get_component_toml_with_hashes_with_references()
+    ], dependencies=[
+        Dependency(ref=c1.bom_ref, dependencies=[
+            Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
+        ]),
+        Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
     ])
 
 
 def get_bom_with_dependencies_invalid() -> Bom:
     c1 = get_component_setuptools_simple()
-    c1.dependencies.update([
-        get_component_toml_with_hashes_with_references().bom_ref
-    ])
-    return Bom(components=[
-        c1
-    ])
+    return Bom(components=[c1], dependencies=[Dependency(ref=c1.bom_ref)])
 
 
 def get_bom_with_metadata_component_and_dependencies() -> Bom:
@@ -327,14 +325,16 @@ def get_bom_for_issue_275_components() -> Bom:
     comp_c = Component(bom_ref=MOCK_UUID_4, name="comp_c", version="1.0.0")
 
     comp_b.components.add(comp_c)
-    comp_b.dependencies.add(comp_c.bom_ref)
+    # comp_b.dependencies.add(comp_c.bom_ref)
 
     libs = [comp_a, comp_b]
-    app.dependencies.add(comp_a.bom_ref)
-    app.dependencies.add(comp_b.bom_ref)
+    # app.dependencies.add(comp_a.bom_ref)
+    # app.dependencies.add(comp_b.bom_ref)
 
     bom = Bom(components=libs)
     bom.metadata.component = app
+    bom.register_dependency(target=app, depends_on=[comp_a, comp_b])
+    bom.register_dependency(target=comp_b, depends_on=[comp_c])
     return bom
 
 

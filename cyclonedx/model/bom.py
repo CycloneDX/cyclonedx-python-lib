@@ -22,6 +22,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 from uuid import UUID, uuid4
 
 import serializable
+from cyclonedx.serialization import UrnUuidHelper
 from sortedcontainers import SortedSet
 
 from ..exception.model import UnknownComponentDependencyException
@@ -29,6 +30,7 @@ from ..parser import BaseParser
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .bom_ref import BomRef
 from .component import Component
+from .dependency import Dependable, Dependency
 from .service import Service
 from .vulnerability import Vulnerability
 
@@ -63,6 +65,7 @@ class BomMetaData:
 
     @property  # type: ignore[misc]
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.xml_sequence(1)
     def timestamp(self) -> datetime:
         """
         The date and time (in UTC) when this BomMetaData was created.
@@ -78,6 +81,7 @@ class BomMetaData:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
+    @serializable.xml_sequence(2)
     def tools(self) -> "SortedSet[Tool]":
         """
         Tools used to create this BOM.
@@ -93,6 +97,7 @@ class BomMetaData:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
+    @serializable.xml_sequence(3)
     def authors(self) -> "SortedSet[OrganizationalContact]":
         """
         The person(s) who created the BOM.
@@ -110,7 +115,8 @@ class BomMetaData:
     def authors(self, authors: Iterable[OrganizationalContact]) -> None:
         self._authors = SortedSet(authors)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def component(self) -> Optional[Component]:
         """
         The (optional) component that the BOM describes.
@@ -134,7 +140,8 @@ class BomMetaData:
         """
         self._component = component
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(5)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
         The organization that manufactured the component that the BOM describes.
@@ -148,7 +155,8 @@ class BomMetaData:
     def manufacture(self, manufacture: Optional[OrganizationalEntity]) -> None:
         self._manufacture = manufacture
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(6)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
         The organization that supplied the component that the BOM describes.
@@ -166,6 +174,7 @@ class BomMetaData:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, '')
+    @serializable.xml_sequence(7)
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this BOM is licensed.
@@ -181,6 +190,7 @@ class BomMetaData:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(8)
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -248,7 +258,8 @@ class Bom:
                  services: Optional[Iterable[Service]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  serial_number: Optional[UUID] = None, version: int = 1,
-                 metadata: Optional[BomMetaData] = None) -> None:
+                 metadata: Optional[BomMetaData] = None,
+                 dependencies: Optional[Iterable[Dependency]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -262,13 +273,17 @@ class Bom:
         self.external_references = external_references or []  # type: ignore
         self.vulnerabilities = SortedSet()
         self.version = version
+        self.dependencies = dependencies or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.type_mapping(UrnUuidHelper)
+    @serializable.xml_attribute()
     def serial_number(self) -> UUID:
         """
         Unique UUID for this BOM
 
         Returns:
+            `UUID` instance
             `UUID` instance
         """
         return self._serial_number
@@ -277,7 +292,8 @@ class Bom:
     def serial_number(self, serial_number: UUID) -> None:
         self._serial_number = serial_number
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def metadata(self) -> BomMetaData:
         """
         Get our internal metadata object for this Bom.
@@ -296,6 +312,7 @@ class Bom:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
+    @serializable.xml_sequence(2)
     def components(self) -> "SortedSet[Component]":
         """
         Get all the Components currently in this Bom.
@@ -351,6 +368,7 @@ class Bom:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.xml_sequence(3)
     def services(self) -> "SortedSet[Service]":
         """
         Get all the Services currently in this Bom.
@@ -366,6 +384,7 @@ class Bom:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    @serializable.xml_sequence(4)
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
@@ -418,6 +437,7 @@ class Bom:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
+    @serializable.xml_sequence(8)
     def vulnerabilities(self) -> "SortedSet[Vulnerability]":
         """
         Get all the Vulnerabilities in this BOM.
@@ -432,12 +452,35 @@ class Bom:
         self._vulnerabilities = SortedSet(vulnerabilities)
 
     @property
+    @serializable.xml_attribute()
     def version(self) -> int:
         return self._version
 
     @version.setter
     def version(self, version: int) -> None:
         self._version = version
+
+    @property
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
+    @serializable.xml_sequence(5)
+    def dependencies(self) -> "SortedSet[Dependency]":
+        return self._dependencies
+
+    @dependencies.setter
+    def dependencies(self, dependencies: Iterable[Dependency]) -> None:
+        self._dependencies = SortedSet(dependencies)
+
+    def register_dependency(self, target: Dependable, depends_on: Optional[Iterable[Dependable]] = None) -> None:
+        _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
+
+        if _d and depends_on:
+            _d.dependencies = _d.dependencies + set(
+                map(lambda _d: Dependency(ref=_d), depends_on)) if depends_on else []
+        else:
+            self._dependencies.add(Dependency(
+                ref=target.bom_ref,
+                dependencies=list(map(lambda _d: Dependency(ref=_d), depends_on)) if depends_on else []
+            ))
 
     def urn(self) -> str:
         return f'urn:cdx:{self.serial_number}/{self.version}'
@@ -450,12 +493,19 @@ class Bom:
         Returns:
              `bool`
         """
+        # 0. Make sure all Dependable have a Dependency entry
+        if self.metadata.component:
+            self.register_dependency(target=self.metadata.component)
+        for _c in self.components:
+            self.register_dependency(target=_c)
+        for _s in self.services:
+            self.register_dependency(target=_s)
 
         # 1. Make sure dependencies are all in this Bom.
         all_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
             map(lambda s: s.bom_ref, self.services))
+        all_dependency_bom_refs = set().union(*(d.dependencies_as_bom_refs() for d in self.dependencies))
 
-        all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
         dependency_diff = all_dependency_bom_refs - all_bom_refs
         if len(dependency_diff) > 0:
             raise UnknownComponentDependencyException(
@@ -463,7 +513,7 @@ class Bom:
                 f'BOM. They are: {dependency_diff}')
 
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
-        if self.metadata.component and not self.metadata.component.dependencies:
+        if self.metadata.component and filter(lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies):
             warnings.warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'

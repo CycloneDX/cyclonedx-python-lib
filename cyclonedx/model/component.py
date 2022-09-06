@@ -46,6 +46,7 @@ from . import (
     sha1sum,
 )
 from .bom_ref import BomRef
+from .dependency import Dependable
 from .issue import IssueType
 from .release_note import ReleaseNotes
 
@@ -691,7 +692,7 @@ class Swid:
 
 
 @serializable.serializable_class
-class Component:
+class Component(Dependable):
     """
     This is our internal representation of a Component within a Bom.
 
@@ -787,6 +788,7 @@ class Component:
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
 
     @property
+    @serializable.xml_attribute()
     def type_(self) -> ComponentType:
         """
         Get the type of this Component.
@@ -835,7 +837,8 @@ class Component:
         """
         return self._bom_ref
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
         The organization that supplied the component. The supplier may often be the manufacture, but may also be a
@@ -850,7 +853,8 @@ class Component:
     def supplier(self, supplier: Optional[OrganizationalEntity]) -> None:
         self._supplier = supplier
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def author(self) -> Optional[str]:
         """
         The person(s) or organization(s) that authored the component.
@@ -864,7 +868,8 @@ class Component:
     def author(self, author: Optional[str]) -> None:
         self._author = author
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def publisher(self) -> Optional[str]:
         """
         The person(s) or organization(s) that published the component
@@ -878,7 +883,8 @@ class Component:
     def publisher(self, publisher: Optional[str]) -> None:
         self._publisher = publisher
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def group(self) -> Optional[str]:
         """
         The grouping name or identifier. This will often be a shortened, single name of the company or project that
@@ -896,7 +902,8 @@ class Component:
     def group(self, group: Optional[str]) -> None:
         self._group = group
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(5)
     def name(self) -> str:
         """
         The name of the component.
@@ -914,7 +921,8 @@ class Component:
     def name(self, name: str) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(6)
     def version(self) -> Optional[str]:
         """
         The component version. The version should ideally comply with semantic versioning but is not enforced.
@@ -931,7 +939,8 @@ class Component:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(7)
     def description(self) -> Optional[str]:
         """
         Get the description of this Component.
@@ -945,7 +954,8 @@ class Component:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(8)
     def scope(self) -> Optional[ComponentScope]:
         """
         Specifies the scope of the component.
@@ -963,6 +973,7 @@ class Component:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.xml_sequence(9)
     def hashes(self) -> "SortedSet[HashType]":
         """
         Optional list of hashes that help specify the integrity of this Component.
@@ -977,7 +988,8 @@ class Component:
         self._hashes = SortedSet(hashes)
 
     @property  # type: ignore[misc]
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, '')
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @serializable.xml_sequence(10)
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this Component is licensed.
@@ -991,7 +1003,8 @@ class Component:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(11)
     def copyright_(self) -> Optional[str]:
         """
         An optional copyright notice informing users of the underlying claims to copyright ownership in a published
@@ -1006,7 +1019,8 @@ class Component:
     def copyright_(self, copyright_: Optional[str]) -> None:
         self._copyright_ = copyright_
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(12)
     def cpe(self) -> Optional[str]:
         """
         Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification.
@@ -1023,6 +1037,7 @@ class Component:
 
     @property  # type: ignore[misc]
     @serializable.type_mapping(PackageUrl)
+    @serializable.xml_sequence(13)
     def purl(self) -> Optional[PackageURL]:
         """
         Specifies the package-url (PURL).
@@ -1039,7 +1054,8 @@ class Component:
     def purl(self, purl: Optional[PackageURL]) -> None:
         self._purl = purl
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(14)
     def swid(self) -> Optional[Swid]:
         """
         Specifies metadata and content for ISO-IEC 19770-2 Software Identification (SWID) Tags.
@@ -1053,7 +1069,8 @@ class Component:
     def swid(self, swid: Optional[Swid]) -> None:
         self._swid = swid
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(16)
     def pedigree(self) -> Optional[Pedigree]:
         """
         Component pedigree is a way to document complex supply chain scenarios where components are created,
@@ -1070,6 +1087,7 @@ class Component:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    @serializable.xml_sequence(17)
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the component or to the project the component
@@ -1086,6 +1104,7 @@ class Component:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(18)
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -1102,6 +1121,7 @@ class Component:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
+    @serializable.xml_sequence(19)
     def components(self) -> "SortedSet['Component']":
         """
         A list of software and hardware components included in the parent component. This is not a dependency tree. It
@@ -1117,7 +1137,8 @@ class Component:
     def components(self, components: Iterable['Component']) -> None:
         self._components = SortedSet(components)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(20)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
         Provides the ability to document evidence collected through various forms of extraction or analysis.
@@ -1131,7 +1152,8 @@ class Component:
     def evidence(self, evidence: Optional[ComponentEvidence]) -> None:
         self._evidence = evidence
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(21)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
         Specifies optional release notes.
@@ -1144,20 +1166,6 @@ class Component:
     @release_notes.setter
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
-
-    @property
-    def dependencies(self) -> "SortedSet[BomRef]":
-        """
-        Set of `BomRef` that this Component depends on.
-
-        Returns:
-             Set of `BomRef`
-        """
-        return self.__dependencies
-
-    @dependencies.setter
-    def dependencies(self, dependencies: Iterable[BomRef]) -> None:
-        self.__dependencies = SortedSet(dependencies)
 
     def get_all_nested_components(self, include_self: bool = False) -> Set["Component"]:
         components = set()

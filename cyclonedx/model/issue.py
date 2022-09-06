@@ -120,7 +120,8 @@ class IssueType:
         self.source = source
         self.references = references or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def type_(self) -> IssueClassification:
         """
         Specifies the type of issue.
@@ -131,10 +132,11 @@ class IssueType:
         return self._type
 
     @type_.setter
-    def type_(self, classification: IssueClassification) -> None:
-        self._type = classification
+    def type_(self, type_: IssueClassification) -> None:
+        self._type = type_
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def id_(self) -> Optional[str]:
         """
         The identifier of the issue assigned by the source of the issue.
@@ -148,7 +150,8 @@ class IssueType:
     def id_(self, id_: Optional[str]) -> None:
         self._id = id_
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
         The name of the issue.
@@ -162,7 +165,8 @@ class IssueType:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def description(self) -> Optional[str]:
         """
         A description of the issue.
@@ -176,7 +180,8 @@ class IssueType:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def source(self) -> Optional[IssueTypeSource]:
         """
         The source of this issue.
@@ -192,6 +197,7 @@ class IssueType:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'url')
+    @serializable.xml_sequence(5)
     def references(self) -> "SortedSet[XsUri]":
         """
         Any reference URLs related to this issue.

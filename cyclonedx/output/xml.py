@@ -64,6 +64,20 @@ class Xml(BaseOutput, BaseSchemaVersion):
         return self.schema_version_enum
 
     def generate(self, force_regeneration: bool = False) -> None:
+        # New way
+        if self.schema_version == SchemaVersion.V1_4:
+            if self.generated and force_regeneration:
+                self.get_bom().validate()
+                self._root_bom_element = self.get_bom().as_xml(as_string=False, xmlns=self.get_target_namespace())
+                return
+            elif self.generated:
+                return
+            else:
+                self.get_bom().validate()
+                self._root_bom_element = self.get_bom().as_xml(as_string=False, xmlns=self.get_target_namespace())
+                return
+
+        # Old Way
         if self.generated and force_regeneration:
             self._root_bom_element = self._create_bom_element()
         elif self.generated:

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1" serialNumber="urn:uuid:38d1018f-b42a-44a4-bb8c-873b62538b11">
     <metadata>
         <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
         <tools>
@@ -36,7 +36,6 @@
             </tool>
         </tools>
     </metadata>
-    <components />
     <externalReferences>
         <reference type="distribution">
             <url>https://cyclonedx.org</url>

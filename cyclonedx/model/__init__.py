@@ -493,7 +493,8 @@ class ExternalReference:
         self.type_ = type_
         self.hashes = hashes or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def url(self) -> XsUri:
         """
         The URL to the external reference.
@@ -931,7 +932,8 @@ class Note:
     def text(self, text: NoteText) -> None:
         self._text = text
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def locale(self) -> Optional[str]:
         """
         Get the ISO locale of this Note.
@@ -993,7 +995,8 @@ class OrganizationalContact:
         self.email = email
         self.phone = phone
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
         Get the name of the contact.
@@ -1007,7 +1010,8 @@ class OrganizationalContact:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def email(self) -> Optional[str]:
         """
         Get the email of the contact.
@@ -1021,7 +1025,8 @@ class OrganizationalContact:
     def email(self, email: Optional[str]) -> None:
         self._email = email
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def phone(self) -> Optional[str]:
         """
         Get the phone of the contact.
@@ -1073,7 +1078,8 @@ class OrganizationalEntity:
         self.urls = urls or []  # type: ignore
         self.contacts = contacts or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
         Get the name of the organization.
@@ -1089,6 +1095,7 @@ class OrganizationalEntity:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'url')
+    @serializable.xml_sequence(2)
     def urls(self) -> "SortedSet[XsUri]":
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
@@ -1104,6 +1111,7 @@ class OrganizationalEntity:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'contact')
+    @serializable.xml_sequence(3)
     def contacts(self) -> "SortedSet[OrganizationalContact]":
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
@@ -1154,7 +1162,8 @@ class Tool:
         self.hashes = hashes or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def vendor(self) -> Optional[str]:
         """
         The name of the vendor who created the tool.
@@ -1168,7 +1177,8 @@ class Tool:
     def vendor(self, vendor: Optional[str]) -> None:
         self._vendor = vendor
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
         The name of the tool.
@@ -1182,7 +1192,8 @@ class Tool:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def version(self) -> Optional[str]:
         """
         The version of the tool.
@@ -1196,7 +1207,9 @@ class Tool:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.xml_sequence(4)
     def hashes(self) -> "SortedSet[HashType]":
         """
         The hashes of the tool (if applicable).
@@ -1212,6 +1225,7 @@ class Tool:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    @serializable.xml_sequence(5)
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         External References provide a way to document systems, sites, and information that may be relevant but which
