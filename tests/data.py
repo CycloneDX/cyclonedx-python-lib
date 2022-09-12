@@ -133,7 +133,11 @@ def get_bom_with_dependencies_invalid() -> Bom:
 def get_bom_with_metadata_component_and_dependencies() -> Bom:
     bom = Bom(components=[get_component_toml_with_hashes_with_references()])
     bom.metadata.component = get_component_setuptools_simple()
-    bom.metadata.component.dependencies.update([get_component_toml_with_hashes_with_references().bom_ref])
+    bom.dependencies.add(
+        Dependency(ref=bom.metadata.component.bom_ref, dependencies=[
+            Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
+        ])
+    )
     return bom
 
 
@@ -148,7 +152,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom.vulnerabilities.add(Vulnerability(
         bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=get_vulnerability_source_nvd(),
         references=[
-            VulnerabilityReference(id='SOME-OTHER-ID', source=VulnerabilitySource(
+            VulnerabilityReference(id_='SOME-OTHER-ID', source=VulnerabilitySource(
                 name='OSS Index', url=XsUri('https://ossindex.sonatype.org/component/pkg:pypi/setuptools')
             ))
         ],

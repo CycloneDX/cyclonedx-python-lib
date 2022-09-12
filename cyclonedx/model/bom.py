@@ -173,7 +173,7 @@ class BomMetaData:
         self._supplier = supplier
 
     @property  # type: ignore[misc]
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, '')
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
     @serializable.xml_sequence(7)
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
@@ -475,11 +475,11 @@ class Bom:
 
         if _d and depends_on:
             _d.dependencies = _d.dependencies + set(
-                map(lambda _d: Dependency(ref=_d), depends_on)) if depends_on else []
-        else:
+                map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
+        elif not _d:
             self._dependencies.add(Dependency(
                 ref=target.bom_ref,
-                dependencies=list(map(lambda _d: Dependency(ref=_d), depends_on)) if depends_on else []
+                dependencies=list(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
             ))
 
     def urn(self) -> str:
@@ -508,6 +508,8 @@ class Bom:
 
         dependency_diff = all_dependency_bom_refs - all_bom_refs
         if len(dependency_diff) > 0:
+            print(f'All Bom Refs: {all_bom_refs}')
+            print(f'All Dep Bom Refs: {all_dependency_bom_refs}')
             raise UnknownComponentDependencyException(
                 f'One or more Components have Dependency references to Components/Services that are not known in this '
                 f'BOM. They are: {dependency_diff}')

@@ -27,10 +27,8 @@ import serializable
 from packageurl import PackageURL  # type: ignore
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import BomRefHelper
-
 from ..exception.model import NoPropertiesProvidedException
-from ..serialization import PackageUrl
+from ..serialization import BomRefHelper, PackageUrl
 from . import (
     AttachedText,
     ComparableTuple,
@@ -74,7 +72,8 @@ class Commit:
         self.committer = committer
         self.message = message
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def uid(self) -> Optional[str]:
         """
         A unique identifier of the commit. This may be version control specific. For example, Subversion uses revision
@@ -89,7 +88,8 @@ class Commit:
     def uid(self, uid: Optional[str]) -> None:
         self._uid = uid
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def url(self) -> Optional[XsUri]:
         """
         The URL to the commit. This URL will typically point to a commit in a version control system.
@@ -103,7 +103,8 @@ class Commit:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def author(self) -> Optional[IdentifiableAction]:
         """
         The author who created the changes in the commit.
@@ -117,7 +118,8 @@ class Commit:
     def author(self, author: Optional[IdentifiableAction]) -> None:
         self._author = author
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def committer(self) -> Optional[IdentifiableAction]:
         """
         The person who committed or pushed the commit
@@ -131,7 +133,8 @@ class Commit:
     def committer(self, committer: Optional[IdentifiableAction]) -> None:
         self._committer = committer
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(5)
     def message(self) -> Optional[str]:
         """
         The text description of the contents of the commit.
@@ -378,7 +381,8 @@ class Patch:
     def diff(self, diff: Optional[Diff]) -> None:
         self._diff = diff
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'issue')
     def resolves(self) -> "SortedSet[IssueType]":
         """
         Optional list of issues resolved by this patch.
@@ -443,6 +447,7 @@ class Pedigree:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
+    @serializable.xml_sequence(1)
     def ancestors(self) -> "SortedSet['Component']":
         """
         Describes zero or more components in which a component is derived from. This is commonly used to describe forks
@@ -464,6 +469,7 @@ class Pedigree:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
+    @serializable.xml_sequence(2)
     def descendants(self) -> "SortedSet['Component']":
         """
         Descendants are the exact opposite of ancestors. This provides a way to document all forks (and their forks) of
@@ -480,6 +486,7 @@ class Pedigree:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
+    @serializable.xml_sequence(3)
     def variants(self) -> "SortedSet['Component']":
         """
         Variants describe relations where the relationship between the components are not known. For example, if
@@ -497,6 +504,7 @@ class Pedigree:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'commit')
+    @serializable.xml_sequence(4)
     def commits(self) -> "SortedSet[Commit]":
         """
         A list of zero or more commits which provide a trail describing how the component deviates from an ancestor,
@@ -513,6 +521,7 @@ class Pedigree:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
+    @serializable.xml_sequence(5)
     def patches(self) -> "SortedSet[Patch]":
         """
         A list of zero or more patches describing how the component deviates from an ancestor, descendant, or variant.
@@ -527,7 +536,8 @@ class Pedigree:
     def patches(self, patches: Iterable[Patch]) -> None:
         self._patches = SortedSet(patches)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(6)
     def notes(self) -> Optional[str]:
         """
         Notes, observations, and other non-structured commentary describing the components pedigree.

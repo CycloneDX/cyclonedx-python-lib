@@ -681,9 +681,9 @@ class Xml(BaseOutput, BaseSchemaVersion):
             if vulnerability.analysis.justification:
                 ElementTree.SubElement(v_analysis_element,
                                        'justification').text = vulnerability.analysis.justification.value
-            if vulnerability.analysis.response:
+            if vulnerability.analysis.responses:
                 v_analysis_responses_element = ElementTree.SubElement(v_analysis_element, 'responses')
-                for response in vulnerability.analysis.response:
+                for response in vulnerability.analysis.responses:
                     ElementTree.SubElement(v_analysis_responses_element, 'response').text = response.value
             if vulnerability.analysis.detail:
                 ElementTree.SubElement(v_analysis_element, 'detail').text = vulnerability.analysis.detail
