@@ -206,6 +206,7 @@ class Service(Dependable):
         self._authenticated = authenticated
 
     @property  # type: ignore[misc]
+    @serializable.json_name('x-trust-boundary')
     @serializable.xml_name('x-trust-boundary')
     @serializable.xml_sequence(8)
     def x_trust_boundary(self) -> Optional[bool]:

@@ -53,6 +53,34 @@ class Json(BaseOutput, BaseSchemaVersion):
         return self.schema_version_enum
 
     def generate(self, force_regeneration: bool = False) -> None:
+        # New Way
+        if self.schema_version == SchemaVersion.V1_4:
+            if self.generated and force_regeneration:
+                self.get_bom().validate()
+                bom_json = json.loads(self.get_bom().as_json())
+                bom_json.update({
+                    '$schema': self._get_schema_uri(),
+                    'bomFormat': 'CycloneDX',
+                    'specVersion': '1.4'
+                })
+                self._json_output = json.dumps(bom_json)
+                self.generated = True
+                return
+            elif self.generated:
+                return
+            else:
+                self.get_bom().validate()
+                bom_json = json.loads(self.get_bom().as_json())
+                bom_json.update({
+                    '$schema': self._get_schema_uri(),
+                    'bomFormat': 'CycloneDX',
+                    'specVersion': '1.4'
+                })
+                self._json_output = json.dumps(bom_json)
+                self.generated = True
+                return
+
+        # Old Way
         if self.generated and not force_regeneration:
             return
 

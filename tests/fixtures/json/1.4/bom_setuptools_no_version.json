@@ -64,8 +64,7 @@
   ],
   "dependencies": [
     {
-      "ref": "pkg:pypi/setuptools?extension=tar.gz",
-      "dependsOn": []
+      "ref": "pkg:pypi/setuptools?extension=tar.gz"
     }
   ]
 }

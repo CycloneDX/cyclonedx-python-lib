@@ -438,6 +438,7 @@ class XsUri(serializable.helpers.BaseHelper):
         self._uri = uri
 
     @property  # type: ignore[misc]
+    @serializable.json_name('.')
     @serializable.xml_name('.')
     def uri(self) -> str:
         return self._uri
@@ -1094,6 +1095,7 @@ class OrganizationalEntity:
         self._name = name
 
     @property  # type: ignore[misc]
+    @serializable.json_name('url')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'url')
     @serializable.xml_sequence(2)
     def urls(self) -> "SortedSet[XsUri]":
@@ -1110,6 +1112,7 @@ class OrganizationalEntity:
         self._urls = SortedSet(urls)
 
     @property  # type: ignore[misc]
+    @serializable.json_name('contact')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'contact')
     @serializable.xml_sequence(3)
     def contacts(self) -> "SortedSet[OrganizationalContact]":

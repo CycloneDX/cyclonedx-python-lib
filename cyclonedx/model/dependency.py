@@ -50,6 +50,7 @@ class Dependency:
         self._ref = ref
 
     @property  # type: ignore[misc]
+    @serializable.json_name('dependsOn')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'dependency')
     def dependencies(self) -> "SortedSet[Dependency]":
         return self._dependencies
