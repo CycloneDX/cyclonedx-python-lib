@@ -51,6 +51,7 @@ sortedcontainers = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.25.0"
+ddt = "^1.6.0"
 coverage = "^6.2"
 mypy = ">= 0.920, <= 0.961"
 autopep8 = "^1.6.0"

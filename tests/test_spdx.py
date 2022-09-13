@@ -17,10 +17,52 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from itertools import chain
+from json import load as json_load
+from os.path import dirname, join as path_join
 from unittest import TestCase
 
-from cyclonedx.spdx import is_supported, fixup
+from ddt import data, ddt, idata, unpack
+
+from cyclonedx.spdx import fixup, is_supported
+
+with open(path_join(dirname(__file__), '..', 'cyclonedx', 'schema', 'spdx.schema.json')) as spdx_schema:
+    SPDX_IDS = json_load(spdx_schema)['enum']
 
 
+@ddt
 class TestSpdx(TestCase):
-    pass
+
+    @data(
+        'something unsupported',
+        # somehow case-twisted values
+        'MiT',
+        'mit',
+    )
+    def test_not_supported(self, unsupported_value: str) -> None:
+        actual = is_supported(unsupported_value)
+        self.assertFalse(actual)
+
+    @idata(SPDX_IDS)
+    def test_is_supported(self, supported_value: str) -> None:
+        actual = is_supported(supported_value)
+        self.assertTrue(actual)
+
+    @idata(chain(
+        # original value
+        ((v, v) for v in SPDX_IDS),
+        # somehow case-twisted values
+        ((v.lower(), v) for v in SPDX_IDS),
+        ((v.upper(), v) for v in SPDX_IDS)
+    ))
+    @unpack
+    def test_fixup(self, fixable: str, expected_fixed: str) -> None:
+        actual = fixup(fixable)
+        self.assertEqual(expected_fixed, actual)
+
+    @data(
+        'something unfixable',
+    )
+    def test_not_fixup(self, unfixable: str) -> None:
+        actual = fixup(unfixable)
+        self.assertIsNone(actual)
