@@ -19,7 +19,7 @@ from typing import Optional
 
 from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
 from ..model import AttachedText, License, LicenseChoice, XsUri
-from ..spdx import fixup as spdx_fixup
+from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression
 
 
 class LicenseFactory:
@@ -69,14 +69,11 @@ class LicenseChoiceFactory:
     def make_with_compound_expression(self, compound_expression: str) -> LicenseChoice:
         """Make a :class:`cyclonedx.model.LicenseChoice` with a compound expression.
 
+        Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
+
         :raises InvalidLicenseExpressionException: if `expression` is not known/supported license expression
-
-        .. note::
-            Uses a best-effort detection of SPDX compound expression according to `SPDX license expression spec`_.
-
-        .. _SPDX license expression spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
         """
-        if compound_expression.startswith('(') and compound_expression.endswith(')'):
+        if is_spdx_compound_expression(compound_expression):
             return LicenseChoice(license_expression=compound_expression)
         raise InvalidLicenseExpressionException(compound_expression)
 

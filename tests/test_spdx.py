@@ -24,7 +24,7 @@ from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
 
-from cyclonedx.spdx import fixup, is_supported
+from cyclonedx.spdx import fixup_id, is_supported_id
 
 with open(path_join(dirname(__file__), '..', 'cyclonedx', 'schema', 'spdx.schema.json')) as spdx_schema:
     SPDX_IDS = json_load(spdx_schema)['enum']
@@ -40,12 +40,12 @@ class TestSpdx(TestCase):
         'mit',
     )
     def test_not_supported(self, unsupported_value: str) -> None:
-        actual = is_supported(unsupported_value)
+        actual = is_supported_id(unsupported_value)
         self.assertFalse(actual)
 
     @idata(SPDX_IDS)
     def test_is_supported(self, supported_value: str) -> None:
-        actual = is_supported(supported_value)
+        actual = is_supported_id(supported_value)
         self.assertTrue(actual)
 
     @idata(chain(
@@ -57,12 +57,12 @@ class TestSpdx(TestCase):
     ))
     @unpack
     def test_fixup(self, fixable: str, expected_fixed: str) -> None:
-        actual = fixup(fixable)
+        actual = fixup_id(fixable)
         self.assertEqual(expected_fixed, actual)
 
     @data(
         'something unfixable',
     )
     def test_not_fixup(self, unfixable: str) -> None:
-        actual = fixup(unfixable)
+        actual = fixup_id(unfixable)
         self.assertIsNone(actual)

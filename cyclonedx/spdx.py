@@ -14,7 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-__all__ = ['is_supported', 'fixup']
+__all__ = ['is_supported_id', 'fixup_id', 'is_compound_expression']
 
 from json import load as json_load
 from os.path import dirname, join as path_join
@@ -33,14 +33,25 @@ __IDS_LOWER_MAP: Dict[str, str] = dict((id_.lower(), id_) for id_ in __IDS)
 
 # endregion
 
-def is_supported(value: str) -> bool:
+def is_supported_id(value: str) -> bool:
     """Validate a SPDX-ID according to current spec."""
     return value in __IDS
 
 
-def fixup(value: str) -> Optional[str]:
+def fixup_id(value: str) -> Optional[str]:
     """Fixup a SPDX-ID.
 
     :returns: repaired value string, or `None` if fixup was unable to help.
     """
     return __IDS_LOWER_MAP.get(value.lower())
+
+
+def is_compound_expression(value: str) -> bool:
+    """Validate compound expression.
+
+    .. note::
+        Uses a best-effort detection of SPDX compound expression according to `SPDX license expression spec`_.
+
+    .. _SPDX license expression spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
+    """
+    return value.startswith('(') and value.endswith(')')
