@@ -18,10 +18,11 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
+from uuid import UUID
+
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
 from serializable.helpers import BaseHelper
-from uuid import UUID
 
 from ..model.bom_ref import BomRef
 

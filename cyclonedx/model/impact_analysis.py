@@ -17,8 +17,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import serializable
 from enum import Enum
+
+import serializable
 
 """
 This set of classes represents the data about Impact Analysis.

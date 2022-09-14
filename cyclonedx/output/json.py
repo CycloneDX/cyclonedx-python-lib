@@ -19,12 +19,10 @@
 
 import json
 from abc import abstractmethod
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
-from ..model.component import Component
-from . import BaseOutput, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
     BaseSchemaVersion,
@@ -34,7 +32,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from .serializer.json import CycloneDxJSONEncoder
+from . import BaseOutput, SchemaVersion
 
 ComponentDict = Dict[str, Union[
     str,

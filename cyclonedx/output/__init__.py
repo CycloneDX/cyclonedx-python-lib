@@ -22,7 +22,6 @@ and according to different versions of the CycloneDX schema standard.
 import importlib
 import os
 from abc import ABC, abstractmethod
-
 from typing import cast
 
 from ..model.bom import Bom

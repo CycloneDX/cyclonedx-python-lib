@@ -22,6 +22,7 @@ from sortedcontainers import SortedSet
 
 from cyclonedx.serialization import BomRefHelper
 
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
 from . import (
     ComparableTuple,
     DataClassification,
@@ -34,13 +35,6 @@ from . import (
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .release_note import ReleaseNotes
-from ..schema.schema import (
-    SchemaVersion1Dot0,
-    SchemaVersion1Dot1,
-    SchemaVersion1Dot2,
-    SchemaVersion1Dot3,
-    SchemaVersion1Dot4
-)
 
 """
 This set of classes represents the data that is possible about known Services.

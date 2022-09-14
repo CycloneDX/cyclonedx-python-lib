@@ -18,22 +18,17 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
 from datetime import datetime, timezone
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Iterable, Optional, Set
 from uuid import UUID, uuid4
 
 import serializable
-from cyclonedx.serialization import UrnUuidHelper
 from sortedcontainers import SortedSet
+
+from cyclonedx.serialization import UrnUuidHelper
 
 from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
-from ..schema.schema import (
-    SchemaVersion1Dot0,
-    SchemaVersion1Dot1,
-    SchemaVersion1Dot2,
-    SchemaVersion1Dot3,
-    SchemaVersion1Dot4
-)
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .bom_ref import BomRef
 from .component import Component

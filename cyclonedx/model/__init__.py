@@ -21,7 +21,7 @@ import sys
 import warnings
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, Iterable, Optional, Set, Tuple, TypeVar
+from typing import Any, Iterable, Optional, Tuple, TypeVar
 
 import serializable
 from sortedcontainers import SortedSet
@@ -33,10 +33,7 @@ from ..exception.model import (
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
-from ..schema.schema import (
-    SchemaVersion1Dot3,
-    SchemaVersion1Dot4
-)
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.

@@ -28,6 +28,13 @@ from packageurl import PackageURL  # type: ignore
 from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+)
 from ..serialization import BomRefHelper, PackageUrl
 from . import (
     AttachedText,
@@ -47,13 +54,6 @@ from .bom_ref import BomRef
 from .dependency import Dependable
 from .issue import IssueType
 from .release_note import ReleaseNotes
-from ..schema.schema import (
-    SchemaVersion1Dot0,
-    SchemaVersion1Dot1,
-    SchemaVersion1Dot2,
-    SchemaVersion1Dot3,
-    SchemaVersion1Dot4
-)
 
 
 @serializable.serializable_class
@@ -162,8 +162,8 @@ class Commit:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
-            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < \
-                   ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
+            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < ComparableTuple(
+                (other.uid, other.url, other.author, other.committer, other.message))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -410,8 +410,8 @@ class Patch:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return ComparableTuple((self.type_, self.diff, ComparableTuple(self.resolves))) < \
-                   ComparableTuple((other.type_, other.diff, ComparableTuple(other.resolves)))
+            return ComparableTuple((self.type_, self.diff, ComparableTuple(self.resolves))) < ComparableTuple(
+                (other.type_, other.diff, ComparableTuple(other.resolves)))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1216,8 +1216,8 @@ class Component(Dependable):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return ComparableTuple((self.type_, self.group, self.name, self.version)) < \
-                   ComparableTuple((other.type_, other.group, other.name, other.version))
+            return ComparableTuple((self.type_, self.group, self.name, self.version)) < ComparableTuple(
+                (other.type_, other.group, other.name, other.version))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1229,7 +1229,8 @@ class Component(Dependable):
         ))
 
     def __repr__(self) -> str:
-        return f'<Component bom-ref={self.bom_ref.value}, group={self.group}, name={self.name}, version={self.version}, type={self.type_}>'
+        return f'<Component bom-ref={self.bom_ref.value}, group={self.group}, name={self.name}, ' \
+               f'version={self.version}, type={self.type_}>'
 
     # Deprecated methods
     def get_namespace(self) -> Optional[str]:

@@ -17,11 +17,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import serializable
-from abc import abstractmethod, ABC
-from cyclonedx.serialization import BomRefHelper
-from sortedcontainers import SortedSet
+from abc import ABC, abstractmethod
 from typing import Any, Iterable, Optional, Set
+
+import serializable
+from sortedcontainers import SortedSet
+
+from cyclonedx.serialization import BomRefHelper
 
 from .bom_ref import BomRef
 
