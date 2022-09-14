@@ -47,6 +47,13 @@ from .bom_ref import BomRef
 from .dependency import Dependable
 from .issue import IssueType
 from .release_note import ReleaseNotes
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4
+)
 
 
 @serializable.serializable_class
@@ -156,7 +163,7 @@ class Commit:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
             return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < \
-                ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
+                   ComparableTuple((other.uid, other.url, other.author, other.committer, other.message))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -404,7 +411,7 @@ class Patch:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
             return ComparableTuple((self.type_, self.diff, ComparableTuple(self.resolves))) < \
-                ComparableTuple((other.type_, other.diff, ComparableTuple(other.resolves)))
+                   ComparableTuple((other.type_, other.diff, ComparableTuple(other.resolves)))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -932,6 +939,10 @@ class Component(Dependable):
         self._name = name
 
     @property  # type: ignore[misc]
+    @serializable.include_none(SchemaVersion1Dot0)
+    @serializable.include_none(SchemaVersion1Dot1)
+    @serializable.include_none(SchemaVersion1Dot2)
+    @serializable.include_none(SchemaVersion1Dot3)
     @serializable.xml_sequence(6)
     def version(self) -> Optional[str]:
         """
@@ -1113,6 +1124,8 @@ class Component(Dependable):
         self._external_references = SortedSet(external_references)
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(18)
     def properties(self) -> "SortedSet[Property]":
@@ -1148,6 +1161,8 @@ class Component(Dependable):
         self._components = SortedSet(components)
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(20)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
@@ -1163,6 +1178,7 @@ class Component(Dependable):
         self._evidence = evidence
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(21)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
@@ -1201,7 +1217,7 @@ class Component(Dependable):
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
             return ComparableTuple((self.type_, self.group, self.name, self.version)) < \
-                ComparableTuple((other.type_, other.group, other.name, other.version))
+                   ComparableTuple((other.type_, other.group, other.name, other.version))
         return NotImplemented
 
     def __hash__(self) -> int:

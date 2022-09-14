@@ -34,6 +34,13 @@ from . import (
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .release_note import ReleaseNotes
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4
+)
 
 """
 This set of classes represents the data that is possible about known Services.
@@ -294,6 +301,7 @@ class Service(Dependable):
         self._services = SortedSet(services)
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(14)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
@@ -309,6 +317,8 @@ class Service(Dependable):
         self._release_notes = release_notes
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(12)
     def properties(self) -> "SortedSet[Property]":

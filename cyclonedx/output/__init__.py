@@ -22,33 +22,11 @@ and according to different versions of the CycloneDX schema standard.
 import importlib
 import os
 from abc import ABC, abstractmethod
-from enum import Enum
+
 from typing import cast
 
 from ..model.bom import Bom
-
-
-class OutputFormat(str, Enum):
-    JSON: str = 'Json'
-    XML: str = 'Xml'
-
-
-class SchemaVersion(str, Enum):
-    V1_0: str = 'V1Dot0'
-    V1_1: str = 'V1Dot1'
-    V1_2: str = 'V1Dot2'
-    V1_3: str = 'V1Dot3'
-    V1_4: str = 'V1Dot4'
-
-    def to_version(self) -> str:
-        """
-        Return as a version string - e.g. `1.4`
-
-        Returns:
-            `str` version
-        """
-        return f'{self.value[1]}.{self.value[5]}'
-
+from ..schema import OutputFormat, SchemaVersion
 
 LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_4
 

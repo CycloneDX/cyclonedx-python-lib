@@ -23,7 +23,8 @@ from unittest.mock import Mock, patch
 from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
+from cyclonedx.output import get_instance
+from cyclonedx.schema import OutputFormat, SchemaVersion
 from data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
@@ -318,12 +319,14 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_dependencies.json'
         )
 
+    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_3_dependencies(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_3,
             fixture='bom_dependencies.json'
         )
 
+    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_2_dependencies(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_2,
@@ -337,12 +340,14 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_dependencies_component.json'
         )
 
+    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_3_dependencies_for_bom_component(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_3,
             fixture='bom_dependencies_component.json'
         )
 
+    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_2_dependencies_for_bom_component(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
@@ -364,12 +369,14 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_issue_275_components.json'
         )
 
+    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_3_issue_275_components(self) -> None:
         self._validate_json_bom(
             bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
             fixture='bom_issue_275_components.json'
         )
 
+    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_2_issue_275_components(self) -> None:
         self._validate_json_bom(
             bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,

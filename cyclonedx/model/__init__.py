@@ -33,6 +33,10 @@ from ..exception.model import (
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
+from ..schema.schema import (
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4
+)
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
@@ -542,8 +546,10 @@ class ExternalReference:
         self._type_ = type_
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
-    def hashes(self) -> "Optional[SortedSet[HashType]]":
+    def hashes(self) -> "SortedSet[HashType]":
         """
         The hashes of the external reference (if applicable).
 
@@ -1227,6 +1233,7 @@ class Tool:
         self._hashes = SortedSet(hashes)
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
     def external_references(self) -> "SortedSet[ExternalReference]":

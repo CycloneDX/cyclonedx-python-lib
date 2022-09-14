@@ -19,7 +19,7 @@
 
 from abc import ABC, abstractmethod
 
-from . import SchemaVersion
+from ..schema import SchemaVersion
 
 
 class BaseSchemaVersion(ABC):
@@ -340,3 +340,12 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
 
     def get_schema_version(self) -> str:
         return '1.0'
+
+
+SCHEMA_VERSIONS = {
+    '1.0': SchemaVersion1Dot0,
+    '1.1': SchemaVersion1Dot1,
+    '1.2': SchemaVersion1Dot2,
+    '1.3': SchemaVersion1Dot3,
+    '1.4': SchemaVersion1Dot4
+}

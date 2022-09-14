@@ -36,12 +36,6 @@
       "externalReferences": [
         {
           "comment": "No comment",
-          "hashes": [
-            {
-              "alg": "SHA-256",
-              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-            }
-          ],
           "type": "distribution",
           "url": "https://cyclonedx.org"
         }
@@ -142,8 +136,13 @@
   "version": 1,
   "dependencies": [
     {
-      "ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
-      "dependsOn": []
+      "ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857"
+    },
+    {
+      "ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789"
+    },
+    {
+      "ref": "my-specific-bom-ref-for-my-first-service"
     }
   ]
 }
