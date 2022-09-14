@@ -24,14 +24,25 @@ from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
 
-from cyclonedx.spdx import fixup_id, is_supported_id
+from cyclonedx import spdx
 
 with open(path_join(dirname(__file__), '..', 'cyclonedx', 'schema', 'spdx.schema.json')) as spdx_schema:
-    SPDX_IDS = json_load(spdx_schema)['enum']
+    KNOWN_SPDX_IDS = json_load(spdx_schema)['enum']
+
+VALID_COMPOUND_EXPRESSIONS = {
+    # for valid test data see the spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
+    '(MIT WITH Apache-2.0)',
+    '(BSD-2-Clause OR Apache-2.0)',
+}
 
 
 @ddt
-class TestSpdx(TestCase):
+class TestSpdxIsSupported(TestCase):
+
+    @idata(KNOWN_SPDX_IDS)
+    def test_positive(self, supported_value: str) -> None:
+        actual = spdx.is_supported_id(supported_value)
+        self.assertTrue(actual)
 
     @data(
         'something unsupported',
@@ -39,30 +50,45 @@ class TestSpdx(TestCase):
         'MiT',
         'mit',
     )
-    def test_not_supported(self, unsupported_value: str) -> None:
-        actual = is_supported_id(unsupported_value)
+    def test_negative(self, unsupported_value: str) -> None:
+        actual = spdx.is_supported_id(unsupported_value)
         self.assertFalse(actual)
 
-    @idata(SPDX_IDS)
-    def test_is_supported(self, supported_value: str) -> None:
-        actual = is_supported_id(supported_value)
-        self.assertTrue(actual)
+
+@ddt
+class TestSpdxFixup(TestCase):
 
     @idata(chain(
         # original value
-        ((v, v) for v in SPDX_IDS),
+        ((v, v) for v in KNOWN_SPDX_IDS),
         # somehow case-twisted values
-        ((v.lower(), v) for v in SPDX_IDS),
-        ((v.upper(), v) for v in SPDX_IDS)
+        ((v.lower(), v) for v in KNOWN_SPDX_IDS),
+        ((v.upper(), v) for v in KNOWN_SPDX_IDS)
     ))
     @unpack
-    def test_fixup(self, fixable: str, expected_fixed: str) -> None:
-        actual = fixup_id(fixable)
+    def test_positive(self, fixable: str, expected_fixed: str) -> None:
+        actual = spdx.fixup_id(fixable)
         self.assertEqual(expected_fixed, actual)
 
     @data(
         'something unfixable',
     )
-    def test_not_fixup(self, unfixable: str) -> None:
-        actual = fixup_id(unfixable)
+    def test_negative(self, unfixable: str) -> None:
+        actual = spdx.fixup_id(unfixable)
         self.assertIsNone(actual)
+
+
+@ddt
+class TestSpdxIsCompoundExpression(TestCase):
+
+    @idata(VALID_COMPOUND_EXPRESSIONS)
+    def test_positive(self, valid_expression: str) -> None:
+        actual = spdx.is_compound_expression(valid_expression)
+        self.assertTrue(actual)
+
+    @data(
+        'something invalid',
+    )
+    def test_negative(self, invalid_expression: str) -> None:
+        actual = spdx.is_compound_expression(invalid_expression)
+        self.assertFalse(actual)
