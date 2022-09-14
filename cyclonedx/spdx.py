@@ -54,4 +54,7 @@ def is_compound_expression(value: str) -> bool:
 
     .. _SPDX license expression spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
     """
-    return value.startswith('(') and value.endswith(')')
+    # shortest known valid expression: (A or B) - 8 characters long
+    return len(value) >= 8 \
+        and value.startswith('(') \
+        and value.endswith(')')

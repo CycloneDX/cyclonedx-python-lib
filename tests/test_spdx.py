@@ -88,6 +88,7 @@ class TestSpdxIsCompoundExpression(TestCase):
 
     @data(
         'something invalid',
+        '(c) John Doe'
     )
     def test_negative(self, invalid_expression: str) -> None:
         actual = spdx.is_compound_expression(invalid_expression)
