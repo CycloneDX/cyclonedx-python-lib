@@ -28,7 +28,13 @@ from cyclonedx.serialization import UrnUuidHelper
 
 from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+)
 from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .bom_ref import BomRef
 from .component import Component
@@ -283,6 +289,10 @@ class Bom:
 
     @property  # type: ignore[misc]
     @serializable.type_mapping(UrnUuidHelper)
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_attribute()
     def serial_number(self) -> UUID:
         """
@@ -299,6 +309,9 @@ class Bom:
         self._serial_number = serial_number
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(1)
     def metadata(self) -> BomMetaData:
         """
@@ -317,6 +330,8 @@ class Bom:
         self._metadata = metadata
 
     @property  # type: ignore[misc]
+    @serializable.include_none(SchemaVersion1Dot0)
+    @serializable.include_none(SchemaVersion1Dot1)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     @serializable.xml_sequence(2)
     def components(self) -> "SortedSet[Component]":
@@ -373,6 +388,9 @@ class Bom:
         return component in self.components
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     @serializable.xml_sequence(3)
     def services(self) -> "SortedSet[Service]":
@@ -389,6 +407,10 @@ class Bom:
         self._services = SortedSet(services)
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(4)
     def external_references(self) -> "SortedSet[ExternalReference]":
@@ -467,7 +489,10 @@ class Bom:
     def version(self, version: int) -> None:
         self._version = version
 
-    @property
+    @property  # type: ignpre[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
     @serializable.xml_sequence(5)
     def dependencies(self) -> "SortedSet[Dependency]":

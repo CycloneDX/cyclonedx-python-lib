@@ -22,7 +22,8 @@ from unittest.mock import Mock, patch
 
 from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import SchemaVersion, get_instance
+from cyclonedx.output import get_instance
+from cyclonedx.schema import SchemaVersion
 from data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
@@ -259,18 +260,21 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_setuptools_with_vulnerabilities.xml'
         )
 
+    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
     def test_bom_v1_3_component_with_vulnerability(self) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_3,
             fixture='bom_setuptools_with_vulnerabilities.xml'
         )
 
+    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
     def test_bom_v1_2_component_with_vulnerability(self) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_2,
             fixture='bom_setuptools_with_vulnerabilities.xml'
         )
 
+    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
     def test_bom_v1_1_component_with_vulnerability(self) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_1,

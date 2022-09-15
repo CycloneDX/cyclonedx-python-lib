@@ -40,8 +40,9 @@ from ..model.component import Component, Patch
 from ..model.release_note import ReleaseNotes
 from ..model.service import Service
 from ..model.vulnerability import BomTargetVersionRange, Vulnerability, VulnerabilityRating, VulnerabilitySource
-from . import BaseOutput, SchemaVersion
-from .schema import (
+from ..schema import SchemaVersion
+from ..schema.schema import (
+    SCHEMA_VERSIONS,
     BaseSchemaVersion,
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -49,6 +50,7 @@ from .schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
+from . import BaseOutput
 
 
 class Xml(BaseOutput, BaseSchemaVersion):
@@ -65,87 +67,93 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     def generate(self, force_regeneration: bool = False) -> None:
         # New way
-        if self.schema_version == SchemaVersion.V1_4:
-            if self.generated and force_regeneration:
-                self.get_bom().validate()
-                self._root_bom_element = self.get_bom().as_xml(as_string=False, xmlns=self.get_target_namespace())
-                return
-            elif self.generated:
-                return
-            else:
-                self.get_bom().validate()
-                self._root_bom_element = self.get_bom().as_xml(as_string=False, xmlns=self.get_target_namespace())
-                return
-
-        # Old Way
+        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
         if self.generated and force_regeneration:
-            self._root_bom_element = self._create_bom_element()
+            self.get_bom().validate()
+            self._root_bom_element = self.get_bom().as_xml(
+                view_=_view, as_string=False, xmlns=self.get_target_namespace()
+            )
+            self.generated = True
+            return
         elif self.generated:
             return
-
-        bom = self.get_bom()
-        bom.validate()
-
-        if self.bom_supports_metadata():
-            self._add_metadata_element()
-
-        components_element = ElementTree.SubElement(self._root_bom_element, 'components')
-        if bom.components:
-            for component in bom.components:
-                component_element = self._add_component_element(component=component)
-                components_element.append(component_element)
-                if self.bom_supports_vulnerabilities_via_extension():
-                    component_vulnerabilities = bom.get_vulnerabilities_for_bom_ref(bom_ref=component.bom_ref)
-                    if component_vulnerabilities:
-                        # Vulnerabilities are only possible when bom-ref is supported by the main CycloneDX schema
-                        # version
-                        vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
-                        for vulnerability in component_vulnerabilities:
-                            if component.bom_ref:
-                                vulnerabilities.append(
-                                    Xml._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.bom_ref,
-                                                                                  vulnerability=vulnerability)
-                                )
-                            else:
-                                warnings.warn(
-                                    f'Unable to include Vulnerability {str(vulnerability)} in generated BOM as the '
-                                    f'Component it relates to ({str(component)}) but it has no bom-ref.'
-                                )
-
-        if self.bom_supports_services() and bom.services:
-            services_element = ElementTree.SubElement(self._root_bom_element, 'services')
-            for service in bom.services:
-                services_element.append(self._add_service_element(service=service))
-
-        if self.bom_supports_external_references() and bom.external_references:
-            self._add_external_references_to_element(
-                ext_refs=bom.external_references,
-                element=self._root_bom_element
+        else:
+            self.get_bom().validate()
+            self._root_bom_element = self.get_bom().as_xml(
+                view_=_view, as_string=False, xmlns=self.get_target_namespace()
             )
+            self.generated = True
+            return
 
-        if self.bom_supports_dependencies() and (bom.metadata.component or bom.components):
-            dep_components: Iterable[Component] = bom.components
-            if bom.metadata.component:
-                dep_components = [bom.metadata.component, *dep_components]
-            dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
-            for component in dep_components:
-                dependency_element = ElementTree.SubElement(dependencies_element, 'dependency', {
-                    'ref': str(component.bom_ref)
-                })
-                for dependency in component.dependencies:
-                    ElementTree.SubElement(dependency_element, 'dependency', {
-                        'ref': str(dependency)
-                    })
-            del dep_components
-
-        if self.bom_supports_vulnerabilities() and bom.vulnerabilities:
-            vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
-            for vulnerability in bom.vulnerabilities:
-                vulnerabilities_element.append(
-                    self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
-                )
-
-        self.generated = True
+        # Old Way
+        # if self.generated and force_regeneration:
+        #     self._root_bom_element = self._create_bom_element()
+        # elif self.generated:
+        #     return
+        #
+        # bom = self.get_bom()
+        # bom.validate()
+        #
+        # if self.bom_supports_metadata():
+        #     self._add_metadata_element()
+        #
+        # components_element = ElementTree.SubElement(self._root_bom_element, 'components')
+        # if bom.components:
+        #     for component in bom.components:
+        #         component_element = self._add_component_element(component=component)
+        #         components_element.append(component_element)
+        #         if self.bom_supports_vulnerabilities_via_extension():
+        #             component_vulnerabilities = bom.get_vulnerabilities_for_bom_ref(bom_ref=component.bom_ref)
+        #             if component_vulnerabilities:
+        #                 # Vulnerabilities are only possible when bom-ref is supported by the main CycloneDX schema
+        #                 # version
+        #                 vulnerabilities = ElementTree.SubElement(component_element, 'v:vulnerabilities')
+        #                 for vulnerability in component_vulnerabilities:
+        #                     if component.bom_ref:
+        #                         vulnerabilities.append(
+        #                             Xml._get_vulnerability_as_xml_element_pre_1_3(bom_ref=component.bom_ref,
+        #                                                                           vulnerability=vulnerability)
+        #                         )
+        #                     else:
+        #                         warnings.warn(
+        #                             f'Unable to include Vulnerability {str(vulnerability)} in generated BOM as the '
+        #                             f'Component it relates to ({str(component)}) but it has no bom-ref.'
+        #                         )
+        #
+        # if self.bom_supports_services() and bom.services:
+        #     services_element = ElementTree.SubElement(self._root_bom_element, 'services')
+        #     for service in bom.services:
+        #         services_element.append(self._add_service_element(service=service))
+        #
+        # if self.bom_supports_external_references() and bom.external_references:
+        #     self._add_external_references_to_element(
+        #         ext_refs=bom.external_references,
+        #         element=self._root_bom_element
+        #     )
+        #
+        # if self.bom_supports_dependencies() and (bom.metadata.component or bom.components):
+        #     dep_components: Iterable[Component] = bom.components
+        #     if bom.metadata.component:
+        #         dep_components = [bom.metadata.component, *dep_components]
+        #     dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
+        #     for component in dep_components:
+        #         dependency_element = ElementTree.SubElement(dependencies_element, 'dependency', {
+        #             'ref': str(component.bom_ref)
+        #         })
+        #         for dependency in component.dependencies:
+        #             ElementTree.SubElement(dependency_element, 'dependency', {
+        #                 'ref': str(dependency)
+        #             })
+        #     del dep_components
+        #
+        # if self.bom_supports_vulnerabilities() and bom.vulnerabilities:
+        #     vulnerabilities_element = ElementTree.SubElement(self._root_bom_element, 'vulnerabilities')
+        #     for vulnerability in bom.vulnerabilities:
+        #         vulnerabilities_element.append(
+        #             self._get_vulnerability_as_xml_element_post_1_4(vulnerability=vulnerability)
+        #         )
+        #
+        # self.generated = True
 
     def output_as_string(self) -> str:
         self.generate()

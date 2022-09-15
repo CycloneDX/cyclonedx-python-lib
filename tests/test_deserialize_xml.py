@@ -183,5 +183,6 @@ class TestDeserializeXml(BaseXmlTestCase):
         bom.metadata.timestamp = datetime.fromisoformat('2021-09-01T10:50:42.051979+00:00')
         with open(
                 join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
-            deserialized_bom = Bom.from_xml(data=ElementTree.fromstring(input_xml.read()))
+            xml = input_xml.read()
+            deserialized_bom = Bom.from_xml(data=ElementTree.fromstring(xml))
             self.assertEqual(bom, deserialized_bom)

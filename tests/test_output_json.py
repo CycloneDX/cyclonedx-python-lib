@@ -389,7 +389,6 @@ class TestOutputJson(BaseJsonTestCase):
         self.assertEqual(outputter.schema_version, schema_version)
         with open(
                 join(dirname(__file__), f'fixtures/json/{schema_version.to_version()}/{fixture}')) as expected_json:
-            print(outputter.output_as_string())
             self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=schema_version)
             self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
             expected_json.close()

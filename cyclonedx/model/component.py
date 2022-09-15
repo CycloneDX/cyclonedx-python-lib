@@ -527,6 +527,9 @@ class Pedigree:
         self._commits = SortedSet(commits)
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     @serializable.xml_sequence(5)
     def patches(self) -> "SortedSet[Patch]":
@@ -758,6 +761,7 @@ class Component(Dependable):
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
+                 modified: bool = False,
                  # Deprecated parameters kept for backwards compatibility
                  namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
@@ -778,6 +782,7 @@ class Component(Dependable):
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
+        self.modified = modified
         self.pedigree = pedigree
         self.external_references = external_references or []  # type: ignore
         self.properties = properties or []  # type: ignore
@@ -840,6 +845,10 @@ class Component(Dependable):
     @property  # type: ignore[misc]
     @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRefHelper)
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -855,6 +864,9 @@ class Component(Dependable):
         return self._bom_ref
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(1)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
@@ -871,6 +883,9 @@ class Component(Dependable):
         self._supplier = supplier
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(2)
     def author(self) -> Optional[str]:
         """
@@ -1009,6 +1024,10 @@ class Component(Dependable):
         self._hashes = SortedSet(hashes)
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
     @serializable.xml_sequence(10)
     def licenses(self) -> "SortedSet[LicenseChoice]":
@@ -1076,6 +1095,9 @@ class Component(Dependable):
         self._purl = purl
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(14)
     def swid(self) -> Optional[Swid]:
         """
@@ -1091,6 +1113,20 @@ class Component(Dependable):
         self._swid = swid
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot0)
+    @serializable.xml_sequence(18)
+    def modified(self) -> bool:
+        return self._modified
+
+    @modified.setter
+    def modified(self, modified: bool) -> None:
+        self._modified = modified
+
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(16)
     def pedigree(self) -> Optional[Pedigree]:
         """
@@ -1107,6 +1143,10 @@ class Component(Dependable):
         self._pedigree = pedigree
 
     @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(17)
     def external_references(self) -> "SortedSet[ExternalReference]":
@@ -1225,7 +1265,7 @@ class Component(Dependable):
             self.type_, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
             self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright_,
             self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
-            tuple(self.components), self.evidence, self.release_notes
+            tuple(self.components), self.evidence, self.release_notes, self.modified
         ))
 
     def __repr__(self) -> str:

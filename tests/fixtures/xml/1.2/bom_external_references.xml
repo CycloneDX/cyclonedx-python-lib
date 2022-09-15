@@ -10,7 +10,6 @@
             </tool>
         </tools>
     </metadata>
-    <components />
     <externalReferences>
         <reference type="distribution">
             <url>https://cyclonedx.org</url>

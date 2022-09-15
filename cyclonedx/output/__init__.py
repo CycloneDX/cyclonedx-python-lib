@@ -96,7 +96,7 @@ def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
     try:
         module = importlib.import_module(f"cyclonedx.output.{output_format.value.lower()}")
         output_klass = getattr(module, f"{output_format.value}{schema_version.value}")
-    except (ImportError, AttributeError):
-        raise ValueError(f"Unknown format {output_format.value.lower()!r}") from None
+    except (ImportError, AttributeError) as e:
+        raise ValueError(f"Unknown format {output_format.value.lower()!r}: {e}") from None
 
     return cast(BaseOutput, output_klass(bom=bom))
