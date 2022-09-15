@@ -4,8 +4,8 @@
 
 ## v3.1.0 (2022-09-15)
 ### Feature
-* Out-factor SPDX compund detection ([`fd4d537`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fd4d537c9dced0e38f14d99dee174cc5bb0bd465))
-* Out-factor SPDX compund detection ([`2b69925`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2b699252f8857d97231a689ea9cbfcdff9459626))
+* Out-factor SPDX compound detection ([`fd4d537`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fd4d537c9dced0e38f14d99dee174cc5bb0bd465))
+* Out-factor SPDX compound detection ([`2b69925`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2b699252f8857d97231a689ea9cbfcdff9459626))
 * License factories ([`033bad2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/033bad2a50fd2236c712d4621caa57b04fcc2043))
 
 _Note: There was no 3.0.0 release officially, but due to CI publishing issues, an unexpected 3.0.0 release was publiched to PyPi and subsequently yanked from PyPi. There are NO breaking changes between 2.7.1 and 3.1.0._
