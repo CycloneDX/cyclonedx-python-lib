@@ -480,7 +480,7 @@ class Bom:
     def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
         self._vulnerabilities = SortedSet(vulnerabilities)
 
-    @property
+    @property  # type: ignore[misc]
     @serializable.xml_attribute()
     def version(self) -> int:
         return self._version
@@ -489,7 +489,7 @@ class Bom:
     def version(self, version: int) -> None:
         self._version = version
 
-    @property  # type: ignpre[misc]
+    @property  # type: ignore[misc]
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -506,7 +506,7 @@ class Bom:
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
 
         if _d and depends_on:
-            _d.dependencies = _d.dependencies + set(
+            _d.dependencies = _d.dependencies + set(  # type: ignore
                 map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
         elif not _d:
             self._dependencies.add(Dependency(

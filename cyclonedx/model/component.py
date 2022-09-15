@@ -809,7 +809,7 @@ class Component(Dependable):
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
 
-    @property
+    @property  # type: ignore[misc]
     @serializable.xml_attribute()
     def type_(self) -> ComponentType:
         """
