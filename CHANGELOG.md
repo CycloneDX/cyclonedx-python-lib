@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v3.1.0 (2022-09-15)
+### Feature
+* Out-factor SPDX compund detection ([`fd4d537`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fd4d537c9dced0e38f14d99dee174cc5bb0bd465))
+* Out-factor SPDX compund detection ([`2b69925`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2b699252f8857d97231a689ea9cbfcdff9459626))
+* License factories ([`033bad2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/033bad2a50fd2236c712d4621caa57b04fcc2043))
+
 ## v2.7.1 (2022-08-01)
 ### Fix
 * BOM validation fails when Components or Services are nested [#275](https://github.com/CycloneDX/cyclonedx-python-lib/issues/275)
