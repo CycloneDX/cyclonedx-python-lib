@@ -44,6 +44,14 @@ python-versions = ">=3.6"
 toml = ["tomli"]
 
 [[package]]
+name = "ddt"
+version = "1.6.0"
+description = "Data-Driven/Decorated Tests"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "distlib"
 version = "0.3.5"
 description = "Distribution utilities"
@@ -465,6 +473,7 @@ attrs = []
 autopep8 = []
 colorama = []
 coverage = []
+ddt = []
 distlib = []
 filelock = []
 flake8 = []
