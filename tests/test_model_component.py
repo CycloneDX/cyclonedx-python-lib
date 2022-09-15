@@ -271,31 +271,6 @@ class TestModelComponent(TestCase):
         self.assertNotEqual(hash(c1), hash(c2))
         self.assertFalse(c1 == c2)
 
-    def test_zero_dependencies(self) -> None:
-        self.assertSetEqual(get_component_setuptools_simple_no_version().dependencies, set())
-
-    def test_with_dependencies(self) -> None:
-        c = get_component_setuptools_simple_no_version()
-        c.dependencies.update([
-            get_component_setuptools_simple_no_version().bom_ref,
-            get_component_toml_with_hashes_with_references().bom_ref
-        ])
-        self.assertEqual(len(c.dependencies), 2)
-        self.assertTrue(get_component_setuptools_simple_no_version().bom_ref in c.dependencies)
-        self.assertTrue(get_component_toml_with_hashes_with_references().bom_ref in c.dependencies)
-
-    def test_with_duplicate_dependencies(self) -> None:
-        c = get_component_setuptools_simple_no_version()
-        c.dependencies.update([
-            get_component_setuptools_simple_no_version().bom_ref,
-            get_component_toml_with_hashes_with_references().bom_ref,
-            get_component_setuptools_simple_no_version().bom_ref,
-            get_component_toml_with_hashes_with_references().bom_ref
-        ])
-        self.assertEqual(len(c.dependencies), 2)
-        self.assertTrue(get_component_setuptools_simple_no_version().bom_ref in c.dependencies)
-        self.assertTrue(get_component_toml_with_hashes_with_references().bom_ref in c.dependencies)
-
     def test_sort(self) -> None:
         # expected sort order: (type, [group], name, [version])
         expected_order = [6, 4, 5, 3, 2, 1, 0]
@@ -316,7 +291,6 @@ class TestModelComponent(TestCase):
         comp_b = Component(name="comp_b", version="1.0.0")
         comp_c = Component(name="comp_c", version="1.0.0")
         comp_b.components.add(comp_c)
-        comp_b.dependencies.add(comp_c.bom_ref)
 
         self.assertEqual(1, len(comp_b.components))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=True)))
@@ -327,7 +301,6 @@ class TestModelComponent(TestCase):
         comp_b = Component(name="comp_b", version="1.0.0")
         comp_c = Component(name="comp_c", version="1.0.0")
         comp_b.components.add(comp_c)
-        comp_b.dependencies.add(comp_c.bom_ref)
         comp_b.components.add(comp_a)
 
         self.assertEqual(2, len(comp_b.components))
