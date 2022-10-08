@@ -85,3 +85,13 @@ class TestComponent(TestCase):
         self.assertEqual(len(bom.components), 2)
         self.assertTrue(bom.has_component(component=get_component_setuptools_simple_no_version()))
         self.assertIsNot(get_component_setuptools_simple(), get_component_setuptools_simple_no_version())
+
+    def test_get_component_by_purl(self) -> None:
+        bom = Bom()
+        setuptools_simple = get_component_setuptools_simple()
+        bom.components.add(get_component_setuptools_simple())
+
+        result = bom.get_component_by_purl(get_component_setuptools_simple().purl)
+
+        self.assertEqual(result, setuptools_simple)
+        self.assertIsNone(bom.get_component_by_purl(get_component_setuptools_simple_no_version().purl))
