@@ -22,7 +22,12 @@ from unittest import TestCase
 from cyclonedx.model import License, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property
 from cyclonedx.model.bom import Bom, BomMetaData, ThisTool, Tool
 from cyclonedx.model.component import Component, ComponentType
-from data import get_bom_for_issue_275_components, get_bom_with_component_setuptools_with_vulnerability
+from data import (
+    get_bom_for_issue_275_components,
+    get_bom_with_component_setuptools_with_vulnerability,
+    get_component_setuptools_simple,
+    get_component_setuptools_simple_no_version,
+)
 
 
 class TestBomMetaData(TestCase):
@@ -127,3 +132,20 @@ class TestBom(TestCase):
     #     self.assertIsInstance(bom.metadata.component, Component)
     #     self.assertEqual(2, len(bom.services))
     #     bom.validate()
+
+    def test_has_component_1(self) -> None:
+        bom = Bom()
+        bom.components.update([get_component_setuptools_simple(), get_component_setuptools_simple_no_version()])
+        self.assertEqual(len(bom.components), 2)
+        self.assertTrue(bom.has_component(component=get_component_setuptools_simple_no_version()))
+        self.assertIsNot(get_component_setuptools_simple(), get_component_setuptools_simple_no_version())
+
+    def test_get_component_by_purl(self) -> None:
+        bom = Bom()
+        setuptools_simple = get_component_setuptools_simple()
+        bom.components.add(setuptools_simple)
+
+        result = bom.get_component_by_purl(get_component_setuptools_simple().purl)
+
+        self.assertIs(result, setuptools_simple)
+        self.assertIsNone(bom.get_component_by_purl(get_component_setuptools_simple_no_version().purl))
