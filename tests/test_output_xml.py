@@ -34,6 +34,7 @@ from data import (
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
+    get_bom_with_component_setuptools_complete_resolves,
     get_bom_with_component_setuptools_no_component_version,
     get_bom_with_component_setuptools_with_cpe,
     get_bom_with_component_setuptools_with_release_notes,
@@ -179,6 +180,13 @@ class TestOutputXml(BaseXmlTestCase):
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_0,
             fixture='bom_setuptools_complete.xml'
+        )
+
+    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_4)
+    def test_bom_v1_4_full_component_patch_resolves(self, mock_uuid: Mock) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_with_component_setuptools_complete_resolves(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_setuptools_complete_resolves.xml'
         )
 
     def test_bom_v1_4_component_hashes_external_references(self) -> None:

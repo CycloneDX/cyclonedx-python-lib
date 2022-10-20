@@ -428,27 +428,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
             for tag in release_notes.tags:
                 ElementTree.SubElement(release_notes_tags_e, 'tag').text = tag
         if release_notes.resolves:
-            release_notes_resolves_e = ElementTree.SubElement(release_notes_e, 'resolves')
-            for issue in release_notes.resolves:
-                issue_e = ElementTree.SubElement(
-                    release_notes_resolves_e, 'issue', {'type': issue.type.value}
-                )
-                if issue.id:
-                    ElementTree.SubElement(issue_e, 'id').text = issue.id
-                if issue.name:
-                    ElementTree.SubElement(issue_e, 'name').text = issue.name
-                if issue.description:
-                    ElementTree.SubElement(issue_e, 'description').text = issue.description
-                if issue.source:
-                    issue_source_e = ElementTree.SubElement(issue_e, 'source')
-                    if issue.source.name:
-                        ElementTree.SubElement(issue_source_e, 'name').text = issue.source.name
-                    if issue.source.url:
-                        ElementTree.SubElement(issue_source_e, 'url').text = str(issue.source.url)
-                if issue.references:
-                    issue_references_e = ElementTree.SubElement(issue_e, 'references')
-                    for reference in issue.references:
-                        ElementTree.SubElement(issue_references_e, 'url').text = str(reference)
+            Xml._add_resolves_element(release_notes.resolves, release_notes_e)
         if release_notes.notes:
             release_notes_notes_e = ElementTree.SubElement(release_notes_e, 'notes')
             for note in release_notes.notes:
@@ -473,8 +453,33 @@ class Xml(BaseOutput, BaseSchemaVersion):
                 diff_element.append(Xml._add_attached_text(attached_text=patch.diff.text))
             if patch.diff.url:
                 ElementTree.SubElement(diff_element, 'url').text = str(patch.diff.url)
-
+        if patch.resolves:
+            Xml._add_resolves_element(patch.resolves, patch_element)
         return patch_element
+
+    @staticmethod
+    def _add_resolves_element(resolves: "SortedSet[IssueType]", parent_element: ElementTree.Element) -> None:
+        resolves_e = ElementTree.SubElement(parent_element, 'resolves')
+        for issue in resolves:
+            issue_e = ElementTree.SubElement(
+                resolves_e, 'issue', {'type': issue.type.value}
+            )
+            if issue.id:
+                ElementTree.SubElement(issue_e, 'id').text = issue.id
+            if issue.name:
+                ElementTree.SubElement(issue_e, 'name').text = issue.name
+            if issue.description:
+                ElementTree.SubElement(issue_e, 'description').text = issue.description
+            if issue.source:
+                issue_source_e = ElementTree.SubElement(issue_e, 'source')
+                if issue.source.name:
+                    ElementTree.SubElement(issue_source_e, 'name').text = issue.source.name
+                if issue.source.url:
+                    ElementTree.SubElement(issue_source_e, 'url').text = str(issue.source.url)
+            if issue.references:
+                issue_references_e = ElementTree.SubElement(issue_e, 'references')
+                for reference in issue.references:
+                    ElementTree.SubElement(issue_references_e, 'url').text = str(reference)
 
     @staticmethod
     def _add_properties_element(properties: "SortedSet[Property]", parent_element: ElementTree.Element) -> None:

@@ -141,6 +141,10 @@ def get_bom_with_component_setuptools_complete() -> Bom:
     return Bom(components=[get_component_setuptools_complete()])
 
 
+def get_bom_with_component_setuptools_complete_resolves() -> Bom:
+    return Bom(components=[get_component_setuptools_complete_resolves()])
+
+
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom = Bom()
     component = get_component_setuptools_simple()
@@ -375,6 +379,12 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     return component
 
 
+def get_component_setuptools_complete_resolves() -> Component:
+    component = get_component_setuptools_complete(False)
+    component.pedigree = get_pedigree_2()
+    return component
+
+
 def get_component_setuptools_simple(
         bom_ref: Optional[str] = 'pkg:pypi/setuptools@50.3.2?extension=tar.gz') -> Component:
     return Component(
@@ -493,6 +503,14 @@ def get_pedigree_1() -> Pedigree:
         patches=[Patch(type_=PatchClassification.BACKPORT)],
         notes='Some notes here please'
     )
+
+
+def get_pedigree_2() -> Pedigree:
+    pedigree = get_pedigree_1()
+    pedigree.patches.add(
+        Patch(type_=PatchClassification.BACKPORT, resolves=[get_issue_1()])
+    )
+    return pedigree
 
 
 def get_properties_1() -> List[Property]:
