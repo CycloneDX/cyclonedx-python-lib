@@ -1,6 +1,10 @@
 # Changelog
 
-<!--next-version-placeholder--> 
+<!--next-version-placeholder-->
+
+## v3.1.1 (2022-11-28)
+### Fix
+* Type hint for `get_component_by_purl` is incorrect ([`3f20bf0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3f20bf04a65d5c539230281437255b5f48e17621)) 
 
 ## v3.1.0 (2022-09-15)
 ### Feature
