@@ -231,7 +231,8 @@ class Bom:
         bom.components.update(parser.get_components())
         return bom
 
-    def __init__(self, *, components: Optional[Iterable[Component]] = None,
+    def __init__(self, *, uuid: Optional[UUID] = None,
+                 components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None) -> None:
         """
@@ -240,7 +241,7 @@ class Bom:
         Returns:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
-        self.uuid = uuid4()
+        self.uuid = uuid or uuid4()
         self.metadata = BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
