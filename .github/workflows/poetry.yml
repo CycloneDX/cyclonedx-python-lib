@@ -15,7 +15,7 @@ on:
 
 env:
   REPORTS_DIR: CI_reports
-  PYTHON_VERISON_DEFAULT: "3.10"
+  PYTHON_VERISON_DEFAULT: "3.11"
   POETRY_VERSION: "1.1.11"
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
         include:
           - # test with the locked dependencies
             os: ubuntu-latest
-            python-version: '3.10'
+            python-version: '3.11'
             toxenv-factor: 'locked'
           - # test with the lowest dependencies
             os: ubuntu-20.04
@@ -90,7 +90,8 @@ jobs:
       matrix:
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         python-version:
-          - "3.10" # highest supported
+          - "3.11" # highest supported
+          - "3.10"
           - "3.9"
           - "3.8"
           - "3.7"
