@@ -45,16 +45,18 @@ jobs:
 
   static-code-analysis:
     name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         include:
           - # test with the locked dependencies
+            os: ubuntu-latest
             python-version: '3.10'
             toxenv-factor: 'locked'
           - # test with the lowest dependencies
+            os: ubuntu-20.04
             python-version: '3.6'
             toxenv-factor: 'lowest'
     steps:
@@ -95,10 +97,18 @@ jobs:
           - "3.6" # lowest supported
         toxenv-factor: ['locked']
         include:
+          - # test with py36 ubuntu20
+            os: ubuntu-20.04
+            python-version: '3.6'
+            toxenv-factor: 'locked'
           - # test with the lowest dependencies
-            os: 'ubuntu-latest'
+            os: ubuntu-20.04
             python-version: '3.6'
             toxenv-factor: 'lowest'
+        exclude:
+          - # no py36 with latest ubuntu - see https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json
+            os: ubuntu-latest
+            python-version: '3.6'
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
