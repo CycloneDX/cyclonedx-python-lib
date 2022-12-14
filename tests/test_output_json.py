@@ -371,6 +371,15 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_issue_275_components.json'
         )
 
+    def test_pretty_json(self) -> None:
+        bom = get_bom_with_dependencies_valid()
+        schema_version = SchemaVersion.V1_4
+        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
+        output = outputter.output_as_string()
+
+        lines = output.splitlines()
+        assert(len(lines) > 1)
+
     # Helper methods
     def _validate_json_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
