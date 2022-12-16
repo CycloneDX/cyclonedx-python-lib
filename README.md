@@ -54,7 +54,7 @@ See the [LICENSE][license_file] file for the full license.
 [chaneglog_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CHANGELOG.md
 [contributing_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CONTRIBUTING.md
 
-[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-python-lib/Python%20CI/main?logo=GitHub&logoColor=white "build"
+[shield_gh-workflow-test]:  https://img.shields.io/github/actions/workflow/status/CycloneDX/cyclonedx-python-lib/poetry.yml?branch=main&logo=GitHub&logoColor=white "build"
 [shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=pypi&logoColor=white&label=PyPI "PyPI"
 [shield_conda-forge-version]: https://img.shields.io/conda/vn/conda-forge/cyclonedx-python-lib?logo=anaconda&logoColor=white&label=conda-forge "conda-forge"
 [shield_rtfd]: https://img.shields.io/readthedocs/cyclonedx-python-library?logo=readthedocs&logoColor=white "Read the Docs"
