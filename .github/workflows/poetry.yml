@@ -55,7 +55,7 @@ jobs:
             python-version: '3.10'
             toxenv-factor: 'locked'
           - # test with the lowest dependencies
-            python-version: '3.6'
+            python-version: '3.7'
             toxenv-factor: 'lowest'
     steps:
       - name: Checkout
@@ -91,13 +91,12 @@ jobs:
           - "3.10" # highest supported
           - "3.9"
           - "3.8"
-          - "3.7"
-          - "3.6" # lowest supported
+          - "3.7" # lowest supported
         toxenv-factor: ['locked']
         include:
           - # test with the lowest dependencies
-            os: 'ubuntu-latest'
-            python-version: '3.6'
+            os: ubuntu-latest
+            python-version: '3.7'
             toxenv-factor: 'lowest'
     steps:
       - name: Disabled Git auto EOL CRLF transforms
