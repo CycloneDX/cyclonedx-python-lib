@@ -253,7 +253,7 @@ class Bom:
         self.version = version
 
     @property
-    def uuid(self) -> UUID:
+    def uuid(self) -> Optional[UUID]:
         """
         Unique UUID for this BOM
 
@@ -263,11 +263,11 @@ class Bom:
         return self.__uuid
 
     @uuid.setter
-    def uuid(self, uuid: UUID) -> None:
+    def uuid(self, uuid: Optional[UUID]) -> None:
         self.__uuid = uuid
 
     @property
-    def metadata(self) -> BomMetaData:
+    def metadata(self) -> Optional[BomMetaData]:
         """
         Get our internal metadata object for this Bom.
 
@@ -280,7 +280,7 @@ class Bom:
         return self._metadata
 
     @metadata.setter
-    def metadata(self, metadata: BomMetaData) -> None:
+    def metadata(self, metadata: Optional[BomMetaData]) -> None:
         self._metadata = metadata
 
     @property
@@ -315,14 +315,15 @@ class Bom:
 
         return None
 
-    def get_urn_uuid(self) -> str:
+    def get_urn_uuid(self) -> Optional[str]:
         """
         Get the unique reference for this Bom.
 
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
         """
-        return self.__uuid.urn
+        if self.__uuid:
+            return self.__uuid.urn
 
     def has_component(self, component: Component) -> bool:
         """
