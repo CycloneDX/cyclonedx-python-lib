@@ -341,6 +341,13 @@ def get_bom_for_issue_275_components() -> Bom:
     return bom
 
 
+def get_bom_minimal() -> Bom:
+    bom = Bom()
+    bom.uuid = None
+    bom.metadata = None
+    return bom
+
+
 # def get_bom_for_issue_275_services() -> Bom:
 #    """regression test for issue #275
 #    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275

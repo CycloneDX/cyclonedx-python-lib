@@ -50,6 +50,7 @@ from .data import (
     get_bom_with_nested_services,
     get_bom_with_services_complex,
     get_bom_with_services_simple,
+    get_bom_minimal,
 )
 
 
@@ -391,6 +392,24 @@ class TestOutputJson(BaseJsonTestCase):
         self._validate_json_bom(
             bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_2,
             fixture='bom_issue_328_components.json'
+        )
+
+    def test_bom_minimal_with_only_required_fields_v1_2(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_minimal(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_minimal_only_required.json'
+        )
+
+    def test_bom_minimal_with_only_required_fields_v1_3(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_minimal(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_minimal_only_required.json'
+        )
+
+    def test_bom_minimal_with_only_required_fields_v1_4(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_minimal(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_external_references.json'
         )
 
     # region Helper methods
