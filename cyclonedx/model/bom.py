@@ -367,7 +367,7 @@ class Bom:
 
     def _get_all_components(self) -> Set[Component]:
         components: Set[Component] = set()
-        if self.metadata.component:
+        if self.metadata and self.metadata.component:
             components.update(self.metadata.component.get_all_nested_components(include_self=True))
 
         for c in self.components:
@@ -448,7 +448,7 @@ class Bom:
                 f'BOM. They are: {dependency_diff}')
 
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
-        if self.metadata.component and not self.metadata.component.dependencies:
+        if self.metadata and self.metadata.component and not self.metadata.component.dependencies:
             warnings.warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
