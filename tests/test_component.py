@@ -27,7 +27,7 @@ from cyclonedx.model import sha1sum
 from cyclonedx.model.component import Component
 from data import get_component_setuptools_simple
 
-FIXTURES_DIRECTORY = 'fixtures/xml/1.4'
+FIXTURES_DIRECTORY = join('fixtures', 'xml', '1.4')
 
 
 class TestComponent(TestCase):
