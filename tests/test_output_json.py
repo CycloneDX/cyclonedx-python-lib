@@ -34,6 +34,7 @@ from .data import (
     MOCK_UUID_6,
     TEST_UUIDS,
     get_bom_for_issue_275_components,
+    get_bom_for_issue_328_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -371,6 +372,24 @@ class TestOutputJson(BaseJsonTestCase):
         self._validate_json_bom(
             bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
             fixture='bom_issue_275_components.json'
+        )
+
+    def test_bom_v1_4_issue_328_components(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_328_components.json'
+        )
+
+    def test_bom_v1_3_issue_328_components(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_issue_328_components.json'
+        )
+
+    def test_bom_v1_2_issue_328_components(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_issue_328_components.json'
         )
 
     # region Helper methods
