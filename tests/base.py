@@ -45,7 +45,7 @@ else:
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
 cyclonedx_lib_version: str = version(cyclonedx_lib_name)
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
-schema_directory = os.path.join(os.path.dirname(__file__), '../cyclonedx/schema')
+schema_directory = os.path.join(os.path.dirname(__file__), '..', 'cyclonedx', 'schema')
 
 
 class BaseJsonTestCase(TestCase):

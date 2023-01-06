@@ -371,17 +371,25 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_issue_275_components.json'
         )
 
-    # Helper methods
+    # region Helper methods
+
     def _validate_json_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
         self.assertEqual(outputter.schema_version, schema_version)
-        with open(
-                join(dirname(__file__), f'fixtures/json/{schema_version.to_version()}/{fixture}')) as expected_json:
-            self.assertValidAgainstSchema(bom_json=outputter.output_as_string(), schema_version=schema_version)
-            self.assertEqualJsonBom(expected_json.read(), outputter.output_as_string())
-            expected_json.close()
+        output = outputter.output_as_string()
+        self.assertValidAgainstSchema(bom_json=output, schema_version=schema_version)
+        with open(join(
+            dirname(__file__),
+            'fixtures',
+            'json',
+            schema_version.to_version(),
+            fixture
+        )) as expected_json:
+            self.assertEqualJsonBom(expected_json.read(), output)
 
     def _validate_json_bom_not_supported(self, bom: Bom, schema_version: SchemaVersion) -> None:
         with self.assertRaises(FormatNotSupportedException):
             outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
             outputter.output_as_string()
+
+    # endregion Helper methods
