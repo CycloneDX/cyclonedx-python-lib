@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v3.1.2 (2023-01-06)
+### Fix
+* Prevent errors on metadata handling for some specification versions ([#330](https://github.com/CycloneDX/cyclonedx-python-lib/issues/330)) ([`f08a656`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f08a65649aee750397edc061eb3b8325a69bb4b4))
+
+### Documentation
+* Typo ([`539b57a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/539b57a00e4e60e239bb26141f219366121e7bc2))
+* Fix shields ([#324](https://github.com/CycloneDX/cyclonedx-python-lib/issues/324)) ([`555dad4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/555dad4bc255066036ecca028192eb83df8ba5a0))
+* Fix typo ([#318](https://github.com/CycloneDX/cyclonedx-python-lib/issues/318)) ([`63bfb87`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/63bfb8772fe78e9842675d17862c456150dbbc15))
+
 ## v3.1.1 (2022-11-28)
 ### Fix
 * Type hint for `get_component_by_purl` is incorrect ([`3f20bf0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3f20bf04a65d5c539230281437255b5f48e17621)) 
