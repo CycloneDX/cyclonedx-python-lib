@@ -87,7 +87,8 @@ class BaseJsonTestCase(TestCase):
         """
         Remove UUID before comparison as this will be unique to each generation
         """
-        ab, bb = json.loads(a), json.loads(b)
+        ab = json.loads(a)
+        bb = json.loads(b)
 
         # Null serialNumbers
         ab['serialNumber'] = single_uuid
@@ -95,19 +96,22 @@ class BaseJsonTestCase(TestCase):
 
         # Unify timestamps to ensure they will compare
         now = datetime.now(tz=timezone.utc)
-        ab['metadata']['timestamp'] = now.isoformat()
-        bb['metadata']['timestamp'] = now.isoformat()
 
-        # Align 'this' Tool Version
-        if 'tools' in ab['metadata'].keys():
-            for i, tool in enumerate(ab['metadata']['tools']):
-                if tool['name'] == cyclonedx_lib_name:
-                    ab['metadata']['tools'][i]['version'] = cyclonedx_lib_version
+        if 'metadata' in ab.keys():
+            ab['metadata']['timestamp'] = now.isoformat()
+            if 'tools' in ab['metadata'].keys():
+                for tool in ab['metadata']['tools']:
+                    if tool['name'] == cyclonedx_lib_name:
+                        tool['version'] = cyclonedx_lib_version
+                    del tool
 
-        if 'tools' in bb['metadata'].keys():
-            for i, tool in enumerate(bb['metadata']['tools']):
-                if tool['name'] == cyclonedx_lib_name:
-                    bb['metadata']['tools'][i]['version'] = cyclonedx_lib_version
+        if 'metadata' in bb.keys():
+            bb['metadata']['timestamp'] = now.isoformat()
+            if 'tools' in bb['metadata'].keys():
+                for tool in bb['metadata']['tools']:
+                    if tool['name'] == cyclonedx_lib_name:
+                        tool['version'] = cyclonedx_lib_version
+                    del tool
 
         self.assertEqualJson(json.dumps(ab), json.dumps(bb))
 
