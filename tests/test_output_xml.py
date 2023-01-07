@@ -23,7 +23,10 @@ from unittest.mock import Mock, patch
 from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import SchemaVersion, get_instance
-from data import (
+
+from . import RECREATE_SNAPSHOTS
+from .base import BaseXmlTestCase
+from .data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
@@ -31,6 +34,7 @@ from data import (
     MOCK_UUID_5,
     MOCK_UUID_6,
     TEST_UUIDS,
+    get_bom_for_issue_275_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -47,8 +51,6 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-from tests.base import BaseXmlTestCase
-from tests.data import get_bom_for_issue_275_components
 
 
 class TestOutputXml(BaseXmlTestCase):
@@ -522,13 +524,17 @@ class TestOutputXml(BaseXmlTestCase):
         self.assertEqual(outputter.schema_version, schema_version)
         output = outputter.output_as_string()
         self.assertValidAgainstSchema(bom_xml=output, schema_version=schema_version)
-        with open(join(
+        fixture_file = join(
             dirname(__file__),
             'fixtures',
             'xml',
             schema_version.to_version(),
             fixture
-        )) as expected_xml:
+        )
+        if RECREATE_SNAPSHOTS:
+            with open(fixture_file, 'w') as expected_xml:
+                expected_xml.write(output)
+        with open(fixture_file) as expected_xml:
             self.assertEqualXmlBom(expected_xml.read(), output, namespace=outputter.get_target_namespace())
 
     # endregion Helper methods

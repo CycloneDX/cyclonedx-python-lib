@@ -17,6 +17,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from os import path
+from os import getenv, path
 
 FIXTURES_DIRECTORY = path.join(path.dirname(__file__), 'fixtures')
+
+RECREATE_SNAPSHOTS = bool(getenv('CDX_TEST_RECREATE_SNAPSHOTS'))
+if RECREATE_SNAPSHOTS:
+    print('!!! WILL RECREATE ALL SNAPSHOTS !!!')

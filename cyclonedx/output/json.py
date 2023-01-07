@@ -66,7 +66,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
         extras = {}
         if self.bom_supports_dependencies():
-            dep_components: Iterable[Component] = bom.components
+            dep_components = self._chained_components(bom)
             if bom.metadata.component:
                 dep_components = [bom.metadata.component, *dep_components]
             dependencies = []

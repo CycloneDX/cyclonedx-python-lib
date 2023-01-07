@@ -24,12 +24,16 @@ from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
-from data import (
+
+from . import RECREATE_SNAPSHOTS
+from .base import BaseJsonTestCase
+from .data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
     MOCK_UUID_6,
     TEST_UUIDS,
+    get_bom_for_issue_275_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -46,8 +50,6 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-from tests.base import BaseJsonTestCase
-from tests.data import get_bom_for_issue_275_components
 
 
 class TestOutputJson(BaseJsonTestCase):
@@ -378,13 +380,17 @@ class TestOutputJson(BaseJsonTestCase):
         self.assertEqual(outputter.schema_version, schema_version)
         output = outputter.output_as_string()
         self.assertValidAgainstSchema(bom_json=output, schema_version=schema_version)
-        with open(join(
+        fixture_file = join(
             dirname(__file__),
             'fixtures',
             'json',
             schema_version.to_version(),
             fixture
-        )) as expected_json:
+        )
+        if RECREATE_SNAPSHOTS:
+            with open(fixture_file, 'w') as expected_json:
+                expected_json.write(output)
+        with open(fixture_file) as expected_json:
             self.assertEqualJsonBom(expected_json.read(), output)
 
     def _validate_json_bom_not_supported(self, bom: Bom, schema_version: SchemaVersion) -> None:
