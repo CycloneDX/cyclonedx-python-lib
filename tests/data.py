@@ -377,9 +377,9 @@ def get_bom_for_issue_328_components() -> Bom:
     comp_b.dependencies = [comp_c.bom_ref]
 
     bom = Bom()
-    bom.components = [comp_a]
-    Bom.metadata = BomMetaData(component=comp_root)
+    bom.metadata.component = comp_root
     comp_root.dependencies = [comp_a.bom_ref]
+    bom.components = [comp_a]
     return bom
 
 
