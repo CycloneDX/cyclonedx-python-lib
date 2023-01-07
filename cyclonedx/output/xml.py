@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import warnings
-from typing import Iterable, Optional
+from typing import Optional
 from xml.etree import ElementTree
 
 from sortedcontainers import SortedSet
