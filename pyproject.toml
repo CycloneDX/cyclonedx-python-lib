@@ -53,7 +53,10 @@ sortedcontainers = "^2.4.0"
 [tool.poetry.dev-dependencies]
 tox = "^3.25.0"
 ddt = "^1.6.0"
-coverage = "^6.2"
+coverage = [
+  { python = ">=3.6,<3.7", version = "^6.2" },
+  { python = ">=3.7",      version = "^6.5" },
+]
 mypy = ">= 0.920, <= 0.961"
 autopep8 = "^1.6.0"
 isort = { version = "^5.10.0", python = ">= 3.6.1" }
@@ -61,7 +64,10 @@ flake8 = "^4.0.1"
 flake8-annotations = {version = "^2.7.0", python = ">= 3.6.2"}
 flake8-bugbear = "^22.7.1"
 flake8-isort = { version = "^4.1.2", python = ">= 3.6.1" }
-jsonschema = { version = ">= 4.4.0", python = "> 3.6"}
+jsonschema = [
+  { python = ">=3.6,<3.7", version = ">=3,<4" },
+  { python = ">=3.7",      version = ">=4.4.0,<5" },
+]
 lxml = ">=4.7.0"
 # `types-setuptools` need to stay in sync with version of `setuptools` - but 47 was not typed...
 types-setuptools = ">= 57.0.0"
