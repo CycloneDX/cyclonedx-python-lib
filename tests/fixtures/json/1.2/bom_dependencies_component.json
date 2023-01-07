@@ -2,15 +2,15 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.2",
-  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "serialNumber": "urn:uuid:d3c403f8-187f-4c3a-ae93-2d62f50689c0",
   "version": 1,
   "metadata": {
-    "timestamp": "2021-09-01T10:50:42.051979+00:00",
+    "timestamp": "2023-01-07T11:40:00.538713+00:00",
     "tools": [
       {
         "vendor": "CycloneDX",
         "name": "cyclonedx-python-lib",
-        "version": "VERSION"
+        "version": "3.1.2"
       }
     ],
     "component": {
@@ -28,23 +28,23 @@
     }
   },
   "components": [
-     {
+    {
       "type": "library",
       "bom-ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "name": "toml",
       "version": "0.10.2",
-      "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "hashes": [
         {
           "alg": "SHA-256",
           "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
         }
       ],
+      "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "externalReferences": [
         {
-          "type": "distribution",
           "url": "https://cyclonedx.org",
-          "comment": "No comment"
+          "comment": "No comment",
+          "type": "distribution"
         }
       ]
     }

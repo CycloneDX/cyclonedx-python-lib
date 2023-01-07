@@ -21,7 +21,8 @@ from unittest import TestCase
 from unittest.mock import Mock, patch
 
 from cyclonedx.model.service import Service
-from tests.data import reorder
+
+from .data import reorder
 
 
 class TestModelService(TestCase):

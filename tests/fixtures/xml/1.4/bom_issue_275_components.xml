@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1"
+     serialNumber="urn:uuid:52a491eb-5476-404d-826a-7628fac920e7">
     <metadata>
-        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <timestamp>2023-01-07T11:40:05.042730+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>VERSION</version>
+                <version>3.1.2</version>
                 <externalReferences>
                     <reference type="build-system">
                         <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
@@ -58,12 +59,12 @@
     </components>
     <dependencies>
         <dependency ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
-            <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda" />
-            <dependency ref="0b049d09-64c0-4490-a0f5-c84d9aacf857" />
+            <dependency ref="0b049d09-64c0-4490-a0f5-c84d9aacf857"/>
+            <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"/>
         </dependency>
-        <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda" />
+        <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"/>
         <dependency ref="0b049d09-64c0-4490-a0f5-c84d9aacf857">
-            <dependency ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789" />
+            <dependency ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789"/>
         </dependency>
     </dependencies>
 </bom>

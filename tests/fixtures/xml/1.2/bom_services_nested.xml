@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1"
+     serialNumber="urn:uuid:2072df52-f0ce-47ab-8881-715b74287d9a">
     <metadata>
-        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <timestamp>2023-01-07T11:40:04.277387+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>VERSION</version>
+                <version>3.1.2</version>
             </tool>
         </tools>
-        <component bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789" type="library">
+        <component type="library" bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
@@ -21,13 +22,13 @@
                 <name>CycloneDX</name>
                 <url>https://cyclonedx.org</url>
                 <contact>
-                    <name>Paul Horton</name>
-                    <email>paul.horton@owasp.org</email>
-                </contact>
-                <contact>
                     <name>A N Other</name>
                     <email>someone@somewhere.tld</email>
                     <phone>+44 (0)1234 567890</phone>
+                </contact>
+                <contact>
+                    <name>Paul Horton</name>
+                    <email>paul.horton@owasp.org</email>
                 </contact>
             </provider>
             <group>a-group</group>
@@ -53,21 +54,18 @@
                 </reference>
             </externalReferences>
             <services>
-                <service bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
-                    <name>first-nested-service</name>
-                </service>
                 <service bom-ref="my-specific-bom-ref-for-second-nested-service">
                     <provider>
                         <name>CycloneDX</name>
                         <url>https://cyclonedx.org</url>
                         <contact>
-                            <name>Paul Horton</name>
-                            <email>paul.horton@owasp.org</email>
-                        </contact>
-                        <contact>
                             <name>A N Other</name>
                             <email>someone@somewhere.tld</email>
                             <phone>+44 (0)1234 567890</phone>
+                        </contact>
+                        <contact>
+                            <name>Paul Horton</name>
+                            <email>paul.horton@owasp.org</email>
                         </contact>
                     </provider>
                     <group>no-group</group>
@@ -75,6 +73,9 @@
                     <version>3.2.1</version>
                     <authenticated>true</authenticated>
                     <x-trust-boundary>false</x-trust-boundary>
+                </service>
+                <service bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
+                    <name>first-nested-service</name>
                 </service>
             </services>
         </service>
@@ -86,13 +87,13 @@
                         <name>CycloneDX</name>
                         <url>https://cyclonedx.org</url>
                         <contact>
-                            <name>Paul Horton</name>
-                            <email>paul.horton@owasp.org</email>
-                        </contact>
-                        <contact>
                             <name>A N Other</name>
                             <email>someone@somewhere.tld</email>
                             <phone>+44 (0)1234 567890</phone>
+                        </contact>
+                        <contact>
+                            <name>Paul Horton</name>
+                            <email>paul.horton@owasp.org</email>
                         </contact>
                     </provider>
                     <group>what-group</group>

@@ -1,108 +1,110 @@
 {
   "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
+  "specVersion": "1.2",
+  "serialNumber": "urn:uuid:d3dabd06-3e09-42de-b638-9dc22a65f58e",
+  "version": 1,
   "metadata": {
-    "component": {
-      "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
-      "name": "cyclonedx-python-lib",
-      "type": "library",
-      "version": "1.0.0"
-    },
-    "timestamp": "2022-01-27T16:16:35.622354+00:00",
+    "timestamp": "2023-01-07T11:40:00.757471+00:00",
     "tools": [
       {
-        "name": "cyclonedx-python-lib",
         "vendor": "CycloneDX",
-        "version": "0.11.0"
+        "name": "cyclonedx-python-lib",
+        "version": "3.1.2"
       }
-    ]
+    ],
+    "component": {
+      "type": "library",
+      "bom-ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
+      "name": "cyclonedx-python-lib",
+      "version": "1.0.0"
+    }
   },
-  "serialNumber": "urn:uuid:1d2c4529-8cf8-447d-b2a1-e4ebb610adb9",
   "services": [
     {
-      "authenticated": false,
       "bom-ref": "my-specific-bom-ref-for-my-first-service",
-      "data": [
-        {
-          "classification": "public",
-          "flow": "outbound"
-        }
-      ],
+      "provider": {
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org"
+        ],
+        "contact": [
+          {
+            "name": "A N Other",
+            "email": "someone@somewhere.tld",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "name": "Paul Horton",
+            "email": "paul.horton@owasp.org"
+          }
+        ]
+      },
+      "group": "a-group",
+      "name": "my-first-service",
+      "version": "1.2.3",
       "description": "Description goes here",
       "endpoints": [
         "/api/thing/1",
         "/api/thing/2"
       ],
-      "externalReferences": [
+      "authenticated": false,
+      "x-trust-boundary": true,
+      "data": [
         {
-          "comment": "No comment",
-          "hashes": [
-            {
-              "alg": "SHA-256",
-              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-            }
-          ],
-          "type": "distribution",
-          "url": "https://cyclonedx.org"
+          "flow": "outbound",
+          "classification": "public"
         }
       ],
-      "group": "a-group",
       "licenses": [
         {
           "expression": "Commercial"
         }
       ],
-      "name": "my-first-service",
-      "provider": {
-        "contact": [
-          {
-            "email": "paul.horton@owasp.org",
-            "name": "Paul Horton"
-          },
-          {
-            "email": "someone@somewhere.tld",
-            "name": "A N Other",
-            "phone": "+44 (0)1234 567890"
-          }
-        ],
-        "name": "CycloneDX",
-        "url": [
-          "https://cyclonedx.org"
-        ]
-      },
+      "externalReferences": [
+        {
+          "url": "https://cyclonedx.org",
+          "comment": "No comment",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-256",
+              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+            }
+          ]
+        }
+      ],
       "services": [
         {
-          "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
-          "name": "first-nested-service"
-        },
-        {
-          "authenticated": true,
           "bom-ref": "my-specific-bom-ref-for-second-nested-service",
-          "group": "no-group",
-          "name": "second-nested-service",
           "provider": {
-            "contact": [
-              {
-                "email": "paul.horton@owasp.org",
-                "name": "Paul Horton"
-              },
-              {
-                "email": "someone@somewhere.tld",
-                "name": "A N Other",
-                "phone": "+44 (0)1234 567890"
-              }
-            ],
             "name": "CycloneDX",
             "url": [
               "https://cyclonedx.org"
+            ],
+            "contact": [
+              {
+                "name": "A N Other",
+                "email": "someone@somewhere.tld",
+                "phone": "+44 (0)1234 567890"
+              },
+              {
+                "name": "Paul Horton",
+                "email": "paul.horton@owasp.org"
+              }
             ]
           },
+          "group": "no-group",
+          "name": "second-nested-service",
           "version": "3.2.1",
+          "authenticated": true,
           "x-trust-boundary": false
+        },
+        {
+          "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
+          "name": "first-nested-service"
         }
-      ],
-      "version": "1.2.3",
-      "x-trust-boundary": true
+      ]
     },
     {
       "bom-ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857",
@@ -110,25 +112,25 @@
       "services": [
         {
           "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
-          "group": "what-group",
-          "name": "yet-another-nested-service",
           "provider": {
-            "contact": [
-              {
-                "email": "paul.horton@owasp.org",
-                "name": "Paul Horton"
-              },
-              {
-                "email": "someone@somewhere.tld",
-                "name": "A N Other",
-                "phone": "+44 (0)1234 567890"
-              }
-            ],
             "name": "CycloneDX",
             "url": [
               "https://cyclonedx.org"
+            ],
+            "contact": [
+              {
+                "name": "A N Other",
+                "email": "someone@somewhere.tld",
+                "phone": "+44 (0)1234 567890"
+              },
+              {
+                "name": "Paul Horton",
+                "email": "paul.horton@owasp.org"
+              }
             ]
           },
+          "group": "what-group",
+          "name": "yet-another-nested-service",
           "version": "6.5.4"
         },
         {
@@ -138,8 +140,6 @@
       ]
     }
   ],
-  "specVersion": "1.2",
-  "version": 1,
   "dependencies": [
     {
       "ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",

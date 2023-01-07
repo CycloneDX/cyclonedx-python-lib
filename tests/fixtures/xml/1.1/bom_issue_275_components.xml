@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
+     serialNumber="urn:uuid:86723f61-24e4-417c-a7f5-94ddc17244df">
     <components>
         <component type="library" bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda">
             <name>comp_a</name>

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.3" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.3" version="1"
+     serialNumber="urn:uuid:e48af5a3-d247-49de-828a-4bfca82f898a">
     <metadata>
-        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <timestamp>2023-01-07T11:40:04.679825+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>VERSION</version>
+                <version>3.1.2</version>
             </tool>
         </tools>
         <authors>
             <author>
-                <name>Paul Horton</name>
-                <email>paul.horton@owasp.org</email>
-            </author>
-            <author>
                 <name>A N Other</name>
                 <email>someone@somewhere.tld</email>
                 <phone>+44 (0)1234 567890</phone>
+            </author>
+            <author>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
             </author>
         </authors>
         <component type="library" bom-ref="bb5911d6-1a1d-41c9-b6e0-46e848d16655">
@@ -25,13 +26,13 @@
                 <name>CycloneDX</name>
                 <url>https://cyclonedx.org</url>
                 <contact>
-                    <name>Paul Horton</name>
-                    <email>paul.horton@owasp.org</email>
-                </contact>
-                <contact>
                     <name>A N Other</name>
                     <email>someone@somewhere.tld</email>
                     <phone>+44 (0)1234 567890</phone>
+                </contact>
+                <contact>
+                    <name>Paul Horton</name>
+                    <email>paul.horton@owasp.org</email>
                 </contact>
             </supplier>
             <author>Test Author</author>
@@ -63,7 +64,7 @@
                     <component type="library" bom-ref="8a3893b3-9923-4adb-a1d3-47456636ba0a">
                         <author>Test Author</author>
                         <name>setuptools</name>
-                        <version></version>
+                        <version/>
                         <licenses>
                             <expression>MIT License</expression>
                         </licenses>
@@ -74,7 +75,7 @@
                     <component type="library" bom-ref="28b2d8ce-def0-446f-a221-58dee0b44acc">
                         <author>Test Author</author>
                         <name>setuptools</name>
-                        <version></version>
+                        <version/>
                         <licenses>
                             <expression>MIT License</expression>
                         </licenses>
@@ -99,6 +100,15 @@
                     </component>
                 </descendants>
                 <variants>
+                    <component type="library" bom-ref="ded1d73e-1fca-4302-b520-f1bc53979958">
+                        <author>Test Author</author>
+                        <name>setuptools</name>
+                        <version>50.3.2</version>
+                        <licenses>
+                            <expression>MIT License</expression>
+                        </licenses>
+                        <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+                    </component>
                     <component type="library" bom-ref="e7abdcca-5ba2-4f29-b2cf-b1e1ef788e66">
                         <name>toml</name>
                         <version>0.10.2</version>
@@ -115,15 +125,6 @@
                                 </hashes>
                             </reference>
                         </externalReferences>
-                    </component>
-                    <component type="library" bom-ref="ded1d73e-1fca-4302-b520-f1bc53979958">
-                        <author>Test Author</author>
-                        <name>setuptools</name>
-                        <version>50.3.2</version>
-                        <licenses>
-                            <expression>MIT License</expression>
-                        </licenses>
-                        <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
                     </component>
                 </variants>
                 <commits>
@@ -189,13 +190,13 @@
             <name>CycloneDX</name>
             <url>https://cyclonedx.org</url>
             <contact>
-                <name>Paul Horton</name>
-                <email>paul.horton@owasp.org</email>
-            </contact>
-            <contact>
                 <name>A N Other</name>
                 <email>someone@somewhere.tld</email>
                 <phone>+44 (0)1234 567890</phone>
+            </contact>
+            <contact>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
             </contact>
         </manufacture>
         <supplier>
@@ -221,6 +222,6 @@
     </metadata>
     <components/>
     <dependencies>
-        <dependency ref="bb5911d6-1a1d-41c9-b6e0-46e848d16655" />
+        <dependency ref="bb5911d6-1a1d-41c9-b6e0-46e848d16655"/>
     </dependencies>
 </bom>
