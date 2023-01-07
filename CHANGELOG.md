@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v3.1.3 (2023-01-07)
+### Fix
+* Serialize dependency graph for nested components ([#329](https://github.com/CycloneDX/cyclonedx-python-lib/issues/329)) ([`fb3f835`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb3f8351881783281f8b7e796098a4c145b35927))
+
 ## v3.1.2 (2023-01-06)
 ### Fix
 * Prevent errors on metadata handling for some specification versions ([#330](https://github.com/CycloneDX/cyclonedx-python-lib/issues/330)) ([`f08a656`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f08a65649aee750397edc061eb3b8325a69bb4b4))
