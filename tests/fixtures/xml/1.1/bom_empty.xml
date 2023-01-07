@@ -1,5 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
-     serialNumber="urn:uuid:ad33f590-4877-4de8-a278-f0253d685490">
-    <components/>
-</bom>
+<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1" serialNumber="urn:uuid:32a0bbee-1c87-4b25-a795-a5dbb4a41b01"><components /></bom>
