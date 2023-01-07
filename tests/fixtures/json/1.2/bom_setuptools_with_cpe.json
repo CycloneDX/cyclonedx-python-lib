@@ -4,47 +4,13 @@
   "specVersion": "1.2",
   "serialNumber": "urn:uuid:ffe12ed7-5a96-42de-a39c-d41c0178b212",
   "version": 1,
-  "etadata": {
+  "metadata": {
     "timestamp": "2023-01-07T12:41:50.436902+00:00",
     "tools": [
       {
         "vendor": "CycloneDX",
         "name": "cyclonedx-python-lib",
-        "version": "3.1.2",
-        "externalReferences": [
-          {
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions",
-            "type": "build-system"
-          },
-          {
-            "url": "https://pypi.org/project/cyclonedx-python-lib/",
-            "type": "distribution"
-          },
-          {
-            "url": "https://cyclonedx.github.io/cyclonedx-python-lib/",
-            "type": "documentation"
-          },
-          {
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues",
-            "type": "issue-tracker"
-          },
-          {
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE",
-            "type": "license"
-          },
-          {
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md",
-            "type": "release-notes"
-          },
-          {
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib",
-            "type": "vcs"
-          },
-          {
-            "url": "https://cyclonedx.org",
-            "type": "website"
-          }
-        ]
+        "version": "3.1.2"
       }
     ]
   },
