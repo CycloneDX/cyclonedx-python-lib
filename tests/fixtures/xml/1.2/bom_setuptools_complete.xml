@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1"
-     serialNumber="urn:uuid:3973d1b6-730e-4a43-afc6-0360aecfe930">
+     serialNumber="urn:uuid:73a50a09-ef46-42cd-9992-d8fb26679962">
     <metadata>
-        <timestamp>2023-01-07T11:04:53.512699+00:00</timestamp>
+        <timestamp>2023-01-07T11:14:23.653516+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
@@ -160,7 +160,5 @@
     </components>
     <dependencies>
         <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"/>
-        <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz"/>
-        <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
     </dependencies>
 </bom>

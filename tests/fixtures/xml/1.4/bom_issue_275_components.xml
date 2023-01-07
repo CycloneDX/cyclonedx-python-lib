@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1"
-     serialNumber="urn:uuid:ebc2d842-ac28-4c55-96cd-c501f2b45ead">
+     serialNumber="urn:uuid:e061f769-e33a-40fa-a8d8-756235d4168d">
     <metadata>
-        <timestamp>2023-01-07T11:04:54.228856+00:00</timestamp>
+        <timestamp>2023-01-07T11:14:24.425991+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
@@ -66,6 +66,5 @@
         <dependency ref="0b049d09-64c0-4490-a0f5-c84d9aacf857">
             <dependency ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789"/>
         </dependency>
-        <dependency ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789"/>
     </dependencies>
 </bom>

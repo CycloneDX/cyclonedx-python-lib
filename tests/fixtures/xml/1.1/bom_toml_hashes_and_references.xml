@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
-     serialNumber="urn:uuid:440be37e-9a27-47dc-a25a-9ec222297522">
+     serialNumber="urn:uuid:b5874cad-ed8f-44a5-bd30-438574b567d0">
     <components>
         <component type="library" bom-ref="pkg:pypi/toml@0.10.2?extension=tar.gz">
             <name>toml</name>

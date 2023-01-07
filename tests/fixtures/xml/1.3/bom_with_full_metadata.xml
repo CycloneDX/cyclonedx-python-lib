@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.3" version="1"
-     serialNumber="urn:uuid:db401712-f672-48df-b7d1-07bd276aa259">
+     serialNumber="urn:uuid:ace853d7-f6ef-43b9-9185-1b1267906427">
     <metadata>
-        <timestamp>2023-01-07T11:04:53.957864+00:00</timestamp>
+        <timestamp>2023-01-07T11:14:24.168478+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
