@@ -2,47 +2,47 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.4",
-  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "serialNumber": "urn:uuid:97e8c230-0ff9-43ce-ab2c-9237a7235c38",
   "version": 1,
   "metadata": {
-    "timestamp": "2021-09-01T10:50:42.051979+00:00",
+    "timestamp": "2023-01-07T11:04:53.117179+00:00",
     "tools": [
       {
         "vendor": "CycloneDX",
         "name": "cyclonedx-python-lib",
-        "version": "VERSION",
+        "version": "3.1.2",
         "externalReferences": [
           {
-            "type": "build-system",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions",
+            "type": "build-system"
           },
           {
-            "type": "distribution",
-            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+            "url": "https://pypi.org/project/cyclonedx-python-lib/",
+            "type": "distribution"
           },
           {
-            "type": "documentation",
-            "url": "https://cyclonedx.github.io/cyclonedx-python-lib/"
+            "url": "https://cyclonedx.github.io/cyclonedx-python-lib/",
+            "type": "documentation"
           },
           {
-            "type": "issue-tracker",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues",
+            "type": "issue-tracker"
           },
           {
-            "type": "license",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE",
+            "type": "license"
           },
           {
-            "type": "release-notes",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md",
+            "type": "release-notes"
           },
           {
-            "type": "vcs",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib",
+            "type": "vcs"
           },
           {
-            "type": "website",
-            "url": "https://cyclonedx.org"
+            "url": "https://cyclonedx.org",
+            "type": "website"
           }
         ]
       }

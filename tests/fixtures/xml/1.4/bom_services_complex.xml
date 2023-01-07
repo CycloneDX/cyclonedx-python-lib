@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1"
+     serialNumber="urn:uuid:abb8a721-2e64-4b08-98f1-e86153011958">
     <metadata>
-        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <timestamp>2023-01-07T11:04:54.273941+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>VERSION</version>
+                <version>3.1.2</version>
                 <externalReferences>
                     <reference type="build-system">
                         <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
@@ -35,7 +36,7 @@
                 </externalReferences>
             </tool>
         </tools>
-        <component bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda" type="library">
+        <component type="library" bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
@@ -47,13 +48,13 @@
                 <name>CycloneDX</name>
                 <url>https://cyclonedx.org</url>
                 <contact>
-                    <name>Paul Horton</name>
-                    <email>paul.horton@owasp.org</email>
-                </contact>
-                <contact>
                     <name>A N Other</name>
                     <email>someone@somewhere.tld</email>
                     <phone>+44 (0)1234 567890</phone>
+                </contact>
+                <contact>
+                    <name>Paul Horton</name>
+                    <email>paul.horton@owasp.org</email>
                 </contact>
             </provider>
             <group>a-group</group>
@@ -96,32 +97,37 @@
                     <alias>First Test Release</alias>
                 </aliases>
                 <tags>
-                    <tag>test</tag>
                     <tag>alpha</tag>
+                    <tag>test</tag>
                 </tags>
                 <resolves>
                     <issue type="security">
                         <id>CVE-2021-44228</id>
                         <name>Apache Log3Shell</name>
-                        <description>Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...</description>
+                        <description>Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...
+                        </description>
                         <source>
                             <name>NVD</name>
                             <url>https://nvd.nist.gov/vuln/detail/CVE-2021-44228</url>
                         </source>
                         <references>
-                            <url>https://logging.apache.org/log4j/2.x/security.html</url>
                             <url>https://central.sonatype.org/news/20211213_log4shell_help</url>
+                            <url>https://logging.apache.org/log4j/2.x/security.html</url>
                         </references>
                     </issue>
                 </resolves>
                 <notes>
                     <note>
                         <locale>en-GB</locale>
-                        <text content-type="text/plain; charset=UTF-8" encoding="base64">U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==</text>
+                        <text content-type="text/plain; charset=UTF-8" encoding="base64">
+                            U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==
+                        </text>
                     </note>
                     <note>
                         <locale>en-US</locale>
-                        <text content-type="text/plain; charset=UTF-8" encoding="base64">U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==</text>
+                        <text content-type="text/plain; charset=UTF-8" encoding="base64">
+                            U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==
+                        </text>
                     </note>
                 </notes>
                 <properties>

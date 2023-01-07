@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1"
+     serialNumber="urn:uuid:816b7507-c2f5-4439-80ee-2ff248ecc874">
     <metadata>
-        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <timestamp>2023-01-07T11:04:53.633800+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>VERSION</version>
+                <version>3.1.2</version>
             </tool>
         </tools>
-        <component bom-ref="0b049d09-64c0-4490-a0f5-c84d9aacf857" type="library">
+        <component type="library" bom-ref="0b049d09-64c0-4490-a0f5-c84d9aacf857">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
     </metadata>
-    <components />
+    <components/>
     <services>
         <service bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
             <name>my-first-service</name>

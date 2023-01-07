@@ -2,15 +2,15 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.3",
-  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "serialNumber": "urn:uuid:5dd2943d-9af8-401d-8c00-de765ab103f1",
   "version": 1,
   "metadata": {
-    "timestamp": "2021-09-01T10:50:42.051979+00:00",
+    "timestamp": "2023-01-07T11:04:51.720359+00:00",
     "tools": [
       {
         "vendor": "CycloneDX",
         "name": "cyclonedx-python-lib",
-        "version": "VERSION"
+        "version": "3.1.2"
       }
     ],
     "component": {
@@ -24,20 +24,20 @@
     {
       "bom-ref": "my-specific-bom-ref-for-my-first-service",
       "provider": {
-        "contact": [
-          {
-            "email": "paul.horton@owasp.org",
-            "name": "Paul Horton"
-          },
-          {
-            "email": "someone@somewhere.tld",
-            "name": "A N Other",
-            "phone": "+44 (0)1234 567890"
-          }
-        ],
         "name": "CycloneDX",
         "url": [
           "https://cyclonedx.org"
+        ],
+        "contact": [
+          {
+            "name": "A N Other",
+            "email": "someone@somewhere.tld",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "name": "Paul Horton",
+            "email": "paul.horton@owasp.org"
+          }
         ]
       },
       "group": "a-group",
@@ -52,8 +52,8 @@
       "x-trust-boundary": true,
       "data": [
         {
-          "classification": "public",
-          "flow": "outbound"
+          "flow": "outbound",
+          "classification": "public"
         }
       ],
       "licenses": [
@@ -63,15 +63,15 @@
       ],
       "externalReferences": [
         {
+          "url": "https://cyclonedx.org",
           "comment": "No comment",
+          "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-256",
               "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
             }
-          ],
-          "type": "distribution",
-          "url": "https://cyclonedx.org"
+          ]
         }
       ],
       "properties": [

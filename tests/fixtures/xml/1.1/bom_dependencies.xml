@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
+     serialNumber="urn:uuid:6c492b41-0e91-44ee-a6bb-a8b63b4d5ada">
     <components>
         <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
             <name>setuptools</name>

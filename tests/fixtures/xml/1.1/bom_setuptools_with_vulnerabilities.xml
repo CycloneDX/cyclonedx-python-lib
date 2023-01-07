@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" xmlns:v="http://cyclonedx.org/schema/ext/vulnerability/1.0" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
+     serialNumber="urn:uuid:91188833-fb0d-4fc6-bd0e-5931a71c7193"
+     xmlns:v="http://cyclonedx.org/schema/ext/vulnerability/1.0">
     <components>
         <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
             <name>setuptools</name>
@@ -41,8 +43,8 @@
                         <v:recommendation>Upgrade</v:recommendation>
                     </v:recommendations>
                     <v:advisories>
-                        <v:advisory>https://nvd.nist.gov/vuln/detail/CVE-2018-7489</v:advisory>
                         <v:advisory>http://www.securitytracker.com/id/1040693</v:advisory>
+                        <v:advisory>https://nvd.nist.gov/vuln/detail/CVE-2018-7489</v:advisory>
                     </v:advisories>
                 </v:vulnerability>
             </v:vulnerabilities>
