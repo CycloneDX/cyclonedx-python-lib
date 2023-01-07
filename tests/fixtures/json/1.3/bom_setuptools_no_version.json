@@ -1,1 +1,38 @@
-{"$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json", "bomFormat": "CycloneDX", "specVersion": "1.3", "serialNumber": "urn:uuid:a1cd92f7-f4d4-4806-a295-0b727ee60b60", "version": 1, "metadata": {"timestamp": "2023-01-07T13:44:29.634217+00:00", "tools": [{"vendor": "CycloneDX", "name": "cyclonedx-python-lib", "version": "3.1.2"}]}, "components": [{"type": "library", "bom-ref": "pkg:pypi/setuptools?extension=tar.gz", "author": "Test Author", "name": "setuptools", "version": "", "licenses": [{"expression": "MIT License"}], "purl": "pkg:pypi/setuptools?extension=tar.gz"}], "dependencies": [{"ref": "pkg:pypi/setuptools?extension=tar.gz", "dependsOn": []}]}
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3",
+  "serialNumber": "urn:uuid:3e6b7d74-47af-41c2-b716-aefdc229aa23",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:45:58.008536+00:00",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
+        "version": "3.1.2"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/setuptools?extension=tar.gz",
+      "author": "Test Author",
+      "name": "setuptools",
+      "version": "",
+      "licenses": [
+        {
+          "expression": "MIT License"
+        }
+      ],
+      "purl": "pkg:pypi/setuptools?extension=tar.gz"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:pypi/setuptools?extension=tar.gz",
+      "dependsOn": []
+    }
+  ]
+}

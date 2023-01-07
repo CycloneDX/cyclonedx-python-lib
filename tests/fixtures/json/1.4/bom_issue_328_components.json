@@ -1,1 +1,93 @@
-{"$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json", "bomFormat": "CycloneDX", "specVersion": "1.4", "serialNumber": "urn:uuid:55c5e150-dd2a-460a-b414-fca4c2b53557", "version": 1, "metadata": {"timestamp": "2023-01-07T13:44:31.018925+00:00", "tools": [{"vendor": "CycloneDX", "name": "cyclonedx-python-lib", "version": "3.1.2", "externalReferences": [{"url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions", "type": "build-system"}, {"url": "https://pypi.org/project/cyclonedx-python-lib/", "type": "distribution"}, {"url": "https://cyclonedx.github.io/cyclonedx-python-lib/", "type": "documentation"}, {"url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues", "type": "issue-tracker"}, {"url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE", "type": "license"}, {"url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md", "type": "release-notes"}, {"url": "https://github.com/CycloneDX/cyclonedx-python-lib", "type": "vcs"}, {"url": "https://cyclonedx.org", "type": "website"}]}]}, "components": [{"type": "library", "bom-ref": "component-A", "name": "A", "version": "0.1", "components": [{"type": "library", "bom-ref": "component-B", "name": "B", "version": "1.0", "components": [{"type": "library", "bom-ref": "component-C", "name": "C", "version": "1.0"}]}]}], "dependencies": [{"ref": "component-A", "dependsOn": ["component-B"]}, {"ref": "component-B", "dependsOn": ["component-C"]}, {"ref": "component-C", "dependsOn": []}]}
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:bade1bff-89cf-4315-be40-215773ab0ff7",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:45:58.908006+00:00",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
+        "version": "3.1.2",
+        "externalReferences": [
+          {
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions",
+            "type": "build-system"
+          },
+          {
+            "url": "https://pypi.org/project/cyclonedx-python-lib/",
+            "type": "distribution"
+          },
+          {
+            "url": "https://cyclonedx.github.io/cyclonedx-python-lib/",
+            "type": "documentation"
+          },
+          {
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues",
+            "type": "issue-tracker"
+          },
+          {
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE",
+            "type": "license"
+          },
+          {
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md",
+            "type": "release-notes"
+          },
+          {
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib",
+            "type": "vcs"
+          },
+          {
+            "url": "https://cyclonedx.org",
+            "type": "website"
+          }
+        ]
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "component-A",
+      "name": "A",
+      "version": "0.1",
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "component-B",
+          "name": "B",
+          "version": "1.0",
+          "components": [
+            {
+              "type": "library",
+              "bom-ref": "component-C",
+              "name": "C",
+              "version": "1.0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "component-A",
+      "dependsOn": [
+        "component-B"
+      ]
+    },
+    {
+      "ref": "component-B",
+      "dependsOn": [
+        "component-C"
+      ]
+    },
+    {
+      "ref": "component-C",
+      "dependsOn": []
+    }
+  ]
+}

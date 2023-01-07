@@ -1,1 +1,65 @@
-{"$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json", "bomFormat": "CycloneDX", "specVersion": "1.2", "serialNumber": "urn:uuid:2c855c17-4aac-4734-99b2-a7c759630499", "version": 1, "metadata": {"timestamp": "2023-01-07T13:44:28.860972+00:00", "tools": [{"vendor": "CycloneDX", "name": "cyclonedx-python-lib", "version": "3.1.2"}]}, "components": [{"type": "library", "bom-ref": "component-A", "name": "A", "version": "0.1", "components": [{"type": "library", "bom-ref": "component-B", "name": "B", "version": "1.0", "components": [{"type": "library", "bom-ref": "component-C", "name": "C", "version": "1.0"}]}]}], "dependencies": [{"ref": "my-project", "dependsOn": ["component-A"]}, {"ref": "component-A", "dependsOn": ["component-B"]}, {"ref": "component-B", "dependsOn": ["component-C"]}, {"ref": "component-C", "dependsOn": []}]}
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2",
+  "serialNumber": "urn:uuid:f840112b-92ce-4546-a69c-c4b05ebf1f33",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:45:57.675523+00:00",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
+        "version": "3.1.2"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "component-A",
+      "name": "A",
+      "version": "0.1",
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "component-B",
+          "name": "B",
+          "version": "1.0",
+          "components": [
+            {
+              "type": "library",
+              "bom-ref": "component-C",
+              "name": "C",
+              "version": "1.0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "my-project",
+      "dependsOn": [
+        "component-A"
+      ]
+    },
+    {
+      "ref": "component-A",
+      "dependsOn": [
+        "component-B"
+      ]
+    },
+    {
+      "ref": "component-B",
+      "dependsOn": [
+        "component-C"
+      ]
+    },
+    {
+      "ref": "component-C",
+      "dependsOn": []
+    }
+  ]
+}
