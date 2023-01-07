@@ -25,7 +25,7 @@ from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
 
-from . import RECREATE_SNAPSHOTS
+from . import FIXTURES_DIRECTORY, RECREATE_SNAPSHOTS
 from .base import BaseJsonTestCase
 from .data import (
     MOCK_UUID_1,
@@ -381,8 +381,7 @@ class TestOutputJson(BaseJsonTestCase):
         output = outputter.output_as_string()
         self.assertValidAgainstSchema(bom_json=output, schema_version=schema_version)
         fixture_file = join(
-            dirname(__file__),
-            'fixtures',
+            FIXTURES_DIRECTORY,
             'json',
             schema_version.to_version(),
             fixture

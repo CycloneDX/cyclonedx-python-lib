@@ -24,7 +24,7 @@ from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import SchemaVersion, get_instance
 
-from . import RECREATE_SNAPSHOTS
+from . import FIXTURES_DIRECTORY, RECREATE_SNAPSHOTS
 from .base import BaseXmlTestCase
 from .data import (
     MOCK_UUID_1,
@@ -525,8 +525,7 @@ class TestOutputXml(BaseXmlTestCase):
         output = outputter.output_as_string()
         self.assertValidAgainstSchema(bom_xml=output, schema_version=schema_version)
         fixture_file = join(
-            dirname(__file__),
-            'fixtures',
+            FIXTURES_DIRECTORY,
             'xml',
             schema_version.to_version(),
             fixture
