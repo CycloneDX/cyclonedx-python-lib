@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.3" version="1"
-     serialNumber="urn:uuid:30c17569-f483-4d84-8047-a1d94c511043"
+     serialNumber="urn:uuid:95b0e848-d253-4e4c-8881-c2194239cac2"
      xmlns:v="http://cyclonedx.org/schema/ext/vulnerability/1.0">
     <metadata>
-        <timestamp>2023-01-07T11:40:04.431723+00:00</timestamp>
+        <timestamp>2023-01-07T12:41:52.237352+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>

@@ -1,55 +1,61 @@
 {
-    "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
-    "bomFormat": "CycloneDX",
-    "specVersion": "1.4",
-    "version": 1,
-    "metadata": {
-        "component": {
-            "type": "application",
-            "name": "my-project",
-            "version": "1",
-            "bom-ref": "my-project"
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "my-project",
+      "version": "1",
+      "bom-ref": "my-project"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "A",
+      "version": "0.1",
+      "bom-ref": "component-A",
+      "components": [
+        {
+          "type": "library",
+          "name": "B",
+          "version": "1.0",
+          "bom-ref": "component-B",
+          "components": [
+            {
+              "type": "library",
+              "name": "C",
+              "version": "1.0",
+              "bom-ref": "component-C"
+            }
+          ]
         }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "my-project",
+      "dependsOn": [
+        "component-A"
+      ]
     },
-    "components": [
-        {
-            "type": "library",
-            "name": "A",
-            "version": "0.1",
-            "bom-ref": "component-A",
-            "components": [
-                {
-                    "type": "library",
-                    "name": "B",
-                    "version": "1.0",
-                    "bom-ref": "component-B",
-                    "components": [
-                        {
-                            "type": "library",
-                            "name": "C",
-                            "version": "1.0",
-                            "bom-ref": "component-C"
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    "dependencies": [
-        {
-            "ref": "my-project",
-            "dependsOn": ["component-A"]
-        },
-        {
-            "ref": "component-A",
-            "dependsOn": ["component-B"]
-        },
-        {
-            "ref": "component-B",
-            "dependsOn": ["component-C"]
-        },
-        {
-            "ref": "component-C"
-        }
-    ]
+    {
+      "ref": "component-A",
+      "dependsOn": [
+        "component-B"
+      ]
+    },
+    {
+      "ref": "component-B",
+      "dependsOn": [
+        "component-C"
+      ]
+    },
+    {
+      "ref": "component-C"
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
-     serialNumber="urn:uuid:886b2d17-783f-4954-bfa3-61dcfc845703">
+     serialNumber="urn:uuid:8ffdc8b6-c536-48e9-8636-cb9c92dce3a3">
     <components/>
     <externalReferences>
         <reference type="distribution">
