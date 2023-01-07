@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1"
-     serialNumber="urn:uuid:67efcbf1-43e0-4d5d-ab9f-17fd95c84c10">
+     serialNumber="urn:uuid:c369409d-5a59-4c59-aa8a-ae86f5c5767b">
     <metadata>
-        <timestamp>2023-01-07T13:44:33.391540+00:00</timestamp>
+        <timestamp>2023-01-07T13:52:32.630121+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
@@ -36,39 +36,39 @@
                 </externalReferences>
             </tool>
         </tools>
+        <component type="application" bom-ref="my-project">
+            <name>my-project</name>
+            <version>1</version>
+        </component>
     </metadata>
     <components>
-        <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
-            <author>Test Author</author>
-            <name>setuptools</name>
-            <version>50.3.2</version>
-            <licenses>
-                <expression>MIT License</expression>
-            </licenses>
-            <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
-        </component>
-        <component type="library" bom-ref="pkg:pypi/toml@0.10.2?extension=tar.gz">
-            <name>toml</name>
-            <version>0.10.2</version>
-            <hashes>
-                <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
-            </hashes>
-            <purl>pkg:pypi/toml@0.10.2?extension=tar.gz</purl>
-            <externalReferences>
-                <reference type="distribution">
-                    <url>https://cyclonedx.org</url>
-                    <comment>No comment</comment>
-                    <hashes>
-                        <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
-                    </hashes>
-                </reference>
-            </externalReferences>
+        <component type="library" bom-ref="component-A">
+            <name>A</name>
+            <version>0.1</version>
+            <components>
+                <component type="library" bom-ref="component-B">
+                    <name>B</name>
+                    <version>1.0</version>
+                    <components>
+                        <component type="library" bom-ref="component-C">
+                            <name>C</name>
+                            <version>1.0</version>
+                        </component>
+                    </components>
+                </component>
+            </components>
         </component>
     </components>
     <dependencies>
-        <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
-            <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
+        <dependency ref="my-project">
+            <dependency ref="component-A"/>
         </dependency>
-        <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
+        <dependency ref="component-A">
+            <dependency ref="component-B"/>
+        </dependency>
+        <dependency ref="component-B">
+            <dependency ref="component-C"/>
+        </dependency>
+        <dependency ref="component-C"/>
     </dependencies>
 </bom>

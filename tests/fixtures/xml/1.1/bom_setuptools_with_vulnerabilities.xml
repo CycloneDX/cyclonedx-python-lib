@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
-     serialNumber="urn:uuid:46334ba1-e556-4d83-9c5c-3db09433845f"
+     serialNumber="urn:uuid:98149a18-a918-4083-837f-e006d26ab3b4"
      xmlns:v="http://cyclonedx.org/schema/ext/vulnerability/1.0">
     <components>
         <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">

@@ -19,11 +19,10 @@
 
 import json
 from abc import abstractmethod
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
-from ..model.component import Component
 from . import BaseOutput, SchemaVersion
 from .schema import (
     BaseSchemaVersion,
@@ -66,7 +65,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
         extras = {}
         if self.bom_supports_dependencies():
-            dep_components: Iterable[Component] = bom.components
+            dep_components = self._chained_components(bom)
             if bom.metadata.component:
                 dep_components = [bom.metadata.component, *dep_components]
             dependencies = []

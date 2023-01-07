@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import warnings
-from typing import Iterable, Optional
+from typing import Optional
 from xml.etree import ElementTree
 
 from sortedcontainers import SortedSet
@@ -111,7 +111,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
             )
 
         if self.bom_supports_dependencies() and (bom.metadata.component or bom.components):
-            dep_components: Iterable[Component] = bom.components
+            dep_components = self._chained_components(bom)
             if bom.metadata.component:
                 dep_components = [bom.metadata.component, *dep_components]
             dependencies_element = ElementTree.SubElement(self._root_bom_element, 'dependencies')
