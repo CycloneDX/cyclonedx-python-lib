@@ -42,7 +42,7 @@ from cyclonedx.model import (
     Tool,
     XsUri,
 )
-from cyclonedx.model.bom import Bom, BomMetaData
+from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import (
     Commit,
     Component,
