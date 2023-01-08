@@ -7,7 +7,7 @@
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>3.1.2</version>
+                <version>TESTING</version>
             </tool>
         </tools>
         <component type="library" bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789">

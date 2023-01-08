@@ -7,7 +7,7 @@
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>3.1.2</version>
+                <version>TESTING</version>
                 <externalReferences>
                     <reference type="build-system">
                         <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>

@@ -54,6 +54,7 @@ from .data import (
 )
 
 
+@patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestOutputXml(BaseXmlTestCase):
 
     def test_bom_external_references_v1_4(self) -> None:
