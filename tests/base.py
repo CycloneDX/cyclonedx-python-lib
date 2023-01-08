@@ -96,22 +96,10 @@ class BaseJsonTestCase(TestCase):
 
         # Unify timestamps to ensure they will compare
         now = datetime.now(tz=timezone.utc)
-
         if 'metadata' in ab.keys():
             ab['metadata']['timestamp'] = now.isoformat()
-            if 'tools' in ab['metadata'].keys():
-                for tool in ab['metadata']['tools']:
-                    if tool['name'] == cyclonedx_lib_name:
-                        tool['version'] = cyclonedx_lib_version
-                    del tool
-
         if 'metadata' in bb.keys():
             bb['metadata']['timestamp'] = now.isoformat()
-            if 'tools' in bb['metadata'].keys():
-                for tool in bb['metadata']['tools']:
-                    if tool['name'] == cyclonedx_lib_name:
-                        tool['version'] = cyclonedx_lib_version
-                    del tool
 
         self.assertEqualJson(json.dumps(ab), json.dumps(bb))
 
@@ -156,18 +144,9 @@ class BaseXmlTestCase(TestCase):
         metadata_ts_a = ba.find('./{{{}}}metadata/{{{}}}timestamp'.format(namespace, namespace))
         if metadata_ts_a is not None:
             metadata_ts_a.text = now.isoformat()
-
         metadata_ts_b = bb.find('./{{{}}}metadata/{{{}}}timestamp'.format(namespace, namespace))
         if metadata_ts_b is not None:
             metadata_ts_b.text = now.isoformat()
-
-        # Align 'this' Tool Version
-        this_tool = ba.find('.//*/{{{}}}tool[{{{}}}version="VERSION"]'.format(namespace, namespace))
-        if this_tool is not None:
-            this_tool.find('./{{{}}}version'.format(namespace)).text = cyclonedx_lib_version
-        this_tool = bb.find('.//*/{{{}}}tool[{{{}}}version="VERSION"]'.format(namespace, namespace))
-        if this_tool is not None:
-            this_tool.find('./{{{}}}version'.format(namespace)).text = cyclonedx_lib_version
 
         self.assertEqualXml(
             xml.etree.ElementTree.tostring(ba, 'unicode'),
