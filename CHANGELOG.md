@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v3.1.4 (2023-01-11)
+### Fix
+* **tests:** Include tests in `sdist` builds ([#337](https://github.com/CycloneDX/cyclonedx-python-lib/issues/337)) ([`936ad7d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/936ad7d0c26d8f98040203d3234ca8f1afbd73ab))
+
 ## v3.1.3 (2023-01-07)
 ### Fix
 * Serialize dependency graph for nested components ([#329](https://github.com/CycloneDX/cyclonedx-python-lib/issues/329)) ([`fb3f835`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb3f8351881783281f8b7e796098a4c145b35927))
