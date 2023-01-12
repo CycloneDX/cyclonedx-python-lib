@@ -42,10 +42,11 @@ if sys.version_info >= (3, 8):
 else:
     from importlib_metadata import version
 
+from . import CDX_SCHEMA_DIRECTORY
+
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
 cyclonedx_lib_version: str = version(cyclonedx_lib_name)
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
-schema_directory = os.path.join(os.path.dirname(__file__), '..', 'cyclonedx', 'schema')
 
 
 class BaseJsonTestCase(TestCase):
@@ -53,7 +54,7 @@ class BaseJsonTestCase(TestCase):
     def assertValidAgainstSchema(self, bom_json: str, schema_version: SchemaVersion) -> None:
         if sys.version_info >= (3, 7):
             schema_fn = os.path.join(
-                schema_directory,
+                CDX_SCHEMA_DIRECTORY,
                 f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.schema.json'
             )
             with open(schema_fn) as schema_fd:
@@ -107,7 +108,7 @@ class BaseJsonTestCase(TestCase):
 class BaseXmlTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_xml: str, schema_version: SchemaVersion) -> None:
-        xsd_fn = os.path.join(schema_directory, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
+        xsd_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
         with open(xsd_fn) as xsd_fd:
             xsd_doc = etree.parse(xsd_fd)
 
