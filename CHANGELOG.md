@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v3.1.5 (2023-01-12)
+### Fix
+* Mak test's schema paths relative to `cyclonedx` package ([#338](https://github.com/CycloneDX/cyclonedx-python-lib/issues/338)) ([`1f0c05f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f0c05fe2b2a22bc84a1a437dd59390f2ceaf986))
+
 ## v3.1.4 (2023-01-11)
 ### Fix
 * **tests:** Include tests in `sdist` builds ([#337](https://github.com/CycloneDX/cyclonedx-python-lib/issues/337)) ([`936ad7d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/936ad7d0c26d8f98040203d3234ca8f1afbd73ab))
