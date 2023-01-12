@@ -16,7 +16,6 @@ packages = [
 ]
 include = [
   { path = "tests", format = "sdist" },
-  "LICENSE",
 ]
 classifiers = [
   # Trove classifiers - https://packaging.python.org/specifications/core-metadata/#metadata-classifier
