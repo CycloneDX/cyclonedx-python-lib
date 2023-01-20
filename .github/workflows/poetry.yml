@@ -35,7 +35,7 @@ jobs:
           architecture: 'x64'
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
-        uses: Gr1N/setup-poetry@v7
+        uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install dependencies
@@ -45,13 +45,14 @@ jobs:
 
   static-code-analysis:
     name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         include:
           - # test with the locked dependencies
+            os: ubuntu-latest
             python-version: '3.10'
             toxenv-factor: 'locked'
           - # test with the lowest dependencies
@@ -69,7 +70,7 @@ jobs:
           architecture: 'x64'
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
-        uses: Gr1N/setup-poetry@v7
+        uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install dependencies
@@ -118,7 +119,7 @@ jobs:
         run: echo "import sys; print('Python %s on %s in %s' % (sys.version, sys.platform, sys.getdefaultencoding()))" | python
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
-        uses: Gr1N/setup-poetry@v7
+        uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install dependencies

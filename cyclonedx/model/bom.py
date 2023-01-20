@@ -19,7 +19,7 @@
 
 import warnings
 from datetime import datetime, timezone
-from typing import Iterable, Optional, Set
+from typing import TYPE_CHECKING, Iterable, Optional, Set
 from uuid import UUID, uuid4
 
 from sortedcontainers import SortedSet
@@ -31,6 +31,9 @@ from .bom_ref import BomRef
 from .component import Component
 from .service import Service
 from .vulnerability import Vulnerability
+
+if TYPE_CHECKING:
+    from packageurl import PackageURL  # type:ignore[import]
 
 
 class BomMetaData:
@@ -294,19 +297,19 @@ class Bom:
     def components(self, components: Iterable[Component]) -> None:
         self._components = SortedSet(components)
 
-    def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
+    def get_component_by_purl(self, purl: Optional["PackageURL"]) -> Optional[Component]:
         """
         Get a Component already in the Bom by its PURL
 
         Args:
              purl:
-                Package URL as a `str` to look and find `Component`
+                An instance of `packageurl.PackageURL` to look and find `Component`.
 
         Returns:
             `Component` or `None`
         """
         if purl:
-            found = list(filter(lambda x: x.purl == purl, self.components))
+            found = [x for x in self.components if x.purl == purl]
             if len(found) == 1:
                 return found[0]
 

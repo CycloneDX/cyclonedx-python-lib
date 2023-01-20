@@ -19,11 +19,10 @@
 
 import json
 from abc import abstractmethod
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
-from ..model.component import Component
 from . import BaseOutput, SchemaVersion
 from .schema import (
     BaseSchemaVersion,
@@ -66,7 +65,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
         extras = {}
         if self.bom_supports_dependencies():
-            dep_components: Iterable[Component] = bom.components
+            dep_components = self._chained_components(bom)
             if bom.metadata.component:
                 dep_components = [bom.metadata.component, *dep_components]
             dependencies = []
@@ -86,44 +85,43 @@ class Json(BaseOutput, BaseSchemaVersion):
         self.generated = True
 
     def _specialise_output_for_schema_version(self, bom_json: Dict[Any, Any]) -> str:
-        if not self.bom_supports_metadata():
-            if 'metadata' in bom_json.keys():
+        if 'metadata' in bom_json.keys():
+            if not self.bom_supports_metadata():
                 del bom_json['metadata']
+            else:
+                if 'tools' in bom_json['metadata'].keys():
+                    if not self.bom_metadata_supports_tools():
+                        del bom_json['metadata']['tools']
+                    else:
+                        if not self.bom_metadata_supports_tools_external_references():
+                            for _tool in bom_json['metadata']['tools']:
+                                if 'externalReferences' in _tool.keys():
+                                    del _tool['externalReferences']
+                                del _tool
+                if 'licenses' in bom_json['metadata'].keys() and not self.bom_metadata_supports_licenses():
+                    del bom_json['metadata']['licenses']
+                if 'properties' in bom_json['metadata'].keys() and not self.bom_metadata_supports_properties():
+                    del bom_json['metadata']['properties']
 
-        if not self.bom_metadata_supports_tools():
-            del bom_json['metadata']['tools']
-        elif not self.bom_metadata_supports_tools_external_references():
-            for i in range(len(bom_json['metadata']['tools'])):
-                if 'externalReferences' in bom_json['metadata']['tools'][i].keys():
-                    del bom_json['metadata']['tools'][i]['externalReferences']
+                if self.get_bom().metadata.component:
+                    bom_json['metadata'] = self._recurse_specialise_component(bom_json['metadata'], 'component')
 
-        if not self.bom_metadata_supports_licenses() and 'licenses' in bom_json['metadata'].keys():
-            del bom_json['metadata']['licenses']
+        bom_json = self._recurse_specialise_component(bom_json)
 
-        if not self.bom_metadata_supports_properties() and 'properties' in bom_json['metadata'].keys():
-            del bom_json['metadata']['properties']
-
-        # Iterate Components
-        if self.get_bom().metadata.component:
-            bom_json['metadata'] = self._recurse_specialise_component(bom_json=bom_json['metadata'],
-                                                                      base_key='component')
-        bom_json = self._recurse_specialise_component(bom_json=bom_json)
-
-        # Iterate Services
         if 'services' in bom_json.keys():
-            for i in range(len(bom_json['services'])):
-                if not self.services_supports_properties() and 'properties' in bom_json['services'][i].keys():
-                    del bom_json['services'][i]['properties']
+            for _service in bom_json['services']:
+                if 'properties' in _service.keys() and not self.services_supports_properties():
+                    del _service['properties']
+                if 'releaseNotes' in _service.keys() and not self.services_supports_release_notes():
+                    del _service['releaseNotes']
+                del _service
 
-                if not self.services_supports_release_notes() and 'releaseNotes' in bom_json['services'][i].keys():
-                    del bom_json['services'][i]['releaseNotes']
-
-        # Iterate externalReferences
         if 'externalReferences' in bom_json.keys():
-            for i in range(len(bom_json['externalReferences'])):
-                if not self.external_references_supports_hashes() \
-                        and 'hashes' in bom_json['externalReferences'][i].keys():
-                    del bom_json['externalReferences'][i]['hashes']
+            if not self.external_references_supports_hashes():
+                for _externalReference in bom_json['externalReferences']:
+                    if 'hashes' in _externalReference.keys():
+                        del _externalReference['hashes']
+                    del _externalReference
 
         # Remove Vulnerabilities if not supported
         if not self.bom_supports_vulnerabilities() and 'vulnerabilities' in bom_json.keys():
