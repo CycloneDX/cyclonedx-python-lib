@@ -1,18 +1,22 @@
 [tool.poetry]
 name = "cyclonedx-python-lib"
-version = "3.1.2"
+version = "3.1.5"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
 authors = ["Paul Horton <phorton@sonatype.com>"]
-maintainers = ["Paul Horton <phorton@sonatype.com>"]
+maintainers = [
+  "Paul Horton <phorton@sonatype.com>",
+  "Jan Kowalleck <jan.kowalleck@gmail.com>",
+]
 license = "Apache-2.0"
 readme = "README.md"
-homepage = "https://github.com/CycloneDX/cyclonedx-python-lib"
+homepage = "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
 repository = "https://github.com/CycloneDX/cyclonedx-python-lib"
+documentation = "https://cyclonedx-python-library.readthedocs.io/"
 packages = [
-    { include = "cyclonedx" }
+  { include = "cyclonedx" }
 ]
 include = [
-    "LICENSE"
+  { path = "tests", format = "sdist" },
 ]
 classifiers = [
     # Trove classifiers - https://packaging.python.org/specifications/core-metadata/#metadata-classifier
@@ -35,7 +39,7 @@ classifiers = [
     'Typing :: Typed'
 ]
 keywords = [
-    "BOM", "SBOM", "SCA", "OWASP"
+  "BOM", "SBOM", "SCA", "OWASP",
 ]
 
 [tool.poetry.urls]
@@ -81,7 +85,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.semantic_release]
 version_variable = [
-    "pyproject.toml:version"
+  "pyproject.toml:version"
 ]
 branch = "main"
 upload_to_pypi = true

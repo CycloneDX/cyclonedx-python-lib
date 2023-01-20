@@ -2,6 +2,18 @@
 
 <!--next-version-placeholder-->
 
+## v3.1.5 (2023-01-12)
+### Fix
+* Mak test's schema paths relative to `cyclonedx` package ([#338](https://github.com/CycloneDX/cyclonedx-python-lib/issues/338)) ([`1f0c05f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f0c05fe2b2a22bc84a1a437dd59390f2ceaf986))
+
+## v3.1.4 (2023-01-11)
+### Fix
+* **tests:** Include tests in `sdist` builds ([#337](https://github.com/CycloneDX/cyclonedx-python-lib/issues/337)) ([`936ad7d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/936ad7d0c26d8f98040203d3234ca8f1afbd73ab))
+
+## v3.1.3 (2023-01-07)
+### Fix
+* Serialize dependency graph for nested components ([#329](https://github.com/CycloneDX/cyclonedx-python-lib/issues/329)) ([`fb3f835`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb3f8351881783281f8b7e796098a4c145b35927))
+
 ## v3.1.2 (2023-01-06)
 ### Fix
 * Prevent errors on metadata handling for some specification versions ([#330](https://github.com/CycloneDX/cyclonedx-python-lib/issues/330)) ([`f08a656`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f08a65649aee750397edc061eb3b8325a69bb4b4))

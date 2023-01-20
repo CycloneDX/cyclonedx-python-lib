@@ -44,7 +44,8 @@ from cyclonedx.model.component import (
     Pedigree,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
-from data import (
+
+from .data import (
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
     get_component_toml_with_hashes_with_references,
@@ -53,8 +54,8 @@ from data import (
     get_pedigree_1,
     get_swid_1,
     get_swid_2,
+    reorder,
 )
-from tests.data import reorder
 
 
 class TestModelCommit(TestCase):

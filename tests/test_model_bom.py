@@ -22,7 +22,8 @@ from unittest import TestCase
 from cyclonedx.model import License, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property
 from cyclonedx.model.bom import Bom, BomMetaData, ThisTool, Tool
 from cyclonedx.model.component import Component, ComponentType
-from data import (
+
+from .data import (
     get_bom_for_issue_275_components,
     get_bom_with_component_setuptools_with_vulnerability,
     get_component_setuptools_simple,
@@ -122,16 +123,22 @@ class TestBom(TestCase):
         self.assertTrue(bom.has_vulnerabilities())
 
     def test_bom_nested_components_issue_275(self) -> None:
+        """regression test for issue #275
+        see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
+        """
         bom = get_bom_for_issue_275_components()
         self.assertIsInstance(bom.metadata.component, Component)
         self.assertEqual(2, len(bom.components))
         bom.validate()
 
     # def test_bom_nested_services_issue_275(self) -> None:
-    #     bom = get_bom_for_issue_275_services()
-    #     self.assertIsInstance(bom.metadata.component, Component)
-    #     self.assertEqual(2, len(bom.services))
-    #     bom.validate()
+    #    """regression test for issue #275
+    #    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
+    #    """
+    #    bom = get_bom_for_issue_275_services()
+    #    self.assertIsInstance(bom.metadata.component, Component)
+    #    self.assertEqual(2, len(bom.services))
+    #    bom.validate()
 
     def test_has_component_1(self) -> None:
         bom = Bom()

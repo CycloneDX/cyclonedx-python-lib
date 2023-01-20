@@ -17,6 +17,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from os import path
+from os import getenv, path
+
+import cyclonedx
+
+CDX_SCHEMA_DIRECTORY = path.join(path.dirname(cyclonedx.__file__), 'schema')
 
 FIXTURES_DIRECTORY = path.join(path.dirname(__file__), 'fixtures')
+
+RECREATE_SNAPSHOTS = bool(getenv('CDX_TEST_RECREATE_SNAPSHOTS'))
+if RECREATE_SNAPSHOTS:
+    print('!!! WILL RECREATE ALL SNAPSHOTS !!!')

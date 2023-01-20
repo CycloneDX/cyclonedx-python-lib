@@ -42,10 +42,11 @@ if sys.version_info >= (3, 8):
 else:
     from importlib_metadata import version
 
+from . import CDX_SCHEMA_DIRECTORY
+
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
 cyclonedx_lib_version: str = version(cyclonedx_lib_name)
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
-schema_directory = os.path.join(os.path.dirname(__file__), '..', 'cyclonedx', 'schema')
 
 
 class BaseJsonTestCase(TestCase):
@@ -53,7 +54,7 @@ class BaseJsonTestCase(TestCase):
     def assertValidAgainstSchema(self, bom_json: str, schema_version: SchemaVersion) -> None:
         if sys.version_info >= (3, 7):
             schema_fn = os.path.join(
-                schema_directory,
+                CDX_SCHEMA_DIRECTORY,
                 f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.schema.json'
             )
             with open(schema_fn) as schema_fd:
@@ -96,22 +97,10 @@ class BaseJsonTestCase(TestCase):
 
         # Unify timestamps to ensure they will compare
         now = datetime.now(tz=timezone.utc)
-
         if 'metadata' in ab.keys():
             ab['metadata']['timestamp'] = now.isoformat()
-            if 'tools' in ab['metadata'].keys():
-                for tool in ab['metadata']['tools']:
-                    if tool['name'] == cyclonedx_lib_name:
-                        tool['version'] = cyclonedx_lib_version
-                    del tool
-
         if 'metadata' in bb.keys():
             bb['metadata']['timestamp'] = now.isoformat()
-            if 'tools' in bb['metadata'].keys():
-                for tool in bb['metadata']['tools']:
-                    if tool['name'] == cyclonedx_lib_name:
-                        tool['version'] = cyclonedx_lib_version
-                    del tool
 
         self.assertEqualJson(json.dumps(ab), json.dumps(bb))
 
@@ -119,7 +108,7 @@ class BaseJsonTestCase(TestCase):
 class BaseXmlTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_xml: str, schema_version: SchemaVersion) -> None:
-        xsd_fn = os.path.join(schema_directory, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
+        xsd_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
         with open(xsd_fn) as xsd_fd:
             xsd_doc = etree.parse(xsd_fd)
 
@@ -156,18 +145,9 @@ class BaseXmlTestCase(TestCase):
         metadata_ts_a = ba.find('./{{{}}}metadata/{{{}}}timestamp'.format(namespace, namespace))
         if metadata_ts_a is not None:
             metadata_ts_a.text = now.isoformat()
-
         metadata_ts_b = bb.find('./{{{}}}metadata/{{{}}}timestamp'.format(namespace, namespace))
         if metadata_ts_b is not None:
             metadata_ts_b.text = now.isoformat()
-
-        # Align 'this' Tool Version
-        this_tool = ba.find('.//*/{{{}}}tool[{{{}}}version="VERSION"]'.format(namespace, namespace))
-        if this_tool is not None:
-            this_tool.find('./{{{}}}version'.format(namespace)).text = cyclonedx_lib_version
-        this_tool = bb.find('.//*/{{{}}}tool[{{{}}}version="VERSION"]'.format(namespace, namespace))
-        if this_tool is not None:
-            this_tool.find('./{{{}}}version'.format(namespace)).text = cyclonedx_lib_version
 
         self.assertEqualXml(
             xml.etree.ElementTree.tostring(ba, 'unicode'),

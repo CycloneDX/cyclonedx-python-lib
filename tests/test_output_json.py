@@ -17,19 +17,24 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from os.path import dirname, join
+from os.path import join
 from unittest.mock import Mock, patch
 
 from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import OutputFormat, SchemaVersion, get_instance
-from data import (
+
+from . import FIXTURES_DIRECTORY, RECREATE_SNAPSHOTS
+from .base import BaseJsonTestCase
+from .data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
     MOCK_UUID_6,
     TEST_UUIDS,
+    get_bom_for_issue_275_components,
+    get_bom_for_issue_328_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -46,10 +51,9 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-from tests.base import BaseJsonTestCase
-from tests.data import get_bom_for_issue_275_components
 
 
+@patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_external_references_v1_4(self) -> None:
@@ -371,6 +375,24 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_issue_275_components.json'
         )
 
+    def test_bom_v1_4_issue_328_components(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_328_components.json'
+        )
+
+    def test_bom_v1_3_issue_328_components(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_issue_328_components.json'
+        )
+
+    def test_bom_v1_2_issue_328_components(self) -> None:
+        self._validate_json_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_issue_328_components.json'
+        )
+
     # region Helper methods
 
     def _validate_json_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
@@ -378,13 +400,16 @@ class TestOutputJson(BaseJsonTestCase):
         self.assertEqual(outputter.schema_version, schema_version)
         output = outputter.output_as_string()
         self.assertValidAgainstSchema(bom_json=output, schema_version=schema_version)
-        with open(join(
-            dirname(__file__),
-            'fixtures',
+        fixture_file = join(
+            FIXTURES_DIRECTORY,
             'json',
             schema_version.to_version(),
             fixture
-        )) as expected_json:
+        )
+        if RECREATE_SNAPSHOTS:
+            with open(fixture_file, 'w') as expected_json:
+                expected_json.write(output)
+        with open(fixture_file) as expected_json:
             self.assertEqualJsonBom(expected_json.read(), output)
 
     def _validate_json_bom_not_supported(self, bom: Bom, schema_version: SchemaVersion) -> None:
