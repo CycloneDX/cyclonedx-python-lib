@@ -17,13 +17,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from os.path import dirname, join
+from os.path import join
 from unittest.mock import Mock, patch
 
 from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import SchemaVersion, get_instance
-from data import (
+
+from . import FIXTURES_DIRECTORY, RECREATE_SNAPSHOTS
+from .base import BaseXmlTestCase
+from .data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
@@ -31,6 +34,8 @@ from data import (
     MOCK_UUID_5,
     MOCK_UUID_6,
     TEST_UUIDS,
+    get_bom_for_issue_275_components,
+    get_bom_for_issue_328_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -47,10 +52,9 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-from tests.base import BaseXmlTestCase
-from tests.data import get_bom_for_issue_275_components
 
 
+@patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestOutputXml(BaseXmlTestCase):
 
     def test_bom_external_references_v1_4(self) -> None:
@@ -515,14 +519,53 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_issue_275_components.xml'
         )
 
-    # Helper methods
+    def test_bom_v1_4_issue_328_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_328_components.xml'
+        )
+
+    def test_bom_v1_3_issue_328_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_issue_328_components.xml'
+        )
+
+    def test_bom_v1_2_issue_328_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_issue_328_components.xml'
+        )
+
+    def test_bom_v1_1_issue_328_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_1,
+            fixture='bom_issue_328_components.xml'
+        )
+
+    def test_bom_v1_0_issue_328_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_0,
+            fixture='bom_issue_328_components.xml'
+        )
+
+    # region Helper methods
+
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         outputter = get_instance(bom=bom, schema_version=schema_version)
         self.assertEqual(outputter.schema_version, schema_version)
-        with open(
-                join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as expected_xml:
-            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=schema_version)
-            self.assertEqualXmlBom(
-                expected_xml.read(), outputter.output_as_string(), namespace=outputter.get_target_namespace()
-            )
-            expected_xml.close()
+        output = outputter.output_as_string()
+        self.assertValidAgainstSchema(bom_xml=output, schema_version=schema_version)
+        fixture_file = join(
+            FIXTURES_DIRECTORY,
+            'xml',
+            schema_version.to_version(),
+            fixture
+        )
+        if RECREATE_SNAPSHOTS:
+            with open(fixture_file, 'w') as expected_xml:
+                expected_xml.write(output)
+        with open(fixture_file) as expected_xml:
+            self.assertEqualXmlBom(expected_xml.read(), output, namespace=outputter.get_target_namespace())
+
+    # endregion Helper methods

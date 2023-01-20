@@ -23,9 +23,10 @@ import importlib
 import os
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import cast
+from typing import Iterable, Union, cast
 
 from ..model.bom import Bom
+from ..model.component import Component
 
 
 class OutputFormat(str, Enum):
@@ -59,6 +60,11 @@ class BaseOutput(ABC):
         super().__init__(**kwargs)
         self._bom = bom
         self._generated: bool = False
+
+    def _chained_components(self, container: Union[Bom, Component]) -> Iterable[Component]:
+        for component in container.components:
+            yield component
+            yield from self._chained_components(component)
 
     @property
     @abstractmethod

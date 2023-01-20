@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1"
+     serialNumber="urn:uuid:25ca268b-b1a0-4047-b1ee-607ef323fa2e">
     <metadata>
-        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <timestamp>2023-01-07T13:44:32.605762+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>VERSION</version>
+                <version>TESTING</version>
             </tool>
         </tools>
     </metadata>
@@ -27,6 +28,6 @@
         </component>
     </components>
     <dependencies>
-        <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"></dependency>
+        <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
     </dependencies>
 </bom>

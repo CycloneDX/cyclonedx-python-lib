@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" version="1"
+     serialNumber="urn:uuid:628d9a91-52ea-4658-8d20-e29cfe83dfe1">
     <metadata>
-        <timestamp>2021-09-01T10:50:42.051979+00:00</timestamp>
+        <timestamp>2023-01-07T13:44:33.660295+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
                 <name>cyclonedx-python-lib</name>
-                <version>VERSION</version>
+                <version>TESTING</version>
                 <externalReferences>
                     <reference type="build-system">
                         <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
@@ -35,7 +36,7 @@
                 </externalReferences>
             </tool>
         </tools>
-        <component bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789" type="library">
+        <component type="library" bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
@@ -47,13 +48,13 @@
                 <name>CycloneDX</name>
                 <url>https://cyclonedx.org</url>
                 <contact>
-                    <name>Paul Horton</name>
-                    <email>paul.horton@owasp.org</email>
-                </contact>
-                <contact>
                     <name>A N Other</name>
                     <email>someone@somewhere.tld</email>
                     <phone>+44 (0)1234 567890</phone>
+                </contact>
+                <contact>
+                    <name>Paul Horton</name>
+                    <email>paul.horton@owasp.org</email>
                 </contact>
             </provider>
             <group>a-group</group>
@@ -86,21 +87,18 @@
                 <property name="key2">val2</property>
             </properties>
             <services>
-                <service bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
-                    <name>first-nested-service</name>
-                </service>
                 <service bom-ref="my-specific-bom-ref-for-second-nested-service">
                     <provider>
                         <name>CycloneDX</name>
                         <url>https://cyclonedx.org</url>
                         <contact>
-                            <name>Paul Horton</name>
-                            <email>paul.horton@owasp.org</email>
-                        </contact>
-                        <contact>
                             <name>A N Other</name>
                             <email>someone@somewhere.tld</email>
                             <phone>+44 (0)1234 567890</phone>
+                        </contact>
+                        <contact>
+                            <name>Paul Horton</name>
+                            <email>paul.horton@owasp.org</email>
                         </contact>
                     </provider>
                     <group>no-group</group>
@@ -108,6 +106,9 @@
                     <version>3.2.1</version>
                     <authenticated>true</authenticated>
                     <x-trust-boundary>false</x-trust-boundary>
+                </service>
+                <service bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
+                    <name>first-nested-service</name>
                 </service>
             </services>
             <releaseNotes>
@@ -121,8 +122,8 @@
                     <alias>First Test Release</alias>
                 </aliases>
                 <tags>
-                    <tag>test</tag>
                     <tag>alpha</tag>
+                    <tag>test</tag>
                 </tags>
                 <resolves>
                     <issue type="security">
@@ -134,8 +135,8 @@
                             <url>https://nvd.nist.gov/vuln/detail/CVE-2021-44228</url>
                         </source>
                         <references>
-                            <url>https://logging.apache.org/log4j/2.x/security.html</url>
                             <url>https://central.sonatype.org/news/20211213_log4shell_help</url>
+                            <url>https://logging.apache.org/log4j/2.x/security.html</url>
                         </references>
                     </issue>
                 </resolves>
@@ -163,13 +164,13 @@
                         <name>CycloneDX</name>
                         <url>https://cyclonedx.org</url>
                         <contact>
-                            <name>Paul Horton</name>
-                            <email>paul.horton@owasp.org</email>
-                        </contact>
-                        <contact>
                             <name>A N Other</name>
                             <email>someone@somewhere.tld</email>
                             <phone>+44 (0)1234 567890</phone>
+                        </contact>
+                        <contact>
+                            <name>Paul Horton</name>
+                            <email>paul.horton@owasp.org</email>
                         </contact>
                     </provider>
                     <group>what-group</group>

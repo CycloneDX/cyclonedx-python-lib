@@ -24,7 +24,13 @@ from cyclonedx.model import License, LicenseChoice, OrganizationalContact, Organ
 from cyclonedx.model.bom import Bom, BomMetaData, ThisTool, Tool
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
-from data import get_bom_for_issue_275_components, get_bom_with_component_setuptools_with_vulnerability
+
+from .data import (
+    get_bom_for_issue_275_components,
+    get_bom_with_component_setuptools_with_vulnerability,
+    get_component_setuptools_simple,
+    get_component_setuptools_simple_no_version,
+)
 
 
 class TestBomMetaData(TestCase):
@@ -147,13 +153,36 @@ class TestBom(TestCase):
         self.assertEqual(len(vulns), 0)
 
     def test_bom_nested_components_issue_275(self) -> None:
+        """regression test for issue #275
+        see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
+        """
         bom = get_bom_for_issue_275_components()
         self.assertIsInstance(bom.metadata.component, Component)
         self.assertEqual(2, len(bom.components))
         bom.validate()
 
     # def test_bom_nested_services_issue_275(self) -> None:
-    #     bom = get_bom_for_issue_275_services()
-    #     self.assertIsInstance(bom.metadata.component, Component)
-    #     self.assertEqual(2, len(bom.services))
-    #     bom.validate()
+    #    """regression test for issue #275
+    #    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
+    #    """
+    #    bom = get_bom_for_issue_275_services()
+    #    self.assertIsInstance(bom.metadata.component, Component)
+    #    self.assertEqual(2, len(bom.services))
+    #    bom.validate()
+
+    def test_has_component_1(self) -> None:
+        bom = Bom()
+        bom.components.update([get_component_setuptools_simple(), get_component_setuptools_simple_no_version()])
+        self.assertEqual(len(bom.components), 2)
+        self.assertTrue(bom.has_component(component=get_component_setuptools_simple_no_version()))
+        self.assertIsNot(get_component_setuptools_simple(), get_component_setuptools_simple_no_version())
+
+    def test_get_component_by_purl(self) -> None:
+        bom = Bom()
+        setuptools_simple = get_component_setuptools_simple()
+        bom.components.add(setuptools_simple)
+
+        result = bom.get_component_by_purl(get_component_setuptools_simple().purl)
+
+        self.assertIs(result, setuptools_simple)
+        self.assertIsNone(bom.get_component_by_purl(get_component_setuptools_simple_no_version().purl))

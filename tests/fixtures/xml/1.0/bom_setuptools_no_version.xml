@@ -3,7 +3,7 @@
     <components>
         <component type="library">
             <name>setuptools</name>
-            <version></version>
+            <version/>
             <purl>pkg:pypi/setuptools?extension=tar.gz</purl>
             <modified>false</modified>
         </component>

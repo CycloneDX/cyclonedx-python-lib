@@ -2,6 +2,39 @@
 
 <!--next-version-placeholder-->
 
+## v3.1.5 (2023-01-12)
+### Fix
+* Mak test's schema paths relative to `cyclonedx` package ([#338](https://github.com/CycloneDX/cyclonedx-python-lib/issues/338)) ([`1f0c05f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f0c05fe2b2a22bc84a1a437dd59390f2ceaf986))
+
+## v3.1.4 (2023-01-11)
+### Fix
+* **tests:** Include tests in `sdist` builds ([#337](https://github.com/CycloneDX/cyclonedx-python-lib/issues/337)) ([`936ad7d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/936ad7d0c26d8f98040203d3234ca8f1afbd73ab))
+
+## v3.1.3 (2023-01-07)
+### Fix
+* Serialize dependency graph for nested components ([#329](https://github.com/CycloneDX/cyclonedx-python-lib/issues/329)) ([`fb3f835`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb3f8351881783281f8b7e796098a4c145b35927))
+
+## v3.1.2 (2023-01-06)
+### Fix
+* Prevent errors on metadata handling for some specification versions ([#330](https://github.com/CycloneDX/cyclonedx-python-lib/issues/330)) ([`f08a656`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f08a65649aee750397edc061eb3b8325a69bb4b4))
+
+### Documentation
+* Typo ([`539b57a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/539b57a00e4e60e239bb26141f219366121e7bc2))
+* Fix shields ([#324](https://github.com/CycloneDX/cyclonedx-python-lib/issues/324)) ([`555dad4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/555dad4bc255066036ecca028192eb83df8ba5a0))
+* Fix typo ([#318](https://github.com/CycloneDX/cyclonedx-python-lib/issues/318)) ([`63bfb87`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/63bfb8772fe78e9842675d17862c456150dbbc15))
+
+## v3.1.1 (2022-11-28)
+### Fix
+* Type hint for `get_component_by_purl` is incorrect ([`3f20bf0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3f20bf04a65d5c539230281437255b5f48e17621)) 
+
+## v3.1.0 (2022-09-15)
+### Feature
+* Out-factor SPDX compound detection ([`fd4d537`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fd4d537c9dced0e38f14d99dee174cc5bb0bd465))
+* Out-factor SPDX compound detection ([`2b69925`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2b699252f8857d97231a689ea9cbfcdff9459626))
+* License factories ([`033bad2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/033bad2a50fd2236c712d4621caa57b04fcc2043))
+
+_Note: There was no 3.0.0 release officially, but due to CI publishing issues, an unexpected 3.0.0 release was publiched to PyPi and subsequently yanked from PyPi. There are NO breaking changes between 2.7.1 and 3.1.0._
+
 ## v2.7.1 (2022-08-01)
 ### Fix
 * BOM validation fails when Components or Services are nested [#275](https://github.com/CycloneDX/cyclonedx-python-lib/issues/275)

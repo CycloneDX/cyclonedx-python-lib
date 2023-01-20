@@ -1,0 +1,71 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3",
+  "serialNumber": "urn:uuid:d59b94a8-25bc-4876-a1ae-c21a73fecd2c",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:52:28.562184+00:00",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
+        "version": "TESTING"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "my-project",
+      "name": "my-project",
+      "version": "1"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "component-A",
+      "name": "A",
+      "version": "0.1",
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "component-B",
+          "name": "B",
+          "version": "1.0",
+          "components": [
+            {
+              "type": "library",
+              "bom-ref": "component-C",
+              "name": "C",
+              "version": "1.0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "my-project",
+      "dependsOn": [
+        "component-A"
+      ]
+    },
+    {
+      "ref": "component-A",
+      "dependsOn": [
+        "component-B"
+      ]
+    },
+    {
+      "ref": "component-B",
+      "dependsOn": [
+        "component-C"
+      ]
+    },
+    {
+      "ref": "component-C",
+      "dependsOn": []
+    }
+  ]
+}

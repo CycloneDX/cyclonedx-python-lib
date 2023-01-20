@@ -1,40 +1,44 @@
 [tool.poetry]
 name = "cyclonedx-python-lib"
-version = "3.0.0"
+version = "3.1.5"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
 authors = ["Paul Horton <phorton@sonatype.com>"]
-maintainers = ["Paul Horton <phorton@sonatype.com>"]
+maintainers = [
+  "Paul Horton <phorton@sonatype.com>",
+  "Jan Kowalleck <jan.kowalleck@gmail.com>",
+]
 license = "Apache-2.0"
 readme = "README.md"
-homepage = "https://github.com/CycloneDX/cyclonedx-python-lib"
+homepage = "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
 repository = "https://github.com/CycloneDX/cyclonedx-python-lib"
+documentation = "https://cyclonedx-python-library.readthedocs.io/"
 packages = [
-    { include = "cyclonedx" }
+  { include = "cyclonedx" }
 ]
 include = [
-    "LICENSE"
+  { path = "tests", format = "sdist" },
 ]
 classifiers = [
-    # Trove classifiers - https://packaging.python.org/specifications/core-metadata/#metadata-classifier
-    # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    'Development Status :: 5 - Production/Stable',
-    'Intended Audience :: Developers',
-    'Intended Audience :: Information Technology',
-    'Intended Audience :: Legal Industry',
-    'Intended Audience :: System Administrators',
-    'Topic :: Security',
-    'Topic :: Software Development',
-    'Topic :: System :: Software Distribution',
-    'License :: OSI Approved :: Apache Software License',
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Typing :: Typed'
+  # Trove classifiers - https://packaging.python.org/specifications/core-metadata/#metadata-classifier
+  # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
+  'Development Status :: 5 - Production/Stable',
+  'Intended Audience :: Developers',
+  'Intended Audience :: Information Technology',
+  'Intended Audience :: Legal Industry',
+  'Intended Audience :: System Administrators',
+  'Topic :: Security',
+  'Topic :: Software Development',
+  'Topic :: System :: Software Distribution',
+  'License :: OSI Approved :: Apache Software License',
+  'Programming Language :: Python :: 3.6',
+  'Programming Language :: Python :: 3.7',
+  'Programming Language :: Python :: 3.8',
+  'Programming Language :: Python :: 3.9',
+  'Programming Language :: Python :: 3.10',
+  'Typing :: Typed',
 ]
 keywords = [
-    "BOM", "SBOM", "SCA", "OWASP"
+  "BOM", "SBOM", "SCA", "OWASP",
 ]
 
 [tool.poetry.urls]
@@ -51,6 +55,7 @@ sortedcontainers = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.25.0"
+ddt = "^1.6.0"
 coverage = "^6.2"
 mypy = ">= 0.920, <= 0.961"
 autopep8 = "^1.6.0"
@@ -73,7 +78,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.semantic_release]
 version_variable = [
-    "pyproject.toml:version"
+  "pyproject.toml:version"
 ]
 branch = "main"
 upload_to_pypi = true

@@ -24,11 +24,11 @@ from unittest import TestCase
 from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model import sha1sum
-from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
-from data import get_component_setuptools_simple, get_component_setuptools_simple_no_version
 
-FIXTURES_DIRECTORY = 'fixtures/xml/1.4'
+from .data import get_component_setuptools_simple
+
+FIXTURES_DIRECTORY = join('fixtures', 'xml', '1.4')
 
 
 class TestComponent(TestCase):
@@ -78,10 +78,3 @@ class TestComponent(TestCase):
         )
         self.assertEqual(c.purl, purl)
         self.assertEqual(len(c.hashes), 1)
-
-    def test_has_component_1(self) -> None:
-        bom = Bom()
-        bom.components.update([get_component_setuptools_simple(), get_component_setuptools_simple_no_version()])
-        self.assertEqual(len(bom.components), 2)
-        self.assertTrue(bom.has_component(component=get_component_setuptools_simple_no_version()))
-        self.assertIsNot(get_component_setuptools_simple(), get_component_setuptools_simple_no_version())
