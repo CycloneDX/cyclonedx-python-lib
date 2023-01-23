@@ -291,6 +291,7 @@ class Bom:
         self.dependencies = dependencies or []  # type: ignore
 
     @property  # type: ignore[misc]
+    @serializable.json_name('')
     @serializable.type_mapping(UrnUuidHelper)
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)

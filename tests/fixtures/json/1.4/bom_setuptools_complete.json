@@ -10,7 +10,7 @@
       {
         "vendor": "CycloneDX",
         "name": "cyclonedx-python-lib",
-        "version": "VERSION",
+        "version": "TESTING",
         "externalReferences": [
           {
             "type": "build-system",

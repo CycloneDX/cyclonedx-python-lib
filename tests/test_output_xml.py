@@ -25,9 +25,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance
 from cyclonedx.schema import SchemaVersion
 from tests.base import BaseXmlTestCase
-from tests.data import get_bom_for_issue_275_components
-
-from .data import (
+from tests.data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
@@ -35,6 +33,7 @@ from .data import (
     MOCK_UUID_5,
     MOCK_UUID_6,
     TEST_UUIDS,
+    get_bom_for_issue_275_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,

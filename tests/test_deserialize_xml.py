@@ -16,18 +16,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import unittest
 from datetime import datetime
 from os.path import dirname, join
+from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
 from xml.etree import ElementTree
 
 from cyclonedx.exception.model import UnknownComponentDependencyException
-from cyclonedx.model import ThisTool
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import SchemaVersion
-from data import (
+from tests.base import BaseXmlTestCase
+from tests.data import (
     MOCK_BOM_UUID_1,
     MOCK_UUID_4,
     MOCK_UUID_6,
@@ -47,14 +49,14 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-from tests.base import BaseXmlTestCase
 
 
+@patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestDeserializeXml(BaseXmlTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        ThisTool.version = 'VERSION'
+        cls._bom_timestamp = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
 
     @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
     def test_bom_external_references_v1_4(self, mock_uuid: Mock) -> None:
@@ -180,9 +182,10 @@ class TestDeserializeXml(BaseXmlTestCase):
 
     # Helper methods
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
-        bom.metadata.timestamp = datetime.fromisoformat('2021-09-01T10:50:42.051979+00:00')
+        bom.metadata.timestamp = self._bom_timestamp
         with open(
-                join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
+            join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
             xml = input_xml.read()
-            deserialized_bom = Bom.from_xml(data=ElementTree.fromstring(xml))
+            deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
+            self.assertEqual(bom.metadata, deserialized_bom.metadata)
             self.assertEqual(bom, deserialized_bom)
