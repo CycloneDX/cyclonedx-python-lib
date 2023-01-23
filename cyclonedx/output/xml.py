@@ -72,7 +72,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
         if self.generated and self._root_bom_element is not None:
             return str(Xml.XML_VERSION_DECLARATION + ElementTree.tostring(self._root_bom_element, encoding='unicode'))
 
-        raise BomGenerationErrorException(f'There was no Root XML Element after BOM generation.')
+        raise BomGenerationErrorException('There was no Root XML Element after BOM generation.')
 
     def get_target_namespace(self) -> str:
         return f'http://cyclonedx.org/schema/bom/{self.get_schema_version()}'
