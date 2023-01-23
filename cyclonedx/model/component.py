@@ -954,10 +954,10 @@ class Component(Dependable):
         self._name = name
 
     @property  # type: ignore[misc]
-    @serializable.include_none(SchemaVersion1Dot0)
-    @serializable.include_none(SchemaVersion1Dot1)
-    @serializable.include_none(SchemaVersion1Dot2)
-    @serializable.include_none(SchemaVersion1Dot3)
+    @serializable.include_none(SchemaVersion1Dot0, "")
+    @serializable.include_none(SchemaVersion1Dot1, "")
+    @serializable.include_none(SchemaVersion1Dot2, "")
+    @serializable.include_none(SchemaVersion1Dot3, "")
     @serializable.xml_sequence(6)
     def version(self) -> Optional[str]:
         """

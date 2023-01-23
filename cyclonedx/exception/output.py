@@ -22,6 +22,12 @@ Exceptions that are for specific error scenarios during the output of a Model to
 from . import CycloneDxException
 
 
+class BomGenerationErrorException(CycloneDxException):
+    """
+    Raised if there is an unknown error.
+    """
+
+
 class FormatNotSupportedException(CycloneDxException):
     """
     Exception raised when attempting to output a BOM to a format not supported in the requested version.

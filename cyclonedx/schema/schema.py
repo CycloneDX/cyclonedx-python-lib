@@ -19,10 +19,12 @@
 
 from abc import ABC, abstractmethod
 
+from serializable import ViewType
+
 from ..schema import SchemaVersion
 
 
-class BaseSchemaVersion(ABC):
+class BaseSchemaVersion(ABC, ViewType):
 
     @property
     @abstractmethod

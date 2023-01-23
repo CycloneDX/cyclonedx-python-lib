@@ -540,14 +540,14 @@ class Bom:
 
         dependency_diff = all_dependency_bom_refs - all_bom_refs
         if len(dependency_diff) > 0:
-            print(f'All Bom Refs: {all_bom_refs}')
-            print(f'All Dep Bom Refs: {all_dependency_bom_refs}')
             raise UnknownComponentDependencyException(
                 f'One or more Components have Dependency references to Components/Services that are not known in this '
                 f'BOM. They are: {dependency_diff}')
 
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
-        if self.metadata.component and filter(lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies):
+        if self.metadata.component and filter(
+                lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies  # type: ignore[arg-type]
+        ):
             warnings.warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
