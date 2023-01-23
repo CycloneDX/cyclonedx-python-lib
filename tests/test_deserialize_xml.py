@@ -183,8 +183,7 @@ class TestDeserializeXml(BaseXmlTestCase):
     # Helper methods
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         bom.metadata.timestamp = self._bom_timestamp
-        with open(
-            join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
+        with open(join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
             xml = input_xml.read()
             deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
             self.assertEqual(bom.metadata, deserialized_bom.metadata)
