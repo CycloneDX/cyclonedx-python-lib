@@ -2,60 +2,60 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.4",
-  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "serialNumber": "urn:uuid:cefd0380-8626-476c-ae2d-956079d6d4b2",
   "version": 1,
   "metadata": {
-    "timestamp": "2021-09-01T10:50:42.051979+00:00",
+    "timestamp": "2023-01-07T13:45:59.098229+00:00",
     "tools": [
       {
         "vendor": "CycloneDX",
         "name": "cyclonedx-python-lib",
-        "version": "VERSION",
+        "version": "TESTING",
         "externalReferences": [
           {
-            "type": "build-system",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions",
+            "type": "build-system"
           },
           {
-            "type": "distribution",
-            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+            "url": "https://pypi.org/project/cyclonedx-python-lib/",
+            "type": "distribution"
           },
           {
-            "type": "documentation",
-            "url": "https://cyclonedx.github.io/cyclonedx-python-lib/"
+            "url": "https://cyclonedx.github.io/cyclonedx-python-lib/",
+            "type": "documentation"
           },
           {
-            "type": "issue-tracker",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues",
+            "type": "issue-tracker"
           },
           {
-            "type": "license",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE",
+            "type": "license"
           },
           {
-            "type": "release-notes",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md",
+            "type": "release-notes"
           },
           {
-            "type": "vcs",
-            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib",
+            "type": "vcs"
           },
           {
-            "type": "website",
-            "url": "https://cyclonedx.org"
+            "url": "https://cyclonedx.org",
+            "type": "website"
           }
         ]
       }
     ],
     "authors": [
       {
-        "name": "Paul Horton",
-        "email": "paul.horton@owasp.org"
-      },
-      {
         "name": "A N Other",
         "email": "someone@somewhere.tld",
         "phone": "+44 (0)1234 567890"
+      },
+      {
+        "name": "Paul Horton",
+        "email": "paul.horton@owasp.org"
       }
     ],
     "component": {
@@ -68,13 +68,13 @@
         ],
         "contact": [
           {
-            "name": "Paul Horton",
-            "email": "paul.horton@owasp.org"
-          },
-          {
             "name": "A N Other",
             "email": "someone@somewhere.tld",
             "phone": "+44 (0)1234 567890"
+          },
+          {
+            "name": "Paul Horton",
+            "email": "paul.horton@owasp.org"
           }
         ]
       },
@@ -148,18 +148,18 @@
             "bom-ref": "555ca729-93c6-48f3-956e-bdaa4a2f0bfa",
             "name": "toml",
             "version": "0.10.2",
-            "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
             "hashes": [
               {
                 "alg": "SHA-256",
                 "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
               }
             ],
+            "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
             "externalReferences": [
               {
-                "type": "distribution",
                 "url": "https://cyclonedx.org",
                 "comment": "No comment",
+                "type": "distribution",
                 "hashes": [
                   {
                     "alg": "SHA-256",
@@ -173,32 +173,6 @@
         "variants": [
           {
             "type": "library",
-            "bom-ref": "e7abdcca-5ba2-4f29-b2cf-b1e1ef788e66",
-            "name": "toml",
-            "version": "0.10.2",
-            "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
-            "hashes": [
-              {
-                "alg": "SHA-256",
-                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-              }
-            ],
-            "externalReferences": [
-              {
-                "type": "distribution",
-                "url": "https://cyclonedx.org",
-                "comment": "No comment",
-                "hashes": [
-                  {
-                    "alg": "SHA-256",
-                    "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "library",
             "bom-ref": "ded1d73e-1fca-4302-b520-f1bc53979958",
             "author": "Test Author",
             "name": "setuptools",
@@ -209,6 +183,32 @@
               }
             ],
             "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+          },
+          {
+            "type": "library",
+            "bom-ref": "e7abdcca-5ba2-4f29-b2cf-b1e1ef788e66",
+            "name": "toml",
+            "version": "0.10.2",
+            "hashes": [
+              {
+                "alg": "SHA-256",
+                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+              }
+            ],
+            "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+            "externalReferences": [
+              {
+                "url": "https://cyclonedx.org",
+                "comment": "No comment",
+                "type": "distribution",
+                "hashes": [
+                  {
+                    "alg": "SHA-256",
+                    "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+                  }
+                ]
+              }
+            ]
           }
         ],
         "commits": [
@@ -226,15 +226,25 @@
       },
       "externalReferences": [
         {
-          "type": "distribution",
           "url": "https://cyclonedx.org",
           "comment": "No comment",
+          "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-256",
               "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
             }
           ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "key1",
+          "value": "val1"
+        },
+        {
+          "name": "key2",
+          "value": "val2"
         }
       ],
       "components": [
@@ -256,18 +266,18 @@
           "bom-ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
           "name": "toml",
           "version": "0.10.2",
-          "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
           "hashes": [
             {
               "alg": "SHA-256",
               "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
             }
           ],
+          "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
           "externalReferences": [
             {
-              "type": "distribution",
               "url": "https://cyclonedx.org",
               "comment": "No comment",
+              "type": "distribution",
               "hashes": [
                 {
                   "alg": "SHA-256",
@@ -299,8 +309,8 @@
           "First Test Release"
         ],
         "tags": [
-          "test",
-          "alpha"
+          "alpha",
+          "test"
         ],
         "resolves": [
           {
@@ -313,27 +323,27 @@
               "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-44228"
             },
             "references": [
-              "https://logging.apache.org/log4j/2.x/security.html",
-              "https://central.sonatype.org/news/20211213_log4shell_help"
+              "https://central.sonatype.org/news/20211213_log4shell_help",
+              "https://logging.apache.org/log4j/2.x/security.html"
             ]
           }
         ],
         "notes": [
           {
-            "locale": "en-GB",
             "text": {
+              "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==",
               "contentType": "text/plain; charset=UTF-8",
-              "encoding": "base64",
-              "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA=="
-            }
+              "encoding": "base64"
+            },
+            "locale": "en-GB"
           },
           {
-            "locale": "en-US",
             "text": {
+              "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==",
               "contentType": "text/plain; charset=UTF-8",
-              "encoding": "base64",
-              "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA=="
-            }
+              "encoding": "base64"
+            },
+            "locale": "en-US"
           }
         ],
         "properties": [
@@ -346,17 +356,7 @@
             "value": "val2"
           }
         ]
-      },
-      "properties": [
-        {
-          "name": "key1",
-          "value": "val1"
-        },
-        {
-          "name": "key2",
-          "value": "val2"
-        }
-      ]
+      }
     },
     "manufacture": {
       "name": "CycloneDX",
@@ -365,13 +365,13 @@
       ],
       "contact": [
         {
-          "name": "Paul Horton",
-          "email": "paul.horton@owasp.org"
-        },
-        {
           "name": "A N Other",
           "email": "someone@somewhere.tld",
           "phone": "+44 (0)1234 567890"
+        },
+        {
+          "name": "Paul Horton",
+          "email": "paul.horton@owasp.org"
         }
       ]
     },

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1"
+     serialNumber="urn:uuid:e42bab8d-aa79-48f1-87d1-f7acb4eb9c7a">
     <components>
         <component type="library" bom-ref="pkg:pypi/setuptools?extension=tar.gz">
             <name>setuptools</name>
-            <version></version>
+            <version/>
             <licenses>
                 <expression>MIT License</expression>
             </licenses>

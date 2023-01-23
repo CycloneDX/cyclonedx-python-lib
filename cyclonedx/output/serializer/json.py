@@ -80,7 +80,7 @@ class CycloneDxJSONEncoder(JSONEncoder):
             d: Dict[Any, Any] = {}
             for k, v in o.__dict__.items():
                 # Remove leading _ in key names
-                new_key = k[1:]
+                new_key = k[1:] if k[0] == '_' else k
                 if new_key.startswith('_') or '__' in new_key:
                     continue
 

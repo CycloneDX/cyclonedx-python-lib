@@ -28,4 +28,6 @@ html/
 /.mypy_cache
 
 # Exlude built docs
-docs/_build
+docs/_build/
+docs/autoapi/
+

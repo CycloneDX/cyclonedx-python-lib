@@ -323,6 +323,10 @@ def get_bom_with_nested_services() -> Bom:
 
 
 def get_bom_for_issue_275_components() -> Bom:
+    """regression test for issue #275
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
+    """
+
     app = Component(bom_ref=MOCK_UUID_1, name="app", version="1.0.0")
     comp_a = Component(bom_ref=MOCK_UUID_2, name="comp_a", version="1.0.0")
     comp_b = Component(bom_ref=MOCK_UUID_3, name="comp_b", version="1.0.0")
@@ -343,17 +347,45 @@ def get_bom_for_issue_275_components() -> Bom:
 
 
 # def get_bom_for_issue_275_services() -> Bom:
-#     app = Component(name="app", version="1.0.0")
-#     serv_a = Service(name='Service A')
-#     serv_b = Service(name='Service B')
-#     serv_c = Service(name='Service C')
+#    """regression test for issue #275
+#    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
+#    """
+#    app = Component(name="app", version="1.0.0")
+#    serv_a = Service(name='Service A')
+#    serv_b = Service(name='Service B')
+#    serv_c = Service(name='Service C')
 #
-#     serv_b.services.add(serv_c)
-#     serv_b.dependencies.add(serv_c.bom_ref)
+#    serv_b.services.add(serv_c)
+#    serv_b.dependencies.add(serv_c.bom_ref)
 #
-#     bom = Bom(services=[serv_a, serv_b])
-#     bom.metadata.component = app
-#     return bom
+#    bom = Bom(services=[serv_a, serv_b])
+#    bom.metadata.component = app
+#    return bom
+
+
+def get_bom_for_issue_328_components() -> Bom:
+    """regression test for issue #328
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/328
+    """
+
+    comp_root = Component(component_type=ComponentType.APPLICATION,
+                          name='my-project', version='1', bom_ref='my-project')
+    comp_a = Component(name='A', version='0.1', bom_ref='component-A')
+    comp_b = Component(name='B', version='1.0', bom_ref='component-B')
+    comp_c = Component(name='C', version='1.0', bom_ref='component-C')
+
+    # Make a tree of components A -> B -> C
+    comp_a.components = [comp_b]
+    comp_b.components = [comp_c]
+    # Declare dependencies the same way: A -> B -> C
+    comp_a.dependencies = [comp_b.bom_ref]
+    comp_b.dependencies = [comp_c.bom_ref]
+
+    bom = Bom()
+    bom.metadata.component = comp_root
+    comp_root.dependencies = [comp_a.bom_ref]
+    bom.components = [comp_a]
+    return bom
 
 
 def get_component_setuptools_complete(include_pedigree: bool = True) -> Component:
@@ -381,7 +413,8 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
 
 
 def get_component_setuptools_simple(
-        bom_ref: Optional[str] = 'pkg:pypi/setuptools@50.3.2?extension=tar.gz') -> Component:
+    bom_ref: Optional[str] = 'pkg:pypi/setuptools@50.3.2?extension=tar.gz'
+) -> Component:
     return Component(
         name='setuptools', version='50.3.2',
         bom_ref=bom_ref,

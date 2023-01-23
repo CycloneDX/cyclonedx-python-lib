@@ -37,6 +37,11 @@ class BaseOutput(ABC):
         self._bom = bom
         self._generated: bool = False
 
+    def _chained_components(self, container: Union[Bom, Component]) -> Iterable[Component]:
+        for component in container.components:
+            yield component
+            yield from self._chained_components(component)
+
     @property
     @abstractmethod
     def schema_version(self) -> SchemaVersion:
