@@ -291,7 +291,6 @@ class Bom:
         self.dependencies = dependencies or []  # type: ignore
 
     @property  # type: ignore[misc]
-    @serializable.json_name('')
     @serializable.type_mapping(UrnUuidHelper)
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
@@ -435,6 +434,7 @@ class Bom:
         if self.metadata.component:
             components.update(self.metadata.component.get_all_nested_components(include_self=True))
 
+        # Add Components and sub Components
         for c in self.components:
             components.update(c.get_all_nested_components(include_self=True))
 
@@ -510,13 +510,18 @@ class Bom:
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
 
         if _d and depends_on:
-            _d.dependencies = _d.dependencies + set(  # type: ignore
-                map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
+            _d.dependencies = _d.dependencies.union(  # type: ignore
+                set(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
+            )
         elif not _d:
             self._dependencies.add(Dependency(
                 ref=target.bom_ref,
                 dependencies=list(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
             ))
+
+        # Ensure dependents are registered with no further dependents in the Dependency Graph as per CDX specification
+        for _d2 in depends_on if depends_on else []:
+            self.register_dependency(target=_d2, depends_on=None)
 
     def urn(self) -> str:
         return f'urn:cdx:{self.serial_number}/{self.version}'
@@ -550,7 +555,7 @@ class Bom:
 
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
         if self.metadata.component and filter(
-                lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies  # type: ignore[arg-type]
+            lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies  # type: ignore[arg-type]
         ):
             warnings.warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
