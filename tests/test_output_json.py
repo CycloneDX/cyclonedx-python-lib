@@ -25,12 +25,14 @@ from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from data import (
+from tests.base import BaseJsonTestCase
+from tests.data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
     MOCK_UUID_6,
     TEST_UUIDS,
+    get_bom_for_issue_275_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -47,10 +49,9 @@ from data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-from tests.base import BaseJsonTestCase
-from tests.data import get_bom_for_issue_275_components
 
 
+@patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_external_references_v1_4(self) -> None:

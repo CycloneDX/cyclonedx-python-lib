@@ -22,9 +22,10 @@ and according to different versions of the CycloneDX schema standard.
 import importlib
 import os
 from abc import ABC, abstractmethod
-from typing import cast
+from typing import Iterable, Union, cast
 
 from ..model.bom import Bom
+from ..model.component import Component
 from ..schema import OutputFormat, SchemaVersion
 
 LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_4
