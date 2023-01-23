@@ -114,7 +114,7 @@ class TestModelComponent(TestCase):
         )
         mock_uuid.assert_called()
         self.assertEqual(c.name, 'test-component')
-        self.assertEqual(c.type, ComponentType.LIBRARY)
+        self.assertEqual(c.type_, ComponentType.LIBRARY)
         self.assertIsNone(c.mime_type)
         self.assertEqual(str(c.bom_ref), '6f266d1c-760f-4552-ae3b-41a9b74232fa')
         self.assertIsNone(c.supplier)
@@ -126,7 +126,7 @@ class TestModelComponent(TestCase):
         self.assertIsNone(c.scope)
         self.assertSetEqual(c.hashes, set())
         self.assertSetEqual(c.licenses, set())
-        self.assertIsNone(c.copyright)
+        self.assertIsNone(c.copyright_)
         self.assertIsNone(c.purl)
         self.assertSetEqual(c.external_references, set())
         self.assertFalse(c.properties)
@@ -141,7 +141,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c1.name, 'test-component')
         self.assertEqual(c1.version, '1.2.3')
-        self.assertEqual(c1.type, ComponentType.LIBRARY)
+        self.assertEqual(c1.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c1.external_references), 0)
         self.assertEqual(len(c1.hashes), 0)
 
@@ -150,7 +150,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c2.name, 'test2-component')
         self.assertEqual(c2.version, '3.2.1')
-        self.assertEqual(c2.type, ComponentType.LIBRARY)
+        self.assertEqual(c2.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
 
@@ -163,13 +163,13 @@ class TestModelComponent(TestCase):
             name='test-component', version='1.2.3'
         )
         c.external_references.add(ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.version, '1.2.3')
-        self.assertEqual(c.type, ComponentType.LIBRARY)
+        self.assertEqual(c.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 1)
         self.assertEqual(len(c.hashes), 0)
 
@@ -178,7 +178,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c2.name, 'test2-component')
         self.assertEqual(c2.version, '3.2.1')
-        self.assertEqual(c2.type, ComponentType.LIBRARY)
+        self.assertEqual(c2.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
 
@@ -188,7 +188,7 @@ class TestModelComponent(TestCase):
         )
         self.assertEqual(c.name, 'test-component')
         self.assertIsNone(c.version, None)
-        self.assertEqual(c.type, ComponentType.LIBRARY)
+        self.assertEqual(c.type_, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 0)
         self.assertEqual(len(c.hashes), 0)
 
@@ -197,7 +197,7 @@ class TestModelComponent(TestCase):
             name='test-component', version='1.2.3'
         )
         c.external_references.add(ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
@@ -206,7 +206,7 @@ class TestModelComponent(TestCase):
             name='test-component', version='1.2.3'
         )
         c2.external_references.add(ExternalReference(
-            reference_type=ExternalReferenceType.OTHER,
+            type_=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
@@ -272,42 +272,17 @@ class TestModelComponent(TestCase):
         self.assertNotEqual(hash(c1), hash(c2))
         self.assertFalse(c1 == c2)
 
-    def test_zero_dependencies(self) -> None:
-        self.assertSetEqual(get_component_setuptools_simple_no_version().dependencies, set())
-
-    def test_with_dependencies(self) -> None:
-        c = get_component_setuptools_simple_no_version()
-        c.dependencies.update([
-            get_component_setuptools_simple_no_version().bom_ref,
-            get_component_toml_with_hashes_with_references().bom_ref
-        ])
-        self.assertEqual(len(c.dependencies), 2)
-        self.assertTrue(get_component_setuptools_simple_no_version().bom_ref in c.dependencies)
-        self.assertTrue(get_component_toml_with_hashes_with_references().bom_ref in c.dependencies)
-
-    def test_with_duplicate_dependencies(self) -> None:
-        c = get_component_setuptools_simple_no_version()
-        c.dependencies.update([
-            get_component_setuptools_simple_no_version().bom_ref,
-            get_component_toml_with_hashes_with_references().bom_ref,
-            get_component_setuptools_simple_no_version().bom_ref,
-            get_component_toml_with_hashes_with_references().bom_ref
-        ])
-        self.assertEqual(len(c.dependencies), 2)
-        self.assertTrue(get_component_setuptools_simple_no_version().bom_ref in c.dependencies)
-        self.assertTrue(get_component_toml_with_hashes_with_references().bom_ref in c.dependencies)
-
     def test_sort(self) -> None:
         # expected sort order: (type, [group], name, [version])
         expected_order = [6, 4, 5, 3, 2, 1, 0]
         components = [
-            Component(name='component-c', component_type=ComponentType.LIBRARY),
-            Component(name='component-a', component_type=ComponentType.LIBRARY),
-            Component(name='component-b', component_type=ComponentType.LIBRARY, group='group-2'),
-            Component(name='component-a', component_type=ComponentType.LIBRARY, group='group-2'),
-            Component(name='component-a', component_type=ComponentType.FILE),
-            Component(name='component-b', component_type=ComponentType.FILE),
-            Component(name='component-a', component_type=ComponentType.FILE, version="1.0.0"),
+            Component(name='component-c', type_=ComponentType.LIBRARY),
+            Component(name='component-a', type_=ComponentType.LIBRARY),
+            Component(name='component-b', type_=ComponentType.LIBRARY, group='group-2'),
+            Component(name='component-a', type_=ComponentType.LIBRARY, group='group-2'),
+            Component(name='component-a', type_=ComponentType.FILE),
+            Component(name='component-b', type_=ComponentType.FILE),
+            Component(name='component-a', type_=ComponentType.FILE, version="1.0.0"),
         ]
         sorted_components = sorted(components)
         expected_components = reorder(components, expected_order)
@@ -317,7 +292,6 @@ class TestModelComponent(TestCase):
         comp_b = Component(name="comp_b", version="1.0.0")
         comp_c = Component(name="comp_c", version="1.0.0")
         comp_b.components.add(comp_c)
-        comp_b.dependencies.add(comp_c.bom_ref)
 
         self.assertEqual(1, len(comp_b.components))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=True)))
@@ -328,7 +302,6 @@ class TestModelComponent(TestCase):
         comp_b = Component(name="comp_b", version="1.0.0")
         comp_c = Component(name="comp_c", version="1.0.0")
         comp_b.components.add(comp_c)
-        comp_b.dependencies.add(comp_c.bom_ref)
         comp_b.components.add(comp_a)
 
         self.assertEqual(2, len(comp_b.components))
@@ -467,8 +440,8 @@ class TestModelPatch(TestCase):
         diff_b = Diff(text=AttachedText(content='b'))
 
         resolves_a = [
-            IssueType(classification=IssueClassification.DEFECT),
-            IssueType(classification=IssueClassification.SECURITY)
+            IssueType(type_=IssueClassification.DEFECT),
+            IssueType(type_=IssueClassification.SECURITY)
         ]
 
         # expected sort order: (type, [diff], sorted(resolves))

@@ -20,7 +20,6 @@ Set of classes and methods which allow for quick creation of a Bom instance from
 Use a Parser instead of programmatically creating a Bom as a developer.
 """
 
-from abc import ABC
 from typing import List
 
 from ..model.component import Component
@@ -44,7 +43,7 @@ class ParserWarning:
         return '<ParserWarning item=\'{}\'>'.format(self._item)
 
 
-class BaseParser(ABC):
+class BaseParser:
     _components: List[Component] = []
     _warnings: List[ParserWarning] = []
 

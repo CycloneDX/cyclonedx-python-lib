@@ -18,6 +18,7 @@
 from enum import Enum
 from typing import Any, Iterable, Optional
 
+import serializable
 from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
@@ -36,6 +37,7 @@ class IssueClassification(str, Enum):
     SECURITY = 'security'
 
 
+@serializable.serializable_class
 class IssueTypeSource:
     """
     This is our internal representation ofa source within the IssueType complex type that can be used in multiple
@@ -98,6 +100,7 @@ class IssueTypeSource:
         return f'<IssueTypeSource name={self._name}, url={self.url}>'
 
 
+@serializable.serializable_class
 class IssueType:
     """
     This is our internal representation of an IssueType complex type that can be used in multiple places within
@@ -107,18 +110,19 @@ class IssueType:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, *, classification: IssueClassification, id_: Optional[str] = None, name: Optional[str] = None,
+    def __init__(self, *, type_: IssueClassification, id_: Optional[str] = None, name: Optional[str] = None,
                  description: Optional[str] = None, source: Optional[IssueTypeSource] = None,
                  references: Optional[Iterable[XsUri]] = None) -> None:
-        self.type = classification
-        self.id = id_
+        self.type_ = type_
+        self.id_ = id_
         self.name = name
         self.description = description
         self.source = source
         self.references = references or []  # type: ignore
 
-    @property
-    def type(self) -> IssueClassification:
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
+    def type_(self) -> IssueClassification:
         """
         Specifies the type of issue.
 
@@ -127,12 +131,13 @@ class IssueType:
         """
         return self._type
 
-    @type.setter
-    def type(self, classification: IssueClassification) -> None:
-        self._type = classification
+    @type_.setter
+    def type_(self, type_: IssueClassification) -> None:
+        self._type = type_
 
-    @property
-    def id(self) -> Optional[str]:
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
+    def id_(self) -> Optional[str]:
         """
         The identifier of the issue assigned by the source of the issue.
 
@@ -141,11 +146,12 @@ class IssueType:
         """
         return self._id
 
-    @id.setter
-    def id(self, id_: Optional[str]) -> None:
+    @id_.setter
+    def id_(self, id_: Optional[str]) -> None:
         self._id = id_
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
         The name of the issue.
@@ -159,7 +165,8 @@ class IssueType:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def description(self) -> Optional[str]:
         """
         A description of the issue.
@@ -173,7 +180,8 @@ class IssueType:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def source(self) -> Optional[IssueTypeSource]:
         """
         The source of this issue.
@@ -187,7 +195,9 @@ class IssueType:
     def source(self, source: Optional[IssueTypeSource]) -> None:
         self._source = source
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'url')
+    @serializable.xml_sequence(5)
     def references(self) -> "SortedSet[XsUri]":
         """
         Any reference URLs related to this issue.
@@ -208,14 +218,14 @@ class IssueType:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
-            return ComparableTuple((self.type, self.id, self.name, self.description, self.source)) < \
-                ComparableTuple((other.type, other.id, other.name, other.description, other.source))
+            return ComparableTuple((self.type_, self.id_, self.name, self.description, self.source)) < \
+                ComparableTuple((other.type_, other.id_, other.name, other.description, other.source))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
-            self.type, self.id, self.name, self.description, self.source, tuple(self.references)
+            self.type_, self.id_, self.name, self.description, self.source, tuple(self.references)
         ))
 
     def __repr__(self) -> str:
-        return f'<IssueType type={self.type}, id={self.id}, name={self.name}>'
+        return f'<IssueType type={self.type_}, id={self.id_}, name={self.name}>'

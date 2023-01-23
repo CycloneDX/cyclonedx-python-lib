@@ -66,8 +66,13 @@
   ],
   "dependencies": [
     {
-      "ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857",
-      "dependsOn": []
+      "ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857"
+    },
+    {
+      "ref": "be2c6502-7e9a-47db-9a66-e34f729810a3"
+    },
+    {
+      "ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"
     }
   ]
 }

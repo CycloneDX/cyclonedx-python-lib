@@ -13,25 +13,27 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-#
 
-"""
-Exceptions that are for specific error scenarios during the output of a Model to a SBOM.
-"""
-
-from . import CycloneDxException
+from enum import Enum
 
 
-class BomGenerationErrorException(CycloneDxException):
-    """
-    Raised if there is an unknown error.
-    """
+class OutputFormat(str, Enum):
+    JSON: str = 'Json'
+    XML: str = 'Xml'
 
 
-class FormatNotSupportedException(CycloneDxException):
-    """
-    Exception raised when attempting to output a BOM to a format not supported in the requested version.
+class SchemaVersion(str, Enum):
+    V1_0: str = 'V1Dot0'
+    V1_1: str = 'V1Dot1'
+    V1_2: str = 'V1Dot2'
+    V1_3: str = 'V1Dot3'
+    V1_4: str = 'V1Dot4'
 
-    For example, JSON is not supported prior to 1.2.
-    """
-    pass
+    def to_version(self) -> str:
+        """
+        Return as a version string - e.g. `1.4`
+
+        Returns:
+            `str` version
+        """
+        return f'{self.value[1]}.{self.value[5]}'

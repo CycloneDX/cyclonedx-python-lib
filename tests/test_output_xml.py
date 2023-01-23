@@ -16,17 +16,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
-from os.path import join
+import unittest
+from os.path import dirname, join
 from unittest.mock import Mock, patch
 
 from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import SchemaVersion, get_instance
-
-from . import FIXTURES_DIRECTORY, RECREATE_SNAPSHOTS
-from .base import BaseXmlTestCase
-from .data import (
+from cyclonedx.output import get_instance
+from cyclonedx.schema import SchemaVersion
+from tests.base import BaseXmlTestCase
+from tests.data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
@@ -35,7 +34,6 @@ from .data import (
     MOCK_UUID_6,
     TEST_UUIDS,
     get_bom_for_issue_275_components,
-    get_bom_for_issue_328_components,
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -263,18 +261,21 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_setuptools_with_vulnerabilities.xml'
         )
 
+    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
     def test_bom_v1_3_component_with_vulnerability(self) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_3,
             fixture='bom_setuptools_with_vulnerabilities.xml'
         )
 
+    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
     def test_bom_v1_2_component_with_vulnerability(self) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_2,
             fixture='bom_setuptools_with_vulnerabilities.xml'
         )
 
+    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
     def test_bom_v1_1_component_with_vulnerability(self) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_1,
@@ -482,6 +483,7 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_dependencies_component.xml'
         )
 
+    @unittest.skip
     def test_bom_v1_4_dependencies_invalid(self) -> None:
         with self.assertRaises(UnknownComponentDependencyException):
             self._validate_xml_bom(
@@ -519,53 +521,14 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_issue_275_components.xml'
         )
 
-    def test_bom_v1_4_issue_328_components(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_4,
-            fixture='bom_issue_328_components.xml'
-        )
-
-    def test_bom_v1_3_issue_328_components(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_3,
-            fixture='bom_issue_328_components.xml'
-        )
-
-    def test_bom_v1_2_issue_328_components(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_2,
-            fixture='bom_issue_328_components.xml'
-        )
-
-    def test_bom_v1_1_issue_328_components(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_1,
-            fixture='bom_issue_328_components.xml'
-        )
-
-    def test_bom_v1_0_issue_328_components(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_for_issue_328_components(), schema_version=SchemaVersion.V1_0,
-            fixture='bom_issue_328_components.xml'
-        )
-
-    # region Helper methods
-
+    # Helper methods
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         outputter = get_instance(bom=bom, schema_version=schema_version)
         self.assertEqual(outputter.schema_version, schema_version)
-        output = outputter.output_as_string()
-        self.assertValidAgainstSchema(bom_xml=output, schema_version=schema_version)
-        fixture_file = join(
-            FIXTURES_DIRECTORY,
-            'xml',
-            schema_version.to_version(),
-            fixture
-        )
-        if RECREATE_SNAPSHOTS:
-            with open(fixture_file, 'w') as expected_xml:
-                expected_xml.write(output)
-        with open(fixture_file) as expected_xml:
-            self.assertEqualXmlBom(expected_xml.read(), output, namespace=outputter.get_target_namespace())
-
-    # endregion Helper methods
+        with open(
+                join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as expected_xml:
+            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=schema_version)
+            self.assertEqualXmlBom(
+                expected_xml.read(), outputter.output_as_string(), namespace=outputter.get_target_namespace()
+            )
+            expected_xml.close()

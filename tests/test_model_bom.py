@@ -60,8 +60,8 @@ class TestBomMetaData(TestCase):
         manufacturer = OrganizationalEntity(name='test_manufacturer')
         supplier = OrganizationalEntity(name='test_supplier')
         licenses = [
-            LicenseChoice(license_=License(spdx_license_id='MIT')),
-            LicenseChoice(license_=License(spdx_license_id='Apache-2.0')),
+            LicenseChoice(license_=License(id_='MIT')),
+            LicenseChoice(license_=License(id_='Apache-2.0')),
         ]
         properties = [
             Property(name='property_1', value='value_1'),
@@ -108,7 +108,7 @@ class TestBom(TestCase):
     def test_metadata_component(self) -> None:
         metadata = Bom().metadata
         self.assertTrue(metadata.component is None)
-        hextech = Component(name='Hextech', version='1.0.0', component_type=ComponentType.LIBRARY)
+        hextech = Component(name='Hextech', version='1.0.0', type_=ComponentType.LIBRARY)
         metadata.component = hextech
         self.assertFalse(metadata.component is None)
         self.assertEqual(metadata.component, hextech)
@@ -116,7 +116,7 @@ class TestBom(TestCase):
     def test_empty_bom(self) -> None:
         bom = Bom()
         self.assertEqual(bom.version, 1)
-        self.assertIsNotNone(bom.uuid)
+        self.assertIsNotNone(bom.serial_number)
         self.assertIsNotNone(bom.metadata)
         self.assertFalse(bom.components)
         self.assertFalse(bom.services)
@@ -125,7 +125,7 @@ class TestBom(TestCase):
     def test_empty_bom_defined_serial(self) -> None:
         serial_number = uuid4()
         bom = Bom(serial_number=serial_number)
-        self.assertEqual(bom.uuid, serial_number)
+        self.assertEqual(bom.serial_number, serial_number)
         self.assertEqual(bom.get_urn_uuid(), serial_number.urn)
         self.assertEqual(bom.version, 1)
         self.assertEqual(bom.urn(), f'urn:cdx:{serial_number}/1')
@@ -133,7 +133,7 @@ class TestBom(TestCase):
     def test_empty_bom_defined_serial_and_version(self) -> None:
         serial_number = uuid4()
         bom = Bom(serial_number=serial_number, version=2)
-        self.assertEqual(bom.uuid, serial_number)
+        self.assertEqual(bom.serial_number, serial_number)
         self.assertEqual(bom.get_urn_uuid(), serial_number.urn)
         self.assertEqual(bom.version, 2)
         self.assertEqual(bom.urn(), f'urn:cdx:{serial_number}/2')

@@ -220,7 +220,6 @@
             <property name="key2">val2</property>
         </properties>
     </metadata>
-    <components/>
     <dependencies>
         <dependency ref="bb5911d6-1a1d-41c9-b6e0-46e848d16655"/>
     </dependencies>

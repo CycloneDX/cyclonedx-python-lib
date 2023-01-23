@@ -23,8 +23,9 @@ from typing import Any, Dict, List, Optional, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
-from . import BaseOutput, SchemaVersion
-from .schema import (
+from ..schema import SchemaVersion
+from ..schema.schema import (
+    SCHEMA_VERSIONS,
     BaseSchemaVersion,
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -32,7 +33,7 @@ from .schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from .serializer.json import CycloneDxJSONEncoder
+from . import BaseOutput
 
 ComponentDict = Dict[str, Union[
     str,
@@ -52,37 +53,34 @@ class Json(BaseOutput, BaseSchemaVersion):
         return self.schema_version_enum
 
     def generate(self, force_regeneration: bool = False) -> None:
-        if self.generated and not force_regeneration:
-            return
-
-        bom = self.get_bom()
-        bom.validate()
-
+        # New Way
         schema_uri: Optional[str] = self._get_schema_uri()
         if not schema_uri:
             raise FormatNotSupportedException(
                 f'JSON is not supported by CycloneDX in schema version {self.schema_version.to_version()}')
 
-        extras = {}
-        if self.bom_supports_dependencies():
-            dep_components = self._chained_components(bom)
-            if bom.metadata.component:
-                dep_components = [bom.metadata.component, *dep_components]
-            dependencies = []
-            for component in dep_components:
-                dependencies.append({
-                    'ref': str(component.bom_ref),
-                    'dependsOn': [*map(str, component.dependencies)]
-                })
-            if dependencies:
-                extras["dependencies"] = dependencies
-            del dep_components
-
-        bom_json = json.loads(json.dumps(bom, cls=CycloneDxJSONEncoder))
-        bom_json = json.loads(self._specialise_output_for_schema_version(bom_json=bom_json))
-        self._json_output = json.dumps({**self._create_bom_element(), **bom_json, **extras})
-
-        self.generated = True
+        _json_core = {
+            '$schema': schema_uri,
+            'bomFormat': 'CycloneDX',
+            'specVersion': self.schema_version.to_version()
+        }
+        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
+        if self.generated and force_regeneration:
+            self.get_bom().validate()
+            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
+            bom_json.update(_json_core)
+            self._json_output = json.dumps(bom_json)
+            self.generated = True
+            return
+        elif self.generated:
+            return
+        else:
+            self.get_bom().validate()
+            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
+            bom_json.update(_json_core)
+            self._json_output = json.dumps(bom_json)
+            self.generated = True
+            return
 
     def _specialise_output_for_schema_version(self, bom_json: Dict[Any, Any]) -> str:
         if 'metadata' in bom_json.keys():

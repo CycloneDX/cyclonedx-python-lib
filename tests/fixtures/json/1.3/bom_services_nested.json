@@ -152,8 +152,13 @@
   ],
   "dependencies": [
     {
-      "ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789",
-      "dependsOn": []
+      "ref": "cd3e9c95-9d41-49e7-9924-8cf0465ae789"
+    },
+    {
+      "ref": "my-specific-bom-ref-for-my-first-service"
+    },
+    {
+      "ref": "0b049d09-64c0-4490-a0f5-c84d9aacf857"
     }
   ]
 }

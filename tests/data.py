@@ -56,6 +56,7 @@ from cyclonedx.model.component import (
     Pedigree,
     Swid,
 )
+from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -84,6 +85,7 @@ MOCK_UUID_3 = '0b049d09-64c0-4490-a0f5-c84d9aacf857'
 MOCK_UUID_4 = 'cd3e9c95-9d41-49e7-9924-8cf0465ae789'
 MOCK_UUID_5 = 'bb5911d6-1a1d-41c9-b6e0-46e848d16655'
 MOCK_UUID_6 = 'df70b5f1-8f53-47a4-be48-669ae78795e6'
+MOCK_BOM_UUID_1 = '3e671687-395b-41f5-a30f-a58921a69b79'
 
 TEST_UUIDS = [
     MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6
@@ -112,29 +114,30 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
 
 def get_bom_with_dependencies_valid() -> Bom:
     c1 = get_component_setuptools_simple()
-    c1.dependencies.update([
-        get_component_toml_with_hashes_with_references().bom_ref
-    ])
     return Bom(components=[
         c1,
         get_component_toml_with_hashes_with_references()
+    ], dependencies=[
+        Dependency(ref=c1.bom_ref, dependencies=[
+            Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
+        ]),
+        Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
     ])
 
 
 def get_bom_with_dependencies_invalid() -> Bom:
     c1 = get_component_setuptools_simple()
-    c1.dependencies.update([
-        get_component_toml_with_hashes_with_references().bom_ref
-    ])
-    return Bom(components=[
-        c1
-    ])
+    return Bom(components=[c1], dependencies=[Dependency(ref=c1.bom_ref)])
 
 
 def get_bom_with_metadata_component_and_dependencies() -> Bom:
     bom = Bom(components=[get_component_toml_with_hashes_with_references()])
     bom.metadata.component = get_component_setuptools_simple()
-    bom.metadata.component.dependencies.update([get_component_toml_with_hashes_with_references().bom_ref])
+    bom.dependencies.add(
+        Dependency(ref=bom.metadata.component.bom_ref, dependencies=[
+            Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
+        ])
+    )
     return bom
 
 
@@ -149,7 +152,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom.vulnerabilities.add(Vulnerability(
         bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=get_vulnerability_source_nvd(),
         references=[
-            VulnerabilityReference(id='SOME-OTHER-ID', source=VulnerabilitySource(
+            VulnerabilityReference(id_='SOME-OTHER-ID', source=VulnerabilitySource(
                 name='OSS Index', url=XsUri('https://ossindex.sonatype.org/component/pkg:pypi/setuptools')
             ))
         ],
@@ -214,9 +217,9 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
     bom.metadata.licenses = [LicenseChoice(license_=License(
-        spdx_license_id='Apache-2.0', license_text=AttachedText(
+        id_='Apache-2.0', text=AttachedText(
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
-        ), license_url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
+        ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
     ))]
     bom.metadata.properties = get_properties_1()
     return bom
@@ -235,7 +238,7 @@ def get_bom_with_services_simple() -> Bom:
         Service(name='my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type_=ComponentType.LIBRARY
     )
     return bom
 
@@ -253,7 +256,7 @@ def get_bom_with_services_complex() -> Bom:
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[
-                LicenseChoice(license_expression='Commercial')
+                LicenseChoice(expression='Commercial')
             ],
             external_references=[
                 get_external_reference_1()
@@ -264,7 +267,7 @@ def get_bom_with_services_complex() -> Bom:
         Service(name='my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type_=ComponentType.LIBRARY
     )
     return bom
 
@@ -282,7 +285,7 @@ def get_bom_with_nested_services() -> Bom:
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[
-                LicenseChoice(license_expression='Commercial')
+                LicenseChoice(expression='Commercial')
             ],
             external_references=[
                 get_external_reference_1()
@@ -314,7 +317,7 @@ def get_bom_with_nested_services() -> Bom:
         )
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type_=ComponentType.LIBRARY
     )
     return bom
 
@@ -330,14 +333,16 @@ def get_bom_for_issue_275_components() -> Bom:
     comp_c = Component(bom_ref=MOCK_UUID_4, name="comp_c", version="1.0.0")
 
     comp_b.components.add(comp_c)
-    comp_b.dependencies.add(comp_c.bom_ref)
+    # comp_b.dependencies.add(comp_c.bom_ref)
 
     libs = [comp_a, comp_b]
-    app.dependencies.add(comp_a.bom_ref)
-    app.dependencies.add(comp_b.bom_ref)
+    # app.dependencies.add(comp_a.bom_ref)
+    # app.dependencies.add(comp_b.bom_ref)
 
     bom = Bom(components=libs)
     bom.metadata.component = app
+    bom.register_dependency(target=app, depends_on=[comp_a, comp_b])
+    bom.register_dependency(target=comp_b, depends_on=[comp_c])
     return bom
 
 
@@ -389,7 +394,7 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     component.publisher = 'CycloneDX'
     component.description = 'This component is awesome'
     component.scope = ComponentScope.REQUIRED
-    component.copyright = 'Apache 2.0 baby!'
+    component.copyright_ = 'Apache 2.0 baby!'
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
     component.swid = get_swid_1()
     if include_pedigree:
@@ -416,7 +421,7 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(license_expression='MIT License')],
+        licenses=[LicenseChoice(expression='MIT License')],
         author='Test Author'
     )
 
@@ -427,7 +432,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(license_expression='MIT License')],
+        licenses=[LicenseChoice(expression='MIT License')],
         author='Test Author'
     )
 
@@ -447,7 +452,7 @@ def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None
 
 def get_external_reference_1() -> ExternalReference:
     return ExternalReference(
-        reference_type=ExternalReferenceType.DISTRIBUTION,
+        type_=ExternalReferenceType.DISTRIBUTION,
         url=XsUri('https://cyclonedx.org'),
         comment='No comment',
         hashes=[
@@ -459,14 +464,14 @@ def get_external_reference_1() -> ExternalReference:
 
 def get_external_reference_2() -> ExternalReference:
     return ExternalReference(
-        reference_type=ExternalReferenceType.WEBSITE,
+        type_=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
     )
 
 
 def get_issue_1() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
+        type_=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -478,7 +483,7 @@ def get_issue_1() -> IssueType:
 
 def get_issue_2() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id_='CVE-2021-44229', name='Apache Log4Shell',
+        type_=IssueClassification.SECURITY, id_='CVE-2021-44229', name='Apache Log4Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -554,13 +559,13 @@ def get_release_notes() -> ReleaseNotes:
             Note(
                 text=NoteText(
                     content=text_content, content_type='text/plain; charset=UTF-8',
-                    content_encoding=Encoding.BASE_64
+                    encoding=Encoding.BASE_64
                 ), locale='en-GB'
             ),
             Note(
                 text=NoteText(
                     content=text_content, content_type='text/plain; charset=UTF-8',
-                    content_encoding=Encoding.BASE_64
+                    encoding=Encoding.BASE_64
                 ), locale='en-US'
             )
         ],

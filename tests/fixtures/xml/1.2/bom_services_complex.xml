@@ -15,7 +15,6 @@
             <version>1.0.0</version>
         </component>
     </metadata>
-    <components/>
     <services>
         <service bom-ref="my-specific-bom-ref-for-my-first-service">
             <provider>
@@ -60,5 +59,7 @@
     </services>
     <dependencies>
         <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"/>
+        <dependency ref="be2c6502-7e9a-47db-9a66-e34f729810a3"/>
+        <dependency ref="my-specific-bom-ref-for-my-first-service"/>
     </dependencies>
 </bom>

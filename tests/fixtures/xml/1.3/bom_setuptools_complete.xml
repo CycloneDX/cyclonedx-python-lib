@@ -180,7 +180,5 @@
     </components>
     <dependencies>
         <dependency ref="0b049d09-64c0-4490-a0f5-c84d9aacf857"/>
-        <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz"/>
-        <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
     </dependencies>
 </bom>

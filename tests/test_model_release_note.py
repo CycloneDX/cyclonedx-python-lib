@@ -28,7 +28,7 @@ class TestModelReleaseNote(TestCase):
 
     def test_simple(self) -> None:
         rn = ReleaseNotes(type_='major')
-        self.assertEqual(rn.type, 'major')
+        self.assertEqual(rn.type_, 'major')
         self.assertIsNone(rn.title)
         self.assertIsNone(rn.featured_image)
         self.assertIsNone(rn.social_image)
@@ -57,7 +57,7 @@ class TestModelReleaseNote(TestCase):
         rn.aliases.add("Release Alpha")
         rn.tags.add('testing')
 
-        self.assertEqual(rn.type, 'major')
+        self.assertEqual(rn.type_, 'major')
         self.assertEqual(rn.title, 'Release Notes Title')
         self.assertEqual(
             str(rn.featured_image),
