@@ -59,7 +59,6 @@ class Json(BaseOutput, BaseSchemaVersion):
             raise FormatNotSupportedException(
                 f'JSON is not supported by CycloneDX in schema version {self.schema_version.to_version()}')
 
-        # if self.schema_version == SchemaVersion.V1_4:
         _json_core = {
             '$schema': schema_uri,
             'bomFormat': 'CycloneDX',
