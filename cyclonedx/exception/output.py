@@ -26,6 +26,7 @@ class BomGenerationErrorException(CycloneDxException):
     """
     Raised if there is an unknown error.
     """
+    pass
 
 
 class FormatNotSupportedException(CycloneDxException):
