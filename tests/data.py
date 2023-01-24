@@ -150,7 +150,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     component = get_component_setuptools_simple()
     bom.components.add(component)
     bom.vulnerabilities.add(Vulnerability(
-        bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=get_vulnerability_source_nvd(),
+        bom_ref='my-vuln-ref-1', id_='CVE-2018-7489', source=get_vulnerability_source_nvd(),
         references=[
             VulnerabilityReference(id_='SOME-OTHER-ID', source=VulnerabilitySource(
                 name='OSS Index', url=XsUri('https://ossindex.sonatype.org/component/pkg:pypi/setuptools')
@@ -180,7 +180,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
                            tzinfo=timezone.utc),
         updated=datetime(year=2021, month=9, day=3, hour=10, minute=50, second=42, microsecond=51979,
                          tzinfo=timezone.utc),
-        credits=VulnerabilityCredits(
+        credits_=VulnerabilityCredits(
             organizations=[
                 get_org_entity_1()
             ],
@@ -193,11 +193,11 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
             responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
         ),
-        affects_targets=[
+        affects=[
             BomTarget(
                 ref=component.purl.to_string() if component.purl else None,
                 versions=[BomTargetVersionRange(
-                    version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
+                    range_='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
             )
         ],

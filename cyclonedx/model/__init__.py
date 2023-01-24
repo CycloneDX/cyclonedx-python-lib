@@ -19,7 +19,7 @@ import hashlib
 import re
 import sys
 import warnings
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Iterable, Optional, Tuple, TypeVar
 
@@ -41,6 +41,10 @@ Uniform set of models to represent objects within a CycloneDX software bill-of-m
 You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
 from a `cyclonedx.parser.BaseParser` implementation.
 """
+
+
+def get_now_utc() -> datetime:
+    return datetime.now(tz=timezone.utc)
 
 
 def sha1sum(filename: str) -> str:

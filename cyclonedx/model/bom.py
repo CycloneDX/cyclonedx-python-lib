@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import TYPE_CHECKING, Iterable, Optional, Set
 from uuid import UUID, uuid4
 
@@ -35,7 +35,16 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
+from . import (
+    ExternalReference,
+    LicenseChoice,
+    OrganizationalContact,
+    OrganizationalEntity,
+    Property,
+    ThisTool,
+    Tool,
+    get_now_utc,
+)
 from .bom_ref import BomRef
 from .component import Component
 from .dependency import Dependable, Dependency
@@ -62,7 +71,7 @@ class BomMetaData:
                  licenses: Optional[Iterable[LicenseChoice]] = None,
                  properties: Optional[Iterable[Property]] = None,
                  timestamp: Optional[datetime] = None) -> None:
-        self.timestamp = timestamp or datetime.now(tz=timezone.utc)
+        self.timestamp = timestamp or get_now_utc()
         self.tools = tools or []  # type: ignore
         self.authors = authors or []  # type: ignore
         self.component = component
@@ -274,7 +283,8 @@ class Bom:
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  serial_number: Optional[UUID] = None, version: int = 1,
                  metadata: Optional[BomMetaData] = None,
-                 dependencies: Optional[Iterable[Dependency]] = None) -> None:
+                 dependencies: Optional[Iterable[Dependency]] = None,
+                 vulnerabilities: Optional[Iterable[Vulnerability]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -286,7 +296,7 @@ class Bom:
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
-        self.vulnerabilities = SortedSet()
+        self.vulnerabilities = SortedSet(vulnerabilities) or SortedSet()
         self.version = version
         self.dependencies = dependencies or []  # type: ignore
 
