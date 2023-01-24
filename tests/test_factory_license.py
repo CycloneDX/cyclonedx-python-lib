@@ -31,10 +31,9 @@ class TestFactoryLicense(unittest.TestCase):
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
         expected = License(id_='bar', text=text, url=url)
-        factory = LicenseFactory()
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
-            actual = factory.make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory.make_from_string('foo', license_text=text, license_url=url)
 
         self.assertEqual(expected, actual)
 
@@ -42,10 +41,9 @@ class TestFactoryLicense(unittest.TestCase):
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
         expected = License(name='foo', text=text, url=url)
-        factory = LicenseFactory()
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None):
-            actual = factory.make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory.make_from_string('foo', license_text=text, license_url=url)
 
         self.assertEqual(expected, actual)
 
@@ -53,27 +51,22 @@ class TestFactoryLicense(unittest.TestCase):
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
         expected = License(id_='bar', text=text, url=url)
-        factory = LicenseFactory()
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
-            actual = factory.make_with_id('foo', text=text, url=url)
+            actual = LicenseFactory.make_with_id('foo', text=text, url=url)
 
         self.assertEqual(expected, actual)
 
     def test_make_with_id_raises(self) -> None:
-        factory = LicenseFactory()
         with self.assertRaises(InvalidSpdxLicenseException, msg='foo'):
             with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None):
-                factory.make_with_id('foo')
+                LicenseFactory.make_with_id('foo')
 
     def test_make_with_name(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
         expected = License(name='foo', text=text, url=url)
-        factory = LicenseFactory()
-
-        actual = factory.make_with_name('foo', text=text, url=url)
-
+        actual = LicenseFactory.make_with_name('foo', text=text, url=url)
         self.assertEqual(expected, actual)
 
 
