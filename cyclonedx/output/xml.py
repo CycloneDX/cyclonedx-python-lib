@@ -36,7 +36,6 @@ from . import BaseOutput
 
 
 class Xml(BaseOutput, BaseSchemaVersion):
-    VULNERABILITY_EXTENSION_NAMESPACE: str = 'http://cyclonedx.org/schema/ext/vulnerability/1.0'
     XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def __init__(self, bom: Bom) -> None:
