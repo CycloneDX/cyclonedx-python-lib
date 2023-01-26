@@ -80,7 +80,7 @@ class Dependency:
         return hash((self.ref, tuple(self.dependencies)))
 
     def __repr__(self) -> str:
-        return f'<Dependency ref={self.ref.value}, targets={len(self.dependencies)}>'
+        return f'<Dependency ref={self.ref}, targets={len(self.dependencies)}>'
 
 
 class Dependable(ABC):

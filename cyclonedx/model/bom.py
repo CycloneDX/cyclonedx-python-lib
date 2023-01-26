@@ -520,13 +520,15 @@ class Bom:
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
 
         if _d and depends_on:
+            # Dependency Target already registered - but it might have new dependencies to add
             _d.dependencies = _d.dependencies.union(  # type: ignore
                 set(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
             )
         elif not _d:
+            # First time we are seeing this target as a Dependency
             self._dependencies.add(Dependency(
                 ref=target.bom_ref,
-                dependencies=list(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
+                dependencies=list(map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on)) if depends_on else []
             ))
 
         # Ensure dependents are registered with no further dependents in the Dependency Graph as per CDX specification

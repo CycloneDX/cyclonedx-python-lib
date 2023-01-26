@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, Union
 
 import serializable
 from sortedcontainers import SortedSet
@@ -53,7 +53,7 @@ class Service(Dependable):
         See the CycloneDX schema: https://cyclonedx.org/docs/1.4/xml/#type_service
     """
 
-    def __init__(self, *, name: str, bom_ref: Optional[str] = None, provider: Optional[OrganizationalEntity] = None,
+    def __init__(self, *, name: str, bom_ref: Optional[Union[str, BomRef]] = None, provider: Optional[OrganizationalEntity] = None,
                  group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
                  endpoints: Optional[Iterable[XsUri]] = None, authenticated: Optional[bool] = None,
                  x_trust_boundary: Optional[bool] = None, data: Optional[Iterable[DataClassification]] = None,
@@ -63,7 +63,7 @@ class Service(Dependable):
                  services: Optional[Iterable['Service']] = None,
                  release_notes: Optional[ReleaseNotes] = None,
                  ) -> None:
-        self._bom_ref = BomRef(value=bom_ref)
+        self._bom_ref = BomRef(value=bom_ref) if type(bom_ref) == str else bom_ref
         self.provider = provider
         self.group = group
         self.name = name

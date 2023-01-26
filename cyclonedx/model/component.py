@@ -20,7 +20,7 @@
 import warnings
 from enum import Enum
 from os.path import exists
-from typing import Any, Iterable, Optional, Set
+from typing import Any, Iterable, Optional, Set, Union
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
@@ -751,7 +751,7 @@ class Component(Dependable):
         )
 
     def __init__(self, *, name: str, type_: ComponentType = ComponentType.LIBRARY,
-                 mime_type: Optional[str] = None, bom_ref: Optional[str] = None,
+                 mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
@@ -767,7 +767,7 @@ class Component(Dependable):
                  ) -> None:
         self.type_ = type_
         self.mime_type = mime_type
-        self._bom_ref = BomRef(value=bom_ref)
+        self._bom_ref = BomRef(value=bom_ref) if type(bom_ref) == str else bom_ref
         self.supplier = supplier
         self.author = author
         self.publisher = publisher

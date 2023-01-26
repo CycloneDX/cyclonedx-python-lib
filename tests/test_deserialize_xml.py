@@ -62,10 +62,6 @@ def fixed_date_time() -> datetime:
 @patch('cyclonedx.model.bom.get_now_utc', fixed_date_time)
 class TestDeserializeXml(BaseXmlTestCase):
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls._bom_timestamp = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
-
     @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
     def test_bom_external_references_v1_4(self, mock_uuid: Mock) -> None:
         self._validate_xml_bom(
@@ -662,7 +658,7 @@ class TestDeserializeXml(BaseXmlTestCase):
 
     # Helper methods
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
-        bom.metadata.timestamp = self._bom_timestamp
+        bom.metadata.timestamp = fixed_date_time()
         bom.validate()
 
         if schema_version != LATEST_SUPPORTED_SCHEMA_VERSION:
