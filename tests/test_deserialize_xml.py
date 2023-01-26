@@ -676,15 +676,6 @@ class TestDeserializeXml(BaseXmlTestCase):
             xml = input_xml.read()
             deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
 
-            self.assertEqual(bom.metadata.timestamp, deserialized_bom.metadata.timestamp)
-            self.assertEqual(bom.metadata.component, deserialized_bom.metadata.component)
-            self.assertEqual(bom.metadata.authors, deserialized_bom.metadata.authors)
-            self.assertEqual(bom.metadata.licenses, deserialized_bom.metadata.licenses)
-            self.assertEqual(bom.metadata.supplier, deserialized_bom.metadata.supplier)
-            self.assertEqual(bom.metadata.manufacture, deserialized_bom.metadata.manufacture)
-            self.assertEqual(bom.metadata.properties, deserialized_bom.metadata.properties)
-            self.assertEqual(bom.metadata.tools, deserialized_bom.metadata.tools)
-
             self.assertEqual(bom.metadata, deserialized_bom.metadata)
 
             # This comparison fails for Dependencies despite the SortedSet's being identical

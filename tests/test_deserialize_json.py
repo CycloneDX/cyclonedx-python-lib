@@ -57,8 +57,12 @@ class TestOutputJson(BaseJsonTestCase):
     # Helper methods
     def _validate_json_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         bom.metadata.timestamp = self._bom_timestamp
+        bom.validate()
+
         with open(
                 join(dirname(__file__), f'fixtures/json/{schema_version.to_version()}/{fixture}')) as input_json:
             deserialized_bom = cast(Bom, Bom.from_json(data=json.loads(input_json.read())))
             self.assertEqual(bom.metadata, deserialized_bom.metadata)
+            self.assertEqual(bom.components, deserialized_bom.components)
+            self.assertEqual(bom.dependencies, deserialized_bom.dependencies)
             self.assertEqual(bom, deserialized_bom)
