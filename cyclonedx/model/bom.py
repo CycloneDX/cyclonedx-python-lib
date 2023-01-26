@@ -248,7 +248,7 @@ class BomMetaData:
 
 
 @serializable.serializable_class(
-    ignore_during_deserialization=['$schema', 'bom_format', 'spec_version', 'dependencies'])  # type: ignore[misc]
+    ignore_during_deserialization=['$schema', 'bom_format', 'spec_version'])  # type: ignore[misc]
 class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
@@ -295,10 +295,10 @@ class Bom:
         self.metadata = metadata or BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
-        self.external_references = external_references or []  # type: ignore
+        self.external_references = SortedSet(external_references) or SortedSet()
         self.vulnerabilities = SortedSet(vulnerabilities) or SortedSet()
         self.version = version
-        self.dependencies = dependencies or []  # type: ignore
+        self.dependencies = SortedSet(dependencies) or SortedSet()
 
     @property  # type: ignore[misc]
     @serializable.type_mapping(UrnUuidHelper)
@@ -584,7 +584,7 @@ class Bom:
     def __hash__(self) -> int:
         return hash((
             self.serial_number, self.version, self.metadata, tuple(self.components), tuple(self.services),
-            tuple(self.external_references), tuple(self.vulnerabilities)
+            tuple(self.external_references), tuple(self.vulnerabilities), tuple(self.dependencies)
         ))
 
     def __repr__(self) -> str:

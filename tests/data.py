@@ -609,9 +609,9 @@ T = TypeVar('T')
 
 
 def reorder(items: List[T], indexes: List[int]) -> List[T]:
-    '''
+    """
     Return list of items in the order indicated by indexes.
-    '''
+    """
     reordered_items = []
     for i in range(len(items)):
         reordered_items.append(items[indexes[i]])

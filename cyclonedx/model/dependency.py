@@ -23,6 +23,7 @@ from typing import Any, Iterable, Optional, Set
 import serializable
 from sortedcontainers import SortedSet
 
+from cyclonedx.model import ComparableTuple
 from cyclonedx.serialization import BomRefHelper
 
 from .bom_ref import BomRef
@@ -39,7 +40,7 @@ class Dependency:
 
     def __init__(self, ref: BomRef, dependencies: Optional[Iterable["Dependency"]] = None) -> None:
         self.ref = ref
-        self.dependencies = dependencies or []  # type: ignore
+        self.dependencies = SortedSet(dependencies) or SortedSet()
 
     @property  # type: ignore[misc]
     @serializable.type_mapping(BomRefHelper)
@@ -71,14 +72,15 @@ class Dependency:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Dependency):
-            return hash(self) < hash(other)
+            return ComparableTuple((self.ref.value, tuple(self.dependencies))) < ComparableTuple(
+                (other.ref.value, tuple(other.dependencies)))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.ref, tuple(self.dependencies)))
 
     def __repr__(self) -> str:
-        return f'<Dependency ref={self.ref}, targets={len(self.dependencies)}>'
+        return f'<Dependency ref={self.ref.value}, targets={len(self.dependencies)}>'
 
 
 class Dependable(ABC):
