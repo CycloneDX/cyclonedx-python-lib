@@ -24,7 +24,6 @@ from unittest.mock import Mock, patch
 from uuid import UUID
 from xml.etree import ElementTree
 
-from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, SchemaVersion, get_instance
 from cyclonedx.schema import OutputFormat
@@ -46,7 +45,6 @@ from tests.data import (
     get_bom_with_component_setuptools_with_release_notes,
     get_bom_with_component_setuptools_with_vulnerability,
     get_bom_with_component_toml_1,
-    get_bom_with_dependencies_invalid,
     get_bom_with_dependencies_valid,
     get_bom_with_external_references,
     get_bom_with_metadata_component_and_dependencies,
@@ -685,9 +683,3 @@ class TestDeserializeXml(BaseXmlTestCase):
             self.assertEqual(bom.vulnerabilities, deserialized_bom.vulnerabilities)
 
             self.assertEqual(bom, deserialized_bom)
-
-    def _print_dep(self, d, level: int = 0) -> None:
-        indent = "  " * level
-        print(f'{indent}{d.ref.value} ({len(d.dependencies)})')
-        for _d in d.dependencies:
-            self._print_dep(_d, level=level + 1)
