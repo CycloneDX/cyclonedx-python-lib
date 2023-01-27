@@ -8,7 +8,7 @@
       "type": "library",
       "version": "1.0.0"
     },
-    "timestamp": "2022-01-27T16:16:35.622354+00:00",
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
         "name": "cyclonedx-python-lib",
@@ -17,7 +17,7 @@
       }
     ]
   },
-  "serialNumber": "urn:uuid:1d2c4529-8cf8-447d-b2a1-e4ebb610adb9",
+  "serialNumber": "urn:uuid:d0b24ba4-102b-497e-b31f-4fdc3f0a3005",
   "services": [
     {
       "authenticated": false,

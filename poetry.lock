@@ -312,7 +312,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "py-serializable"
-version = "0.9.1"
+version = "0.9.2"
 description = "Library for serializing and deserializing Python Objects to and from JSON and XML."
 category = "main"
 optional = false
@@ -487,7 +487,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "49a495401e52b2d1a6c2156ebd211971e5cd420223165c2f5dac5b7bc4cc81b9"
+content-hash = "11b202525ccde66b53452bae8d46ccf1da3c0cc9b729cbfd0b8976055b40e617"
 
 [metadata.files]
 attrs = [
@@ -735,8 +735,8 @@ py = [
     {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
 ]
 py-serializable = [
-    {file = "py-serializable-0.9.1.tar.gz", hash = "sha256:474ba0b3ec98a963371a5334fb422fa6865ac5173d97df953195afa15de9c7fb"},
-    {file = "py_serializable-0.9.1-py3-none-any.whl", hash = "sha256:3511faca3f260e20a56bc6e152310e7db049afb0c07af091e92ac9619268a87d"},
+    {file = "py-serializable-0.9.2.tar.gz", hash = "sha256:6c394a6fbe6a4aa8b1f54a4c1022c44be303cd176d8972a6e1fc3671f8ba3be5"},
+    {file = "py_serializable-0.9.2-py3-none-any.whl", hash = "sha256:3c42edf16078892ffc993176cd6adb0efa105f4c3a346933269d7c14e709900f"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
