@@ -16,10 +16,10 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from typing import Any, Iterable, Optional, Union
+from uuid import uuid4
 
 import serializable
 from sortedcontainers import SortedSet
-from uuid import uuid4
 
 from cyclonedx.serialization import BomRefHelper
 

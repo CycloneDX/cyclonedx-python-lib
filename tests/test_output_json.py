@@ -31,6 +31,8 @@ from tests.data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
+    MOCK_UUID_4,
+    MOCK_UUID_5,
     MOCK_UUID_6,
     TEST_UUIDS,
     get_bom_for_issue_275_components,
@@ -48,7 +50,7 @@ from tests.data import (
     get_bom_with_metadata_component_and_dependencies,
     get_bom_with_nested_services,
     get_bom_with_services_complex,
-    get_bom_with_services_simple, MOCK_UUID_5, MOCK_UUID_4,
+    get_bom_with_services_simple,
 )
 
 
@@ -373,14 +375,6 @@ class TestOutputJson(BaseJsonTestCase):
             bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
             fixture='bom_dependencies_component.json'
         )
-
-    @unittest.skip
-    def test_bom_v1_4_dependencies_invalid(self) -> None:
-        with self.assertRaises(UnknownComponentDependencyException):
-            self._validate_json_bom(
-                bom=get_bom_with_dependencies_invalid(), schema_version=SchemaVersion.V1_4,
-                fixture='bom_dependencies.json'
-            )
 
     @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_4_issue_275_components(self) -> None:
