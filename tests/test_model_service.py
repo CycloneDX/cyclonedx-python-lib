@@ -22,17 +22,17 @@ from unittest.mock import Mock, patch
 
 from cyclonedx.model.service import Service
 
-from .data import reorder
+from tests.data import reorder, MOCK_UUID_8, MOCK_UUID_9
 
 
 class TestModelService(TestCase):
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value='77d15ab9-5602-4cca-8ed2-59ae579aafd3')
+    @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_8)
     def test_minimal_service(self, mock_uuid: Mock) -> None:
         s = Service(name='my-test-service')
         mock_uuid.assert_called()
         self.assertEqual(s.name, 'my-test-service')
-        self.assertEqual(str(s.bom_ref), '77d15ab9-5602-4cca-8ed2-59ae579aafd3')
+        self.assertEqual(str(s.bom_ref), str(MOCK_UUID_8))
         self.assertIsNone(s.provider)
         self.assertIsNone(s.group)
         self.assertIsNone(s.version)
@@ -47,7 +47,7 @@ class TestModelService(TestCase):
         self.assertFalse(s.release_notes)
         self.assertFalse(s.properties)
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value='859ff614-35a7-4d37-803b-d89130cb2577')
+    @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_9)
     def test_service_with_services(self, mock_uuid: Mock) -> None:
         parent_service = Service(name='parent-service')
         parent_service.services = [
@@ -56,7 +56,7 @@ class TestModelService(TestCase):
         ]
         mock_uuid.assert_called()
         self.assertEqual(parent_service.name, 'parent-service')
-        self.assertEqual(str(parent_service.bom_ref), '859ff614-35a7-4d37-803b-d89130cb2577')
+        self.assertEqual(str(parent_service.bom_ref), str(MOCK_UUID_9))
         self.assertIsNone(parent_service.provider)
         self.assertIsNone(parent_service.group)
         self.assertIsNone(parent_service.version)

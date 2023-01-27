@@ -19,6 +19,7 @@ from typing import Any, Iterable, Optional, Union
 
 import serializable
 from sortedcontainers import SortedSet
+from uuid import uuid4
 
 from cyclonedx.serialization import BomRefHelper
 
@@ -63,7 +64,10 @@ class Service(Dependable):
                  services: Optional[Iterable['Service']] = None,
                  release_notes: Optional[ReleaseNotes] = None,
                  ) -> None:
-        self._bom_ref = BomRef(value=bom_ref) if type(bom_ref) == str else bom_ref
+        if type(bom_ref) == BomRef:
+            self._bom_ref = bom_ref
+        else:
+            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else str(uuid4()))
         self.provider = provider
         self.group = group
         self.name = name
@@ -348,4 +352,4 @@ class Service(Dependable):
         ))
 
     def __repr__(self) -> str:
-        return f'<Service bom-ref={self.bom_ref.value}, group={self.group}, name={self.name}, version={self.version}>'
+        return f'<Service bom-ref={self.bom_ref}, group={self.group}, name={self.name}, version={self.version}>'

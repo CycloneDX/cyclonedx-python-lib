@@ -72,8 +72,8 @@ class Dependency:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Dependency):
-            return ComparableTuple((self.ref.value, tuple(self.dependencies))) < ComparableTuple(
-                (other.ref.value, tuple(other.dependencies)))
+            return ComparableTuple((self.ref, tuple(self.dependencies))) < ComparableTuple(
+                (other.ref, tuple(other.dependencies)))
         return NotImplemented
 
     def __hash__(self) -> int:

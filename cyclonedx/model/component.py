@@ -21,6 +21,7 @@ import warnings
 from enum import Enum
 from os.path import exists
 from typing import Any, Iterable, Optional, Set, Union
+from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
@@ -767,7 +768,10 @@ class Component(Dependable):
                  ) -> None:
         self.type_ = type_
         self.mime_type = mime_type
-        self._bom_ref = BomRef(value=bom_ref) if type(bom_ref) == str else bom_ref
+        if type(bom_ref) == BomRef:
+            self._bom_ref = bom_ref
+        else:
+            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else str(uuid4()))
         self.supplier = supplier
         self.author = author
         self.publisher = publisher
@@ -1269,7 +1273,7 @@ class Component(Dependable):
         ))
 
     def __repr__(self) -> str:
-        return f'<Component bom-ref={self.bom_ref.value}, group={self.group}, name={self.name}, ' \
+        return f'<Component bom-ref={self.bom_ref}, group={self.group}, name={self.name}, ' \
                f'version={self.version}, type={self.type_}>'
 
     # Deprecated methods

@@ -10,7 +10,7 @@
                 <version>TESTING</version>
             </tool>
         </tools>
-        <component type="library" bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda">
+        <component type="library" bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
@@ -65,7 +65,7 @@
         </service>
     </services>
     <dependencies>
-        <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda" />
+        <dependency ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789" />
         <dependency ref="my-specific-bom-ref-for-my-first-service"/>
         <dependency ref="be2c6502-7e9a-47db-9a66-e34f729810a3"/>
     </dependencies>

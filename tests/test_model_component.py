@@ -45,7 +45,7 @@ from cyclonedx.model.component import (
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
 
-from .data import (
+from tests.data import (
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
     get_component_toml_with_hashes_with_references,
@@ -54,7 +54,7 @@ from .data import (
     get_pedigree_1,
     get_swid_1,
     get_swid_2,
-    reorder,
+    reorder, MOCK_UUID_7,
 )
 
 
@@ -107,7 +107,7 @@ class TestModelCommit(TestCase):
 
 class TestModelComponent(TestCase):
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
+    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
     def test_empty_basic_component(self, mock_uuid: Mock) -> None:
         c = Component(
             name='test-component', version='1.2.3'
@@ -134,7 +134,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c.components), 0)
         self.assertEqual(len(c.get_all_nested_components(include_self=True)), 1)
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value='6f266d1c-760f-4552-ae3b-41a9b74232fa')
+    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
     def test_multiple_basic_components(self, mock_uuid: Mock) -> None:
         c1 = Component(
             name='test-component', version='1.2.3'

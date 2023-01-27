@@ -19,6 +19,7 @@
 import unittest
 from os.path import dirname, join
 from unittest.mock import Mock, patch
+from uuid import UUID
 
 from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.exception.output import FormatNotSupportedException
@@ -47,7 +48,7 @@ from tests.data import (
     get_bom_with_metadata_component_and_dependencies,
     get_bom_with_nested_services,
     get_bom_with_services_complex,
-    get_bom_with_services_simple,
+    get_bom_with_services_simple, MOCK_UUID_5, MOCK_UUID_4,
 )
 
 
@@ -118,7 +119,7 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_setuptools_with_cpe.json'
         )
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_6)
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
     def test_bom_v1_4_full_component(self, mock: Mock) -> None:
         self.maxDiff = None
         self._validate_json_bom(
@@ -127,7 +128,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_6)
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
     def test_bom_v1_3_full_component(self, mock: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_3,
@@ -135,7 +136,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_6)
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
     def test_bom_v1_2_full_component(self, mock: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_complete(), schema_version=SchemaVersion.V1_2,
@@ -205,7 +206,7 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_setuptools.json'
         )
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_1)
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_1))
     def test_bom_v1_4_with_metadata_component(self, mock_uuid: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
@@ -214,7 +215,7 @@ class TestOutputJson(BaseJsonTestCase):
             )
             mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_2)
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_2))
     def test_bom_v1_3_with_metadata_component(self, mock_uuid: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
@@ -223,7 +224,7 @@ class TestOutputJson(BaseJsonTestCase):
             )
             mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_3)
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_3))
     def test_bom_v1_2_with_metadata_component(self, mock_uuid: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
@@ -232,86 +233,104 @@ class TestOutputJson(BaseJsonTestCase):
             )
             mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_4_services_simple(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_4_services_simple(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_services_simple.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_3_services_simple(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_3_services_simple(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_3,
                 fixture='bom_services_simple.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_2_services_simple(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_2_services_simple(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_services_simple(), schema_version=SchemaVersion.V1_2,
                 fixture='bom_services_simple.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_4_services_complex(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_5))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_4_services_complex(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_services_complex.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_3_services_complex(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_5))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_3_services_complex(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_3,
                 fixture='bom_services_complex.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_2_services_complex(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_5))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_2_services_complex(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_services_complex(), schema_version=SchemaVersion.V1_2,
                 fixture='bom_services_complex.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_4_services_nested(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_4))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_4_services_nested(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_services_nested.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_3_services_nested(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_4))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_3_services_nested(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_3,
                 fixture='bom_services_nested.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_v1_2_services_nested(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_4))
+    @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+    def test_bom_v1_2_services_nested(self, mock_1: Mock, mock_2: Mock) -> None:
         with self.assertWarns(UserWarning):
             self._validate_json_bom(
                 bom=get_bom_with_nested_services(), schema_version=SchemaVersion.V1_2,
                 fixture='bom_services_nested.json'
             )
-            mock_uuid.assert_called()
+            mock_1.assert_called()
+            mock_2.assert_called()
 
     @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_4_dependencies(self) -> None:

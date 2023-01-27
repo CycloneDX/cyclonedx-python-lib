@@ -21,6 +21,7 @@ import base64
 from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional, TypeVar
+from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
@@ -85,10 +86,14 @@ MOCK_UUID_3 = '0b049d09-64c0-4490-a0f5-c84d9aacf857'
 MOCK_UUID_4 = 'cd3e9c95-9d41-49e7-9924-8cf0465ae789'
 MOCK_UUID_5 = 'bb5911d6-1a1d-41c9-b6e0-46e848d16655'
 MOCK_UUID_6 = 'df70b5f1-8f53-47a4-be48-669ae78795e6'
-MOCK_BOM_UUID_1 = '3e671687-395b-41f5-a30f-a58921a69b79'
+MOCK_UUID_7 = UUID('6f266d1c-760f-4552-ae3b-41a9b74232fa')
+MOCK_UUID_8 = UUID('77d15ab9-5602-4cca-8ed2-59ae579aafd3')
+MOCK_UUID_9 = UUID('859ff614-35a7-4d37-803b-d89130cb2577')
+MOCK_UUID_10 = UUID('0afa65bc-4acd-428b-9e17-8e97b1969745')
+MOCK_BOM_UUID_1 = UUID('3e671687-395b-41f5-a30f-a58921a69b79')
 
 TEST_UUIDS = [
-    MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6
+    UUID(MOCK_UUID_1), UUID(MOCK_UUID_2), UUID(MOCK_UUID_3), UUID(MOCK_UUID_4), UUID(MOCK_UUID_5), UUID(MOCK_UUID_6)
 ]
 
 

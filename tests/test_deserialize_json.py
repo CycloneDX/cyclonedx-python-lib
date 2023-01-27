@@ -50,7 +50,7 @@ def fixed_date_time() -> datetime:
 @patch('cyclonedx.model.bom.get_now_utc', fixed_date_time)
 class TestOutputJson(BaseJsonTestCase):
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_bom_external_references_v1_4(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_external_references(), schema_version=SchemaVersion.V1_4,
@@ -58,7 +58,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_bom_external_references_v1_3(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_external_references(), schema_version=SchemaVersion.V1_3,
@@ -66,7 +66,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_bom_external_references_v1_2(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_external_references(), schema_version=SchemaVersion.V1_2,
@@ -74,7 +74,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_simple_bom_v1_4(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_4,
@@ -82,7 +82,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_simple_bom_v1_3(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_3,
@@ -90,7 +90,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_simple_bom_v1_2(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_basic(), schema_version=SchemaVersion.V1_2,
@@ -98,7 +98,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_simple_bom_v1_4_with_cpe(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_with_cpe(), schema_version=SchemaVersion.V1_4,
@@ -106,7 +106,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_simple_bom_v1_3_with_cpe(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_with_cpe(), schema_version=SchemaVersion.V1_3,
@@ -114,7 +114,7 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_simple_bom_v1_2_with_cpe(self, mock_uuid: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_with_cpe(), schema_version=SchemaVersion.V1_2,
@@ -122,8 +122,8 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_uuid.assert_called()
 
-    @patch('cyclonedx.model.bom_ref.uuid4', return_value=MOCK_UUID_6)
-    @patch('cyclonedx.model.bom.uuid4', return_value=UUID(MOCK_BOM_UUID_1))
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
+    @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
     def test_bom_v1_4_full_component(self, mock1: Mock, mock2: Mock) -> None:
         self.maxDiff = None
         self._validate_json_bom(
