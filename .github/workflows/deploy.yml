@@ -48,7 +48,7 @@ jobs:
       - name: Python Semantic Release
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html
         # see https://github.com/relekang/python-semantic-release
-        uses: relekang/python-semantic-release@v7.31.2
+        uses: relekang/python-semantic-release@v7.33.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository_username: __token__
