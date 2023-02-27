@@ -54,7 +54,8 @@ class Service(Dependable):
         See the CycloneDX schema: https://cyclonedx.org/docs/1.4/xml/#type_service
     """
 
-    def __init__(self, *, name: str, bom_ref: Optional[Union[str, BomRef]] = None, provider: Optional[OrganizationalEntity] = None,
+    def __init__(self, *, name: str, bom_ref: Optional[Union[str, BomRef]] = None,
+                 provider: Optional[OrganizationalEntity] = None,
                  group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
                  endpoints: Optional[Iterable[XsUri]] = None, authenticated: Optional[bool] = None,
                  x_trust_boundary: Optional[bool] = None, data: Optional[Iterable[DataClassification]] = None,

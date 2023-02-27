@@ -16,7 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-import unittest
 from os.path import dirname, join
 from unittest.mock import Mock, patch
 from uuid import UUID

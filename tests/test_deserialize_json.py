@@ -19,7 +19,6 @@
 
 import json
 import logging
-import unittest
 from datetime import datetime
 from os.path import dirname, join
 from typing import cast
