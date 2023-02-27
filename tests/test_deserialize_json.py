@@ -222,12 +222,13 @@ class TestOutputJson(BaseJsonTestCase):
         )
         mock_1.assert_called()
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
-    def test_bom_v1_4_component_with_release_notes(self) -> None:
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
+    def test_bom_v1_4_component_with_release_notes(self, mock_1: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_with_release_notes(), schema_version=SchemaVersion.V1_4,
             fixture='bom_setuptools_with_release_notes.json'
         )
+        mock_1.assert_called()
 
     @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_bom_v1_3_component_with_release_notes(self, mock_1: Mock) -> None:
@@ -403,12 +404,13 @@ class TestOutputJson(BaseJsonTestCase):
             mock_2.assert_called()
             mock_3.assert_called()
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
-    def test_bom_v1_4_dependencies(self) -> None:
+    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
+    def test_bom_v1_4_dependencies(self, mock_1: Mock) -> None:
         self._validate_json_bom(
             bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_4,
             fixture='bom_dependencies.json'
         )
+        mock_1.assert_called()
     # --
 
     # Helper methods

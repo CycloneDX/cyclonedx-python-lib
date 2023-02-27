@@ -701,8 +701,8 @@ class TestDeserializeXml(BaseXmlTestCase):
             self.assertEqual(bom.metadata, deserialized_bom.metadata)
 
             # This comparison fails for Dependencies despite the SortedSet's being identical
-            # self.assertEqual(bom.dependencies, deserialized_bom.dependencies)
-            self.assertSetEqual(set(bom.dependencies), set(deserialized_bom.dependencies))
+            self.assertEqual(bom.dependencies, deserialized_bom.dependencies)
+            # self.assertSetEqual(set(bom.dependencies), set(deserialized_bom.dependencies))
 
             self.assertEqual(bom.vulnerabilities, deserialized_bom.vulnerabilities)
 

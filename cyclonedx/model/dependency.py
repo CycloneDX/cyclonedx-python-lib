@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, Optional, Set
+from typing import Any, Iterable, List, Optional, Set
 
 import serializable
 from sortedcontainers import SortedSet
@@ -27,6 +27,24 @@ from cyclonedx.model import ComparableTuple
 from cyclonedx.serialization import BomRefHelper
 
 from .bom_ref import BomRef
+
+
+class DependencyDependencies(serializable.BaseHelper):  # type: ignore
+
+    @classmethod
+    def serialize(cls, o: object) -> List[str]:
+        if isinstance(o, SortedSet):
+            return list(map(lambda i: str(i.ref), o))
+
+        raise ValueError(f'Attempt to serialize a non-Dependency: {o.__class__}')
+
+    @classmethod
+    def deserialize(cls, o: object) -> Set["Dependency"]:
+        dependencies: Set["Dependency"] = set()
+        if isinstance(o, list):
+            for v in o:
+                dependencies.add(Dependency(ref=BomRef(value=v)))
+        return dependencies
 
 
 @serializable.serializable_class
@@ -54,6 +72,7 @@ class Dependency:
 
     @property  # type: ignore[misc]
     @serializable.json_name('dependsOn')
+    @serializable.type_mapping(DependencyDependencies)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'dependency')
     def dependencies(self) -> "SortedSet[Dependency]":
         return self._dependencies

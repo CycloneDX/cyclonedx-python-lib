@@ -120,15 +120,15 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
 
 def get_bom_with_dependencies_valid() -> Bom:
     c1 = get_component_setuptools_simple()
-    return Bom(components=[
-        c1,
-        get_component_toml_with_hashes_with_references()
-    ], dependencies=[
-        Dependency(ref=c1.bom_ref, dependencies=[
-            Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
-        ]),
-        Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
-    ])
+    c2 = get_component_toml_with_hashes_with_references()
+    return Bom(
+        components=[c1, c2], dependencies=[
+            Dependency(ref=c1.bom_ref, dependencies=[
+                Dependency(ref=c2.bom_ref)
+            ]),
+            Dependency(ref=c2.bom_ref)
+        ]
+    )
 
 
 def get_bom_with_dependencies_invalid() -> Bom:

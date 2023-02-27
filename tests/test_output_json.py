@@ -180,7 +180,6 @@ class TestOutputJson(BaseJsonTestCase):
             fixture='bom_setuptools_no_version.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_4_component_with_release_notes(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_component_setuptools_with_release_notes(), schema_version=SchemaVersion.V1_4,
@@ -332,63 +331,54 @@ class TestOutputJson(BaseJsonTestCase):
             mock_1.assert_called()
             mock_2.assert_called()
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_4_dependencies(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_4,
             fixture='bom_dependencies.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_3_dependencies(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_3,
             fixture='bom_dependencies.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_2_dependencies(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_dependencies_valid(), schema_version=SchemaVersion.V1_2,
             fixture='bom_dependencies.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_4_dependencies_for_bom_component(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_4,
             fixture='bom_dependencies_component.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_3_dependencies_for_bom_component(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_3,
             fixture='bom_dependencies_component.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_2_dependencies_for_bom_component(self) -> None:
         self._validate_json_bom(
             bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
             fixture='bom_dependencies_component.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_4_issue_275_components(self) -> None:
         self._validate_json_bom(
             bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
             fixture='bom_issue_275_components.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_3_issue_275_components(self) -> None:
         self._validate_json_bom(
             bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
             fixture='bom_issue_275_components.json'
         )
 
-    @unittest.skip('See https://github.com/CycloneDX/specification/issues/146')
     def test_bom_v1_2_issue_275_components(self) -> None:
         self._validate_json_bom(
             bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
