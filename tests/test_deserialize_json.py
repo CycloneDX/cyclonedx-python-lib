@@ -55,10 +55,6 @@ from tests.data import (
     get_bom_with_services_simple,
 )
 
-logger = logging.getLogger('serializable')
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 
 def fixed_date_time() -> datetime:
     return datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
