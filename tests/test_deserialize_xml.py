@@ -24,8 +24,6 @@ from unittest.mock import Mock, patch
 from uuid import UUID
 from xml.etree import ElementTree
 
-from sortedcontainers import SortedSet
-
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, SchemaVersion, get_instance
 from cyclonedx.schema import OutputFormat

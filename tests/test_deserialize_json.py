@@ -18,7 +18,6 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
-import logging
 from datetime import datetime
 from os.path import dirname, join
 from typing import cast
