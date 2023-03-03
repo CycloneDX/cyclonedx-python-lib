@@ -21,6 +21,7 @@ import base64
 from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional, TypeVar
+from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL  # type: ignore
@@ -56,6 +57,7 @@ from cyclonedx.model.component import (
     Pedigree,
     Swid,
 )
+from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -84,9 +86,15 @@ MOCK_UUID_3 = '0b049d09-64c0-4490-a0f5-c84d9aacf857'
 MOCK_UUID_4 = 'cd3e9c95-9d41-49e7-9924-8cf0465ae789'
 MOCK_UUID_5 = 'bb5911d6-1a1d-41c9-b6e0-46e848d16655'
 MOCK_UUID_6 = 'df70b5f1-8f53-47a4-be48-669ae78795e6'
+MOCK_UUID_7 = UUID('6f266d1c-760f-4552-ae3b-41a9b74232fa')
+MOCK_UUID_8 = UUID('77d15ab9-5602-4cca-8ed2-59ae579aafd3')
+MOCK_UUID_9 = UUID('859ff614-35a7-4d37-803b-d89130cb2577')
+MOCK_UUID_10 = UUID('0afa65bc-4acd-428b-9e17-8e97b1969745')
+MOCK_BOM_UUID_1 = UUID('3e671687-395b-41f5-a30f-a58921a69b79')
+MOCK_BOM_UUID_2 = UUID('d0b24ba4-102b-497e-b31f-4fdc3f0a3005')
 
 TEST_UUIDS = [
-    MOCK_UUID_1, MOCK_UUID_2, MOCK_UUID_3, MOCK_UUID_4, MOCK_UUID_5, MOCK_UUID_6
+    UUID(MOCK_UUID_1), UUID(MOCK_UUID_2), UUID(MOCK_UUID_3), UUID(MOCK_UUID_4), UUID(MOCK_UUID_5), UUID(MOCK_UUID_6)
 ]
 
 
@@ -112,29 +120,30 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
 
 def get_bom_with_dependencies_valid() -> Bom:
     c1 = get_component_setuptools_simple()
-    c1.dependencies.update([
-        get_component_toml_with_hashes_with_references().bom_ref
-    ])
-    return Bom(components=[
-        c1,
-        get_component_toml_with_hashes_with_references()
-    ])
+    c2 = get_component_toml_with_hashes_with_references()
+    return Bom(
+        components=[c1, c2], dependencies=[
+            Dependency(ref=c1.bom_ref, dependencies=[
+                Dependency(ref=c2.bom_ref)
+            ]),
+            Dependency(ref=c2.bom_ref)
+        ]
+    )
 
 
 def get_bom_with_dependencies_invalid() -> Bom:
     c1 = get_component_setuptools_simple()
-    c1.dependencies.update([
-        get_component_toml_with_hashes_with_references().bom_ref
-    ])
-    return Bom(components=[
-        c1
-    ])
+    return Bom(components=[c1], dependencies=[Dependency(ref=c1.bom_ref)])
 
 
 def get_bom_with_metadata_component_and_dependencies() -> Bom:
     bom = Bom(components=[get_component_toml_with_hashes_with_references()])
     bom.metadata.component = get_component_setuptools_simple()
-    bom.metadata.component.dependencies.update([get_component_toml_with_hashes_with_references().bom_ref])
+    bom.dependencies.add(
+        Dependency(ref=bom.metadata.component.bom_ref, dependencies=[
+            Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
+        ])
+    )
     return bom
 
 
@@ -190,11 +199,11 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
             responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
         ),
-        affects_targets=[
+        affects=[
             BomTarget(
                 ref=component.purl.to_string() if component.purl else None,
                 versions=[BomTargetVersionRange(
-                    version_range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
+                    range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
             )
         ],
@@ -213,10 +222,10 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
-    bom.metadata.licenses = [LicenseChoice(license_=License(
-        spdx_license_id='Apache-2.0', license_text=AttachedText(
+    bom.metadata.licenses = [LicenseChoice(license=License(
+        id='Apache-2.0', text=AttachedText(
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
-        ), license_url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
+        ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
     ))]
     bom.metadata.properties = get_properties_1()
     return bom
@@ -235,7 +244,7 @@ def get_bom_with_services_simple() -> Bom:
         Service(name='my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
     )
     return bom
 
@@ -253,7 +262,7 @@ def get_bom_with_services_complex() -> Bom:
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[
-                LicenseChoice(license_expression='Commercial')
+                LicenseChoice(expression='Commercial')
             ],
             external_references=[
                 get_external_reference_1()
@@ -264,7 +273,7 @@ def get_bom_with_services_complex() -> Bom:
         Service(name='my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
     )
     return bom
 
@@ -282,7 +291,7 @@ def get_bom_with_nested_services() -> Bom:
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[
-                LicenseChoice(license_expression='Commercial')
+                LicenseChoice(expression='Commercial')
             ],
             external_references=[
                 get_external_reference_1()
@@ -314,7 +323,7 @@ def get_bom_with_nested_services() -> Bom:
         )
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', component_type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
     )
     return bom
 
@@ -330,14 +339,16 @@ def get_bom_for_issue_275_components() -> Bom:
     comp_c = Component(bom_ref=MOCK_UUID_4, name="comp_c", version="1.0.0")
 
     comp_b.components.add(comp_c)
-    comp_b.dependencies.add(comp_c.bom_ref)
+    # comp_b.dependencies.add(comp_c.bom_ref)
 
     libs = [comp_a, comp_b]
-    app.dependencies.add(comp_a.bom_ref)
-    app.dependencies.add(comp_b.bom_ref)
+    # app.dependencies.add(comp_a.bom_ref)
+    # app.dependencies.add(comp_b.bom_ref)
 
     bom = Bom(components=libs)
     bom.metadata.component = app
+    bom.register_dependency(target=app, depends_on=[comp_a, comp_b])
+    bom.register_dependency(target=comp_b, depends_on=[comp_c])
     return bom
 
 
@@ -363,7 +374,7 @@ def get_bom_for_issue_328_components() -> Bom:
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/328
     """
 
-    comp_root = Component(component_type=ComponentType.APPLICATION,
+    comp_root = Component(type=ComponentType.APPLICATION,
                           name='my-project', version='1', bom_ref='my-project')
     comp_a = Component(name='A', version='0.1', bom_ref='component-A')
     comp_b = Component(name='B', version='1.0', bom_ref='component-B')
@@ -402,7 +413,7 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
         get_component_setuptools_simple(),
         get_component_toml_with_hashes_with_references()
     ])
-    component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
+    component.evidence = ComponentEvidence(copyright=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
     component.release_notes = get_release_notes()
     return component
 
@@ -416,7 +427,7 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(license_expression='MIT License')],
+        licenses=[LicenseChoice(expression='MIT License')],
         author='Test Author'
     )
 
@@ -427,7 +438,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(license_expression='MIT License')],
+        licenses=[LicenseChoice(expression='MIT License')],
         author='Test Author'
     )
 
@@ -447,7 +458,7 @@ def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None
 
 def get_external_reference_1() -> ExternalReference:
     return ExternalReference(
-        reference_type=ExternalReferenceType.DISTRIBUTION,
+        type=ExternalReferenceType.DISTRIBUTION,
         url=XsUri('https://cyclonedx.org'),
         comment='No comment',
         hashes=[
@@ -459,14 +470,14 @@ def get_external_reference_1() -> ExternalReference:
 
 def get_external_reference_2() -> ExternalReference:
     return ExternalReference(
-        reference_type=ExternalReferenceType.WEBSITE,
+        type=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
     )
 
 
 def get_issue_1() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
+        type=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -478,7 +489,7 @@ def get_issue_1() -> IssueType:
 
 def get_issue_2() -> IssueType:
     return IssueType(
-        classification=IssueClassification.SECURITY, id_='CVE-2021-44229', name='Apache Log4Shell',
+        type=IssueClassification.SECURITY, id='CVE-2021-44229', name='Apache Log4Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -523,7 +534,7 @@ def get_pedigree_1() -> Pedigree:
             get_component_setuptools_simple(bom_ref='ded1d73e-1fca-4302-b520-f1bc53979958')
         ],
         commits=[Commit(uid='a-random-uid', message="A commit message")],
-        patches=[Patch(type_=PatchClassification.BACKPORT)],
+        patches=[Patch(type=PatchClassification.BACKPORT)],
         notes='Some notes here please'
     )
 
@@ -541,7 +552,7 @@ def get_release_notes() -> ReleaseNotes:
     ).decode(encoding='UTF-8')
 
     return ReleaseNotes(
-        type_='major', title="Release Notes Title",
+        type='major', title="Release Notes Title",
         featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
         social_image=XsUri('https://cyclonedx.org/cyclonedx-icon.png'),
         description="This release is a test release", timestamp=MOCK_TIMESTAMP,
@@ -554,13 +565,13 @@ def get_release_notes() -> ReleaseNotes:
             Note(
                 text=NoteText(
                     content=text_content, content_type='text/plain; charset=UTF-8',
-                    content_encoding=Encoding.BASE_64
+                    encoding=Encoding.BASE_64
                 ), locale='en-GB'
             ),
             Note(
                 text=NoteText(
                     content=text_content, content_type='text/plain; charset=UTF-8',
-                    content_encoding=Encoding.BASE_64
+                    encoding=Encoding.BASE_64
                 ), locale='en-US'
             )
         ],
@@ -604,9 +615,9 @@ T = TypeVar('T')
 
 
 def reorder(items: List[T], indexes: List[int]) -> List[T]:
-    '''
+    """
     Return list of items in the order indicated by indexes.
-    '''
+    """
     reordered_items = []
     for i in range(len(items)):
         reordered_items.append(items[indexes[i]])

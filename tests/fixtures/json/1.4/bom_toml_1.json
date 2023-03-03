@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.4",
-  "serialNumber": "urn:uuid:6b822a8f-bb36-47ff-a9e8-321a3a16a46a",
+  "serialNumber": "urn:uuid:6f266d1c-760f-4552-ae3b-41a9b74232fa",
   "version": 1,
   "metadata": {
-    "timestamp": "2023-01-07T13:45:58.628816+00:00",
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
         "vendor": "CycloneDX",
@@ -78,8 +78,7 @@
   ],
   "dependencies": [
     {
-      "ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
-      "dependsOn": []
+      "ref": "pkg:pypi/toml@0.10.2?extension=tar.gz"
     }
   ]
 }

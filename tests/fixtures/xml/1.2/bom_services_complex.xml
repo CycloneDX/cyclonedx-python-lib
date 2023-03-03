@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1"
-     serialNumber="urn:uuid:05169962-c7de-47e5-afdd-999ef5f1dac4">
+     serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79">
     <metadata>
-        <timestamp>2023-01-07T13:44:32.798684+00:00</timestamp>
+        <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
         <tools>
             <tool>
                 <vendor>CycloneDX</vendor>
@@ -10,12 +10,11 @@
                 <version>TESTING</version>
             </tool>
         </tools>
-        <component type="library" bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda">
+        <component type="library" bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789">
             <name>cyclonedx-python-lib</name>
             <version>1.0.0</version>
         </component>
     </metadata>
-    <components/>
     <services>
         <service bom-ref="my-specific-bom-ref-for-my-first-service">
             <provider>
@@ -59,6 +58,8 @@
         </service>
     </services>
     <dependencies>
-        <dependency ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"/>
+        <dependency ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789"/>
+        <dependency ref="be2c6502-7e9a-47db-9a66-e34f729810a3"/>
+        <dependency ref="my-specific-bom-ref-for-my-first-service"/>
     </dependencies>
 </bom>

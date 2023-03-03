@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.2",
-  "serialNumber": "urn:uuid:97251de9-d320-463f-a31d-399d88719b86",
+  "serialNumber": "urn:uuid:d0b24ba4-102b-497e-b31f-4fdc3f0a3005",
   "version": 1,
   "metadata": {
-    "timestamp": "2023-01-07T13:45:57.701426+00:00",
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
         "vendor": "CycloneDX",
@@ -15,7 +15,7 @@
     ],
     "component": {
       "type": "library",
-      "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
+      "bom-ref": "bb5911d6-1a1d-41c9-b6e0-46e848d16655",
       "name": "cyclonedx-python-lib",
       "version": "1.0.0"
     }
@@ -24,20 +24,20 @@
     {
       "bom-ref": "my-specific-bom-ref-for-my-first-service",
       "provider": {
+        "contact": [
+          {
+            "email": "paul.horton@owasp.org",
+            "name": "Paul Horton"
+          },
+          {
+            "email": "someone@somewhere.tld",
+            "name": "A N Other",
+            "phone": "+44 (0)1234 567890"
+          }
+        ],
         "name": "CycloneDX",
         "url": [
           "https://cyclonedx.org"
-        ],
-        "contact": [
-          {
-            "name": "A N Other",
-            "email": "someone@somewhere.tld",
-            "phone": "+44 (0)1234 567890"
-          },
-          {
-            "name": "Paul Horton",
-            "email": "paul.horton@owasp.org"
-          }
         ]
       },
       "group": "a-group",
@@ -52,8 +52,8 @@
       "x-trust-boundary": true,
       "data": [
         {
-          "flow": "outbound",
-          "classification": "public"
+          "classification": "public",
+          "flow": "outbound"
         }
       ],
       "licenses": [
@@ -63,15 +63,9 @@
       ],
       "externalReferences": [
         {
-          "url": "https://cyclonedx.org",
           "comment": "No comment",
           "type": "distribution",
-          "hashes": [
-            {
-              "alg": "SHA-256",
-              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-            }
-          ]
+          "url": "https://cyclonedx.org"
         }
       ]
     },
@@ -82,8 +76,13 @@
   ],
   "dependencies": [
     {
-      "ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
-      "dependsOn": []
+      "ref": "bb5911d6-1a1d-41c9-b6e0-46e848d16655"
+    },
+    {
+      "ref": "my-specific-bom-ref-for-my-first-service"
+    },
+    {
+      "ref": "be2c6502-7e9a-47db-9a66-e34f729810a3"
     }
   ]
 }

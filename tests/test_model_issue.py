@@ -49,13 +49,13 @@ class TestModelIssueType(TestCase):
         # expected sort order: (type/classification, id, name, description, source)
         expected_order = [6, 5, 0, 1, 2, 3, 4]
         issues = [
-            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a', description='a', source=source_a),
-            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a', description='a', source=source_b),
-            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a', description='a'),
-            IssueType(classification=IssueClassification.SECURITY, id_='a', name='a'),
-            IssueType(classification=IssueClassification.SECURITY, id_='a'),
-            IssueType(classification=IssueClassification.DEFECT, id_='a', name='a', description='a', source=source_b),
-            IssueType(classification=IssueClassification.DEFECT, id_='a', name='a', description='a', source=source_a),
+            IssueType(type=IssueClassification.SECURITY, id='a', name='a', description='a', source=source_a),
+            IssueType(type=IssueClassification.SECURITY, id='a', name='a', description='a', source=source_b),
+            IssueType(type=IssueClassification.SECURITY, id='a', name='a', description='a'),
+            IssueType(type=IssueClassification.SECURITY, id='a', name='a'),
+            IssueType(type=IssueClassification.SECURITY, id='a'),
+            IssueType(type=IssueClassification.DEFECT, id='a', name='a', description='a', source=source_b),
+            IssueType(type=IssueClassification.DEFECT, id='a', name='a', description='a', source=source_a),
         ]
         sorted_issues = sorted(issues)
         expected_issues = reorder(issues, expected_order)

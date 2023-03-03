@@ -40,7 +40,7 @@ if sys.version_info >= (3, 7):
 if sys.version_info >= (3, 8):
     from importlib.metadata import PackageNotFoundError, version
 else:
-    from importlib_metadata import version
+    from importlib_metadata import PackageNotFoundError, version
 
 from . import CDX_SCHEMA_DIRECTORY
 

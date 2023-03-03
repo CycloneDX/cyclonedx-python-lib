@@ -19,10 +19,11 @@ import hashlib
 import re
 import sys
 import warnings
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Iterable, Optional, Tuple, TypeVar
 
+import serializable
 from sortedcontainers import SortedSet
 
 from ..exception.model import (
@@ -32,6 +33,7 @@ from ..exception.model import (
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
@@ -39,6 +41,10 @@ Uniform set of models to represent objects within a CycloneDX software bill-of-m
 You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
 from a `cyclonedx.parser.BaseParser` implementation.
 """
+
+
+def get_now_utc() -> datetime:
+    return datetime.now(tz=timezone.utc)
 
 
 def sha1sum(filename: str) -> str:
@@ -109,6 +115,7 @@ class DataFlow(str, Enum):
     UNKNOWN = "unknown"
 
 
+@serializable.serializable_class
 class DataClassification:
     """
     This is our internal representation of the `dataClassificationType` complex type within the CycloneDX standard.
@@ -122,7 +129,8 @@ class DataClassification:
         self.flow = flow
         self.classification = classification
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def flow(self) -> DataFlow:
         """
         Specifies the flow direction of the data.
@@ -145,7 +153,8 @@ class DataClassification:
     def flow(self, flow: DataFlow) -> None:
         self._flow = flow
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('.')
     def classification(self) -> str:
         """
         Data classification tags data according to its type, sensitivity, and value if altered, stolen, or destroyed.
@@ -181,6 +190,7 @@ class Encoding(str, Enum):
     BASE_64 = 'base64'
 
 
+@serializable.serializable_class
 class AttachedText:
     """
     This is our internal representation of the `attachedTextType` complex type within the CycloneDX standard.
@@ -197,7 +207,9 @@ class AttachedText:
         self.encoding = encoding
         self.content = content
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
+    @serializable.xml_name('content-type')
     def content_type(self) -> str:
         """
         Specifies the content type of the text. Defaults to text/plain if not specified.
@@ -211,7 +223,8 @@ class AttachedText:
     def content_type(self, content_type: str) -> None:
         self._content_type = content_type
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def encoding(self) -> Optional[Encoding]:
         """
         Specifies the optional encoding the text is represented in.
@@ -225,7 +238,8 @@ class AttachedText:
     def encoding(self, encoding: Optional[Encoding]) -> None:
         self._encoding = encoding
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('.')
     def content(self) -> str:
         """
         The attachment data.
@@ -282,6 +296,7 @@ class HashAlgorithm(str, Enum):
     SHA3_512 = 'SHA3-512'
 
 
+@serializable.serializable_class
 class HashType:
     """
     This is our internal representation of the hashType complex type within the CycloneDX standard.
@@ -312,27 +327,28 @@ class HashType:
         algorithm_prefix = parts[0].lower()
         if algorithm_prefix == 'md5':
             return HashType(
-                algorithm=HashAlgorithm.MD5,
-                hash_value=parts[1].lower()
+                alg=HashAlgorithm.MD5,
+                content=parts[1].lower()
             )
         elif algorithm_prefix[0:3] == 'sha':
             return HashType(
-                algorithm=getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:])),
-                hash_value=parts[1].lower()
+                alg=getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:])),
+                content=parts[1].lower()
             )
         elif algorithm_prefix[0:6] == 'blake2':
             return HashType(
-                algorithm=getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:])),
-                hash_value=parts[1].lower()
+                alg=getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:])),
+                content=parts[1].lower()
             )
 
         raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
 
-    def __init__(self, *, algorithm: HashAlgorithm, hash_value: str) -> None:
-        self.alg = algorithm
-        self.content = hash_value
+    def __init__(self, *, alg: HashAlgorithm, content: str) -> None:
+        self.alg = alg
+        self.content = content
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def alg(self) -> HashAlgorithm:
         """
         Specifies the algorithm used to create the hash.
@@ -346,7 +362,8 @@ class HashType:
     def alg(self, alg: HashAlgorithm) -> None:
         self._alg = alg
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('.')
     def content(self) -> str:
         """
         Hash value content.
@@ -384,6 +401,7 @@ class ExternalReferenceType(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReferenceType
     """
+
     ADVISORIES = 'advisories'
     BOM = 'bom'
     BUILD_META = 'build-meta'
@@ -403,7 +421,8 @@ class ExternalReferenceType(str, Enum):
     WEBSITE = 'website'
 
 
-class XsUri:
+@serializable.serializable_class
+class XsUri(serializable.helpers.BaseHelper):
     """
     Helper class that allows us to perform validation on data strings that are defined as xs:anyURI
     in CycloneDX schema.
@@ -422,6 +441,26 @@ class XsUri:
                 f"Supplied value '{uri}' does not appear to be a valid URI."
             )
         self._uri = uri
+
+    @property  # type: ignore[misc]
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
+    def uri(self) -> str:
+        return self._uri
+
+    @classmethod
+    def serialize(cls, o: object) -> str:
+        if isinstance(o, XsUri):
+            return str(o)
+
+        raise ValueError(f'Attempt to serialize a non-XsUri: {o.__class__}')
+
+    @classmethod
+    def deserialize(cls, o: object) -> 'XsUri':
+        try:
+            return XsUri(uri=str(o))
+        except ValueError:
+            raise ValueError(f'XsUri string supplied ({o}) does not parse!')
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, XsUri):
@@ -443,6 +482,7 @@ class XsUri:
         return self._uri
 
 
+@serializable.serializable_class
 class ExternalReference:
     """
     This is our internal representation of an ExternalReference complex type that can be used in multiple places within
@@ -452,14 +492,15 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, *, reference_type: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
+    def __init__(self, *, type: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
                  hashes: Optional[Iterable[HashType]] = None) -> None:
         self.url = url
         self.comment = comment
-        self.type = reference_type
+        self.type = type
         self.hashes = hashes or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def url(self) -> XsUri:
         """
         The URL to the external reference.
@@ -487,7 +528,8 @@ class ExternalReference:
     def comment(self, comment: Optional[str]) -> None:
         self._comment = comment
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def type(self) -> ExternalReferenceType:
         """
         Specifies the type of external reference.
@@ -501,10 +543,13 @@ class ExternalReference:
         return self._type
 
     @type.setter
-    def type(self, type_: ExternalReferenceType) -> None:
-        self._type = type_
+    def type(self, type: ExternalReferenceType) -> None:
+        self._type = type
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     def hashes(self) -> "SortedSet[HashType]":
         """
         The hashes of the external reference (if applicable).
@@ -536,9 +581,10 @@ class ExternalReference:
         ))
 
     def __repr__(self) -> str:
-        return f'<ExternalReference {self._type.name}, {self._url}>'
+        return f'<ExternalReference {self.type.name}, {self.url}>'
 
 
+@serializable.serializable_class
 class License:
     """
     This is our internal representation of `licenseType` complex type that can be used in multiple places within
@@ -548,22 +594,22 @@ class License:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
     """
 
-    def __init__(self, *, spdx_license_id: Optional[str] = None, license_name: Optional[str] = None,
-                 license_text: Optional[AttachedText] = None, license_url: Optional[XsUri] = None) -> None:
-        if not spdx_license_id and not license_name:
-            raise MutuallyExclusivePropertiesException('Either `spdx_license_id` or `license_name` MUST be supplied')
-        if spdx_license_id and license_name:
+    def __init__(self, *, id: Optional[str] = None, name: Optional[str] = None,
+                 text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
+        if not id and not name:
+            raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
+        if id and name:
             warnings.warn(
-                'Both `spdx_license_id` and `license_name` have been supplied - `license_name` will be ignored!',
+                'Both `id` and `name` have been supplied - `name` will be ignored!',
                 RuntimeWarning
             )
-        self.id = spdx_license_id
-        if not spdx_license_id:
-            self.name = license_name
+        self.id = id
+        if not id:
+            self.name = name
         else:
             self.name = None
-        self.text = license_text
-        self.url = license_url
+        self.text = text
+        self.url = url
 
     @property
     def id(self) -> Optional[str]:
@@ -639,6 +685,7 @@ class License:
         return f'<License id={self.id}, name={self.name}>'
 
 
+@serializable.serializable_class
 class LicenseChoice:
     """
     This is our internal representation of `licenseChoiceType` complex type that can be used in multiple places within
@@ -648,19 +695,19 @@ class LicenseChoice:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
     """
 
-    def __init__(self, *, license_: Optional[License] = None, license_expression: Optional[str] = None) -> None:
-        if not license_ and not license_expression:
+    def __init__(self, *, license: Optional[License] = None, expression: Optional[str] = None) -> None:
+        if not license and not expression:
             raise NoPropertiesProvidedException(
-                'One of `license` or `license_expression` must be supplied - neither supplied'
+                'One of `license` or `expression` must be supplied - neither supplied'
             )
-        if license_ and license_expression:
+        if license and expression:
             warnings.warn(
-                'Both `license` and `license_expression` have been supplied - `license` will take precedence',
+                'Both `license` and `expression` have been supplied - `license` will take precedence',
                 RuntimeWarning
             )
-        self.license = license_
-        if not license_:
-            self.expression = license_expression
+        self.license = license
+        if not license:
+            self.expression = expression
         else:
             self.expression = None
 
@@ -675,8 +722,8 @@ class LicenseChoice:
         return self._license
 
     @license.setter
-    def license(self, license_: Optional[License]) -> None:
-        self._license = license_
+    def license(self, license: Optional[License]) -> None:
+        self._license = license
 
     @property
     def expression(self) -> Optional[str]:
@@ -701,7 +748,8 @@ class LicenseChoice:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, LicenseChoice):
-            return ComparableTuple((self.license, self.expression)) < ComparableTuple((other.license, other.expression))
+            return ComparableTuple((self.license, self.expression)) < ComparableTuple(
+                (other.license, other.expression))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -711,6 +759,7 @@ class LicenseChoice:
         return f'<LicenseChoice license={self.license}, expression={self.expression}>'
 
 
+@serializable.serializable_class
 class Property:
     """
     This is our internal representation of `propertyType` complex type that can be used in multiple places within
@@ -726,7 +775,8 @@ class Property:
         self.name = name
         self.value = value
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def name(self) -> str:
         """
         The name of the property.
@@ -742,7 +792,8 @@ class Property:
     def name(self, name: str) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('.')
     def value(self) -> str:
         """
         Value of this Property.
@@ -773,6 +824,7 @@ class Property:
         return f'<Property name={self.name}>'
 
 
+@serializable.serializable_class
 class NoteText:
     """
     This is our internal representation of the Note.text complex type that can be used in multiple places within
@@ -785,12 +837,13 @@ class NoteText:
     DEFAULT_CONTENT_TYPE: str = 'text/plain'
 
     def __init__(self, *, content: str, content_type: Optional[str] = None,
-                 content_encoding: Optional[Encoding] = None) -> None:
+                 encoding: Optional[Encoding] = None) -> None:
         self.content = content
         self.content_type = content_type or NoteText.DEFAULT_CONTENT_TYPE
-        self.encoding = content_encoding
+        self.encoding = encoding
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('.')
     def content(self) -> str:
         """
         Get the text content of this Note.
@@ -804,7 +857,9 @@ class NoteText:
     def content(self, content: str) -> None:
         self._content = content
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
+    @serializable.xml_name('content-type')
     def content_type(self) -> Optional[str]:
         """
         Get the content-type of this Note.
@@ -820,7 +875,8 @@ class NoteText:
     def content_type(self, content_type: str) -> None:
         self._content_type = content_type
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def encoding(self) -> Optional[Encoding]:
         """
         Get the encoding method used for the note's content.
@@ -852,6 +908,7 @@ class NoteText:
         return f'<NoteText content_type={self.content_type}, encoding={self.encoding}>'
 
 
+@serializable.serializable_class
 class Note:
     """
     This is our internal representation of the Note complex type that can be used in multiple places within
@@ -859,6 +916,8 @@ class Note:
 
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
+
+    @todo: Replace ``NoteText`` with ``AttachedText``?
     """
 
     _LOCALE_TYPE_REGEX = re.compile(r'^[a-z]{2}(?:\-[A-Z]{2})?$')
@@ -881,7 +940,8 @@ class Note:
     def text(self, text: NoteText) -> None:
         self._text = text
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def locale(self) -> Optional[str]:
         """
         Get the ISO locale of this Note.
@@ -924,6 +984,7 @@ class Note:
         return f'<Note id={id(self)}, locale={self.locale}>'
 
 
+@serializable.serializable_class
 class OrganizationalContact:
     """
     This is our internal representation of the `organizationalContact` complex type that can be used in multiple places
@@ -942,7 +1003,8 @@ class OrganizationalContact:
         self.email = email
         self.phone = phone
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
         Get the name of the contact.
@@ -956,7 +1018,8 @@ class OrganizationalContact:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def email(self) -> Optional[str]:
         """
         Get the email of the contact.
@@ -970,7 +1033,8 @@ class OrganizationalContact:
     def email(self, email: Optional[str]) -> None:
         self._email = email
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def phone(self) -> Optional[str]:
         """
         Get the phone of the contact.
@@ -1002,6 +1066,7 @@ class OrganizationalContact:
         return f'<OrganizationalContact name={self.name}, email={self.email}, phone={self.phone}>'
 
 
+@serializable.serializable_class
 class OrganizationalEntity:
     """
     This is our internal representation of the `organizationalEntity` complex type that can be used in multiple places
@@ -1018,10 +1083,11 @@ class OrganizationalEntity:
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
         self.name = name
-        self.url = urls or []  # type: ignore
-        self.contact = contacts or []  # type: ignore
+        self.urls = urls or []  # type: ignore
+        self.contacts = contacts or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
         Get the name of the organization.
@@ -1035,33 +1101,39 @@ class OrganizationalEntity:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
-    def url(self) -> "SortedSet[XsUri]":
+    @property  # type: ignore[misc]
+    @serializable.json_name('url')
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'url')
+    @serializable.xml_sequence(2)
+    def urls(self) -> "SortedSet[XsUri]":
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
 
         Returns:
             Set of `XsUri`
         """
-        return self._url
+        return self._urls
 
-    @url.setter
-    def url(self, urls: Iterable[XsUri]) -> None:
-        self._url = SortedSet(urls)
+    @urls.setter
+    def urls(self, urls: Iterable[XsUri]) -> None:
+        self._urls = SortedSet(urls)
 
-    @property
-    def contact(self) -> "SortedSet[OrganizationalContact]":
+    @property  # type: ignore[misc]
+    @serializable.json_name('contact')
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'contact')
+    @serializable.xml_sequence(3)
+    def contacts(self) -> "SortedSet[OrganizationalContact]":
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
 
         Returns:
             Set of `OrganizationalContact`
         """
-        return self._contact
+        return self._contacts
 
-    @contact.setter
-    def contact(self, contacts: Iterable[OrganizationalContact]) -> None:
-        self._contact = SortedSet(contacts)
+    @contacts.setter
+    def contacts(self, contacts: Iterable[OrganizationalContact]) -> None:
+        self._contacts = SortedSet(contacts)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, OrganizationalEntity):
@@ -1074,12 +1146,13 @@ class OrganizationalEntity:
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.name, tuple(self.url), tuple(self.contact)))
+        return hash((self.name, tuple(self.urls), tuple(self.contacts)))
 
     def __repr__(self) -> str:
         return f'<OrganizationalEntity name={self.name}>'
 
 
+@serializable.serializable_class
 class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
@@ -1099,7 +1172,8 @@ class Tool:
         self.hashes = hashes or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def vendor(self) -> Optional[str]:
         """
         The name of the vendor who created the tool.
@@ -1113,7 +1187,8 @@ class Tool:
     def vendor(self, vendor: Optional[str]) -> None:
         self._vendor = vendor
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
         The name of the tool.
@@ -1127,7 +1202,8 @@ class Tool:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def version(self) -> Optional[str]:
         """
         The version of the tool.
@@ -1141,7 +1217,9 @@ class Tool:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.xml_sequence(4)
     def hashes(self) -> "SortedSet[HashType]":
         """
         The hashes of the tool (if applicable).
@@ -1155,7 +1233,10 @@ class Tool:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    @serializable.xml_sequence(5)
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         External References provide a way to document systems, sites, and information that may be relevant but which
@@ -1188,6 +1269,7 @@ class Tool:
         return f'<Tool name={self.name}, version={self.version}, vendor={self.vendor}>'
 
 
+@serializable.serializable_class
 class IdentifiableAction:
     """
     This is our internal representation of the `identifiableActionType` complex type.
@@ -1207,7 +1289,8 @@ class IdentifiableAction:
         self.name = name
         self.email = email
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
     def timestamp(self) -> Optional[datetime]:
         """
         The timestamp in which the action occurred.
@@ -1267,6 +1350,7 @@ class IdentifiableAction:
         return f'<IdentifiableAction name={self.name}, email={self.email}>'
 
 
+@serializable.serializable_class
 class Copyright:
     """
     This is our internal representation of the `copyrightsType` complex type.
@@ -1278,7 +1362,8 @@ class Copyright:
     def __init__(self, *, text: str) -> None:
         self.text = text
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_name('.')
     def text(self) -> str:
         """
         Copyright statement.
@@ -1321,35 +1406,35 @@ except Exception:
 ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
 ThisTool.external_references.update([
     ExternalReference(
-        reference_type=ExternalReferenceType.BUILD_SYSTEM,
+        type=ExternalReferenceType.BUILD_SYSTEM,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.DISTRIBUTION,
+        type=ExternalReferenceType.DISTRIBUTION,
         url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.DOCUMENTATION,
+        type=ExternalReferenceType.DOCUMENTATION,
         url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.ISSUE_TRACKER,
+        type=ExternalReferenceType.ISSUE_TRACKER,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.LICENSE,
+        type=ExternalReferenceType.LICENSE,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.RELEASE_NOTES,
+        type=ExternalReferenceType.RELEASE_NOTES,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.VCS,
+        type=ExternalReferenceType.VCS,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
     ),
     ExternalReference(
-        reference_type=ExternalReferenceType.WEBSITE,
+        type=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
     )
 ])

@@ -30,57 +30,50 @@ class TestFactoryLicense(unittest.TestCase):
     def test_make_from_string_with_id(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = License(spdx_license_id='bar', license_text=text, license_url=url)
-        factory = LicenseFactory()
+        expected = License(id='bar', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
-            actual = factory.make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory().make_from_string(name_or_spdx='foo', license_text=text, license_url=url)
 
         self.assertEqual(expected, actual)
 
     def test_make_from_string_with_name(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = License(license_name='foo', license_text=text, license_url=url)
-        factory = LicenseFactory()
+        expected = License(name='foo', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None):
-            actual = factory.make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory().make_from_string(name_or_spdx='foo', license_text=text, license_url=url)
 
         self.assertEqual(expected, actual)
 
     def test_make_with_id(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = License(spdx_license_id='bar', license_text=text, license_url=url)
-        factory = LicenseFactory()
+        expected = License(id='bar', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
-            actual = factory.make_with_id('foo', license_text=text, license_url=url)
+            actual = LicenseFactory().make_with_id(spdx_id='foo', text=text, url=url)
 
         self.assertEqual(expected, actual)
 
     def test_make_with_id_raises(self) -> None:
-        factory = LicenseFactory()
         with self.assertRaises(InvalidSpdxLicenseException, msg='foo'):
             with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None):
-                factory.make_with_id('foo')
+                LicenseFactory().make_with_id(spdx_id='foo')
 
     def test_make_with_name(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = License(license_name='foo', license_text=text, license_url=url)
-        factory = LicenseFactory()
-
-        actual = factory.make_with_name('foo', license_text=text, license_url=url)
-
+        expected = License(name='foo', text=text, url=url)
+        actual = LicenseFactory().make_with_name(name='foo', text=text, url=url)
         self.assertEqual(expected, actual)
 
 
 class TestFactoryLicenseChoice(unittest.TestCase):
 
     def test_make_from_string_with_compound_expression(self) -> None:
-        expected = LicenseChoice(license_expression='foo')
+        expected = LicenseChoice(expression='foo')
         factory = LicenseChoiceFactory(license_factory=unittest.mock.MagicMock(spec=LicenseFactory))
 
         with unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
@@ -90,7 +83,7 @@ class TestFactoryLicenseChoice(unittest.TestCase):
 
     def test_make_from_string_with_license(self) -> None:
         license_ = unittest.mock.NonCallableMock(spec=License)
-        expected = LicenseChoice(license_=license_)
+        expected = LicenseChoice(license=license_)
         license_factory = unittest.mock.MagicMock(spec=LicenseFactory)
         license_factory.make_from_string.return_value = license_
         factory = LicenseChoiceFactory(license_factory=license_factory)
@@ -103,7 +96,7 @@ class TestFactoryLicenseChoice(unittest.TestCase):
         license_factory.make_from_string.assert_called_once_with('foo', license_text=None, license_url=None)
 
     def test_make_with_compound_expression(self) -> None:
-        expected = LicenseChoice(license_expression='foo')
+        expected = LicenseChoice(expression='foo')
         factory = LicenseChoiceFactory(license_factory=unittest.mock.MagicMock(spec=LicenseFactory))
 
         with unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
@@ -121,7 +114,7 @@ class TestFactoryLicenseChoice(unittest.TestCase):
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
         license_ = unittest.mock.NonCallableMock(spec=License)
-        expected = LicenseChoice(license_=license_)
+        expected = LicenseChoice(license=license_)
         license_factory = unittest.mock.MagicMock(spec=LicenseFactory)
         license_factory.make_from_string.return_value = license_
         factory = LicenseChoiceFactory(license_factory=license_factory)

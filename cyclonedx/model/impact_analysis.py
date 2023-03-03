@@ -19,6 +19,8 @@
 
 from enum import Enum
 
+import serializable
+
 """
 This set of classes represents the data about Impact Analysis.
 
@@ -29,6 +31,7 @@ Impact Analysis is new for CycloneDX schema version 1.
 """
 
 
+@serializable.serializable_enum
 class ImpactAnalysisAffectedStatus(str, Enum):
     """
     Enum object that defines the permissible impact analysis affected states.
@@ -50,6 +53,7 @@ class ImpactAnalysisAffectedStatus(str, Enum):
     UNKNOWN = 'unknown'
 
 
+@serializable.serializable_enum
 class ImpactAnalysisJustification(str, Enum):
     """
     Enum object that defines the rationale of why the impact analysis state was asserted.
@@ -69,6 +73,7 @@ class ImpactAnalysisJustification(str, Enum):
     REQUIRES_ENVIRONMENT = 'requires_environment'
 
 
+@serializable.serializable_enum
 class ImpactAnalysisResponse(str, Enum):
     """
     Enum object that defines the valid rationales as to why the impact analysis state was asserted.
@@ -84,6 +89,7 @@ class ImpactAnalysisResponse(str, Enum):
     WORKAROUND_AVAILABLE = 'workaround_available'
 
 
+@serializable.serializable_enum
 class ImpactAnalysisState(str, Enum):
     """
     Enum object that defines the permissible impact analysis states.
