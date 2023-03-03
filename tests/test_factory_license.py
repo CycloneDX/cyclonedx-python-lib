@@ -33,7 +33,7 @@ class TestFactoryLicense(unittest.TestCase):
         expected = License(id='bar', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
-            actual = LicenseFactory.make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory().make_from_string('foo', license_text=text, license_url=url)
 
         self.assertEqual(expected, actual)
 
@@ -43,7 +43,7 @@ class TestFactoryLicense(unittest.TestCase):
         expected = License(name='foo', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None):
-            actual = LicenseFactory.make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory().make_from_string('foo', license_text=text, license_url=url)
 
         self.assertEqual(expected, actual)
 
@@ -53,20 +53,20 @@ class TestFactoryLicense(unittest.TestCase):
         expected = License(id='bar', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
-            actual = LicenseFactory.make_with_id('foo', text=text, url=url)
+            actual = LicenseFactory().make_with_id('foo', text=text, url=url)
 
         self.assertEqual(expected, actual)
 
     def test_make_with_id_raises(self) -> None:
         with self.assertRaises(InvalidSpdxLicenseException, msg='foo'):
             with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None):
-                LicenseFactory.make_with_id('foo')
+                LicenseFactory().make_with_id('foo')
 
     def test_make_with_name(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
         expected = License(name='foo', text=text, url=url)
-        actual = LicenseFactory.make_with_name('foo', text=text, url=url)
+        actual = LicenseFactory().make_with_name('foo', text=text, url=url)
         self.assertEqual(expected, actual)
 
 

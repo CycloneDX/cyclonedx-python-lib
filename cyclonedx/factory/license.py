@@ -34,7 +34,8 @@ class LicenseFactory:
         except InvalidSpdxLicenseException:
             return self.make_with_name(name_or_spdx, text=license_text, url=license_url)
 
-    def make_with_id(self, spdx_id: str, *, text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> License:
+    def make_with_id(self, spdx_id: str, *, text: Optional[AttachedText] = None,
+                     url: Optional[XsUri] = None) -> License:
         """Make a :class:`cyclonedx.model.License` from an SPDX-ID.
 
         :raises InvalidSpdxLicenseException: if `spdx_id` was not known/supported SPDX-ID
