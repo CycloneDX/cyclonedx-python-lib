@@ -186,14 +186,14 @@ class ComponentEvidence:
     """
 
     def __init__(self, *, licenses: Optional[Iterable[LicenseChoice]] = None,
-                 copyright_: Optional[Iterable[Copyright]] = None) -> None:
-        if not licenses and not copyright_:
+                 copyright: Optional[Iterable[Copyright]] = None) -> None:
+        if not licenses and not copyright:
             raise NoPropertiesProvidedException(
-                'At least one of `licenses` or `copyright_` must be supplied for a `ComponentEvidence`.'
+                'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
             )
 
         self.licenses = licenses or []  # type: ignore
-        self.copyright_ = copyright_ or []  # type: ignore
+        self.copyright = copyright or []  # type: ignore
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'license')
@@ -212,7 +212,7 @@ class ComponentEvidence:
 
     @property  # type: ignore[misc]
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
-    def copyright_(self) -> "SortedSet[Copyright]":
+    def copyright(self) -> "SortedSet[Copyright]":
         """
         Optional list of copyright statements.
 
@@ -221,9 +221,9 @@ class ComponentEvidence:
         """
         return self._copyright
 
-    @copyright_.setter
-    def copyright_(self, copyright_: Iterable[Copyright]) -> None:
-        self._copyright = SortedSet(copyright_)
+    @copyright.setter
+    def copyright(self, copyright: Iterable[Copyright]) -> None:
+        self._copyright = SortedSet(copyright)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ComponentEvidence):
@@ -231,7 +231,7 @@ class ComponentEvidence:
         return False
 
     def __hash__(self) -> int:
-        return hash((tuple(self.licenses), tuple(self.copyright_)))
+        return hash((tuple(self.licenses), tuple(self.copyright)))
 
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
@@ -350,15 +350,15 @@ class Patch:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_patchType
     """
 
-    def __init__(self, *, type_: PatchClassification, diff: Optional[Diff] = None,
+    def __init__(self, *, type: PatchClassification, diff: Optional[Diff] = None,
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
-        self.type_ = type_
+        self.type = type
         self.diff = diff
         self.resolves = resolves or []  # type: ignore
 
     @property  # type: ignore[misc]
     @serializable.xml_attribute()
-    def type_(self) -> PatchClassification:
+    def type(self) -> PatchClassification:
         """
         Specifies the purpose for the patch including the resolution of defects, security issues, or new behavior or
         functionality.
@@ -368,9 +368,9 @@ class Patch:
         """
         return self._type
 
-    @type_.setter
-    def type_(self, type_: PatchClassification) -> None:
-        self._type = type_
+    @type.setter
+    def type(self, type: PatchClassification) -> None:
+        self._type = type
 
     @property
     def diff(self) -> Optional[Diff]:
@@ -411,15 +411,15 @@ class Patch:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return ComparableTuple((self.type_, self.diff, ComparableTuple(self.resolves))) < ComparableTuple(
-                (other.type_, other.diff, ComparableTuple(other.resolves)))
+            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < ComparableTuple(
+                (other.type, other.diff, ComparableTuple(other.resolves)))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.type_, self.diff, tuple(self.resolves)))
+        return hash((self.type, self.diff, tuple(self.resolves)))
 
     def __repr__(self) -> str:
-        return f'<Patch type={self.type_}, id={id(self)}>'
+        return f'<Patch type={self.type}, id={id(self)}>'
 
 
 @serializable.serializable_class
@@ -745,19 +745,19 @@ class Component(Dependable):
             hashes=[
                 HashType(alg=HashAlgorithm.SHA_1, content=sha1_hash)
             ],
-            type_=ComponentType.FILE, purl=PackageURL(
+            type=ComponentType.FILE, purl=PackageURL(
                 type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
                 version='0.0.0-{}'.format(sha1_hash[0:12])
             )
         )
 
-    def __init__(self, *, name: str, type_: ComponentType = ComponentType.LIBRARY,
+    def __init__(self, *, name: str, type: ComponentType = ComponentType.LIBRARY,
                  mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
                  hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[LicenseChoice]] = None,
-                 copyright_: Optional[str] = None, purl: Optional[PackageURL] = None,
+                 copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
@@ -766,9 +766,9 @@ class Component(Dependable):
                  # Deprecated parameters kept for backwards compatibility
                  namespace: Optional[str] = None, license_str: Optional[str] = None
                  ) -> None:
-        self.type_ = type_
+        self.type = type
         self.mime_type = mime_type
-        if type(bom_ref) == BomRef:
+        if isinstance(bom_ref, BomRef):
             self._bom_ref = bom_ref
         else:
             self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else str(uuid4()))
@@ -782,7 +782,7 @@ class Component(Dependable):
         self.scope = scope
         self.hashes = hashes or []  # type: ignore
         self.licenses = licenses or []  # type: ignore
-        self.copyright_ = copyright_
+        self.copyright = copyright
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
@@ -815,18 +815,18 @@ class Component(Dependable):
 
     @property  # type: ignore[misc]
     @serializable.xml_attribute()
-    def type_(self) -> ComponentType:
+    def type(self) -> ComponentType:
         """
         Get the type of this Component.
 
         Returns:
             Declared type of this Component as `ComponentType`.
         """
-        return self._type_
+        return self._type
 
-    @type_.setter
-    def type_(self, component_type: ComponentType) -> None:
-        self._type_ = component_type
+    @type.setter
+    def type(self, type: ComponentType) -> None:
+        self._type = type
 
     @property
     def mime_type(self) -> Optional[str]:
@@ -1049,7 +1049,7 @@ class Component(Dependable):
 
     @property  # type: ignore[misc]
     @serializable.xml_sequence(11)
-    def copyright_(self) -> Optional[str]:
+    def copyright(self) -> Optional[str]:
         """
         An optional copyright notice informing users of the underlying claims to copyright ownership in a published
         work.
@@ -1057,11 +1057,11 @@ class Component(Dependable):
         Returns:
             `str` or `None`
         """
-        return self._copyright_
+        return self._copyright
 
-    @copyright_.setter
-    def copyright_(self, copyright_: Optional[str]) -> None:
-        self._copyright_ = copyright_
+    @copyright.setter
+    def copyright(self, copyright: Optional[str]) -> None:
+        self._copyright = copyright
 
     @property  # type: ignore[misc]
     @serializable.xml_sequence(12)
@@ -1260,21 +1260,21 @@ class Component(Dependable):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return ComparableTuple((self.type_, self.group, self.name, self.version)) < ComparableTuple(
-                (other.type_, other.group, other.name, other.version))
+            return ComparableTuple((self.type, self.group, self.name, self.version)) < ComparableTuple(
+                (other.type, other.group, other.name, other.version))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
-            self.type_, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
-            self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright_,
+            self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
+            self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
             self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
             tuple(self.components), self.evidence, self.release_notes, self.modified
         ))
 
     def __repr__(self) -> str:
         return f'<Component bom-ref={self.bom_ref}, group={self.group}, name={self.name}, ' \
-               f'version={self.version}, type={self.type_}>'
+               f'version={self.version}, type={self.type}>'
 
     # Deprecated methods
     def get_namespace(self) -> Optional[str]:

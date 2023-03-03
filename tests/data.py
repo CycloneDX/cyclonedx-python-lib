@@ -156,9 +156,9 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     component = get_component_setuptools_simple()
     bom.components.add(component)
     bom.vulnerabilities.add(Vulnerability(
-        bom_ref='my-vuln-ref-1', id_='CVE-2018-7489', source=get_vulnerability_source_nvd(),
+        bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=get_vulnerability_source_nvd(),
         references=[
-            VulnerabilityReference(id_='SOME-OTHER-ID', source=VulnerabilitySource(
+            VulnerabilityReference(id='SOME-OTHER-ID', source=VulnerabilitySource(
                 name='OSS Index', url=XsUri('https://ossindex.sonatype.org/component/pkg:pypi/setuptools')
             ))
         ],
@@ -186,7 +186,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
                            tzinfo=timezone.utc),
         updated=datetime(year=2021, month=9, day=3, hour=10, minute=50, second=42, microsecond=51979,
                          tzinfo=timezone.utc),
-        credits_=VulnerabilityCredits(
+        credits=VulnerabilityCredits(
             organizations=[
                 get_org_entity_1()
             ],
@@ -203,7 +203,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             BomTarget(
                 ref=component.purl.to_string() if component.purl else None,
                 versions=[BomTargetVersionRange(
-                    range_='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
+                    range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
             )
         ],
@@ -222,8 +222,8 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
-    bom.metadata.licenses = [LicenseChoice(license_=License(
-        id_='Apache-2.0', text=AttachedText(
+    bom.metadata.licenses = [LicenseChoice(license=License(
+        id='Apache-2.0', text=AttachedText(
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
         ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
     ))]
@@ -244,7 +244,7 @@ def get_bom_with_services_simple() -> Bom:
         Service(name='my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', type_=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
     )
     return bom
 
@@ -273,7 +273,7 @@ def get_bom_with_services_complex() -> Bom:
         Service(name='my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', type_=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
     )
     return bom
 
@@ -323,7 +323,7 @@ def get_bom_with_nested_services() -> Bom:
         )
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', type_=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
     )
     return bom
 
@@ -374,7 +374,7 @@ def get_bom_for_issue_328_components() -> Bom:
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/328
     """
 
-    comp_root = Component(component_type=ComponentType.APPLICATION,
+    comp_root = Component(type=ComponentType.APPLICATION,
                           name='my-project', version='1', bom_ref='my-project')
     comp_a = Component(name='A', version='0.1', bom_ref='component-A')
     comp_b = Component(name='B', version='1.0', bom_ref='component-B')
@@ -400,7 +400,7 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     component.publisher = 'CycloneDX'
     component.description = 'This component is awesome'
     component.scope = ComponentScope.REQUIRED
-    component.copyright_ = 'Apache 2.0 baby!'
+    component.copyright = 'Apache 2.0 baby!'
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
     component.swid = get_swid_1()
     if include_pedigree:
@@ -413,7 +413,7 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
         get_component_setuptools_simple(),
         get_component_toml_with_hashes_with_references()
     ])
-    component.evidence = ComponentEvidence(copyright_=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
+    component.evidence = ComponentEvidence(copyright=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
     component.release_notes = get_release_notes()
     return component
 
@@ -458,7 +458,7 @@ def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None
 
 def get_external_reference_1() -> ExternalReference:
     return ExternalReference(
-        type_=ExternalReferenceType.DISTRIBUTION,
+        type=ExternalReferenceType.DISTRIBUTION,
         url=XsUri('https://cyclonedx.org'),
         comment='No comment',
         hashes=[
@@ -470,14 +470,14 @@ def get_external_reference_1() -> ExternalReference:
 
 def get_external_reference_2() -> ExternalReference:
     return ExternalReference(
-        type_=ExternalReferenceType.WEBSITE,
+        type=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
     )
 
 
 def get_issue_1() -> IssueType:
     return IssueType(
-        type_=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
+        type=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -489,7 +489,7 @@ def get_issue_1() -> IssueType:
 
 def get_issue_2() -> IssueType:
     return IssueType(
-        type_=IssueClassification.SECURITY, id_='CVE-2021-44229', name='Apache Log4Shell',
+        type=IssueClassification.SECURITY, id='CVE-2021-44229', name='Apache Log4Shell',
         description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...',
         source=IssueTypeSource(name='NVD', url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228')),
         references=[
@@ -534,7 +534,7 @@ def get_pedigree_1() -> Pedigree:
             get_component_setuptools_simple(bom_ref='ded1d73e-1fca-4302-b520-f1bc53979958')
         ],
         commits=[Commit(uid='a-random-uid', message="A commit message")],
-        patches=[Patch(type_=PatchClassification.BACKPORT)],
+        patches=[Patch(type=PatchClassification.BACKPORT)],
         notes='Some notes here please'
     )
 
@@ -552,7 +552,7 @@ def get_release_notes() -> ReleaseNotes:
     ).decode(encoding='UTF-8')
 
     return ReleaseNotes(
-        type_='major', title="Release Notes Title",
+        type='major', title="Release Notes Title",
         featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
         social_image=XsUri('https://cyclonedx.org/cyclonedx-icon.png'),
         description="This release is a test release", timestamp=MOCK_TIMESTAMP,

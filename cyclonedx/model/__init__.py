@@ -492,11 +492,11 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, *, type_: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
+    def __init__(self, *, type: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
                  hashes: Optional[Iterable[HashType]] = None) -> None:
         self.url = url
         self.comment = comment
-        self.type_ = type_
+        self.type = type
         self.hashes = hashes or []  # type: ignore
 
     @property  # type: ignore[misc]
@@ -530,7 +530,7 @@ class ExternalReference:
 
     @property  # type: ignore[misc]
     @serializable.xml_attribute()
-    def type_(self) -> ExternalReferenceType:
+    def type(self) -> ExternalReferenceType:
         """
         Specifies the type of external reference.
 
@@ -540,11 +540,11 @@ class ExternalReference:
         Returns:
             `ExternalReferenceType`
         """
-        return self._type_
+        return self._type
 
-    @type_.setter
-    def type_(self, type_: ExternalReferenceType) -> None:
-        self._type_ = type_
+    @type.setter
+    def type(self, type: ExternalReferenceType) -> None:
+        self._type = type
 
     @property  # type: ignore[misc]
     @serializable.view(SchemaVersion1Dot3)
@@ -570,18 +570,18 @@ class ExternalReference:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ExternalReference):
-            return ComparableTuple((self._type_, self._url, self._comment)) < \
-                ComparableTuple((other._type_, other._url, other._comment))
+            return ComparableTuple((self._type, self._url, self._comment)) < \
+                ComparableTuple((other._type, other._url, other._comment))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
-            self._type_, self._url, self._comment,
+            self._type, self._url, self._comment,
             tuple(sorted(self._hashes, key=hash))
         ))
 
     def __repr__(self) -> str:
-        return f'<ExternalReference {self.type_.name}, {self.url}>'
+        return f'<ExternalReference {self.type.name}, {self.url}>'
 
 
 @serializable.serializable_class
@@ -594,17 +594,17 @@ class License:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
     """
 
-    def __init__(self, *, id_: Optional[str] = None, name: Optional[str] = None,
+    def __init__(self, *, id: Optional[str] = None, name: Optional[str] = None,
                  text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
-        if not id_ and not name:
-            raise MutuallyExclusivePropertiesException('Either `id_` or `name` MUST be supplied')
-        if id_ and name:
+        if not id and not name:
+            raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
+        if id and name:
             warnings.warn(
-                'Both `id_` and `name` have been supplied - `name` will be ignored!',
+                'Both `id` and `name` have been supplied - `name` will be ignored!',
                 RuntimeWarning
             )
-        self.id_ = id_
-        if not id_:
+        self.id = id
+        if not id:
             self.name = name
         else:
             self.name = None
@@ -612,7 +612,7 @@ class License:
         self.url = url
 
     @property
-    def id_(self) -> Optional[str]:
+    def id(self) -> Optional[str]:
         """
         A valid SPDX license ID
 
@@ -621,9 +621,9 @@ class License:
         """
         return self._id
 
-    @id_.setter
-    def id_(self, id_: Optional[str]) -> None:
-        self._id = id_
+    @id.setter
+    def id(self, id: Optional[str]) -> None:
+        self._id = id
 
     @property
     def name(self) -> Optional[str]:
@@ -675,14 +675,14 @@ class License:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, License):
-            return ComparableTuple((self.id_, self.name)) < ComparableTuple((other.id_, other.name))
+            return ComparableTuple((self.id, self.name)) < ComparableTuple((other.id, other.name))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.id_, self.name, self.text, self.url))
+        return hash((self.id, self.name, self.text, self.url))
 
     def __repr__(self) -> str:
-        return f'<License id={self.id_}, name={self.name}>'
+        return f'<License id={self.id}, name={self.name}>'
 
 
 @serializable.serializable_class
@@ -695,35 +695,35 @@ class LicenseChoice:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
     """
 
-    def __init__(self, *, license_: Optional[License] = None, expression: Optional[str] = None) -> None:
-        if not license_ and not expression:
+    def __init__(self, *, license: Optional[License] = None, expression: Optional[str] = None) -> None:
+        if not license and not expression:
             raise NoPropertiesProvidedException(
-                'One of `license` or `license_expression` must be supplied - neither supplied'
+                'One of `license` or `expression` must be supplied - neither supplied'
             )
-        if license_ and expression:
+        if license and expression:
             warnings.warn(
-                'Both `license` and `license_expression` have been supplied - `license` will take precedence',
+                'Both `license` and `expression` have been supplied - `license` will take precedence',
                 RuntimeWarning
             )
-        self.license_ = license_
-        if not license_:
+        self.license = license
+        if not license:
             self.expression = expression
         else:
             self.expression = None
 
     @property
-    def license_(self) -> Optional[License]:
+    def license(self) -> Optional[License]:
         """
         License definition
 
         Returns:
             `License` or `None`
         """
-        return self._license_
+        return self._license
 
-    @license_.setter
-    def license_(self, license_: Optional[License]) -> None:
-        self._license_ = license_
+    @license.setter
+    def license(self, license: Optional[License]) -> None:
+        self._license = license
 
     @property
     def expression(self) -> Optional[str]:
@@ -748,15 +748,15 @@ class LicenseChoice:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, LicenseChoice):
-            return ComparableTuple((self.license_, self.expression)) < ComparableTuple(
-                (other.license_, other.expression))
+            return ComparableTuple((self.license, self.expression)) < ComparableTuple(
+                (other.license, other.expression))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.license_, self.expression))
+        return hash((self.license, self.expression))
 
     def __repr__(self) -> str:
-        return f'<LicenseChoice license={self.license_}, expression={self.expression}>'
+        return f'<LicenseChoice license={self.license}, expression={self.expression}>'
 
 
 @serializable.serializable_class
@@ -1406,35 +1406,35 @@ except Exception:
 ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
 ThisTool.external_references.update([
     ExternalReference(
-        type_=ExternalReferenceType.BUILD_SYSTEM,
+        type=ExternalReferenceType.BUILD_SYSTEM,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
     ),
     ExternalReference(
-        type_=ExternalReferenceType.DISTRIBUTION,
+        type=ExternalReferenceType.DISTRIBUTION,
         url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
     ),
     ExternalReference(
-        type_=ExternalReferenceType.DOCUMENTATION,
+        type=ExternalReferenceType.DOCUMENTATION,
         url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
     ),
     ExternalReference(
-        type_=ExternalReferenceType.ISSUE_TRACKER,
+        type=ExternalReferenceType.ISSUE_TRACKER,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
     ),
     ExternalReference(
-        type_=ExternalReferenceType.LICENSE,
+        type=ExternalReferenceType.LICENSE,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
     ),
     ExternalReference(
-        type_=ExternalReferenceType.RELEASE_NOTES,
+        type=ExternalReferenceType.RELEASE_NOTES,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
     ),
     ExternalReference(
-        type_=ExternalReferenceType.VCS,
+        type=ExternalReferenceType.VCS,
         url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
     ),
     ExternalReference(
-        type_=ExternalReferenceType.WEBSITE,
+        type=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
     )
 ])

@@ -30,7 +30,7 @@ class TestFactoryLicense(unittest.TestCase):
     def test_make_from_string_with_id(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = License(id_='bar', text=text, url=url)
+        expected = License(id='bar', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
             actual = LicenseFactory.make_from_string('foo', license_text=text, license_url=url)
@@ -50,7 +50,7 @@ class TestFactoryLicense(unittest.TestCase):
     def test_make_with_id(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = License(id_='bar', text=text, url=url)
+        expected = License(id='bar', text=text, url=url)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
             actual = LicenseFactory.make_with_id('foo', text=text, url=url)
@@ -83,7 +83,7 @@ class TestFactoryLicenseChoice(unittest.TestCase):
 
     def test_make_from_string_with_license(self) -> None:
         license_ = unittest.mock.NonCallableMock(spec=License)
-        expected = LicenseChoice(license_=license_)
+        expected = LicenseChoice(license=license_)
         license_factory = unittest.mock.MagicMock(spec=LicenseFactory)
         license_factory.make_from_string.return_value = license_
         factory = LicenseChoiceFactory(license_factory=license_factory)
@@ -92,7 +92,7 @@ class TestFactoryLicenseChoice(unittest.TestCase):
             actual = factory.make_from_string('foo')
 
         self.assertEqual(expected, actual)
-        self.assertIs(license_, actual.license_)
+        self.assertIs(license_, actual.license)
         license_factory.make_from_string.assert_called_once_with('foo', license_text=None, license_url=None)
 
     def test_make_with_compound_expression(self) -> None:
@@ -114,7 +114,7 @@ class TestFactoryLicenseChoice(unittest.TestCase):
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
         license_ = unittest.mock.NonCallableMock(spec=License)
-        expected = LicenseChoice(license_=license_)
+        expected = LicenseChoice(license=license_)
         license_factory = unittest.mock.MagicMock(spec=LicenseFactory)
         license_factory.make_from_string.return_value = license_
         factory = LicenseChoiceFactory(license_factory=license_factory)
@@ -123,5 +123,5 @@ class TestFactoryLicenseChoice(unittest.TestCase):
             actual = factory.make_with_license('foo', license_text=text, license_url=url)
 
         self.assertEqual(expected, actual)
-        self.assertIs(license_, actual.license_)
+        self.assertIs(license_, actual.license)
         license_factory.make_from_string.assert_called_once_with('foo', license_text=text, license_url=url)

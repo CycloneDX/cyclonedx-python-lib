@@ -44,7 +44,7 @@ class LicenseFactory:
         spdx_license_id = spdx_fixup(spdx_id)
         if spdx_license_id is None:
             raise InvalidSpdxLicenseException(spdx_id)
-        return License(id_=spdx_license_id, text=text, url=url)
+        return License(id=spdx_license_id, text=text, url=url)
 
     @staticmethod
     def make_with_name(name: str, *, text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> License:
@@ -81,5 +81,5 @@ class LicenseChoiceFactory:
                           license_text: Optional[AttachedText] = None,
                           license_url: Optional[XsUri] = None) -> LicenseChoice:
         """Make a :class:`cyclonedx.model.LicenseChoice` with a license (name or SPDX-ID)."""
-        return LicenseChoice(license_=self.license_factory.make_from_string(
+        return LicenseChoice(license=self.license_factory.make_from_string(
             name_or_spdx, license_text=license_text, license_url=license_url))

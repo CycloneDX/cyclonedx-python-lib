@@ -110,11 +110,11 @@ class IssueType:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, *, type_: IssueClassification, id_: Optional[str] = None, name: Optional[str] = None,
+    def __init__(self, *, type: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
                  description: Optional[str] = None, source: Optional[IssueTypeSource] = None,
                  references: Optional[Iterable[XsUri]] = None) -> None:
-        self.type_ = type_
-        self.id_ = id_
+        self.type = type
+        self.id = id
         self.name = name
         self.description = description
         self.source = source
@@ -122,7 +122,7 @@ class IssueType:
 
     @property  # type: ignore[misc]
     @serializable.xml_attribute()
-    def type_(self) -> IssueClassification:
+    def type(self) -> IssueClassification:
         """
         Specifies the type of issue.
 
@@ -131,13 +131,13 @@ class IssueType:
         """
         return self._type
 
-    @type_.setter
-    def type_(self, type_: IssueClassification) -> None:
-        self._type = type_
+    @type.setter
+    def type(self, type: IssueClassification) -> None:
+        self._type = type
 
     @property  # type: ignore[misc]
     @serializable.xml_sequence(1)
-    def id_(self) -> Optional[str]:
+    def id(self) -> Optional[str]:
         """
         The identifier of the issue assigned by the source of the issue.
 
@@ -146,9 +146,9 @@ class IssueType:
         """
         return self._id
 
-    @id_.setter
-    def id_(self, id_: Optional[str]) -> None:
-        self._id = id_
+    @id.setter
+    def id(self, id: Optional[str]) -> None:
+        self._id = id
 
     @property  # type: ignore[misc]
     @serializable.xml_sequence(2)
@@ -218,14 +218,14 @@ class IssueType:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
-            return ComparableTuple((self.type_, self.id_, self.name, self.description, self.source)) < \
-                ComparableTuple((other.type_, other.id_, other.name, other.description, other.source))
+            return ComparableTuple((self.type, self.id, self.name, self.description, self.source)) < \
+                ComparableTuple((other.type, other.id, other.name, other.description, other.source))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
-            self.type_, self.id_, self.name, self.description, self.source, tuple(self.references)
+            self.type, self.id, self.name, self.description, self.source, tuple(self.references)
         ))
 
     def __repr__(self) -> str:
-        return f'<IssueType type={self.type_}, id={self.id_}, name={self.name}>'
+        return f'<IssueType type={self.type}, id={self.id}, name={self.name}>'

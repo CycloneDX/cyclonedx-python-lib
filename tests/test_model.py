@@ -158,8 +158,8 @@ class TestModelLicense(TestCase):
         # expected sort order: ([id], [name])
         expected_order = [1, 0, 3, 2]
         licenses = [
-            License(id_='MIT'),
-            License(id_='Apache-2.0'),
+            License(id='MIT'),
+            License(id='Apache-2.0'),
             License(name='MIT'),
             License(name='Apache-2.0'),
         ]
@@ -171,14 +171,14 @@ class TestModelLicense(TestCase):
 class TestModelLicenseChoice(TestCase):
 
     def test_sort(self) -> None:
-        license_a = License(id_='Apache-2.0')
-        license_b = License(id_='MIT')
+        license_a = License(id='Apache-2.0')
+        license_b = License(id='MIT')
 
         # expected sort order: ([license], [expression])
         expected_order = [1, 0, 3, 2]
         licenses = [
-            LicenseChoice(license_=license_b),
-            LicenseChoice(license_=license_a),
+            LicenseChoice(license=license_b),
+            LicenseChoice(license=license_a),
             LicenseChoice(expression='MIT'),
             LicenseChoice(expression='Apache-2.0'),
         ]
@@ -219,20 +219,20 @@ class TestModelCopyright(TestCase):
 class TestModelExternalReference(TestCase):
 
     def test_external_reference_with_xsuri(self) -> None:
-        e = ExternalReference(type_=ExternalReferenceType.VCS, url=XsUri('https://www.google.com'))
-        self.assertEqual(e.type_, ExternalReferenceType.VCS)
+        e = ExternalReference(type=ExternalReferenceType.VCS, url=XsUri('https://www.google.com'))
+        self.assertEqual(e.type, ExternalReferenceType.VCS)
         self.assertEqual(e.url, XsUri('https://www.google.com'))
         self.assertIsNone(e.comment)
         self.assertSetEqual(e.hashes, set())
 
     def test_same(self) -> None:
         ref_1 = ExternalReference(
-            type_=ExternalReferenceType.OTHER,
+            type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         )
         ref_2 = ExternalReference(
-            type_=ExternalReferenceType.OTHER,
+            type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         )
@@ -242,12 +242,12 @@ class TestModelExternalReference(TestCase):
 
     def test_not_same(self) -> None:
         ref_1 = ExternalReference(
-            type_=ExternalReferenceType.OTHER,
+            type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         )
         ref_2 = ExternalReference(
-            type_=ExternalReferenceType.OTHER,
+            type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org/'),
             comment='No comment'
         )
@@ -259,12 +259,12 @@ class TestModelExternalReference(TestCase):
         # expected sort order: (type, url, [comment])
         expected_order = [5, 4, 0, 1, 3, 2]
         refs = [
-            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('a'), comment='a'),
-            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('a'), comment='b'),
-            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('b')),
-            ExternalReference(type_=ExternalReferenceType.OTHER, url=XsUri('b'), comment='a'),
-            ExternalReference(type_=ExternalReferenceType.LICENSE, url=XsUri('b'), comment='a'),
-            ExternalReference(type_=ExternalReferenceType.BUILD_SYSTEM, url=XsUri('b'), comment='a'),
+            ExternalReference(type=ExternalReferenceType.OTHER, url=XsUri('a'), comment='a'),
+            ExternalReference(type=ExternalReferenceType.OTHER, url=XsUri('a'), comment='b'),
+            ExternalReference(type=ExternalReferenceType.OTHER, url=XsUri('b')),
+            ExternalReference(type=ExternalReferenceType.OTHER, url=XsUri('b'), comment='a'),
+            ExternalReference(type=ExternalReferenceType.LICENSE, url=XsUri('b'), comment='a'),
+            ExternalReference(type=ExternalReferenceType.BUILD_SYSTEM, url=XsUri('b'), comment='a'),
         ]
         sorted_refs = sorted(refs)
         expected_refs = reorder(refs, expected_order)
@@ -347,7 +347,7 @@ class TestModelIssueType(TestCase):
 
     def test_issue_type(self) -> None:
         it = IssueType(
-            type_=IssueClassification.SECURITY, id_='CVE-2021-44228', name='Apache Log3Shell',
+            type=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
             description='Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features used in '
                         'configuration, log messages, and parameters do not protect against attacker controlled LDAP '
                         'and other JNDI related endpoints. An attacker who can control log messages or log message '
@@ -362,8 +362,8 @@ class TestModelIssueType(TestCase):
                 XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
             ]
         )
-        self.assertEqual(it.type_, IssueClassification.SECURITY),
-        self.assertEqual(it.id_, 'CVE-2021-44228'),
+        self.assertEqual(it.type, IssueClassification.SECURITY),
+        self.assertEqual(it.id, 'CVE-2021-44228'),
         self.assertEqual(it.name, 'Apache Log3Shell')
         self.assertEqual(
             it.description,

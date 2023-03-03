@@ -20,8 +20,16 @@
 from unittest import TestCase
 from uuid import uuid4
 
-from cyclonedx.model import License, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property
-from cyclonedx.model.bom import Bom, BomMetaData, ThisTool, Tool
+from cyclonedx.model import (
+    License,
+    LicenseChoice,
+    OrganizationalContact,
+    OrganizationalEntity,
+    Property,
+    ThisTool,
+    Tool,
+)
+from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
 
@@ -60,12 +68,12 @@ class TestBomMetaData(TestCase):
         manufacturer = OrganizationalEntity(name='test_manufacturer')
         supplier = OrganizationalEntity(name='test_supplier')
         licenses = [
-            LicenseChoice(license_=License(id_='MIT')),
-            LicenseChoice(license_=License(id_='Apache-2.0')),
+            LicenseChoice(license=License(id='MIT')),
+            LicenseChoice(license=License(id='Apache-2.0')),
         ]
         properties = [
             Property(name='property_1', value='value_1'),
-            Property(name='property_2', value='value_2',)
+            Property(name='property_2', value='value_2', )
         ]
 
         metadata = BomMetaData(tools=tools, authors=authors, component=component,
@@ -108,7 +116,7 @@ class TestBom(TestCase):
     def test_metadata_component(self) -> None:
         metadata = Bom().metadata
         self.assertTrue(metadata.component is None)
-        hextech = Component(name='Hextech', version='1.0.0', type_=ComponentType.LIBRARY)
+        hextech = Component(name='Hextech', version='1.0.0', type=ComponentType.LIBRARY)
         metadata.component = hextech
         self.assertFalse(metadata.component is None)
         self.assertEqual(metadata.component, hextech)

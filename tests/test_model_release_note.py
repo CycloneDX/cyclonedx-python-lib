@@ -27,8 +27,8 @@ from cyclonedx.model.release_note import ReleaseNotes
 class TestModelReleaseNote(TestCase):
 
     def test_simple(self) -> None:
-        rn = ReleaseNotes(type_='major')
-        self.assertEqual(rn.type_, 'major')
+        rn = ReleaseNotes(type='major')
+        self.assertEqual(rn.type, 'major')
         self.assertIsNone(rn.title)
         self.assertIsNone(rn.featured_image)
         self.assertIsNone(rn.social_image)
@@ -43,7 +43,7 @@ class TestModelReleaseNote(TestCase):
     def test_complete(self) -> None:
         timestamp: datetime.datetime = datetime.datetime.utcnow()
         rn = ReleaseNotes(
-            type_='major', title="Release Notes Title",
+            type='major', title="Release Notes Title",
             featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
             social_image=XsUri('https://cyclonedx.org/cyclonedx-icon.png'),
             description="This release is a test release", timestamp=timestamp,
@@ -57,7 +57,7 @@ class TestModelReleaseNote(TestCase):
         rn.aliases.add("Release Alpha")
         rn.tags.add('testing')
 
-        self.assertEqual(rn.type_, 'major')
+        self.assertEqual(rn.type, 'major')
         self.assertEqual(rn.title, 'Release Notes Title')
         self.assertEqual(
             str(rn.featured_image),

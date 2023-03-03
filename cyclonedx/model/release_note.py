@@ -36,12 +36,12 @@ class ReleaseNotes:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_releaseNotesType
     """
 
-    def __init__(self, *, type_: str, title: Optional[str] = None, featured_image: Optional[XsUri] = None,
+    def __init__(self, *, type: str, title: Optional[str] = None, featured_image: Optional[XsUri] = None,
                  social_image: Optional[XsUri] = None, description: Optional[str] = None,
                  timestamp: Optional[datetime] = None, aliases: Optional[Iterable[str]] = None,
                  tags: Optional[Iterable[str]] = None, resolves: Optional[Iterable[IssueType]] = None,
                  notes: Optional[Iterable[Note]] = None, properties: Optional[Iterable[Property]] = None) -> None:
-        self.type_ = type_
+        self.type = type
         self.title = title
         self.featured_image = featured_image
         self.social_image = social_image
@@ -55,7 +55,7 @@ class ReleaseNotes:
 
     @property  # type: ignore[misc]
     @serializable.xml_sequence(1)
-    def type_(self) -> str:
+    def type(self) -> str:
         """
         The software versioning type.
 
@@ -75,9 +75,9 @@ class ReleaseNotes:
         """
         return self._type
 
-    @type_.setter
-    def type_(self, type_: str) -> None:
-        self._type = type_
+    @type.setter
+    def type(self, type: str) -> None:
+        self._type = type
 
     @property  # type: ignore[misc]
     @serializable.xml_sequence(2)
@@ -231,9 +231,9 @@ class ReleaseNotes:
 
     def __hash__(self) -> int:
         return hash((
-            self.type_, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
+            self.type, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
             tuple(self.aliases), tuple(self.tags), tuple(self.resolves), tuple(self.notes), tuple(self.properties)
         ))
 
     def __repr__(self) -> str:
-        return f'<ReleaseNotes type={self.type_}, title={self.title}>'
+        return f'<ReleaseNotes type={self.type}, title={self.title}>'
