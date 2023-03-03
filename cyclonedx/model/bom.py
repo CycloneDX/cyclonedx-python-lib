@@ -258,9 +258,6 @@ class Bom:
 
     Once you have an instance of `cyclonedx.model.bom.Bom`, you can pass this to an instance of
     `cyclonedx.output.BaseOutput` to produce a CycloneDX document according to a specific schema version and format.
-
-    @todo: Handle different Spec Versions during (de-)serialization
-    @todo: Support dependencies during (de-)serialization
     """
 
     @staticmethod
@@ -295,8 +292,8 @@ class Bom:
         self.metadata = metadata or BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
-        self.external_references = SortedSet(external_references) or SortedSet()
-        self.vulnerabilities = SortedSet(vulnerabilities) or SortedSet()
+        self.external_references = SortedSet(external_references or [])
+        self.vulnerabilities = SortedSet(vulnerabilities or [])
         self.version = version
         self.dependencies = SortedSet(dependencies) or SortedSet()
 
