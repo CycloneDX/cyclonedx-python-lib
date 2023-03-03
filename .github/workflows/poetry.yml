@@ -4,7 +4,7 @@ name: Python CI
 
 on:
   push:
-    branches: ["master", "main"]
+    branches: ["main"]
   pull_request:
     branches-ignore: ['dependabot/**']
   workflow_dispatch:
@@ -16,7 +16,7 @@ on:
 env:
   REPORTS_DIR: CI_reports
   PYTHON_VERSION_DEFAULT: "3.11"
-  POETRY_VERSION: "1.1.11"
+  POETRY_VERSION: "1.1.12"
 
 jobs:
   coding-standards:
