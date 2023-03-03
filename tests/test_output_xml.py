@@ -262,27 +262,6 @@ class TestOutputXml(BaseXmlTestCase):
             fixture='bom_setuptools_with_vulnerabilities.xml'
         )
 
-    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
-    def test_bom_v1_3_component_with_vulnerability(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_3,
-            fixture='bom_setuptools_with_vulnerabilities.xml'
-        )
-
-    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
-    def test_bom_v1_2_component_with_vulnerability(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_2,
-            fixture='bom_setuptools_with_vulnerabilities.xml'
-        )
-
-    @unittest.skip('Required Vulnerability Extension Schema - dropping support')
-    def test_bom_v1_1_component_with_vulnerability(self) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_1,
-            fixture='bom_setuptools_with_vulnerabilities.xml'
-        )
-
     def test_bom_v1_0_component_with_vulnerability(self) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_component_setuptools_with_vulnerability(), schema_version=SchemaVersion.V1_0,
@@ -509,14 +488,6 @@ class TestOutputXml(BaseXmlTestCase):
             self._validate_xml_bom(
                 bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
                 fixture='bom_dependencies_component.xml'
-            )
-
-    @unittest.skip
-    def test_bom_v1_4_dependencies_invalid(self) -> None:
-        with self.assertRaises(UnknownComponentDependencyException):
-            self._validate_xml_bom(
-                bom=get_bom_with_dependencies_invalid(), schema_version=SchemaVersion.V1_4,
-                fixture='bom_dependencies.xml'
             )
 
     def test_bom_v1_4_issue_275_components(self) -> None:
