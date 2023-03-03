@@ -16,12 +16,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-import unittest
 from os.path import dirname, join
 from unittest.mock import Mock, patch
 from uuid import UUID
 
-from cyclonedx.exception.model import UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance
 from cyclonedx.schema import SchemaVersion
@@ -43,7 +41,6 @@ from tests.data import (
     get_bom_with_component_setuptools_with_release_notes,
     get_bom_with_component_setuptools_with_vulnerability,
     get_bom_with_component_toml_1,
-    get_bom_with_dependencies_invalid,
     get_bom_with_dependencies_valid,
     get_bom_with_external_references,
     get_bom_with_metadata_component_and_dependencies,
