@@ -525,7 +525,7 @@ class Bom:
             # First time we are seeing this target as a Dependency
             self._dependencies.add(Dependency(
                 ref=target.bom_ref,
-                dependencies=list(map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on)) if depends_on else []
+                dependencies=map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on) if depends_on else []
             ))
 
         # Ensure dependents are registered with no further dependents in the Dependency Graph as per CDX specification
