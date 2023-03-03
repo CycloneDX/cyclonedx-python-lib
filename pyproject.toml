@@ -48,7 +48,7 @@ keywords = [
 python = "^3.7"
 importlib-metadata = { version = ">= 3.4", python = "< 3.8" }
 packageurl-python = ">= 0.9"
-py-serializable = "^0.11.0"
+py-serializable = "^0.11.1"
 setuptools = ">= 47.0.0"
 toml = "^0.10.0"
 sortedcontainers = "^2.4.0"
