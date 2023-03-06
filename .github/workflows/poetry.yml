@@ -4,7 +4,7 @@ name: Python CI
 
 on:
   push:
-    branches: ["master", "main"]
+    branches: ["main"]
   pull_request:
     branches-ignore: ['dependabot/**']
   workflow_dispatch:
@@ -15,8 +15,8 @@ on:
 
 env:
   REPORTS_DIR: CI_reports
-  PYTHON_VERISON_DEFAULT: "3.10"
-  POETRY_VERSION: "1.1.11"
+  PYTHON_VERSION_DEFAULT: "3.11"
+  POETRY_VERSION: "1.1.12"
 
 jobs:
   coding-standards:
@@ -27,19 +27,23 @@ jobs:
       - name: Checkout
         # see https://github.com/actions/checkout
         uses: actions/checkout@v3
+
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ env.PYTHON_VERISON_DEFAULT }}
+          python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
           architecture: 'x64'
+
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
+
       - name: Install dependencies
         run: poetry install --no-root
+
       - name: Run tox
         run: poetry run tox -e flake8 -s false
 
@@ -53,7 +57,7 @@ jobs:
         include:
           - # test with the locked dependencies
             os: ubuntu-latest
-            python-version: '3.10'
+            python-version: '3.11'
             toxenv-factor: 'locked'
           - # test with the lowest dependencies
             os: ubuntu-latest
@@ -63,19 +67,23 @@ jobs:
       - name: Checkout
         # see https://github.com/actions/checkout
         uses: actions/checkout@v3
+
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
+
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
+
       - name: Install dependencies
         run: poetry install --no-root
+
       - name: Run tox
         run: poetry run tox -e mypy-${{ matrix.toxenv-factor }} -s false
 
@@ -90,7 +98,8 @@ jobs:
       matrix:
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         python-version:
-          - "3.10" # highest supported
+          - "3.11" # highest supported
+          - "3.10"
           - "3.9"
           - "3.8"
           - "3.7" # lowest supported
@@ -105,35 +114,45 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
+
       - name: Checkout
         # see https://github.com/actions/checkout
         uses: actions/checkout@v3
+
       - name: Create reports directory
         run: mkdir ${{ env.REPORTS_DIR }}
+
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
+
       - name: Validate Python Environment
         run: echo "import sys; print('Python %s on %s in %s' % (sys.version, sys.platform, sys.getdefaultencoding()))" | python
+
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
+
       - name: Install dependencies
         run: poetry install --no-root
+
       - name: Ensure build successful
         run: poetry build
+
       - name: Run tox
         run: poetry run tox -e py-${{ matrix.toxenv-factor }} -s false
+
       - name: Generate coverage reports
         run: >
           poetry run coverage report &&
           poetry run coverage xml -o ${{ env.REPORTS_DIR }}/coverage-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.toxenv-factor }}.xml &&
           poetry run coverage html -d ${{ env.REPORTS_DIR }}
+
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact
