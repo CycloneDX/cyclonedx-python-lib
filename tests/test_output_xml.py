@@ -522,14 +522,17 @@ class TestOutputXml(BaseXmlTestCase):
                 fixture='bom_issue_275_components.xml'
             )
 
-    # Helper methods
+    # region Helper methods
+
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         outputter = get_instance(bom=bom, schema_version=schema_version)
         self.assertEqual(outputter.schema_version, schema_version)
         with open(
                 join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as expected_xml:
-            self.assertValidAgainstSchema(bom_xml=outputter.output_as_string(), schema_version=schema_version)
+            output_as_string = outputter.output_as_string()
+            self.assertValidAgainstSchema(bom_xml=output_as_string, schema_version=schema_version)
             self.assertEqualXmlBom(
-                expected_xml.read(), outputter.output_as_string(), namespace=outputter.get_target_namespace()
+                expected_xml.read(), output_as_string, namespace=outputter.get_target_namespace()
             )
-            expected_xml.close()
+
+    # endregion Helper methods

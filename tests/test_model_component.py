@@ -109,9 +109,7 @@ class TestModelComponent(TestCase):
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
     def test_empty_basic_component(self, mock_uuid: Mock) -> None:
-        c = Component(
-            name='test-component', version='1.2.3'
-        )
+        c = Component(name='test-component')
         mock_uuid.assert_called()
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.type, ComponentType.LIBRARY)
@@ -121,7 +119,7 @@ class TestModelComponent(TestCase):
         self.assertIsNone(c.author)
         self.assertIsNone(c.publisher)
         self.assertIsNone(c.group)
-        self.assertEqual(c.version, '1.2.3')
+        self.assertIsNone(c.version)
         self.assertIsNone(c.description)
         self.assertIsNone(c.scope)
         self.assertSetEqual(c.hashes, set())
@@ -136,20 +134,16 @@ class TestModelComponent(TestCase):
 
     @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
     def test_multiple_basic_components(self, mock_uuid: Mock) -> None:
-        c1 = Component(
-            name='test-component', version='1.2.3'
-        )
+        c1 = Component(name='test-component')
         self.assertEqual(c1.name, 'test-component')
-        self.assertEqual(c1.version, '1.2.3')
+        self.assertIsNone(c1.version)
         self.assertEqual(c1.type, ComponentType.LIBRARY)
         self.assertEqual(len(c1.external_references), 0)
         self.assertEqual(len(c1.hashes), 0)
 
-        c2 = Component(
-            name='test2-component', version='3.2.1'
-        )
+        c2 = Component(name='test2-component')
         self.assertEqual(c2.name, 'test2-component')
-        self.assertEqual(c2.version, '3.2.1')
+        self.assertIsNone(c2.version)
         self.assertEqual(c2.type, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
@@ -159,52 +153,42 @@ class TestModelComponent(TestCase):
         mock_uuid.assert_called()
 
     def test_external_references(self) -> None:
-        c = Component(
-            name='test-component', version='1.2.3'
-        )
+        c = Component(name='test-component')
         c.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
         self.assertEqual(c.name, 'test-component')
-        self.assertEqual(c.version, '1.2.3')
+        self.assertIsNone(c.version)
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 1)
         self.assertEqual(len(c.hashes), 0)
 
-        c2 = Component(
-            name='test2-component', version='3.2.1'
-        )
+        c2 = Component(name='test2-component')
         self.assertEqual(c2.name, 'test2-component')
-        self.assertEqual(c2.version, '3.2.1')
+        self.assertIsNone(c2.version)
         self.assertEqual(c2.type, ComponentType.LIBRARY)
         self.assertEqual(len(c2.external_references), 0)
         self.assertEqual(len(c2.hashes), 0)
 
-    def test_empty_basic_component_no_version(self) -> None:
-        c = Component(
-            name='test-component'
-        )
+    def test_empty_component_with_version(self) -> None:
+        c = Component(name='test-component', version='1.2.3')
         self.assertEqual(c.name, 'test-component')
-        self.assertIsNone(c.version, None)
+        self.assertEqual(c.version, '1.2.3')
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertEqual(len(c.external_references), 0)
         self.assertEqual(len(c.hashes), 0)
 
     def test_component_equal_1(self) -> None:
-        c = Component(
-            name='test-component', version='1.2.3'
-        )
+        c = Component(name='test-component')
         c.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
 
-        c2 = Component(
-            name='test-component', version='1.2.3'
-        )
+        c2 = Component(name='test-component')
         c2.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
@@ -289,8 +273,8 @@ class TestModelComponent(TestCase):
         self.assertListEqual(sorted_components, expected_components)
 
     def test_nested_components_1(self) -> None:
-        comp_b = Component(name="comp_b", version="1.0.0")
-        comp_c = Component(name="comp_c", version="1.0.0")
+        comp_b = Component(name="comp_b")
+        comp_c = Component(name="comp_c")
         comp_b.components.add(comp_c)
 
         self.assertEqual(1, len(comp_b.components))
@@ -298,9 +282,9 @@ class TestModelComponent(TestCase):
         self.assertEqual(1, len(comp_b.get_all_nested_components(include_self=False)))
 
     def test_nested_components_2(self) -> None:
-        comp_a = Component(name="comp_a", version="1.2.3")
-        comp_b = Component(name="comp_b", version="1.0.0")
-        comp_c = Component(name="comp_c", version="1.0.0")
+        comp_a = Component(name="comp_a")
+        comp_b = Component(name="comp_b")
+        comp_c = Component(name="comp_c")
         comp_b.components.add(comp_c)
         comp_b.components.add(comp_a)
 
