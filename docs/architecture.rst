@@ -21,12 +21,19 @@ This library broadly is separated into three key functional areas:
    can easily help you build a Model from your project or ecosystem.
    For Python specific parser implementations see `cyclonedx-python`_
 2. **Model**: Internal models used to unify data from different parsers
+
+    **Note:** As of version 4.0.0 of this library we support deserialization from JSON and XML as well as
+    serialization to JSON and XML.
+
 3. **Output**: Choose and configure an output which allows you to define output format as well as the CycloneDX schema
    version
 
 When wishing to generate a BOM, the process is as follows:
 
-1. Generated a Model (either programmatically or from a :py:mod:`cyclonedx.parser`
+1. Generate a Model by either:
+    1. Programmatically using this library
+    2. By deserializing from an existing CycloneDX BOM document
+    3. From a :py:mod:`cyclonedx.parser`
 2. Output the Model using an :py:mod:`cyclonedx.output` instance that reflects the schema version and format you require
 
 .. toctree::

@@ -22,7 +22,7 @@ This project uses `PEP8`_ Style Guide for Python Code. This project loves sorted
 .. code-block::
 
     poetry run isort .
-    poetry run autopep8 --in-place -r cyclonedx tests
+    poetry run flake8 cyclonedx/ tests/ typings/
 
 
 Documentation

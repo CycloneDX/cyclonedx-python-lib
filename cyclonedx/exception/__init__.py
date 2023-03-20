@@ -21,4 +21,7 @@ Exceptions that are specific to the CycloneDX library implementation.
 
 
 class CycloneDxException(Exception):
+    """
+    Root exception thrown by this library.
+    """
     pass

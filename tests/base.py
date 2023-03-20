@@ -38,14 +38,18 @@ if sys.version_info >= (3, 7):
     from jsonschema import ValidationError, validate as json_validate
 
 if sys.version_info >= (3, 8):
-    from importlib.metadata import version
+    from importlib.metadata import PackageNotFoundError, version
 else:
-    from importlib_metadata import version
+    from importlib_metadata import PackageNotFoundError, version
 
 from . import CDX_SCHEMA_DIRECTORY
 
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
-cyclonedx_lib_version: str = version(cyclonedx_lib_name)
+cyclonedx_lib_version: str = 'DEV'
+try:
+    cyclonedx_lib_version: str = version(cyclonedx_lib_name)
+except PackageNotFoundError:
+    pass
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
 

@@ -18,6 +18,7 @@
 from enum import Enum
 from typing import Any, Iterable, Optional
 
+import serializable
 from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
@@ -36,6 +37,7 @@ class IssueClassification(str, Enum):
     SECURITY = 'security'
 
 
+@serializable.serializable_class
 class IssueTypeSource:
     """
     This is our internal representation ofa source within the IssueType complex type that can be used in multiple
@@ -98,6 +100,7 @@ class IssueTypeSource:
         return f'<IssueTypeSource name={self._name}, url={self.url}>'
 
 
+@serializable.serializable_class
 class IssueType:
     """
     This is our internal representation of an IssueType complex type that can be used in multiple places within
@@ -107,17 +110,18 @@ class IssueType:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, *, classification: IssueClassification, id_: Optional[str] = None, name: Optional[str] = None,
+    def __init__(self, *, type: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
                  description: Optional[str] = None, source: Optional[IssueTypeSource] = None,
                  references: Optional[Iterable[XsUri]] = None) -> None:
-        self.type = classification
-        self.id = id_
+        self.type = type
+        self.id = id
         self.name = name
         self.description = description
         self.source = source
         self.references = references or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
     def type(self) -> IssueClassification:
         """
         Specifies the type of issue.
@@ -128,10 +132,11 @@ class IssueType:
         return self._type
 
     @type.setter
-    def type(self, classification: IssueClassification) -> None:
-        self._type = classification
+    def type(self, type: IssueClassification) -> None:
+        self._type = type
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def id(self) -> Optional[str]:
         """
         The identifier of the issue assigned by the source of the issue.
@@ -142,10 +147,11 @@ class IssueType:
         return self._id
 
     @id.setter
-    def id(self, id_: Optional[str]) -> None:
-        self._id = id_
+    def id(self, id: Optional[str]) -> None:
+        self._id = id
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
         The name of the issue.
@@ -159,7 +165,8 @@ class IssueType:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def description(self) -> Optional[str]:
         """
         A description of the issue.
@@ -173,7 +180,8 @@ class IssueType:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def source(self) -> Optional[IssueTypeSource]:
         """
         The source of this issue.
@@ -187,7 +195,9 @@ class IssueType:
     def source(self, source: Optional[IssueTypeSource]) -> None:
         self._source = source
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'url')
+    @serializable.xml_sequence(5)
     def references(self) -> "SortedSet[XsUri]":
         """
         Any reference URLs related to this issue.

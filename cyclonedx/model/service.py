@@ -15,10 +15,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, Union
+from uuid import uuid4
 
+import serializable
 from sortedcontainers import SortedSet
 
+from cyclonedx.serialization import BomRefHelper
+
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
 from . import (
     ComparableTuple,
     DataClassification,
@@ -29,6 +34,7 @@ from . import (
     XsUri,
 )
 from .bom_ref import BomRef
+from .dependency import Dependable
 from .release_note import ReleaseNotes
 
 """
@@ -39,7 +45,8 @@ This set of classes represents the data that is possible about known Services.
 """
 
 
-class Service:
+@serializable.serializable_class
+class Service(Dependable):
     """
     Class that models the `service` complex type in the CycloneDX schema.
 
@@ -47,7 +54,8 @@ class Service:
         See the CycloneDX schema: https://cyclonedx.org/docs/1.4/xml/#type_service
     """
 
-    def __init__(self, *, name: str, bom_ref: Optional[str] = None, provider: Optional[OrganizationalEntity] = None,
+    def __init__(self, *, name: str, bom_ref: Optional[Union[str, BomRef]] = None,
+                 provider: Optional[OrganizationalEntity] = None,
                  group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
                  endpoints: Optional[Iterable[XsUri]] = None, authenticated: Optional[bool] = None,
                  x_trust_boundary: Optional[bool] = None, data: Optional[Iterable[DataClassification]] = None,
@@ -57,7 +65,10 @@ class Service:
                  services: Optional[Iterable['Service']] = None,
                  release_notes: Optional[ReleaseNotes] = None,
                  ) -> None:
-        self._bom_ref = BomRef(value=bom_ref)
+        if type(bom_ref) == BomRef:
+            self._bom_ref = bom_ref
+        else:
+            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else str(uuid4()))
         self.provider = provider
         self.group = group
         self.name = name
@@ -73,7 +84,11 @@ class Service:
         self.release_notes = release_notes
         self.properties = properties or []  # type: ignore
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRefHelper)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the service elsewhere in the BOM. Uniqueness is enforced
@@ -86,7 +101,8 @@ class Service:
         """
         return self._bom_ref
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(1)
     def provider(self) -> Optional[OrganizationalEntity]:
         """
         Get the The organization that provides the service.
@@ -100,7 +116,8 @@ class Service:
     def provider(self, provider: Optional[OrganizationalEntity]) -> None:
         self._provider = provider
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(2)
     def group(self) -> Optional[str]:
         """
         The grouping name, namespace, or identifier. This will often be a shortened, single name of the company or
@@ -115,7 +132,8 @@ class Service:
     def group(self, group: Optional[str]) -> None:
         self._group = group
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(3)
     def name(self) -> str:
         """
         The name of the service. This will often be a shortened, single name of the service.
@@ -129,7 +147,8 @@ class Service:
     def name(self, name: str) -> None:
         self._name = name
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def version(self) -> Optional[str]:
         """
         The service version.
@@ -143,7 +162,8 @@ class Service:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(5)
     def description(self) -> Optional[str]:
         """
         Specifies a description for the service.
@@ -157,7 +177,9 @@ class Service:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'endpoint')
+    @serializable.xml_sequence(6)
     def endpoints(self) -> "SortedSet[XsUri]":
         """
         A list of endpoints URI's this service provides.
@@ -171,7 +193,8 @@ class Service:
     def endpoints(self, endpoints: Iterable[XsUri]) -> None:
         self._endpoints = SortedSet(endpoints)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(7)
     def authenticated(self) -> Optional[bool]:
         """
         A boolean value indicating if the service requires authentication. A value of true indicates the service
@@ -188,7 +211,10 @@ class Service:
     def authenticated(self, authenticated: Optional[bool]) -> None:
         self._authenticated = authenticated
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.json_name('x-trust-boundary')
+    @serializable.xml_name('x-trust-boundary')
+    @serializable.xml_sequence(8)
     def x_trust_boundary(self) -> Optional[bool]:
         """
         A boolean value indicating if use of the service crosses a trust zone or boundary. A value of true indicates
@@ -205,7 +231,9 @@ class Service:
     def x_trust_boundary(self, x_trust_boundary: Optional[bool]) -> None:
         self._x_trust_boundary = x_trust_boundary
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
+    @serializable.xml_sequence(9)
     def data(self) -> "SortedSet[DataClassification]":
         """
         Specifies the data classification.
@@ -219,7 +247,9 @@ class Service:
     def data(self, data: Iterable[DataClassification]) -> None:
         self._data = SortedSet(data)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @serializable.xml_sequence(10)
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this Service is licensed.
@@ -233,7 +263,9 @@ class Service:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    @serializable.xml_sequence(11)
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the Service.
@@ -247,7 +279,9 @@ class Service:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.xml_sequence(13)
     def services(self) -> "SortedSet['Service']":
         """
         A list of services included or deployed behind the parent service.
@@ -265,7 +299,9 @@ class Service:
     def services(self, services: Iterable['Service']) -> None:
         self._services = SortedSet(services)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_sequence(14)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
         Specifies optional release notes.
@@ -279,7 +315,11 @@ class Service:
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(12)
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -313,4 +353,4 @@ class Service:
         ))
 
     def __repr__(self) -> str:
-        return f'<Service group={self.group}, name={self.name}, version={self.version}, bom-ref={self.bom_ref}>'
+        return f'<Service bom-ref={self.bom_ref}, group={self.group}, name={self.name}, version={self.version}>'

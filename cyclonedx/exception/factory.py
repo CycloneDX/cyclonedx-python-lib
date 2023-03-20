@@ -30,16 +30,28 @@ class CycloneDxFactoryException(CycloneDxException):
 
 
 class LicenseChoiceFactoryException(CycloneDxFactoryException):
+    """
+    Base exception that covers all LicenseChoiceFactory exceptions.
+    """
     pass
 
 
 class InvalidSpdxLicenseException(LicenseChoiceFactoryException):
+    """
+    Thrown when an invalid SPDX License is provided.
+    """
     pass
 
 
 class LicenseFactoryException(CycloneDxFactoryException):
+    """
+    Base exception that covers all LicenseFactory exceptions.
+    """
     pass
 
 
 class InvalidLicenseExpressionException(LicenseFactoryException):
+    """
+    Thrown when an invalid License expressions is provided.
+    """
     pass

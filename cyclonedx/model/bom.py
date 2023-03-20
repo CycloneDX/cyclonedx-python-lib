@@ -17,22 +17,45 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import TYPE_CHECKING, Iterable, Optional, Set
 from uuid import UUID, uuid4
 
+import serializable
 from sortedcontainers import SortedSet
+
+from cyclonedx.serialization import UrnUuidHelper
 
 from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
-from . import ExternalReference, LicenseChoice, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+)
+from . import (
+    ExternalReference,
+    LicenseChoice,
+    OrganizationalContact,
+    OrganizationalEntity,
+    Property,
+    ThisTool,
+    Tool,
+    get_now_utc,
+)
+from .bom_ref import BomRef
 from .component import Component
+from .dependency import Dependable, Dependency
 from .service import Service
+from .vulnerability import Vulnerability
 
 if TYPE_CHECKING:
     from packageurl import PackageURL  # type:ignore[import]
 
 
+@serializable.serializable_class
 class BomMetaData:
     """
     This is our internal representation of the metadata complex type within the CycloneDX standard.
@@ -46,8 +69,9 @@ class BomMetaData:
                  manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[LicenseChoice]] = None,
-                 properties: Optional[Iterable[Property]] = None) -> None:
-        self.timestamp = datetime.now(tz=timezone.utc)
+                 properties: Optional[Iterable[Property]] = None,
+                 timestamp: Optional[datetime] = None) -> None:
+        self.timestamp = timestamp or get_now_utc()
         self.tools = tools or []  # type: ignore
         self.authors = authors or []  # type: ignore
         self.component = component
@@ -59,7 +83,9 @@ class BomMetaData:
         if not tools:
             self.tools.add(ThisTool)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.xml_sequence(1)
     def timestamp(self) -> datetime:
         """
         The date and time (in UTC) when this BomMetaData was created.
@@ -73,7 +99,9 @@ class BomMetaData:
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
+    @serializable.xml_sequence(2)
     def tools(self) -> "SortedSet[Tool]":
         """
         Tools used to create this BOM.
@@ -87,7 +115,9 @@ class BomMetaData:
     def tools(self, tools: Iterable[Tool]) -> None:
         self._tools = SortedSet(tools)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
+    @serializable.xml_sequence(3)
     def authors(self) -> "SortedSet[OrganizationalContact]":
         """
         The person(s) who created the BOM.
@@ -105,7 +135,8 @@ class BomMetaData:
     def authors(self, authors: Iterable[OrganizationalContact]) -> None:
         self._authors = SortedSet(authors)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(4)
     def component(self) -> Optional[Component]:
         """
         The (optional) component that the BOM describes.
@@ -129,7 +160,8 @@ class BomMetaData:
         """
         self._component = component
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(5)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
         The organization that manufactured the component that the BOM describes.
@@ -143,7 +175,8 @@ class BomMetaData:
     def manufacture(self, manufacture: Optional[OrganizationalEntity]) -> None:
         self._manufacture = manufacture
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.xml_sequence(6)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
         The organization that supplied the component that the BOM describes.
@@ -159,7 +192,11 @@ class BomMetaData:
     def supplier(self, supplier: Optional[OrganizationalEntity]) -> None:
         self._supplier = supplier
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @serializable.xml_sequence(7)
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
         A optional list of statements about how this BOM is licensed.
@@ -173,7 +210,11 @@ class BomMetaData:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(8)
     def properties(self) -> "SortedSet[Property]":
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -198,13 +239,16 @@ class BomMetaData:
 
     def __hash__(self) -> int:
         return hash((
-            self.timestamp, self.tools, self.component
+            tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
+            self.supplier, self.timestamp, tuple(self.tools)
         ))
 
     def __repr__(self) -> str:
-        return f'<BomMetaData timestamp={self.timestamp.utcnow()}>'
+        return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
 
 
+@serializable.serializable_class(
+    ignore_during_deserialization=['$schema', 'bom_format', 'spec_version'])  # type: ignore[misc]
 class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
@@ -233,34 +277,52 @@ class Bom:
 
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+                 external_references: Optional[Iterable[ExternalReference]] = None,
+                 serial_number: Optional[UUID] = None, version: int = 1,
+                 metadata: Optional[BomMetaData] = None,
+                 dependencies: Optional[Iterable[Dependency]] = None,
+                 vulnerabilities: Optional[Iterable[Vulnerability]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
         Returns:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
-        self.uuid = uuid4()
-        self.metadata = BomMetaData()
+        self.serial_number = serial_number or uuid4()
+        self.metadata = metadata or BomMetaData()
         self.components = components or []  # type: ignore
         self.services = services or []  # type: ignore
-        self.external_references = external_references or []  # type: ignore
+        self.external_references = SortedSet(external_references or [])
+        self.vulnerabilities = SortedSet(vulnerabilities or [])
+        self.version = version
+        self.dependencies = SortedSet(dependencies) or SortedSet()
 
-    @property
-    def uuid(self) -> UUID:
+    @property  # type: ignore[misc]
+    @serializable.type_mapping(UrnUuidHelper)
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_attribute()
+    def serial_number(self) -> UUID:
         """
         Unique UUID for this BOM
 
         Returns:
             `UUID` instance
+            `UUID` instance
         """
-        return self.__uuid
+        return self._serial_number
 
-    @uuid.setter
-    def uuid(self, uuid: UUID) -> None:
-        self.__uuid = uuid
+    @serial_number.setter
+    def serial_number(self, serial_number: UUID) -> None:
+        self._serial_number = serial_number
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_sequence(1)
     def metadata(self) -> BomMetaData:
         """
         Get our internal metadata object for this Bom.
@@ -277,7 +339,11 @@ class Bom:
     def metadata(self, metadata: BomMetaData) -> None:
         self._metadata = metadata
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.include_none(SchemaVersion1Dot0)
+    @serializable.include_none(SchemaVersion1Dot1)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
+    @serializable.xml_sequence(2)
     def components(self) -> "SortedSet[Component]":
         """
         Get all the Components currently in this Bom.
@@ -316,7 +382,7 @@ class Bom:
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
         """
-        return 'urn:uuid:{}'.format(self.__uuid)
+        return self.serial_number.urn
 
     def has_component(self, component: Component) -> bool:
         """
@@ -331,7 +397,12 @@ class Bom:
         """
         return component in self.components
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.xml_sequence(3)
     def services(self) -> "SortedSet[Service]":
         """
         Get all the Services currently in this Bom.
@@ -345,7 +416,13 @@ class Bom:
     def services(self, services: Iterable[Service]) -> None:
         self._services = SortedSet(services)
 
-    @property
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    @serializable.xml_sequence(4)
     def external_references(self) -> "SortedSet[ExternalReference]":
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
@@ -364,20 +441,99 @@ class Bom:
         if self.metadata.component:
             components.update(self.metadata.component.get_all_nested_components(include_self=True))
 
+        # Add Components and sub Components
         for c in self.components:
             components.update(c.get_all_nested_components(include_self=True))
 
         return components
+
+    def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> "SortedSet[Vulnerability]":
+        """
+        Get all known Vulnerabilities that affect the supplied bom_ref.
+
+        Args:
+            bom_ref: `BomRef`
+
+        Returns:
+            `SortedSet` of `Vulnerability`
+        """
+
+        vulnerabilities: SortedSet[Vulnerability] = SortedSet()
+        for v in self.vulnerabilities:
+            for target in v.affects:
+                if target.ref == bom_ref.value:
+                    vulnerabilities.add(v)
+        return vulnerabilities
 
     def has_vulnerabilities(self) -> bool:
         """
         Check whether this Bom has any declared vulnerabilities.
 
         Returns:
-            `bool` - `True` if at least one `cyclonedx.model.component.Component` has at least one Vulnerability,
-                `False` otherwise.
+            `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
         """
-        return any(c.has_vulnerabilities() for c in self.components)
+        return bool(self.vulnerabilities)
+
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
+    @serializable.xml_sequence(8)
+    def vulnerabilities(self) -> "SortedSet[Vulnerability]":
+        """
+        Get all the Vulnerabilities in this BOM.
+
+        Returns:
+             Set of `Vulnerability`
+        """
+        return self._vulnerabilities
+
+    @vulnerabilities.setter
+    def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
+        self._vulnerabilities = SortedSet(vulnerabilities)
+
+    @property  # type: ignore[misc]
+    @serializable.xml_attribute()
+    def version(self) -> int:
+        return self._version
+
+    @version.setter
+    def version(self, version: int) -> None:
+        self._version = version
+
+    @property  # type: ignore[misc]
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
+    @serializable.xml_sequence(5)
+    def dependencies(self) -> "SortedSet[Dependency]":
+        return self._dependencies
+
+    @dependencies.setter
+    def dependencies(self, dependencies: Iterable[Dependency]) -> None:
+        self._dependencies = SortedSet(dependencies)
+
+    def register_dependency(self, target: Dependable, depends_on: Optional[Iterable[Dependable]] = None) -> None:
+        _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
+
+        if _d and depends_on:
+            # Dependency Target already registered - but it might have new dependencies to add
+            _d.dependencies = _d.dependencies.union(  # type: ignore
+                set(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
+            )
+        elif not _d:
+            # First time we are seeing this target as a Dependency
+            self._dependencies.add(Dependency(
+                ref=target.bom_ref,
+                dependencies=map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on) if depends_on else []
+            ))
+
+        # Ensure dependents are registered with no further dependents in the Dependency Graph as per CDX specification
+        for _d2 in depends_on if depends_on else []:
+            self.register_dependency(target=_d2, depends_on=None)
+
+    def urn(self) -> str:
+        return f'urn:cdx:{self.serial_number}/{self.version}'
 
     def validate(self) -> bool:
         """
@@ -387,12 +543,19 @@ class Bom:
         Returns:
              `bool`
         """
+        # 0. Make sure all Dependable have a Dependency entry
+        if self.metadata.component:
+            self.register_dependency(target=self.metadata.component)
+        for _c in self.components:
+            self.register_dependency(target=_c)
+        for _s in self.services:
+            self.register_dependency(target=_s)
 
         # 1. Make sure dependencies are all in this Bom.
         all_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
             map(lambda s: s.bom_ref, self.services))
+        all_dependency_bom_refs = set().union(*(d.dependencies_as_bom_refs() for d in self.dependencies))
 
-        all_dependency_bom_refs = set().union(*(c.dependencies for c in self.components))
         dependency_diff = all_dependency_bom_refs - all_bom_refs
         if len(dependency_diff) > 0:
             raise UnknownComponentDependencyException(
@@ -400,11 +563,13 @@ class Bom:
                 f'BOM. They are: {dependency_diff}')
 
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
-        if self.metadata.component and not self.metadata.component.dependencies:
+        if self.metadata.component and filter(
+            lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies  # type: ignore[arg-type]
+        ):
             warnings.warn(
-                f'The Component this BOM is describing (PURL={self.metadata.component.purl}) has no defined '
-                f'dependencies which means the Dependency Graph is incomplete - you should add direct dependencies to '
-                f'this Component to complete the Dependency Graph data.',
+                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
+                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
+                f'to complete the Dependency Graph data.',
                 UserWarning
             )
 
@@ -417,8 +582,9 @@ class Bom:
 
     def __hash__(self) -> int:
         return hash((
-            self.uuid, self.metadata, tuple(self.components), tuple(self.services), tuple(self.external_references)
+            self.serial_number, self.version, self.metadata, tuple(self.components), tuple(self.services),
+            tuple(self.external_references), tuple(self.vulnerabilities), tuple(self.dependencies)
         ))
 
     def __repr__(self) -> str:
-        return f'<Bom uuid={self.uuid}>'
+        return f'<Bom uuid={self.serial_number}, hash={hash(self)}>'

@@ -23,6 +23,59 @@ Vulnerabilities are supported by the Model as of version 0.3.0.
     **Note:** Known vulnerabilities associated with Components can be sourced from various data sources, but this library
     will not source them for you. Perhaps look at `Jake`_ if you're interested in this.
 
+Example BOM created programmatically
+------------------------------------
+
+.. note::
+
+    It is recommended that you have a good understanding of the `CycloneDX Schema`_ before attempting to create a BOM
+    programmatically with this library.
+
+
+For the most up-to-date in-depth examples, look at our `Unit Tests`_.
+
+Example BOM created from existing CycloneDX BOM
+------------------------------------
+
+.. note::
+
+    Supported from version 4.0.0 of this library.
+
+Deserializing from a CycloneDX JSON BOM
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each model class in this library that is serializable provides a magic ``from_json()`` method.
+
+See the example below to read and deserialize a JSON CycloneDX document. Note that reading the file and loading as JSON
+is the programmers responsibility.
+
+.. code-block:: python
+
+    import json
+    from cyclonedx.model.bom import Bom
+
+    with open('/path/to/my/cyclonedx.json') as input_json:
+        deserialized_bom = Bom.from_json(data=json.loads(input_json.read()))
+
+
+Deserializing from a CycloneDX XML BOM
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each model class in this library that is serializable provides a magic ``from_xml()`` method.
+
+See the example below to read and deserialize a XML CycloneDX document. Note that reading the file and loading as XML
+is the programmers responsibility. Be careful to avoid XML vulnerabilities as documented `here`_. It is recommended that
+you use a library such as `defusedxml` instead of the native `xml.etree.ElementTree`.
+
+.. code-block:: python
+
+    from xml.etree import ElementTree
+    from cyclonedx.model.bom import Bom
+
+    with open('/path/to/my/cyclonedx.xml') as input_xml:
+        deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(input_xml.read())))
+
+
 Example BOM using a Parser
 --------------------------
 
@@ -37,19 +90,11 @@ Example BOM using a Parser
     parser = EnvironmentParser()
     bom = Bom.from_parser(parser=parser)
 
-Example BOM created programmatically
-------------------------------------
 
-.. note::
-
-    It is recommended that you have a good understanding of the `CycloneDX Schema`_ before attempting to create a BOM
-    programmatically with this library.
-
-
-For the most up-to-date in-depth examples, look at our `Unit Tests`_.
 
 
 .. _CycloneDX Python: https://github.com/CycloneDX/cyclonedx-python
 .. _Jake: https://pypi.org/project/jake
 .. _CycloneDX Schema: https://cyclonedx.org/docs/latest
 .. _Unit Tests: https://github.com/CycloneDX/cyclonedx-python-lib/tree/main/tests
+.. _here: https://docs.python.org/3/library/xml.html#xml-vulnerabilities

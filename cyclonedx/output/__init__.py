@@ -22,34 +22,11 @@ and according to different versions of the CycloneDX schema standard.
 import importlib
 import os
 from abc import ABC, abstractmethod
-from enum import Enum
 from typing import Iterable, Union, cast
 
 from ..model.bom import Bom
 from ..model.component import Component
-
-
-class OutputFormat(str, Enum):
-    JSON: str = 'Json'
-    XML: str = 'Xml'
-
-
-class SchemaVersion(str, Enum):
-    V1_0: str = 'V1Dot0'
-    V1_1: str = 'V1Dot1'
-    V1_2: str = 'V1Dot2'
-    V1_3: str = 'V1Dot3'
-    V1_4: str = 'V1Dot4'
-
-    def to_version(self) -> str:
-        """
-        Return as a version string - e.g. `1.4`
-
-        Returns:
-            `str` version
-        """
-        return f'{self.value[1]}.{self.value[5]}'
-
+from ..schema import OutputFormat, SchemaVersion
 
 LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_4
 
@@ -125,7 +102,7 @@ def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
     try:
         module = importlib.import_module(f"cyclonedx.output.{output_format.value.lower()}")
         output_klass = getattr(module, f"{output_format.value}{schema_version.value}")
-    except (ImportError, AttributeError):
-        raise ValueError(f"Unknown format {output_format.value.lower()!r}") from None
+    except (ImportError, AttributeError) as e:
+        raise ValueError(f"Unknown format {output_format.value.lower()!r}: {e}") from None
 
     return cast(BaseOutput, output_klass(bom=bom))
