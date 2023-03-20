@@ -3,18 +3,25 @@
 <!--next-version-placeholder-->
 
 ## v4.0.0 (2023-03-20)
-### Feature
-* Release 4.0.0 #341) ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
 
 ### Breaking
-* Large portions of this library have been re-written for this release and many methods and contracts have changed. ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
-* Model classes changed to relocated Vulnerability at Bom, not at Component ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
-* Model classes changed to relocated Vulnerability at Bom, not at Component ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
-*  ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
+* Dropped support for Python 3.6 (supplied by @hakandilek) #292
+* Support for deserializing from JSON and XML to the Python Model #185
+
+### Feature
+* Officially support for Python 3.11 #322
+* Support for `BomLink` #266
+* Support for `service` to have `depenendency` #277
+* Support for creating VEX CycloneDX documents without needing to have Components #261
+
+### Fix
+* Make tests' schema paths relative to `cyclonedx` package (forward port from `3.x.x`) #338
+* Prevent errors on metadata handling for some specification version (forward port from `3.x.x`) #330
+* Dependency updates (#346, #340)
 
 ## v3.1.5 (2023-01-12)
 ### Fix
-* Mak test's schema paths relative to `cyclonedx` package ([#338](https://github.com/CycloneDX/cyclonedx-python-lib/issues/338)) ([`1f0c05f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f0c05fe2b2a22bc84a1a437dd59390f2ceaf986))
+* Make test's schema paths relative to `cyclonedx` package ([#338](https://github.com/CycloneDX/cyclonedx-python-lib/issues/338)) ([`1f0c05f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f0c05fe2b2a22bc84a1a437dd59390f2ceaf986))
 
 ## v3.1.4 (2023-01-11)
 ### Fix
