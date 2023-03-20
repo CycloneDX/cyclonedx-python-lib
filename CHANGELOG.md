@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v4.0.0 (2023-03-20)
+### Feature
+* Release 4.0.0 #341) ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
+
+### Breaking
+* Large portions of this library have been re-written for this release and many methods and contracts have changed. ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
+* Model classes changed to relocated Vulnerability at Bom, not at Component ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
+* Model classes changed to relocated Vulnerability at Bom, not at Component ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
+*  ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
+
 ## v3.1.5 (2023-01-12)
 ### Fix
 * Mak test's schema paths relative to `cyclonedx` package ([#338](https://github.com/CycloneDX/cyclonedx-python-lib/issues/338)) ([`1f0c05f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f0c05fe2b2a22bc84a1a437dd59390f2ceaf986))
