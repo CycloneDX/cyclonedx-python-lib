@@ -13,6 +13,10 @@ on:
     # this means: at 23:42 on Fridays
     - cron: '42 23 * * 5'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false  # prevent hickups with semantic-release
+
 env:
   REPORTS_DIR: CI_reports
   PYTHON_VERSION_DEFAULT: "3.11"
