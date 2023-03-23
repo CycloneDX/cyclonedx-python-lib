@@ -39,6 +39,11 @@ class TestDeserializeeRealWorldExamples(unittest.TestCase):
             schema_version=SchemaVersion.V1_4, fixture='webgoat-6.1.xml'
         )
 
+    def test_checkov_sca_image(self) -> None:
+        self._attempt_load_example(
+            schema_version=SchemaVersion.V1_4, fixture='checkov-sca-image.xml'
+        )
+
     def _attempt_load_example(self, schema_version: SchemaVersion, fixture: str) -> None:
         with open(join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
             xml = input_xml.read()

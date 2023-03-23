@@ -226,7 +226,7 @@ def get_bom_just_complete_metadata() -> Bom:
         id='Apache-2.0', text=AttachedText(
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
         ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
-    ))]
+    )), LicenseChoice(license=License(name='OSI_APACHE'))]
     bom.metadata.properties = get_properties_1()
     return bom
 
