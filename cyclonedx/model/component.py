@@ -25,7 +25,7 @@ from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
-from packageurl import PackageURL  # type: ignore
+from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
