@@ -568,8 +568,8 @@ class Bom:
         ):
             warnings.warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
-                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this Component'
-                f'to complete the Dependency Graph data.',
+                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
+                f'Component to complete the Dependency Graph data.',
                 UserWarning
             )
 
