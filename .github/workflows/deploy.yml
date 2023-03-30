@@ -12,7 +12,6 @@ concurrency:
 env:
   PYTHON_VERSION_DEFAULT: "3.11"
   POETRY_VERSION: "1.4.1"
-  PY_SEMVER_RELEASE_VERSION: "7.33.2"
 
 jobs:
   release:
@@ -53,7 +52,7 @@ jobs:
       - name: Python Semantic Release
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html
         # see https://github.com/relekang/python-semantic-release
-        uses: relekang/python-semantic-release@${{ env.PY_SEMVER_RELEASE_VERSION }}
+        uses: python-semantic-release/python-semantic-release@7.33.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository_username: __token__
