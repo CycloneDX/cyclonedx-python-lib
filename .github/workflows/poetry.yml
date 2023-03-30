@@ -20,7 +20,7 @@ concurrency:
 env:
   REPORTS_DIR: CI_reports
   PYTHON_VERSION_DEFAULT: "3.11"
-  POETRY_VERSION: "1.1.12"
+  POETRY_VERSION: "1.4.1"
 
 jobs:
   coding-standards:
@@ -106,7 +106,7 @@ jobs:
           - "3.10"
           - "3.9"
           - "3.8"
-          - "3.7" # lowest supported
+          - "3.7"  # lowest supported
         toxenv-factor: ['locked']
         include:
           - # test with the lowest dependencies
