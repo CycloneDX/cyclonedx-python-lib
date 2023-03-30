@@ -45,7 +45,7 @@ keywords = [
 "Bug Tracker" = "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
 
 [tool.poetry.dependencies]
-# ATTENTION: keep `requirements.lowest.txt` file in sync
+# ATTENTION: keep `deps.lowest.r` file in sync
 python = "^3.7"
 importlib-metadata = { version = "^3.4.0", python = "<3.8" }
 packageurl-python = ">= 0.9"
@@ -64,8 +64,6 @@ jsonschema = ">= 4.4.0"
 mypy = "^1.1.1"
 lxml = ">=4.7.0"
 tox = "^3.2.8"
-# `types-setuptools` need to stay in sync with version of `setuptools` - but 47 was not typed...
-types-setuptools = ">= 57.0.0"
 xmldiff = ">=2.4"
 
 [build-system]
