@@ -47,7 +47,7 @@ keywords = [
 [tool.poetry.dependencies]
 # ATTENTION: keep `deps.lowest.r` file in sync
 python = "^3.7"
-importlib-metadata = { version = "^3.4.0", python = "<3.8" }
+importlib-metadata = { version = ">=3.4,<5.0", python = "<3.8" }
 packageurl-python = ">= 0.11"
 py-serializable = "^0.11.1"
 sortedcontainers = "^2.4.0"
