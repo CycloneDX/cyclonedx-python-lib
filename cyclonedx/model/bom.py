@@ -52,7 +52,7 @@ from .service import Service
 from .vulnerability import Vulnerability
 
 if TYPE_CHECKING:
-    from packageurl import PackageURL  # type:ignore[import]
+    from packageurl import PackageURL
 
 
 @serializable.serializable_class

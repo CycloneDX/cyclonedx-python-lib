@@ -21,7 +21,7 @@ Set of helper classes for use with ``serializable`` when conducting (de-)seriali
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
-from packageurl import PackageURL  # type: ignore
+from packageurl import PackageURL
 from serializable.helpers import BaseHelper
 
 from ..model.bom_ref import BomRef
@@ -71,7 +71,7 @@ class UrnUuidHelper(BaseHelper):
         raise ValueError(f'Attempt to serialize a non-UUID: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object) -> PackageURL:
+    def deserialize(cls, o: object) -> UUID:
         try:
             return UUID(str(o))
         except ValueError:

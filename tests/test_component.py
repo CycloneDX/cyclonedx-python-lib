@@ -21,7 +21,7 @@ from os.path import dirname, join
 from unittest import TestCase
 
 # See https://github.com/package-url/packageurl-python/issues/65
-from packageurl import PackageURL  # type: ignore
+from packageurl import PackageURL
 
 from cyclonedx.model import sha1sum
 from cyclonedx.model.component import Component

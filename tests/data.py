@@ -24,7 +24,7 @@ from typing import List, Optional, TypeVar
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
-from packageurl import PackageURL  # type: ignore
+from packageurl import PackageURL
 
 from cyclonedx.model import (
     AttachedText,

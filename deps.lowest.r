@@ -1,7 +1,7 @@
 # exactly pinned dependencies to the lowest version regardless of python_version
 # see pyptoject file for ranges
 
-packageurl-python == 0.9.0
+packageurl-python == 0.11.1
 py-serializable == 0.11.1
 importlib-metadata == 3.4.0 # ; python_version < '3.8'
 
