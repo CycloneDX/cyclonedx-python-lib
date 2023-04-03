@@ -25,8 +25,8 @@ from uuid import UUID
 from xml.etree import ElementTree
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, SchemaVersion, get_instance
-from cyclonedx.schema import OutputFormat
+from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, get_instance
+from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests.base import BaseXmlTestCase
 from tests.data import (
     MOCK_BOM_UUID_1,
@@ -692,11 +692,11 @@ class TestDeserializeXml(BaseXmlTestCase):
         if schema_version != LATEST_SUPPORTED_SCHEMA_VERSION:
             # Rewind the BOM to only have data supported by the SchemaVersion in question
             outputter = get_instance(bom=bom, output_format=OutputFormat.XML, schema_version=schema_version)
-            bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(outputter.output_as_string())))
+            bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(outputter.output_as_string())))  # type: ignore
 
         with open(join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
             xml = input_xml.read()
-            deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
+            deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))  # type: ignore
 
             self.assertEqual(bom.metadata, deserialized_bom.metadata)
 

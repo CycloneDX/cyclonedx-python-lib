@@ -17,8 +17,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from os.path import dirname, join
+from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
+
+from cyclonedx.output.xml import Xml
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance
@@ -525,7 +528,7 @@ class TestOutputXml(BaseXmlTestCase):
     # region Helper methods
 
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
-        outputter = get_instance(bom=bom, schema_version=schema_version)
+        outputter = cast(Xml, get_instance(bom=bom, schema_version=schema_version))
         self.assertEqual(outputter.schema_version, schema_version)
         with open(
                 join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as expected_xml:

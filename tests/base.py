@@ -27,29 +27,28 @@ from typing import Any
 from unittest import TestCase
 from uuid import uuid4
 
-from lxml import etree
-from lxml.etree import DocumentInvalid
-from xmldiff import main
-from xmldiff.actions import MoveNode
+from lxml import etree  # type: ignore
+from lxml.etree import DocumentInvalid  # type: ignore
+from xmldiff import main  # type: ignore
+from xmldiff.actions import MoveNode  # type: ignore
 
-from cyclonedx.output import SchemaVersion
+from cyclonedx.schema import SchemaVersion
 
 if sys.version_info >= (3, 7):
-    from jsonschema import ValidationError, validate as json_validate
+    from jsonschema import ValidationError, validate as json_validate  # type: ignore
 
 if sys.version_info >= (3, 8):
-    from importlib.metadata import PackageNotFoundError, version
+    from importlib.metadata import version as meta_version
 else:
-    from importlib_metadata import PackageNotFoundError, version
+    from importlib_metadata import version as meta_version
 
 from . import CDX_SCHEMA_DIRECTORY
 
 cyclonedx_lib_name: str = 'cyclonedx-python-lib'
-cyclonedx_lib_version: str = 'DEV'
 try:
-    cyclonedx_lib_version: str = version(cyclonedx_lib_name)
-except PackageNotFoundError:
-    pass
+    cyclonedx_lib_version: str = str(meta_version(cyclonedx_lib_name))  # type: ignore[no-untyped-call]
+except Exception:
+    cyclonedx_lib_version = 'DEV'
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
 

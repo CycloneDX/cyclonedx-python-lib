@@ -49,10 +49,8 @@ class TestModelService(TestCase):
     @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_9)
     def test_service_with_services(self, mock_uuid: Mock) -> None:
         parent_service = Service(name='parent-service')
-        parent_service.services = [
-            Service(name='child-service-1'),
-            Service(name='child-service-2')
-        ]
+        parent_service.services.add(Service(name='child-service-1'))
+        parent_service.services.add(Service(name='child-service-2'))
         mock_uuid.assert_called()
         self.assertEqual(parent_service.name, 'parent-service')
         self.assertEqual(str(parent_service.bom_ref), str(MOCK_UUID_9))

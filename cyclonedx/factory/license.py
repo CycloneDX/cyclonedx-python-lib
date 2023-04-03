@@ -78,5 +78,5 @@ class LicenseChoiceFactory:
                           license_text: Optional[AttachedText] = None,
                           license_url: Optional[XsUri] = None) -> LicenseChoice:
         """Make a :class:`cyclonedx.model.LicenseChoice` with a license (name or SPDX-ID)."""
-        return LicenseChoice(license=self.license_factory.make_from_string(
-            name_or_spdx, license_text=license_text, license_url=license_url))
+        return LicenseChoice(licenses=[self.license_factory.make_from_string(
+            name_or_spdx, license_text=license_text, license_url=license_url)])

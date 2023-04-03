@@ -67,17 +67,14 @@ class TestBomMetaData(TestCase):
         component = Component(name='test_component')
         manufacturer = OrganizationalEntity(name='test_manufacturer')
         supplier = OrganizationalEntity(name='test_supplier')
-        licenses = [
-            LicenseChoice(license=License(id='MIT')),
-            LicenseChoice(license=License(id='Apache-2.0')),
-        ]
+        licenses = [License(id='MIT'), License(id='Apache-2.0')]
         properties = [
             Property(name='property_1', value='value_1'),
             Property(name='property_2', value='value_2', )
         ]
 
-        metadata = BomMetaData(tools=tools, authors=authors, component=component,
-                               manufacture=manufacturer, supplier=supplier, licenses=licenses, properties=properties)
+        metadata = BomMetaData(tools=tools, authors=authors, component=component, manufacture=manufacturer,
+                               supplier=supplier, licenses=LicenseChoice(licenses=licenses), properties=properties)
         self.assertIsNotNone(metadata.timestamp)
         self.assertIsNotNone(metadata.authors)
         self.assertTrue(authors[0] in metadata.authors)
@@ -86,8 +83,9 @@ class TestBomMetaData(TestCase):
         self.assertEqual(metadata.manufacture, manufacturer)
         self.assertEqual(metadata.supplier, supplier)
         self.assertIsNotNone(metadata.licenses)
-        self.assertTrue(licenses[0] in metadata.licenses)
-        self.assertTrue(licenses[1] in metadata.licenses)
+        if metadata.licenses and metadata.licenses.licenses:
+            self.assertTrue(licenses[0] in metadata.licenses.licenses)
+            self.assertTrue(licenses[1] in metadata.licenses.licenses)
         self.assertIsNotNone(metadata.properties)
         self.assertTrue(properties[0] in metadata.properties)
         self.assertTrue(properties[1] in metadata.properties)

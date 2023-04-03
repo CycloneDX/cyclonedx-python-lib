@@ -22,7 +22,7 @@ from json import load as json_load
 from os.path import join as path_join
 from unittest import TestCase
 
-from ddt import data, ddt, idata, unpack
+from ddt import data, ddt, idata, unpack  # type: ignore
 
 from cyclonedx import spdx
 

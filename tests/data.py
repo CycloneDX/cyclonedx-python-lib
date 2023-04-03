@@ -28,6 +28,7 @@ from packageurl import PackageURL  # type: ignore
 
 from cyclonedx.model import (
     AttachedText,
+    Copyright,
     DataClassification,
     DataFlow,
     Encoding,
@@ -51,23 +52,24 @@ from cyclonedx.model.component import (
     ComponentEvidence,
     ComponentScope,
     ComponentType,
-    Copyright,
     Patch,
     PatchClassification,
     Pedigree,
     Swid,
 )
 from cyclonedx.model.dependency import Dependency
+from cyclonedx.model.impact_analysis import (
+    ImpactAnalysisAffectedStatus,
+    ImpactAnalysisJustification,
+    ImpactAnalysisResponse,
+    ImpactAnalysisState,
+)
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
-    ImpactAnalysisAffectedStatus,
-    ImpactAnalysisJustification,
-    ImpactAnalysisResponse,
-    ImpactAnalysisState,
     Vulnerability,
     VulnerabilityAdvisory,
     VulnerabilityAnalysis,
@@ -201,7 +203,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ),
         affects=[
             BomTarget(
-                ref=component.purl.to_string() if component.purl else None,
+                ref=component.bom_ref.value,
                 versions=[BomTargetVersionRange(
                     range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
@@ -218,16 +220,20 @@ def get_bom_with_component_toml_1() -> Bom:
 
 def get_bom_just_complete_metadata() -> Bom:
     bom = Bom()
-    bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
+    bom.metadata.authors.add(get_org_contact_1())
+    bom.metadata.authors.add(get_org_contact_2())
     bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
-    bom.metadata.licenses = [LicenseChoice(license=License(
-        id='Apache-2.0', text=AttachedText(
-            content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
-        ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
-    )), LicenseChoice(license=License(name='OSI_APACHE'))]
-    bom.metadata.properties = get_properties_1()
+    bom.metadata.licenses = LicenseChoice(licenses=[
+        License(id='Apache-2.0',
+                text=AttachedText(content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=',
+                                  encoding=Encoding.BASE_64),
+                url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
+                ),
+        License(name='OSI_APACHE')
+    ])
+    bom.metadata.properties.update(get_properties_1())
     return bom
 
 
@@ -374,23 +380,24 @@ def get_bom_for_issue_328_components() -> Bom:
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/328
     """
 
-    comp_root = Component(type=ComponentType.APPLICATION,
-                          name='my-project', version='1', bom_ref='my-project')
+    comp_root = Component(type=ComponentType.APPLICATION, name='my-project', version='1', bom_ref='my-project')
     comp_a = Component(name='A', version='0.1', bom_ref='component-A')
     comp_b = Component(name='B', version='1.0', bom_ref='component-B')
     comp_c = Component(name='C', version='1.0', bom_ref='component-C')
 
     # Make a tree of components A -> B -> C
-    comp_a.components = [comp_b]
-    comp_b.components = [comp_c]
-    # Declare dependencies the same way: A -> B -> C
-    comp_a.dependencies = [comp_b.bom_ref]
-    comp_b.dependencies = [comp_c.bom_ref]
+    comp_a.components.add(comp_b)
+    comp_b.components.add(comp_c)
 
     bom = Bom()
     bom.metadata.component = comp_root
-    comp_root.dependencies = [comp_a.bom_ref]
-    bom.components = [comp_a]
+
+    # Declare dependencies the same way: A -> B -> C
+    bom.register_dependency(target=comp_a, depends_on=[comp_b])
+    bom.register_dependency(target=comp_b, depends_on=[comp_c])
+    bom.register_dependency(target=comp_root, depends_on=[comp_a])
+
+    bom.components.add(comp_a)
     return bom
 
 
@@ -408,7 +415,7 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     component.external_references.add(
         get_external_reference_1()
     )
-    component.properties = get_properties_1()
+    component.properties.update(get_properties_1())
     component.components.update([
         get_component_setuptools_simple(),
         get_component_toml_with_hashes_with_references()
@@ -427,7 +434,7 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=LicenseChoice(expression='MIT License'),
         author='Test Author'
     )
 
@@ -438,7 +445,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=LicenseChoice(expression='MIT License'),
         author='Test Author'
     )
 

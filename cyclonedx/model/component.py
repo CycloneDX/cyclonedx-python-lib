@@ -20,7 +20,7 @@
 import warnings
 from enum import Enum
 from os.path import exists
-from typing import Any, Iterable, Optional, Set, Union
+from typing import Any, Iterable, List, Optional, Set, Union
 from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -756,7 +756,7 @@ class Component(Dependable):
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
-                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[LicenseChoice]] = None,
+                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[LicenseChoice] = None,
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
@@ -781,7 +781,7 @@ class Component(Dependable):
         self.description = description
         self.scope = scope
         self.hashes = hashes or []  # type: ignore
-        self.licenses = licenses or []  # type: ignore
+        self.licenses = licenses
         self.copyright = copyright
         self.cpe = cpe
         self.purl = purl
@@ -1034,7 +1034,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
     @serializable.xml_sequence(10)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    def licenses(self) -> Optional[LicenseChoice]:
         """
         A optional list of statements about how this Component is licensed.
 
@@ -1044,8 +1044,8 @@ class Component(Dependable):
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+    def licenses(self, licenses: Optional[LicenseChoice]) -> None:
+        self._licenses = licenses
 
     @property  # type: ignore[misc]
     @serializable.xml_sequence(11)
@@ -1267,7 +1267,7 @@ class Component(Dependable):
     def __hash__(self) -> int:
         return hash((
             self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
-            self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
+            self.version, self.description, self.scope, tuple(self.hashes), self.licenses, self.copyright,
             self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
             tuple(self.components), self.evidence, self.release_notes, self.modified
         ))

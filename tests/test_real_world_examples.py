@@ -47,4 +47,4 @@ class TestDeserializeeRealWorldExamples(unittest.TestCase):
     def _attempt_load_example(self, schema_version: SchemaVersion, fixture: str) -> None:
         with open(join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
             xml = input_xml.read()
-            cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
+            cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))  # type: ignore

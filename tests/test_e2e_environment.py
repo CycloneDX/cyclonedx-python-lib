@@ -18,52 +18,55 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import json
+from typing import cast, Dict, Any, Optional
 from unittest import TestCase
 
-import pkg_resources
-from lxml import etree
+from lxml import etree  # type: ignore
 from packageurl import PackageURL
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
-from cyclonedx.output import OutputFormat, get_instance
+from cyclonedx.output import get_instance
 from cyclonedx.output.json import Json
 from cyclonedx.output.xml import Xml
+from cyclonedx.schema import OutputFormat
 
-OUR_PACKAGE_NAME: str = 'cyclonedx-python-lib'
-OUR_PACKAGE_VERSION: str = pkg_resources.get_distribution(OUR_PACKAGE_NAME).version
+from .base import cyclonedx_lib_name, cyclonedx_lib_version
+
+OUR_PACKAGE_NAME: str = cyclonedx_lib_name
+OUR_PACKAGE_VERSION: str = cyclonedx_lib_version
 OUR_PACKAGE_AUTHOR: str = 'Paul Horton'
+
+TEST_BOM: Bom = Bom()
+TEST_BOM.components.add(
+    Component(
+        name=OUR_PACKAGE_NAME, author=OUR_PACKAGE_AUTHOR, version=OUR_PACKAGE_VERSION,
+        purl=PackageURL(type='pypi', name=OUR_PACKAGE_NAME, version=OUR_PACKAGE_VERSION)
+    )
+)
 
 
 class TestE2EEnvironment(TestCase):
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.bom: Bom = Bom()
-        cls.bom.components.add(
-            Component(
-                name=OUR_PACKAGE_NAME, author=OUR_PACKAGE_AUTHOR, version=OUR_PACKAGE_VERSION,
-                purl=PackageURL(type='pypi', name=OUR_PACKAGE_NAME, version=OUR_PACKAGE_VERSION)
-            )
-        )
-
     def test_json_defaults(self) -> None:
-        outputter: Json = get_instance(bom=TestE2EEnvironment.bom, output_format=OutputFormat.JSON)
+        outputter: Json = cast(Json, get_instance(bom=TEST_BOM, output_format=OutputFormat.JSON))
         bom_json = json.loads(outputter.output_as_string())
         self.assertTrue('metadata' in bom_json)
         self.assertFalse('component' in bom_json['metadata'])
-        component_this_library = next(
+        component_this_library: Optional[Dict[str, Any]] = next(
             (x for x in bom_json['components'] if
              x['purl'] == 'pkg:pypi/{}@{}'.format(OUR_PACKAGE_NAME, OUR_PACKAGE_VERSION)), None
         )
 
-        self.assertTrue('author' in component_this_library.keys(), 'author is missing from JSON BOM')
-        self.assertEqual(component_this_library['author'], OUR_PACKAGE_AUTHOR)
-        self.assertEqual(component_this_library['name'], OUR_PACKAGE_NAME)
-        self.assertEqual(component_this_library['version'], OUR_PACKAGE_VERSION)
+        self.assertIsNotNone(component_this_library)
+        if component_this_library:
+            self.assertTrue('author' in component_this_library.keys(), 'author is missing from JSON BOM')
+            self.assertEqual(component_this_library['author'], OUR_PACKAGE_AUTHOR)
+            self.assertEqual(component_this_library['name'], OUR_PACKAGE_NAME)
+            self.assertEqual(component_this_library['version'], OUR_PACKAGE_VERSION)
 
     def test_xml_defaults(self) -> None:
-        outputter: Xml = get_instance(bom=TestE2EEnvironment.bom)
+        outputter: Xml = cast(Xml, get_instance(bom=TEST_BOM))
 
         # Check we have cyclonedx-python-lib with Author, Name and Version
         bom_xml_e: etree.ElementTree = etree.fromstring(bytes(outputter.output_as_string(), encoding='utf-8'))

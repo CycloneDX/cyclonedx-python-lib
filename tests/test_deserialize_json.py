@@ -25,7 +25,8 @@ from unittest.mock import Mock, patch
 from uuid import UUID
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, OutputFormat, SchemaVersion, get_instance
+from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, get_instance
+from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests.base import BaseJsonTestCase
 from tests.data import (
     MOCK_BOM_UUID_1,
@@ -415,11 +416,11 @@ class TestOutputJson(BaseJsonTestCase):
         if schema_version != LATEST_SUPPORTED_SCHEMA_VERSION:
             # Rewind the BOM to only have data supported by the SchemaVersion in question
             outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
-            bom = cast(Bom, Bom.from_json(data=json.loads(outputter.output_as_string())))
+            bom = cast(Bom, Bom.from_json(data=json.loads(outputter.output_as_string())))  # type: ignore
 
         with open(
                 join(dirname(__file__), f'fixtures/json/{schema_version.to_version()}/{fixture}')) as input_json:
-            deserialized_bom = cast(Bom, Bom.from_json(data=json.loads(input_json.read())))
+            deserialized_bom = cast(Bom, Bom.from_json(data=json.loads(input_json.read())))  # type: ignore
 
             self.assertEqual(bom.metadata, deserialized_bom.metadata)
 

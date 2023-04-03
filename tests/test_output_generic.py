@@ -25,26 +25,24 @@ from cyclonedx.output import get_instance
 from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot4
 from cyclonedx.schema import OutputFormat, SchemaVersion
 
+TEST_BOM = Bom()
+TEST_BOM.components.add(Component(name='setuptools'))
+
 
 class TestOutputGeneric(TestCase):
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls._bom = Bom()
-        cls._bom.components.add(Component(name='setuptools'))
-
     def test_get_instance_default(self) -> None:
-        i = get_instance(bom=TestOutputGeneric._bom)
+        i = get_instance(bom=TEST_BOM)
         self.assertIsInstance(i, XmlV1Dot4)
 
     def test_get_instance_xml_default(self) -> None:
-        i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML)
+        i = get_instance(bom=TEST_BOM, output_format=OutputFormat.XML)
         self.assertIsInstance(i, XmlV1Dot4)
 
     def test_get_instance_xml_v1_3(self) -> None:
-        i = get_instance(bom=TestOutputGeneric._bom, output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
+        i = get_instance(bom=TEST_BOM, output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
         self.assertIsInstance(i, XmlV1Dot3)
 
     def test_component_no_version_v1_3(self) -> None:
-        i = get_instance(bom=TestOutputGeneric._bom, schema_version=SchemaVersion.V1_3)
+        i = get_instance(bom=TEST_BOM, schema_version=SchemaVersion.V1_3)
         self.assertIsInstance(i, XmlV1Dot3)

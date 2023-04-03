@@ -123,7 +123,7 @@ class TestModelComponent(TestCase):
         self.assertIsNone(c.description)
         self.assertIsNone(c.scope)
         self.assertSetEqual(c.hashes, set())
-        self.assertSetEqual(c.licenses, set())
+        self.assertIsNone(c.licenses)
         self.assertIsNone(c.copyright)
         self.assertIsNone(c.purl)
         self.assertSetEqual(c.external_references, set())

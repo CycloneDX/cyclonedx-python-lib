@@ -71,7 +71,7 @@ class UrnUuidHelper(BaseHelper):
         raise ValueError(f'Attempt to serialize a non-UUID: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object) -> PackageURL:
+    def deserialize(cls, o: object) -> UUID:
         try:
             return UUID(str(o))
         except ValueError:

@@ -68,7 +68,7 @@ class BomMetaData:
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
                  manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
-                 licenses: Optional[Iterable[LicenseChoice]] = None,
+                 licenses: Optional[LicenseChoice] = None,
                  properties: Optional[Iterable[Property]] = None,
                  timestamp: Optional[datetime] = None) -> None:
         self.timestamp = timestamp or get_now_utc()
@@ -77,7 +77,7 @@ class BomMetaData:
         self.component = component
         self.manufacture = manufacture
         self.supplier = supplier
-        self.licenses = licenses or []  # type: ignore
+        self.licenses = licenses
         self.properties = properties or []  # type: ignore
 
         if not tools:
@@ -195,9 +195,9 @@ class BomMetaData:
     @property  # type: ignore[misc]
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    # @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
     @serializable.xml_sequence(7)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    def licenses(self) -> Optional[LicenseChoice]:
         """
         A optional list of statements about how this BOM is licensed.
 
@@ -207,8 +207,8 @@ class BomMetaData:
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+    def licenses(self, licenses: Optional[LicenseChoice]) -> None:
+        self._licenses = licenses
 
     @property  # type: ignore[misc]
     @serializable.view(SchemaVersion1Dot3)
@@ -239,7 +239,7 @@ class BomMetaData:
 
     def __hash__(self) -> int:
         return hash((
-            tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
+            tuple(self.authors), self.component, self.licenses, self.manufacture, tuple(self.properties),
             self.supplier, self.timestamp, tuple(self.tools)
         ))
 

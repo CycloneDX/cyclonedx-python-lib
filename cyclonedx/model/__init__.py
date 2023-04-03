@@ -21,7 +21,7 @@ import sys
 import warnings
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Iterable, Optional, Tuple, TypeVar
+from typing import Any, Iterable, List, Optional, Tuple, TypeVar
 
 import serializable
 from sortedcontainers import SortedSet
@@ -695,35 +695,36 @@ class LicenseChoice:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
     """
 
-    def __init__(self, *, license: Optional[License] = None, expression: Optional[str] = None) -> None:
-        if not license and not expression:
+    def __init__(self, *, licenses: Optional[List[License]] = None, expression: Optional[str] = None) -> None:
+        if not licenses and not expression:
             raise NoPropertiesProvidedException(
-                'One of `license` or `expression` must be supplied - neither supplied'
+                'One of `licenses` or `expression` must be supplied - neither supplied'
             )
-        if license and expression:
+        if licenses and expression:
             warnings.warn(
-                'Both `license` and `expression` have been supplied - `license` will take precedence',
+                'Both `licenses` and `expression` have been supplied - `license` will take precedence',
                 RuntimeWarning
             )
-        self.license = license
-        if not license:
+        self.licenses = licenses
+        if not licenses:
             self.expression = expression
         else:
             self.expression = None
 
-    @property
-    def license(self) -> Optional[License]:
+    @property  # type: ignore[misc]
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'license')
+    def licenses(self) -> Optional[List[License]]:
         """
         License definition
 
         Returns:
             `License` or `None`
         """
-        return self._license
+        return self._licenses
 
-    @license.setter
-    def license(self, license: Optional[License]) -> None:
-        self._license = license
+    @licenses.setter
+    def licenses(self, licenses: Optional[List[License]] = None) -> None:
+        self._licenses = licenses
 
     @property
     def expression(self) -> Optional[str]:
@@ -748,15 +749,15 @@ class LicenseChoice:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, LicenseChoice):
-            return ComparableTuple((self.license, self.expression)) < ComparableTuple(
-                (other.license, other.expression))
+            return ComparableTuple((self.licenses or [], self.expression)) < ComparableTuple(
+                (other.licenses or [], other.expression))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.license, self.expression))
+        return hash((tuple(self.licenses) if self.licenses else (), self.expression))
 
     def __repr__(self) -> str:
-        return f'<LicenseChoice license={self.license}, expression={self.expression}>'
+        return f'<LicenseChoice licenses={self.licenses}, expression={self.expression}>'
 
 
 @serializable.serializable_class
