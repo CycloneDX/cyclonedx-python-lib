@@ -18,13 +18,18 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
+import warnings
+from typing import Iterable, List, TypeVar
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 from serializable.helpers import BaseHelper
 
+from ..model import LicenseChoice
 from ..model.bom_ref import BomRef
+
+_T = TypeVar('_T')
 
 
 class BomRefHelper(BaseHelper):
@@ -76,3 +81,23 @@ class UrnUuidHelper(BaseHelper):
             return UUID(str(o))
         except ValueError:
             raise ValueError(f'UUID string supplied ({o}) does not parse!')
+
+
+class LicensesHelper(BaseHelper):
+
+    @classmethod
+    def deserialize(cls, o: _T) -> _T:
+        return o
+
+    @classmethod
+    def serialize(cls, o: Iterable[LicenseChoice]) -> List[LicenseChoice]:
+        licenses = list(o)
+        if len(licenses) > 1:
+            expression = next(license for license in licenses if license.expression)
+            if expression:
+                warnings.warn(
+                    f'Licenses: found an expression {expression!r}, dropping the rest of: {licenses!r}',
+                    RuntimeWarning
+                )
+                return [expression]
+        return licenses

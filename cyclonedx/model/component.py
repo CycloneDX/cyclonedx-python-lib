@@ -36,7 +36,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from ..serialization import BomRefHelper, PackageUrl
+from ..serialization import BomRefHelper, LicensesHelper, PackageUrl
 from . import (
     AttachedText,
     ComparableTuple,
@@ -1028,6 +1028,7 @@ class Component(Dependable):
         self._hashes = SortedSet(hashes)
 
     @property  # type: ignore[misc]
+    @serializable.type_mapping(LicensesHelper)
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
