@@ -52,7 +52,7 @@ jobs:
       - name: Python Semantic Release
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html
         # see https://github.com/python-semantic-release/python-semantic-release
-        uses: python-semantic-release/python-semantic-release@v7.33.2
+        uses: python-semantic-release/python-semantic-release@v7.33.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository_username: __token__
