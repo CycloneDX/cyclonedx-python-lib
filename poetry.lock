@@ -783,14 +783,14 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 
 [[package]]
 name = "xmldiff"
-version = "2.5"
+version = "2.6.1"
 description = "Creates diffs of XML files"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "xmldiff-2.5-py3-none-any.whl", hash = "sha256:d2eee7992f3f71b157088b24c7e70f6e77ab50f75b0ece71f6938d9ea2559a7c"},
-    {file = "xmldiff-2.5.tar.gz", hash = "sha256:6c5f30bc65ce6e81d9a70a3cb0269f7ba61852fd6caa7a0fbfc0edf33b3cb717"},
+    {file = "xmldiff-2.6.1-py3-none-any.whl", hash = "sha256:6ad5eb62cec5512103059bcef9663f2c0e10bc694acc3e325c7fea1e14ff6986"},
+    {file = "xmldiff-2.6.1.tar.gz", hash = "sha256:81b817ef2fd0de9b30336b47fd1d4648c99b30685024a07bc34f2c146404e159"},
 ]
 
 [package.dependencies]
