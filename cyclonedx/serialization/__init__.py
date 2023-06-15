@@ -19,13 +19,12 @@ Set of helper classes for use with ``serializable`` when conducting (de-)seriali
 """
 
 import warnings
-from typing import List, TypeVar
+from typing import List
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 from serializable.helpers import BaseHelper
-from sortedcontainers import SortedSet
 
 from ..model import LicenseChoice
 from ..model.bom_ref import BomRef
@@ -85,19 +84,17 @@ class UrnUuidHelper(BaseHelper):
 class LicensesHelper(BaseHelper):
 
     @classmethod
-    def deserialize(cls, o: object) -> SortedSet[LicenseChoice]:
-        licenses: List[dict] = o
-        return SortedSet(LicenseChoice(**l) for l in licenses)
-
-    @classmethod
     def serialize(cls, o: object) -> List[LicenseChoice]:
+        # need to call `list(o)`, because `o` could be any iterable.
         licenses: List[LicenseChoice] = list(o)  # type: ignore[call-overload]
         if len(licenses) > 1:
-            expression = next(license for license in licenses if license.expression)
+            expression = next((license for license in licenses if license.expression), None)
             if expression:
-                warnings.warn(
-                    f'Licenses: found an expression {expression!r}, dropping the rest of: {licenses!r}',
-                    RuntimeWarning
-                )
+                warnings.warn(f'Licenses: found an expression {expression!r}, dropping the rest of: {licenses!r}',
+                              RuntimeWarning)
                 return [expression]
         return licenses
+
+    @classmethod
+    def deserialize(cls, o: object) -> List[LicenseChoice]:
+        raise NotImplementedError
