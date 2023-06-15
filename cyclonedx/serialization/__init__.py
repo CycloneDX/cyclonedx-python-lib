@@ -19,17 +19,16 @@ Set of helper classes for use with ``serializable`` when conducting (de-)seriali
 """
 
 import warnings
-from typing import Iterable, List, TypeVar
+from typing import List, TypeVar
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 from serializable.helpers import BaseHelper
+from sortedcontainers import SortedSet
 
 from ..model import LicenseChoice
 from ..model.bom_ref import BomRef
-
-_T = TypeVar('_T')
 
 
 class BomRefHelper(BaseHelper):
@@ -86,12 +85,13 @@ class UrnUuidHelper(BaseHelper):
 class LicensesHelper(BaseHelper):
 
     @classmethod
-    def deserialize(cls, o: _T) -> _T:
-        return o
+    def deserialize(cls, o: object) -> SortedSet[LicenseChoice]:
+        licenses: List[dict] = o
+        return SortedSet(LicenseChoice(**l) for l in licenses)
 
     @classmethod
-    def serialize(cls, o: Iterable[LicenseChoice]) -> List[LicenseChoice]:
-        licenses = list(o)
+    def serialize(cls, o: object) -> List[LicenseChoice]:
+        licenses: List[LicenseChoice] = list(o)  # type: ignore[call-overload]
         if len(licenses) > 1:
             expression = next(license for license in licenses if license.expression)
             if expression:
