@@ -6,7 +6,7 @@
             <name>setuptools</name>
             <version>50.3.2</version>
             <licenses>
-                <expression>MIT License</expression>
+                <license><name>MIT License</name></license>
             </licenses>
             <cpe>cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*</cpe>
             <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>

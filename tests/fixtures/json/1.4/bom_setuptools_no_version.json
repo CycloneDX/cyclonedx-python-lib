@@ -55,9 +55,7 @@
       "author": "Test Author",
       "name": "setuptools",
       "licenses": [
-        {
-          "expression": "MIT License"
-        }
+        {"license": { "name": "MIT License" }}
       ],
       "purl": "pkg:pypi/setuptools?extension=tar.gz"
     }

@@ -85,9 +85,7 @@
       "description": "This component is awesome",
       "scope": "required",
       "licenses": [
-        {
-          "expression": "MIT License"
-        }
+        {"license": { "name": "MIT License" }}
       ],
       "copyright": "Apache 2.0 baby!",
       "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
@@ -111,9 +109,7 @@
             "name": "setuptools",
             "version": "50.3.2",
             "licenses": [
-              {
-                "expression": "MIT License"
-              }
+              {"license": { "id": "MIT" }}
             ],
             "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
           },
@@ -123,9 +119,7 @@
             "author": "Test Author",
             "name": "setuptools",
             "licenses": [
-              {
-                "expression": "MIT License"
-              }
+              {"license": { "id": "MIT" }}
             ],
             "purl": "pkg:pypi/setuptools?extension=tar.gz"
           }
@@ -137,9 +131,7 @@
             "author": "Test Author",
             "name": "setuptools",
             "licenses": [
-              {
-                "expression": "MIT License"
-              }
+              {"license": { "name": "MIT License" }}
             ],
             "purl": "pkg:pypi/setuptools?extension=tar.gz"
           },
@@ -178,9 +170,7 @@
             "name": "setuptools",
             "version": "50.3.2",
             "licenses": [
-              {
-                "expression": "MIT License"
-              }
+              {"license": { "name": "MIT License" }}
             ],
             "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
           },
@@ -255,9 +245,7 @@
           "name": "setuptools",
           "version": "50.3.2",
           "licenses": [
-            {
-              "expression": "MIT License"
-            }
+            {"license": { "name": "MIT License" }}
           ],
           "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
         },

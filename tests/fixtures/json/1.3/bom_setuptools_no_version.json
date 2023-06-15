@@ -22,9 +22,7 @@
       "name": "setuptools",
       "version": "",
       "licenses": [
-        {
-          "expression": "MIT License"
-        }
+        {"license": { "name": "MIT License" }}
       ],
       "purl": "pkg:pypi/setuptools?extension=tar.gz"
     }

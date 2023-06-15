@@ -1033,7 +1033,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    # @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, '')
     @serializable.xml_sequence(10)
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """

@@ -33,7 +33,7 @@
             <description>This component is awesome</description>
             <scope>required</scope>
             <licenses>
-                <expression>MIT License</expression>
+                <license><name>MIT License</name></license>
             </licenses>
             <copyright>Apache 2.0 baby!</copyright>
             <cpe>cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*</cpe>
@@ -48,7 +48,7 @@
                         <name>setuptools</name>
                         <version>50.3.2</version>
                         <licenses>
-                            <expression>MIT License</expression>
+                            <license><name>MIT License</name></license>
                         </licenses>
                         <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
                     </component>
@@ -57,7 +57,7 @@
                         <name>setuptools</name>
                         <version/>
                         <licenses>
-                            <expression>MIT License</expression>
+                            <license><name>MIT License</name></license>
                         </licenses>
                         <purl>pkg:pypi/setuptools?extension=tar.gz</purl>
                     </component>
@@ -68,7 +68,7 @@
                         <name>setuptools</name>
                         <version/>
                         <licenses>
-                            <expression>MIT License</expression>
+                            <license><name>MIT License</name></license>
                         </licenses>
                         <purl>pkg:pypi/setuptools?extension=tar.gz</purl>
                     </component>
@@ -93,7 +93,7 @@
                         <name>setuptools</name>
                         <version>50.3.2</version>
                         <licenses>
-                            <expression>MIT License</expression>
+                            <license><name>MIT License</name></license>
                         </licenses>
                         <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
                     </component>
@@ -135,7 +135,7 @@
                     <name>setuptools</name>
                     <version>50.3.2</version>
                     <licenses>
-                        <expression>MIT License</expression>
+                        <license><name>MIT License</name></license>
                     </licenses>
                     <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
                 </component>

@@ -44,7 +44,7 @@
                 <classification flow="outbound">public</classification>
             </data>
             <licenses>
-                <expression>Commercial</expression>
+                <license><name>Commercial</name></license>
             </licenses>
             <externalReferences>
                 <reference type="distribution">

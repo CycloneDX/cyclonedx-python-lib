@@ -42,7 +42,7 @@
             <author>Test Author</author>
             <name>setuptools</name>
             <licenses>
-                <expression>MIT License</expression>
+                <license><name>MIT License</name></license>
             </licenses>
             <purl>pkg:pypi/setuptools?extension=tar.gz</purl>
         </component>

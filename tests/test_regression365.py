@@ -16,60 +16,27 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from datetime import datetime, timezone
 from itertools import chain, product
 from os.path import dirname, join
-from typing import Type, Union
+from typing import Callable, Type, Union
 from unittest import TestCase
-from uuid import UUID
 
 from ddt import ddt, idata, unpack
 
-from cyclonedx.model import AttachedText, Encoding, License, LicenseChoice, XsUri
-from cyclonedx.model.bom import Bom, Component
+from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import Json, JsonV1Dot2, JsonV1Dot3, JsonV1Dot4
 from cyclonedx.output.xml import Xml, XmlV1Dot0, XmlV1Dot1, XmlV1Dot2, XmlV1Dot3, XmlV1Dot4
+from tests.data import (
+    get_bom_for_issue_365_expression,
+    get_bom_for_issue_365_expression_preferred,
+    get_bom_for_issue_365_multiple_licenses,
+)
 
-_bom_multiple_licenses = Bom(serial_number=UUID(hex='92f71d34625a449798913333c56a7af1'))
-_bom_multiple_licenses.metadata.timestamp = datetime(2022, 6, 15, 13, 5, 12, 0, timezone.utc)
-_bom_multiple_licenses.metadata.tools = []
-_bom_multiple_licenses.components.add(Component(
-    name='multiple-licenses',
-    bom_ref='testing',
-    licenses=[
-        LicenseChoice(
-            license=License(
-                id='Apache-2.0',
-                text=AttachedText(
-                    content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=',
-                    encoding=Encoding.BASE_64
-                ),
-                url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
-            )
-        ),
-        LicenseChoice(license=License(name='OSI_APACHE'))
-    ]))
-
-_bom_expression_preferred = Bom(serial_number=UUID(hex='66f6f3d40d244db3b69cbd547be9b0d3'))
-_bom_expression_preferred.metadata.timestamp = datetime(2022, 6, 15, 13, 9, 38, 0, timezone.utc)
-_bom_multiple_licenses.metadata.tools = []
-_bom_expression_preferred.components.add(Component(
-    name='expression-preferred',
-    bom_ref='testing',
-    licenses=[
-        LicenseChoice(
-            license=License(
-                id='Apache-2.0',
-                text=AttachedText(
-                    content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=',
-                    encoding=Encoding.BASE_64
-                ),
-                url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
-            )
-        ),
-        LicenseChoice(expression='(Apache-2.0 OR MIT)'),
-        LicenseChoice(license=License(name='OSI_APACHE'))
-    ]))
+_bom_getters = [
+    get_bom_for_issue_365_multiple_licenses,
+    get_bom_for_issue_365_expression,
+    get_bom_for_issue_365_expression_preferred
+]
 
 
 @ddt
@@ -83,24 +50,18 @@ class Regression365(TestCase):
     """
 
     @idata(chain(
-        product(
-            [_bom_multiple_licenses, _bom_expression_preferred],
-            ['xml'],
-            [XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0]
-        ),
-        product(
-            [_bom_multiple_licenses, _bom_expression_preferred],
-            ['json'],
-            [JsonV1Dot4, JsonV1Dot3, JsonV1Dot2]
-        ),
+        product(_bom_getters, ['xml'], [XmlV1Dot4, XmlV1Dot3, XmlV1Dot2, XmlV1Dot1, XmlV1Dot0]),
+        product(_bom_getters, ['json'], [JsonV1Dot4, JsonV1Dot3, JsonV1Dot2]),
     ))
     @unpack
-    def test_serialize(self, bom: Bom, target: str, schema_type: Union[Type[Json], Type[Xml]]) -> None:
+    def test_serialize(self, bom_getter: Callable[[], Bom], target: str, schema_type: Union[Type[Json], Type[Xml]]) -> None:
+        bom = bom_getter()
         serializer = schema_type(bom)
         serialized = serializer.output_as_string()
 
         expected_file = join(
             dirname(__file__),
             f'fixtures/{target}/{serializer.get_schema_version()}/regression365_{bom.components[0].name}.{target}')
-        with open(expected_file, 'r') as expected_fh:
+        with open(expected_file, 'w') as expected_fh:
+            expected_fh.write(serialized)
             self.assertEqual(expected_fh.read(), serialized)

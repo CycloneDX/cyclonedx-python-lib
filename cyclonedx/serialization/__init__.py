@@ -98,3 +98,4 @@ class LicensesHelper(BaseHelper):
     @classmethod
     def deserialize(cls, o: object) -> List[LicenseChoice]:
         raise NotImplementedError
+        return [LicenseChoice.from_json(data) for data in o]

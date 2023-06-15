@@ -261,9 +261,7 @@ def get_bom_with_services_complex() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[
-                LicenseChoice(expression='Commercial')
-            ],
+            licenses=[LicenseChoice(license=License(name='Commercial'))],
             external_references=[
                 get_external_reference_1()
             ],
@@ -290,9 +288,7 @@ def get_bom_with_nested_services() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[
-                LicenseChoice(expression='Commercial')
-            ],
+            licenses=[LicenseChoice(license=License(name='Commercial'))],
             external_references=[
                 get_external_reference_1()
             ],
@@ -394,6 +390,56 @@ def get_bom_for_issue_328_components() -> Bom:
     return bom
 
 
+def get_bom_for_issue_365_multiple_licenses() -> Bom:
+    bom = Bom(serial_number=UUID(hex='92f71d34625a449798913333c56a7af1'))
+    bom.metadata.timestamp = datetime(2022, 6, 15, 13, 5, 12, 0, timezone.utc)
+    bom.metadata.tools = []
+    bom.components.add(Component(
+        name='multiple-licenses',
+        bom_ref='testing',
+        licenses=[
+            LicenseChoice(
+                license=License(
+                    id='Apache-2.0',
+                    text=AttachedText(
+                        content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=',
+                        encoding=Encoding.BASE_64
+                    ),
+                    url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
+                )
+            ),
+            LicenseChoice(license=License(name='OSI_APACHE'))
+        ]))
+    return bom
+
+
+def get_bom_for_issue_365_expression() -> Bom:
+    bom = Bom(serial_number=UUID(hex='66f6f3d40d244db3b69cbd547be9b0d3'))
+    bom.metadata.timestamp = datetime(2022, 6, 15, 13, 9, 38, 0, timezone.utc)
+    bom.metadata.tools = []
+    bom.components.add(Component(
+        name='expression',
+        bom_ref='testing',
+        licenses=[
+            LicenseChoice(expression='(Apache-2.0 OR MIT)'),
+        ]))
+    return bom
+
+
+def get_bom_for_issue_365_expression_preferred() -> Bom:
+    """
+    create a component with license expression AND named/id license.
+    when serialized, the expression is preferred.
+    this means: serialization result is the same as of `get_bom_for_issue_365_expression()`
+    """
+    bom_expression = get_bom_for_issue_365_expression()
+    bom_multi = get_bom_for_issue_365_multiple_licenses()
+    component_multi: Component = bom_multi.components[0]
+    component_expression: Component = bom_expression.components[0]
+    component_expression.licenses.update(component_multi.licenses)
+    return bom_expression
+
+
 def get_component_setuptools_complete(include_pedigree: bool = True) -> Component:
     component = get_component_setuptools_simple(bom_ref=None)
     component.supplier = get_org_entity_1()
@@ -427,10 +473,9 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=[LicenseChoice(license=License(id='MIT'))],
         author='Test Author'
     )
-
 
 def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) -> Component:
     return Component(
@@ -438,7 +483,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=[LicenseChoice(license=License(name='MIT License'))],
         author='Test Author'
     )
 

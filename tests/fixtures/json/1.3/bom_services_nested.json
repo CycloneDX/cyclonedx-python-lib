@@ -57,9 +57,7 @@
         }
       ],
       "licenses": [
-        {
-          "expression": "Commercial"
-        }
+        {"license": { "name": "Commercial" }}
       ],
       "externalReferences": [
         {

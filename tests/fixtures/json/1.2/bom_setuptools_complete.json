@@ -43,7 +43,9 @@
       "scope": "required",
       "licenses": [
         {
-          "expression": "MIT License"
+          "license": {
+            "name": "MIT License"
+          }
         }
       ],
       "copyright": "Apache 2.0 baby!",
@@ -69,7 +71,9 @@
             "version": "50.3.2",
             "licenses": [
               {
-                "expression": "MIT License"
+                "license": {
+                  "name": "MIT License"
+                }
               }
             ],
             "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
@@ -82,7 +86,9 @@
             "version": "",
             "licenses": [
               {
-                "expression": "MIT License"
+                "license": {
+                  "name": "MIT License"
+                }
               }
             ],
             "purl": "pkg:pypi/setuptools?extension=tar.gz"
@@ -97,7 +103,9 @@
             "version": "",
             "licenses": [
               {
-                "expression": "MIT License"
+                "license": {
+                  "name": "MIT License"
+                }
               }
             ],
             "purl": "pkg:pypi/setuptools?extension=tar.gz"
@@ -152,7 +160,9 @@
             "version": "50.3.2",
             "licenses": [
               {
-                "expression": "MIT License"
+                "license": {
+                  "name": "MIT License"
+                }
               }
             ],
             "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
@@ -187,7 +197,9 @@
           "version": "50.3.2",
           "licenses": [
             {
-              "expression": "MIT License"
+              "license": {
+                "name": "MIT License"
+              }
             }
           ],
           "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"

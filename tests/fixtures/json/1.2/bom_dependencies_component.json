@@ -21,7 +21,9 @@
       "version": "50.3.2",
       "licenses": [
         {
-          "expression": "MIT License"
+          "license": {
+            "name": "MIT License"
+          }
         }
       ],
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
