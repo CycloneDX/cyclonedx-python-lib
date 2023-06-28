@@ -524,7 +524,6 @@ class TestOutputXml(BaseXmlTestCase):
                 fixture='bom_with_dependencies_hanging.xml'
             )
 
-
     # region Helper methods
 
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
