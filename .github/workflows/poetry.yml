@@ -134,7 +134,8 @@ jobs:
           architecture: 'x64'
 
       - name: Validate Python Environment
-        run: echo "import sys; print('Python %s on %s in %s' % (sys.version, sys.platform, sys.getdefaultencoding()))" | python
+        run: import sys; print('Python %s on %s in %s' % (sys.version, sys.platform, sys.getdefaultencoding()))
+        shell: python
 
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
@@ -165,3 +166,34 @@ jobs:
           name: ${{ env.REPORTS_ARTIFACT }}
           path: ${{ env.REPORTS_DIR }}
           if-no-files-found: error
+
+  build-and-run-examples:
+    name: Examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v3
+      - name: Setup Python Environment
+        # see https://github.com/actions/setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '>=3.7 <=3.11'  # supported version range
+      - name: Validate Python Environment
+        run: import sys; print('Python %s on %s in %s' % (sys.version, sys.platform, sys.getdefaultencoding()))
+        shell: python
+      - name: Install poetry
+        # see https://github.com/marketplace/actions/setup-poetry
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Install project
+        run: poetry install
+      - name: run all examples
+        run: >
+          find examples -type f -name '*.py' -print0
+          | xargs -0 -L1 -t
+          poetry run python

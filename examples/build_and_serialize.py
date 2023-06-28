@@ -38,7 +38,6 @@ bom.dependencies.add(Dependency(rootComponent.bom_ref, [Dependency(component.bom
 
 # endregion build the BOM
 
-
 serializedJSON = JsonV1Dot4(bom).output_as_string()
 print(serializedJSON)
 
