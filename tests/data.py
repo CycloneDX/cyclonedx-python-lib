@@ -130,19 +130,34 @@ def get_bom_with_dependencies_valid() -> Bom:
         ]
     )
 
+
 def get_bom_with_dependencies_hanging() -> Bom:
-    """A bom with a RootCOmponent. but all dependencies are not conected to the root. """
-    c1 = get_component_setuptools_simple()
-    c2 = get_component_toml_with_hashes_with_references()
-    return Bom(
-        metadata=BomMetaData(component=Component(name='rootComponent', type=ComponentType.APPLICATION)),
-        components=[c1, c2], dependencies=[
-            Dependency(ref=c1.bom_ref, dependencies=[
-                Dependency(ref=c2.bom_ref)
+    """
+    A bom with a RootComponent and components,
+    but no dependencies are connected to RootComponent.
+    """
+    c1 = get_component_setuptools_simple('setuptools')
+    c2 = get_component_toml_with_hashes_with_references('toml')
+    bom = Bom(
+        serial_number=UUID(hex='12345678395b41f5a30f1234567890ab'),
+        version=23,
+        metadata=BomMetaData(
+            component=Component(name='rootComponent', type=ComponentType.APPLICATION, bom_ref='root-component'),
+        ),
+        components=[c1, c2],
+        dependencies=[
+            Dependency(c1.bom_ref, [
+                Dependency(c2.bom_ref)
             ]),
-            Dependency(ref=c2.bom_ref)
+            Dependency(c2.bom_ref)
         ]
     )
+    bom.metadata.tools.clear()
+    bom.metadata.timestamp = datetime(
+        year=2023, month=6, day=1,
+        hour=3, minute=3, second=7, microsecond=0,
+        tzinfo=timezone.utc)
+    return bom
 
 
 def get_bom_with_dependencies_invalid() -> Bom:

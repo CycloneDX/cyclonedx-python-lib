@@ -42,6 +42,7 @@ from tests.data import (
     get_bom_with_component_setuptools_with_release_notes,
     get_bom_with_component_setuptools_with_vulnerability,
     get_bom_with_component_toml_1,
+    get_bom_with_dependencies_hanging,
     get_bom_with_dependencies_valid,
     get_bom_with_external_references,
     get_bom_with_metadata_component_and_dependencies,
@@ -383,6 +384,13 @@ class TestOutputJson(BaseJsonTestCase):
             bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
             fixture='bom_issue_275_components.json'
         )
+
+    def test_bom_v1_4_warn_dependencies(self) -> None:
+        with self.assertWarns(UserWarning):
+            self._validate_json_bom(
+                bom=get_bom_with_dependencies_hanging(), schema_version=SchemaVersion.V1_4,
+                fixture='bom_with_dependencies_hanging.json'
+            )
 
     # region Helper methods
 
