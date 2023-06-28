@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cyclonedx-python-lib"
-version = "4.0.0"
+version = "4.0.1"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
 authors = ["Paul Horton <phorton@sonatype.com>"]
 maintainers = [

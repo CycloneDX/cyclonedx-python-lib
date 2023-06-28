@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v4.0.1 (2023-06-28)
+
+### Fix
+
+* Conditional warning if no root dependencies were found ([#398](https://github.com/CycloneDX/cyclonedx-python-lib/issues/398)) ([`c8175bb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c8175bb6aebac7f129d42d7a5a0ae928212c20cb))
+
+### Documentation
+
+* **examples:** README ([#399](https://github.com/CycloneDX/cyclonedx-python-lib/issues/399)) ([`1d262ba`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1d262ba57eab0d61b947fc293fc59c6234f19647))
+* Add exaple how to build and serialize ([#397](https://github.com/CycloneDX/cyclonedx-python-lib/issues/397)) ([`65e22bd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/65e22bdc6a1a3fc02a6282146bc8fbc17ddb32fa))
+
 ## v4.0.0 (2023-03-20)
 
 ### Breaking
