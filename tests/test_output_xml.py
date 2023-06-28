@@ -467,60 +467,52 @@ class TestOutputXml(BaseXmlTestCase):
         )
 
     def test_bom_v1_4_dependencies_for_bom_component(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_4,
-                fixture='bom_dependencies_component.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_dependencies_component.xml'
+        )
 
     def test_bom_v1_3_dependencies_for_bom_component(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_3,
-                fixture='bom_dependencies_component.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_dependencies_component.xml'
+        )
 
     def test_bom_v1_2_dependencies_for_bom_component(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
-                fixture='bom_dependencies_component.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_dependencies_component.xml'
+        )
 
     def test_bom_v1_4_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_3_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_2_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_1_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_1,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_1,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_0_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_0,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_0,
+            fixture='bom_issue_275_components.xml'
+        )
 
     # region Helper methods
 

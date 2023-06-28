@@ -44,7 +44,7 @@ from cyclonedx.model import (
     Tool,
     XsUri,
 )
-from cyclonedx.model.bom import Bom
+from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.component import (
     Commit,
     Component,
@@ -122,6 +122,20 @@ def get_bom_with_dependencies_valid() -> Bom:
     c1 = get_component_setuptools_simple()
     c2 = get_component_toml_with_hashes_with_references()
     return Bom(
+        components=[c1, c2], dependencies=[
+            Dependency(ref=c1.bom_ref, dependencies=[
+                Dependency(ref=c2.bom_ref)
+            ]),
+            Dependency(ref=c2.bom_ref)
+        ]
+    )
+
+def get_bom_with_dependencies_hanging() -> Bom:
+    """A bom with a RootCOmponent. but all dependencies are not conected to the root. """
+    c1 = get_component_setuptools_simple()
+    c2 = get_component_toml_with_hashes_with_references()
+    return Bom(
+        metadata=BomMetaData(component=Component(name='rootComponent', type=ComponentType.APPLICATION)),
         components=[c1, c2], dependencies=[
             Dependency(ref=c1.bom_ref, dependencies=[
                 Dependency(ref=c2.bom_ref)
