@@ -387,6 +387,8 @@ class TestOutputJson(BaseJsonTestCase):
 
     def test_bom_v1_4_warn_dependencies(self) -> None:
         with self.assertWarns(UserWarning):
+            # this data set is expected to throw this UserWarning.
+            # that is the while point of this test!
             self._validate_json_bom(
                 bom=get_bom_with_dependencies_hanging(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_with_dependencies_hanging.json'
