@@ -40,6 +40,7 @@ programmatically generate SBOMs.
 
    install
    architecture
+   examples
    contributing
    support
    changelog
