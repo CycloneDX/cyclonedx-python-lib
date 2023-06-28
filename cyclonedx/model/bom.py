@@ -563,9 +563,9 @@ class Bom:
                 f'BOM. They are: {dependency_diff}')
 
         # 2. Dependencies should exist for the Component this BOM is describing, if one is set
-        if self.metadata.component and filter(
-            lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies  # type: ignore[arg-type]
-        ):
+        if self.metadata.component and not any(map(
+            lambda _d: _d.ref == self.metadata.component.bom_ref and len(_d.dependencies) > 0, self.dependencies
+        )):
             warnings.warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
