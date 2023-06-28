@@ -41,6 +41,7 @@ from tests.data import (
     get_bom_with_component_setuptools_with_release_notes,
     get_bom_with_component_setuptools_with_vulnerability,
     get_bom_with_component_toml_1,
+    get_bom_with_dependencies_hanging,
     get_bom_with_dependencies_valid,
     get_bom_with_external_references,
     get_bom_with_metadata_component_and_dependencies,
@@ -467,59 +468,60 @@ class TestOutputXml(BaseXmlTestCase):
         )
 
     def test_bom_v1_4_dependencies_for_bom_component(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_4,
-                fixture='bom_dependencies_component.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_dependencies_component.xml'
+        )
 
     def test_bom_v1_3_dependencies_for_bom_component(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_3,
-                fixture='bom_dependencies_component.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_dependencies_component.xml'
+        )
 
     def test_bom_v1_2_dependencies_for_bom_component(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
-                fixture='bom_dependencies_component.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_with_metadata_component_and_dependencies(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_dependencies_component.xml'
+        )
 
     def test_bom_v1_4_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_4,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_3_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_3,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_2_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_2,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_1_issue_275_components(self) -> None:
-        with self.assertWarns(UserWarning):
-            self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_1,
-                fixture='bom_issue_275_components.xml'
-            )
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_1,
+            fixture='bom_issue_275_components.xml'
+        )
 
     def test_bom_v1_0_issue_275_components(self) -> None:
+        self._validate_xml_bom(
+            bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_0,
+            fixture='bom_issue_275_components.xml'
+        )
+
+    def test_bom_v1_4_warn_dependencies(self) -> None:
         with self.assertWarns(UserWarning):
+            # this data set is expected to throw this UserWarning.
+            # that is the while point of this test!
             self._validate_xml_bom(
-                bom=get_bom_for_issue_275_components(), schema_version=SchemaVersion.V1_0,
-                fixture='bom_issue_275_components.xml'
+                bom=get_bom_with_dependencies_hanging(), schema_version=SchemaVersion.V1_4,
+                fixture='bom_with_dependencies_hanging.xml'
             )
 
     # region Helper methods

@@ -562,14 +562,15 @@ class Bom:
                 f'One or more Components have Dependency references to Components/Services that are not known in this '
                 f'BOM. They are: {dependency_diff}')
 
-        # 2. Dependencies should exist for the Component this BOM is describing, if one is set
-        if self.metadata.component and filter(
-            lambda _d: _d.ref == self.metadata.component.bom_ref, self.dependencies  # type: ignore[arg-type]
-        ):
+        # 2. if root component is set: dependencies should exist for the Component this BOM is describing
+        if self.metadata.component and not any(map(
+            lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type: ignore[union-attr]
+            self.dependencies
+        )):
             warnings.warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
-                f'Component to complete the Dependency Graph data.',
+                f'"root" Component to complete the Dependency Graph data.',
                 UserWarning
             )
 

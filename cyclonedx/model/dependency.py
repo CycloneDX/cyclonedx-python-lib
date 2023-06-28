@@ -58,7 +58,7 @@ class Dependency:
 
     def __init__(self, ref: BomRef, dependencies: Optional[Iterable["Dependency"]] = None) -> None:
         self.ref = ref
-        self.dependencies = SortedSet(dependencies) or SortedSet()
+        self.dependencies = SortedSet(dependencies or [])
 
     @property  # type: ignore[misc]
     @serializable.type_mapping(BomRefHelper)

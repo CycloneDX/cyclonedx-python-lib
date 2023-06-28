@@ -44,7 +44,7 @@ from cyclonedx.model import (
     Tool,
     XsUri,
 )
-from cyclonedx.model.bom import Bom
+from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.component import (
     Commit,
     Component,
@@ -129,6 +129,35 @@ def get_bom_with_dependencies_valid() -> Bom:
             Dependency(ref=c2.bom_ref)
         ]
     )
+
+
+def get_bom_with_dependencies_hanging() -> Bom:
+    """
+    A bom with a RootComponent and components,
+    but no dependencies are connected to RootComponent.
+    """
+    c1 = get_component_setuptools_simple('setuptools')
+    c2 = get_component_toml_with_hashes_with_references('toml')
+    bom = Bom(
+        serial_number=UUID(hex='12345678395b41f5a30f1234567890ab'),
+        version=23,
+        metadata=BomMetaData(
+            component=Component(name='rootComponent', type=ComponentType.APPLICATION, bom_ref='root-component'),
+        ),
+        components=[c1, c2],
+        dependencies=[
+            Dependency(c1.bom_ref, [
+                Dependency(c2.bom_ref)
+            ]),
+            Dependency(c2.bom_ref)
+        ]
+    )
+    bom.metadata.tools.clear()
+    bom.metadata.timestamp = datetime(
+        year=2023, month=6, day=1,
+        hour=3, minute=3, second=7, microsecond=0,
+        tzinfo=timezone.utc)
+    return bom
 
 
 def get_bom_with_dependencies_invalid() -> Bom:
