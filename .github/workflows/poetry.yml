@@ -190,8 +190,8 @@ jobs:
         uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Install project
-        run: poetry install
+      - name: Install package and prod dependencies
+        run: poetry install --only=main -vvv
       - name: run all examples
         run: >
           find examples -type f -name '*.py' -print0
