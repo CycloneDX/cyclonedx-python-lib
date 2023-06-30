@@ -1,8 +1,7 @@
 from cyclonedx.factory.license import LicenseFactory
-from cyclonedx.model import OrganizationalEntity, XsUri
-from cyclonedx.model.bom import Bom, LicenseChoice
+from cyclonedx.model import LicenseChoice, OrganizationalEntity, XsUri
+from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
-from cyclonedx.model.dependency import Dependency
 from cyclonedx.output.json import JsonV1Dot4
 from cyclonedx.output.xml import XmlV1Dot4
 from packageurl import PackageURL
@@ -34,7 +33,7 @@ component = Component(
 )
 
 bom.components.add(component)
-bom.dependencies.add(Dependency(rootComponent.bom_ref, [Dependency(component.bom_ref)]))
+bom.register_dependency(rootComponent, [component])
 
 # endregion build the BOM
 
