@@ -8,6 +8,10 @@ on:
         required: true
         type: string
 
+concurrency:
+  group: deploy
+  cancel-in-progress: false  # prevent hickups with semantic-release
+
 env:
   PYTHON_VERSION_DEFAULT: "3.11"
   POETRY_VERSION: "1.4.1"
