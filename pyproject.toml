@@ -81,7 +81,10 @@ changelog_file = "CHANGELOG.md"
 exclude_commit_patterns = [
   "chore\\(release\\):",
 ]
-[tool.semantic_release.branches."alpha"]
+[tool.semantic_release.branches.main]
+match = "(main|master)"
+prerelease = false
+[tool.semantic_release.branches."feat|fix|tests|style|docs|chore"]
 match = "(feat|fix|tests|style|docs|chore)"
 prerelease = true
 prerelease_token = "alpha"
