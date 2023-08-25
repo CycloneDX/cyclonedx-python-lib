@@ -1,33 +1,37 @@
 name: Release
 
 on:
-  #push:
-  #  branches: [ 'main' ]
+  push:
+    branches: [ 'main', 'master' ]
   workflow_dispatch:
-    release_force:
-      # see https://python-semantic-release.readthedocs.io/en/latest/github-action.html#command-line-options
-      description: 'force release be one of: [major | minor | patch]'
-      type: choice
-      options:
-        - major
-        - minor
-        - patch
-      default: ""
-      required: false
-    prerelease_token:
-      description: 'The "prerelease identifier" to use as a prefix for the "prerelease" part of a semver. Like the rc in `1.2.0-rc.8`.'
-      type: choice
-      options:
-        - rc
-        - beta
-        - alpha
-      default: rc
-      required: false
-    prerelease:
-      description: "Is a pre-release"
-      type: boolean
-      default: false
-      required: false
+    inputs:
+      release_force:
+        # see https://python-semantic-release.readthedocs.io/en/latest/github-action.html#command-line-options
+        description: |
+          Force release be one of: [major | minor | patch]
+          Leave empty for auto-detect based on commit messages.
+        type: choice
+        options:
+          - "" # auto - no force
+          - major # force major
+          - minor # force minor
+          - patch # force patch
+        default: ""
+        required: false
+      prerelease_token:
+        description: 'The "prerelease identifier" to use as a prefix for the "prerelease" part of a semver. Like the rc in `1.2.0-rc.8`.'
+        type: choice
+        options:
+          - rc
+          - beta
+          - alpha
+        default: rc
+        required: false
+      prerelease:
+        description: "Is a pre-release"
+        type: boolean
+        default: false
+        required: false
 
 concurrency:
   group: deploy
@@ -41,9 +45,9 @@ jobs:
   release:
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
     # limit this to being run on regular commits, not the commits that semantic-release will create
-    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'chore(release):')
+    # but also allow manual workflow dispatch
+    if: "!contains(github.event.head_commit.message, 'chore(release):')"
     runs-on: ubuntu-latest
-    concurrency: release
     permissions:
       # NOTE: this enables trusted publishing.
       # See https://github.com/pypa/gh-action-pypi-publish/tree/release/v1#trusted-publishing
@@ -84,7 +88,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           force: ${{ github.event.inputs.release_force }}
-          prerelease: ${{ github.event.inputs.prerelease && "true" || "false" }}
+          prerelease: ${{ github.event.inputs.prerelease }}
           prerelease_token: ${{ github.event.inputs.prerelease_token }}
 
       - name: Publish package distributions to PyPI
