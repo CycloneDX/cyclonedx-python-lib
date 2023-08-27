@@ -1,6 +1,143 @@
 # CHANGELOG
 
 
+
+## v4.1.0 (2023-08-27)
+
+### Chore
+
+* chore: migrate to python-semantic-release8 (#421)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`14c501c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/14c501c1133c747e1a7dad6df8cad01a03f71a20))
+
+* chore: migrate to python-semantic-release8 (#420)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0e35d88`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0e35d88b329bebe05f19748a23a31abf6295c933))
+
+* chore: migrate to python-semantic-release8 (#419)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`adf5a36`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/adf5a3668c7c9aa3e0478fd1eabf3b3163fae691))
+
+* chore(deps-dev): bump distlib from 0.3.6 to 0.3.7 (#412)
+
+Bumps [distlib](https://github.com/pypa/distlib) from 0.3.6 to 0.3.7.
+- [Release notes](https://github.com/pypa/distlib/releases)
+- [Changelog](https://github.com/pypa/distlib/blob/master/CHANGES.rst)
+- [Commits](https://github.com/pypa/distlib/compare/0.3.6...0.3.7)
+
+---
+updated-dependencies:
+- dependency-name: distlib
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`bc9f01d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bc9f01dd90688ef57f755d1b8ca5c5f7739d9d5d))
+
+* chore(deps-dev): bump pluggy from 1.0.0 to 1.2.0 (#413)
+
+Bumps [pluggy](https://github.com/pytest-dev/pluggy) from 1.0.0 to 1.2.0.
+- [Changelog](https://github.com/pytest-dev/pluggy/blob/main/CHANGELOG.rst)
+- [Commits](https://github.com/pytest-dev/pluggy/compare/1.0.0...1.2.0)
+
+---
+updated-dependencies:
+- dependency-name: pluggy
+  dependency-type: indirect
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`be8af3e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/be8af3e950d3908179e0f194132222bd04310c36))
+
+* chore(deps-dev): bump typed-ast from 1.5.4 to 1.5.5 (#411)
+
+Bumps [typed-ast](https://github.com/python/typed_ast) from 1.5.4 to 1.5.5.
+- [Changelog](https://github.com/python/typed_ast/blob/master/release_process.md)
+- [Commits](https://github.com/python/typed_ast/compare/1.5.4...1.5.5)
+
+---
+updated-dependencies:
+- dependency-name: typed-ast
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`75302b1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/75302b1de9ad9245327fa3b09181c7ff381fefe8))
+
+* chore(deps-dev): bump lxml from 4.9.2 to 4.9.3 (#405)
+
+Bumps [lxml](https://github.com/lxml/lxml) from 4.9.2 to 4.9.3.
+- [Release notes](https://github.com/lxml/lxml/releases)
+- [Changelog](https://github.com/lxml/lxml/blob/master/CHANGES.txt)
+- [Commits](https://github.com/lxml/lxml/compare/lxml-4.9.2...lxml-4.9.3)
+
+---
+updated-dependencies:
+- dependency-name: lxml
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`6aa057b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6aa057bb2f0e3804e57b799fd9c3f969fb328fb7))
+
+* chore(deps-dev): bump mypy from 1.4.0 to 1.4.1 (#400)
+
+Bumps [mypy](https://github.com/python/mypy) from 1.4.0 to 1.4.1.
+- [Commits](https://github.com/python/mypy/compare/v1.4.0...v1.4.1)
+
+---
+updated-dependencies:
+- dependency-name: mypy
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`54d6a1a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/54d6a1a676d0d9715acd0d9275410b95bd9b82cf))
+
+### Ci
+
+* ci: streamline concurrency for deploy (#406)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6a7ddfa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6a7ddfa635995f5dbb849ba5141dcb19a70db0ea))
+
+* ci: run examples on prod-deps only (#402)
+
+* ci: run examples on prod-deps only
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* ci: simplify ci
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`cf40048`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cf40048f00d4d9a70306ee414ebf5a1f970c6a70))
+
+* ci: run examples (#401)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`058f386`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/058f38609453ec738d9cdaa01cbed1b22066cc77))
+
+### Documentation
+
+* docs(examples): showcase shorthand dependency management (#403)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`8b32efb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8b32efb322a3281d58e9f980bb9001b112aa944a))
+
+### Feature
+
+* feat: programmatic access to library&#39;s version (#417)
+
+adds `cyclonedx.__version__`
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3585ea9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3585ea9911ae521e86793ef18f5891289fb0b604))
+
+
 ## v4.0.1 (2023-06-28)
 
 ### Chore
