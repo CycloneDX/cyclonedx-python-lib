@@ -17,7 +17,6 @@
 
 import hashlib
 import re
-import sys
 import warnings
 from datetime import datetime, timezone
 from enum import Enum
@@ -26,6 +25,7 @@ from typing import Any, Iterable, Optional, Tuple, TypeVar
 import serializable
 from sortedcontainers import SortedSet
 
+from .. import __version__ as __ThisToolVersion
 from ..exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
@@ -1394,15 +1394,6 @@ class Copyright:
         return f'<Copyright text={self.text}>'
 
 
-if sys.version_info >= (3, 8):
-    from importlib.metadata import version as meta_version
-else:
-    from importlib_metadata import version as meta_version
-
-try:
-    __ThisToolVersion: Optional[str] = str(meta_version('cyclonedx-python-lib'))  # type: ignore[no-untyped-call]
-except Exception:
-    __ThisToolVersion = None
 ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
 ThisTool.external_references.update([
     ExternalReference(

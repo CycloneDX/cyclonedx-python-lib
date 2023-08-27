@@ -13,7 +13,6 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-import pkg_resources
 
 # -- Project information -----------------------------------------------------
 
@@ -22,7 +21,8 @@ copyright = '2022, Copyright (c) OWASP Foundation'
 author = 'Paul Horton, Jan Kowalleck, Steve Springett, Patrick Dwyer'
 
 # The full version, including alpha/beta/rc tags
-release = pkg_resources.get_distribution("cyclonedx-python-lib").version
+# !! version is managed by semantic_release
+release = '4.1.0-alpha.1'
 
 # -- General configuration ---------------------------------------------------
 
