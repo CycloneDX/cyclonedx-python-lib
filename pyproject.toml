@@ -55,6 +55,7 @@ python = "^3.7"
 packageurl-python = ">= 0.11"
 py-serializable = "^0.11.1"
 sortedcontainers = "^2.4.0"
+license-expression = "^30"
 
 [tool.poetry.dev-dependencies]
 ddt = "^1.6.0"

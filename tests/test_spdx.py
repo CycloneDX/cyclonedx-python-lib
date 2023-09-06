@@ -33,8 +33,8 @@ with open(path_join(CDX_SCHEMA_DIRECTORY, 'spdx.schema.json')) as spdx_schema:
 
 VALID_COMPOUND_EXPRESSIONS = {
     # for valid test data see the spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
-    '(MIT WITH Apache-2.0)',
-    '(BSD-2-Clause OR Apache-2.0)',
+    '(MIT AND Apache-2.0)',
+    'BSD-2-Clause OR Apache-2.0',
 }
 
 
@@ -89,8 +89,9 @@ class TestSpdxIsCompoundExpression(TestCase):
         self.assertTrue(actual)
 
     @data(
+        'MIT AND Apache-2.0 OR something-unknown'
         'something invalid',
-        '(c) John Doe'
+        '(c) John Doe',
     )
     def test_negative(self, invalid_expression: str) -> None:
         actual = spdx.is_compound_expression(invalid_expression)

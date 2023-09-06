@@ -14,11 +14,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-__all__ = ['is_supported_id', 'fixup_id', 'is_compound_expression']
+__all__ = [
+    'is_supported_id', 'fixup_id',
+    'is_compound_expression'
+]
 
 from json import load as json_load
 from os.path import dirname, join as path_join
-from typing import Dict, Optional, Set
+from typing import TYPE_CHECKING, Dict, Optional, Set
+
+from license_expression import get_spdx_licensing  # type: ignore
+
+if TYPE_CHECKING:
+    from license_expression import Licensing
 
 # region init
 # python's internal module loader will assure that this init-part runs only once.
@@ -30,8 +38,10 @@ assert len(__IDS) > 0, 'known SPDX-IDs should be non-empty set'
 
 __IDS_LOWER_MAP: Dict[str, str] = dict((id_.lower(), id_) for id_ in __IDS)
 
+__SPDX_EXPRESSION_LICENSING: 'Licensing' = get_spdx_licensing()
 
 # endregion
+
 
 def is_supported_id(value: str) -> bool:
     """Validate a SPDX-ID according to current spec."""
@@ -50,11 +60,12 @@ def is_compound_expression(value: str) -> bool:
     """Validate compound expression.
 
     .. note::
-        Uses a best-effort detection of SPDX compound expression according to `SPDX license expression spec`_.
+        Utilizes `license-expression library`_ to
+        validate SPDX compound expression according to `SPDX license expression spec`_.
 
     .. _SPDX license expression spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
+    .. _license-expression library: https://github.com/nexB/license-expression
     """
-    # shortest known valid expression: (A or B) - 8 characters long
-    return len(value) >= 8 \
-        and value.startswith('(') \
-        and value.endswith(')')
+    return 0 == len(
+        __SPDX_EXPRESSION_LICENSING.validate(value).errors
+    )
