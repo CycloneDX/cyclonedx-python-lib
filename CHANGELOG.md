@@ -2,6 +2,15 @@
 
 
 
+## v4.2.1 (2023-09-06)
+
+### Fix
+
+* fix: `LicenseChoiceFactory.make_from_string()` prioritize SPDX id over expression (#427)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e1bdfdd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e1bdfddcfab97359fbde9f53dc65f56fc8ec4ba9))
+
+
 ## v4.2.0 (2023-09-06)
 
 ### Chore
