@@ -2,6 +2,34 @@
 
 
 
+## v4.2.0 (2023-09-06)
+
+### Chore
+
+* chore(deps): bump python-semantic-release/python-semantic-release (#423)
+
+Bumps [python-semantic-release/python-semantic-release](https://github.com/python-semantic-release/python-semantic-release) from 8.0.7 to 8.0.8.
+- [Release notes](https://github.com/python-semantic-release/python-semantic-release/releases)
+- [Changelog](https://github.com/python-semantic-release/python-semantic-release/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python-semantic-release/python-semantic-release/compare/v8.0.7...v8.0.8)
+
+---
+updated-dependencies:
+- dependency-name: python-semantic-release/python-semantic-release
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`13e441d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/13e441d581e2c419b46719148078155d44786e52))
+
+### Feature
+
+* feat: complete SPDX license expression (#425)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e06f9fd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e06f9fd2c30e8976766f326ff216103d2560cb9a))
+
+
 ## v4.1.0 (2023-08-27)
 
 ### Chore
