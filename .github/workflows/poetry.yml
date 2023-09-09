@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
@@ -70,7 +70,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
@@ -121,7 +121,7 @@ jobs:
 
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create reports directory
         run: mkdir ${{ env.REPORTS_DIR }}
@@ -176,7 +176,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v4
