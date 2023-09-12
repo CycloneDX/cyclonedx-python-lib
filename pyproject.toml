@@ -58,18 +58,18 @@ sortedcontainers = "^2.4.0"
 license-expression = "^30"
 
 [tool.poetry.dev-dependencies]
-ddt = "^1.6.0"
-coverage = "^7.2.7"
-flake8 = "^5.0.4" # last version supporting Python 3.7
-flake8-annotations = "^2.9.1" # last version supporting Python 3.7
-flake8-bugbear = "^22.7.1"
-flake8-isort = "^4.1.2"
-isort = "^5.11.5" # last version supporting Python 3.7
-jsonschema = ">= 4.4.0"
-mypy = "^1.4.1"
-lxml = ">=4.7.0"
-tox = "^3.2.8"
-xmldiff = ">=2.4"
+ddt = "1.6.0"
+coverage = "7.2.7"
+flake8 = "5.0.4" # last version supporting Python 3.7
+flake8-annotations = "2.9.1" # last version supporting Python 3.7
+flake8-bugbear = "22.12.6" # last version supporting Python 3.7
+flake8-isort = "4.2.0"
+isort = "5.11.5" # last version supporting Python 3.7
+jsonschema = "4.17.3"
+mypy = "1.4.1"
+lxml = "4.9.3"
+tox = "3.28.0"
+xmldiff = "2.6.3"
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html

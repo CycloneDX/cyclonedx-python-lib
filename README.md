@@ -65,7 +65,7 @@ See the [LICENSE][license_file] file for the full license.
 [shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
 [shield_groups]: https://img.shields.io/badge/discussion-groups.io-blue.svg "groups discussion"
 [shield_twitter-follow]: https://img.shields.io/badge/Twitter-follow-blue?logo=Twitter&logoColor=white "twitter follow"
-[link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/poetry.yml?query=branch%3Amain
+[link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/python.yml?query=branch%3Amain
 [link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
 [link_conda-forge]: https://anaconda.org/conda-forge/cyclonedx-python-lib
 [link_rtfd]: https://cyclonedx-python-library.readthedocs.io/en/latest/?badge=latest
