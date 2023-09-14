@@ -37,7 +37,8 @@ from cyclonedx.output import SchemaVersion
 if sys.version_info >= (3, 7):
     from jsonschema import ValidationError, validate as json_validate
 
-from . import CDX_SCHEMA_DIRECTORY
+
+from cyclonedx.schema import __RES_DIR as CDX_SCHEMA_DIRECTORY
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
@@ -98,6 +99,7 @@ class BaseJsonTestCase(TestCase):
 class BaseXmlTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_xml: str, schema_version: SchemaVersion) -> None:
+        # rework access
         xsd_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
         with open(xsd_fn) as xsd_fd:
             xsd_doc = etree.parse(xsd_fd)

@@ -15,6 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from enum import Enum
+from os.path import join, dirname
 
 
 class OutputFormat(str, Enum):
@@ -37,3 +38,6 @@ class SchemaVersion(str, Enum):
             `str` version
         """
         return f'{self.value[1]}.{self.value[5]}'
+
+
+__RES_DIR = join(dirname(dirname(__file__)), '__res', 'schema')

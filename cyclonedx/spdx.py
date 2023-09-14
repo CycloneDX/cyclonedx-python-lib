@@ -20,10 +20,13 @@ __all__ = [
 ]
 
 from json import load as json_load
-from os.path import dirname, join as path_join
+from os.path import join as path_join
 from typing import TYPE_CHECKING, Dict, Optional, Set
 
 from license_expression import get_spdx_licensing  # type: ignore
+
+from .schema import __RES_DIR as __SCHEMA_RES_DIR
+
 
 if TYPE_CHECKING:
     from license_expression import Licensing
@@ -32,7 +35,7 @@ if TYPE_CHECKING:
 # python's internal module loader will assure that this init-part runs only once.
 
 # !!! this requires to ship the actual schema data with the package.
-with open(path_join(dirname(__file__), 'schema', 'spdx.schema.json')) as schema:
+with open(path_join(__SCHEMA_RES_DIR, 'spdx.schema.json')) as schema:
     __IDS: Set[str] = set(json_load(schema).get('enum', []))
 assert len(__IDS) > 0, 'known SPDX-IDs should be non-empty set'
 
