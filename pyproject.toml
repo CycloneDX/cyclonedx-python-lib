@@ -21,6 +21,7 @@ packages = [
   { include = "cyclonedx" }
 ]
 include = [
+  "README.md", "LICENSE", "NOTICE",
   { path = "tests", format = "sdist" },
 ]
 classifiers = [
