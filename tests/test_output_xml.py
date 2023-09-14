@@ -16,7 +16,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-from os.path import dirname, join
+from os.path import join
 from unittest.mock import Mock, patch
 from uuid import UUID
 
@@ -53,6 +53,7 @@ from tests.data import (
 from . import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
+
 
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestOutputXml(BaseXmlTestCase):

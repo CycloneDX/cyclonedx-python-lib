@@ -19,7 +19,7 @@
 
 import json
 from datetime import datetime
-from os.path import dirname, join
+from os.path import join
 from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID

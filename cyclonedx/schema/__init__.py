@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from enum import Enum
-from os.path import join, dirname
+from os.path import dirname, join
 
 
 class OutputFormat(str, Enum):

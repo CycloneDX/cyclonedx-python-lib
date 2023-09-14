@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from datetime import datetime
-from os.path import dirname, join
+from os.path import join
 from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
@@ -56,6 +56,7 @@ from tests.data import (
 from . import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
+
 
 def fixed_date_time() -> datetime:
     return datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')

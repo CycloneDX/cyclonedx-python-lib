@@ -17,7 +17,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import unittest
 from datetime import datetime
-from os.path import dirname, join
+from os.path import join
 from typing import cast
 from unittest.mock import patch
 from xml.etree import ElementTree

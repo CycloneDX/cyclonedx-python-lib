@@ -27,7 +27,6 @@ from license_expression import get_spdx_licensing  # type: ignore
 
 from .schema import __RES_DIR as __SCHEMA_RES_DIR
 
-
 if TYPE_CHECKING:
     from license_expression import Licensing
 
