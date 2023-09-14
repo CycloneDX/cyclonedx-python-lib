@@ -2,6 +2,50 @@
 
 
 
+## v4.2.2 (2023-09-14)
+
+### Chore
+
+* chore: dont lock poetry (#431)
+
+fixes #430
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`49b144b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/49b144be519705b03adc510ddcc6b9e4504b7a40))
+
+* chore(deps): bump actions/checkout from 3 to 4 (#429)
+
+Bumps [actions/checkout](https://github.com/actions/checkout) from 3 to 4.
+- [Release notes](https://github.com/actions/checkout/releases)
+- [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/actions/checkout/compare/v3...v4)
+
+---
+updated-dependencies:
+- dependency-name: actions/checkout
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`a70754d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a70754d602e109538c06e06e59f563953c21ab1b))
+
+### Documentation
+
+* docs: fix shield in README
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6a941b1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6a941b1ef5cc0f9e956173cce7e9da57e8c6bf22))
+
+* docs(example): showcase `LicenseChoiceFactory` (#428)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c56ec83`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c56ec8395dd203ac41fa6f4c43970a50c0e80efb))
+
+### Fix
+
+* fix: ship meta files (#434)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3a1a8a5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3a1a8a5c1cbe8d8989b4cb335269a02b5c6d4f38))
+
+
 ## v4.2.1 (2023-09-06)
 
 ### Fix
