@@ -34,11 +34,10 @@ from xmldiff.actions import MoveNode
 
 from cyclonedx.output import SchemaVersion
 
-if sys.version_info >= (3, 7):
-    from jsonschema import ValidationError, validate as json_validate
+from jsonschema import ValidationError, validate as json_validate
 
 
-from cyclonedx.schema import __RES_DIR as CDX_SCHEMA_DIRECTORY
+from cyclonedx.schema import _RES_DIR as CDX_SCHEMA_DIRECTORY
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
@@ -46,10 +45,7 @@ single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 class BaseJsonTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_json: str, schema_version: SchemaVersion) -> None:
-        schema_fn = os.path.join(
-            CDX_SCHEMA_DIRECTORY,
-            f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.schema.json'
-        )
+        schema_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.to_version()}.SNAPSHOT.schema.json')
         with open(schema_fn) as schema_fd:
             schema_doc = json.load(schema_fd)
 

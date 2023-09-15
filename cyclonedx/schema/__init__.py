@@ -40,4 +40,4 @@ class SchemaVersion(str, Enum):
         return f'{self.value[1]}.{self.value[5]}'
 
 
-__RES_DIR = join(dirname(dirname(__file__)), '__res', 'schema')
+_RES_DIR = join(dirname(dirname(__file__)), '__res', 'schema')

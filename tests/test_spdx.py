@@ -25,10 +25,10 @@ from unittest import TestCase
 from ddt import data, ddt, idata, unpack
 
 from cyclonedx import spdx
-from cyclonedx.schema import __RES_DIR as CDX_SCHEMA_DIRECTORY
+from cyclonedx.schema import _RES_DIR as CDX_SCHEMA_DIRECTORY
 
 # rework access
-with open(path_join(CDX_SCHEMA_DIRECTORY, 'spdx.schema.json')) as spdx_schema:
+with open(path_join(CDX_SCHEMA_DIRECTORY, 'spdx.SNAPSHOT.schema.json')) as spdx_schema:
     KNOWN_SPDX_IDS = json_load(spdx_schema)['enum']
 
 VALID_COMPOUND_EXPRESSIONS = {

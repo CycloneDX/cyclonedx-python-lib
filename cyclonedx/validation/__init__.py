@@ -13,3 +13,32 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+
+from abc import ABC, abstractmethod
+from typing import Optional, Any, TYPE_CHECKING
+from os.path import isfile
+
+if TYPE_CHECKING:
+    from ..schema import SchemaVersion
+
+
+class ValidationError:
+    def __init__(self, data: Any) -> None:
+        self.data = data
+
+
+class _BaseValidator(ABC):
+
+    @property
+    @abstractmethod
+    def _schema_file(self) -> str:
+        ...
+
+    def __init__(self, schema_version: 'SchemaVersion') -> None:
+        self.schema_version = schema_version
+        if not isfile(self._schema_file):
+            raise NotImplementedError(f'not implemented for schema {schema_version}')
+
+    @abstractmethod
+    def validate(self, data: str) -> Optional[ValidationError]:
+        ...
