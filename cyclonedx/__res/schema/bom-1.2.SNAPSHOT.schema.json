@@ -6,8 +6,7 @@
   "$comment" : "CycloneDX JSON schema is published under the terms of the Apache License 2.0.",
   "required": [
     "bomFormat",
-    "specVersion",
-    "version"
+    "specVersion"
   ],
   "properties": {
     "bomFormat": {
@@ -577,7 +576,7 @@
       ],
       "properties": {
         "id": {
-          "$ref": "spdx.schema.json",
+          "$ref": "spdx.SNAPSHOT.schema.json",
           "title": "License ID (SPDX)",
           "description": "A valid SPDX license ID",
           "examples": ["Apache-2.0"]

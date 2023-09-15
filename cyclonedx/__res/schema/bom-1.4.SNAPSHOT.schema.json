@@ -6,8 +6,7 @@
   "$comment" : "CycloneDX JSON schema is published under the terms of the Apache License 2.0.",
   "required": [
     "bomFormat",
-    "specVersion",
-    "version"
+    "specVersion"
   ],
   "additionalProperties": false,
   "properties": {
@@ -611,7 +610,7 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "$ref": "spdx.schema.json",
+          "$ref": "spdx.SNAPSHOT.schema.json",
           "title": "License ID (SPDX)",
           "description": "A valid SPDX license ID",
           "examples": ["Apache-2.0"]
@@ -1689,7 +1688,7 @@
       "maxLength": 1024
     },
     "signature": {
-      "$ref": "jsf-0.82.schema.json#/definitions/signature",
+      "$ref": "jsf-0.82.SNAPSHOT.schema.json#/definitions/signature",
       "title": "Signature",
       "description": "Enveloped signature in [JSON Signature Format (JSF)](https://cyberphone.github.io/doc/security/jsf.html)."
     }

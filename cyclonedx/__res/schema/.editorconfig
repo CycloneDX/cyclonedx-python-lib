@@ -1,0 +1,10 @@
+
+# fix settings for files that are copied over, to keep them as is
+[*.SNAPSHOT.xsd]
+indent_size = 4
+indent_style = space
+trim_trailing_whitespace = false
+[*.SNAPSHOT.schema.json]
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = false
