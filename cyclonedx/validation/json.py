@@ -20,7 +20,7 @@ from abc import ABC
 from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Optional, Tuple
 
-from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPPDX
+from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
 from . import MissingOptionalDependencyException, ValidationError, _BaseValidator
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
@@ -79,7 +79,7 @@ class __BaseJsonValidator(_BaseValidator, ABC):
         @staticmethod
         def __make_validator_registry() -> Registry[Any]:
             schema_prefix = 'http://cyclonedx.org/schema/'
-            with open(_S_SPPDX) as spdx, open(_S_JSF) as jsf:
+            with open(_S_SPDX) as spdx, open(_S_JSF) as jsf:
                 return Registry().with_resources([
                     (f'{schema_prefix}spdx.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(spdx.read()))),
                     (f'{schema_prefix}jsf-0.82.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(jsf.read()))),
