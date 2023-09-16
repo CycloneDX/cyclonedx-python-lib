@@ -38,7 +38,7 @@ UNSUPPORTED_SCHEMA_VERSIONS = (SchemaVersion.V1_0, SchemaVersion.V1_1,)
 def _dp(prefix: str) -> Generator:
     return (
         (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(f'{prefix}-*.json', root_dir=join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version()))
+        for tf in iglob(join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.json'))
     )
 
 
@@ -54,7 +54,7 @@ class TestJsonValidator(TestCase):
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
-        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
+        with open(join(test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)
@@ -66,7 +66,7 @@ class TestJsonValidator(TestCase):
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
-        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
+        with open(join(test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)
@@ -88,7 +88,7 @@ class TestJsonStrictValidator(TestCase):
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonStrictValidator(schema_version)
-        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
+        with open(join(test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)
@@ -100,7 +100,7 @@ class TestJsonStrictValidator(TestCase):
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonStrictValidator(schema_version)
-        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
+        with open(join(test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)

@@ -59,11 +59,11 @@ jobs:
           - # test with the latest dependencies
             os: ubuntu-latest
             python-version: '3.11'
-            toxenv-factors: 'current'
+            toxenv-factors: '-current'
           - # test with the lowest dependencies
             os: ubuntu-latest
             python-version: '3.8'
-            toxenv-factors: 'lowest'
+            toxenv-factors: '-lowest'
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
