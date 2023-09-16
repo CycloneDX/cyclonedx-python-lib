@@ -73,7 +73,6 @@ class __BaseJsonValidator(_BaseValidator, ABC):
                         json_loads(sf.read()),
                         registry=self.__make_validator_registry(),
                         format_checker=Draft7Validator.FORMAT_CHECKER)
-            assert self.__validator
             return self.__validator
 
         @staticmethod
