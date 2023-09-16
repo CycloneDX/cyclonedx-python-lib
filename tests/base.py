@@ -32,7 +32,7 @@ from xmldiff import main
 from xmldiff.actions import MoveNode
 
 from cyclonedx.output import SchemaVersion
-from cyclonedx.schema import _RES_DIR as CDX_SCHEMA_DIRECTORY
+from cyclonedx.schema._res import __DIR as CDX_SCHEMA_DIRECTORY
 from cyclonedx.validation import MissingOptionalDependencyException
 from cyclonedx.validation.json import JsonValidator
 
@@ -89,7 +89,7 @@ class BaseXmlTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_xml: str, schema_version: SchemaVersion) -> None:
         # rework access
-        xsd_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
+        xsd_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.to_version()}.SNAPSHOT.xsd')
         with open(xsd_fn) as xsd_fd:
             xsd_doc = etree.parse(xsd_fd)
 

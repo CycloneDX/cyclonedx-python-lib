@@ -25,6 +25,7 @@ from unittest import TestCase
 from ddt import data, ddt, idata, unpack
 
 from cyclonedx.schema import SchemaVersion
+from cyclonedx.validation import MissingOptionalDependencyException
 from cyclonedx.validation.json import JsonStrictValidator, JsonValidator
 
 from . import TESTDATA_DIRECTORY
@@ -55,8 +56,11 @@ class TestJsonValidator(TestCase):
         validator = JsonValidator(schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
-        error = validator.validate_str(test_data)
-        self.assertIsNone(error)
+        try:
+            validation_error = validator.validate_str(test_data)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNone(validation_error)
 
     @idata(_dp('invalid'))
     @unpack
@@ -64,13 +68,16 @@ class TestJsonValidator(TestCase):
         validator = JsonValidator(schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
-        error = validator.validate_str(test_data)
-        self.assertIsNotNone(error)
-        self.assertIsNotNone(error.data)
+        try:
+            validation_error = validator.validate_str(test_data)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(validation_error)
+        self.assertIsNotNone(validation_error.data)
 
 
 @ddt
-class TestJsonValidator(TestCase):
+class TestJsonStrictValidator(TestCase):
 
     @data(*UNSUPPORTED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
@@ -83,8 +90,11 @@ class TestJsonValidator(TestCase):
         validator = JsonStrictValidator(schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
-        error = validator.validate_str(test_data)
-        self.assertIsNone(error)
+        try:
+            validation_error = validator.validate_str(test_data)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNone(validation_error)
 
     @idata(_dp('invalid'))
     @unpack
@@ -92,6 +102,9 @@ class TestJsonValidator(TestCase):
         validator = JsonStrictValidator(schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
-        error = validator.validate_str(test_data)
-        self.assertIsNotNone(error)
-        self.assertIsNotNone(error.data)
+        try:
+            validation_error = validator.validate_str(test_data)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(validation_error)
+        self.assertIsNotNone(validation_error.data)

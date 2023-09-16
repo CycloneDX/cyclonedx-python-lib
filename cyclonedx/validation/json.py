@@ -18,7 +18,7 @@ __all__ = ['JsonValidator', 'JsonStrictValidator']
 
 from abc import ABC
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Never, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional, Tuple
 
 from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPPDX
 from . import MissingOptionalDependencyException, ValidationError, _BaseValidator
@@ -28,7 +28,6 @@ try:
     from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore
     from jsonschema.validators import Draft7Validator  # type: ignore
     from referencing import Registry
-    from referencing.exceptions import NoSuchResource
     from referencing.jsonschema import DRAFT7
 
     if TYPE_CHECKING:

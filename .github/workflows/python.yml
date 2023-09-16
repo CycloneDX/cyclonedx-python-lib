@@ -49,21 +49,21 @@ jobs:
         run: poetry run tox run -e flake8 -s false
 
   static-code-analysis:
-    name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
+    name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factors }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         include:
-          - # test with the locked dependencies
+          - # test with the latest dependencies
             os: ubuntu-latest
             python-version: '3.11'
-            toxenv-factor: 'locked'
+            toxenv-factors: 'current'
           - # test with the lowest dependencies
             os: ubuntu-latest
             python-version: '3.8'
-            toxenv-factor: 'lowest'
+            toxenv-factors: 'lowest'
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
@@ -82,10 +82,10 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox run -e mypy-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run -e mypy${{ matrix.toxenv-factors }} -s false
 
   build-and-test:
-    name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factor }})
+    name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factors }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
@@ -97,12 +97,9 @@ jobs:
           - "3.10"
           - "3.9"
           - "3.8"  # lowest supported
-        toxenv-factor: ['locked']
-        include:
-          - # test with the lowest dependencies
-            os: ubuntu-latest
-            python-version: '3.8'
-            toxenv-factor: 'lowest'
+        toxenv-factors:
+          - '-allExtras'
+          - '-noExtras'
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
@@ -134,14 +131,14 @@ jobs:
       - name: Ensure build successful
         run: poetry build
       - name: Run tox
-        run: poetry run tox run -e py-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run -e py-${{ matrix.toxenv-factors }} -s false
       - name: Generate coverage reports
         shell: bash
         run: |
           set -eux
           poetry run coverage report
-          poetry run coverage xml -o "$REPORTS_DIR/coverage.${{ matrix.os }}_py${{ matrix.python-version }}_${{ matrix.toxenv-factor }}.cobertura.xml"
-          # poetry run coverage lcov -o "$REPORTS_DIR/coverage.${{ matrix.os }}_py${{ matrix.python-version }}_${{ matrix.toxenv-factor }}.lcov.xml"
+          poetry run coverage xml -o "$REPORTS_DIR/coverage.${{ matrix.os }}_py${{ matrix.python-version }}_${{ matrix.toxenv-factors }}.cobertura.xml"
+          # poetry run coverage lcov -o "$REPORTS_DIR/coverage.${{ matrix.os }}_py${{ matrix.python-version }}_${{ matrix.toxenv-factors }}.lcov.xml"
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact

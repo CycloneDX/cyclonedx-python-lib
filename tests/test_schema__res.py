@@ -40,5 +40,5 @@ def _dp_files() -> Generator:
 class SchemaRes(TestCase):
 
     @idata(_dp_files())
-    def test_file_exists(self, file) -> None:
+    def test_file_exists(self, file: str) -> None:
         self.assertTrue(isfile(file), file)
