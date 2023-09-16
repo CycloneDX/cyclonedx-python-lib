@@ -1,10 +1,10 @@
 # Resources: Schema files
 
 some schema for offline use as download via [script](../../../tools/schema-downloader.py).
-original sources: <https://github.com/CycloneDX/specification/blob/1.4>
+original sources: <https://github.com/CycloneDX/specification/tree/master/schema>
 
 Currently using version
-[ccbf7b5781ef534cd62616e3c4221004c7c82a66](https://github.com/CycloneDX/specification/commit/ccbf7b5781ef534cd62616e3c4221004c7c82a66)
+[fd4d383658196992364e5d62568a48c431ace515](https://github.com/CycloneDX/specification/commit/fd4d383658196992364e5d62568a48c431ace515)
 
 | file | note |
 |------|------|

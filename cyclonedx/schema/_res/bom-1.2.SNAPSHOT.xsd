@@ -22,7 +22,7 @@ limitations under the License.
            targetNamespace="http://cyclonedx.org/schema/bom/1.2"
            vc:minVersion="1.0"
            vc:maxVersion="1.1"
-           version="1.2">
+           version="1.2.1">
 
     <xs:import namespace="http://cyclonedx.org/schema/spdx" schemaLocation="spdx.SNAPSHOT.xsd"/>
 
@@ -37,6 +37,13 @@ limitations under the License.
             </authors>
         </xs:documentation>
     </xs:annotation>
+
+    <xs:simpleType name="refType">
+        <xs:annotation>
+            <xs:documentation>Identifier-DataType for interlinked elements.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string" />
+    </xs:simpleType>
 
     <xs:complexType name="metadata">
         <xs:sequence minOccurs="0" maxOccurs="1">
@@ -395,7 +402,7 @@ limitations under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="bom-ref" type="xs:string">
+        <xs:attribute name="bom-ref" type="bom:refType">
             <xs:annotation>
                 <xs:documentation>
                     An optional identifier which can be used to reference the component elsewhere in the BOM.
@@ -593,7 +600,7 @@ limitations under the License.
 
     <xs:simpleType name="mimeType">
         <xs:restriction base="xs:token">
-            <xs:pattern value="^[-+a-z0-9.]+/[-+a-z0-9.]+$"/>
+            <xs:pattern value="[-+a-z0-9.]+/[-+a-z0-9.]+"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -1144,7 +1151,7 @@ limitations under the License.
         <xs:sequence minOccurs="0" maxOccurs="unbounded">
             <xs:element name="dependency" type="bom:dependencyType"/>
         </xs:sequence>
-        <xs:attribute name="ref" type="xs:string" use="required">
+        <xs:attribute name="ref" type="bom:refType" use="required">
             <xs:annotation>
                 <xs:documentation>References a component or service by the its bom-ref attribute</xs:documentation>
             </xs:annotation>
@@ -1302,7 +1309,7 @@ limitations under the License.
                 </xs:annotation>
             </xs:any>
         </xs:sequence>
-        <xs:attribute name="bom-ref" type="xs:string">
+        <xs:attribute name="bom-ref" type="bom:refType">
             <xs:annotation>
                 <xs:documentation>
                     An optional identifier which can be used to reference the service elsewhere in the BOM.

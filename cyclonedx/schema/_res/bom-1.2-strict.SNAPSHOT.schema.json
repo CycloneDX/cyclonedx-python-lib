@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://cyclonedx.org/schema/bom-1.2a.schema.json",
+  "$id": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "type": "object",
   "title": "CycloneDX Software Bill-of-Material Specification",
   "$comment" : "CycloneDX JSON schema is published under the terms of the Apache License 2.0.",
@@ -13,7 +13,7 @@
     "$schema": {
       "type": "string",
       "enum": [
-        "http://cyclonedx.org/schema/bom-1.2a.schema.json"
+        "http://cyclonedx.org/schema/bom-1.2b.schema.json"
       ]
     },
     "bomFormat": {
@@ -86,6 +86,10 @@
     }
   },
   "definitions": {
+    "refType": {
+      "$comment": "Identifier-DataType for interlinked elements.",
+      "type": "string"
+    },
     "metadata": {
       "type": "object",
       "title": "BOM Metadata Object",
@@ -151,7 +155,7 @@
           "description": "The date and time (timestamp) when the document was created."
         },
         "hashes": {
-          "$id": "#/properties/hashes",
+          "$id": "#/definitions/tool/properties/hashes",
           "type": "array",
           "items": {"$ref": "#/definitions/hash"},
           "title": "Hashes",
@@ -260,7 +264,7 @@
           "pattern": "^[-+a-z0-9.]+/[-+a-z0-9.]+$"
         },
         "bom-ref": {
-          "type": "string",
+          "$ref": "#/definitions/refType",
           "title": "BOM Reference",
           "description": "An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref should be unique.",
           "default": "",
@@ -445,7 +449,7 @@
           "title": "External References"
         },
         "components": {
-          "$id": "#/properties/components",
+          "$id": "#/definitions/component/properties/components",
           "type": "array",
           "items": {"$ref": "#/definitions/component"},
           "uniqueItems": true,
@@ -858,8 +862,7 @@
       "additionalProperties": false,
       "properties": {
         "ref": {
-          "type": "string",
-          "format": "string",
+          "$ref": "#/definitions/refType",
           "title": "Reference",
           "description": "References a component by the components bom-ref attribute"
         },
@@ -867,7 +870,7 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/refType"
           },
           "title": "Depends On",
           "description": "The bom-ref identifiers of the components that are dependencies of this dependency object."
@@ -883,7 +886,7 @@
       "additionalProperties": false,
       "properties": {
         "bom-ref": {
-          "type": "string",
+          "$ref": "#/definitions/refType",
           "title": "BOM Reference",
           "description": "An optional identifier which can be used to reference the service elsewhere in the BOM. Every bom-ref should be unique.",
           "default": "",
@@ -984,7 +987,7 @@
           "title": "External References"
         },
         "services": {
-          "$id": "#/properties/services",
+          "$id": "#/definitions/service/properties/services",
           "type": "array",
           "items": {"$ref": "#/definitions/service"},
           "uniqueItems": true,
