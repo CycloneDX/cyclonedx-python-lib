@@ -25,14 +25,14 @@ from . import MissingOptionalDependencyException, ValidationError, _BaseValidato
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
-    from jsonschema.exceptions import ValidationError as JsonValidationError
-    from jsonschema.validators import Draft7Validator
+    from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore
+    from jsonschema.validators import Draft7Validator  # type: ignore
     from referencing import Registry
     from referencing.exceptions import NoSuchResource
     from referencing.jsonschema import DRAFT7
 
     if TYPE_CHECKING:
-        from jsonschema.protocols import Validator as JsonSchemaValidator
+        from jsonschema.protocols import Validator as JsonSchemaValidator  # type: ignore
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'
@@ -42,11 +42,13 @@ except ImportError as err:
 
 class __BaseJsonValidator(_BaseValidator, ABC):
     if _missing_deps_error:
+        __MDERROR = _missing_deps_error
+
         def validate_str(self, data: str) -> Optional[ValidationError]:
-            raise _missing_deps_error[0]  # from functionality_not_implemented_error[1]
+            raise self.__MDERROR[0]  # from functionality_not_implemented_error[1]
 
         def validata_data(self, data: Any) -> Optional[ValidationError]:
-            raise _missing_deps_error[0]  # from functionality_not_implemented_error[1]
+            raise self.__MDERROR[0]  # from functionality_not_implemented_error[1]
     else:
         def validate_str(self, data: str) -> Optional[ValidationError]:
             return self.validata_data(json_loads(data))
@@ -57,32 +59,32 @@ class __BaseJsonValidator(_BaseValidator, ABC):
                 validator.validate(data)
             except JsonValidationError as error:
                 return ValidationError(error)
-
-        @staticmethod
-        def __make_validator_registry() -> Registry:
-            def _prevent_retrieve(uri: str) -> Never:
-                raise NoSuchResource(ref=uri)
-
-            schema_prefix = 'http://cyclonedx.org/schema/'
-            with open(_S_SPPDX) as spdx, open(_S_JSF) as jsf:
-                return Registry(
-                    retrieve=_prevent_retrieve  # prevent unexpected outbound access
-                ).with_resources([
-                    (f'{schema_prefix}spdx.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(spdx.read()))),
-                    (f'{schema_prefix}jsf-0.82.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(jsf.read()))),
-                ])
+            return None
 
         __validator: Optional['JsonSchemaValidator'] = None
 
         @property
         def _validator(self) -> 'JsonSchemaValidator':
             if not self.__validator:
-                with open(self._schema_file) as sf:
+                schema_file = self._schema_file
+                if schema_file is None:
+                    raise NotImplementedError('mising schema file')
+                with open(schema_file) as sf:
                     self.__validator = Draft7Validator(
                         json_loads(sf.read()),
                         registry=self.__make_validator_registry(),
                         format_checker=Draft7Validator.FORMAT_CHECKER)
+            assert self.__validator
             return self.__validator
+
+        @staticmethod
+        def __make_validator_registry() -> Registry[Any]:
+            schema_prefix = 'http://cyclonedx.org/schema/'
+            with open(_S_SPPDX) as spdx, open(_S_JSF) as jsf:
+                return Registry().with_resources([
+                    (f'{schema_prefix}spdx.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(spdx.read()))),
+                    (f'{schema_prefix}jsf-0.82.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(jsf.read()))),
+                ])
 
 
 class JsonValidator(__BaseJsonValidator):
