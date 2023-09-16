@@ -1,6 +1,6 @@
 # Resources: Schema files
 
-some schema for offline use as download via [script](../../tools/schema-downloader.py).
+some schema for offline use as download via [script](../../../tools/schema-downloader.py).
 original sources: <https://github.com/CycloneDX/specification/blob/1.4>
 
 Currently using version

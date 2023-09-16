@@ -19,18 +19,26 @@
 
 from glob import iglob
 from os.path import join
+from typing import Generator
 from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
 
 from cyclonedx.schema import SchemaVersion
-from cyclonedx.validation.json import JsonValidator
+from cyclonedx.validation.json import JsonStrictValidator, JsonValidator
 
 from . import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'schemaTestData')
 
 UNSUPPORTED_SCHEMA_VERSIONS = (SchemaVersion.V1_0, SchemaVersion.V1_1,)
+
+
+def _dp(prefix: str) -> Generator:
+    return (
+        (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
+        for tf in iglob(f'{prefix}-*.json', root_dir=join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version()))
+    )
 
 
 @ddt
@@ -41,8 +49,7 @@ class TestJsonValidator(TestCase):
         with self.assertRaisesRegex(NotImplementedError, 'not implemented for schema'):
             JsonValidator(schema_version)
 
-    @idata((sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS for tf in
-           iglob('valid-*.json', root_dir=join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version())))
+    @idata(_dp('valid'))
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
@@ -51,11 +58,38 @@ class TestJsonValidator(TestCase):
         error = validator.validate_str(test_data)
         self.assertIsNone(error)
 
-    @idata((sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS for tf in
-           iglob('invalid-*.json', root_dir=join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version())))
+    @idata(_dp('invalid'))
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
+        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
+            test_data = tdfh.read()
+        error = validator.validate_str(test_data)
+        self.assertIsNotNone(error)
+        self.assertIsNotNone(error.data)
+
+
+@ddt
+class TestJsonValidator(TestCase):
+
+    @data(*UNSUPPORTED_SCHEMA_VERSIONS)
+    def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
+        with self.assertRaisesRegex(NotImplementedError, 'not implemented for schema'):
+            JsonStrictValidator(schema_version)
+
+    @idata(_dp('valid'))
+    @unpack
+    def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+        validator = JsonStrictValidator(schema_version)
+        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
+            test_data = tdfh.read()
+        error = validator.validate_str(test_data)
+        self.assertIsNone(error)
+
+    @idata(_dp('invalid'))
+    @unpack
+    def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+        validator = JsonStrictValidator(schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
         error = validator.validate_str(test_data)

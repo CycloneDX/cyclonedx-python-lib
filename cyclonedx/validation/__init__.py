@@ -15,7 +15,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import ABC, abstractmethod
-from os.path import isfile
 from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
@@ -39,15 +38,19 @@ class ValidationError:
 
 class _BaseValidator(ABC):
 
+    def __init__(self, schema_version: 'SchemaVersion') -> None:
+        self.__schema_version = schema_version
+        if not self._schema_file:
+            raise NotImplementedError(f'not implemented for schema {schema_version}')
+
     @property
     @abstractmethod
-    def _schema_file(self) -> str:
+    def _schema_file(self) -> Optional[str]:
         ...
 
-    def __init__(self, schema_version: 'SchemaVersion') -> None:
-        self.schema_version = schema_version
-        if not isfile(self._schema_file):
-            raise NotImplementedError(f'not implemented for schema {schema_version}')
+    @property
+    def schema_version(self) -> 'SchemaVersion':
+        return self.__schema_version
 
     @abstractmethod
     def validate_str(self, data: str) -> Optional[ValidationError]:

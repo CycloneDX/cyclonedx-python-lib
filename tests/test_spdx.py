@@ -19,16 +19,15 @@
 
 from itertools import chain
 from json import load as json_load
-from os.path import join as path_join
 from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
 
 from cyclonedx import spdx
-from cyclonedx.schema import _RES_DIR as CDX_SCHEMA_DIRECTORY
+from cyclonedx.schema._res import SPDX_JSON
 
 # rework access
-with open(path_join(CDX_SCHEMA_DIRECTORY, 'spdx.SNAPSHOT.schema.json')) as spdx_schema:
+with open(SPDX_JSON) as spdx_schema:
     KNOWN_SPDX_IDS = json_load(spdx_schema)['enum']
 
 VALID_COMPOUND_EXPRESSIONS = {

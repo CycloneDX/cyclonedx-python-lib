@@ -19,7 +19,7 @@ from urllib.request import urlretrieve
 import re
 
 SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/1.4/schema/'
-TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', '__res', 'schema')
+TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res')
 
 bom_xsd = {
     'versions': ['1.4', '1.3', '1.2', '1.1', '1.0'],
