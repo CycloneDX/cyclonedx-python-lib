@@ -25,13 +25,13 @@ from . import MissingOptionalDependencyException, ValidationError, _BaseValidato
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
-    from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore
-    from jsonschema.validators import Draft7Validator  # type: ignore
-    from referencing import Registry
-    from referencing.jsonschema import DRAFT7
+    from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore[import]
+    from jsonschema.validators import Draft7Validator  # type: ignore[import]
+    from referencing import Registry  # type: ignore[import]
+    from referencing.jsonschema import DRAFT7  # type: ignore[import]
 
     if TYPE_CHECKING:
-        from jsonschema.protocols import Validator as JsonSchemaValidator  # type: ignore
+        from jsonschema.protocols import Validator as JsonSchemaValidator  # type: ignore[import]
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'
