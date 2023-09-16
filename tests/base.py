@@ -20,14 +20,12 @@
 import io
 import json
 import os
-import sys
 import xml.etree.ElementTree
 from datetime import datetime, timezone
 from typing import Any
 from unittest import TestCase
 from uuid import uuid4
 
-from jsonschema import ValidationError, validate as json_validate
 from lxml import etree
 from lxml.etree import DocumentInvalid
 from xmldiff import main
@@ -35,6 +33,8 @@ from xmldiff.actions import MoveNode
 
 from cyclonedx.output import SchemaVersion
 from cyclonedx.schema import _RES_DIR as CDX_SCHEMA_DIRECTORY
+from cyclonedx.validation import MissingOptionalDependencyException
+from cyclonedx.validation.json import JsonValidator
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
@@ -42,16 +42,12 @@ single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 class BaseJsonTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_json: str, schema_version: SchemaVersion) -> None:
-        schema_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.to_version()}.SNAPSHOT.schema.json')
-        with open(schema_fn) as schema_fd:
-            schema_doc = json.load(schema_fd)
-
         try:
-            json_validate(instance=json.loads(bom_json), schema=schema_doc)
-        except ValidationError as e:
-            self.assertTrue(False, f'Failed to validate SBOM against JSON schema: {str(e)}')
-
-        self.assertTrue(True)
+            validation_error = JsonValidator(schema_version).validate_str(bom_json)
+        except MissingOptionalDependencyException:
+            return  # some deps are missing - skip the validation
+        self.assertIsNone(validation_error,
+                          f'Failed to validate SBOM against JSON schema: {str(validation_error)}')
 
     @staticmethod
     def _sort_json_dict(item: object) -> Any:

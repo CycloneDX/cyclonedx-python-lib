@@ -22,9 +22,9 @@ from os.path import join
 from typing import TYPE_CHECKING, Any, Never, Optional, Tuple
 
 from ..schema import _RES_DIR as _SCHEMA_RES_DIR
-from . import ValidationError, _BaseValidator
+from . import MissingOptionalDependencyException, ValidationError, _BaseValidator
 
-functionality_not_implemented_error: Optional[Tuple[NotImplementedError, Any]] = None
+_missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
     from jsonschema import FormatChecker
     from jsonschema.exceptions import ValidationError as JsonValidationError
@@ -37,21 +37,21 @@ try:
     if TYPE_CHECKING:
         from jsonschema.protocols import Validator as JsonSchemaValidator
 except ImportError as err:
-    functionality_not_implemented_error = NotImplementedError(
+    _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'
         'Please install `cyclonedx-python-lib` with the extra "json-validation".\n'
     ), err
 
-if functionality_not_implemented_error:
-    class _BaseJsonValidator(_BaseValidator, ABC):
+if _missing_deps_error:
+    class __BaseJsonValidator(_BaseValidator, ABC):
         def validate_str(self, data: str) -> Optional[ValidationError]:
-            raise functionality_not_implemented_error[0]  # from functionality_not_implemented_error[1]
+            raise _missing_deps_error[0]  # from functionality_not_implemented_error[1]
 
         def validata_data(self, data: Any) -> Optional[ValidationError]:
-            raise functionality_not_implemented_error[0]  # from functionality_not_implemented_error[1]
+            raise _missing_deps_error[0]  # from functionality_not_implemented_error[1]
 
 else:
-    class _BaseJsonValidator(_BaseValidator, ABC):
+    class __BaseJsonValidator(_BaseValidator, ABC):
         __validator: Optional['JsonSchemaValidator'] = None
 
         @staticmethod
@@ -91,14 +91,14 @@ else:
                 return ValidationError(error)
 
 
-class JsonValidator(_BaseJsonValidator):
+class JsonValidator(__BaseJsonValidator):
 
     @property
     def _schema_file(self) -> str:
         return join(_SCHEMA_RES_DIR, f'bom-{self.schema_version.to_version()}.SNAPSHOT.schema.json')
 
 
-class JsonStrictValidator(_BaseJsonValidator):
+class JsonStrictValidator(__BaseJsonValidator):
 
     @property
     def _schema_file(self) -> str:

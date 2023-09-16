@@ -22,9 +22,19 @@ if TYPE_CHECKING:
     from ..schema import SchemaVersion
 
 
+class MissingOptionalDependencyException(BaseException):
+    pass
+
+
 class ValidationError:
     def __init__(self, data: Any) -> None:
         self.data = data
+
+    def __repr__(self) -> str:
+        return repr(self.data)
+
+    def __str__(self) -> str:
+        return str(self.data)
 
 
 class _BaseValidator(ABC):
