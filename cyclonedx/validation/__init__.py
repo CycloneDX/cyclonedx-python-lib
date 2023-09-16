@@ -15,8 +15,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import ABC, abstractmethod
-from typing import Optional, Any, TYPE_CHECKING
 from os.path import isfile
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from ..schema import SchemaVersion

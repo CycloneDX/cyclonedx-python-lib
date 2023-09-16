@@ -27,16 +27,13 @@ from typing import Any
 from unittest import TestCase
 from uuid import uuid4
 
+from jsonschema import ValidationError, validate as json_validate
 from lxml import etree
 from lxml.etree import DocumentInvalid
 from xmldiff import main
 from xmldiff.actions import MoveNode
 
 from cyclonedx.output import SchemaVersion
-
-from jsonschema import ValidationError, validate as json_validate
-
-
 from cyclonedx.schema import _RES_DIR as CDX_SCHEMA_DIRECTORY
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())

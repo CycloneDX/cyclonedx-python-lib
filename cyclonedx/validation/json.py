@@ -16,22 +16,23 @@
 
 __all__ = ['JsonValidator', 'JsonStrictValidator']
 
-from . import _BaseValidator, ValidationError
-from typing import Optional, TYPE_CHECKING, Any, Never, Tuple
-from ..schema import _RES_DIR as _SCHEMA_RES_DIR
-from os.path import join
-from json import loads as json_loads
 from abc import ABC
+from json import loads as json_loads
+from os.path import join
+from typing import TYPE_CHECKING, Any, Never, Optional, Tuple
+
+from ..schema import _RES_DIR as _SCHEMA_RES_DIR
+from . import ValidationError, _BaseValidator
 
 functionality_not_implemented_error: Optional[Tuple[NotImplementedError, Any]] = None
 try:
     from jsonschema import FormatChecker
-    from jsonschema.validators import Draft7Validator
-    from jsonschema.protocols import Validator
     from jsonschema.exceptions import ValidationError as JsonValidationError
+    from jsonschema.protocols import Validator
+    from jsonschema.validators import Draft7Validator
     from referencing import Registry, Resource
-    from referencing.jsonschema import DRAFT7
     from referencing.exceptions import NoSuchResource
+    from referencing.jsonschema import DRAFT7
 
     if TYPE_CHECKING:
         from jsonschema.protocols import Validator as JsonSchemaValidator

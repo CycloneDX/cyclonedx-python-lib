@@ -17,15 +17,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from unittest import TestCase
-from ddt import ddt, idata, data, unpack
 from glob import iglob
 from os.path import join
+from unittest import TestCase
 
-from . import TESTDATA_DIRECTORY
+from ddt import data, ddt, idata, unpack
 
 from cyclonedx.schema import SchemaVersion
 from cyclonedx.validation.json import JsonValidator
+
+from . import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'schemaTestData')
 
