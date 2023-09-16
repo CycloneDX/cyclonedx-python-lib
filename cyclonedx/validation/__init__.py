@@ -40,5 +40,5 @@ class _BaseValidator(ABC):
             raise NotImplementedError(f'not implemented for schema {schema_version}')
 
     @abstractmethod
-    def validate(self, data: str) -> Optional[ValidationError]:
+    def validate_str(self, data: str) -> Optional[ValidationError]:
         ...

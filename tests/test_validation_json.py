@@ -43,20 +43,20 @@ class TestJsonValidator(TestCase):
     @idata((sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS for tf in
            iglob('valid-*.json', root_dir=join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version())))
     @unpack
-    def test_validate_returns_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+    def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
-        error = validator.validate(test_data)
+        error = validator.validate_str(test_data)
         self.assertIsNone(error)
 
     @idata((sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS for tf in
            iglob('invalid-*.json', root_dir=join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version())))
     @unpack
-    def test_validate_returns_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+    def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), test_data_file), 'r') as tdfh:
             test_data = tdfh.read()
-        error = validator.validate(test_data)
+        error = validator.validate_str(test_data)
         self.assertIsNotNone(error)
         self.assertIsNotNone(error.data)

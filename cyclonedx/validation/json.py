@@ -17,7 +17,7 @@
 __all__ = ['JsonValidator', 'JsonStrictValidator']
 
 from . import _BaseValidator, ValidationError
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Any, Never
 from ..schema import _RES_DIR as _SCHEMA_RES_DIR
 from os.path import join
 from json import loads as json_loads
@@ -25,9 +25,11 @@ from abc import ABC
 
 functionality_not_implemented_error: Optional[NotImplementedError] = None
 try:
-    from jsonschema.validators import validator_for
+    from jsonschema.validators import Draft7Validator
+    from jsonschema.protocols import Validator
     from jsonschema.exceptions import ValidationError as JsonValidationError
     from referencing import Registry, Resource
+    from referencing.jsonschema import DRAFT7
     from referencing.exceptions import NoSuchResource
 
     if TYPE_CHECKING:
@@ -36,44 +38,54 @@ except ImportError as err:
     functionality_not_implemented_error = NotImplementedError(
         'this functionality requires optional dependencies.\n'
         'please install the extra "json-validation"\n'
-        f'---\nprevious: {err}'
+        f'----\nprevious: {err}'
     )
 
-
-class _BaseJsonValidator(_BaseValidator, ABC):
-    __validator: Optional['JsonSchemaValidator']
-
-    @staticmethod
-    def __fetch_schema_file(uri: str) -> 'Resource':
-        if not uri.startswith("http://cyclonedx.org/schema/"):
-            raise NoSuchResource(ref=uri)
-
-        file = join(_SCHEMA_RES_DIR, uri.removeprefix("http://cyclonedx.org/schema/"))
-        with open(file, 'r') as fh:
-            return Resource.from_contents(json_loads(fh.read()))
-
-    @property
-    def _validator(self) -> 'JsonSchemaValidator':
-        if not self.__validator:
-            if functionality_not_implemented_error:
-                raise functionality_not_implemented_error
-
-            schema_registry = Registry(retrieve=self.__fetch_schema_file)
-            with open(self._schema_file, 'r') as sf:
-                schema = json_loads(sf.read())
-            self.__validator = validator_for(schema)(schema, registry=schema_registry)
-        return self.__validator
-
-    def validate(self, data: str) -> Optional[ValidationError]:
-        if functionality_not_implemented_error:
+if functionality_not_implemented_error:
+    class _BaseJsonValidator(_BaseValidator, ABC):
+        def validate_str(self, data: str) -> Optional[ValidationError]:
             raise functionality_not_implemented_error
 
-        structure = json_loads(data)
-        validator = self._validator  # may throw on error that MUST NOT be caught
-        try:
-            validator.validate(structure)
-        except JsonValidationError as error:
-            return ValidationError(error)
+        def validata_data(self, data: Any) -> Optional[ValidationError]:
+            raise functionality_not_implemented_error
+
+else:
+    class _BaseJsonValidator(_BaseValidator, ABC):
+        __validator: Optional['JsonSchemaValidator'] = None
+
+        @staticmethod
+        def __make_validator_registry() -> 'Registry':
+            def _prevent_retrieve(uri: str) -> Never:
+                raise NoSuchResource(ref=uri)
+
+            schema_prefix = 'http://cyclonedx.org/schema/'
+            spdx = open(join(_SCHEMA_RES_DIR, 'spdx.SNAPSHOT.schema.json'))
+            jsf = open(join(_SCHEMA_RES_DIR, 'jsf-0.82.SNAPSHOT.schema.json'))
+            with spdx, jsf:
+                return Registry(
+                    retrieve=_prevent_retrieve
+                ).with_resources([
+                    (f'{schema_prefix}spdx.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(spdx.read()))),
+                    (f'{schema_prefix}jsf-0.82.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(jsf.read()))),
+                ])
+
+        @property
+        def _validator(self) -> 'JsonSchemaValidator':
+            if not self.__validator:
+                with open(self._schema_file) as sf:
+                    schema = json_loads(sf.read())
+                self.__validator = Draft7Validator(schema, registry=self.__make_validator_registry())
+            return self.__validator
+
+        def validate_str(self, data: str) -> Optional[ValidationError]:
+            return self.validata_data(json_loads(data))
+
+        def validata_data(self, data: Any) -> Optional[ValidationError]:
+            validator = self._validator  # may throw on error that MUST NOT be caught
+            try:
+                validator.validate(data)
+            except JsonValidationError as error:
+                return ValidationError(error)
 
 
 class JsonValidator(_BaseJsonValidator):
