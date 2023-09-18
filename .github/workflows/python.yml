@@ -131,7 +131,7 @@ jobs:
       - name: Ensure build successful
         run: poetry build
       - name: Run tox
-        run: poetry run tox run -e py-${{ matrix.toxenv-factors }} -s false
+        run: poetry run tox run -e py${{ matrix.toxenv-factors }} -s false
       - name: Generate coverage reports
         shell: bash
         run: |
