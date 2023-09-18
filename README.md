@@ -1,9 +1,10 @@
 # Python Library for generating CycloneDX
 
-[![shield_gh-workflow-test]][link_gh-workflow-test]
-[![shield_rtfd]][link_rtfd]
 [![shield_pypi-version]][link_pypi]
 [![shield_conda-forge-version]][link_conda-forge]
+[![shield_rtfd]][link_rtfd]
+[![shield_gh-workflow-test]][link_gh-workflow-test]
+[![shield_coverage]][link_codacy]
 [![shield_license]][license_file]  
 [![shield_website]][link_website]
 [![shield_slack]][link_slack]
@@ -57,6 +58,7 @@ See the [LICENSE][license_file] file for the full license.
 [contributing_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CONTRIBUTING.md
 
 [shield_gh-workflow-test]: https://img.shields.io/github/actions/workflow/status/CycloneDX/cyclonedx-python-lib/python.yml?branch=main&logo=GitHub&logoColor=white "build"
+[shield_coverage]: https://img.shields.io/codacy/coverage/1f9d451e9cdc49ce99c2a1247adab341?logo=Codacy&logoColor=white "test coverage"
 [shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=pypi&logoColor=white&label=PyPI "PyPI"
 [shield_conda-forge-version]: https://img.shields.io/conda/vn/conda-forge/cyclonedx-python-lib?logo=anaconda&logoColor=white&label=conda-forge "conda-forge"
 [shield_rtfd]: https://img.shields.io/readthedocs/cyclonedx-python-library?logo=readthedocs&logoColor=white "Read the Docs"
@@ -69,6 +71,7 @@ See the [LICENSE][license_file] file for the full license.
 [link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
 [link_conda-forge]: https://anaconda.org/conda-forge/cyclonedx-python-lib
 [link_rtfd]: https://cyclonedx-python-library.readthedocs.io/en/latest/?badge=latest
+[link_codacy]: https://app.codacy.com/gh/CycloneDX/cyclonedx-python-lib
 [link_website]: https://cyclonedx.org/
 [link_slack]: https://cyclonedx.org/slack/invite
 [link_discussion]: https://groups.io/g/CycloneDX
