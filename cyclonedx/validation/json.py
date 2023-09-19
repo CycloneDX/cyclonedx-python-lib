@@ -20,8 +20,12 @@ from abc import ABC
 from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Optional, Tuple
 
+if TYPE_CHECKING:
+    from ..schema import SchemaVersion
+
+from ..exception import MissingOptionalDependencyException
 from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
-from . import MissingOptionalDependencyException, ValidationError, _BaseValidator
+from . import ValidationError, _BaseValidator
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
@@ -39,7 +43,16 @@ except ImportError as err:
     ), err
 
 
-class __BaseJsonValidator(_BaseValidator, ABC):
+class _BaseJsonValidator(_BaseValidator, ABC):
+
+    def __init__(self, schema_version: 'SchemaVersion') -> None:
+        # this is the def that is used for generating the documentation
+        super().__init__(schema_version)
+
+    def validate_str(self, data: str) -> Optional[ValidationError]:
+        """Validate a string according to the schema version."""
+        # this is the def that is used for generating the documentation
+
     if _missing_deps_error:
         __MDERROR = _missing_deps_error
 
@@ -84,15 +97,20 @@ class __BaseJsonValidator(_BaseValidator, ABC):
                 ])
 
 
-class JsonValidator(__BaseJsonValidator):
+class JsonValidator(_BaseJsonValidator):
+    """Validator for CycloneDX documents in JSON format."""
 
     @property
     def _schema_file(self) -> Optional[str]:
         return _S_BOM.get(self.schema_version)
 
 
-class JsonStrictValidator(__BaseJsonValidator):
+class JsonStrictValidator(_BaseJsonValidator):
+    """Strict validator for CycloneDX documents in JSON format.
 
+    In contrast to :class:`~JsonValidator`,
+    the document must not have additional or unknown JSON properties.
+    """
     @property
     def _schema_file(self) -> Optional[str]:
         return _S_BOM_STRICT.get(self.schema_version)

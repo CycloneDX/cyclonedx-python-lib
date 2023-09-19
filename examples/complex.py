@@ -1,5 +1,8 @@
 import sys
 
+from packageurl import PackageURL
+
+from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.factory.license import LicenseChoiceFactory, LicenseFactory
 from cyclonedx.model import OrganizationalEntity, XsUri
 from cyclonedx.model.bom import Bom
@@ -7,10 +10,8 @@ from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.output.json import JsonV1Dot4
 from cyclonedx.output.xml import XmlV1Dot4
 from cyclonedx.schema import SchemaVersion
-from cyclonedx.validation import MissingOptionalDependencyException
 from cyclonedx.validation.json import JsonValidator
 from cyclonedx.validation.xml import XmlValidator
-from packageurl import PackageURL
 
 lc_factory = LicenseChoiceFactory(license_factory=LicenseFactory())
 

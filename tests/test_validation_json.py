@@ -24,8 +24,8 @@ from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
 
+from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import SchemaVersion
-from cyclonedx.validation import MissingOptionalDependencyException
 from cyclonedx.validation.json import JsonStrictValidator, JsonValidator
 
 from . import TESTDATA_DIRECTORY

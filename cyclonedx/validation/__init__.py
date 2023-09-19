@@ -15,17 +15,20 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Optional, Protocol
 
 if TYPE_CHECKING:
     from ..schema import SchemaVersion
 
 
-class MissingOptionalDependencyException(BaseException):
-    pass
-
-
 class ValidationError:
+    """Validation failed with this specific error.
+
+    Use :attr:`~data` to access the content.
+    """
+
+    data: Any
+
     def __init__(self, data: Any) -> None:
         self.data = data
 
@@ -36,7 +39,16 @@ class ValidationError:
         return str(self.data)
 
 
-class _BaseValidator(ABC):
+class Validator(Protocol):
+    """Validator protocol"""
+
+    def validate_str(self, data: str) -> Optional[ValidationError]:
+        """Validate a string"""
+        ...
+
+
+class _BaseValidator(Validator, ABC):
+    """this class is non-public. changes without notice may happen."""
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         self.__schema_version = schema_version
@@ -44,14 +56,12 @@ class _BaseValidator(ABC):
             raise ValueError(f'unsupported schema: {schema_version}')
 
     @property
-    @abstractmethod
-    def _schema_file(self) -> Optional[str]:
-        ...
-
-    @property
     def schema_version(self) -> 'SchemaVersion':
+        """get the schema version."""
         return self.__schema_version
 
+    @property
     @abstractmethod
-    def validate_str(self, data: str) -> Optional[ValidationError]:
+    def _schema_file(self) -> Optional[str]:
+        """get the schema file according to schema version."""
         ...

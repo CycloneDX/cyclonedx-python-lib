@@ -28,8 +28,8 @@ from lxml import etree
 from xmldiff import main
 from xmldiff.actions import MoveNode
 
+from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.output import SchemaVersion
-from cyclonedx.validation import MissingOptionalDependencyException
 from cyclonedx.validation.json import JsonValidator
 from cyclonedx.validation.xml import XmlValidator
 
