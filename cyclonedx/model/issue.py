@@ -120,7 +120,7 @@ class IssueType:
         self.source = source
         self.references = references or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def type(self) -> IssueClassification:
         """
@@ -135,7 +135,7 @@ class IssueType:
     def type(self, type: IssueClassification) -> None:
         self._type = type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def id(self) -> Optional[str]:
         """
@@ -150,7 +150,7 @@ class IssueType:
     def id(self, id: Optional[str]) -> None:
         self._id = id
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
@@ -165,7 +165,7 @@ class IssueType:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def description(self) -> Optional[str]:
         """
@@ -180,7 +180,7 @@ class IssueType:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(4)
     def source(self) -> Optional[IssueTypeSource]:
         """
@@ -195,7 +195,7 @@ class IssueType:
     def source(self, source: Optional[IssueTypeSource]) -> None:
         self._source = source
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'url')
     @serializable.xml_sequence(5)
     def references(self) -> "SortedSet[XsUri]":

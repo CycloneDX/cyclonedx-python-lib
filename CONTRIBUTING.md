@@ -23,7 +23,7 @@ Get it all applied via:
 
 ```shell
 poetry run isort .
-poetry run flake8 cyclonedx/ tests/ typings/
+poetry run autopep8 -ir cyclonedx/ tests/ typings/
 ```
 
 ## Documentation
@@ -45,7 +45,7 @@ make html
 Run all tests in dedicated environments, via:
 
 ```shell
-poetry run tox
+poetry run tox run
 ```
 
 ## Sign off your commits
