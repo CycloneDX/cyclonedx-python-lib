@@ -32,7 +32,7 @@ Impact Analysis is new for CycloneDX schema version 1.
 
 
 @serializable.serializable_enum
-class ImpactAnalysisAffectedStatus(str, Enum):
+class ImpactAnalysisAffectedStatus(Enum):
     """
     Enum object that defines the permissible impact analysis affected states.
 
@@ -54,7 +54,7 @@ class ImpactAnalysisAffectedStatus(str, Enum):
 
 
 @serializable.serializable_enum
-class ImpactAnalysisJustification(str, Enum):
+class ImpactAnalysisJustification(Enum):
     """
     Enum object that defines the rationale of why the impact analysis state was asserted.
 
@@ -74,7 +74,7 @@ class ImpactAnalysisJustification(str, Enum):
 
 
 @serializable.serializable_enum
-class ImpactAnalysisResponse(str, Enum):
+class ImpactAnalysisResponse(Enum):
     """
     Enum object that defines the valid rationales as to why the impact analysis state was asserted.
 
@@ -90,7 +90,7 @@ class ImpactAnalysisResponse(str, Enum):
 
 
 @serializable.serializable_enum
-class ImpactAnalysisState(str, Enum):
+class ImpactAnalysisState(Enum):
     """
     Enum object that defines the permissible impact analysis states.
 

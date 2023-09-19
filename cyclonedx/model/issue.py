@@ -25,7 +25,7 @@ from ..exception.model import NoPropertiesProvidedException
 from . import ComparableTuple, XsUri
 
 
-class IssueClassification(str, Enum):
+class IssueClassification(Enum):
     """
     This is our internal representation of the enum `issueClassification`.
 

@@ -17,17 +17,17 @@
 from enum import Enum
 
 
-class OutputFormat(str, Enum):
-    JSON: str = 'Json'
-    XML: str = 'Xml'
+class OutputFormat(Enum):
+    JSON = 'Json'
+    XML = 'Xml'
 
 
-class SchemaVersion(str, Enum):
-    V1_0: str = 'V1Dot0'
-    V1_1: str = 'V1Dot1'
-    V1_2: str = 'V1Dot2'
-    V1_3: str = 'V1Dot3'
-    V1_4: str = 'V1Dot4'
+class SchemaVersion(Enum):
+    V1_0 = 'V1Dot0'
+    V1_1 = 'V1Dot1'
+    V1_2 = 'V1Dot2'
+    V1_3 = 'V1Dot3'
+    V1_4 = 'V1Dot4'
 
     def to_version(self) -> str:
         """

@@ -237,7 +237,7 @@ class ComponentEvidence:
         return f'<ComponentEvidence id={id(self)}>'
 
 
-class ComponentScope(str, Enum):
+class ComponentScope(Enum):
     """
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
 
@@ -249,7 +249,7 @@ class ComponentScope(str, Enum):
     EXCLUDED = 'excluded'
 
 
-class ComponentType(str, Enum):
+class ComponentType(Enum):
     """
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
 
@@ -328,7 +328,7 @@ class Diff:
         return f'<Diff url={self.url}>'
 
 
-class PatchClassification(str, Enum):
+class PatchClassification(Enum):
     """
     Enum object that defines the permissible `patchClassification`s.
 
