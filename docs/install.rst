@@ -36,7 +36,7 @@ The following extras are available when installing this package:
 `xml-validation`
     Install the optional dependencies needed for XML validation.
 `validation`
-    Install the optional dependencies needed for the validations above.
+    Install the optional dependencies needed for all supported validations.
 
 They can be used when installing in order to include additional dependencies, e.g.:
 
