@@ -1,3 +1,5 @@
+import sys
+
 from cyclonedx.factory.license import LicenseChoiceFactory, LicenseFactory
 from cyclonedx.model import OrganizationalEntity, XsUri
 from cyclonedx.model.bom import Bom
@@ -52,15 +54,21 @@ bom.register_dependency(component1, [component2])
 serialized_json = JsonV1Dot4(bom).output_as_string()
 print(serialized_json)
 try:
-    valid = JsonValidator(SchemaVersion.V1_4).validate_str(serialized_json)
-    print('JSON is', 'valid' if valid else 'invalid')
+    validation_errors = JsonValidator(SchemaVersion.V1_4).validate_str(serialized_json)
+    if validation_errors:
+        print('', 'JSON ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+        sys.exit(2)
+    print('JSON valid')
 except MissingOptionalDependencyException as error:
     print('JSON-validation was skipped due to', error)
 
 serialized_xml = XmlV1Dot4(bom).output_as_string()
 print(serialized_xml)
 try:
-    valid = XmlValidator(SchemaVersion.V1_4).validate_str(serialized_xml)
-    print('XML is', 'valid' if valid else 'invalid')
+    validation_errors = XmlValidator(SchemaVersion.V1_4).validate_str(serialized_xml)
+    if validation_errors:
+        print('', 'JSON ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+        sys.exit(2)
+    print('JSON valid')
 except MissingOptionalDependencyException as error:
     print('XML-validation was skipped due to', error)
