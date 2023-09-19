@@ -15,10 +15,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Optional, Protocol, cast
+from typing import TYPE_CHECKING, Any, Optional, Protocol
 
 if TYPE_CHECKING:
-    from ..schema import OutputFormat, SchemaVersion
+    from ..schema import SchemaVersion
 
 
 class ValidationError:
