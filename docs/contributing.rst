@@ -12,7 +12,7 @@ To install dev-dependencies and tools:
 
 .. code-block::
 
-   poetry install
+   poetry install --all-extras
 
 Code style
 ----------------------------------------------------
@@ -22,7 +22,7 @@ This project uses `PEP8`_ Style Guide for Python Code. This project loves sorted
 .. code-block::
 
     poetry run isort .
-    poetry run flake8 cyclonedx/ tests/ typings/
+    poetry run autopep8 -ir cyclonedx/ tests/ typings/ examples/
 
 
 Documentation
@@ -48,7 +48,7 @@ Run all tests in dedicated environments, via:
 
 .. code-block::
 
-    poetry run tox
+    poetry run tox run
 
 
 Sign your commits

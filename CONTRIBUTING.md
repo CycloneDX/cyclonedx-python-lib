@@ -5,6 +5,8 @@ But please read the
 [CycloneDX contributing guidelines](https://github.com/CycloneDX/.github/blob/master/CONTRIBUTING.md)
 first.
 
+See also: [contrib docs](docs/contributing.rst)
+
 ## Setup
 
 This project uses [poetry]. Have it installed and setup first.
@@ -12,7 +14,7 @@ This project uses [poetry]. Have it installed and setup first.
 To install dev-dependencies and tools:
 
 ```shell
-poetry install
+poetry install --all-extras
 ```
 
 ## Code style
