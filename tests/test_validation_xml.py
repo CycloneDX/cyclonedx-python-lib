@@ -24,8 +24,8 @@ from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
 
-from cyclonedx.schema import SchemaVersion
 from cyclonedx.exception import MissingOptionalDependencyException
+from cyclonedx.schema import SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
 
 from . import TESTDATA_DIRECTORY
