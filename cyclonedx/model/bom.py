@@ -83,7 +83,7 @@ class BomMetaData:
         if not tools:
             self.tools.add(ThisTool)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
     @serializable.xml_sequence(1)
     def timestamp(self) -> datetime:
@@ -99,7 +99,7 @@ class BomMetaData:
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(2)
     def tools(self) -> "SortedSet[Tool]":
@@ -115,7 +115,7 @@ class BomMetaData:
     def tools(self, tools: Iterable[Tool]) -> None:
         self._tools = SortedSet(tools)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
     @serializable.xml_sequence(3)
     def authors(self) -> "SortedSet[OrganizationalContact]":
@@ -135,7 +135,7 @@ class BomMetaData:
     def authors(self, authors: Iterable[OrganizationalContact]) -> None:
         self._authors = SortedSet(authors)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(4)
     def component(self) -> Optional[Component]:
         """
@@ -160,7 +160,7 @@ class BomMetaData:
         """
         self._component = component
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(5)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
@@ -175,7 +175,7 @@ class BomMetaData:
     def manufacture(self, manufacture: Optional[OrganizationalEntity]) -> None:
         self._manufacture = manufacture
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(6)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
@@ -192,7 +192,7 @@ class BomMetaData:
     def supplier(self, supplier: Optional[OrganizationalEntity]) -> None:
         self._supplier = supplier
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
@@ -210,7 +210,7 @@ class BomMetaData:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
@@ -247,8 +247,7 @@ class BomMetaData:
         return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
 
 
-@serializable.serializable_class(
-    ignore_during_deserialization=['$schema', 'bom_format', 'spec_version'])  # type: ignore[misc]
+@serializable.serializable_class(ignore_during_deserialization=['$schema', 'bom_format', 'spec_version'])
 class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
@@ -297,7 +296,7 @@ class Bom:
         self.version = version
         self.dependencies = SortedSet(dependencies) or SortedSet()
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(UrnUuidHelper)
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
@@ -318,7 +317,7 @@ class Bom:
     def serial_number(self, serial_number: UUID) -> None:
         self._serial_number = serial_number
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -339,7 +338,7 @@ class Bom:
     def metadata(self, metadata: BomMetaData) -> None:
         self._metadata = metadata
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.include_none(SchemaVersion1Dot0)
     @serializable.include_none(SchemaVersion1Dot1)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
@@ -397,7 +396,7 @@ class Bom:
         """
         return component in self.components
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -416,7 +415,7 @@ class Bom:
     def services(self, services: Iterable[Service]) -> None:
         self._services = SortedSet(services)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
@@ -474,7 +473,7 @@ class Bom:
         """
         return bool(self.vulnerabilities)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
     @serializable.xml_sequence(8)
@@ -491,7 +490,7 @@ class Bom:
     def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
         self._vulnerabilities = SortedSet(vulnerabilities)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def version(self) -> int:
         return self._version
@@ -500,7 +499,7 @@ class Bom:
     def version(self, version: int) -> None:
         self._version = version
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)

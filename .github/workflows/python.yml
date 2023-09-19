@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e flake8 -s false
+        run: poetry run tox run-e flake8 -s false
 
   static-code-analysis:
     name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
@@ -82,7 +82,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e mypy-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run-e mypy-${{ matrix.toxenv-factor }} -s false
 
   build-and-test:
     name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factor }})
@@ -134,7 +134,7 @@ jobs:
       - name: Ensure build successful
         run: poetry build
       - name: Run tox
-        run: poetry run tox -e py-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run-e py-${{ matrix.toxenv-factor }} -s false
       - name: Generate coverage reports
         shell: bash
         run: |

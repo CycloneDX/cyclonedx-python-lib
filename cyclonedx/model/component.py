@@ -80,7 +80,7 @@ class Commit:
         self.committer = committer
         self.message = message
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def uid(self) -> Optional[str]:
         """
@@ -96,7 +96,7 @@ class Commit:
     def uid(self, uid: Optional[str]) -> None:
         self._uid = uid
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def url(self) -> Optional[XsUri]:
         """
@@ -111,7 +111,7 @@ class Commit:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def author(self) -> Optional[IdentifiableAction]:
         """
@@ -126,7 +126,7 @@ class Commit:
     def author(self, author: Optional[IdentifiableAction]) -> None:
         self._author = author
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(4)
     def committer(self) -> Optional[IdentifiableAction]:
         """
@@ -141,7 +141,7 @@ class Commit:
     def committer(self, committer: Optional[IdentifiableAction]) -> None:
         self._committer = committer
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(5)
     def message(self) -> Optional[str]:
         """
@@ -195,7 +195,7 @@ class ComponentEvidence:
         self.licenses = licenses or []  # type: ignore
         self.copyright = copyright or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'license')
     def licenses(self) -> "SortedSet[LicenseChoice]":
         """
@@ -210,7 +210,7 @@ class ComponentEvidence:
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
     def copyright(self) -> "SortedSet[Copyright]":
         """
@@ -356,7 +356,7 @@ class Patch:
         self.diff = diff
         self.resolves = resolves or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def type(self) -> PatchClassification:
         """
@@ -389,7 +389,7 @@ class Patch:
     def diff(self, diff: Optional[Diff]) -> None:
         self._diff = diff
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'issue')
     def resolves(self) -> "SortedSet[IssueType]":
         """
@@ -453,7 +453,7 @@ class Pedigree:
         self.patches = patches or []  # type: ignore
         self.notes = notes
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     @serializable.xml_sequence(1)
     def ancestors(self) -> "SortedSet['Component']":
@@ -475,7 +475,7 @@ class Pedigree:
     def ancestors(self, ancestors: Iterable['Component']) -> None:
         self._ancestors = SortedSet(ancestors)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     @serializable.xml_sequence(2)
     def descendants(self) -> "SortedSet['Component']":
@@ -492,7 +492,7 @@ class Pedigree:
     def descendants(self, descendants: Iterable['Component']) -> None:
         self._descendants = SortedSet(descendants)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     @serializable.xml_sequence(3)
     def variants(self) -> "SortedSet['Component']":
@@ -510,7 +510,7 @@ class Pedigree:
     def variants(self, variants: Iterable['Component']) -> None:
         self._variants = SortedSet(variants)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'commit')
     @serializable.xml_sequence(4)
     def commits(self) -> "SortedSet[Commit]":
@@ -527,7 +527,7 @@ class Pedigree:
     def commits(self, commits: Iterable[Commit]) -> None:
         self._commits = SortedSet(commits)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -547,7 +547,7 @@ class Pedigree:
     def patches(self, patches: Iterable[Patch]) -> None:
         self._patches = SortedSet(patches)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(6)
     def notes(self) -> Optional[str]:
         """
@@ -597,7 +597,7 @@ class Swid:
         self.text = text
         self.url = url
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def tag_id(self) -> str:
         """
@@ -612,7 +612,7 @@ class Swid:
     def tag_id(self, tag_id: str) -> None:
         self._tag_id = tag_id
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def name(self) -> str:
         """
@@ -627,7 +627,7 @@ class Swid:
     def name(self, name: str) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def version(self) -> Optional[str]:
         """
@@ -642,7 +642,7 @@ class Swid:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def tag_version(self) -> Optional[int]:
         """
@@ -657,7 +657,7 @@ class Swid:
     def tag_version(self, tag_version: Optional[int]) -> None:
         self._tag_version = tag_version
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def patch(self) -> Optional[bool]:
         """
@@ -813,7 +813,7 @@ class Component(Dependable):
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def type(self) -> ComponentType:
         """
@@ -846,7 +846,7 @@ class Component(Dependable):
     def mime_type(self, mime_type: Optional[str]) -> None:
         self._mime_type = mime_type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRefHelper)
     @serializable.view(SchemaVersion1Dot1)
@@ -867,7 +867,7 @@ class Component(Dependable):
         """
         return self._bom_ref
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -886,7 +886,7 @@ class Component(Dependable):
     def supplier(self, supplier: Optional[OrganizationalEntity]) -> None:
         self._supplier = supplier
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -904,7 +904,7 @@ class Component(Dependable):
     def author(self, author: Optional[str]) -> None:
         self._author = author
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def publisher(self) -> Optional[str]:
         """
@@ -919,7 +919,7 @@ class Component(Dependable):
     def publisher(self, publisher: Optional[str]) -> None:
         self._publisher = publisher
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(4)
     def group(self) -> Optional[str]:
         """
@@ -938,7 +938,7 @@ class Component(Dependable):
     def group(self, group: Optional[str]) -> None:
         self._group = group
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(5)
     def name(self) -> str:
         """
@@ -957,7 +957,7 @@ class Component(Dependable):
     def name(self, name: str) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.include_none(SchemaVersion1Dot0, "")
     @serializable.include_none(SchemaVersion1Dot1, "")
     @serializable.include_none(SchemaVersion1Dot2, "")
@@ -979,7 +979,7 @@ class Component(Dependable):
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(7)
     def description(self) -> Optional[str]:
         """
@@ -994,7 +994,7 @@ class Component(Dependable):
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(8)
     def scope(self) -> Optional[ComponentScope]:
         """
@@ -1011,7 +1011,7 @@ class Component(Dependable):
     def scope(self, scope: Optional[ComponentScope]) -> None:
         self._scope = scope
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     @serializable.xml_sequence(9)
     def hashes(self) -> "SortedSet[HashType]":
@@ -1027,7 +1027,7 @@ class Component(Dependable):
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
@@ -1047,7 +1047,7 @@ class Component(Dependable):
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
         self._licenses = SortedSet(licenses)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(11)
     def copyright(self) -> Optional[str]:
         """
@@ -1063,7 +1063,7 @@ class Component(Dependable):
     def copyright(self, copyright: Optional[str]) -> None:
         self._copyright = copyright
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(12)
     def cpe(self) -> Optional[str]:
         """
@@ -1079,7 +1079,7 @@ class Component(Dependable):
     def cpe(self, cpe: Optional[str]) -> None:
         self._cpe = cpe
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(PackageUrl)
     @serializable.xml_sequence(13)
     def purl(self) -> Optional[PackageURL]:
@@ -1098,7 +1098,7 @@ class Component(Dependable):
     def purl(self, purl: Optional[PackageURL]) -> None:
         self._purl = purl
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -1116,7 +1116,7 @@ class Component(Dependable):
     def swid(self, swid: Optional[Swid]) -> None:
         self._swid = swid
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot0)
     @serializable.xml_sequence(18)
     def modified(self) -> bool:
@@ -1126,7 +1126,7 @@ class Component(Dependable):
     def modified(self, modified: bool) -> None:
         self._modified = modified
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
@@ -1146,7 +1146,7 @@ class Component(Dependable):
     def pedigree(self, pedigree: Optional[Pedigree]) -> None:
         self._pedigree = pedigree
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
@@ -1167,7 +1167,7 @@ class Component(Dependable):
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
@@ -1186,7 +1186,7 @@ class Component(Dependable):
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     @serializable.xml_sequence(19)
     def components(self) -> "SortedSet['Component']":
@@ -1204,7 +1204,7 @@ class Component(Dependable):
     def components(self, components: Iterable['Component']) -> None:
         self._components = SortedSet(components)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(20)
@@ -1221,7 +1221,7 @@ class Component(Dependable):
     def evidence(self, evidence: Optional[ComponentEvidence]) -> None:
         self._evidence = evidence
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(21)
     def release_notes(self) -> Optional[ReleaseNotes]:
