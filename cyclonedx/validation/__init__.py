@@ -47,7 +47,7 @@ class Validator(Protocol):
         ...
 
 
-class BaseValidator(ABC):
+class BaseValidator(ABC, Validator):
     """BaseValidator"""
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
@@ -65,17 +65,3 @@ class BaseValidator(ABC):
     def _schema_file(self) -> Optional[str]:
         """get the schema file according to schema version."""
         ...
-
-
-def get_instance(format: 'OutputFormat',
-                 schema_version: 'SchemaVersion') -> Validator:
-    """Helper method to quickly get the correct validation class/validator."""
-    import importlib
-
-    try:
-        module = importlib.import_module(f"cyclonedx.validation.{format.value.lower()}")
-        output_klass = getattr(module, f"{format.value}{schema_version.value}")
-    except (ImportError, AttributeError) as e:
-        raise ValueError(f"Unknown format {format.value.lower()!r}: {e}") from None
-
-    return cast(Validator, output_klass(schema_version=schema_version))

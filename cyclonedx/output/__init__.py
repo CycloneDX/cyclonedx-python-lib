@@ -19,28 +19,26 @@ Set of classes and methods for outputting our libraries internal Bom model to Cy
 and according to different versions of the CycloneDX schema standard.
 """
 
+import importlib
 import os
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterable, Union, cast
+from typing import Iterable, Union, cast
 
-if TYPE_CHECKING:
-    from ..model.bom import Bom
-    from ..model.component import Component
-    from ..schema import OutputFormat, SchemaVersion
-
+from ..model.bom import Bom
+from ..model.component import Component
+from ..schema import OutputFormat, SchemaVersion
 
 LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_4
 
 
 class BaseOutput(ABC):
-    """BaseOutput"""
 
-    def __init__(self, bom: 'Bom', **kwargs: int) -> None:
+    def __init__(self, bom: Bom, **kwargs: int) -> None:
         super().__init__(**kwargs)
         self._bom = bom
         self._generated: bool = False
 
-    def _chained_components(self, container: Union['Bom', 'Component']) -> Iterable['Component']:
+    def _chained_components(self, container: Union[Bom, Component]) -> Iterable[Component]:
         for component in container.components:
             yield component
             yield from self._chained_components(component)
@@ -58,10 +56,10 @@ class BaseOutput(ABC):
     def generated(self, generated: bool) -> None:
         self._generated = generated
 
-    def get_bom(self) -> 'Bom':
+    def get_bom(self) -> Bom:
         return self._bom
 
-    def set_bom(self, bom: 'Bom') -> None:
+    def set_bom(self, bom: Bom) -> None:
         self._bom = bom
 
     @abstractmethod
@@ -89,9 +87,8 @@ class BaseOutput(ABC):
         f_out.close()
 
 
-def get_instance(bom: 'Bom',
-                 output_format: 'OutputFormat' = OutputFormat.XML,
-                 schema_version: 'SchemaVersion' = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
+def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
+                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.
 
@@ -102,8 +99,6 @@ def get_instance(bom: 'Bom',
     :param schema_version: SchemaVersion
     :return:
     """
-    import importlib
-
     try:
         module = importlib.import_module(f"cyclonedx.output.{output_format.value.lower()}")
         output_klass = getattr(module, f"{output_format.value}{schema_version.value}")
