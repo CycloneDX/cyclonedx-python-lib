@@ -171,7 +171,7 @@ jobs:
           coverage-reports: ${{ env.REPORTS_DIR }}/coverage.*
 
   examples:
-    name: Examples E${{ matrix.install-extras }}
+    name: Examples E:${{ matrix.install-extras || '<none>' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
