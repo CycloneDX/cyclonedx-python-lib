@@ -25,3 +25,21 @@ Install from `pypi.org`_ as you would any other Python module using your preferr
 
 .. _pypi.org: https://pypi.org/project/cyclonedx-python-lib/
 .. _conda-forge: https://anaconda.org/conda-forge/cyclonedx-python-lib
+
+Extras
+------
+
+The following extras are available when installing the package:
+
+`json-validation`
+    Install the optional dependencies needed for JSON validation.
+`xml-validation`
+    Install the optional dependencies needed for JSON validation.
+`validation`
+    Install the optional dependencies needed for the validations above.
+
+They can be used when installing in order to include additional dependencies, e.g.:
+
+.. code-block:: bash
+
+    pip install 'cyclonedx-python-lib[validation]'
