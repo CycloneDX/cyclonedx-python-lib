@@ -41,7 +41,7 @@ class _BaseValidator(ABC):
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         self.__schema_version = schema_version
         if not self._schema_file:
-            raise NotImplementedError(f'not implemented for schema {schema_version}')
+            raise ValueError(f'unsupported schema: {schema_version}')
 
     @property
     @abstractmethod

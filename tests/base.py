@@ -19,7 +19,6 @@
 
 import io
 import json
-import os
 import xml.etree.ElementTree
 from datetime import datetime, timezone
 from typing import Any
@@ -27,14 +26,13 @@ from unittest import TestCase
 from uuid import uuid4
 
 from lxml import etree
-from lxml.etree import DocumentInvalid
 from xmldiff import main
 from xmldiff.actions import MoveNode
 
 from cyclonedx.output import SchemaVersion
-from cyclonedx.schema._res import __DIR as CDX_SCHEMA_DIRECTORY
 from cyclonedx.validation import MissingOptionalDependencyException
 from cyclonedx.validation.json import JsonValidator
+from cyclonedx.validation.xml import XmlValidator
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
@@ -88,22 +86,12 @@ class BaseJsonTestCase(TestCase):
 class BaseXmlTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_xml: str, schema_version: SchemaVersion) -> None:
-        # rework access
-        xsd_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.to_version()}.SNAPSHOT.xsd')
-        with open(xsd_fn) as xsd_fd:
-            xsd_doc = etree.parse(xsd_fd)
-
-        xml_schema = etree.XMLSchema(xsd_doc)
-        schema_validates = False
         try:
-            schema_validates = xml_schema.validate(etree.parse(io.BytesIO(bytes(bom_xml, 'ascii'))))
-        except DocumentInvalid as e:
-            print(f'Failed to validate SBOM against schema: {str(e)}')
-
-        if not schema_validates:
-            print(xml_schema.error_log.last_error)
-        self.assertTrue(schema_validates, f'Failed to validate Generated SBOM against XSD Schema:'
-                                          f'{bom_xml}')
+            validation_error = XmlValidator(schema_version).validate_str(bom_xml)
+        except MissingOptionalDependencyException:
+            return  # some deps are missing - skip the validation
+        self.assertIsNone(validation_error,
+                          f'Failed to validate Generated SBOM against XSD Schema: {str(validation_error)}')
 
     def assertEqualXml(self, a: str, b: str) -> None:
         diff_results = main.diff_texts(a, b, diff_options={'F': 0.5})

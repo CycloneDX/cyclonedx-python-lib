@@ -46,13 +46,12 @@ class __BaseJsonValidator(_BaseValidator, ABC):
         def validate_str(self, data: str) -> Optional[ValidationError]:
             raise self.__MDERROR[0]  # from functionality_not_implemented_error[1]
 
-        def validata_data(self, data: Any) -> Optional[ValidationError]:
-            raise self.__MDERROR[0]  # from functionality_not_implemented_error[1]
     else:
         def validate_str(self, data: str) -> Optional[ValidationError]:
-            return self.validata_data(json_loads(data))
+            return self._validata_data(
+                json_loads(data))
 
-        def validata_data(self, data: Any) -> Optional[ValidationError]:
+        def _validata_data(self, data: Any) -> Optional[ValidationError]:
             validator = self._validator  # may throw on error that MUST NOT be caught
             try:
                 validator.validate(data)
@@ -67,7 +66,7 @@ class __BaseJsonValidator(_BaseValidator, ABC):
             if not self.__validator:
                 schema_file = self._schema_file
                 if schema_file is None:
-                    raise NotImplementedError('mising schema file')
+                    raise NotImplementedError('missing schema file')
                 with open(schema_file) as sf:
                     self.__validator = Draft7Validator(
                         json_loads(sf.read()),
