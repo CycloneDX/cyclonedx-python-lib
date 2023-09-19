@@ -15,10 +15,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Optional, Protocol
+from typing import TYPE_CHECKING, Any, Optional, Protocol, cast
 
 if TYPE_CHECKING:
-    from ..schema import SchemaVersion
+    from ..schema import OutputFormat, SchemaVersion
 
 
 class ValidationError:
@@ -47,8 +47,8 @@ class Validator(Protocol):
         ...
 
 
-class _BaseValidator(Validator, ABC):
-    """this class is non-public. changes without notice may happen."""
+class BaseValidator(ABC):
+    """BaseValidator"""
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         self.__schema_version = schema_version
@@ -65,3 +65,25 @@ class _BaseValidator(Validator, ABC):
     def _schema_file(self) -> Optional[str]:
         """get the schema file according to schema version."""
         ...
+
+
+def get_instance(format: 'OutputFormat',
+                 schema_version: 'SchemaVersion') -> Validator:
+    """
+    Helper method to quickly get the correct validation class/validator.
+
+    Pass in your BOM and optionally an output format and schema version.
+
+    :param format: OutputFormat
+    :param schema_version: SchemaVersion
+    :return:
+    """
+    import importlib
+
+    try:
+        module = importlib.import_module(f"cyclonedx.validation.{format.value.lower()}")
+        output_klass = getattr(module, f"{format.value}{schema_version.value}")
+    except (ImportError, AttributeError) as e:
+        raise ValueError(f"Unknown format {format.value.lower()!r}: {e}") from None
+
+    return cast(Validator, output_klass(schema_version=schema_version))

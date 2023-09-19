@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING, Any, Optional, Tuple
 
 from ..exception import MissingOptionalDependencyException
 from ..schema._res import BOM_XML as _S_BOM
-from . import ValidationError, _BaseValidator
+from . import BaseValidator, ValidationError, Validator
 
 if TYPE_CHECKING:
     from ..schema import SchemaVersion
@@ -36,15 +36,11 @@ except ImportError as err:
     ), err
 
 
-class _BaseXmlValidator(_BaseValidator, ABC):
+class _BaseXmlValidator(BaseValidator, ABC):
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         # this is the def that is used for generating the documentation
         super().__init__(schema_version)
-
-    def validate_str(self, data: str) -> Optional[ValidationError]:
-        """Validate a string according to the schema version."""
-        # this is the def that is used for generating the documentation
 
     if _missing_deps_error:
         __MDERROR = _missing_deps_error
@@ -80,7 +76,7 @@ class _BaseXmlValidator(_BaseValidator, ABC):
             return self.__validator
 
 
-class XmlValidator(_BaseXmlValidator):
+class XmlValidator(_BaseXmlValidator, Validator):
     """Validator for CycloneDX documents in XML format."""
 
     @property

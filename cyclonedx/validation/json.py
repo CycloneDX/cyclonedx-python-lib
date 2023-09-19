@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 from ..exception import MissingOptionalDependencyException
 from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
-from . import ValidationError, _BaseValidator
+from . import BaseValidator, ValidationError, Validator
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
@@ -43,15 +43,11 @@ except ImportError as err:
     ), err
 
 
-class _BaseJsonValidator(_BaseValidator, ABC):
+class _BaseJsonValidator(BaseValidator, ABC):
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         # this is the def that is used for generating the documentation
         super().__init__(schema_version)
-
-    def validate_str(self, data: str) -> Optional[ValidationError]:
-        """Validate a string according to the schema version."""
-        # this is the def that is used for generating the documentation
 
     if _missing_deps_error:
         __MDERROR = _missing_deps_error
@@ -97,7 +93,7 @@ class _BaseJsonValidator(_BaseValidator, ABC):
                 ])
 
 
-class JsonValidator(_BaseJsonValidator):
+class JsonValidator(_BaseJsonValidator, Validator):
     """Validator for CycloneDX documents in JSON format."""
 
     @property
@@ -105,7 +101,7 @@ class JsonValidator(_BaseJsonValidator):
         return _S_BOM.get(self.schema_version)
 
 
-class JsonStrictValidator(_BaseJsonValidator):
+class JsonStrictValidator(_BaseJsonValidator, Validator):
     """Strict validator for CycloneDX documents in JSON format.
 
     In contrast to :class:`~JsonValidator`,
