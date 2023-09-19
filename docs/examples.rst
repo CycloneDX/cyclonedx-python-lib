@@ -15,9 +15,9 @@
 Examples
 ========
 
-Build & Serialize
------------------
+Complex
+-------
 
-.. literalinclude:: ../examples/build_and_serialize.py
+.. literalinclude:: ../examples/complex.py
   :language: python
   :linenos:

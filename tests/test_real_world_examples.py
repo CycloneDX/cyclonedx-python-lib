@@ -17,13 +17,17 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import unittest
 from datetime import datetime
-from os.path import dirname, join
+from os.path import join
 from typing import cast
 from unittest.mock import patch
 from xml.etree import ElementTree
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import SchemaVersion
+
+from . import TESTDATA_DIRECTORY
+
+RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
 
 
 def fixed_date_time() -> datetime:
@@ -40,6 +44,6 @@ class TestDeserializeeRealWorldExamples(unittest.TestCase):
         )
 
     def _attempt_load_example(self, schema_version: SchemaVersion, fixture: str) -> None:
-        with open(join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
+        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as input_xml:
             xml = input_xml.read()
             cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))

@@ -31,15 +31,18 @@ release = '5.0.0-alpha.1'
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.viewcode",
+    # "sphinx.ext.viewcode",
     "autoapi.extension",
     "sphinx_rtd_theme",
     "m2r2"
 ]
 
+
 # Document Python Code
 autoapi_type = 'python'
 autoapi_dirs = ['../cyclonedx']
+# see https://sphinx-autoapi.readthedocs.io/en/latest/reference/config.html#confval-autoapi_options
+autoapi_options = ['show-module-summary', 'members', 'undoc-members', 'inherited-members', 'show-inheritance']
 
 source_suffix = ['.rst', '.md']
 

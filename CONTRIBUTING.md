@@ -12,7 +12,7 @@ This project uses [poetry]. Have it installed and setup first.
 To install dev-dependencies and tools:
 
 ```shell
-poetry install
+poetry install --all-extras
 ```
 
 ## Code style
@@ -23,7 +23,7 @@ Get it all applied via:
 
 ```shell
 poetry run isort .
-poetry run autopep8 -ir cyclonedx/ tests/ typings/
+poetry run autopep8 -ir cyclonedx/ tests/ typings/ examples/
 ```
 
 ## Documentation

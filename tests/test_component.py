@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from os.path import dirname, join
+from os.path import join
 from unittest import TestCase
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -26,9 +26,10 @@ from packageurl import PackageURL
 from cyclonedx.model import sha1sum
 from cyclonedx.model.component import Component
 
+from . import TESTDATA_DIRECTORY
 from .data import get_component_setuptools_simple
 
-FIXTURES_DIRECTORY = join('fixtures', 'xml', '1.4')
+RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml', '1.4')
 
 
 class TestComponent(TestCase):
@@ -67,7 +68,7 @@ class TestComponent(TestCase):
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
 
     def test_from_file_with_path_for_bom(self) -> None:
-        test_file = join(dirname(__file__), FIXTURES_DIRECTORY, 'bom_setuptools.xml')
+        test_file = join(RELEVANT_TESTDATA_DIRECTORY, 'bom_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
         sha1_hash: str = sha1sum(filename=test_file)
         expected_version = '0.0.0-{}'.format(sha1_hash[0:12])
