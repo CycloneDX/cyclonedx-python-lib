@@ -24,13 +24,7 @@ from . import MissingOptionalDependencyException, ValidationError, _BaseValidato
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
-    from lxml.etree import (  # type: ignore[import]
-        DocumentInvalid,
-        XMLParser,
-        XMLSchema,
-        fromstring as xml_fromstring,
-        parse as xml_parse,
-    )
+    from lxml.etree import XMLParser, XMLSchema, fromstring as xml_fromstring  # type: ignore[import]
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'

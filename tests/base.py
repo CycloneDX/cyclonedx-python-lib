@@ -17,7 +17,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import io
 import json
 import xml.etree.ElementTree
 from datetime import datetime, timezone
