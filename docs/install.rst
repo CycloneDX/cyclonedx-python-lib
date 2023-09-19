@@ -29,12 +29,12 @@ Install from `pypi.org`_ as you would any other Python module using your preferr
 Extras
 ------
 
-The following extras are available when installing the package:
+The following extras are available when installing this package:
 
 `json-validation`
     Install the optional dependencies needed for JSON validation.
 `xml-validation`
-    Install the optional dependencies needed for JSON validation.
+    Install the optional dependencies needed for XML validation.
 `validation`
     Install the optional dependencies needed for the validations above.
 

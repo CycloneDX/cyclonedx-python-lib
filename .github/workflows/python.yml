@@ -171,9 +171,16 @@ jobs:
           coverage-reports: ${{ env.REPORTS_DIR }}/coverage.*
 
   examples:
-    name: Examples
+    name: Examples E${{ matrix.install-extras }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        install-extras:
+          - '' # none
+          - json-validation
+          - xml-validation
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
@@ -194,7 +201,7 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install package and prod dependencies
-        run: poetry install --only=main -vvv
+        run: poetry install --only=main --extras='${{ matrix.install-extras }}' -vvv
       - name: run all examples
         run: >
           find examples -type f -name '*.py' -print0
