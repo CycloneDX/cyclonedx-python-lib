@@ -44,6 +44,7 @@ class Validator(Protocol):
 
     def validate_str(self, data: str) -> Optional[ValidationError]:
         """Validate a string
+
         :param data: the data string to validate
         :return: validation error
         :retval None: if `data` is valid
