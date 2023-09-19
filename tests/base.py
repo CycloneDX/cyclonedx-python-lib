@@ -45,22 +45,19 @@ single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 class BaseJsonTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_json: str, schema_version: SchemaVersion) -> None:
-        if sys.version_info >= (3, 7):
-            schema_fn = os.path.join(
-                CDX_SCHEMA_DIRECTORY,
-                f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.schema.json'
-            )
-            with open(schema_fn) as schema_fd:
-                schema_doc = json.load(schema_fd)
+        schema_fn = os.path.join(
+            CDX_SCHEMA_DIRECTORY,
+            f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.schema.json'
+        )
+        with open(schema_fn) as schema_fd:
+            schema_doc = json.load(schema_fd)
 
-            try:
-                json_validate(instance=json.loads(bom_json), schema=schema_doc)
-            except ValidationError as e:
-                self.assertTrue(False, f'Failed to validate SBOM against JSON schema: {str(e)}')
+        try:
+            json_validate(instance=json.loads(bom_json), schema=schema_doc)
+        except ValidationError as e:
+            self.assertTrue(False, f'Failed to validate SBOM against JSON schema: {str(e)}')
 
-            self.assertTrue(True)
-        else:
-            self.assertTrue(True, 'JSON Schema Validation is not possible in Python < 3.7')
+        self.assertTrue(True)
 
     @staticmethod
     def _sort_json_dict(item: object) -> Any:

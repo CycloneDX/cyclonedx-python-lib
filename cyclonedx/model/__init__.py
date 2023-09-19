@@ -129,7 +129,7 @@ class DataClassification:
         self.flow = flow
         self.classification = classification
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def flow(self) -> DataFlow:
         """
@@ -153,7 +153,7 @@ class DataClassification:
     def flow(self, flow: DataFlow) -> None:
         self._flow = flow
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def classification(self) -> str:
         """
@@ -207,7 +207,7 @@ class AttachedText:
         self.encoding = encoding
         self.content = content
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     @serializable.xml_name('content-type')
     def content_type(self) -> str:
@@ -223,7 +223,7 @@ class AttachedText:
     def content_type(self, content_type: str) -> None:
         self._content_type = content_type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def encoding(self) -> Optional[Encoding]:
         """
@@ -238,7 +238,7 @@ class AttachedText:
     def encoding(self, encoding: Optional[Encoding]) -> None:
         self._encoding = encoding
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def content(self) -> str:
         """
@@ -347,7 +347,7 @@ class HashType:
         self.alg = alg
         self.content = content
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def alg(self) -> HashAlgorithm:
         """
@@ -362,7 +362,7 @@ class HashType:
     def alg(self, alg: HashAlgorithm) -> None:
         self._alg = alg
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def content(self) -> str:
         """
@@ -442,7 +442,7 @@ class XsUri(serializable.helpers.BaseHelper):
             )
         self._uri = uri
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('.')
     @serializable.xml_name('.')
     def uri(self) -> str:
@@ -499,7 +499,7 @@ class ExternalReference:
         self.type = type
         self.hashes = hashes or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def url(self) -> XsUri:
         """
@@ -528,7 +528,7 @@ class ExternalReference:
     def comment(self, comment: Optional[str]) -> None:
         self._comment = comment
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def type(self) -> ExternalReferenceType:
         """
@@ -546,7 +546,7 @@ class ExternalReference:
     def type(self, type: ExternalReferenceType) -> None:
         self._type = type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
@@ -775,7 +775,7 @@ class Property:
         self.name = name
         self.value = value
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def name(self) -> str:
         """
@@ -792,7 +792,7 @@ class Property:
     def name(self, name: str) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def value(self) -> str:
         """
@@ -842,7 +842,7 @@ class NoteText:
         self.content_type = content_type or NoteText.DEFAULT_CONTENT_TYPE
         self.encoding = encoding
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def content(self) -> str:
         """
@@ -857,7 +857,7 @@ class NoteText:
     def content(self, content: str) -> None:
         self._content = content
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     @serializable.xml_name('content-type')
     def content_type(self) -> Optional[str]:
@@ -875,7 +875,7 @@ class NoteText:
     def content_type(self, content_type: str) -> None:
         self._content_type = content_type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def encoding(self) -> Optional[Encoding]:
         """
@@ -940,7 +940,7 @@ class Note:
     def text(self, text: NoteText) -> None:
         self._text = text
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def locale(self) -> Optional[str]:
         """
@@ -1003,7 +1003,7 @@ class OrganizationalContact:
         self.email = email
         self.phone = phone
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
@@ -1018,7 +1018,7 @@ class OrganizationalContact:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def email(self) -> Optional[str]:
         """
@@ -1033,7 +1033,7 @@ class OrganizationalContact:
     def email(self, email: Optional[str]) -> None:
         self._email = email
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def phone(self) -> Optional[str]:
         """
@@ -1086,7 +1086,7 @@ class OrganizationalEntity:
         self.urls = urls or []  # type: ignore
         self.contacts = contacts or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
@@ -1101,7 +1101,7 @@ class OrganizationalEntity:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('url')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'url')
     @serializable.xml_sequence(2)
@@ -1118,7 +1118,7 @@ class OrganizationalEntity:
     def urls(self, urls: Iterable[XsUri]) -> None:
         self._urls = SortedSet(urls)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('contact')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'contact')
     @serializable.xml_sequence(3)
@@ -1172,7 +1172,7 @@ class Tool:
         self.hashes = hashes or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def vendor(self) -> Optional[str]:
         """
@@ -1187,7 +1187,7 @@ class Tool:
     def vendor(self, vendor: Optional[str]) -> None:
         self._vendor = vendor
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
@@ -1202,7 +1202,7 @@ class Tool:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def version(self) -> Optional[str]:
         """
@@ -1217,7 +1217,7 @@ class Tool:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     @serializable.xml_sequence(4)
     def hashes(self) -> "SortedSet[HashType]":
@@ -1233,7 +1233,7 @@ class Tool:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
@@ -1289,7 +1289,7 @@ class IdentifiableAction:
         self.name = name
         self.email = email
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
     def timestamp(self) -> Optional[datetime]:
         """
@@ -1362,7 +1362,7 @@ class Copyright:
     def __init__(self, *, text: str) -> None:
         self.text = text
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def text(self) -> str:
         """

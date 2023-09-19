@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e flake8 -s false
+        run: poetry run tox run -e flake8 -s false
 
   static-code-analysis:
     name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
@@ -62,7 +62,7 @@ jobs:
             toxenv-factor: 'locked'
           - # test with the lowest dependencies
             os: ubuntu-latest
-            python-version: '3.7'
+            python-version: '3.8'
             toxenv-factor: 'lowest'
     steps:
       - name: Checkout
@@ -82,7 +82,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e mypy-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run -e mypy-${{ matrix.toxenv-factor }} -s false
 
   build-and-test:
     name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factor }})
@@ -96,13 +96,12 @@ jobs:
           - "3.11" # highest supported
           - "3.10"
           - "3.9"
-          - "3.8"
-          - "3.7"  # lowest supported
+          - "3.8"  # lowest supported
         toxenv-factor: ['locked']
         include:
           - # test with the lowest dependencies
             os: ubuntu-latest
-            python-version: '3.7'
+            python-version: '3.8'
             toxenv-factor: 'lowest'
     steps:
       - name: Disabled Git auto EOL CRLF transforms
@@ -135,7 +134,7 @@ jobs:
       - name: Ensure build successful
         run: poetry build
       - name: Run tox
-        run: poetry run tox -e py-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run -e py-${{ matrix.toxenv-factor }} -s false
       - name: Generate coverage reports
         shell: bash
         run: |
@@ -186,7 +185,7 @@ jobs:
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: '>=3.7 <=3.11'  # supported version range
+          python-version: '>=3.8 <=3.11'  # supported version range
       - name: Validate Python Environment
         shell: python
         run: |

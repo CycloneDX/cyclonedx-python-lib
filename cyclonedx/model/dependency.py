@@ -60,7 +60,7 @@ class Dependency:
         self.ref = ref
         self.dependencies = SortedSet(dependencies or [])
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(BomRefHelper)
     @serializable.xml_attribute()
     def ref(self) -> BomRef:
@@ -70,7 +70,7 @@ class Dependency:
     def ref(self, ref: BomRef) -> None:
         self._ref = ref
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('dependsOn')
     @serializable.type_mapping(DependencyDependencies)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'dependency')

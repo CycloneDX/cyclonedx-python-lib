@@ -53,7 +53,7 @@ class ReleaseNotes:
         self.notes = notes or []  # type: ignore
         self.properties = properties or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def type(self) -> str:
         """
@@ -79,7 +79,7 @@ class ReleaseNotes:
     def type(self, type: str) -> None:
         self._type = type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def title(self) -> Optional[str]:
         """
@@ -91,7 +91,7 @@ class ReleaseNotes:
     def title(self, title: Optional[str]) -> None:
         self._title = title
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def featured_image(self) -> Optional[XsUri]:
         """
@@ -103,7 +103,7 @@ class ReleaseNotes:
     def featured_image(self, featured_image: Optional[XsUri]) -> None:
         self._featured_image = featured_image
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(4)
     def social_image(self) -> Optional[XsUri]:
         """
@@ -115,7 +115,7 @@ class ReleaseNotes:
     def social_image(self, social_image: Optional[XsUri]) -> None:
         self._social_image = social_image
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(5)
     def description(self) -> Optional[str]:
         """
@@ -127,7 +127,7 @@ class ReleaseNotes:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
     @serializable.xml_sequence(6)
     def timestamp(self) -> Optional[datetime]:
@@ -140,7 +140,7 @@ class ReleaseNotes:
     def timestamp(self, timestamp: Optional[datetime]) -> None:
         self._timestamp = timestamp
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'alias')
     @serializable.xml_sequence(7)
     def aliases(self) -> "SortedSet[str]":
@@ -157,7 +157,7 @@ class ReleaseNotes:
     def aliases(self, aliases: Iterable[str]) -> None:
         self._aliases = SortedSet(aliases)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
     @serializable.xml_sequence(8)
     def tags(self) -> "SortedSet[str]":
@@ -173,7 +173,7 @@ class ReleaseNotes:
     def tags(self, tags: Iterable[str]) -> None:
         self._tags = SortedSet(tags)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'issue')
     @serializable.xml_sequence(9)
     def resolves(self) -> "SortedSet[IssueType]":
@@ -189,7 +189,7 @@ class ReleaseNotes:
     def resolves(self, resolves: Iterable[IssueType]) -> None:
         self._resolves = SortedSet(resolves)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'note')
     @serializable.xml_sequence(10)
     def notes(self) -> "SortedSet[Note]":
@@ -206,7 +206,7 @@ class ReleaseNotes:
     def notes(self, notes: Iterable[Note]) -> None:
         self._notes = SortedSet(notes)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(11)
     def properties(self) -> "SortedSet[Property]":
