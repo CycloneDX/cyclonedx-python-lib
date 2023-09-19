@@ -27,8 +27,8 @@ _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportEr
 try:
     from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore[import]
     from jsonschema.validators import Draft7Validator  # type: ignore[import]
-    from referencing import Registry  # type: ignore[import]
-    from referencing.jsonschema import DRAFT7  # type: ignore[import]
+    from referencing import Registry
+    from referencing.jsonschema import DRAFT7
 
     if TYPE_CHECKING:
         from jsonschema.protocols import Validator as JsonSchemaValidator  # type: ignore[import]
