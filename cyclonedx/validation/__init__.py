@@ -69,15 +69,7 @@ class BaseValidator(ABC):
 
 def get_instance(format: 'OutputFormat',
                  schema_version: 'SchemaVersion') -> Validator:
-    """
-    Helper method to quickly get the correct validation class/validator.
-
-    Pass in your BOM and optionally an output format and schema version.
-
-    :param format: OutputFormat
-    :param schema_version: SchemaVersion
-    :return:
-    """
+    """Helper method to quickly get the correct validation class/validator."""
     import importlib
 
     try:
