@@ -19,7 +19,7 @@
 
 import json
 from datetime import datetime
-from os.path import dirname, join
+from os.path import join
 from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
@@ -53,6 +53,10 @@ from tests.data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
+
+from . import TESTDATA_DIRECTORY
+
+RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'json')
 
 
 def fixed_date_time() -> datetime:
@@ -417,8 +421,7 @@ class TestOutputJson(BaseJsonTestCase):
             outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
             bom = cast(Bom, Bom.from_json(data=json.loads(outputter.output_as_string())))
 
-        with open(
-                join(dirname(__file__), f'fixtures/json/{schema_version.to_version()}/{fixture}')) as input_json:
+        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as input_json:
             deserialized_bom = cast(Bom, Bom.from_json(data=json.loads(input_json.read())))
 
             self.assertEqual(bom.metadata, deserialized_bom.metadata)

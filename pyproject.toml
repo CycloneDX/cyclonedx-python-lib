@@ -7,7 +7,10 @@ name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
 version = "5.0.0-alpha.1"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
-authors = ["Paul Horton <phorton@sonatype.com>"]
+authors = [
+  "Paul Horton <phorton@sonatype.com>",
+  "Jan Kowalleck <jan.kowalleck@gmail.com>",
+]
 maintainers = [
   "Paul Horton <phorton@sonatype.com>",
   "Jan Kowalleck <jan.kowalleck@gmail.com>",
@@ -23,6 +26,10 @@ packages = [
 include = [
   "README.md", "LICENSE", "NOTICE",
   { path = "tests", format = "sdist" },
+]
+exclude = [
+  # exclude dotfiles
+  "**/.*"
 ]
 classifiers = [
   # Trove classifiers - https://packaging.python.org/specifications/core-metadata/#metadata-classifier
@@ -56,6 +63,13 @@ packageurl-python = ">= 0.11"
 py-serializable = "^0.11.1"
 sortedcontainers = "^2.4.0"
 license-expression = "^30"
+jsonschema = { version = "^4.18", extras=['format'], optional=true, python="^3.8" }
+lxml = { version="^4", optional=true }
+
+[tool.poetry.extras]
+validation = ["jsonschema", "lxml"]
+json-validation = ["jsonschema"]
+xml-validation = ["lxml"]
 
 [tool.poetry.dev-dependencies]
 ddt = "1.6.0"
@@ -66,9 +80,7 @@ flake8-bugbear = { version="23.9.16", python=">=3.8.1" }
 flake8-isort = "6.1.0 "
 isort = "5.12.0"
 autopep8 = "2.0.4"
-jsonschema = "4.17.3"
 mypy = "1.5.1"
-lxml = "4.9.3"
 tox = "4.11.3"
 xmldiff = "2.6.3"
 

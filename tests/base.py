@@ -17,10 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import io
 import json
-import os
-import sys
 import xml.etree.ElementTree
 from datetime import datetime, timezone
 from typing import Any
@@ -28,16 +25,13 @@ from unittest import TestCase
 from uuid import uuid4
 
 from lxml import etree
-from lxml.etree import DocumentInvalid
 from xmldiff import main
 from xmldiff.actions import MoveNode
 
+from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.output import SchemaVersion
-
-if sys.version_info >= (3, 7):
-    from jsonschema import ValidationError, validate as json_validate
-
-from . import CDX_SCHEMA_DIRECTORY
+from cyclonedx.validation.json import JsonValidator
+from cyclonedx.validation.xml import XmlValidator
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
@@ -45,19 +39,12 @@ single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 class BaseJsonTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_json: str, schema_version: SchemaVersion) -> None:
-        schema_fn = os.path.join(
-            CDX_SCHEMA_DIRECTORY,
-            f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.schema.json'
-        )
-        with open(schema_fn) as schema_fd:
-            schema_doc = json.load(schema_fd)
-
         try:
-            json_validate(instance=json.loads(bom_json), schema=schema_doc)
-        except ValidationError as e:
-            self.assertTrue(False, f'Failed to validate SBOM against JSON schema: {str(e)}')
-
-        self.assertTrue(True)
+            validation_error = JsonValidator(schema_version).validate_str(bom_json)
+        except MissingOptionalDependencyException:
+            return  # some deps are missing - skip the validation
+        self.assertIsNone(validation_error,
+                          f'Failed to validate SBOM against JSON schema: {str(validation_error)}')
 
     @staticmethod
     def _sort_json_dict(item: object) -> Any:
@@ -98,21 +85,12 @@ class BaseJsonTestCase(TestCase):
 class BaseXmlTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_xml: str, schema_version: SchemaVersion) -> None:
-        xsd_fn = os.path.join(CDX_SCHEMA_DIRECTORY, f'bom-{schema_version.name.replace("_", ".").replace("V", "")}.xsd')
-        with open(xsd_fn) as xsd_fd:
-            xsd_doc = etree.parse(xsd_fd)
-
-        xml_schema = etree.XMLSchema(xsd_doc)
-        schema_validates = False
         try:
-            schema_validates = xml_schema.validate(etree.parse(io.BytesIO(bytes(bom_xml, 'ascii'))))
-        except DocumentInvalid as e:
-            print(f'Failed to validate SBOM against schema: {str(e)}')
-
-        if not schema_validates:
-            print(xml_schema.error_log.last_error)
-        self.assertTrue(schema_validates, f'Failed to validate Generated SBOM against XSD Schema:'
-                                          f'{bom_xml}')
+            validation_error = XmlValidator(schema_version).validate_str(bom_xml)
+        except MissingOptionalDependencyException:
+            return  # some deps are missing - skip the validation
+        self.assertIsNone(validation_error,
+                          f'Failed to validate Generated SBOM against XSD Schema: {str(validation_error)}')
 
     def assertEqualXml(self, a: str, b: str) -> None:
         diff_results = main.diff_texts(a, b, diff_options={'F': 0.5})

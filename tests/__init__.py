@@ -19,11 +19,7 @@
 
 from os import getenv, path
 
-import cyclonedx
-
-CDX_SCHEMA_DIRECTORY = path.join(path.dirname(cyclonedx.__file__), 'schema')
-
-FIXTURES_DIRECTORY = path.join(path.dirname(__file__), 'fixtures')
+TESTDATA_DIRECTORY = path.join(path.dirname(__file__), '_data')
 
 RECREATE_SNAPSHOTS = bool(getenv('CDX_TEST_RECREATE_SNAPSHOTS'))
 if RECREATE_SNAPSHOTS:

@@ -1,0 +1,6 @@
+# snapshots are vendored for offline use
+*.SNAPSHOT.*    linguist-vendored
+
+# specs are vendored for offline use
+*.xsd           linguist-vendored
+*.schema.json   linguist-vendored

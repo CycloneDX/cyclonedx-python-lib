@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from datetime import datetime
-from os.path import dirname, join
+from os.path import join
 from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
@@ -52,6 +52,10 @@ from tests.data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
+
+from . import TESTDATA_DIRECTORY
+
+RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
 
 
 def fixed_date_time() -> datetime:
@@ -687,7 +691,7 @@ class TestDeserializeXml(BaseXmlTestCase):
             outputter = get_instance(bom=bom, output_format=OutputFormat.XML, schema_version=schema_version)
             bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(outputter.output_as_string())))
 
-        with open(join(dirname(__file__), f'fixtures/xml/{schema_version.to_version()}/{fixture}')) as input_xml:
+        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as input_xml:
             xml = input_xml.read()
             deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
 
