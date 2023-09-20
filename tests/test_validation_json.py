@@ -28,24 +28,22 @@ from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator, JsonValidator
 
-from . import TESTDATA_DIRECTORY
+from . import SCHEMA_TESTDATA_DIRECTORY
 
-RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'schemaTestData')
-
-UNSUPPORTED_SCHEMA_VERSIONS = (SchemaVersion.V1_0, SchemaVersion.V1_1,)
+_UNSUPPORTED_SCHEMA_VERSIONS = (SchemaVersion.V1_0, SchemaVersion.V1_1,)
 
 
 def _dp(prefix: str) -> Generator:
     return (
-        (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.json'))
+        (sv, tf) for sv in SchemaVersion if sv not in _UNSUPPORTED_SCHEMA_VERSIONS
+        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.json'))
     )
 
 
 @ddt
 class TestJsonValidator(TestCase):
 
-    @data(*UNSUPPORTED_SCHEMA_VERSIONS)
+    @data(*_UNSUPPORTED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
         with self.assertRaisesRegex(ValueError, 'unsupported schema:'):
             JsonValidator(schema_version)
@@ -79,7 +77,7 @@ class TestJsonValidator(TestCase):
 @ddt
 class TestJsonStrictValidator(TestCase):
 
-    @data(*UNSUPPORTED_SCHEMA_VERSIONS)
+    @data(*_UNSUPPORTED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
         with self.assertRaisesRegex(ValueError, 'unsupported schema:'):
             JsonStrictValidator(schema_version)

@@ -1,2 +1,2 @@
-xml/*/*.xml     linguist-generated
-json/*/*.josn   linguist-generated
+xml/**  linguist-generated
+json/** linguist-generated

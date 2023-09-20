@@ -19,7 +19,11 @@
 
 from os import getenv, path
 
-TESTDATA_DIRECTORY = path.join(path.dirname(__file__), '_data')
+_TESTDATA_DIRECTORY = path.join(path.dirname(__file__), '_data')
+
+SCHEMA_TESTDATA_DIRECTORY = path.join(_TESTDATA_DIRECTORY, 'schemaTestData')
+OWN_DATA_DIRECTORY = path.join(_TESTDATA_DIRECTORY, 'own')
+SNAPSHOTS_DIRECTORY = path.join(_TESTDATA_DIRECTORY, 'snapshots')
 
 RECREATE_SNAPSHOTS = bool(getenv('CDX_TEST_RECREATE_SNAPSHOTS'))
 if RECREATE_SNAPSHOTS:

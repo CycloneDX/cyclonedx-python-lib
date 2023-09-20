@@ -28,24 +28,22 @@ from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
 
-from . import TESTDATA_DIRECTORY
+from . import SCHEMA_TESTDATA_DIRECTORY
 
-RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'schemaTestData')
-
-UNSUPPORTED_SCHEMA_VERSIONS = set()
+_UNSUPPORTED_SCHEMA_VERSIONS = set()
 
 
 def _dp(prefix: str) -> Generator:
     return (
-        (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.xml'))
+        (sv, tf) for sv in SchemaVersion if sv not in _UNSUPPORTED_SCHEMA_VERSIONS
+        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.xml'))
     )
 
 
 @ddt
 class TestXmlValidator(TestCase):
 
-    @data(*UNSUPPORTED_SCHEMA_VERSIONS)
+    @data(*_UNSUPPORTED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
         with self.assertRaisesRegex(ValueError, 'unsupported schema'):
             XmlValidator(schema_version)

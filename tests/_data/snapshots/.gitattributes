@@ -1,0 +1,4 @@
+# files in here are treated as binary, since they are compared byte-wise for equality in tests.
+*.bin       linguist-generated     binary
+*.xml.bin   linguist-language=XML  diff=xml
+*.json.bin  linguist-language=JSON diff=json

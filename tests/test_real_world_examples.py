@@ -18,16 +18,15 @@
 import unittest
 from datetime import datetime
 from os.path import join
-from typing import cast
+from json import loads as json_loads
 from unittest.mock import patch
 from xml.etree import ElementTree
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.schema import SchemaVersion
 
-from . import TESTDATA_DIRECTORY
+from . import OWN_DATA_DIRECTORY
 
-RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
+from ddt import ddt, data
 
 
 def fixed_date_time() -> datetime:
@@ -36,14 +35,17 @@ def fixed_date_time() -> datetime:
 
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
 @patch('cyclonedx.model.bom.get_now_utc', fixed_date_time)
+@ddt()
 class TestDeserializeeRealWorldExamples(unittest.TestCase):
 
-    def test_webgoat_6_1(self) -> None:
-        self._attempt_load_example(
-            schema_version=SchemaVersion.V1_4, fixture='webgoat-6.1.xml'
-        )
+    @data(
+        join(OWN_DATA_DIRECTORY, 'xml', '1.4', 'webgoat-6.1.xml'),
+    )
+    def test_can_load_xml(self, file: str) -> None:
+        with open(file) as f:
+            Bom.from_xml(data=ElementTree.fromstring(f.read()))
 
-    def _attempt_load_example(self, schema_version: SchemaVersion, fixture: str) -> None:
-        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as input_xml:
-            xml = input_xml.read()
-            cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
+    @data()
+    def test_can_load_json(self, file: str) -> None:
+        with open(file) as f:
+            Bom.from_json(data=json_loads(f.read()))
