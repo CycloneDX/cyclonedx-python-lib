@@ -22,7 +22,7 @@ and according to different versions of the CycloneDX schema standard.
 import importlib
 import os
 from abc import ABC, abstractmethod
-from typing import Iterable, Union, cast
+from typing import Iterable, Union
 
 from ..model.bom import Bom
 from ..model.component import Component
@@ -87,6 +87,9 @@ class BaseOutput(ABC):
         f_out.close()
 
 
+from typing import TYPE_CHECKING, Union
+
+
 def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
     """
@@ -99,10 +102,12 @@ def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
     :param schema_version: SchemaVersion
     :return:
     """
+    if TYPE_CHECKING:
+        from cyclonedx.output import xml as cdx_xml_module, json as cdx_json_module
     try:
-        module = importlib.import_module(f"cyclonedx.output.{output_format.value.lower()}")
-        output_klass = getattr(module, f"{output_format.value}{schema_version.value}")
-    except (ImportError, AttributeError) as e:
-        raise ValueError(f"Unknown format {output_format.value.lower()!r}: {e}") from None
-
-    return cast(BaseOutput, output_klass(bom=bom))
+        module: Union['cdx_xml_module', 'cdx_json_module'] = importlib.import_module(
+            f"cyclonedx.output.{output_format.name.lower()}")
+        output_klass = module.BY_SCHEMA_VERSIONS[schema_version]
+    except (ImportError, AttributeError, KeyError) as e:
+        raise ValueError(f"Unknown {output_format}/{schema_version}: {e}") from None
+    return output_klass(bom=bom)

@@ -113,3 +113,14 @@ class JsonV1Dot4(Json, SchemaVersion1Dot4):
 
     def _get_schema_uri(self) -> Optional[str]:
         return 'http://cyclonedx.org/schema/bom-1.4.schema.json'
+
+
+from typing import Dict, Type
+
+BY_SCHEMA_VERSIONS: Dict[SchemaVersion, Optional[Type[Json]]] = {
+    SchemaVersion.V1_4: JsonV1Dot4,
+    SchemaVersion.V1_3: JsonV1Dot3,
+    SchemaVersion.V1_2: JsonV1Dot2,
+    SchemaVersion.V1_1: None,
+    SchemaVersion.V1_0: None,
+}

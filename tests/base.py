@@ -40,13 +40,21 @@ from os.path import join
 
 
 class SnapshotCompareMixin(object):
+    def __getSnapshotFile(self, snapshot_name: str) -> str:
+        return join(SNAPSHOTS_DIRECTORY, f'{snapshot_name}.bin')
+
+    def writeSnapshot(self, snapshot_name: str, data: str):
+        with open(self.__getSnapshotFile(snapshot_name), 'w') as s:
+            s.write(data)
+
+    def readSnapshot(self, snapshot_name: str) -> str:
+        with open(self.__getSnapshotFile(snapshot_name), 'r') as s:
+            return s.read()
+
     def assertEqualSnapshot(self, actual: str, snapshot_name: str) -> None:
-        snapshot = join(SNAPSHOTS_DIRECTORY, f'{snapshot_name}.bin')
         if RECREATE_SNAPSHOTS:
-            with open(snapshot, 'w') as goal:
-                goal.write(actual)
-        with open(snapshot) as expected:
-            self.assertEqual(actual, expected.read())
+            self.writeSnapshot(snapshot_name, actual)
+        self.assertEqual(actual, self.readSnapshot(snapshot_name))
 
 
 class BaseJsonTestCase(TestCase):

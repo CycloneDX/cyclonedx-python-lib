@@ -70,10 +70,12 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return SchemaVersion.V1_0
 
 
-SCHEMA_VERSIONS = {
-    '1.0': SchemaVersion1Dot0,
-    '1.1': SchemaVersion1Dot1,
-    '1.2': SchemaVersion1Dot2,
-    '1.3': SchemaVersion1Dot3,
-    '1.4': SchemaVersion1Dot4
+from typing import Dict, Type
+
+SCHEMA_VERSIONS: Dict[SchemaVersion, Type[BaseSchemaVersion]] = {
+    SchemaVersion.V1_4: SchemaVersion1Dot4,
+    SchemaVersion.V1_3: SchemaVersion1Dot3,
+    SchemaVersion.V1_2: SchemaVersion1Dot2,
+    SchemaVersion.V1_1: SchemaVersion1Dot1,
+    SchemaVersion.V1_0: SchemaVersion1Dot0,
 }

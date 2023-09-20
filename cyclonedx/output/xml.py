@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Optional
+from typing import Optional, Dict, Type
 from xml.etree import ElementTree
 
 from ..exception.output import BomGenerationErrorException
@@ -97,3 +97,12 @@ class XmlV1Dot3(Xml, SchemaVersion1Dot3):
 
 class XmlV1Dot4(Xml, SchemaVersion1Dot4):
     pass
+
+
+BY_SCHEMA_VERSIONS: Dict[SchemaVersion, Optional[Type[Xml]]] = {
+    SchemaVersion.V1_4: XmlV1Dot4,
+    SchemaVersion.V1_3: XmlV1Dot3,
+    SchemaVersion.V1_2: XmlV1Dot2,
+    SchemaVersion.V1_1: XmlV1Dot1,
+    SchemaVersion.V1_0: XmlV1Dot2,
+}

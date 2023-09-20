@@ -25,8 +25,8 @@ from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from .base import BaseJsonTestCase
-from .data import (
+from tests.base import BaseJsonTestCase
+from tests.data import (
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,

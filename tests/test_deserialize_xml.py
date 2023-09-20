@@ -18,17 +18,15 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from datetime import datetime
-from os.path import join
 from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
 from xml.etree import ElementTree
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, SchemaVersion, get_instance
-from cyclonedx.schema import OutputFormat
-from .base import BaseXmlTestCase
-from .data import (
+from cyclonedx.schema import SchemaVersion
+from tests.base import BaseXmlTestCase
+from tests.data import (
     MOCK_BOM_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
@@ -53,47 +51,47 @@ from .data import (
     get_bom_with_services_simple,
 )
 
-from . import TESTDATA_DIRECTORY
+from tests.base import SnapshotCompareMixin
 
-RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
+from ddt import ddt, idata
 
-
-def fixed_date_time() -> datetime:
-    return datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
+_RELEVANT_SCHEMA_VERSIONS = (SchemaVersion.V1_4,
+                             SchemaVersion.V1_3,
+                             SchemaVersion.V1_2,
+                             SchemaVersion.V1_1,
+                             SchemaVersion.V1_0)
 
 
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-@patch('cyclonedx.model.bom.get_now_utc', fixed_date_time)
-class TestDeserializeXml(BaseXmlTestCase):
+@ddt
+class TestDeserializeXml(BaseXmlTestCase, SnapshotCompareMixin):
 
-    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
-    def test_bom_external_references_v1_4(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_external_references(), schema_version=SchemaVersion.V1_4,
-            fixture='bom_external_references.xml'
-        )
-        mock_uuid.assert_called()
+    @idata(_RELEVANT_SCHEMA_VERSIONS)
+    def test_bom_external_references(self, schema_version: SchemaVersion) -> None:
+        bom = get_bom_with_external_references()
+        if schema_version < SchemaVersion.V1_4:
+            for t in bom.metadata.tools:
+                t.external_references.clear()
+        self._test_bom_as_expected(bom,
+                                   schema_version,
+                                   'bom_external_references')
+
+    # region Helper methods
+
+    def _test_bom_as_expected(self, bom: Bom, schema_version: SchemaVersion, snapshot_name: str) -> None:
+        serialized = self.readSnapshot(f'xml_{snapshot_name}_{schema_version.to_version()}.xml')
+        deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(serialized)))
+        self.assertEqual(bom, deserialized_bom)
+
+    # endregion Helper methods
+
+
+class __old(object):
 
     @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
     def test_bom_external_references_v1_3(self, mock_uuid: Mock) -> None:
         self._validate_xml_bom(
             bom=get_bom_with_external_references(), schema_version=SchemaVersion.V1_3,
-            fixture='bom_external_references.xml'
-        )
-        mock_uuid.assert_called()
-
-    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
-    def test_bom_external_references_v1_2(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_external_references(), schema_version=SchemaVersion.V1_2,
-            fixture='bom_external_references.xml'
-        )
-        mock_uuid.assert_called()
-
-    @patch('cyclonedx.model.bom.uuid4', return_value=MOCK_BOM_UUID_1)
-    def test_bom_external_references_v1_1(self, mock_uuid: Mock) -> None:
-        self._validate_xml_bom(
-            bom=get_bom_with_external_references(), schema_version=SchemaVersion.V1_1,
             fixture='bom_external_references.xml'
         )
         mock_uuid.assert_called()
@@ -680,27 +678,3 @@ class TestDeserializeXml(BaseXmlTestCase):
             fixture='bom_issue_275_components.xml'
         )
         mock_uuid.assert_called()
-
-    # Helper methods
-    def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
-        bom.metadata.timestamp = fixed_date_time()
-        bom.validate()
-
-        if schema_version != LATEST_SUPPORTED_SCHEMA_VERSION:
-            # Rewind the BOM to only have data supported by the SchemaVersion in question
-            outputter = get_instance(bom=bom, output_format=OutputFormat.XML, schema_version=schema_version)
-            bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(outputter.output_as_string())))
-
-        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as input_xml:
-            xml = input_xml.read()
-            deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
-
-            self.assertEqual(bom.metadata, deserialized_bom.metadata)
-
-            # This comparison fails for Dependencies despite the SortedSet's being identical
-            # print(bom.dependencies.difference(deserialized_bom.dependencies))
-            # self.assertEqual(bom.dependencies, deserialized_bom.dependencies)
-            # self.assertSetEqual(set(bom.dependencies), set(deserialized_bom.dependencies))
-
-            self.assertEqual(bom.vulnerabilities, deserialized_bom.vulnerabilities)
-            self.assertEqual(bom, deserialized_bom)

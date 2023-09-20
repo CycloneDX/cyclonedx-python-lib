@@ -27,7 +27,7 @@ from cyclonedx.model import sha1sum
 from cyclonedx.model.component import Component
 
 from . import TESTDATA_DIRECTORY
-from .data import get_component_setuptools_simple
+from tests.data import get_component_setuptools_simple
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml', '1.4')
 

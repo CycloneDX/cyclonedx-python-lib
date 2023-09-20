@@ -44,7 +44,7 @@ from cyclonedx.model.component import (
     Pedigree,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
-from .data import (
+from tests.data import (
     MOCK_UUID_7,
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
