@@ -35,6 +35,19 @@ from cyclonedx.validation.xml import XmlValidator
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
+from . import SNAPSHOTS_DIRECTORY, RECREATE_SNAPSHOTS
+from os.path import join
+
+
+class SnapshotCompareMixin(object):
+    def assertEqualSnapshot(self, actual: str, snapshot_name: str) -> None:
+        snapshot = join(SNAPSHOTS_DIRECTORY, f'{snapshot_name}.bin')
+        if RECREATE_SNAPSHOTS:
+            with open(snapshot, 'w') as goal:
+                goal.write(actual)
+        with open(snapshot) as expected:
+            self.assertEqual(actual, expected.read())
+
 
 class BaseJsonTestCase(TestCase):
 

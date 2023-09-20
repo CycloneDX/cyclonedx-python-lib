@@ -27,8 +27,8 @@ from xml.etree import ElementTree
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, SchemaVersion, get_instance
 from cyclonedx.schema import OutputFormat
-from tests.base import BaseXmlTestCase
-from tests.data import (
+from .base import BaseXmlTestCase
+from .data import (
     MOCK_BOM_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,

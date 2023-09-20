@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><ns0:bom xmlns:ns0="http://cyclonedx.org/schema/bom/1.0" version="1"><ns0:components><ns0:component type="library"><ns0:name>setuptools</ns0:name><ns0:version>50.3.2</ns0:version><ns0:purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</ns0:purl><ns0:modified>false</ns0:modified></ns0:component></ns0:components></ns0:bom>

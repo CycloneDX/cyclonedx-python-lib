@@ -21,7 +21,7 @@ from unittest import TestCase
 
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.dependency import Dependency
-from tests.data import reorder
+from .data import reorder
 
 
 class TestDependency(TestCase):

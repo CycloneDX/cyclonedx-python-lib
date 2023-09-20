@@ -26,8 +26,8 @@ from uuid import UUID
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, OutputFormat, SchemaVersion, get_instance
-from tests.base import BaseJsonTestCase
-from tests.data import (
+from .base import BaseJsonTestCase
+from .data import (
     MOCK_BOM_UUID_1,
     MOCK_BOM_UUID_2,
     MOCK_UUID_1,
