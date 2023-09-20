@@ -57,7 +57,7 @@ print(serialized_json)
 try:
     validation_errors = JsonValidator(SchemaVersion.V1_4).validate_str(serialized_json)
     if validation_errors:
-        print('', 'JSON ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+        print('JSON valid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
     print('JSON valid')
 except MissingOptionalDependencyException as error:
@@ -68,8 +68,8 @@ print(serialized_xml)
 try:
     validation_errors = XmlValidator(SchemaVersion.V1_4).validate_str(serialized_xml)
     if validation_errors:
-        print('', 'JSON ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+        print('XML invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
-    print('JSON valid')
+    print('XML valid')
 except MissingOptionalDependencyException as error:
     print('XML-validation was skipped due to', error)
