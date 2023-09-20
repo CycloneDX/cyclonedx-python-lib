@@ -11,4 +11,5 @@ As a shortcut just run:
 CDX_TEST_RECREATE_SNAPSHOTS=1 poetry run tox -e py
 ```
 
-The files will be written as is, which might not be human-readable. feel free to reformat the files manually.
+The files will be written as is, which might not be human-readable. 
+Do not reformat the files manually, they are compared as is.
