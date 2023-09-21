@@ -20,8 +20,7 @@
 from unittest import TestCase
 
 from cyclonedx.model.bom_ref import BomRef
-
-from .data import reorder
+from tests.data import reorder
 
 
 class TestBomRef(TestCase):

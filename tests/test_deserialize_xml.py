@@ -27,6 +27,7 @@ from xml.etree import ElementTree
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, SchemaVersion, get_instance
 from cyclonedx.schema import OutputFormat
+from tests import TESTDATA_DIRECTORY
 from tests.base import BaseXmlTestCase
 from tests.data import (
     MOCK_BOM_UUID_1,
@@ -52,8 +53,6 @@ from tests.data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-
-from . import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
 

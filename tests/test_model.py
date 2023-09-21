@@ -47,8 +47,7 @@ from cyclonedx.model import (
     XsUri,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-
-from .data import reorder
+from tests.data import reorder
 
 
 class DummyStringEnum(str, Enum):

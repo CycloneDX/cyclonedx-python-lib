@@ -24,8 +24,7 @@ from xml.etree import ElementTree
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import SchemaVersion
-
-from . import TESTDATA_DIRECTORY
+from tests import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
 

@@ -32,8 +32,7 @@ from cyclonedx.model import (
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
-
-from .data import (
+from tests.data import (
     get_bom_for_issue_275_components,
     get_bom_with_component_setuptools_with_vulnerability,
     get_component_setuptools_simple,
