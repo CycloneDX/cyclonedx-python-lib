@@ -19,10 +19,10 @@ Set of classes and methods for outputting our libraries internal Bom model to Cy
 and according to different versions of the CycloneDX schema standard.
 """
 
-import importlib
 import os
 from abc import ABC, abstractmethod
-from typing import Iterable, Union
+from importlib import import_module
+from typing import Iterable, Type, Union
 
 from ..model.bom import Bom
 from ..model.component import Component
@@ -87,9 +87,6 @@ class BaseOutput(ABC):
         f_out.close()
 
 
-from typing import TYPE_CHECKING, Union
-
-
 def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
     """
@@ -102,12 +99,9 @@ def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
     :param schema_version: SchemaVersion
     :return:
     """
-    if TYPE_CHECKING:
-        from cyclonedx.output import xml as cdx_xml_module, json as cdx_json_module
     try:
-        module: Union['cdx_xml_module', 'cdx_json_module'] = importlib.import_module(
-            f"cyclonedx.output.{output_format.name.lower()}")
-        output_klass = module.BY_SCHEMA_VERSIONS[schema_version]
+        module = import_module(output_format.name.lower(), 'cyclonedx.output')
+        output_klass: Type[BaseOutput] = module.BY_SCHEMA_VERSIONS[schema_version]
     except (ImportError, AttributeError, KeyError) as e:
         raise ValueError(f"Unknown {output_format}/{schema_version}: {e}") from None
     return output_klass(bom=bom)

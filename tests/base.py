@@ -20,6 +20,7 @@
 import json
 import xml.etree.ElementTree
 from datetime import datetime, timezone
+from os.path import join
 from typing import Any
 from unittest import TestCase
 from uuid import uuid4
@@ -33,10 +34,9 @@ from cyclonedx.output import SchemaVersion
 from cyclonedx.validation.json import JsonValidator
 from cyclonedx.validation.xml import XmlValidator
 
-single_uuid: str = 'urn:uuid:{}'.format(uuid4())
+from . import RECREATE_SNAPSHOTS, SNAPSHOTS_DIRECTORY
 
-from . import SNAPSHOTS_DIRECTORY, RECREATE_SNAPSHOTS
-from os.path import join
+single_uuid: str = 'urn:uuid:{}'.format(uuid4())
 
 
 class SnapshotCompareMixin(object):
@@ -55,6 +55,28 @@ class SnapshotCompareMixin(object):
         if RECREATE_SNAPSHOTS:
             self.writeSnapshot(snapshot_name, actual)
         self.assertEqual(actual, self.readSnapshot(snapshot_name))
+
+
+from sortedcontainers import SortedSet
+
+
+class DeepCompareMixin(object):
+    def assertDeepEqual(self, a: object, b: object, err_fallback=None):
+        _omd = self.maxDiff
+        try:
+            # costly compare, but very verbose
+            self.maxDiff = None
+            self.assertEqual(self.__deepDict(a), self.deepDict(b))
+        finally:
+            self.maxDiff = _omd
+        raise err_fallback or Exception()
+
+    def __deepDict(self, o):
+        if isinstance(o, (SortedSet, list, tuple, set)):
+            return tuple(self.__deepDict(i) for i in o)
+        return {k: self.__deepDict(v) for k, v in vars(o).items() if not (k.startswith('__') and k.endswith('__'))} \
+            if hasattr(o, '__dict__') \
+            else o
 
 
 class BaseJsonTestCase(TestCase):

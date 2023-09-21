@@ -47,7 +47,6 @@ from cyclonedx.model import (
     XsUri,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-
 from tests.data import reorder
 
 

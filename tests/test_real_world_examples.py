@@ -17,16 +17,16 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import unittest
 from datetime import datetime
-from os.path import join
 from json import loads as json_loads
+from os.path import join
 from unittest.mock import patch
 from xml.etree import ElementTree
+
+from ddt import data, ddt
 
 from cyclonedx.model.bom import Bom
 
 from . import OWN_DATA_DIRECTORY
-
-from ddt import ddt, data
 
 
 def fixed_date_time() -> datetime:

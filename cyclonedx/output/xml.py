@@ -1,4 +1,21 @@
 # encoding: utf-8
+from abc import ABC
+from typing import Dict, Optional, Type
+from xml.etree import ElementTree
+
+from ..exception.output import BomGenerationErrorException
+from ..model.bom import Bom
+from ..schema import SchemaVersion
+from ..schema.schema import (
+    SCHEMA_VERSIONS,
+    BaseSchemaVersion,
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+)
+from . import BaseOutput
 
 # This file is part of CycloneDX Python Lib
 #
@@ -17,25 +34,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Optional, Dict, Type
-from xml.etree import ElementTree
 
-from ..exception.output import BomGenerationErrorException
-from ..model.bom import Bom
-from ..schema import SchemaVersion
-from ..schema.schema import (
-    SCHEMA_VERSIONS,
-    BaseSchemaVersion,
-    SchemaVersion1Dot0,
-    SchemaVersion1Dot1,
-    SchemaVersion1Dot2,
-    SchemaVersion1Dot3,
-    SchemaVersion1Dot4,
-)
-from . import BaseOutput
-
-
-class Xml(BaseOutput, BaseSchemaVersion):
+class Xml(BaseSchemaVersion, BaseOutput):
     XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def __init__(self, bom: Bom) -> None:
@@ -48,7 +48,7 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
     def generate(self, force_regeneration: bool = False) -> None:
         # New way
-        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
+        _view = SCHEMA_VERSIONS[self.schema_version_enum]
         if self.generated and force_regeneration:
             self.get_bom().validate()
             self._root_bom_element = self.get_bom().as_xml(  # type: ignore

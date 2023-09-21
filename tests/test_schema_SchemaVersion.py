@@ -19,23 +19,24 @@
 
 from unittest import TestCase
 
-from ddt import ddt, idata, data, unpack
+from ddt import ddt, idata, unpack
 
 from cyclonedx.schema import SchemaVersion
 
-from itertools import chain
+SORTED_SV = (SchemaVersion.V1_4,
+             SchemaVersion.V1_3,
+             SchemaVersion.V1_2,
+             SchemaVersion.V1_1,
+             SchemaVersion.V1_0)
 
-SORTED_SCHEMA_VERSIONS = (SchemaVersion.V1_4,
-                          SchemaVersion.V1_3,
-                          SchemaVersion.V1_2,
-                          SchemaVersion.V1_1,
-                          SchemaVersion.V1_0)
-
-td_gt = tuple((a, b) for i, a in enumerate(SORTED_SCHEMA_VERSIONS) for b in SORTED_SCHEMA_VERSIONS[i + 1:])
-td_ge = tuple((a, b) for i, a in enumerate(SORTED_SCHEMA_VERSIONS) for b in SORTED_SCHEMA_VERSIONS[i:])
-td_eq = tuple((a, b) for i, a in enumerate(SORTED_SCHEMA_VERSIONS) for b in SORTED_SCHEMA_VERSIONS[:])
-td_le = tuple((a, b) for i, a in enumerate(SORTED_SCHEMA_VERSIONS) for b in SORTED_SCHEMA_VERSIONS[:i + 1])
-td_lt = tuple((a, b) for i, a in enumerate(SORTED_SCHEMA_VERSIONS) for b in SORTED_SCHEMA_VERSIONS[:i])
+# do not use any value-comparisons or implicit hash-functions here !
+# just work with the position in tuple SORTED_SCHEMA_VERSIONS
+td_gt = tuple((a, b) for i, a in enumerate(SORTED_SV) for b in SORTED_SV[i + 1:])
+td_ge = tuple((a, b) for i, a in enumerate(SORTED_SV) for b in SORTED_SV[i:])
+td_eq = tuple((v, v) for v in SORTED_SV)
+td_le = tuple((b, a) for a, b in td_ge)
+td_lt = tuple((b, a) for a, b in td_gt)
+td_ne = tuple((a, b) for i, a in enumerate(SORTED_SV) for j, b in enumerate(SORTED_SV) if i != j)
 
 
 @ddt
@@ -46,27 +47,32 @@ class TestSchemaVersion(TestCase):
         v2 = SchemaVersion.from_version(v.to_version())
         self.assertIs(v, v2)
 
-    @data(td_gt)
+    @idata(td_ne)
+    @unpack
+    def test_ne(self, a: SchemaVersion, b: SchemaVersion) -> None:
+        self.assertNotEqual(a, b)
+
+    @idata(td_gt)
     @unpack
     def test_gt(self, a: SchemaVersion, b: SchemaVersion) -> None:
         self.assertGreater(a, b)
 
-    @data(td_ge)
+    @idata(td_ge)
     @unpack
     def test_ge(self, a: SchemaVersion, b: SchemaVersion) -> None:
         self.assertGreaterEqual(a, b)
 
-    @data(td_eq)
+    @idata(td_eq)
     @unpack
     def test_eq(self, a: SchemaVersion, b: SchemaVersion) -> None:
         self.assertEqual(a, b)
 
-    @data(td_lt)
+    @idata(td_lt)
     @unpack
     def test_lt(self, a: SchemaVersion, b: SchemaVersion) -> None:
         self.assertLess(a, b)
 
-    @data(td_le)
+    @idata(td_le)
     @unpack
     def test_le(self, a: SchemaVersion, b: SchemaVersion) -> None:
         self.assertLessEqual(a, b)

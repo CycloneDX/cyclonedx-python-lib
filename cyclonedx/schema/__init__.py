@@ -46,30 +46,41 @@ class SchemaVersion(Enum):
     @classmethod
     def from_version(cls, version: str) -> 'SchemaVersion':
         """Return instance from  a version string - e.g. `1.4`"""
-        return cls(tuple(map(int, version.split('.'))[:2]))
+        return cls(tuple(map(int, version.split('.')))[:2])
 
     def to_version(self) -> str:
         """Return as a version string - e.g. `1.4`"""
         return '.'.join(map(str, self.value))
 
-    def __ne__(self, other: 'SchemaVersion') -> bool:
-        return self.value != other.value
+    def __ne__(self, other: object) -> bool:
+        return self.value != other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
 
-    def __lt__(self, other: 'SchemaVersion') -> bool:
-        return self.value < other.value
+    def __lt__(self, other: object) -> bool:
+        return self.value < other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
 
-    def __le__(self, other: 'SchemaVersion') -> bool:
-        return self.value <= other.value
+    def __le__(self, other: object) -> bool:
+        return self.value <= other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
 
-    def __eq__(self, other: 'SchemaVersion') -> bool:
-        return self.value == other.value
+    def __eq__(self, other: object) -> bool:
+        return self.value == other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
 
-    def __ge__(self, other: 'SchemaVersion') -> bool:
-        return self.value >= other.value
+    def __ge__(self, other: object) -> bool:
+        return self.value >= other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
 
-    def __gt__(self, other: 'SchemaVersion') -> bool:
-        return self.value > other.value
+    def __gt__(self, other: object) -> bool:
+        return self.value > other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
 
     def __hash__(self) -> int:
         return hash(self.name)
-

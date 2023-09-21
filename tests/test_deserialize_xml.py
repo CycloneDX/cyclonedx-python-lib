@@ -17,15 +17,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from datetime import datetime
 from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
 from xml.etree import ElementTree
 
+from ddt import ddt, idata
+
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import SchemaVersion
-from tests.base import BaseXmlTestCase
+from tests.base import BaseXmlTestCase, SnapshotCompareMixin, DeepCompareMixin
 from tests.data import (
     MOCK_BOM_UUID_1,
     MOCK_UUID_2,
@@ -51,10 +52,6 @@ from tests.data import (
     get_bom_with_services_simple,
 )
 
-from tests.base import SnapshotCompareMixin
-
-from ddt import ddt, idata
-
 _RELEVANT_SCHEMA_VERSIONS = (SchemaVersion.V1_4,
                              SchemaVersion.V1_3,
                              SchemaVersion.V1_2,
@@ -62,9 +59,13 @@ _RELEVANT_SCHEMA_VERSIONS = (SchemaVersion.V1_4,
                              SchemaVersion.V1_0)
 
 
+from tests.data import BOM_TIMESTAMP
+
+
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+@patch('cyclonedx.model.bom.get_now_utc', lambda : BOM_TIMESTAMP)
 @ddt
-class TestDeserializeXml(BaseXmlTestCase, SnapshotCompareMixin):
+class TestDeserializeXml(BaseXmlTestCase, SnapshotCompareMixin, DeepCompareMixin):
 
     @idata(_RELEVANT_SCHEMA_VERSIONS)
     def test_bom_external_references(self, schema_version: SchemaVersion) -> None:
@@ -72,16 +73,24 @@ class TestDeserializeXml(BaseXmlTestCase, SnapshotCompareMixin):
         if schema_version < SchemaVersion.V1_4:
             for t in bom.metadata.tools:
                 t.external_references.clear()
-        self._test_bom_as_expected(bom,
-                                   schema_version,
-                                   'bom_external_references')
+        if schema_version < SchemaVersion.V1_3:
+            for r in bom.external_references:
+                r.hashes.clear()
+        if schema_version < SchemaVersion.V1_1:
+            bom.external_references.clear()
+        self._test_bom_as_expected(bom, schema_version, 'bom_external_references')
 
     # region Helper methods
 
     def _test_bom_as_expected(self, bom: Bom, schema_version: SchemaVersion, snapshot_name: str) -> None:
         serialized = self.readSnapshot(f'xml_{snapshot_name}_{schema_version.to_version()}.xml')
         deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(serialized)))
-        self.assertEqual(bom, deserialized_bom)
+        if schema_version < SchemaVersion.V1_1:
+            deserialized_bom.serial_number = bom.serial_number
+        try:
+            self.assertEqual(bom, deserialized_bom)
+        except self.failureException as error:
+            self.assertDeepEqual(bom, deserialized_bom, error)
 
     # endregion Helper methods
 

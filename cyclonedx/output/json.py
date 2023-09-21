@@ -19,7 +19,7 @@
 
 import json
 from abc import abstractmethod
-from typing import Optional
+from typing import Dict, Optional, Type
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
@@ -58,7 +58,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             'bomFormat': 'CycloneDX',
             'specVersion': self.schema_version.to_version()
         }
-        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
+        _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
         if self.generated and force_regeneration:
             self.get_bom().validate()
             bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
@@ -114,8 +114,6 @@ class JsonV1Dot4(Json, SchemaVersion1Dot4):
     def _get_schema_uri(self) -> Optional[str]:
         return 'http://cyclonedx.org/schema/bom-1.4.schema.json'
 
-
-from typing import Dict, Type
 
 BY_SCHEMA_VERSIONS: Dict[SchemaVersion, Optional[Type[Json]]] = {
     SchemaVersion.V1_4: JsonV1Dot4,

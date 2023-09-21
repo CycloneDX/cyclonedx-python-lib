@@ -20,6 +20,8 @@ from os.path import join
 from unittest.mock import patch
 from uuid import UUID
 
+from ddt import ddt, idata
+
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance as get_outputter
 from cyclonedx.schema import SchemaVersion
@@ -48,7 +50,6 @@ from tests.data import (
 )
 
 from . import SNAPSHOTS_DIRECTORY
-from ddt import ddt, idata
 
 RELEVANT_TESTDATA_DIRECTORY = join(SNAPSHOTS_DIRECTORY, 'xml')
 
@@ -128,7 +129,7 @@ class TestOutputXml(BaseXmlTestCase, SnapshotCompareMixin):
     @idata(_RELEVANT_SCHEMA_VERSIONS)
     @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_3))
     @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_services_simple(self, schema_version: SchemaVersion,  *_, **__) -> None:
+    def test_bom_services_simple(self, schema_version: SchemaVersion, *_, **__) -> None:
         with self.assertWarns(UserWarning):
             self._test_output_as_expected(get_bom_with_services_simple(),
                                           schema_version,
@@ -137,7 +138,7 @@ class TestOutputXml(BaseXmlTestCase, SnapshotCompareMixin):
     @idata(_RELEVANT_SCHEMA_VERSIONS)
     @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_4))
     @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_services_complex(self, schema_version: SchemaVersion,  *_, **__) -> None:
+    def test_bom_services_complex(self, schema_version: SchemaVersion, *_, **__) -> None:
         with self.assertWarns(UserWarning):
             self._test_output_as_expected(get_bom_with_services_complex(),
                                           schema_version,
@@ -146,7 +147,7 @@ class TestOutputXml(BaseXmlTestCase, SnapshotCompareMixin):
     @idata(_RELEVANT_SCHEMA_VERSIONS)
     @patch('cyclonedx.model.component.uuid4', return_value=UUID(MOCK_UUID_6))
     @patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
-    def test_bom_services_nested(self, schema_version: SchemaVersion,  *_, **__) -> None:
+    def test_bom_services_nested(self, schema_version: SchemaVersion, *_, **__) -> None:
         with self.assertWarns(UserWarning):
             self._test_output_as_expected(get_bom_with_nested_services(),
                                           schema_version,
