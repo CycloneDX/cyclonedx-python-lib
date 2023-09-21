@@ -21,33 +21,33 @@
 from itertools import product
 from typing import Tuple
 from unittest import TestCase
-from unittest.mock import Mock
 
 from ddt import data, ddt, named_data, unpack
 
-from cyclonedx.model.bom import Bom
-from cyclonedx.output import get_instance as get_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.validation import get_instance as get_validator
+
+UndefinedFormatVersion = {(OutputFormat.JSON, SchemaVersion.V1_1), (OutputFormat.JSON, SchemaVersion.V1_0), }
 
 
 @ddt
-class TestTestGetInstance(TestCase):
+class TestGetInstance(TestCase):
 
-    @named_data(*([f'{x[0].name} {x[1].name}', *x] for x in product(OutputFormat, SchemaVersion)))
+    @named_data(*([f'{f.name} {v.name}', f, v]
+                  for f, v
+                  in product(OutputFormat, SchemaVersion)
+                  if (f, v) not in UndefinedFormatVersion))
     @unpack
     def test_as_expected(self, of: OutputFormat, sv: SchemaVersion) -> None:
-        bom = Mock(spec=Bom)
-        outputter = get_outputter(bom, of, sv)
-        self.assertIs(outputter.get_bom(), bom)
-        self.assertIs(outputter.output_format, of)
-        self.assertIs(outputter.schema_version, sv)
+        validator = get_validator(of, sv)
+        self.assertIs(validator.output_format, of)
+        self.assertIs(validator.schema_version, sv)
 
     @data(
-        *((of, 'foo', (TypeError, "unexpected schema_version: 'foo'")) for of in OutputFormat),
         *(('foo', sv, (TypeError, "unexpected output_format: 'foo'")) for sv in SchemaVersion),
+        *((f, v, (ValueError, f'unsupported schema_version: {v}')) for f, v in UndefinedFormatVersion)
     )
     @unpack
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raisesRegex: Tuple) -> None:
-        bom = Mock(spec=Bom)
         with self.assertRaisesRegexp(*raisesRegex):
-            get_outputter(bom, of, sv)
+            get_validator(of, sv)

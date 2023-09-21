@@ -108,7 +108,7 @@ def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
         module = import_module(f'.{output_format.name.lower()}', __package__)
     except ImportError as error:  # pragma: no cover
         raise ValueError(f'Unknown output_format: {output_format.name}') from error
-    output_klass: Optional[Type[BaseOutput]] = module.BY_SCHEMA_VERSION.get(schema_version, None)
-    if output_klass is None:  # pragma: no cover
+    klass: Optional[Type[BaseOutput]] = module.BY_SCHEMA_VERSION.get(schema_version, None)
+    if klass is None:  # pragma: no cover
         raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version.name}')
-    return output_klass(bom=bom)
+    return klass(bom=bom)

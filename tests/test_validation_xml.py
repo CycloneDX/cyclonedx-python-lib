@@ -22,10 +22,10 @@ from os.path import join
 from typing import Generator
 from unittest import TestCase
 
-from ddt import data, ddt, idata, unpack
+from ddt import ddt, idata, unpack
 
 from cyclonedx.exception import MissingOptionalDependencyException
-from cyclonedx.schema import SchemaVersion
+from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
 from tests import TESTDATA_DIRECTORY
 
@@ -44,9 +44,15 @@ def _dp(prefix: str) -> Generator:
 @ddt
 class TestXmlValidator(TestCase):
 
-    @data(*UNSUPPORTED_SCHEMA_VERSIONS)
+    @idata(sv for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS)
+    def test_validator_as_expected(self, schema_version: SchemaVersion) -> None:
+        validator = XmlValidator(schema_version)
+        self.assertIs(validator.schema_version, schema_version)
+        self.assertIs(validator.output_format, OutputFormat.XML)
+
+    @idata(UNSUPPORTED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
-        with self.assertRaisesRegex(ValueError, 'unsupported schema'):
+        with self.assertRaisesRegex(ValueError, f'unsupported schema_version: {schema_version}'):
             XmlValidator(schema_version)
 
     @idata(_dp('valid'))
