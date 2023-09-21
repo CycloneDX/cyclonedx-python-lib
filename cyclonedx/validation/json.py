@@ -20,6 +20,8 @@ from abc import ABC
 from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Optional, Tuple
 
+from ..schema import OutputFormat
+
 if TYPE_CHECKING:
     from ..schema import SchemaVersion
 
@@ -44,6 +46,9 @@ except ImportError as err:
 
 
 class _BaseJsonValidator(BaseValidator, ABC):
+    @property
+    def output_format(self) -> OutputFormat:
+        return OutputFormat.JSON
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         # this is the def that is used for generating the documentation

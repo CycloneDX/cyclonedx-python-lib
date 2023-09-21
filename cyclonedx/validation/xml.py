@@ -20,6 +20,7 @@ from abc import ABC
 from typing import TYPE_CHECKING, Any, Optional, Tuple
 
 from ..exception import MissingOptionalDependencyException
+from ..schema import OutputFormat
 from ..schema._res import BOM_XML as _S_BOM
 from . import BaseValidator, ValidationError, Validator
 
@@ -37,6 +38,10 @@ except ImportError as err:
 
 
 class _BaseXmlValidator(BaseValidator, ABC):
+
+    @property
+    def output_format(self) -> OutputFormat:
+        return OutputFormat.XML
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         # this is the def that is used for generating the documentation

@@ -15,7 +15,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Optional, Protocol
+from importlib import import_module
+from typing import TYPE_CHECKING, Any, Optional, Protocol, Type
+
+from ..schema import OutputFormat
 
 if TYPE_CHECKING:
     from ..schema import SchemaVersion
@@ -59,7 +62,7 @@ class BaseValidator(ABC, Validator):
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         self.__schema_version = schema_version
         if not self._schema_file:
-            raise ValueError(f'unsupported schema: {schema_version}')
+            raise ValueError(f'unsupported schema_version: {schema_version}')
 
     @property
     def schema_version(self) -> 'SchemaVersion':
@@ -68,6 +71,26 @@ class BaseValidator(ABC, Validator):
 
     @property
     @abstractmethod
+    def output_format(self) -> OutputFormat:
+        """get the format."""
+        ...
+
+    @property
+    @abstractmethod
     def _schema_file(self) -> Optional[str]:
         """get the schema file according to schema version."""
         ...
+
+
+def get_instance(output_format: OutputFormat, schema_version: 'SchemaVersion') -> BaseValidator:
+    """get the default validator for a certain `OutputFormat`"""
+    if not isinstance(output_format, OutputFormat):
+        raise TypeError(f"unexpected output_format: {output_format!r}")
+    try:
+        module = import_module(f'.{output_format.name.lower()}', __package__)
+    except ImportError as error:  # pragma: no cover
+        raise ValueError(f'Unknown output_format: {output_format.name}') from error
+    klass: Optional[Type[BaseValidator]] = getattr(module, f'{output_format.name.capitalize()}Validator', None)
+    if klass is None:  # pragma: no cover
+        raise ValueError(f'Missing Validator for {output_format.name}')
+    return klass(schema_version)

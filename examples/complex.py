@@ -7,11 +7,11 @@ from cyclonedx.factory.license import LicenseChoiceFactory, LicenseFactory
 from cyclonedx.model import OrganizationalEntity, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
+from cyclonedx.output import get_instance as get_outputter
 from cyclonedx.output.json import JsonV1Dot4
-from cyclonedx.output.xml import XmlV1Dot4
-from cyclonedx.schema import SchemaVersion
-from cyclonedx.validation.json import JsonValidator
-from cyclonedx.validation.xml import XmlValidator
+from cyclonedx.schema import SchemaVersion, OutputFormat
+from cyclonedx.validation.json import JsonStrictValidator
+from cyclonedx.validation import get_instance as get_validator
 
 lc_factory = LicenseChoiceFactory(license_factory=LicenseFactory())
 
@@ -55,7 +55,7 @@ bom.register_dependency(component1, [component2])
 serialized_json = JsonV1Dot4(bom).output_as_string()
 print(serialized_json)
 try:
-    validation_errors = JsonValidator(SchemaVersion.V1_4).validate_str(serialized_json)
+    validation_errors = JsonStrictValidator(SchemaVersion.V1_4).validate_str(serialized_json)
     if validation_errors:
         print('JSON valid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
@@ -63,10 +63,13 @@ try:
 except MissingOptionalDependencyException as error:
     print('JSON-validation was skipped due to', error)
 
-serialized_xml = XmlV1Dot4(bom).output_as_string()
+my_outputter = get_outputter(bom, OutputFormat.XML, SchemaVersion.V1_4)
+serialized_xml = my_outputter.output_as_string()
 print(serialized_xml)
 try:
-    validation_errors = XmlValidator(SchemaVersion.V1_4).validate_str(serialized_xml)
+    validation_errors = get_validator(my_outputter.output_format,
+                                      my_outputter.schema_version
+                                      ).validate_str(serialized_xml)
     if validation_errors:
         print('XML invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
