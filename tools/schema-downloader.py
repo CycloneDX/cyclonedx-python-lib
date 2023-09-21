@@ -34,7 +34,8 @@ bom_xsd = {
 # "version" is not required but optional with a default value!
 #   this is wrong in schema<1.5
 _bomSchemaEnumMatch = re.compile(
-    r'("\$id": "(http://cyclonedx\.org/schema/bom.+?\.schema\.json)".*"enum": \[\s+")http://cyclonedx\.org/schema/bom.+?\.schema\.json"',
+    r'("\$id": "(http://cyclonedx\.org/schema/bom.+?\.schema\.json)".*"enum": \[\s+")'
+    r'http://cyclonedx\.org/schema/bom.+?\.schema\.json"',
     re.DOTALL)
 _bomSchemaEnumReplace = r'\1\2"'
 

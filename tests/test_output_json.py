@@ -17,13 +17,18 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from os.path import join
+from unittest import TestCase
 from unittest.mock import Mock, patch
 from uuid import UUID
+
+from ddt import ddt, idata
 
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance
+from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
+from tests import TESTDATA_DIRECTORY
 from tests.base import BaseJsonTestCase
 from tests.data import (
     MOCK_UUID_1,
@@ -50,8 +55,6 @@ from tests.data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-
-from . import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'json')
 
@@ -402,7 +405,6 @@ class TestOutputJson(BaseJsonTestCase):
 
     def _validate_json_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
-        self.assertEqual(outputter.schema_version, schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as expected_json:
             output_as_string = outputter.output_as_string()
             self.assertValidAgainstSchema(bom_json=output_as_string, schema_version=schema_version)
@@ -414,3 +416,15 @@ class TestOutputJson(BaseJsonTestCase):
             outputter.output_as_string()
 
     # endregion Helper methods
+
+
+@ddt
+class TestFunctionalBySchemaVersion(TestCase):
+
+    @idata(SchemaVersion)
+    def test_get_instance_expected(self, sv: SchemaVersion) -> None:
+        outputterClass = BY_SCHEMA_VERSION[sv]
+        self.assertTrue(issubclass(outputterClass, Json))
+        outputter = outputterClass(Mock(spec=Bom))
+        self.assertIs(outputter.schema_version, sv)
+        self.assertIs(outputter.output_format, OutputFormat.JSON)

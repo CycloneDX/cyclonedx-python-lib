@@ -17,12 +17,17 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from os.path import join
+from unittest import TestCase
 from unittest.mock import Mock, patch
 from uuid import UUID
 
+from ddt import ddt, idata
+
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import get_instance
-from cyclonedx.schema import SchemaVersion
+from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
+from cyclonedx.schema import OutputFormat, SchemaVersion
+from tests import TESTDATA_DIRECTORY
 from tests.base import BaseXmlTestCase
 from tests.data import (
     MOCK_UUID_1,
@@ -49,8 +54,6 @@ from tests.data import (
     get_bom_with_services_complex,
     get_bom_with_services_simple,
 )
-
-from . import TESTDATA_DIRECTORY
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
 
@@ -532,7 +535,6 @@ class TestOutputXml(BaseXmlTestCase):
 
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
         outputter = get_instance(bom=bom, schema_version=schema_version)
-        self.assertEqual(outputter.schema_version, schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as expected_xml:
             output_as_string = outputter.output_as_string()
             self.assertValidAgainstSchema(bom_xml=output_as_string, schema_version=schema_version)
@@ -541,3 +543,15 @@ class TestOutputXml(BaseXmlTestCase):
             )
 
     # endregion Helper methods
+
+
+@ddt
+class TestFunctionalBySchemaVersion(TestCase):
+
+    @idata(SchemaVersion)
+    def test_get_instance_expected(self, sv: SchemaVersion) -> None:
+        outputterClass = BY_SCHEMA_VERSION[sv]
+        self.assertTrue(issubclass(outputterClass, Xml))
+        outputter = outputterClass(Mock(spec=Bom))
+        self.assertIs(outputter.schema_version, sv)
+        self.assertIs(outputter.output_format, OutputFormat.XML)

@@ -19,10 +19,10 @@ Set of classes and methods for outputting our libraries internal Bom model to Cy
 and according to different versions of the CycloneDX schema standard.
 """
 
-import importlib
 import os
 from abc import ABC, abstractmethod
-from typing import Iterable, Union, cast
+from importlib import import_module
+from typing import Iterable, Optional, Type, Union
 
 from ..model.bom import Bom
 from ..model.component import Component
@@ -46,7 +46,12 @@ class BaseOutput(ABC):
     @property
     @abstractmethod
     def schema_version(self) -> SchemaVersion:
-        pass
+        ...
+
+    @property
+    @abstractmethod
+    def output_format(self) -> OutputFormat:
+        ...
 
     @property
     def generated(self) -> bool:
@@ -64,27 +69,22 @@ class BaseOutput(ABC):
 
     @abstractmethod
     def generate(self, force_regeneration: bool = False) -> None:
-        pass
+        ...
 
     @abstractmethod
     def output_as_string(self) -> str:
-        pass
+        ...
 
     def output_to_file(self, filename: str, allow_overwrite: bool = False) -> None:
         # Check directory writable
         output_filename = os.path.realpath(filename)
         output_directory = os.path.dirname(output_filename)
-
         if not os.access(output_directory, os.W_OK):
             raise PermissionError(output_directory)
-
         if os.path.exists(output_filename) and not allow_overwrite:
             raise FileExistsError(output_filename)
-
         with open(output_filename, mode='wb') as f_out:
             f_out.write(self.output_as_string().encode('utf-8'))
-
-        f_out.close()
 
 
 def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
@@ -99,10 +99,16 @@ def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
     :param schema_version: SchemaVersion
     :return:
     """
+    # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
+    if not isinstance(output_format, OutputFormat):
+        raise TypeError(f"unexpected output_format: {output_format!r}")
+    if not isinstance(schema_version, SchemaVersion):
+        raise TypeError(f"unexpected schema_version: {schema_version!r}")
     try:
-        module = importlib.import_module(f"cyclonedx.output.{output_format.value.lower()}")
-        output_klass = getattr(module, f"{output_format.value}{schema_version.value}")
-    except (ImportError, AttributeError) as e:
-        raise ValueError(f"Unknown format {output_format.value.lower()!r}: {e}") from None
-
-    return cast(BaseOutput, output_klass(bom=bom))
+        module = import_module(f'.{output_format.name.lower()}', __package__)
+    except ImportError as error:  # pragma: no cover
+        raise ValueError(f'Unknown output_format: {output_format.name}') from error
+    output_klass: Optional[Type[BaseOutput]] = module.BY_SCHEMA_VERSION.get(schema_version, None)
+    if output_klass is None:  # pragma: no cover
+        raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version.name}')
+    return output_klass(bom=bom)

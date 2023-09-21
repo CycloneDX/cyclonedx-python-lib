@@ -19,11 +19,11 @@
 
 import json
 from abc import abstractmethod
-from typing import Optional
+from typing import Dict, Optional, Type
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
-from ..schema import SchemaVersion
+from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
     BaseSchemaVersion,
@@ -46,6 +46,10 @@ class Json(BaseOutput, BaseSchemaVersion):
     def schema_version(self) -> SchemaVersion:
         return self.schema_version_enum
 
+    @property
+    def output_format(self) -> OutputFormat:
+        return OutputFormat.JSON
+
     def generate(self, force_regeneration: bool = False) -> None:
         # New Way
         schema_uri: Optional[str] = self._get_schema_uri()
@@ -58,7 +62,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             'bomFormat': 'CycloneDX',
             'specVersion': self.schema_version.to_version()
         }
-        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
+        _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
         if self.generated and force_regeneration:
             self.get_bom().validate()
             bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
@@ -113,3 +117,12 @@ class JsonV1Dot4(Json, SchemaVersion1Dot4):
 
     def _get_schema_uri(self) -> Optional[str]:
         return 'http://cyclonedx.org/schema/bom-1.4.schema.json'
+
+
+BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Json]] = {
+    SchemaVersion.V1_4: JsonV1Dot4,  # type:ignore[type-abstract]
+    SchemaVersion.V1_3: JsonV1Dot3,  # type:ignore[type-abstract]
+    SchemaVersion.V1_2: JsonV1Dot2,  # type:ignore[type-abstract]
+    SchemaVersion.V1_1: JsonV1Dot1,  # type:ignore[type-abstract]
+    SchemaVersion.V1_0: JsonV1Dot0,  # type:ignore[type-abstract]
+}
