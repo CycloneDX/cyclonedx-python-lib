@@ -17,12 +17,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Optional
+
+from typing import Dict, Optional, Type
 from xml.etree import ElementTree
 
 from ..exception.output import BomGenerationErrorException
 from ..model.bom import Bom
-from ..schema import SchemaVersion
+from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
     BaseSchemaVersion,
@@ -35,7 +36,7 @@ from ..schema.schema import (
 from . import BaseOutput
 
 
-class Xml(BaseOutput, BaseSchemaVersion):
+class Xml(BaseSchemaVersion, BaseOutput):
     XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def __init__(self, bom: Bom) -> None:
@@ -46,9 +47,13 @@ class Xml(BaseOutput, BaseSchemaVersion):
     def schema_version(self) -> SchemaVersion:
         return self.schema_version_enum
 
+    @property
+    def output_format(self) -> OutputFormat:
+        return OutputFormat.XML
+
     def generate(self, force_regeneration: bool = False) -> None:
         # New way
-        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
+        _view = SCHEMA_VERSIONS[self.schema_version_enum]
         if self.generated and force_regeneration:
             self.get_bom().validate()
             self._root_bom_element = self.get_bom().as_xml(  # type: ignore
@@ -97,3 +102,12 @@ class XmlV1Dot3(Xml, SchemaVersion1Dot3):
 
 class XmlV1Dot4(Xml, SchemaVersion1Dot4):
     pass
+
+
+BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Xml]] = {
+    SchemaVersion.V1_4: XmlV1Dot4,  # type:ignore[type-abstract]
+    SchemaVersion.V1_3: XmlV1Dot3,  # type:ignore[type-abstract]
+    SchemaVersion.V1_2: XmlV1Dot2,  # type:ignore[type-abstract]
+    SchemaVersion.V1_1: XmlV1Dot1,  # type:ignore[type-abstract]
+    SchemaVersion.V1_0: XmlV1Dot0,  # type:ignore[type-abstract]
+}

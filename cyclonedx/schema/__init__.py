@@ -14,26 +14,73 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from enum import Enum
+from enum import Enum, auto, unique
 
 
-class OutputFormat(str, Enum):
-    JSON: str = 'Json'
-    XML: str = 'Xml'
+@unique
+class OutputFormat(Enum):
+    """Output formats.
+
+    Do not rely on the actual/literal values, just use enum cases.
+    """
+    JSON = auto()
+    XML = auto()
 
 
-class SchemaVersion(str, Enum):
-    V1_0: str = 'V1Dot0'
-    V1_1: str = 'V1Dot1'
-    V1_2: str = 'V1Dot2'
-    V1_3: str = 'V1Dot3'
-    V1_4: str = 'V1Dot4'
+@unique
+class SchemaVersion(Enum):
+    """
+    Schema version.
+
+    Cases are hashable.
+    Cases are comparable(!=,>=,>,==,<,<=)
+
+    Do not rely on the actual/literal values, just use enum cases.
+    """
+    V1_4 = (1, 4)
+    V1_3 = (1, 3)
+    V1_2 = (1, 2)
+    V1_1 = (1, 1)
+    V1_0 = (1, 0)
+
+    @classmethod
+    def from_version(cls, version: str) -> 'SchemaVersion':
+        """Return instance from  a version string - e.g. `1.4`"""
+        return cls(tuple(map(int, version.split('.')))[:2])
 
     def to_version(self) -> str:
-        """
-        Return as a version string - e.g. `1.4`
+        """Return as a version string - e.g. `1.4`"""
+        return '.'.join(map(str, self.value))
 
-        Returns:
-            `str` version
-        """
-        return f'{self.value[1]}.{self.value[5]}'
+    def __ne__(self, other: object) -> bool:
+        return self.value != other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
+
+    def __lt__(self, other: object) -> bool:
+        return self.value < other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
+
+    def __le__(self, other: object) -> bool:
+        return self.value <= other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
+
+    def __eq__(self, other: object) -> bool:
+        return self.value == other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
+
+    def __ge__(self, other: object) -> bool:
+        return self.value >= other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
+
+    def __gt__(self, other: object) -> bool:
+        return self.value > other.value \
+            if isinstance(other, self.__class__) \
+            else NotImplemented  # type:ignore[return-value]
+
+    def __hash__(self) -> int:
+        return hash(self.name)

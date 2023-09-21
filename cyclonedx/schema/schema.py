@@ -18,6 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import ABC, abstractmethod
+from typing import Dict, Type
 
 from serializable import ViewType
 
@@ -29,7 +30,7 @@ class BaseSchemaVersion(ABC, ViewType):
     @property
     @abstractmethod
     def schema_version_enum(self) -> SchemaVersion:
-        pass
+        ...
 
     def get_schema_version(self) -> str:
         return self.schema_version_enum.to_version()
@@ -70,10 +71,10 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return SchemaVersion.V1_0
 
 
-SCHEMA_VERSIONS = {
-    '1.0': SchemaVersion1Dot0,
-    '1.1': SchemaVersion1Dot1,
-    '1.2': SchemaVersion1Dot2,
-    '1.3': SchemaVersion1Dot3,
-    '1.4': SchemaVersion1Dot4
+SCHEMA_VERSIONS: Dict[SchemaVersion, Type[BaseSchemaVersion]] = {
+    SchemaVersion.V1_4: SchemaVersion1Dot4,  # type:ignore[type-abstract]
+    SchemaVersion.V1_3: SchemaVersion1Dot3,  # type:ignore[type-abstract]
+    SchemaVersion.V1_2: SchemaVersion1Dot2,  # type:ignore[type-abstract]
+    SchemaVersion.V1_1: SchemaVersion1Dot1,  # type:ignore[type-abstract]
+    SchemaVersion.V1_0: SchemaVersion1Dot0,  # type:ignore[type-abstract]
 }

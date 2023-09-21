@@ -37,7 +37,7 @@ def _dp_files() -> Generator:
 
 
 @ddt
-class SchemaRes(TestCase):
+class SchemaResTest(TestCase):
 
     @idata(_dp_files())
     def test_file_exists(self, file: str) -> None:
