@@ -69,7 +69,8 @@ class Xml(BaseSchemaVersion, BaseOutput):
             self._root_bom_element, method='xml',
             encoding='unicode', xml_declaration=True,
             # cannot set defaultNS, because the stupid XML serializer forgot to set NS on attributes.
-            # therefore, the defaultNS was registered as name with empty string. see above.
+            # therefore, the defaultNS was registered as nsID with empty string. see above.
+            # see https://github.com/madpah/serializable/issues/12
             # default_namespace=self.get_target_namespace()
         )
 
