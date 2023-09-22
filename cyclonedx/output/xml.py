@@ -52,31 +52,26 @@ class Xml(BaseSchemaVersion, BaseOutput):
         return OutputFormat.XML
 
     def generate(self, force_regeneration: bool = False) -> None:
-        # New way
-        _view = SCHEMA_VERSIONS[self.schema_version_enum]
-        if self.generated and force_regeneration:
+        if force_regeneration or not self.generated:
+            _view = SCHEMA_VERSIONS[self.schema_version_enum]
             self.get_bom().validate()
             self._root_bom_element = self.get_bom().as_xml(  # type: ignore
                 view_=_view, as_string=False, xmlns=self.get_target_namespace()
             )
             self.generated = True
-            return
-        elif self.generated:
-            return
-        else:
-            self.get_bom().validate()
-            self._root_bom_element = self.get_bom().as_xml(  # type: ignore
-                view_=_view, as_string=False, xmlns=self.get_target_namespace()
-            )
-            self.generated = True
-            return
 
     def output_as_string(self) -> str:
         self.generate()
-        if self.generated and self._root_bom_element is not None:
-            return str(Xml.XML_VERSION_DECLARATION + ElementTree.tostring(self._root_bom_element, encoding='unicode'))
-
-        raise BomGenerationErrorException('There was no Root XML Element after BOM generation.')
+        if not self.generated or self._root_bom_element is None:
+            raise BomGenerationErrorException('There was no Root XML Element after BOM generation.')
+        ElementTree.register_namespace('', self.get_target_namespace())
+        return ElementTree.tostring(
+            self._root_bom_element, method='xml',
+            encoding='unicode', xml_declaration=True,
+            # cannot set defaultNS, because the stupid XML serializer forgot to set NS on attributes.
+            # therefore, the defaultNS was registered as name with empty string. see above.
+            # default_namespace=self.get_target_namespace()
+        )
 
     def get_target_namespace(self) -> str:
         return f'http://cyclonedx.org/schema/bom/{self.get_schema_version()}'
