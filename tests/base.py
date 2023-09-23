@@ -30,7 +30,7 @@ from xmldiff.actions import MoveNode
 
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.output import SchemaVersion
-from cyclonedx.validation.json import JsonValidator
+from cyclonedx.validation.json import JsonStrictValidator
 from cyclonedx.validation.xml import XmlValidator
 
 single_uuid: str = 'urn:uuid:{}'.format(uuid4())
@@ -40,7 +40,7 @@ class BaseJsonTestCase(TestCase):
 
     def assertValidAgainstSchema(self, bom_json: str, schema_version: SchemaVersion) -> None:
         try:
-            validation_error = JsonValidator(schema_version).validate_str(bom_json)
+            validation_error = JsonStrictValidator(schema_version).validate_str(bom_json)
         except MissingOptionalDependencyException:
             return  # some deps are missing - skip the validation
         self.assertIsNone(validation_error,

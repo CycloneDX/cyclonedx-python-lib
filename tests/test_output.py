@@ -49,5 +49,5 @@ class TestTestGetInstance(TestCase):
     @unpack
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raisesRegex: Tuple) -> None:
         bom = Mock(spec=Bom)
-        with self.assertRaisesRegexp(*raisesRegex):
+        with self.assertRaisesRegex(*raisesRegex):
             get_outputter(bom, of, sv)
