@@ -73,10 +73,21 @@ class UnknownComponentDependencyException(CycloneDxModelException):
     """
     Exception raised when a dependency has been noted for a Component that is NOT a Component BomRef in this Bom.
     """
+    pass
 
 
 class UnknownHashTypeException(CycloneDxModelException):
     """
     Exception raised when we are unable to determine the type of hash from a composite hash string.
+    """
+    pass
+
+
+class LicenseExpressionAlongWithOthersException(CycloneDxModelException):
+    """
+    Exception raised when a LicenseExpression was detected along with other licenses.
+    If a LicenseExpression exists, than it must stand alone.
+
+    See https://github.com/CycloneDX/specification/pull/205
     """
     pass

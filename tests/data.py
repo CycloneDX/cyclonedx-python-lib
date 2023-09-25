@@ -640,6 +640,59 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
     return VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
 
 
+def get_bom_metadata_licenses_invalid() -> Bom:
+    return Bom(metadata=BomMetaData(licenses=[
+        LicenseChoice(expression='Apache-2.0 OR MIT'),
+        LicenseChoice(license=License(id='MIT')),
+    ]))
+
+
+def get_invalid_license_repository() -> List[LicenseChoice]:
+    """
+    license expression and a license -- this is an invalid constellation according to schema
+    see https://github.com/CycloneDX/specification/pull/205
+    """
+    return [
+        LicenseChoice(expression='Apache-2.0 OR MIT'),
+        LicenseChoice(license=License(id='GPL-2.0-only')),
+    ]
+
+
+def get_component_licenses_invalid() -> Component:
+    return Component(name='foo', type=ComponentType.LIBRARY,
+                     licenses=get_invalid_license_repository())
+
+
+def get_bom_metadata_component_licenses_invalid() -> Bom:
+    comp = get_component_licenses_invalid()
+    return Bom(metadata=BomMetaData(component=comp),
+               dependencies=[Dependency(comp.bom_ref)])
+
+
+def get_bom_metadata_component_nested_licenses_invalid() -> Bom:
+    comp = Component(name='bar', type=ComponentType.LIBRARY,
+                     components=[get_component_licenses_invalid()])
+    return Bom(metadata=BomMetaData(component=comp),
+               dependencies=[Dependency(comp.bom_ref)])
+
+
+def get_bom_component_licenses_invalid() -> Bom:
+    return Bom(components=[get_component_licenses_invalid()])
+
+
+def get_bom_component_nested_licenses_invalid() -> Bom:
+    return Bom(components=[
+        Component(name='bar', type=ComponentType.LIBRARY,
+                  components=[get_component_licenses_invalid()])
+    ])
+
+
+def get_bom_service_licenses_invalid() -> Bom:
+    return Bom(services=[
+        Service(name='foo', licenses=get_invalid_license_repository())
+    ])
+
+
 T = TypeVar('T')
 
 

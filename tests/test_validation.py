@@ -52,5 +52,5 @@ class TestGetInstance(TestCase):
     )
     @unpack
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raisesRegex: Tuple) -> None:
-        with self.assertRaisesRegexp(*raisesRegex):
+        with self.assertRaisesRegex(*raisesRegex):
             get_validator(of, sv)
