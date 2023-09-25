@@ -17,7 +17,7 @@ Installation
 
 Install from `pypi.org`_ as you would any other Python module using your preferred package manager:
 
-.. code-block:: bash
+.. code-block:: sh
 
     pip install cyclonedx-python-lib
 
@@ -40,6 +40,6 @@ The following extras are available when installing this package:
 
 They can be used when installing in order to include additional dependencies, e.g.:
 
-.. code-block:: bash
+.. code-block:: sh
 
     pip install 'cyclonedx-python-lib[validation]'
