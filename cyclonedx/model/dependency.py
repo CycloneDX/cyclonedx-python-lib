@@ -32,14 +32,14 @@ from .bom_ref import BomRef
 class DependencyDependencies(serializable.BaseHelper):  # type: ignore
 
     @classmethod
-    def serialize(cls, o: object) -> List[str]:
+    def serialize(cls, o: object, t: 'SerializationType') -> List[str]:
         if isinstance(o, SortedSet):
             return list(map(lambda i: str(i.ref), o))
 
         raise ValueError(f'Attempt to serialize a non-Dependency: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object) -> Set["Dependency"]:
+    def deserialize(cls, o: object, t: 'SerializationType') -> Set["Dependency"]:
         dependencies: Set["Dependency"] = set()
         if isinstance(o, list):
             for v in o:

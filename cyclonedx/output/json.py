@@ -65,7 +65,7 @@ class Json(BaseOutput, BaseSchemaVersion):
         _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
         if self.generated and force_regeneration:
             self.get_bom().validate()
-            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
+            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: dict
             bom_json.update(_json_core)
             self._json_output = json.dumps(bom_json)
             self.generated = True
@@ -74,7 +74,7 @@ class Json(BaseOutput, BaseSchemaVersion):
             return
         else:
             self.get_bom().validate()
-            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
+            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: dict
             bom_json.update(_json_core)
             self._json_output = json.dumps(bom_json)
             self.generated = True

@@ -17,8 +17,9 @@
 
 from typing import Optional
 
+from ..model.license import License, LicenseChoice, Expression
 from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
-from ..model import AttachedText, License, LicenseChoice, XsUri
+from ..model import AttachedText, XsUri
 from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression
 
 
@@ -51,40 +52,39 @@ class LicenseFactory:
 
 
 class LicenseChoiceFactory:
-    """Factory for :class:`cyclonedx.model.LicenseChoice`."""
+    """Factory for :type:`cyclonedx.model.LicenseChoice`."""
 
     def __init__(self, *, license_factory: LicenseFactory) -> None:
         self.license_factory = license_factory
 
     def make_from_string(self, expression_or_name_or_spdx: str) -> LicenseChoice:
-        """Make a :class:`cyclonedx.model.LicenseChoice` from a string.
+        """Make a :type:`cyclonedx.model.LicenseChoice` from a string.
 
         Priority: SPDX license ID, SPDX license expression, named license
         """
         try:
-            return LicenseChoice(license=self.license_factory.make_with_id(expression_or_name_or_spdx))
+            return self.license_factory.make_with_id(expression_or_name_or_spdx)
         except InvalidSpdxLicenseException:
             pass
         try:
             return self.make_with_compound_expression(expression_or_name_or_spdx)
         except InvalidLicenseExpressionException:
             pass
-        return LicenseChoice(license=self.license_factory.make_with_name(expression_or_name_or_spdx))
+        return self.license_factory.make_with_name(expression_or_name_or_spdx)
 
-    def make_with_compound_expression(self, compound_expression: str) -> LicenseChoice:
-        """Make a :class:`cyclonedx.model.LicenseChoice` with a compound expression.
+    def make_with_compound_expression(self, compound_expression: str) -> Expression:
+        """Make a :class:`cyclonedx.model.LicenseExpression` with a compound expression.
 
         Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
 
         :raises InvalidLicenseExpressionException: if `expression` is not known/supported license expression
         """
         if is_spdx_compound_expression(compound_expression):
-            return LicenseChoice(expression=compound_expression)
+            return Expression(compound_expression)
         raise InvalidLicenseExpressionException(compound_expression)
 
     def make_with_license(self, name_or_spdx: str, *,
                           license_text: Optional[AttachedText] = None,
-                          license_url: Optional[XsUri] = None) -> LicenseChoice:
-        """Make a :class:`cyclonedx.model.LicenseChoice` with a license (name or SPDX-ID)."""
-        return LicenseChoice(license=self.license_factory.make_from_string(
-            name_or_spdx, license_text=license_text, license_url=license_url))
+                          license_url: Optional[XsUri] = None) -> License:
+        """Make a :class:`cyclonedx.model.License`."""
+        return self.license_factory.make_from_string(name_or_spdx, license_text=license_text, license_url=license_url)

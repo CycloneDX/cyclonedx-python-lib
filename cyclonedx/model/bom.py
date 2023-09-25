@@ -24,7 +24,8 @@ from uuid import UUID, uuid4
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import UrnUuidHelper
+from cyclonedx.serialization import UrnUuidHelper, LicenseRepositoryHelper
+from .license import LicenseRepository, LicenseChoice
 
 from ..exception.model import UnknownComponentDependencyException
 from ..parser import BaseParser
@@ -37,7 +38,6 @@ from ..schema.schema import (
 )
 from . import (
     ExternalReference,
-    LicenseChoice,
     OrganizationalContact,
     OrganizationalEntity,
     Property,
@@ -195,9 +195,8 @@ class BomMetaData:
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
-    @serializable.xml_sequence(7)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    @serializable.type_mapping(LicenseRepositoryHelper)
+    def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this BOM is licensed.
 
@@ -208,7 +207,7 @@ class BomMetaData:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+        self._licenses = LicenseRepository(licenses)
 
     @property
     @serializable.view(SchemaVersion1Dot3)

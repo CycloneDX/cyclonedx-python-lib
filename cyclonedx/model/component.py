@@ -28,6 +28,7 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
+from .license import LicenseChoice, LicenseRepository
 from ..exception.model import NoPropertiesProvidedException
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -36,7 +37,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from ..serialization import BomRefHelper, PackageUrl
+from ..serialization import BomRefHelper, PackageUrl, LicenseRepositoryHelper
 from . import (
     AttachedText,
     ComparableTuple,
@@ -45,11 +46,10 @@ from . import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
-    LicenseChoice,
     OrganizationalEntity,
     Property,
     XsUri,
-    sha1sum,
+    sha1sum
 )
 from .bom_ref import BomRef
 from .dependency import Dependable
@@ -196,8 +196,8 @@ class ComponentEvidence:
         self.copyright = copyright or []  # type: ignore
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'license')
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    @serializable.type_mapping(LicenseRepositoryHelper)
+    def licenses(self) -> LicenseRepository:
         """
         Optional list of licenses obtained during analysis.
 
@@ -208,7 +208,7 @@ class ComponentEvidence:
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+        self._licenses = LicenseRepository(licenses)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
@@ -809,7 +809,7 @@ class Component(Dependable):
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = [LicenseChoice(expression=license_str)]  # type: ignore
+                self.licenses = [LicenseExpression(license_str)]  # type: ignore
 
         self.__dependencies: "SortedSet[BomRef]" = SortedSet()
 
@@ -1032,9 +1032,9 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(10)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Component is licensed.
 
@@ -1045,7 +1045,7 @@ class Component(Dependable):
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+        self._licenses = LicenseRepository(licenses)
 
     @property
     @serializable.xml_sequence(11)

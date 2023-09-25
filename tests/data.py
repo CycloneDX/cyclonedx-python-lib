@@ -35,7 +35,6 @@ from cyclonedx.model import (
     ExternalReferenceType,
     HashType,
     License,
-    LicenseChoice,
     Note,
     NoteText,
     OrganizationalContact,
@@ -251,11 +250,11 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
-    bom.metadata.licenses = [LicenseChoice(license=License(
+    bom.metadata.licenses = [License(
         id='Apache-2.0', text=AttachedText(
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
         ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
-    ))]
+    )]
     bom.metadata.properties = get_properties_1()
     return bom
 
@@ -290,9 +289,7 @@ def get_bom_with_services_complex() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[
-                LicenseChoice(expression='Commercial')
-            ],
+            licenses=[License(name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -319,9 +316,7 @@ def get_bom_with_nested_services() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[
-                LicenseChoice(expression='Commercial')
-            ],
+            licenses=[License(name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -456,7 +451,7 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=[License(id='MIT')],
         author='Test Author'
     )
 
@@ -467,7 +462,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=[License(id='MIT')],
         author='Test Author'
     )
 
