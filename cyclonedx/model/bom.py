@@ -574,7 +574,7 @@ class Bom:
                 UserWarning
             )
 
-        # 3. If a LicenseExpression is set. then there must be no other license.
+        # 3. If a LicenseExpression is set, then there must be no other license.
         # see https://github.com/CycloneDX/specification/pull/205
         elem: Union[BomMetaData, Component, Service]
         for elem in chain(  # type: ignore[assignment]
