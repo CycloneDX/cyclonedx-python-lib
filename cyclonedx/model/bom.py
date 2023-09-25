@@ -18,7 +18,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
 from datetime import datetime
-from typing import TYPE_CHECKING, Iterable, Optional, Set
+from itertools import chain
+from typing import TYPE_CHECKING, Iterable, Optional, Set, Union
 from uuid import UUID, uuid4
 
 import serializable
@@ -26,7 +27,7 @@ from sortedcontainers import SortedSet
 
 from cyclonedx.serialization import UrnUuidHelper
 
-from ..exception.model import UnknownComponentDependencyException
+from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..parser import BaseParser
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -572,6 +573,18 @@ class Bom:
                 f'"root" Component to complete the Dependency Graph data.',
                 UserWarning
             )
+
+        # 3. If a LicenseExpression is set. then there must be no other license.
+        # see https://github.com/CycloneDX/specification/pull/205
+        elem: Union[Component, Service]
+        for elem in chain(  # type: ignore[assignment]
+            self.metadata.component.get_all_nested_components(include_self=True) if self.metadata.component else [],
+            chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
+            self.services
+        ):
+            if len(elem.licenses) > 1 and any(li.expression for li in elem.licenses):
+                raise LicenseExpressionAlongWithOthersException(
+                    f'Found LicenseExpression along with others licenses in: {elem!r}')
 
         return True
 
