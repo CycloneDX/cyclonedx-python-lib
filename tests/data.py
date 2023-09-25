@@ -640,6 +640,21 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
     return VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
 
 
+def get_multiple_licenses() -> Bom:
+    multi_licenses = [
+        LicenseChoice(license=License(id='MIT')),
+        LicenseChoice(license=License(name='foo license')),
+    ]
+    return Bom(
+        metadata=BomMetaData(
+            licenses=multi_licenses,
+            component=Component(name='app', type=ComponentType.APPLICATION, licenses=multi_licenses)
+        ),
+        components=[Component(name='comp', type=ComponentType.LIBRARY, licenses=multi_licenses)],
+        services=[Service(name='serv', licenses=multi_licenses)]
+    )
+
+
 T = TypeVar('T')
 
 

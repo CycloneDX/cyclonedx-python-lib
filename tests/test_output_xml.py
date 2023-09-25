@@ -52,13 +52,15 @@ from tests.data import (
     get_bom_with_metadata_component_and_dependencies,
     get_bom_with_nested_services,
     get_bom_with_services_complex,
-    get_bom_with_services_simple,
+    get_bom_with_services_simple, get_multiple_licenses,
 )
 
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
 
+from ddt import ddt, idata
 
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+@ddt
 class TestOutputXml(BaseXmlTestCase):
 
     def test_bom_external_references_v1_4(self) -> None:
@@ -530,6 +532,13 @@ class TestOutputXml(BaseXmlTestCase):
                 bom=get_bom_with_dependencies_hanging(), schema_version=SchemaVersion.V1_4,
                 fixture='bom_with_dependencies_hanging.xml'
             )
+
+    @idata(SchemaVersion)
+    def test_regression_issue365(self, s: SchemaVersion) -> None:
+        self._validate_xml_bom(
+            bom=get_multiple_licenses(), schema_version=s,
+            fixture='bom_issue_275_components.xml'
+        )
 
     # region Helper methods
 
