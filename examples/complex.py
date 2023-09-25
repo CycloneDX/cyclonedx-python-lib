@@ -57,7 +57,7 @@ print(serialized_json)
 try:
     validation_errors = JsonStrictValidator(SchemaVersion.V1_4).validate_str(serialized_json)
     if validation_errors:
-        print('JSON valid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+        print('JSON invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
     print('JSON valid')
 except MissingOptionalDependencyException as error:
