@@ -436,17 +436,6 @@ class Bom:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    def _get_all_components(self) -> Set[Component]:
-        components: Set[Component] = set()
-        if self.metadata.component:
-            components.update(self.metadata.component.get_all_nested_components(include_self=True))
-
-        # Add Components and sub Components
-        for c in self.components:
-            components.update(c.get_all_nested_components(include_self=True))
-
-        return components
-
     def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> "SortedSet[Vulnerability]":
         """
         Get all known Vulnerabilities that affect the supplied bom_ref.
@@ -534,60 +523,6 @@ class Bom:
 
     def urn(self) -> str:
         return f'urn:cdx:{self.serial_number}/{self.version}'
-
-    def validate(self) -> bool:
-        """
-        Perform data-model level validations to make sure we have some known data integrity prior to attempting output
-        of this `Bom`
-
-        Returns:
-             `bool`
-        """
-        # 0. Make sure all Dependable have a Dependency entry
-        if self.metadata.component:
-            self.register_dependency(target=self.metadata.component)
-        for _c in self.components:
-            self.register_dependency(target=_c)
-        for _s in self.services:
-            self.register_dependency(target=_s)
-
-        # 1. Make sure dependencies are all in this Bom.
-        all_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
-            map(lambda s: s.bom_ref, self.services))
-        all_dependency_bom_refs = set().union(*(d.dependencies_as_bom_refs() for d in self.dependencies))
-
-        dependency_diff = all_dependency_bom_refs - all_bom_refs
-        if len(dependency_diff) > 0:
-            raise UnknownComponentDependencyException(
-                f'One or more Components have Dependency references to Components/Services that are not known in this '
-                f'BOM. They are: {dependency_diff}')
-
-        # 2. if root component is set: dependencies should exist for the Component this BOM is describing
-        if self.metadata.component and not any(map(
-            lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type: ignore[union-attr]
-            self.dependencies
-        )):
-            warnings.warn(
-                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
-                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
-                f'"root" Component to complete the Dependency Graph data.',
-                UserWarning
-            )
-
-        # 3. If a LicenseExpression is set, then there must be no other license.
-        # see https://github.com/CycloneDX/specification/pull/205
-        elem: Union[BomMetaData, Component, Service]
-        for elem in chain(  # type: ignore[assignment]
-            [self.metadata],
-            self.metadata.component.get_all_nested_components(include_self=True) if self.metadata.component else [],
-            chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
-            self.services
-        ):
-            if len(elem.licenses) > 1 and any(li.expression for li in elem.licenses):
-                raise LicenseExpressionAlongWithOthersException(
-                    f'Found LicenseExpression along with others licenses in: {elem!r}')
-
-        return True
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):
