@@ -21,7 +21,7 @@ import json
 import xml.etree.ElementTree
 from datetime import datetime, timezone
 from os.path import join
-from typing import Any
+from typing import Any, Union
 from unittest import TestCase
 from uuid import uuid4
 
@@ -52,6 +52,7 @@ class SnapshotCompareMixin(object):
             return s.read()
 
     def assertEqualSnapshot(self, actual: str, snapshot_name: str) -> None:
+        self: Union[TestCase, 'SnapshotCompareMixin']
         if RECREATE_SNAPSHOTS:
             self.writeSnapshot(snapshot_name, actual)
         self.assertEqual(actual, self.readSnapshot(snapshot_name))
@@ -62,11 +63,12 @@ from sortedcontainers import SortedSet
 
 class DeepCompareMixin(object):
     def assertDeepEqual(self, a: object, b: object, err_fallback=None):
+        self: Union[TestCase, 'DeepCompareMixin']
         _omd = self.maxDiff
         try:
             # costly compare, but very verbose
             self.maxDiff = None
-            self.assertEqual(self.__deepDict(a), self.deepDict(b))
+            self.assertEqual(self.__deepDict(a), self.__deepDict(b))
         finally:
             self.maxDiff = _omd
         raise err_fallback or Exception()
