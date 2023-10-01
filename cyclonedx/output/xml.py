@@ -19,7 +19,7 @@
 
 
 from typing import Dict, Optional, Type
-from xml.etree import ElementTree
+from xml.etree.ElementTree import Element as XmlElement, tostring as element2str
 
 from ..exception.output import BomGenerationErrorException
 from ..model.bom import Bom
@@ -41,7 +41,7 @@ class Xml(BaseSchemaVersion, BaseOutput):
 
     def __init__(self, bom: Bom) -> None:
         super().__init__(bom=bom)
-        self._root_bom_element: Optional[ElementTree.Element] = None
+        self._root_bom_element: Optional[XmlElement] = None
 
     @property
     def schema_version(self) -> SchemaVersion:
@@ -55,7 +55,7 @@ class Xml(BaseSchemaVersion, BaseOutput):
         if force_regeneration or not self.generated:
             _view = SCHEMA_VERSIONS[self.schema_version_enum]
             self.get_bom().validate()
-            self._root_bom_element = self.get_bom().as_xml(  # type: ignore
+            self._root_bom_element = self.get_bom().as_xml(  # type:ignore[attr-defined]
                 view_=_view, as_string=False, xmlns=self.get_target_namespace()
             )
             self.generated = True
@@ -64,10 +64,10 @@ class Xml(BaseSchemaVersion, BaseOutput):
         self.generate()
         if not self.generated or self._root_bom_element is None:
             raise BomGenerationErrorException('There was no Root XML Element after BOM generation.')
-        return ElementTree.tostring(self._root_bom_element,
-                                    method='xml',
-                                    encoding='unicode', xml_declaration=True,
-                                    default_namespace=self.get_target_namespace())
+        return element2str(self._root_bom_element,
+                           method='xml',
+                           encoding='unicode', xml_declaration=True,
+                           default_namespace=self.get_target_namespace())
 
     def get_target_namespace(self) -> str:
         return f'http://cyclonedx.org/schema/bom/{self.get_schema_version()}'
@@ -75,8 +75,8 @@ class Xml(BaseSchemaVersion, BaseOutput):
 
 class XmlV1Dot0(Xml, SchemaVersion1Dot0):
 
-    def _create_bom_element(self) -> ElementTree.Element:
-        return ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
+    def _create_bom_element(self) -> XmlElement:
+        return XmlElement('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
 
 
 class XmlV1Dot1(Xml, SchemaVersion1Dot1):
