@@ -64,15 +64,10 @@ class Xml(BaseSchemaVersion, BaseOutput):
         self.generate()
         if not self.generated or self._root_bom_element is None:
             raise BomGenerationErrorException('There was no Root XML Element after BOM generation.')
-        ElementTree.register_namespace('', self.get_target_namespace())
-        return ElementTree.tostring(
-            self._root_bom_element, method='xml',
-            encoding='unicode', xml_declaration=True,
-            # cannot set defaultNS, because the stupid XML serializer forgot to set NS on attributes.
-            # therefore, the defaultNS was registered as nsID with empty string. see above.
-            # see https://github.com/madpah/serializable/issues/12
-            # default_namespace=self.get_target_namespace()
-        )
+        return ElementTree.tostring(self._root_bom_element,
+                                    method='xml',
+                                    encoding='unicode', xml_declaration=True,
+                                    default_namespace=self.get_target_namespace())
 
     def get_target_namespace(self) -> str:
         return f'http://cyclonedx.org/schema/bom/{self.get_schema_version()}'
