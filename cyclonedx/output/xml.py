@@ -37,7 +37,6 @@ from . import BaseOutput
 
 
 class Xml(BaseSchemaVersion, BaseOutput):
-    XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def __init__(self, bom: Bom) -> None:
         super().__init__(bom=bom)
@@ -74,7 +73,11 @@ class Xml(BaseSchemaVersion, BaseOutput):
     def output_as_string(self) -> str:
         self.generate()
         if self.generated and self._root_bom_element is not None:
-            return str(Xml.XML_VERSION_DECLARATION + ElementTree.tostring(self._root_bom_element, encoding='unicode'))
+            return ElementTree.tostring(self._root_bom_element,
+                                        method='xml',
+                                        encoding='unicode', xml_declaration=True,
+                                        default_namespace=self.get_target_namespace(),
+                                        short_empty_elements=True)
 
         raise BomGenerationErrorException('There was no Root XML Element after BOM generation.')
 
