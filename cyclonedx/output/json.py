@@ -17,9 +17,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import json
 from abc import abstractmethod
-from typing import Dict, Optional, Type
+from json import dumps as json_dumps, loads as json_loads
+from typing import Any, Dict, Optional, Type, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
@@ -40,7 +40,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     def __init__(self, bom: Bom) -> None:
         super().__init__(bom=bom)
-        self._json_output: str = ''
+        self._bom_json: Dict[str, Any] = dict()
 
     @property
     def schema_version(self) -> SchemaVersion:
@@ -51,7 +51,9 @@ class Json(BaseOutput, BaseSchemaVersion):
         return OutputFormat.JSON
 
     def generate(self, force_regeneration: bool = False) -> None:
-        # New Way
+        if self.generated and not force_regeneration:
+            return
+
         schema_uri: Optional[str] = self._get_schema_uri()
         if not schema_uri:
             raise FormatNotSupportedException(
@@ -63,26 +65,19 @@ class Json(BaseOutput, BaseSchemaVersion):
             'specVersion': self.schema_version.to_version()
         }
         _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
-        if self.generated and force_regeneration:
-            self.get_bom().validate()
-            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
-            bom_json.update(_json_core)
-            self._json_output = json.dumps(bom_json)
-            self.generated = True
-            return
-        elif self.generated:
-            return
-        else:
-            self.get_bom().validate()
-            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
-            bom_json.update(_json_core)
-            self._json_output = json.dumps(bom_json)
-            self.generated = True
-            return
+        self.get_bom().validate()
+        bom_json: Dict[str, Any] = json_loads(
+            self.get_bom().as_json(  # type:ignore[attr-defined]
+                view_=_view))
+        bom_json.update(_json_core)
+        self._bom_json = bom_json
+        self.generated = True
 
-    def output_as_string(self) -> str:
+    def output_as_string(self, *,
+                         indent: Optional[Union[int, str]] = None) -> str:
         self.generate()
-        return self._json_output
+        return json_dumps(self._bom_json,
+                          indent=indent)
 
     @abstractmethod
     def _get_schema_uri(self) -> Optional[str]:
