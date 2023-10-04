@@ -22,7 +22,7 @@ and according to different versions of the CycloneDX schema standard.
 import os
 from abc import ABC, abstractmethod
 from importlib import import_module
-from typing import Iterable, Optional, Type, Union
+from typing import Any, Dict, Iterable, Optional, Type, Union
 
 from ..model.bom import Bom
 from ..model.component import Component
@@ -72,10 +72,14 @@ class BaseOutput(ABC):
         ...
 
     @abstractmethod
-    def output_as_string(self) -> str:
+    def output_as_string(self, *,
+                         indent: Optional[Union[int, str]] = None,
+                         **kwargs: Dict[str, Any]) -> str:
         ...
 
-    def output_to_file(self, filename: str, allow_overwrite: bool = False) -> None:
+    def output_to_file(self, filename: str, allow_overwrite: bool = False, *,
+                       indent: Optional[Union[int, str]] = None,
+                       **kwargs: Dict[str, Any]) -> None:
         # Check directory writable
         output_filename = os.path.realpath(filename)
         output_directory = os.path.dirname(output_filename)
@@ -84,7 +88,7 @@ class BaseOutput(ABC):
         if os.path.exists(output_filename) and not allow_overwrite:
             raise FileExistsError(output_filename)
         with open(output_filename, mode='wb') as f_out:
-            f_out.write(self.output_as_string().encode('utf-8'))
+            f_out.write(self.output_as_string(indent=indent).encode('utf-8'))
 
 
 def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,

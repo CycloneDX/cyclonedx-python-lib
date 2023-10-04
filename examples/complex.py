@@ -52,7 +52,7 @@ bom.register_dependency(component1, [component2])
 # endregion build the BOM
 
 
-serialized_json = JsonV1Dot4(bom).output_as_string()
+serialized_json = JsonV1Dot4(bom).output_as_string(indent=2)
 print(serialized_json)
 try:
     validation_errors = JsonStrictValidator(SchemaVersion.V1_4).validate_str(serialized_json)
@@ -63,8 +63,10 @@ try:
 except MissingOptionalDependencyException as error:
     print('JSON-validation was skipped due to', error)
 
+print('', '=' * 30, '', sep='\n')
+
 my_outputter = get_outputter(bom, OutputFormat.XML, SchemaVersion.V1_4)
-serialized_xml = my_outputter.output_as_string()
+serialized_xml = my_outputter.output_as_string(indent=2)
 print(serialized_xml)
 try:
     validation_errors = get_validator(my_outputter.output_format,

@@ -17,19 +17,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from os.path import join
+from typing import Optional, Union
 from unittest import TestCase
 from unittest.mock import Mock, patch
 from uuid import UUID
 
-from ddt import ddt, idata
+from ddt import ddt, idata, named_data
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import get_instance
+from cyclonedx.output import get_instance as get_outputter
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import TESTDATA_DIRECTORY
 from tests.base import BaseXmlTestCase
 from tests.data import (
+    MOCK_BOM_UUID_1,
+    MOCK_TIMESTAMP,
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
@@ -58,6 +61,7 @@ from tests.data import (
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
 
 
+@ddt
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestOutputXml(BaseXmlTestCase):
 
@@ -531,10 +535,28 @@ class TestOutputXml(BaseXmlTestCase):
                 fixture='bom_with_dependencies_hanging.xml'
             )
 
+    @named_data(
+        ('None', 'None', None),
+        ('two', 'two', 2),
+        ('4spaces', '4spaces', '    '),
+        ('tab', 'tab', '\t')
+    )
+    def test_indent(self, name: str, indent: Optional[Union[str, int]]) -> None:
+        bom = get_bom_with_component_setuptools_basic()
+        bom.serial_number = MOCK_BOM_UUID_1
+        bom.metadata.timestamp = MOCK_TIMESTAMP
+        schema_version = SchemaVersion.V1_4
+        outputter = get_outputter(bom=bom, schema_version=schema_version, output_format=OutputFormat.XML)
+        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), f'indented_{name}.xml')
+                  ) as expected_xml:
+            bom_xml = outputter.output_as_string(indent=indent)
+            self.assertEqual(expected_xml.read(), bom_xml)
+            self.assertValidAgainstSchema(bom_xml=bom_xml, schema_version=schema_version)
+
     # region Helper methods
 
     def _validate_xml_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
-        outputter = get_instance(bom=bom, schema_version=schema_version)
+        outputter = get_outputter(bom=bom, schema_version=schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as expected_xml:
             output_as_string = outputter.output_as_string()
             self.assertValidAgainstSchema(bom_xml=output_as_string, schema_version=schema_version)
@@ -549,7 +571,7 @@ class TestOutputXml(BaseXmlTestCase):
 class TestFunctionalBySchemaVersion(TestCase):
 
     @idata(SchemaVersion)
-    def test_get_instance_expected(self, sv: SchemaVersion) -> None:
+    def test_get_outputter_expected(self, sv: SchemaVersion) -> None:
         outputterClass = BY_SCHEMA_VERSION[sv]
         self.assertTrue(issubclass(outputterClass, Xml))
         outputter = outputterClass(Mock(spec=Bom))
