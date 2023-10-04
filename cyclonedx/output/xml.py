@@ -56,12 +56,14 @@ class Xml(BaseSchemaVersion, BaseOutput):
         _view = SCHEMA_VERSIONS[self.schema_version_enum]
         self.get_bom().validate()
         xmlns = self.get_target_namespace()
-        self._bom_xml = xml_dumps(
+        self._bom_xml = '<?xml version="1.0" ?>\n' + xml_dumps(
             self.get_bom().as_xml(  # type:ignore[attr-defined]
                 _view, as_string=False, xmlns=xmlns),
-            method='xml',
-            encoding='unicode', xml_declaration=True,
-            default_namespace=xmlns)
+            method='xml', default_namespace=xmlns, encoding='unicode',
+            # `xml-declaration` is inconsistent/bugged in py38, especially on Windows it will print a non-UTF8 codepage.
+            # Furthermore, it might add an encoding of "utf-8" which is redundant default value of XML.
+            # -> so we write the declaration manually, as long as py38 is supported.
+            xml_declaration=False)
 
         self.generated = True
 
@@ -73,7 +75,9 @@ class Xml(BaseSchemaVersion, BaseOutput):
             return v
         return ''
 
-    def output_as_string(self, *, indent: Optional[Union[int, str]] = None) -> str:
+    def output_as_string(self, *,
+                         indent: Optional[Union[int, str]] = None,
+                         **kwargs) -> str:
         self.generate()
         return self._bom_xml if indent is None else dom_parseString(self._bom_xml).toprettyxml(
             indent=self.__make_indent(indent)

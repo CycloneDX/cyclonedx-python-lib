@@ -73,11 +73,13 @@ class BaseOutput(ABC):
 
     @abstractmethod
     def output_as_string(self, *,
-                         indent: Optional[Union[int, str]] = None) -> str:
+                         indent: Optional[Union[int, str]] = None,
+                         **kwargs) -> str:
         ...
 
     def output_to_file(self, filename: str, allow_overwrite: bool = False, *,
-                       indent: Optional[Union[int, str]] = None) -> None:
+                       indent: Optional[Union[int, str]] = None,
+                       **kwargs) -> None:
         # Check directory writable
         output_filename = os.path.realpath(filename)
         output_directory = os.path.dirname(output_filename)
