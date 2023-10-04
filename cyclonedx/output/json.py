@@ -75,7 +75,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     def output_as_string(self, *,
                          indent: Optional[Union[int, str]] = None,
-                         **kwargs) -> str:
+                         **kwargs: Dict[str, Any]) -> str:
         self.generate()
         return json_dumps(self._bom_json,
                           indent=indent)

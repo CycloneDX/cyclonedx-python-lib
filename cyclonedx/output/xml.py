@@ -18,7 +18,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Type, Union
 from xml.dom.minidom import parseString as dom_parseString
 from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps
 
@@ -77,7 +77,7 @@ class Xml(BaseSchemaVersion, BaseOutput):
 
     def output_as_string(self, *,
                          indent: Optional[Union[int, str]] = None,
-                         **kwargs) -> str:
+                         **kwargs: Dict[str, Any]) -> str:
         self.generate()
         return self._bom_xml if indent is None else dom_parseString(self._bom_xml).toprettyxml(
             indent=self.__make_indent(indent)
