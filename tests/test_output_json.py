@@ -17,20 +17,23 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from os.path import join
+from typing import Optional, Union
 from unittest import TestCase
 from unittest.mock import Mock, patch
 from uuid import UUID
 
-from ddt import ddt, idata
+from ddt import ddt, idata, named_data
 
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import get_instance
+from cyclonedx.output import get_instance as get_outputter
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import TESTDATA_DIRECTORY
 from tests.base import BaseJsonTestCase
 from tests.data import (
+    MOCK_BOM_UUID_1,
+    MOCK_TIMESTAMP,
     MOCK_UUID_1,
     MOCK_UUID_2,
     MOCK_UUID_3,
@@ -59,6 +62,7 @@ from tests.data import (
 RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'json')
 
 
+@ddt
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
 class TestOutputJson(BaseJsonTestCase):
 
@@ -401,10 +405,28 @@ class TestOutputJson(BaseJsonTestCase):
                 fixture='bom_with_dependencies_hanging.json'
             )
 
+    @named_data(
+        ('None', 'None', None),
+        ('two', 'two', 2),
+        ('4spaces', '4spaces', '    '),
+        ('tab', 'tab', '\t')
+    )
+    def test_indent(self, name: str, indent: Optional[Union[str, int]]) -> None:
+        bom = get_bom_with_component_setuptools_basic()
+        bom.serial_number = MOCK_BOM_UUID_1
+        bom.metadata.timestamp = MOCK_TIMESTAMP
+        schema_version = SchemaVersion.V1_4
+        outputter = get_outputter(bom=bom, schema_version=schema_version, output_format=OutputFormat.JSON)
+        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), f'indented_{name}.json')
+                  ) as expected_xml:
+            bom_json = outputter.output_as_string(indent=indent)
+            self.assertEqual(expected_xml.read(), bom_json)
+            self.assertValidAgainstSchema(bom_json=bom_json, schema_version=schema_version)
+
     # region Helper methods
 
     def _validate_json_bom(self, bom: Bom, schema_version: SchemaVersion, fixture: str) -> None:
-        outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
+        outputter = get_outputter(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as expected_json:
             output_as_string = outputter.output_as_string()
             self.assertValidAgainstSchema(bom_json=output_as_string, schema_version=schema_version)
@@ -412,7 +434,7 @@ class TestOutputJson(BaseJsonTestCase):
 
     def _validate_json_bom_not_supported(self, bom: Bom, schema_version: SchemaVersion) -> None:
         with self.assertRaises(FormatNotSupportedException):
-            outputter = get_instance(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
+            outputter = get_outputter(bom=bom, output_format=OutputFormat.JSON, schema_version=schema_version)
             outputter.output_as_string()
 
     # endregion Helper methods
@@ -422,7 +444,7 @@ class TestOutputJson(BaseJsonTestCase):
 class TestFunctionalBySchemaVersion(TestCase):
 
     @idata(SchemaVersion)
-    def test_get_instance_expected(self, sv: SchemaVersion) -> None:
+    def test_get_outputter_expected(self, sv: SchemaVersion) -> None:
         outputterClass = BY_SCHEMA_VERSION[sv]
         self.assertTrue(issubclass(outputterClass, Json))
         outputter = outputterClass(Mock(spec=Bom))

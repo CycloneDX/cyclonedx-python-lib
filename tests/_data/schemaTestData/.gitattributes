@@ -1,2 +1,3 @@
-*/*.json    linguist-vendored
-*/*.xml     linguist-vendored
+*           binary
+*/*.json    linguist-vendored diff=json
+*/*.xml     linguist-vendored diff=xml
