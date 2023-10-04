@@ -1,8 +1,3 @@
-# encoding: utf-8
-import re
-from os.path import dirname, join
-from urllib.request import urlretrieve
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,6 +12,9 @@ from urllib.request import urlretrieve
 #
 # SPDX-License-Identifier: Apache-2.0
 
+import re
+from os.path import dirname, join
+from urllib.request import urlretrieve
 
 SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/master/schema/'
 TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res')
