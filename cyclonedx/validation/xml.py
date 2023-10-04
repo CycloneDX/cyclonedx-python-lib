@@ -65,11 +65,16 @@ class _BaseXmlValidator(BaseValidator, ABC):
 
         __validator: Optional['XMLSchema'] = None
 
-        __xml_parser = XMLParser(
-            resolve_entities=False,
-            no_network=True,
-            huge_tree=True,
-            compact=True)
+        @property
+        def __xml_parser(self) -> XMLParser:
+            return XMLParser(
+                attribute_defaults=False, dtd_validation=False, load_dtd=False,
+                no_network=True,
+                resolve_entities=False,
+                huge_tree=True,
+                compact=True,
+                recover=False
+            )
 
         @property
         def _validator(self) -> 'XMLSchema':
