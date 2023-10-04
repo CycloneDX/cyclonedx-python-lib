@@ -58,7 +58,7 @@ jobs:
         include:
           - # test with the latest dependencies
             os: ubuntu-latest
-            python-version: '3.11'
+            python-version: '3.12'
             toxenv-factors: '-current'
           - # test with the lowest dependencies
             os: ubuntu-latest
@@ -93,7 +93,8 @@ jobs:
       matrix:
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         python-version:
-          - "3.11" # highest supported
+          - "3.12" # highest supported
+          - "3.11"
           - "3.10"
           - "3.9"
           - "3.8"  # lowest supported
@@ -189,7 +190,7 @@ jobs:
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: '>=3.8 <=3.11'  # supported version range
+          python-version: '>=3.8 <=3.12'  # supported version range
       - name: Validate Python Environment
         shell: python
         run: |
