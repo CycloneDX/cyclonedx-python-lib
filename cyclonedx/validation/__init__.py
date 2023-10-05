@@ -84,19 +84,19 @@ class BaseValidator(ABC, Validator):
 
 @overload
 def get_instance(output_format: Literal[OutputFormat.JSON], schema_version: 'SchemaVersion'
-                 ) -> 'JsonValidator':  # pragma: no cover
+                 ) -> 'JsonValidator':
     ...
 
 
 @overload
 def get_instance(output_format: Literal[OutputFormat.XML], schema_version: 'SchemaVersion'
-                 ) -> 'XmlValidator':  # pragma: no cover
+                 ) -> 'XmlValidator':
     ...
 
 
 @overload
 def get_instance(output_format: OutputFormat, schema_version: 'SchemaVersion'
-                 ) -> Union['JsonValidator', 'XmlValidator']:  # pragma: no cover
+                 ) -> Union['JsonValidator', 'XmlValidator']:
     ...
 
 
