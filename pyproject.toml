@@ -64,7 +64,7 @@ packageurl-python = ">= 0.11"
 py-serializable = "^0.13.0"
 sortedcontainers = "^2.4.0"
 license-expression = "^30"
-jsonschema = { version = "^4.18", extras=['format'], optional=true, python="^3.8" }
+jsonschema = { version = "^4.18", extras=['format'], optional=true }
 lxml = { version="^4", optional=true }
 
 [tool.poetry.extras]
