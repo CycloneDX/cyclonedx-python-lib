@@ -18,7 +18,7 @@
 import base64
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional, TypeVar
+from typing import List, Optional, TypeVar, Any, Dict, ParamSpec
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -41,6 +41,7 @@ from cyclonedx.model import (
     Property,
     Tool,
     XsUri,
+    Copyright,
 )
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.component import (
@@ -49,7 +50,6 @@ from cyclonedx.model.component import (
     ComponentEvidence,
     ComponentScope,
     ComponentType,
-    Copyright,
     Patch,
     PatchClassification,
     Pedigree,
@@ -59,13 +59,15 @@ from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
-from cyclonedx.model.vulnerability import (
-    BomTarget,
-    BomTargetVersionRange,
+from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
     ImpactAnalysisJustification,
     ImpactAnalysisResponse,
     ImpactAnalysisState,
+)
+from cyclonedx.model.vulnerability import (
+    BomTarget,
+    BomTargetVersionRange,
     Vulnerability,
     VulnerabilityAdvisory,
     VulnerabilityAnalysis,
@@ -76,6 +78,8 @@ from cyclonedx.model.vulnerability import (
     VulnerabilitySeverity,
     VulnerabilitySource,
 )
+
+MOCK_TIMESTAMP = datetime.fromisoformat('2023-08-15 01:23:45.678900+00:00')
 
 MOCK_UUID = (
     'be2c6502-7e9a-47db-9a66-e34f729810a3',
@@ -102,8 +106,8 @@ BOM_SERIAL_NUMBER = UUID('1441d33a-e0fc-45b5-af3b-61ee52a88bac')
 BOM_TIMESTAMP = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
 
 
-def _makeBom(*args, **kwargs) -> Bom:
-    bom = Bom(*args, **kwargs)
+def _makeBom(**kwargs: Any) -> Bom:
+    bom = Bom(**kwargs)
     bom.serial_number = BOM_SERIAL_NUMBER
     bom.metadata.timestamp = BOM_TIMESTAMP
     return bom
@@ -189,6 +193,8 @@ def get_bom_with_component_setuptools_complete() -> Bom:
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom = _makeBom()
     component = get_component_setuptools_simple()
+    if not component.purl:
+        raise ValueError('purl is required here')
     bom.components.add(component)
     bom.vulnerabilities.add(Vulnerability(
         bom_ref='my-vuln-ref-1', id='CVE-2018-7489', source=get_vulnerability_source_nvd(),
@@ -236,7 +242,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ),
         affects=[
             BomTarget(
-                ref=component.purl.to_string() if component.purl else None,
+                ref=component.purl.to_string(),
                 versions=[BomTargetVersionRange(
                     range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
@@ -368,10 +374,10 @@ def get_bom_for_issue_275_components() -> Bom:
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
     """
 
-    app = Component(bom_ref=MOCK_UUID_1, name="app", version="1.0.0")
-    comp_a = Component(bom_ref=MOCK_UUID_2, name="comp_a", version="1.0.0")
-    comp_b = Component(bom_ref=MOCK_UUID_3, name="comp_b", version="1.0.0")
-    comp_c = Component(bom_ref=MOCK_UUID_4, name="comp_c", version="1.0.0")
+    app = Component(bom_ref=MOCK_UUID[0], name="app", version="1.0.0")
+    comp_a = Component(bom_ref=MOCK_UUID[1], name="comp_a", version="1.0.0")
+    comp_b = Component(bom_ref=MOCK_UUID[2], name="comp_b", version="1.0.0")
+    comp_c = Component(bom_ref=MOCK_UUID[3], name="comp_c", version="1.0.0")
 
     comp_b.components.add(comp_c)
     # comp_b.dependencies.add(comp_c.bom_ref)
