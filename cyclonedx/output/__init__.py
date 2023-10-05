@@ -95,20 +95,20 @@ class BaseOutput(ABC):
 
 @overload
 def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.JSON],
-                 schema_version: SchemaVersion = ...) -> 'JsonOutputter':
+                 schema_version: SchemaVersion = ...) -> 'JsonOutputter':  # pragma: no cover
     ...
 
 
 @overload
 def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.XML] = ...,
-                 schema_version: SchemaVersion = ...) -> 'XmlOutputter':
+                 schema_version: SchemaVersion = ...) -> 'XmlOutputter':  # pragma: no cover
     ...
 
 
 @overload
 def get_instance(bom: 'Bom', output_format: OutputFormat = ...,
                  schema_version: SchemaVersion = ...
-                 ) -> Union['XmlOutputter', 'JsonOutputter']:
+                 ) -> Union['XmlOutputter', 'JsonOutputter']:  # pragma: no cover
     ...
 
 
