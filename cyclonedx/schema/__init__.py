@@ -19,7 +19,8 @@ from enum import Enum, auto, unique
 class OutputFormat(Enum):
     """Output formats.
 
-    Do not rely on the actual/literal values, just use enum cases.
+    Do not rely on the actual/literal values, just use enum cases, like so:
+        my_of = OutputFormat.XML
     """
     JSON = auto()
     XML = auto()
@@ -33,7 +34,8 @@ class SchemaVersion(Enum):
     Cases are hashable.
     Cases are comparable(!=,>=,>,==,<,<=)
 
-    Do not rely on the actual/literal values, just use enum cases.
+    Do not rely on the actual/literal values, just use enum cases, like so:
+        my_sv = SchemaVersion.V1_3
     """
     V1_4 = (1, 4)
     V1_3 = (1, 3)
