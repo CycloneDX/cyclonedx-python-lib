@@ -20,7 +20,7 @@ and according to different versions of the CycloneDX schema standard.
 import os
 from abc import ABC, abstractmethod
 from importlib import import_module
-from typing import Any, Dict, Iterable, Optional, Type, Union
+from typing import Any, Iterable, Optional, Type, Union
 
 from ..model.bom import Bom
 from ..model.component import Component
@@ -72,12 +72,12 @@ class BaseOutput(ABC):
     @abstractmethod
     def output_as_string(self, *,
                          indent: Optional[Union[int, str]] = None,
-                         **kwargs: Dict[str, Any]) -> str:
+                         **kwargs: Any) -> str:
         ...
 
     def output_to_file(self, filename: str, allow_overwrite: bool = False, *,
                        indent: Optional[Union[int, str]] = None,
-                       **kwargs: Dict[str, Any]) -> None:
+                       **kwargs: Any) -> None:
         # Check directory writable
         output_filename = os.path.realpath(filename)
         output_directory = os.path.dirname(output_filename)
