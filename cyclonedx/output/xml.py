@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Type, Union, Literal
 from xml.dom.minidom import parseString as dom_parseString
 from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps
 
@@ -44,7 +44,7 @@ class Xml(BaseSchemaVersion, BaseOutput):
         return self.schema_version_enum
 
     @property
-    def output_format(self) -> OutputFormat:
+    def output_format(self) -> Literal[OutputFormat.XML]:
         return OutputFormat.XML
 
     def generate(self, force_regeneration: bool = False) -> None:

@@ -70,9 +70,9 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
 
 
 SCHEMA_VERSIONS: Dict[SchemaVersion, Type[BaseSchemaVersion]] = {
-    SchemaVersion.V1_4: SchemaVersion1Dot4,  # type:ignore[type-abstract]
-    SchemaVersion.V1_3: SchemaVersion1Dot3,  # type:ignore[type-abstract]
-    SchemaVersion.V1_2: SchemaVersion1Dot2,  # type:ignore[type-abstract]
-    SchemaVersion.V1_1: SchemaVersion1Dot1,  # type:ignore[type-abstract]
-    SchemaVersion.V1_0: SchemaVersion1Dot0,  # type:ignore[type-abstract]
+    SchemaVersion.V1_4: SchemaVersion1Dot4,
+    SchemaVersion.V1_3: SchemaVersion1Dot3,
+    SchemaVersion.V1_2: SchemaVersion1Dot2,
+    SchemaVersion.V1_1: SchemaVersion1Dot1,
+    SchemaVersion.V1_0: SchemaVersion1Dot0,
 }

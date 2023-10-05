@@ -14,7 +14,7 @@
 
 from abc import ABC, abstractmethod
 from importlib import import_module
-from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Type, overload
+from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Type, overload, Union
 
 from ..schema import OutputFormat
 
@@ -89,6 +89,12 @@ def get_instance(output_format: Literal[OutputFormat.JSON], schema_version: 'Sch
 
 @overload
 def get_instance(output_format: Literal[OutputFormat.XML], schema_version: 'SchemaVersion') -> 'XmlValidator':
+    ...
+
+
+@overload
+def get_instance(output_format: OutputFormat, schema_version: 'SchemaVersion'
+                 ) -> Union['JsonValidator', 'XmlValidator']:
     ...
 
 

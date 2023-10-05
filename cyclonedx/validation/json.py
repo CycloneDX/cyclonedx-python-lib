@@ -16,7 +16,7 @@ __all__ = ['JsonValidator', 'JsonStrictValidator']
 
 from abc import ABC
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional, Tuple, Literal
 
 from ..schema import OutputFormat
 
@@ -45,7 +45,7 @@ except ImportError as err:
 
 class _BaseJsonValidator(BaseValidator, ABC):
     @property
-    def output_format(self) -> OutputFormat:
+    def output_format(self) -> Literal[OutputFormat.JSON]:
         return OutputFormat.JSON
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:

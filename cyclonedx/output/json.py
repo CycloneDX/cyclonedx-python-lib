@@ -17,7 +17,7 @@
 
 from abc import abstractmethod
 from json import dumps as json_dumps, loads as json_loads
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Type, Union, Literal
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom
@@ -45,7 +45,7 @@ class Json(BaseOutput, BaseSchemaVersion):
         return self.schema_version_enum
 
     @property
-    def output_format(self) -> OutputFormat:
+    def output_format(self) -> Literal[OutputFormat.JSON]:
         return OutputFormat.JSON
 
     def generate(self, force_regeneration: bool = False) -> None:
@@ -85,31 +85,31 @@ class Json(BaseOutput, BaseSchemaVersion):
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> None:
         return None
 
 
 class JsonV1Dot1(Json, SchemaVersion1Dot1):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> None:
         return None
 
 
 class JsonV1Dot2(Json, SchemaVersion1Dot2):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> str:
         return 'http://cyclonedx.org/schema/bom-1.2b.schema.json'
 
 
 class JsonV1Dot3(Json, SchemaVersion1Dot3):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> str:
         return 'http://cyclonedx.org/schema/bom-1.3a.schema.json'
 
 
 class JsonV1Dot4(Json, SchemaVersion1Dot4):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> str:
         return 'http://cyclonedx.org/schema/bom-1.4.schema.json'
 
 
