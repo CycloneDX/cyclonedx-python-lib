@@ -20,11 +20,16 @@ from typing import Hashable
 class OutputFormat(Enum):
     """Output formats.
 
+    Cases are hashable.
+
     Do not rely on the actual/literal values, just use enum cases, like so:
         my_of = OutputFormat.XML
     """
     JSON = auto()
     XML = auto()
+
+    def __hash__(self) -> int:
+        return hash(self.name)
 
 
 @unique
@@ -82,3 +87,6 @@ class SchemaVersion(Enum):
         if isinstance(other, self.__class__):
             return self.value > other.value
         return NotImplemented  # pragma: no cover
+
+    def __hash__(self) -> int:
+        return hash(self.name)
