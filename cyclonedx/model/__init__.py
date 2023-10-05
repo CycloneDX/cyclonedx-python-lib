@@ -18,6 +18,7 @@ import re
 import warnings
 from datetime import datetime, timezone
 from enum import Enum
+from itertools import zip_longest
 from typing import Any, Iterable, Optional, Tuple, TypeVar
 
 import serializable
@@ -72,31 +73,27 @@ class ComparableTuple(Tuple[Optional[_T], ...]):
     """
 
     def __lt__(self, other: Any) -> bool:
-        for s, o in zip(self, other):
+        for s, o in zip_longest(self, other):
             if s == o:
                 continue
+            # the idea is to have any consistent order, not necessarily "natural" order.
             if s is None:
                 return False
             if o is None:
                 return True
-            if s < o:
-                return True
-            if s > o:
-                return False
+            return True if s < o else False
         return False
 
     def __gt__(self, other: Any) -> bool:
-        for s, o in zip(self, other):
+        for s, o in zip_longest(self, other):
             if s == o:
                 continue
+            # the idea is to have any consistent order, not necessarily "natural" order.
             if s is None:
                 return True
             if o is None:
                 return False
-            if s < o:
-                return False
-            if s > o:
-                return True
+            return True if s > o else False
         return False
 
 
