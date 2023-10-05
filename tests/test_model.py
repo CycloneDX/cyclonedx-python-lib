@@ -134,6 +134,14 @@ class TestComparableTuple(TestCase):
         self.assertNotEqual(tuple1, tuple2)
         self.assertNotEqual(tuple2, tuple1)
 
+    def test_compare_last_item_missing(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        tuple2 = ComparableTuple((1, 2, 3, 4))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
     def test_compare_enum(self) -> None:
         tuple1 = ComparableTuple((DummyStringEnum.FIRST, ))
         tuple2 = ComparableTuple((DummyStringEnum.SECOND, ))
