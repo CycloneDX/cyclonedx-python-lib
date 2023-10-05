@@ -13,6 +13,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from enum import Enum, auto, unique
+from typing import Hashable
 
 
 @unique
@@ -53,34 +54,31 @@ class SchemaVersion(Enum):
         return '.'.join(map(str, self.value))
 
     def __ne__(self, other: object) -> bool:
-        return self.value != other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+        if isinstance(other, self.__class__):
+            return self.value != other.value
+        return NotImplemented  # pragma: no cover
 
     def __lt__(self, other: object) -> bool:
-        return self.value < other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+        if isinstance(other, self.__class__):
+            return self.value < other.value
+        return NotImplemented  # pragma: no cover
 
     def __le__(self, other: object) -> bool:
-        return self.value <= other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+        if isinstance(other, self.__class__):
+            return self.value <= other.value
+        return NotImplemented  # pragma: no cover
 
     def __eq__(self, other: object) -> bool:
-        return self.value == other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+        if isinstance(other, self.__class__):
+            return self.value == other.value
+        return NotImplemented  # pragma: no cover
 
     def __ge__(self, other: object) -> bool:
-        return self.value >= other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+        if isinstance(other, self.__class__):
+            return self.value >= other.value
+        return NotImplemented  # pragma: no cover
 
     def __gt__(self, other: object) -> bool:
-        return self.value > other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
-
-    def __hash__(self) -> int:
-        return hash(self.name)
+        if isinstance(other, self.__class__):
+            return self.value > other.value
+        return NotImplemented  # pragma: no cover
