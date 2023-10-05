@@ -17,10 +17,9 @@
 
 from abc import abstractmethod
 from json import dumps as json_dumps, loads as json_loads
-from typing import Any, Dict, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Type, Union
 
 from ..exception.output import FormatNotSupportedException
-from ..model.bom import Bom
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
@@ -33,10 +32,13 @@ from ..schema.schema import (
 )
 from . import BaseOutput
 
+if TYPE_CHECKING:
+    from ..model.bom import Bom
+
 
 class Json(BaseOutput, BaseSchemaVersion):
 
-    def __init__(self, bom: Bom) -> None:
+    def __init__(self, bom: 'Bom') -> None:
         super().__init__(bom=bom)
         self._bom_json: Dict[str, Any] = dict()
 
@@ -63,9 +65,10 @@ class Json(BaseOutput, BaseSchemaVersion):
             'specVersion': self.schema_version.to_version()
         }
         _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
-        self.get_bom().validate()
+        bom = self.get_bom()
+        bom.validate()
         bom_json: Dict[str, Any] = json_loads(
-            self.get_bom().as_json(  # type:ignore[attr-defined]
+            bom.as_json(  # type:ignore[attr-defined]
                 view_=_view))
         bom_json.update(_json_core)
         self._bom_json = bom_json
