@@ -107,7 +107,7 @@ def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.XML] = ...,
 
 @overload
 def get_instance(bom: 'Bom', output_format: OutputFormat = ...,
-                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION
+                 schema_version: SchemaVersion = ...
                  ) -> Union['XmlOutputter', 'JsonOutputter']:
     ...
 

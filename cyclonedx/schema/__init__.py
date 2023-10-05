@@ -15,8 +15,6 @@
 from enum import Enum, auto, unique
 from typing import Any, Type, TypeVar
 
-_T = TypeVar('_T')
-
 
 @unique
 class OutputFormat(Enum):
@@ -33,6 +31,9 @@ class OutputFormat(Enum):
 
     def __hash__(self) -> int:
         return hash(self.name)
+
+
+_SV = TypeVar('_SV', bound='SchemaVersion')
 
 
 @unique
@@ -54,7 +55,7 @@ class SchemaVersion(Enum):
     V1_0 = (1, 0)
 
     @classmethod
-    def from_version(cls: Type[_T], version: str) -> _T:
+    def from_version(cls: Type[_SV], version: str) -> _SV:
         """Return instance based of a version string - e.g. `1.4`"""
         return cls(tuple(map(int, version.split('.')))[:2])
 
