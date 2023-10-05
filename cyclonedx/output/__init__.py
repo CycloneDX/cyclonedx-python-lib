@@ -20,23 +20,27 @@ and according to different versions of the CycloneDX schema standard.
 import os
 from abc import ABC, abstractmethod
 from importlib import import_module
-from typing import Any, Iterable, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Type, Union, overload
 
-from ..model.bom import Bom
-from ..model.component import Component
 from ..schema import OutputFormat, SchemaVersion
+
+if TYPE_CHECKING:
+    from ..model.bom import Bom
+    from ..model.component import Component
+    from .json import Json as JsonOutputter
+    from .xml import Xml as XmlOutputter
 
 LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_4
 
 
 class BaseOutput(ABC):
 
-    def __init__(self, bom: Bom, **kwargs: int) -> None:
+    def __init__(self, bom: 'Bom', **kwargs: int) -> None:
         super().__init__(**kwargs)
         self._bom = bom
         self._generated: bool = False
 
-    def _chained_components(self, container: Union[Bom, Component]) -> Iterable[Component]:
+    def _chained_components(self, container: Union['Bom', 'Component']) -> Iterable['Component']:
         for component in container.components:
             yield component
             yield from self._chained_components(component)
@@ -59,10 +63,10 @@ class BaseOutput(ABC):
     def generated(self, generated: bool) -> None:
         self._generated = generated
 
-    def get_bom(self) -> Bom:
+    def get_bom(self) -> 'Bom':
         return self._bom
 
-    def set_bom(self, bom: Bom) -> None:
+    def set_bom(self, bom: 'Bom') -> None:
         self._bom = bom
 
     @abstractmethod
@@ -89,17 +93,32 @@ class BaseOutput(ABC):
             f_out.write(self.output_as_string(indent=indent).encode('utf-8'))
 
 
-def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
+@overload
+def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.JSON],
+                 schema_version: SchemaVersion = ...) -> 'JsonOutputter':
+    ...
+
+
+@overload
+def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.XML] = ...,
+                 schema_version: SchemaVersion = ...) -> 'XmlOutputter':
+    ...
+
+
+def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
                  schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.
 
     Pass in your BOM and optionally an output format and schema version (defaults to XML and latest schema version).
 
+
+    Raises error when no instance could be built.
+
     :param bom: Bom
     :param output_format: OutputFormat
     :param schema_version: SchemaVersion
-    :return:
+    :return: BaseOutput
     """
     # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
     if not isinstance(output_format, OutputFormat):
@@ -108,9 +127,9 @@ def get_instance(bom: Bom, output_format: OutputFormat = OutputFormat.XML,
         raise TypeError(f"unexpected schema_version: {schema_version!r}")
     try:
         module = import_module(f'.{output_format.name.lower()}', __package__)
-    except ImportError as error:  # pragma: no cover
+    except ImportError as error:
         raise ValueError(f'Unknown output_format: {output_format.name}') from error
     klass: Optional[Type[BaseOutput]] = module.BY_SCHEMA_VERSION.get(schema_version, None)
-    if klass is None:  # pragma: no cover
+    if klass is None:
         raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version.name}')
     return klass(bom=bom)
