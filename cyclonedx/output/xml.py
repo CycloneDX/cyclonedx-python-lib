@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Any, Dict, Optional, Type, Union, Literal
+from typing import Any, Dict, Literal, Optional, Type, Union
 from xml.dom.minidom import parseString as dom_parseString
 from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps
 

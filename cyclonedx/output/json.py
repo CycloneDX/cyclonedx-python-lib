@@ -17,7 +17,7 @@
 
 from abc import abstractmethod
 from json import dumps as json_dumps, loads as json_loads
-from typing import Any, Dict, Optional, Type, Union, Literal
+from typing import Any, Dict, Literal, Optional, Type, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..model.bom import Bom

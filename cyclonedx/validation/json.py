@@ -16,7 +16,7 @@ __all__ = ['JsonValidator', 'JsonStrictValidator']
 
 from abc import ABC
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Optional, Tuple, Literal
+from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple
 
 from ..schema import OutputFormat
 

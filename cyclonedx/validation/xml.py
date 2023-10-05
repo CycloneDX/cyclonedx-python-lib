@@ -15,7 +15,7 @@
 __all__ = ['XmlValidator']
 
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Optional, Tuple, Literal
+from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple
 
 from ..exception import MissingOptionalDependencyException
 from ..schema import OutputFormat

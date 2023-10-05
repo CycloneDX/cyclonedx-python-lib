@@ -14,7 +14,7 @@
 
 from abc import ABC, abstractmethod
 from importlib import import_module
-from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Type, overload, Union
+from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Type, Union, overload
 
 from ..schema import OutputFormat
 
