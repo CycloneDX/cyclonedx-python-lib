@@ -114,9 +114,9 @@ class JsonV1Dot4(Json, SchemaVersion1Dot4):
 
 
 BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Json]] = {
-    SchemaVersion.V1_4: JsonV1Dot4,  # type:ignore[type-abstract]
-    SchemaVersion.V1_3: JsonV1Dot3,  # type:ignore[type-abstract]
-    SchemaVersion.V1_2: JsonV1Dot2,  # type:ignore[type-abstract]
-    SchemaVersion.V1_1: JsonV1Dot1,  # type:ignore[type-abstract]
-    SchemaVersion.V1_0: JsonV1Dot0,  # type:ignore[type-abstract]
+    SchemaVersion.V1_4: JsonV1Dot4,
+    SchemaVersion.V1_3: JsonV1Dot3,
+    SchemaVersion.V1_2: JsonV1Dot2,
+    SchemaVersion.V1_1: JsonV1Dot1,
+    SchemaVersion.V1_0: JsonV1Dot0,
 }

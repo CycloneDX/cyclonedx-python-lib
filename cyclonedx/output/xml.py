@@ -109,9 +109,9 @@ class XmlV1Dot4(Xml, SchemaVersion1Dot4):
 
 
 BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Xml]] = {
-    SchemaVersion.V1_4: XmlV1Dot4,  # type:ignore[type-abstract]
-    SchemaVersion.V1_3: XmlV1Dot3,  # type:ignore[type-abstract]
-    SchemaVersion.V1_2: XmlV1Dot2,  # type:ignore[type-abstract]
-    SchemaVersion.V1_1: XmlV1Dot1,  # type:ignore[type-abstract]
-    SchemaVersion.V1_0: XmlV1Dot0,  # type:ignore[type-abstract]
+    SchemaVersion.V1_4: XmlV1Dot4,
+    SchemaVersion.V1_3: XmlV1Dot3,
+    SchemaVersion.V1_2: XmlV1Dot2,
+    SchemaVersion.V1_1: XmlV1Dot1,
+    SchemaVersion.V1_0: XmlV1Dot0,
 }
