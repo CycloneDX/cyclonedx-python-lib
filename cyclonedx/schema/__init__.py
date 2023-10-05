@@ -13,7 +13,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from enum import Enum, auto, unique
-from typing import Hashable
+from typing import Any, Type, TypeVar
+
+_T = TypeVar('_T')
 
 
 @unique
@@ -25,6 +27,7 @@ class OutputFormat(Enum):
     Do not rely on the actual/literal values, just use enum cases, like so:
         my_of = OutputFormat.XML
     """
+
     JSON = auto()
     XML = auto()
 
@@ -43,6 +46,7 @@ class SchemaVersion(Enum):
     Do not rely on the actual/literal values, just use enum cases, like so:
         my_sv = SchemaVersion.V1_3
     """
+
     V1_4 = (1, 4)
     V1_3 = (1, 3)
     V1_2 = (1, 2)
@@ -50,40 +54,40 @@ class SchemaVersion(Enum):
     V1_0 = (1, 0)
 
     @classmethod
-    def from_version(cls, version: str) -> 'SchemaVersion':
-        """Return instance from  a version string - e.g. `1.4`"""
+    def from_version(cls: Type[_T], version: str) -> _T:
+        """Return instance based of a version string - e.g. `1.4`"""
         return cls(tuple(map(int, version.split('.')))[:2])
 
     def to_version(self) -> str:
         """Return as a version string - e.g. `1.4`"""
         return '.'.join(map(str, self.value))
 
-    def __ne__(self, other: object) -> bool:
+    def __ne__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.value != other.value
         return NotImplemented  # pragma: no cover
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.value < other.value
         return NotImplemented  # pragma: no cover
 
-    def __le__(self, other: object) -> bool:
+    def __le__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.value <= other.value
         return NotImplemented  # pragma: no cover
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.value == other.value
         return NotImplemented  # pragma: no cover
 
-    def __ge__(self, other: object) -> bool:
+    def __ge__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.value >= other.value
         return NotImplemented  # pragma: no cover
 
-    def __gt__(self, other: object) -> bool:
+    def __gt__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.value > other.value
         return NotImplemented  # pragma: no cover
