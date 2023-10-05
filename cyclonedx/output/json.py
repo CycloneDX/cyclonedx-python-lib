@@ -32,7 +32,7 @@ from ..schema.schema import (
 )
 from . import BaseOutput
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
 
 

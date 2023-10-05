@@ -24,7 +24,7 @@ from license_expression import get_spdx_licensing  # type: ignore
 
 from .schema._res import SPDX_JSON as __SPDX_JSON_SCHEMA
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from license_expression import Licensing
 
 # region init

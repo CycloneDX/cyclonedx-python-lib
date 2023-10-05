@@ -50,7 +50,7 @@ from .dependency import Dependable, Dependency
 from .service import Service
 from .vulnerability import Vulnerability
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
 
 

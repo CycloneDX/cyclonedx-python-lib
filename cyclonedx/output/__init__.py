@@ -24,7 +24,7 @@ from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Type, Union,
 
 from ..schema import OutputFormat, SchemaVersion
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
     from ..model.component import Component
     from .json import Json as JsonOutputter

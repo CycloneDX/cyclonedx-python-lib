@@ -22,7 +22,7 @@ from ..schema import OutputFormat
 from ..schema._res import BOM_XML as _S_BOM
 from . import BaseValidator, ValidationError, Validator
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None

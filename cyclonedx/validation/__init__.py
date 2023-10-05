@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Type, Union,
 
 from ..schema import OutputFormat
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
     from .json import JsonValidator
     from .xml import XmlValidator
