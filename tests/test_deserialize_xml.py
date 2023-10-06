@@ -20,7 +20,6 @@ from os.path import join
 from typing import cast
 from unittest.mock import Mock, patch
 from uuid import UUID
-from xml.etree import ElementTree
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION, SchemaVersion, get_instance
@@ -686,11 +685,10 @@ class TestDeserializeXml(BaseXmlTestCase):
         if schema_version != LATEST_SUPPORTED_SCHEMA_VERSION:
             # Rewind the BOM to only have data supported by the SchemaVersion in question
             outputter = get_instance(bom=bom, output_format=OutputFormat.XML, schema_version=schema_version)
-            bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(outputter.output_as_string())))
+            bom = cast(Bom, Bom.from_xml(outputter.output_as_string()))
 
         with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as input_xml:
-            xml = input_xml.read()
-            deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(xml)))
+            deserialized_bom = cast(Bom, Bom.from_xml(input_xml))
 
             self.assertEqual(bom.metadata, deserialized_bom.metadata)
 
