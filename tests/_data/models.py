@@ -16,9 +16,11 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import base64
+import sys
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional, TypeVar, Any, Dict, ParamSpec
+from inspect import getmembers, isfunction
+from typing import Any, Dict, List, Optional, ParamSpec, TypeVar
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -26,6 +28,7 @@ from packageurl import PackageURL
 
 from cyclonedx.model import (
     AttachedText,
+    Copyright,
     DataClassification,
     DataFlow,
     Encoding,
@@ -41,7 +44,6 @@ from cyclonedx.model import (
     Property,
     Tool,
     XsUri,
-    Copyright,
 )
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.component import (
@@ -56,15 +58,15 @@ from cyclonedx.model.component import (
     Swid,
 )
 from cyclonedx.model.dependency import Dependency
-from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from cyclonedx.model.release_note import ReleaseNotes
-from cyclonedx.model.service import Service
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
     ImpactAnalysisJustification,
     ImpactAnalysisResponse,
     ImpactAnalysisState,
 )
+from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
+from cyclonedx.model.release_note import ReleaseNotes
+from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
@@ -101,11 +103,13 @@ MOCK_UUID = (
     'a3f4096d-4211-4d68-9d2b-13973c86aca9',
 )
 
-def uuid_generator(offset:int=0, version: int=4):
+
+def uuid_generator(offset: int = 0, version: int = 4):
     v = offset
     while True:
         v += 1
         yield UUID(int=v, version=version)
+
 
 BOM_SERIAL_NUMBER = UUID('1441d33a-e0fc-45b5-af3b-61ee52a88bac')
 BOM_TIMESTAMP = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
@@ -709,11 +713,8 @@ def get_bom_service_licenses_invalid() -> Bom:
         Service(name='foo', licenses=get_invalid_license_repository())
     ])
 
-from inspect import isfunction, getmembers
-import sys
-
 
 all_get_bom_funct_valid = tuple(
-    (n,f) for n,f in getmembers(sys.modules[__name__], isfunction)
+    (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid')
 )

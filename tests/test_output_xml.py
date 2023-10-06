@@ -24,12 +24,10 @@ from ddt import ddt, idata, named_data, unpack
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
-from cyclonedx.schema import SchemaVersion, OutputFormat
-
+from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.validation.xml import XmlValidator
 from tests import SnapshotCompareMixin
 from tests._data.models import all_get_bom_funct_valid, uuid_generator
-
-from cyclonedx.validation.xml import XmlValidator
 
 
 @ddt
@@ -48,8 +46,6 @@ class TestOutputXml(TestCase, SnapshotCompareMixin):
         errors = XmlValidator(sv).validate_str(xml)
         self.assertIsNone(errors)
         self.assertEqualSnapshot(xml, f'{self.__class__.__name__}-{get_bom.__name__}-{sv.to_version()}.xml')
-
-
 
 
 @ddt

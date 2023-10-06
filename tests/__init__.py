@@ -17,7 +17,7 @@
 
 from os import getenv, path
 from os.path import join
-from typing import Union, Any, Optional, TypeVar, List
+from typing import Any, List, Optional, TypeVar, Union
 from unittest import TestCase
 
 from sortedcontainers import SortedSet

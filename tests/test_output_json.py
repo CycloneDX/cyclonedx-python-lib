@@ -23,12 +23,10 @@ from ddt import ddt, idata, named_data, unpack
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
-from cyclonedx.schema import SchemaVersion, OutputFormat
-
+from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.validation.json import JsonStrictValidator
 from tests import SnapshotCompareMixin
 from tests._data.models import all_get_bom_funct_valid, uuid_generator
-
-from cyclonedx.validation.json import JsonStrictValidator
 
 
 @ddt
@@ -39,8 +37,8 @@ class TestOutputJson(TestCase, SnapshotCompareMixin):
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion if sv not in [
-        SchemaVersion.V1_1, SchemaVersion.V1_0,
-    ]
+            SchemaVersion.V1_1, SchemaVersion.V1_0,
+        ]
     ))
     @unpack
     def test(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:

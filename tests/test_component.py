@@ -21,10 +21,10 @@ from unittest import TestCase
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 
-from tests._data.models import get_component_setuptools_simple
 from cyclonedx.model import sha1sum
 from cyclonedx.model.component import Component
 from tests import OWN_DATA_DIRECTORY
+from tests._data.models import get_component_setuptools_simple
 
 
 class TestComponent(TestCase):
