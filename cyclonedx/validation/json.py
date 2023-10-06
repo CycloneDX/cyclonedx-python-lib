@@ -16,11 +16,11 @@ __all__ = ['JsonValidator', 'JsonStrictValidator']
 
 from abc import ABC
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple
 
 from ..schema import OutputFormat
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
 
 from ..exception import MissingOptionalDependencyException
@@ -34,7 +34,7 @@ try:
     from referencing import Registry
     from referencing.jsonschema import DRAFT7
 
-    if TYPE_CHECKING:
+    if TYPE_CHECKING:  # pragma: no cover
         from jsonschema.protocols import Validator as JsonSchemaValidator  # type: ignore[import]
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
@@ -45,7 +45,7 @@ except ImportError as err:
 
 class _BaseJsonValidator(BaseValidator, ABC):
     @property
-    def output_format(self) -> OutputFormat:
+    def output_format(self) -> Literal[OutputFormat.JSON]:
         return OutputFormat.JSON
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:

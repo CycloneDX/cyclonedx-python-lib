@@ -30,6 +30,14 @@ from cyclonedx.schema import SchemaVersion, OutputFormat
 from cyclonedx.validation.json import JsonStrictValidator
 from cyclonedx.validation import get_instance as get_validator
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from cyclonedx.output.json import Json as JsonOutputter
+    from cyclonedx.output.xml import Xml as XmlOutputter
+    from cyclonedx.validation.xml import XmlValidator
+
+
 lc_factory = LicenseChoiceFactory(license_factory=LicenseFactory())
 
 # region build the BOM
@@ -68,11 +76,15 @@ bom.register_dependency(component1, [component2])
 
 # endregion build the BOM
 
+# region JSON
+"""demo with explicit instructions for SchemaVersion, outputter and validator"""
 
-serialized_json = JsonV1Dot4(bom).output_as_string(indent=2)
+my_json_outputter: 'JsonOutputter' = JsonV1Dot4(bom)
+serialized_json = my_json_outputter.output_as_string(indent=2)
 print(serialized_json)
+my_json_validator = JsonStrictValidator(SchemaVersion.V1_4)
 try:
-    validation_errors = JsonStrictValidator(SchemaVersion.V1_4).validate_str(serialized_json)
+    validation_errors = my_json_validator.validate_str(serialized_json)
     if validation_errors:
         print('JSON invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
@@ -82,16 +94,22 @@ except MissingOptionalDependencyException as error:
 
 print('', '=' * 30, '', sep='\n')
 
-my_outputter = get_outputter(bom, OutputFormat.XML, SchemaVersion.V1_4)
-serialized_xml = my_outputter.output_as_string(indent=2)
+# endregion JSON
+
+# region XML
+"""demo with implicit instructions for SchemaVersion, outputter and validator. TypeCheckers will catch errors."""
+
+my_xml_outputter: 'XmlOutputter' = get_outputter(bom, OutputFormat.XML)
+serialized_xml = my_xml_outputter.output_as_string(indent=2)
 print(serialized_xml)
+my_xml_validator: 'XmlValidator' = get_validator(my_xml_outputter.output_format, my_xml_outputter.schema_version)
 try:
-    validation_errors = get_validator(my_outputter.output_format,
-                                      my_outputter.schema_version
-                                      ).validate_str(serialized_xml)
+    validation_errors = my_xml_validator.validate_str(serialized_xml)
     if validation_errors:
         print('XML invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
     print('XML valid')
 except MissingOptionalDependencyException as error:
     print('XML-validation was skipped due to', error)
+
+# endregion XML

@@ -14,12 +14,14 @@
 
 from abc import ABC, abstractmethod
 from importlib import import_module
-from typing import TYPE_CHECKING, Any, Optional, Protocol, Type
+from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Type, Union, overload
 
 from ..schema import OutputFormat
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
+    from .json import JsonValidator
+    from .xml import XmlValidator
 
 
 class ValidationError:
@@ -80,15 +82,37 @@ class BaseValidator(ABC, Validator):
         ...
 
 
+@overload
+def get_instance(output_format: Literal[OutputFormat.JSON], schema_version: 'SchemaVersion'
+                 ) -> 'JsonValidator':
+    ...
+
+
+@overload
+def get_instance(output_format: Literal[OutputFormat.XML], schema_version: 'SchemaVersion'
+                 ) -> 'XmlValidator':
+    ...
+
+
+@overload
+def get_instance(output_format: OutputFormat, schema_version: 'SchemaVersion'
+                 ) -> Union['JsonValidator', 'XmlValidator']:
+    ...
+
+
 def get_instance(output_format: OutputFormat, schema_version: 'SchemaVersion') -> BaseValidator:
-    """get the default validator for a certain `OutputFormat`"""
+    """get the default validator for a certain `OutputFormat`
+
+    Raises error when no instance could be built.
+    """
+    # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
     if not isinstance(output_format, OutputFormat):
         raise TypeError(f"unexpected output_format: {output_format!r}")
     try:
         module = import_module(f'.{output_format.name.lower()}', __package__)
-    except ImportError as error:  # pragma: no cover
+    except ImportError as error:
         raise ValueError(f'Unknown output_format: {output_format.name}') from error
     klass: Optional[Type[BaseValidator]] = getattr(module, f'{output_format.name.capitalize()}Validator', None)
-    if klass is None:  # pragma: no cover
+    if klass is None:
         raise ValueError(f'Missing Validator for {output_format.name}')
     return klass(schema_version)

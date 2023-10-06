@@ -15,14 +15,14 @@
 __all__ = ['XmlValidator']
 
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple
 
 from ..exception import MissingOptionalDependencyException
 from ..schema import OutputFormat
 from ..schema._res import BOM_XML as _S_BOM
 from . import BaseValidator, ValidationError, Validator
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
@@ -38,7 +38,7 @@ except ImportError as err:
 class _BaseXmlValidator(BaseValidator, ABC):
 
     @property
-    def output_format(self) -> OutputFormat:
+    def output_format(self) -> Literal[OutputFormat.XML]:
         return OutputFormat.XML
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:

@@ -13,16 +13,27 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from enum import Enum, auto, unique
+from typing import Any, Type, TypeVar
 
 
 @unique
 class OutputFormat(Enum):
     """Output formats.
 
-    Do not rely on the actual/literal values, just use enum cases.
+    Cases are hashable.
+
+    Do not rely on the actual/literal values, just use enum cases, like so:
+        my_of = OutputFormat.XML
     """
+
     JSON = auto()
     XML = auto()
+
+    def __hash__(self) -> int:
+        return hash(self.name)
+
+
+_SV = TypeVar('_SV', bound='SchemaVersion')
 
 
 @unique
@@ -33,8 +44,10 @@ class SchemaVersion(Enum):
     Cases are hashable.
     Cases are comparable(!=,>=,>,==,<,<=)
 
-    Do not rely on the actual/literal values, just use enum cases.
+    Do not rely on the actual/literal values, just use enum cases, like so:
+        my_sv = SchemaVersion.V1_3
     """
+
     V1_4 = (1, 4)
     V1_3 = (1, 3)
     V1_2 = (1, 2)
@@ -42,43 +55,43 @@ class SchemaVersion(Enum):
     V1_0 = (1, 0)
 
     @classmethod
-    def from_version(cls, version: str) -> 'SchemaVersion':
-        """Return instance from  a version string - e.g. `1.4`"""
+    def from_version(cls: Type[_SV], version: str) -> _SV:
+        """Return instance based of a version string - e.g. `1.4`"""
         return cls(tuple(map(int, version.split('.')))[:2])
 
     def to_version(self) -> str:
         """Return as a version string - e.g. `1.4`"""
         return '.'.join(map(str, self.value))
 
-    def __ne__(self, other: object) -> bool:
-        return self.value != other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+    def __ne__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value != other.value
+        return NotImplemented  # pragma: no cover
 
-    def __lt__(self, other: object) -> bool:
-        return self.value < other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value < other.value
+        return NotImplemented  # pragma: no cover
 
-    def __le__(self, other: object) -> bool:
-        return self.value <= other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value <= other.value
+        return NotImplemented  # pragma: no cover
 
-    def __eq__(self, other: object) -> bool:
-        return self.value == other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value == other.value
+        return NotImplemented  # pragma: no cover
 
-    def __ge__(self, other: object) -> bool:
-        return self.value >= other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value >= other.value
+        return NotImplemented  # pragma: no cover
 
-    def __gt__(self, other: object) -> bool:
-        return self.value > other.value \
-            if isinstance(other, self.__class__) \
-            else NotImplemented  # type:ignore[return-value]
+    def __gt__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value > other.value
+        return NotImplemented  # pragma: no cover
 
     def __hash__(self) -> int:
         return hash(self.name)

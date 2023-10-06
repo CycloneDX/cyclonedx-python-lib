@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import ABC, abstractmethod
-from typing import Dict, Type
+from typing import Dict, Literal, Type
 
 from serializable import ViewType
 
@@ -37,42 +37,42 @@ class BaseSchemaVersion(ABC, ViewType):
 class SchemaVersion1Dot4(BaseSchemaVersion):
 
     @property
-    def schema_version_enum(self) -> SchemaVersion:
+    def schema_version_enum(self) -> Literal[SchemaVersion.V1_4]:
         return SchemaVersion.V1_4
 
 
 class SchemaVersion1Dot3(BaseSchemaVersion):
 
     @property
-    def schema_version_enum(self) -> SchemaVersion:
+    def schema_version_enum(self) -> Literal[SchemaVersion.V1_3]:
         return SchemaVersion.V1_3
 
 
 class SchemaVersion1Dot2(BaseSchemaVersion):
 
     @property
-    def schema_version_enum(self) -> SchemaVersion:
+    def schema_version_enum(self) -> Literal[SchemaVersion.V1_2]:
         return SchemaVersion.V1_2
 
 
 class SchemaVersion1Dot1(BaseSchemaVersion):
 
     @property
-    def schema_version_enum(self) -> SchemaVersion:
+    def schema_version_enum(self) -> Literal[SchemaVersion.V1_1]:
         return SchemaVersion.V1_1
 
 
 class SchemaVersion1Dot0(BaseSchemaVersion):
 
     @property
-    def schema_version_enum(self) -> SchemaVersion:
+    def schema_version_enum(self) -> Literal[SchemaVersion.V1_0]:
         return SchemaVersion.V1_0
 
 
 SCHEMA_VERSIONS: Dict[SchemaVersion, Type[BaseSchemaVersion]] = {
-    SchemaVersion.V1_4: SchemaVersion1Dot4,  # type:ignore[type-abstract]
-    SchemaVersion.V1_3: SchemaVersion1Dot3,  # type:ignore[type-abstract]
-    SchemaVersion.V1_2: SchemaVersion1Dot2,  # type:ignore[type-abstract]
-    SchemaVersion.V1_1: SchemaVersion1Dot1,  # type:ignore[type-abstract]
-    SchemaVersion.V1_0: SchemaVersion1Dot0,  # type:ignore[type-abstract]
+    SchemaVersion.V1_4: SchemaVersion1Dot4,
+    SchemaVersion.V1_3: SchemaVersion1Dot3,
+    SchemaVersion.V1_2: SchemaVersion1Dot2,
+    SchemaVersion.V1_1: SchemaVersion1Dot1,
+    SchemaVersion.V1_0: SchemaVersion1Dot0,
 }
