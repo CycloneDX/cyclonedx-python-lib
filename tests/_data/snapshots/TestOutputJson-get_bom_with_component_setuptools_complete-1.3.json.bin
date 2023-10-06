@@ -2,7 +2,7 @@
   "components": [
     {
       "author": "Test Author",
-      "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
+      "bom-ref": "00000000-0000-4000-8000-000000000005",
       "components": [
         {
           "author": "Test Author",
@@ -246,7 +246,7 @@
   ],
   "dependencies": [
     {
-      "ref": "be2c6502-7e9a-47db-9a66-e34f729810a3"
+      "ref": "00000000-0000-4000-8000-000000000005"
     }
   ],
   "metadata": {

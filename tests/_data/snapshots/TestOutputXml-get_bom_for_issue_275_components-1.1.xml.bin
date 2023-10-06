@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <components>
+    <component type="library" bom-ref="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda">
+      <name>comp_a</name>
+      <version>1.0.0</version>
+    </component>
+    <component type="library" bom-ref="0b049d09-64c0-4490-a0f5-c84d9aacf857">
+      <name>comp_b</name>
+      <version>1.0.0</version>
+      <components>
+        <component type="library" bom-ref="cd3e9c95-9d41-49e7-9924-8cf0465ae789">
+          <name>comp_c</name>
+          <version>1.0.0</version>
+        </component>
+      </components>
+    </component>
+  </components>
+</bom>

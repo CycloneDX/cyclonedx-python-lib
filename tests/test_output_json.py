@@ -14,6 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 from typing import Callable
 from unittest import TestCase
 from unittest.mock import Mock, patch
@@ -25,21 +26,21 @@ from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import SchemaVersion, OutputFormat
 
 from tests import SnapshotCompareMixin
-from tests._data.models import all_get_bom_funct_valid, TEST_UUIDS
+from tests._data.models import all_get_bom_funct_valid, uuid_generator
 
 from cyclonedx.validation.json import JsonStrictValidator
 
 
 @ddt
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-@patch('cyclonedx.model.component.uuid4', side_effect=TEST_UUIDS)
-@patch('cyclonedx.model.service.uuid4', side_effect=TEST_UUIDS)
+@patch('cyclonedx.model.component.uuid4', side_effect=uuid_generator(0))
+@patch('cyclonedx.model.service.uuid4', side_effect=uuid_generator(2 ** 32))
 class TestOutputJson(TestCase, SnapshotCompareMixin):
 
     @named_data(*(
-        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in [
-            SchemaVersion.V1_4, SchemaVersion.V1_3, SchemaVersion.V1_2,
-        ]
+        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion if sv not in [
+        SchemaVersion.V1_1, SchemaVersion.V1_0,
+    ]
     ))
     @unpack
     def test(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:

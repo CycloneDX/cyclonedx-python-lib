@@ -1,15 +1,18 @@
 {
   "dependencies": [
     {
-      "ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"
+      "ref": "00000000-0000-4000-8000-00000000000e"
     },
     {
-      "ref": "be2c6502-7e9a-47db-9a66-e34f729810a3"
+      "ref": "00000000-0000-4000-8000-00010000000f"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000100000010"
     }
   ],
   "metadata": {
     "component": {
-      "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
+      "bom-ref": "00000000-0000-4000-8000-00000000000e",
       "name": "cyclonedx-python-lib",
       "type": "library",
       "version": "1.0.0"
@@ -26,11 +29,11 @@
   "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "services": [
     {
-      "bom-ref": "be2c6502-7e9a-47db-9a66-e34f729810a3",
+      "bom-ref": "00000000-0000-4000-8000-00010000000f",
       "name": "my-first-service"
     },
     {
-      "bom-ref": "17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda",
+      "bom-ref": "00000000-0000-4000-8000-000100000010",
       "name": "my-second-service"
     }
   ],
