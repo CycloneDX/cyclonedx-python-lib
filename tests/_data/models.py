@@ -703,3 +703,12 @@ def get_bom_service_licenses_invalid() -> Bom:
     return Bom(services=[
         Service(name='foo', licenses=get_invalid_license_repository())
     ])
+
+from inspect import isfunction, getmembers
+import sys
+
+
+all_get_bom_funct_valid = tuple(
+    (n,f) for n,f in getmembers(sys.modules[__name__], isfunction)
+    if n.startswith('get_bom_') and not n.endswith('_invalid')
+)
