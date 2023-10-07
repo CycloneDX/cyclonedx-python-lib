@@ -9,22 +9,22 @@
         <version>TESTING</version>
       </tool>
     </tools>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000016">
+    <component type="library" bom-ref="00000000-0000-4000-8000-000000000033">
       <name>cyclonedx-python-lib</name>
       <version>1.0.0</version>
     </component>
   </metadata>
   <services>
-    <service bom-ref="00000000-0000-4000-8000-000100000017">
+    <service bom-ref="00000000-0000-4000-8000-000000000031">
       <name>my-first-service</name>
     </service>
-    <service bom-ref="00000000-0000-4000-8000-000100000018">
+    <service bom-ref="00000000-0000-4000-8000-000000000032">
       <name>my-second-service</name>
     </service>
   </services>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000016"/>
-    <dependency ref="00000000-0000-4000-8000-000100000017"/>
-    <dependency ref="00000000-0000-4000-8000-000100000018"/>
+    <dependency ref="00000000-0000-4000-8000-000000000031"/>
+    <dependency ref="00000000-0000-4000-8000-000000000032"/>
+    <dependency ref="00000000-0000-4000-8000-000000000033"/>
   </dependencies>
 </bom>

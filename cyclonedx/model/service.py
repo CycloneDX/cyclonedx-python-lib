@@ -14,7 +14,6 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from typing import Any, Iterable, Optional, Union
-from uuid import uuid4
 
 import serializable
 from sortedcontainers import SortedSet
@@ -66,7 +65,7 @@ class Service(Dependable):
         if isinstance(bom_ref, BomRef):
             self._bom_ref = bom_ref
         else:
-            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else str(uuid4()))
+            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
         self.provider = provider
         self.group = group
         self.name = name

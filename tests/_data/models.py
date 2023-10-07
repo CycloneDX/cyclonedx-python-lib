@@ -20,7 +20,7 @@ import sys
 from datetime import datetime, timezone
 from decimal import Decimal
 from inspect import getmembers, isfunction
-from typing import Any, Dict, List, Optional, ParamSpec, TypeVar
+from typing import Any, List, Optional
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -46,6 +46,7 @@ from cyclonedx.model import (
     XsUri,
 )
 from cyclonedx.model.bom import Bom, BomMetaData
+from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
     Commit,
     Component,
@@ -172,17 +173,21 @@ def get_bom_with_dependencies_hanging() -> Bom:
     return bom
 
 
-def get_bom_with_dependencies_invalid() -> Bom:
+def get_bom_with_dependencies_unlinked() -> Bom:
+    """generate a bom with an unlinked dependency.
+    it is expected that this is not an issue on output, that the unlined is just omitted
+    """
     c1 = get_component_setuptools_simple()
-    return _makeBom(components=[c1], dependencies=[Dependency(ref=c1.bom_ref)])
+    return _makeBom(components=[c1], dependencies=[Dependency(ref=BomRef('link-to-ref-not-in-document'))])
 
 
 def get_bom_with_metadata_component_and_dependencies() -> Bom:
-    bom = _makeBom(components=[get_component_toml_with_hashes_with_references()])
+    cs = get_component_toml_with_hashes_with_references()
+    bom = _makeBom(components=[cs])
     bom.metadata.component = get_component_setuptools_simple()
     bom.dependencies.add(
         Dependency(ref=bom.metadata.component.bom_ref, dependencies=[
-            Dependency(ref=get_component_toml_with_hashes_with_references().bom_ref)
+            Dependency(ref=cs.bom_ref)
         ])
     )
     return bom

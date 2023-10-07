@@ -35,22 +35,20 @@
         </externalReferences>
       </tool>
     </tools>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000030">
-      <name>cyclonedx-python-lib</name>
-      <version>1.0.0</version>
-    </component>
   </metadata>
-  <services>
-    <service bom-ref="00000000-0000-4000-8000-00000000002e">
-      <name>my-first-service</name>
-    </service>
-    <service bom-ref="00000000-0000-4000-8000-00000000002f">
-      <name>my-second-service</name>
-    </service>
-  </services>
+  <components>
+    <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
+      <author>Test Author</author>
+      <name>setuptools</name>
+      <version>50.3.2</version>
+      <licenses>
+        <expression>MIT License</expression>
+      </licenses>
+      <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+    </component>
+  </components>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-00000000002e"/>
-    <dependency ref="00000000-0000-4000-8000-00000000002f"/>
-    <dependency ref="00000000-0000-4000-8000-000000000030"/>
+    <dependency ref="00000000-0000-4000-8000-00000000000b"/>
+    <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz"/>
   </dependencies>
 </bom>

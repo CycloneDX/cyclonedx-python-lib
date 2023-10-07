@@ -17,7 +17,7 @@
 
 from os import getenv, path
 from os.path import join
-from typing import Any, List, Optional, TypeVar, Union
+from typing import Any, Generator, List, Optional, TypeVar, Union
 from unittest import TestCase
 from uuid import UUID
 
@@ -43,7 +43,7 @@ class SnapshotCompareMixin:
         return join(SNAPSHOTS_DIRECTORY, f'{snapshot_name}.bin')
 
     @classmethod
-    def writeSnapshot(cls, snapshot_name: str, data: str):
+    def writeSnapshot(cls, snapshot_name: str, data: str) -> None:
         with open(cls.getSnapshotFile(snapshot_name), 'w') as s:
             s.write(data)
 
@@ -100,7 +100,7 @@ def reorder(items: List[_T], indexes: List[int]) -> List[_T]:
     return reordered_items
 
 
-def uuid_generator(offset: int = 0, version: int = 4):
+def uuid_generator(offset: int = 0, version: int = 4) -> Generator[UUID, None, None]:
     v = offset
     while True:
         v += 1
