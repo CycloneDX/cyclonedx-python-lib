@@ -104,13 +104,6 @@ MOCK_UUID = (
 )
 
 
-def uuid_generator(offset: int = 0, version: int = 4):
-    v = offset
-    while True:
-        v += 1
-        yield UUID(int=v, version=version)
-
-
 BOM_SERIAL_NUMBER = UUID('1441d33a-e0fc-45b5-af3b-61ee52a88bac')
 BOM_TIMESTAMP = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
 
@@ -717,4 +710,9 @@ def get_bom_service_licenses_invalid() -> Bom:
 all_get_bom_funct_valid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid')
+)
+
+all_get_bom_funct_invalid = tuple(
+    (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
+    if n.startswith('get_bom_') and n.endswith('_invalid')
 )

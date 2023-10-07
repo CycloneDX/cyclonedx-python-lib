@@ -19,21 +19,29 @@ from typing import Callable
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from ddt import ddt, idata, named_data, unpack
+from ddt import ddt, idata, named_data, unpack, data
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
-from tests import SnapshotCompareMixin
-from tests._data.models import all_get_bom_funct_valid, uuid_generator
+from cyclonedx.exception import CycloneDxException
+from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from cyclonedx.exception.output import FormatNotSupportedException
+from tests import SnapshotCompareMixin, uuid_generator
+from tests._data.models import all_get_bom_funct_valid, all_get_bom_funct_invalid
 
 
 @ddt
-@patch('cyclonedx.model.ThisTool._version', 'TESTING')
-@patch('cyclonedx.model.component.uuid4', side_effect=uuid_generator(0))
-@patch('cyclonedx.model.service.uuid4', side_effect=uuid_generator(2 ** 32))
 class TestOutputJson(TestCase, SnapshotCompareMixin):
+
+    @data(SchemaVersion.V1_1, SchemaVersion.V1_0,)
+    def test_unsupported_schema_raises(self, sv: SchemaVersion) -> None:
+        outputterClass = BY_SCHEMA_VERSION[sv]
+        self.assertTrue(issubclass(outputterClass, Json))
+        outputter = outputterClass(Mock(spec=Bom))
+        with self.assertRaises(FormatNotSupportedException):
+            outputter.output_as_string()
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion if sv not in [
@@ -41,12 +49,33 @@ class TestOutputJson(TestCase, SnapshotCompareMixin):
         ]
     ))
     @unpack
-    def test(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.component.uuid4', side_effect=uuid_generator(0))
+    @patch('cyclonedx.model.service.uuid4', side_effect=uuid_generator(2 ** 32))
+    def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:
         bom = get_bom()
         json = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
         errors = JsonStrictValidator(sv).validate_str(json)
         self.assertIsNone(errors)
         self.assertEqualSnapshot(json, f'{self.__class__.__name__}-{get_bom.__name__}-{sv.to_version()}.json')
+
+    @named_data(*(
+        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion if sv not in [
+            SchemaVersion.V1_1, SchemaVersion.V1_0,
+        ]
+    ))
+    @unpack
+    def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:
+        bom = get_bom()
+        outputter = BY_SCHEMA_VERSION[sv](bom)
+        with self.assertRaises(CycloneDxException) as error:
+            outputter.output_as_string()
+        if isinstance(error.exception, (
+            LicenseExpressionAlongWithOthersException,
+            UnknownComponentDependencyException,
+        )):
+            return None  # expected
+        raise error.exception
 
 
 @ddt

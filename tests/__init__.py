@@ -19,6 +19,7 @@ from os import getenv, path
 from os.path import join
 from typing import Any, List, Optional, TypeVar, Union
 from unittest import TestCase
+from uuid import UUID
 
 from sortedcontainers import SortedSet
 
@@ -54,7 +55,13 @@ class SnapshotCompareMixin:
     def assertEqualSnapshot(self: Union[TestCase, 'SnapshotCompareMixin'], actual: str, snapshot_name: str) -> None:
         if RECREATE_SNAPSHOTS:
             self.writeSnapshot(snapshot_name, actual)
-        self.assertEqual(actual, self.readSnapshot(snapshot_name))
+        _omd = self.maxDiff
+        _omd = self.maxDiff
+        self.maxDiff = None
+        try:
+            self.assertEqual(actual, self.readSnapshot(snapshot_name))
+        finally:
+            self.maxDiff = _omd
 
 
 class DeepCompareMixin:
@@ -62,6 +69,7 @@ class DeepCompareMixin:
                         msg: Optional[str] = None) -> None:
         """costly compare, but very verbose"""
         _omd = self.maxDiff
+        self.maxDiff = None
         try:
             self.maxDiff = None
             dd1 = self.__deepDict(first)
@@ -90,3 +98,10 @@ def reorder(items: List[_T], indexes: List[int]) -> List[_T]:
     for i in range(len(items)):
         reordered_items.append(items[indexes[i]])
     return reordered_items
+
+
+def uuid_generator(offset: int = 0, version: int = 4):
+    v = offset
+    while True:
+        v += 1
+        yield UUID(int=v, version=version)

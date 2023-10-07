@@ -26,26 +26,44 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SnapshotCompareMixin
-from tests._data.models import all_get_bom_funct_valid, uuid_generator
+from cyclonedx.exception.model import UnknownComponentDependencyException, LicenseExpressionAlongWithOthersException
+from cyclonedx.exception import CycloneDxException
+from tests import SnapshotCompareMixin, uuid_generator
+from tests._data.models import all_get_bom_funct_valid, all_get_bom_funct_invalid
 
 
 @ddt
-@patch('cyclonedx.model.ThisTool._version', 'TESTING')
-@patch('cyclonedx.model.component.uuid4', side_effect=uuid_generator(0))
-@patch('cyclonedx.model.service.uuid4', side_effect=uuid_generator(2 ** 32))
 class TestOutputXml(TestCase, SnapshotCompareMixin):
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion
     ))
     @unpack
-    def test(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.component.uuid4', side_effect=uuid_generator(0))
+    @patch('cyclonedx.model.service.uuid4', side_effect=uuid_generator(2 ** 32))
+    def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:
         bom = get_bom()
         xml = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
         errors = XmlValidator(sv).validate_str(xml)
         self.assertIsNone(errors)
         self.assertEqualSnapshot(xml, f'{self.__class__.__name__}-{get_bom.__name__}-{sv.to_version()}.xml')
+
+    @named_data(*(
+        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion
+    ))
+    @unpack
+    def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_, **__) -> None:
+        bom = get_bom()
+        outputter = BY_SCHEMA_VERSION[sv](bom)
+        with self.assertRaises(CycloneDxException) as error:
+            outputter.output_as_string()
+        if isinstance(error.exception, (
+            LicenseExpressionAlongWithOthersException,
+            UnknownComponentDependencyException,
+        )):
+            return None  # expected
+        raise error.exception
 
 
 @ddt
