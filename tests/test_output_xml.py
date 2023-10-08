@@ -22,7 +22,7 @@ from unittest.mock import Mock, patch
 
 from ddt import ddt, idata, named_data, unpack
 
-from cyclonedx.exception import CycloneDxException
+from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
@@ -45,7 +45,10 @@ class TestOutputXml(TestCase, SnapshotMixin):
         snapshot_name = mksname(get_bom, sv, OutputFormat.XML)
         bom = get_bom()
         xml = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
-        errors = XmlValidator(sv).validate_str(xml)
+        try:
+            errors = XmlValidator(sv).validate_str(xml)
+        except MissingOptionalDependencyException:
+            errors = None  # skipped validation
         self.assertIsNone(errors)
         self.assertEqualSnapshot(xml, snapshot_name)
 

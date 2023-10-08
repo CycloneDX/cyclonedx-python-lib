@@ -21,7 +21,7 @@ from unittest.mock import Mock, patch
 
 from ddt import data, ddt, idata, named_data, unpack
 
-from cyclonedx.exception import CycloneDxException
+from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
@@ -31,7 +31,7 @@ from cyclonedx.validation.json import JsonStrictValidator
 from tests import SnapshotMixin, mksname, uuid_generator
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid
 
-UNSUPPORTED_SV = frozenset((SchemaVersion.V1_1, SchemaVersion.V1_0, ))
+UNSUPPORTED_SV = frozenset((SchemaVersion.V1_1, SchemaVersion.V1_0,))
 
 
 @ddt
@@ -56,7 +56,10 @@ class TestOutputJson(TestCase, SnapshotMixin):
         snapshot_name = mksname(get_bom, sv, OutputFormat.JSON)
         bom = get_bom()
         json = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
-        errors = JsonStrictValidator(sv).validate_str(json)
+        try:
+            errors = JsonStrictValidator(sv).validate_str(json)
+        except MissingOptionalDependencyException:
+            errors = None  # skipped validation
         self.assertIsNone(errors)
         self.assertEqualSnapshot(json, snapshot_name)
 
