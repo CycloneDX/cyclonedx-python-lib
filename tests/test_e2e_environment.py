@@ -18,10 +18,10 @@
 import json
 from unittest import TestCase
 
-import pkg_resources
 from lxml import etree
 from packageurl import PackageURL
 
+from cyclonedx import __version__ as OUR_PACKAGE_VERSION
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import OutputFormat, get_instance
@@ -29,7 +29,6 @@ from cyclonedx.output.json import Json
 from cyclonedx.output.xml import Xml
 
 OUR_PACKAGE_NAME: str = 'cyclonedx-python-lib'
-OUR_PACKAGE_VERSION: str = pkg_resources.get_distribution(OUR_PACKAGE_NAME).version
 OUR_PACKAGE_AUTHOR: str = 'Paul Horton'
 
 

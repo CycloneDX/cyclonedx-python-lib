@@ -1,3 +1,2 @@
-*               binary
-xml/*/*.xml     linguist-generated diff=xml
-json/*/*.json   linguist-generated diff=json
+xml/*/*.xml     linguist-generated
+json/*/*.json   linguist-generated

@@ -35,7 +35,7 @@ from cyclonedx.model import (
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
-from tests.data import (
+from tests._data.models import (
     get_bom_component_licenses_invalid,
     get_bom_component_nested_licenses_invalid,
     get_bom_for_issue_275_components,

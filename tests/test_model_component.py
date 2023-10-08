@@ -16,9 +16,9 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import datetime
-from typing import List
+from typing import Any, List
 from unittest import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
@@ -42,8 +42,8 @@ from cyclonedx.model.component import (
     Pedigree,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
-from tests.data import (
-    MOCK_UUID_7,
+from tests import reorder, uuid_generator
+from tests._data.models import (
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
     get_component_toml_with_hashes_with_references,
@@ -52,7 +52,6 @@ from tests.data import (
     get_pedigree_1,
     get_swid_1,
     get_swid_2,
-    reorder,
 )
 
 
@@ -105,14 +104,13 @@ class TestModelCommit(TestCase):
 
 class TestModelComponent(TestCase):
 
-    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
-    def test_empty_basic_component(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
+    def test_empty_basic_component(self, *_: Any, **__: Any) -> None:
         c = Component(name='test-component')
-        mock_uuid.assert_called()
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertIsNone(c.mime_type)
-        self.assertEqual(str(c.bom_ref), '6f266d1c-760f-4552-ae3b-41a9b74232fa')
+        self.assertEqual(str(c.bom_ref), '00000000-0000-4000-8000-000000000001')
         self.assertIsNone(c.supplier)
         self.assertIsNone(c.author)
         self.assertIsNone(c.publisher)
@@ -130,8 +128,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c.components), 0)
         self.assertEqual(len(c.get_all_nested_components(include_self=True)), 1)
 
-    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
-    def test_multiple_basic_components(self, mock_uuid: Mock) -> None:
+    def test_multiple_basic_components(self) -> None:
         c1 = Component(name='test-component')
         self.assertEqual(c1.name, 'test-component')
         self.assertIsNone(c1.version)
@@ -147,8 +144,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c2.hashes), 0)
 
         self.assertNotEqual(c1, c2)
-
-        mock_uuid.assert_called()
 
     def test_external_references(self) -> None:
         c = Component(name='test-component')

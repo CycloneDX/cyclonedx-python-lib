@@ -19,7 +19,6 @@ import warnings
 from enum import Enum
 from os.path import exists
 from typing import Any, Iterable, Optional, Set, Union
-from uuid import uuid4
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
@@ -769,7 +768,7 @@ class Component(Dependable):
         if isinstance(bom_ref, BomRef):
             self._bom_ref = bom_ref
         else:
-            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else str(uuid4()))
+            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
         self.supplier = supplier
         self.author = author
         self.publisher = publisher
@@ -808,8 +807,6 @@ class Component(Dependable):
             )
             if not licenses:
                 self.licenses = [LicenseChoice(expression=license_str)]  # type: ignore
-
-        self.__dependencies: "SortedSet[BomRef]" = SortedSet()
 
     @property
     @serializable.xml_attribute()
