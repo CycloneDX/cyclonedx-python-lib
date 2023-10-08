@@ -169,7 +169,6 @@ def get_bom_with_dependencies_hanging() -> Bom:
             Dependency(c2.bom_ref)
         ]
     )
-    bom.metadata.tools.clear()
     return bom
 
 
@@ -729,5 +728,4 @@ all_get_bom_funct_invalid = tuple(
 )
 
 all_get_bom_funct_with_incomplete_deps = {
-
 }
