@@ -25,9 +25,7 @@ from ddt import ddt, idata, unpack
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import TESTDATA_DIRECTORY
-
-RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'schemaTestData')
+from tests import SCHEMA_TESTDATA_DIRECTORY
 
 UNSUPPORTED_SCHEMA_VERSIONS = set()
 
@@ -35,7 +33,7 @@ UNSUPPORTED_SCHEMA_VERSIONS = set()
 def _dp(prefix: str) -> Generator:
     return (
         (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.xml'))
+        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.xml'))
     )
 
 

@@ -25,17 +25,15 @@ from ddt import data, ddt, idata, unpack
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator, JsonValidator
-from tests import TESTDATA_DIRECTORY
+from tests import SCHEMA_TESTDATA_DIRECTORY
 
-RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'schemaTestData')
-
-UNSUPPORTED_SCHEMA_VERSIONS = (SchemaVersion.V1_0, SchemaVersion.V1_1,)
+UNSUPPORTED_SCHEMA_VERSIONS = {SchemaVersion.V1_0, SchemaVersion.V1_1, }
 
 
 def _dp(prefix: str) -> Generator:
     return (
         (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(join(RELEVANT_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.json'))
+        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.json'))
     )
 
 
