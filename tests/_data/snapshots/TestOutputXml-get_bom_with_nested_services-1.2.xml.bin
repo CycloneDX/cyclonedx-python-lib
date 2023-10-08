@@ -9,7 +9,7 @@
         <version>TESTING</version>
       </tool>
     </tools>
-    <component type="library" bom-ref="00000000-0000-4000-8000-00000000001b">
+    <component type="library" bom-ref="00000000-0000-4000-8000-000000000016">
       <name>cyclonedx-python-lib</name>
       <version>1.0.0</version>
     </component>
@@ -72,15 +72,15 @@
           <authenticated>true</authenticated>
           <x-trust-boundary>false</x-trust-boundary>
         </service>
-        <service bom-ref="00000000-0000-4000-8000-000000000018">
+        <service bom-ref="00000000-0000-4000-8000-000000000013">
           <name>first-nested-service</name>
         </service>
       </services>
     </service>
-    <service bom-ref="00000000-0000-4000-8000-00000000001a">
+    <service bom-ref="00000000-0000-4000-8000-000000000015">
       <name>my-second-service</name>
       <services>
-        <service bom-ref="00000000-0000-4000-8000-000000000019">
+        <service bom-ref="00000000-0000-4000-8000-000000000014">
           <provider>
             <name>CycloneDX</name>
             <url>https://cyclonedx.org</url>
@@ -105,8 +105,8 @@
     </service>
   </services>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-00000000001a"/>
-    <dependency ref="00000000-0000-4000-8000-00000000001b"/>
+    <dependency ref="00000000-0000-4000-8000-000000000015"/>
+    <dependency ref="00000000-0000-4000-8000-000000000016"/>
     <dependency ref="my-specific-bom-ref-for-my-first-service"/>
   </dependencies>
 </bom>

@@ -552,7 +552,9 @@ class Bom:
         # 1. Make sure dependencies are all in this Bom.
         all_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
             map(lambda s: s.bom_ref, self.services))
-        all_dependency_bom_refs = set().union(*(d.dependencies_as_bom_refs() for d in self.dependencies))
+        all_dependency_bom_refs = set(chain((d.ref for d in self.dependencies),
+                                            chain.from_iterable(
+                                                d.dependencies_as_bom_refs() for d in self.dependencies)))
 
         dependency_diff = all_dependency_bom_refs - all_bom_refs
         if len(dependency_diff) > 0:

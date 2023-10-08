@@ -1,10 +1,10 @@
 {
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000014"
+      "ref": "00000000-0000-4000-8000-000000000011"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000015"
+      "ref": "00000000-0000-4000-8000-000000000012"
     },
     {
       "ref": "my-specific-bom-ref-for-my-first-service"
@@ -12,7 +12,7 @@
   ],
   "metadata": {
     "component": {
-      "bom-ref": "00000000-0000-4000-8000-000000000015",
+      "bom-ref": "00000000-0000-4000-8000-000000000012",
       "name": "cyclonedx-python-lib",
       "type": "library",
       "version": "1.0.0"
@@ -100,7 +100,7 @@
           "x-trust-boundary": false
         },
         {
-          "bom-ref": "00000000-0000-4000-8000-000000000012",
+          "bom-ref": "00000000-0000-4000-8000-00000000000f",
           "name": "first-nested-service"
         }
       ],
@@ -108,11 +108,11 @@
       "x-trust-boundary": true
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000014",
+      "bom-ref": "00000000-0000-4000-8000-000000000011",
       "name": "my-second-service",
       "services": [
         {
-          "bom-ref": "00000000-0000-4000-8000-000000000013",
+          "bom-ref": "00000000-0000-4000-8000-000000000010",
           "group": "what-group",
           "name": "yet-another-nested-service",
           "provider": {

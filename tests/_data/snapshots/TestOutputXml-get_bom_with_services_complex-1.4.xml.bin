@@ -35,7 +35,7 @@
         </externalReferences>
       </tool>
     </tools>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000025">
+    <component type="library" bom-ref="00000000-0000-4000-8000-000000000020">
       <name>cyclonedx-python-lib</name>
       <version>1.0.0</version>
     </component>
@@ -129,13 +129,13 @@
         </properties>
       </releaseNotes>
     </service>
-    <service bom-ref="00000000-0000-4000-8000-000000000024">
+    <service bom-ref="00000000-0000-4000-8000-00000000001f">
       <name>my-second-service</name>
     </service>
   </services>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000024"/>
-    <dependency ref="00000000-0000-4000-8000-000000000025"/>
+    <dependency ref="00000000-0000-4000-8000-00000000001f"/>
+    <dependency ref="00000000-0000-4000-8000-000000000020"/>
     <dependency ref="my-specific-bom-ref-for-my-first-service"/>
   </dependencies>
 </bom>

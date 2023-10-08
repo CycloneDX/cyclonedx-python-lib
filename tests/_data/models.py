@@ -173,9 +173,9 @@ def get_bom_with_dependencies_hanging() -> Bom:
     return bom
 
 
-def get_bom_with_dependencies_unlinked() -> Bom:
+def get_bom_with_dependencies_unlinked_invalid() -> Bom:
     """generate a bom with an unlinked dependency.
-    it is expected that this is not an issue on output, that the unlined is just omitted
+    it is expected to throw on output.
     """
     c1 = get_component_setuptools_simple()
     return _makeBom(components=[c1], dependencies=[Dependency(ref=BomRef('link-to-ref-not-in-document'))])
