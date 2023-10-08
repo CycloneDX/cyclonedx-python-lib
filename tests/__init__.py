@@ -17,7 +17,7 @@
 
 from os import getenv, path
 from os.path import join
-from typing import Any, Generator, List, Optional, TypeVar, Union, TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Any, Generator, Iterable, List, Optional, TypeVar, Union
 from unittest import TestCase
 from uuid import UUID
 
@@ -27,6 +27,7 @@ from cyclonedx.schema import OutputFormat, SchemaVersion
 
 if TYPE_CHECKING:
     from cyclonedx.model.bom import Bom
+    from cyclonedx.model.dependency import Dependency
 
 _T = TypeVar('_T')
 
@@ -99,21 +100,28 @@ class DeepCompareMixin:
             return d
         return o
 
-    def assertDeepEqualBom(self, expected: 'Bom', actual: 'Bom',
+    def assertBomDeepEqual(self: Union[TestCase, 'DeepCompareMixin'], expected: 'Bom', actual: 'Bom',
                            msg: Optional[str] = None, *,
                            fuzzy_deps: bool = True) -> None:
         # deps might have been upgraded on serialization, so they might differ
         edeps = expected.dependencies
         adeps = actual.dependencies
-        if True or fuzzy_deps:
+        if fuzzy_deps:
             expected.dependencies = []
             actual.dependencies = []
         try:
             self.assertDeepEqual(expected, actual, msg)
-            # do the fuzzy in deps
+            if fuzzy_deps:
+                self._assertDependenciesFuzzyEqual(edeps, adeps)
         finally:
             expected.dependencies = edeps
             actual.dependencies = adeps
+
+    def _assertDependenciesFuzzyEqual(self: TestCase, a: Iterable['Dependency'], b: Iterable['Dependency']) -> None:
+        delta = set(a) ^ set(b)
+        for d in delta:
+            # only actual relevant dependencies shall be taken into account.
+            self.assertEqual(0, len(d.dependencies), f'unexpected dependencies for {d.ref}')
 
 
 def reorder(items: List[_T], indexes: List[int]) -> List[_T]:

@@ -40,5 +40,5 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
         expected = get_bom()
         with open(self.getSnapshotFile(snapshot_name), 'r') as s:
             bom = Bom.from_xml(s)
-        self.assertDeepEqualBom(expected, bom,
+        self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)

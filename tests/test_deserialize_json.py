@@ -41,5 +41,5 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         expected = get_bom()
         json = json_loads(self.readSnapshot(snapshot_name))
         bom = Bom.from_json(json)
-        self.assertDeepEqualBom(expected, bom,
+        self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)

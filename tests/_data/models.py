@@ -728,4 +728,17 @@ all_get_bom_funct_invalid = tuple(
 )
 
 all_get_bom_funct_with_incomplete_deps = {
+    get_bom_just_complete_metadata,
+    get_bom_with_component_setuptools_basic,
+    get_bom_with_component_setuptools_complete,
+    get_bom_with_component_setuptools_no_component_version,
+    get_bom_with_component_setuptools_with_cpe,
+    get_bom_with_component_setuptools_with_release_notes,
+    get_bom_with_component_setuptools_with_vulnerability,
+    get_bom_with_component_toml_1,
+    get_bom_with_dependencies_hanging,
+    get_bom_with_metadata_component_and_dependencies,
+    get_bom_with_nested_services,
+    get_bom_with_services_complex,
+    get_bom_with_services_simple,
 }
