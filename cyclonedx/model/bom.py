@@ -18,7 +18,7 @@ import warnings
 from datetime import datetime
 from itertools import chain
 from typing import TYPE_CHECKING, Iterable, Optional, Set, Union
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import serializable
 from sortedcontainers import SortedSet
@@ -51,8 +51,6 @@ from .service import Service
 from .vulnerability import Vulnerability
 
 if TYPE_CHECKING:  # pragma: no cover
-    from uuid import UUID
-
     from packageurl import PackageURL
 
 
@@ -278,7 +276,7 @@ class Bom:
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
-                 serial_number: Optional['UUID'] = None, version: int = 1,
+                 serial_number: Optional[UUID] = None, version: int = 1,
                  metadata: Optional[BomMetaData] = None,
                  dependencies: Optional[Iterable[Dependency]] = None,
                  vulnerabilities: Optional[Iterable[Vulnerability]] = None) -> None:
@@ -304,7 +302,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_attribute()
-    def serial_number(self) -> 'UUID':
+    def serial_number(self) -> UUID:
         """
         Unique UUID for this BOM
 
@@ -315,7 +313,7 @@ class Bom:
         return self._serial_number
 
     @serial_number.setter
-    def serial_number(self, serial_number: 'UUID') -> None:
+    def serial_number(self, serial_number: UUID) -> None:
         self._serial_number = serial_number
 
     @property

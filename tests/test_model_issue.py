@@ -20,7 +20,8 @@ from unittest import TestCase
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import XsUri
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from tests.data import get_issue_1, get_issue_2, reorder
+from tests import reorder
+from tests._data.models import get_issue_1, get_issue_2
 
 
 class TestModelIssueType(TestCase):
