@@ -38,7 +38,7 @@ if RECREATE_SNAPSHOTS:
     print('!!! WILL RECREATE ALL SNAPSHOTS !!!')
 
 
-class SnapshotCompareMixin:
+class SnapshotMixin:
 
     @staticmethod
     def getSnapshotFile(snapshot_name: str) -> str:
@@ -54,7 +54,7 @@ class SnapshotCompareMixin:
         with open(cls.getSnapshotFile(snapshot_name), 'r') as s:
             return s.read()
 
-    def assertEqualSnapshot(self: Union[TestCase, 'SnapshotCompareMixin'], actual: str, snapshot_name: str) -> None:
+    def assertEqualSnapshot(self: Union[TestCase, 'SnapshotMixin'], actual: str, snapshot_name: str) -> None:
         if RECREATE_SNAPSHOTS:
             self.writeSnapshot(snapshot_name, actual)
         _omd = self.maxDiff
@@ -84,7 +84,7 @@ class DeepCompareMixin:
         if isinstance(o, (list, tuple)):
             return tuple(self.__deepDict(i) for i in o)
         if isinstance(o, dict):
-            return {k: self.__deepDict(v) for k, v in o}
+            return {k: self.__deepDict(v) for k, v in o.items()}
         if isinstance(o, (set, SortedSet)):
             return tuple(sorted((self.__deepDict(i) for i in o), key=repr))
         if hasattr(o, '__dict__'):

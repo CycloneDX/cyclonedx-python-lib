@@ -28,12 +28,12 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SnapshotCompareMixin, mksname, uuid_generator
+from tests import SnapshotMixin, mksname, uuid_generator
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid
 
 
 @ddt
-class TestOutputXml(TestCase, SnapshotCompareMixin):
+class TestOutputXml(TestCase, SnapshotMixin):
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion
@@ -42,11 +42,12 @@ class TestOutputXml(TestCase, SnapshotCompareMixin):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        snapshot_name = mksname(get_bom, sv, OutputFormat.XML)
         bom = get_bom()
         xml = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
         errors = XmlValidator(sv).validate_str(xml)
         self.assertIsNone(errors)
-        self.assertEqualSnapshot(xml, mksname(get_bom, sv, OutputFormat.XML))
+        self.assertEqualSnapshot(xml, snapshot_name)
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion
