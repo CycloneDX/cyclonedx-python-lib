@@ -14,7 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
+from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
@@ -45,7 +45,7 @@ class TestModelService(TestCase):
         self.assertFalse(s.properties)
 
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
-    def test_service_with_services(self, *_, **__) -> None:
+    def test_service_with_services(self, *_: Any, **__: Any) -> None:
         parent_service = Service(name='parent-service')
         parent_service.services = [
             Service(name='child-service-1'),

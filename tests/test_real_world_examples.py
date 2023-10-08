@@ -18,6 +18,7 @@
 import unittest
 from datetime import datetime
 from os.path import join
+from typing import Any
 from unittest.mock import patch
 
 from cyclonedx.model.bom import Bom
@@ -28,6 +29,6 @@ from tests import OWN_DATA_DIRECTORY
 @patch('cyclonedx.model.bom.get_now_utc', return_value=datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00'))
 class TestDeserializeeRealWorldExamples(unittest.TestCase):
 
-    def test_webgoat_6_1(self, *_, **__) -> None:
+    def test_webgoat_6_1(self, *_: Any, **__: Any) -> None:
         with open(join(OWN_DATA_DIRECTORY, 'xml', '1.4', 'webgoat-6.1.xml')) as input_xml:
             Bom.from_xml(input_xml)
