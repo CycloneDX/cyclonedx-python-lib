@@ -28,14 +28,16 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
-from tests import SnapshotCompareMixin, uuid_generator
+from tests import SnapshotCompareMixin, mksname, uuid_generator
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid
+
+UNSUPPORTED_SV = frozenset((SchemaVersion.V1_1, SchemaVersion.V1_0, ))
 
 
 @ddt
 class TestOutputJson(TestCase, SnapshotCompareMixin):
 
-    @data(SchemaVersion.V1_1, SchemaVersion.V1_0,)
+    @data(*UNSUPPORTED_SV)
     def test_unsupported_schema_raises(self, sv: SchemaVersion) -> None:
         outputterClass = BY_SCHEMA_VERSION[sv]
         self.assertTrue(issubclass(outputterClass, Json))
@@ -43,11 +45,10 @@ class TestOutputJson(TestCase, SnapshotCompareMixin):
         with self.assertRaises(FormatNotSupportedException):
             outputter.output_as_string()
 
-    @named_data(*(
-        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion if sv not in [
-            SchemaVersion.V1_1, SchemaVersion.V1_0,
-        ]
-    ))
+    @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
+                  for n, gb in all_get_bom_funct_valid
+                  for sv in SchemaVersion
+                  if sv not in UNSUPPORTED_SV))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
@@ -56,13 +57,12 @@ class TestOutputJson(TestCase, SnapshotCompareMixin):
         json = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
         errors = JsonStrictValidator(sv).validate_str(json)
         self.assertIsNone(errors)
-        self.assertEqualSnapshot(json, f'{self.__class__.__name__}-{get_bom.__name__}-{sv.to_version()}.json')
+        self.assertEqualSnapshot(json, mksname(get_bom, sv, OutputFormat.JSON))
 
-    @named_data(*(
-        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion if sv not in [
-            SchemaVersion.V1_1, SchemaVersion.V1_0,
-        ]
-    ))
+    @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
+                  for n, gb in all_get_bom_funct_invalid
+                  for sv in SchemaVersion
+                  if sv not in UNSUPPORTED_SV))
     @unpack
     def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion) -> None:
         bom = get_bom()

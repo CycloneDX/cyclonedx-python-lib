@@ -28,7 +28,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SnapshotCompareMixin, uuid_generator
+from tests import SnapshotCompareMixin, mksname, uuid_generator
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid
 
 
@@ -46,7 +46,7 @@ class TestOutputXml(TestCase, SnapshotCompareMixin):
         xml = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
         errors = XmlValidator(sv).validate_str(xml)
         self.assertIsNone(errors)
-        self.assertEqualSnapshot(xml, f'{self.__class__.__name__}-{get_bom.__name__}-{sv.to_version()}.xml')
+        self.assertEqualSnapshot(xml, mksname(get_bom, sv, OutputFormat.XML))
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion

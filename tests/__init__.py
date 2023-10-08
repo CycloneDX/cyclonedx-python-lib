@@ -23,6 +23,8 @@ from uuid import UUID
 
 from sortedcontainers import SortedSet
 
+from cyclonedx.schema import OutputFormat, SchemaVersion
+
 _T = TypeVar('_T')
 
 _TESTDATA_DIRECTORY = path.join(path.dirname(__file__), '_data')
@@ -105,3 +107,14 @@ def uuid_generator(offset: int = 0, version: int = 4) -> Generator[UUID, None, N
     while True:
         v += 1
         yield UUID(int=v, version=version)
+
+
+_SNAME_EXT = {
+    OutputFormat.JSON: 'json',
+    OutputFormat.XML: 'xml',
+}
+
+
+def mksname(purpose: Union[Any], sv: SchemaVersion, f: OutputFormat) -> str:
+    purpose = purpose if isinstance(purpose, str) else purpose.__name__
+    return f'{purpose}-{sv.to_version()}.{_SNAME_EXT[f]}'

@@ -32,6 +32,9 @@ class OutputFormat(Enum):
     def __hash__(self) -> int:
         return hash(self.name)
 
+    def __eq__(self, other: Any) -> bool:
+        return self is other
+
 
 _SV = TypeVar('_SV', bound='SchemaVersion')
 
