@@ -18,29 +18,16 @@
 import unittest
 from datetime import datetime
 from os.path import join
-from typing import cast
 from unittest.mock import patch
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.schema import SchemaVersion
-from tests import TESTDATA_DIRECTORY
-
-RELEVANT_TESTDATA_DIRECTORY = join(TESTDATA_DIRECTORY, 'own', 'xml')
-
-
-def fixed_date_time() -> datetime:
-    return datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
+from tests import OWN_DATA_DIRECTORY
 
 
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-@patch('cyclonedx.model.bom.get_now_utc', fixed_date_time)
+@patch('cyclonedx.model.bom.get_now_utc', return_value=datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00'))
 class TestDeserializeeRealWorldExamples(unittest.TestCase):
 
-    def test_webgoat_6_1(self) -> None:
-        self._attempt_load_example(
-            schema_version=SchemaVersion.V1_4, fixture='webgoat-6.1.xml'
-        )
-
-    def _attempt_load_example(self, schema_version: SchemaVersion, fixture: str) -> None:
-        with open(join(RELEVANT_TESTDATA_DIRECTORY, schema_version.to_version(), fixture)) as input_xml:
-            cast(Bom, Bom.from_xml(input_xml))
+    def test_webgoat_6_1(self, *_, **__) -> None:
+        with open(join(OWN_DATA_DIRECTORY, 'xml', '1.4', 'webgoat-6.1.xml')) as input_xml:
+            Bom.from_xml(input_xml)
