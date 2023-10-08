@@ -17,13 +17,16 @@
 
 from os import getenv, path
 from os.path import join
-from typing import Any, Generator, List, Optional, TypeVar, Union
+from typing import Any, Generator, List, Optional, TypeVar, Union, TYPE_CHECKING, Callable
 from unittest import TestCase
 from uuid import UUID
 
 from sortedcontainers import SortedSet
 
 from cyclonedx.schema import OutputFormat, SchemaVersion
+
+if TYPE_CHECKING:
+    from cyclonedx.model.bom import Bom
 
 _T = TypeVar('_T')
 
@@ -89,10 +92,27 @@ class DeepCompareMixin:
             return {k: self.__deepDict(v) for k, v in o.items()}
         if isinstance(o, (set, SortedSet)):
             # this method returns dict. `dict` is not hashable, so use `list` instead.
-            return list(self.__deepDict(i) for i in o) + ['%conv:set%']
+            return tuple(self.__deepDict(i) for i in sorted(o, key=hash)) + ('%conv:%set',)
         if hasattr(o, '__dict__'):
-            return {k: self.__deepDict(v) for k, v in vars(o).items() if '__' not in k}
+            return {a: self.__deepDict(v) for a, v in o.__dict__.items() if '__' not in a
+                    } | {'%conv': str(type(o))}
         return o
+
+    def assertDeepEqualBom(self, expected: 'Bom', actual: 'Bom',
+                           msg: Optional[str] = None, *,
+                           fuzzy_deps: bool = True) -> None:
+        # deps might have been upgraded on serialization, so they might differ
+        edeps = expected.dependencies
+        adeps = actual.dependencies
+        if True or fuzzy_deps:
+            expected.dependencies = []
+            actual.dependencies = []
+        try:
+            self.assertDeepEqual(expected, actual, msg)
+            # do the fuzzy in deps
+        finally:
+            expected.dependencies = edeps
+            actual.dependencies = adeps
 
 
 def reorder(items: List[_T], indexes: List[int]) -> List[_T]:

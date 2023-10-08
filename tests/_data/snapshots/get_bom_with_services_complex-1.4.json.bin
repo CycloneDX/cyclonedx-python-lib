@@ -1,18 +1,18 @@
 {
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000013"
-    },
-    {
-      "ref": "00000000-0000-4000-8000-000000000014"
+      "ref": "my-specific-bom-ref-for-cpl"
     },
     {
       "ref": "my-specific-bom-ref-for-my-first-service"
+    },
+    {
+      "ref": "my-specific-bom-ref-for-my-second-service"
     }
   ],
   "metadata": {
     "component": {
-      "bom-ref": "00000000-0000-4000-8000-000000000014",
+      "bom-ref": "my-specific-bom-ref-for-cpl",
       "name": "cyclonedx-python-lib",
       "type": "library",
       "version": "1.0.0"
@@ -186,7 +186,7 @@
       "x-trust-boundary": true
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000013",
+      "bom-ref": "my-specific-bom-ref-for-my-second-service",
       "name": "my-second-service"
     }
   ],

@@ -212,12 +212,12 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ],
         ratings=[
             VulnerabilityRating(
-                source=get_vulnerability_source_nvd(), score=Decimal(9.8), severity=VulnerabilitySeverity.CRITICAL,
+                source=get_vulnerability_source_nvd(), score=Decimal('9.8'), severity=VulnerabilitySeverity.CRITICAL,
                 method=VulnerabilityScoreSource.CVSS_V3,
                 vector='AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', justification='Some justification'
             ),
             VulnerabilityRating(
-                source=get_vulnerability_source_owasp(), score=Decimal(2.7), severity=VulnerabilitySeverity.LOW,
+                source=get_vulnerability_source_owasp(), score=Decimal('2.7'), severity=VulnerabilitySeverity.LOW,
                 method=VulnerabilityScoreSource.CVSS_V3,
                 vector='AV:L/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N', justification='Some other justification'
             )
@@ -288,11 +288,12 @@ def get_bom_with_external_references() -> Bom:
 
 def get_bom_with_services_simple() -> Bom:
     bom = _makeBom(services=[
-        Service(name='my-first-service'),
-        Service(name='my-second-service')
+        Service(name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service'),
+        Service(name='my-second-service', bom_ref='my-specific-bom-ref-for-my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY,
+        bom_ref='my-specific-bom-ref-for-cpl'
     )
     return bom
 
@@ -318,10 +319,11 @@ def get_bom_with_services_complex() -> Bom:
             properties=get_properties_1(),
             release_notes=get_release_notes()
         ),
-        Service(name='my-second-service')
+        Service(name='my-second-service', bom_ref='my-specific-bom-ref-for-my-second-service')
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY,
+        bom_ref='my-specific-bom-ref-for-cpl'
     )
     return bom
 
@@ -347,7 +349,7 @@ def get_bom_with_nested_services() -> Bom:
             properties=get_properties_1(),
             services=[
                 Service(
-                    name='first-nested-service'
+                    name='first-nested-service', bom_ref='my-specific-bom-ref-for-first-nested-service',
                 ),
                 Service(
                     name='second-nested-service', bom_ref='my-specific-bom-ref-for-second-nested-service',
@@ -359,6 +361,7 @@ def get_bom_with_nested_services() -> Bom:
         ),
         Service(
             name='my-second-service',
+            bom_ref='my-specific-bom-ref-for-my-second-service',
             services=[
                 Service(
                     name='yet-another-nested-service', provider=get_org_entity_1(), group='what-group', version='6.5.4'
@@ -371,7 +374,8 @@ def get_bom_with_nested_services() -> Bom:
         )
     ])
     bom.metadata.component = Component(
-        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY
+        name='cyclonedx-python-lib', version='1.0.0', type=ComponentType.LIBRARY,
+        bom_ref='my-specific-bom-ref-for-cpl'
     )
     return bom
 
@@ -421,6 +425,7 @@ def get_bom_for_issue_328_components() -> Bom:
     """regression test for issue #328
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/328
     """
+    bom = _makeBom()
 
     comp_root = Component(type=ComponentType.APPLICATION,
                           name='my-project', version='1', bom_ref='my-project')
@@ -431,19 +436,20 @@ def get_bom_for_issue_328_components() -> Bom:
     # Make a tree of components A -> B -> C
     comp_a.components = [comp_b]
     comp_b.components = [comp_c]
-    # Declare dependencies the same way: A -> B -> C
-    comp_a.dependencies = [comp_b.bom_ref]
-    comp_b.dependencies = [comp_c.bom_ref]
 
-    bom = _makeBom()
     bom.metadata.component = comp_root
-    comp_root.dependencies = [comp_a.bom_ref]
+    bom.register_dependency(comp_root, [comp_a])
     bom.components = [comp_a]
+
+    # Declare dependencies the same way: A -> B -> C
+    bom.register_dependency(comp_a, [comp_b])
+    bom.register_dependency(comp_b, [comp_c])
+
     return bom
 
 
 def get_component_setuptools_complete(include_pedigree: bool = True) -> Component:
-    component = get_component_setuptools_simple(bom_ref=None)
+    component = get_component_setuptools_simple(bom_ref='my-specific-bom-ref-for-dings')
     component.supplier = get_org_entity_1()
     component.publisher = 'CycloneDX'
     component.description = 'This component is awesome'
@@ -721,3 +727,7 @@ all_get_bom_funct_invalid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and n.endswith('_invalid')
 )
+
+all_get_bom_funct_with_incomplete_deps = {
+
+}

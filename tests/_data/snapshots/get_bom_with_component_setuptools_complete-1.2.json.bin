@@ -2,7 +2,7 @@
   "components": [
     {
       "author": "Test Author",
-      "bom-ref": "00000000-0000-4000-8000-000000000006",
+      "bom-ref": "my-specific-bom-ref-for-dings",
       "components": [
         {
           "author": "Test Author",
@@ -202,7 +202,7 @@
   ],
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000006"
+      "ref": "my-specific-bom-ref-for-dings"
     }
   ],
   "metadata": {

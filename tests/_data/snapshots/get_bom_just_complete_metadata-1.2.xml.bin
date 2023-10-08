@@ -20,7 +20,7 @@
         <email>paul.horton@owasp.org</email>
       </author>
     </authors>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000003">
+    <component type="library" bom-ref="my-specific-bom-ref-for-dings">
       <supplier>
         <name>CycloneDX</name>
         <url>https://cyclonedx.org</url>
@@ -187,6 +187,6 @@
     </supplier>
   </metadata>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000003"/>
+    <dependency ref="my-specific-bom-ref-for-dings"/>
   </dependencies>
 </bom>

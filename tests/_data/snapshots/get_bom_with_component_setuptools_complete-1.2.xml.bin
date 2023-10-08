@@ -11,7 +11,7 @@
     </tools>
   </metadata>
   <components>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000008">
+    <component type="library" bom-ref="my-specific-bom-ref-for-dings">
       <supplier>
         <name>CycloneDX</name>
         <url>https://cyclonedx.org</url>
@@ -156,6 +156,6 @@
     </component>
   </components>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000008"/>
+    <dependency ref="my-specific-bom-ref-for-dings"/>
   </dependencies>
 </bom>

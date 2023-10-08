@@ -9,7 +9,7 @@
         <version>TESTING</version>
       </tool>
     </tools>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000024">
+    <component type="library" bom-ref="my-specific-bom-ref-for-cpl">
       <name>cyclonedx-python-lib</name>
       <version>1.0.0</version>
     </component>
@@ -52,13 +52,13 @@
         </reference>
       </externalReferences>
     </service>
-    <service bom-ref="00000000-0000-4000-8000-000000000023">
+    <service bom-ref="my-specific-bom-ref-for-my-second-service">
       <name>my-second-service</name>
     </service>
   </services>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000023"/>
-    <dependency ref="00000000-0000-4000-8000-000000000024"/>
+    <dependency ref="my-specific-bom-ref-for-cpl"/>
     <dependency ref="my-specific-bom-ref-for-my-first-service"/>
+    <dependency ref="my-specific-bom-ref-for-my-second-service"/>
   </dependencies>
 </bom>

@@ -25,9 +25,24 @@
   ],
   "dependencies": [
     {
+      "dependsOn": [
+        "component-B"
+      ],
       "ref": "component-A"
     },
     {
+      "dependsOn": [
+        "component-C"
+      ],
+      "ref": "component-B"
+    },
+    {
+      "ref": "component-C"
+    },
+    {
+      "dependsOn": [
+        "component-A"
+      ],
       "ref": "my-project"
     }
   ],

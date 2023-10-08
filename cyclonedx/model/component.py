@@ -808,8 +808,6 @@ class Component(Dependable):
             if not licenses:
                 self.licenses = [LicenseChoice(expression=license_str)]  # type: ignore
 
-        self.__dependencies: "SortedSet[BomRef]" = SortedSet()
-
     @property
     @serializable.xml_attribute()
     def type(self) -> ComponentType:

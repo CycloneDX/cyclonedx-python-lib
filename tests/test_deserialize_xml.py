@@ -25,11 +25,11 @@ from ddt import ddt, named_data
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import DeepCompareMixin, SnapshotMixin, mksname, uuid_generator
-from tests._data.models import all_get_bom_funct_valid
+from tests._data.models import all_get_bom_funct_valid, all_get_bom_funct_with_incomplete_deps
 
 
 @ddt
-class TestOutputJson(TestCase, SnapshotMixin, DeepCompareMixin):
+class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
 
     @named_data(*all_get_bom_funct_valid)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
@@ -40,4 +40,5 @@ class TestOutputJson(TestCase, SnapshotMixin, DeepCompareMixin):
         expected = get_bom()
         with open(self.getSnapshotFile(snapshot_name), 'r') as s:
             bom = Bom.from_xml(s)
-        self.assertDeepEqual(expected, bom)
+        self.assertDeepEqualBom(expected, bom,
+                                fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
