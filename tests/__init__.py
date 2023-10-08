@@ -81,14 +81,17 @@ class DeepCompareMixin:
             self.maxDiff = _omd
 
     def __deepDict(self, o: Any) -> Any:
-        if isinstance(o, (list, tuple)):
+        if isinstance(o, tuple):
             return tuple(self.__deepDict(i) for i in o)
+        if isinstance(o, list):
+            return list(self.__deepDict(i) for i in o)
         if isinstance(o, dict):
             return {k: self.__deepDict(v) for k, v in o.items()}
         if isinstance(o, (set, SortedSet)):
-            return tuple(sorted((self.__deepDict(i) for i in o), key=repr))
+            # this method returns dict. `dict` is not hashable, so use `list` instead.
+            return list(self.__deepDict(i) for i in o) + ['%conv:set%']
         if hasattr(o, '__dict__'):
-            return {k: self.__deepDict(v) for k, v in vars(o).items() if not (k.startswith('__') and k.endswith('__'))}
+            return {k: self.__deepDict(v) for k, v in vars(o).items() if '__' not in k}
         return o
 
 
