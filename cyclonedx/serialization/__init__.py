@@ -11,6 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.

@@ -11,7 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-#
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Exceptions relating to specific conditions that occur when factoring a model.

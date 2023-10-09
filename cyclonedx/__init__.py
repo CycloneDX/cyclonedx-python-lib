@@ -11,6 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Python library for generating and representing CycloneDX software bill-of-materials.

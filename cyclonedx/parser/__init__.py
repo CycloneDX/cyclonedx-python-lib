@@ -11,6 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Set of classes and methods which allow for quick creation of a Bom instance from your environment or Python project.

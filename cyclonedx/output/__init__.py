@@ -11,6 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Set of classes and methods for outputting our libraries internal Bom model to CycloneDX documents in varying formats

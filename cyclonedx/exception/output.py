@@ -11,7 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-#
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Exceptions that are for specific error scenarios during the output of a Model to a SBOM.
