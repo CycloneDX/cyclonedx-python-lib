@@ -49,8 +49,8 @@ class TestOutputXml(TestCase, SnapshotMixin):
             errors = XmlValidator(sv).validate_str(xml)
         except MissingOptionalDependencyException:
             errors = None  # skipped validation
-        self.assertIsNone(errors)
         self.assertEqualSnapshot(xml, snapshot_name)
+        self.assertIsNone(errors)
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion

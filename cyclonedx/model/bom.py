@@ -188,6 +188,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.xml_sequence(7)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this BOM is licensed.

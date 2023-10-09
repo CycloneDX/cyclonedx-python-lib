@@ -661,10 +661,29 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
     return VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
 
 
-def get_bom_with_licenses_expression() -> Bom:
-    return _makeBom(metadata=BomMetaData(licenses=[
-        LicenseExpression(value='Apache-2.0 OR MIT'),
-    ]))
+def get_bom_with_licenses() -> Bom:
+    return _makeBom(
+        metadata=BomMetaData(
+            licenses=[DisjunctiveLicense(id='CC-BY-1.0')],
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',
+                                licenses=[DisjunctiveLicense(name='proprietary')])
+        ),
+        components=[
+            Component(name='c-with-expression', type=ComponentType.LIBRARY, bom_ref='C1',
+                      licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+            Component(name='c-with-SPDX', type=ComponentType.LIBRARY, bom_ref='C2',
+                      licenses=[DisjunctiveLicense(id='Apache-2.0')]),
+            Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
+                      licenses=[DisjunctiveLicense(name='(c) ACME Inc.')]),
+        ],
+        services=[
+            Service(name='s-with-expression', bom_ref='S1',
+                    licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+            Service(name='s-with-SPDX', bom_ref='S2',
+                    licenses=[DisjunctiveLicense(id='Apache-2.0')]),
+            Service(name='s-with-name', bom_ref='S3',
+                    licenses=[DisjunctiveLicense(name='(c) ACME Inc.')]),
+        ])
 
 
 def get_bom_metadata_licenses_invalid() -> Bom:
@@ -749,6 +768,8 @@ all_get_bom_funct_invalid = tuple(
 )
 
 all_get_bom_funct_with_incomplete_deps = {
+    # List of functions that return BOM with an incomplte dependency graph.
+    # It is expected that some process auto-fixes this before actual serialization takes place.
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -762,5 +783,6 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_nested_services,
     get_bom_with_services_complex,
     get_bom_with_services_simple,
+    get_bom_with_licenses,
     get_bom_with_multiple_licenses,
 }
