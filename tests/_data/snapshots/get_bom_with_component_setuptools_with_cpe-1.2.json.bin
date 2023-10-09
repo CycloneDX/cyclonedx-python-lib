@@ -6,7 +6,9 @@
       "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
       "licenses": [
         {
-          "expression": "MIT License"
+          "license": {
+            "id": "MIT"
+          }
         }
       ],
       "name": "setuptools",

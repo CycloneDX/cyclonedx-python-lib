@@ -18,13 +18,14 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
-from typing import Any
+from typing import Any, Dict, List
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 from serializable.helpers import BaseHelper
 
+from ..model.license import LicenseRepository, LicenseExpression, DisjunctiveLicense
 from ..model.bom_ref import BomRef
 
 
@@ -79,11 +80,33 @@ class UrnUuidHelper(BaseHelper):
             raise ValueError(f'UUID string supplied ({o}) does not parse!')
 
 
+from json import loads as json_loads
+
+
 class LicenseRepositoryHelper(BaseHelper):
     @classmethod
-    def serialize(cls, o: Any):
+    def json_serialize(cls, o: LicenseRepository) -> Any:
+        if len(o) == 0:
+            return None
+        expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
+        if expression:
+            return [{'expression': str(expression.value)}]
+        return [{'license': json_loads(li.as_json())} for li in o]
+
+    @classmethod
+    def json_deserialize(cls, o: List[Dict[str, Any]]) -> LicenseRepository:
+        licenses = LicenseRepository()
+        for li in o:
+            if 'license' in li:
+                licenses.add(DisjunctiveLicense.from_json(li['license']))
+            elif 'expression' in li:
+                licenses.add(LicenseExpression(li['expression']))
+        return licenses
+
+    @classmethod
+    def xml_serialize(cls, o: Any) -> Any:
         pass
 
     @classmethod
-    def deserialize(cls, o: Any):
+    def xml_deserialize(cls, o: Any) -> Any:
         pass

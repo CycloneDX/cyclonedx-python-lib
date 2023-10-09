@@ -5,7 +5,9 @@
       "bom-ref": "setuptools",
       "licenses": [
         {
-          "expression": "MIT License"
+          "license": {
+            "id": "MIT"
+          }
         }
       ],
       "name": "setuptools",

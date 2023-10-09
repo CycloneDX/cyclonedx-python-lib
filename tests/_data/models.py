@@ -268,9 +268,12 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
     bom.metadata.licenses = [DisjunctiveLicense(
-        id='Apache-2.0', text=AttachedText(
-            content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
-        ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
+        id='Apache-2.0',
+        url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt'),
+        text=AttachedText(
+            encoding=Encoding.BASE_64,
+            content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE='
+        )
     )]
     bom.metadata.properties = get_properties_1()
     return bom
@@ -658,11 +661,14 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
     return VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
 
 
-def get_bom_metadata_licenses_invalid() -> Bom:
-    return Bom(metadata=BomMetaData(licenses=[
+def get_bom_with_licenses_expression() -> Bom:
+    return _makeBom(metadata=BomMetaData(licenses=[
         LicenseExpression(value='Apache-2.0 OR MIT'),
-        DisjunctiveLicense(id='MIT'),
     ]))
+
+
+def get_bom_metadata_licenses_invalid() -> Bom:
+    return Bom(metadata=BomMetaData(licenses=get_invalid_license_repository()))
 
 
 def get_invalid_license_repository() -> List[LicenseChoice]:
