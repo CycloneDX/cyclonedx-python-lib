@@ -25,7 +25,6 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
-from .license import LicenseChoice, LicenseRepository
 from ..exception.model import NoPropertiesProvidedException
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -34,7 +33,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from ..serialization import BomRefHelper, PackageUrl, LicenseRepositoryHelper
+from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
     AttachedText,
     ComparableTuple,
@@ -46,11 +45,12 @@ from . import (
     OrganizationalEntity,
     Property,
     XsUri,
-    sha1sum
+    sha1sum,
 )
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .issue import IssueType
+from .license import LicenseChoice, LicenseExpression, LicenseRepository
 from .release_note import ReleaseNotes
 
 
@@ -806,7 +806,7 @@ class Component(Dependable):
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = [LicenseExpression(license_str)]  # type: ignore
+                self.licenses = [LicenseExpression(license_str)]
 
     @property
     @serializable.xml_attribute()

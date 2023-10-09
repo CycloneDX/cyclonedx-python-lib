@@ -35,8 +35,6 @@ from cyclonedx.model import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
-    License,
-    LicenseChoice,
     Note,
     NoteText,
     OrganizationalContact,
@@ -155,41 +153,6 @@ class TestComparableTuple(TestCase):
         self.assertGreater(tuple2, tuple1)
         self.assertNotEqual(tuple1, tuple2)
         self.assertNotEqual(tuple2, tuple1)
-
-
-class TestModelLicense(TestCase):
-
-    def test_sort(self) -> None:
-        # expected sort order: ([id], [name])
-        expected_order = [1, 0, 3, 2]
-        licenses = [
-            License(id='MIT'),
-            License(id='Apache-2.0'),
-            License(name='MIT'),
-            License(name='Apache-2.0'),
-        ]
-        sorted_licenses = sorted(licenses)
-        expected_licenses = reorder(licenses, expected_order)
-        self.assertListEqual(sorted_licenses, expected_licenses)
-
-
-class TestModelLicenseChoice(TestCase):
-
-    def test_sort(self) -> None:
-        license_a = License(id='Apache-2.0')
-        license_b = License(id='MIT')
-
-        # expected sort order: ([license], [expression])
-        expected_order = [1, 0, 3, 2]
-        licenses = [
-            LicenseChoice(license=license_b),
-            LicenseChoice(license=license_a),
-            LicenseChoice(expression='MIT'),
-            LicenseChoice(expression='Apache-2.0'),
-        ]
-        sorted_licenses = sorted(licenses)
-        expected_licenses = reorder(licenses, expected_order)
-        self.assertListEqual(sorted_licenses, expected_licenses)
 
 
 class TestModelCopyright(TestCase):

@@ -19,19 +19,12 @@ import serializable
 from sortedcontainers import SortedSet
 
 from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
-from .license import LicenseRepository, LicenseChoice
 
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
-from . import (
-    ComparableTuple,
-    DataClassification,
-    ExternalReference,
-    OrganizationalEntity,
-    Property,
-    XsUri,
-)
+from . import ComparableTuple, DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
 from .bom_ref import BomRef
 from .dependency import Dependable
+from .license import LicenseChoice, LicenseRepository
 from .release_note import ReleaseNotes
 
 """

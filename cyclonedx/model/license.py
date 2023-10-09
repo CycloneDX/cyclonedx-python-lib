@@ -21,17 +21,16 @@ from typing import Any, Optional, TypeAlias, Union
 import serializable
 from sortedcontainers import SortedSet
 
-from . import AttachedText, XsUri, ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
+from . import AttachedText, ComparableTuple, XsUri
 
 """
 License related things
 """
 
 
-
-@serializable.serializable_class
-class License:
+@serializable.serializable_class(name='license')
+class DisjunctiveLicense:
     """
     This is our internal representation of `licenseType` complex type that can be used in multiple places within
     a CycloneDX BOM document.
@@ -67,6 +66,8 @@ class License:
     @id.setter
     def id(self, id: Optional[str]) -> None:
         self._id = id
+        if id is not None:
+            self._name = None
 
     @property
     def name(self) -> Optional[str]:
@@ -81,6 +82,8 @@ class License:
     @name.setter
     def name(self, name: Optional[str]) -> None:
         self._name = name
+        if name is not None:
+            self._id = None
 
     @property
     def text(self) -> Optional[AttachedText]:
@@ -112,13 +115,15 @@ class License:
         self._url = url
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, License):
+        if isinstance(other, DisjunctiveLicense):
             return hash(other) == hash(self)
         return False
 
     def __lt__(self, other: Any) -> bool:
-        if isinstance(other, License):
+        if isinstance(other, DisjunctiveLicense):
             return ComparableTuple((self._id, self._name)) < ComparableTuple((other._id, other._name))
+        if isinstance(other, LicenseExpression):
+            return False  # self after any LicenseExpression
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -128,8 +133,8 @@ class License:
         return f'<License id={self._id!r}, name={self._name!r}>'
 
 
-@serializable.serializable_class
-class Expression:
+@serializable.serializable_class(name='expression')
+class LicenseExpression:
     """
     This is our internal representation of `licenseType`'s  expression type that can be used in multiple places within
     a CycloneDX BOM document.
@@ -161,20 +166,22 @@ class Expression:
         return hash(self._value)
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, Expression):
+        if isinstance(other, LicenseExpression):
             return self._value == other._value
-        return NotImplemented
+        return False
 
     def __lt__(self, other: Any) -> bool:
-        if isinstance(other, Expression):
+        if isinstance(other, LicenseExpression):
             return self._value < other._value
+        if isinstance(other, DisjunctiveLicense):
+            return True  # self before any DisjunctiveLicense
         return NotImplemented
 
     def __repr__(self) -> str:
         return f'<LicenseExpression value={self._value!r}>'
 
 
-LicenseChoice: TypeAlias = Union[Expression, License]
+LicenseChoice: TypeAlias = Union[LicenseExpression, DisjunctiveLicense]
 
 
 class LicenseRepository(SortedSet[LicenseChoice]):

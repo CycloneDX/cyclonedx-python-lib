@@ -25,9 +25,6 @@ from uuid import UUID, uuid4
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import UrnUuidHelper, LicenseRepositoryHelper
-from .license import LicenseRepository, LicenseChoice
-
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..parser import BaseParser
 from ..schema.schema import (
@@ -37,18 +34,12 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from . import (
-    ExternalReference,
-    OrganizationalContact,
-    OrganizationalEntity,
-    Property,
-    ThisTool,
-    Tool,
-    get_now_utc,
-)
+from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
+from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool, get_now_utc
 from .bom_ref import BomRef
 from .component import Component
 from .dependency import Dependable, Dependency
+from .license import LicenseChoice, LicenseExpression, LicenseRepository
 from .service import Service
 from .vulnerability import Vulnerability
 
@@ -584,7 +575,7 @@ class Bom:
             chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
             self.services
         ):
-            if len(elem.licenses) > 1 and any(li.expression for li in elem.licenses):
+            if len(elem.licenses) > 1 and any(isinstance(li, LicenseExpression) for li in elem.licenses):
                 raise LicenseExpressionAlongWithOthersException(
                     f'Found LicenseExpression along with others licenses in: {elem!r}')
 

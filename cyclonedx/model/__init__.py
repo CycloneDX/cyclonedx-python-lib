@@ -442,20 +442,19 @@ class XsUri(serializable.helpers.BaseHelper):
         return self._uri
 
     @classmethod
-    def serialize(cls, o: object, t: 'SerializationType') -> str:
+    def serialize(cls, o: Any) -> str:
         if isinstance(o, XsUri):
             return str(o)
-
         raise ValueError(f'Attempt to serialize a non-XsUri: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object, t: 'SerializationType') -> 'XsUri':
+    def deserialize(cls, o: Any) -> 'XsUri':
         try:
             return XsUri(uri=str(o))
         except ValueError:
             raise ValueError(f'XsUri string supplied ({o}) does not parse!')
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
             return hash(other) == hash(self)
         return False

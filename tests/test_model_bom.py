@@ -23,18 +23,11 @@ from uuid import uuid4
 from ddt import ddt, named_data
 
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException
-from cyclonedx.model import (
-    License,
-    LicenseChoice,
-    OrganizationalContact,
-    OrganizationalEntity,
-    Property,
-    ThisTool,
-    Tool,
-)
+from cyclonedx.model import OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
+from cyclonedx.model.license import DisjunctiveLicense
 from tests._data.models import (
     get_bom_component_licenses_invalid,
     get_bom_component_nested_licenses_invalid,
@@ -76,8 +69,8 @@ class TestBomMetaData(TestCase):
         manufacturer = OrganizationalEntity(name='test_manufacturer')
         supplier = OrganizationalEntity(name='test_supplier')
         licenses = [
-            LicenseChoice(license=License(id='MIT')),
-            LicenseChoice(license=License(id='Apache-2.0')),
+            DisjunctiveLicense(id='MIT'),
+            DisjunctiveLicense(id='Apache-2.0'),
         ]
         properties = [
             Property(name='property_1', value='value_1'),

@@ -18,30 +18,27 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
-import warnings
-from typing import List
+from typing import Any
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
-from serializable import SerializationType
 from serializable.helpers import BaseHelper
 
-from ..model.license import Expression, LicenseChoice
 from ..model.bom_ref import BomRef
 
 
 class BomRefHelper(BaseHelper):
 
     @classmethod
-    def serialize(cls, o: object, t: SerializationType) -> str:
+    def serialize(cls, o: Any) -> str:
         if isinstance(o, BomRef):
             return o.value
 
         raise ValueError(f'Attempt to serialize a non-BomRef: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object, t: SerializationType) -> BomRef:
+    def deserialize(cls, o: Any) -> BomRef:
         try:
             return BomRef(value=str(o))
         except ValueError:
@@ -51,14 +48,14 @@ class BomRefHelper(BaseHelper):
 class PackageUrl(BaseHelper):
 
     @classmethod
-    def serialize(cls, o: object, t: SerializationType) -> str:
+    def serialize(cls, o: Any, ) -> str:
         if isinstance(o, PackageURL):
             return str(o.to_string())
 
         raise ValueError(f'Attempt to serialize a non-PackageURL: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object, t: SerializationType) -> PackageURL:
+    def deserialize(cls, o: Any) -> PackageURL:
         try:
             return PackageURL.from_string(purl=str(o))
         except ValueError:
@@ -68,14 +65,14 @@ class PackageUrl(BaseHelper):
 class UrnUuidHelper(BaseHelper):
 
     @classmethod
-    def serialize(cls, o: object, t: SerializationType) -> str:
+    def serialize(cls, o: Any) -> str:
         if isinstance(o, UUID):
             return o.urn
 
         raise ValueError(f'Attempt to serialize a non-UUID: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object, t: SerializationType) -> UUID:
+    def deserialize(cls, o: Any) -> UUID:
         try:
             return UUID(str(o))
         except ValueError:
@@ -84,16 +81,9 @@ class UrnUuidHelper(BaseHelper):
 
 class LicenseRepositoryHelper(BaseHelper):
     @classmethod
-    def serialize(cls, o: object, t: SerializationType):
-        # need to call `list(o)`, because `o` could be any iterable.
-        licenses: List[LicenseChoice] = list(o)  # type: ignore[call-overload]
-        expr = next((l for l in licenses if isinstance(l, Expression)), None)
-        if expr:
-            if len(licenses) > 1:
-                warnings.warn(f'Licenses: found an expression {expr!r}, dropping the rest of: {licenses!r}',  RuntimeWarning)
-            return [expr]
-        return [{'license': l} for l in licenses] if t is SerializationType.JSON else licenses
+    def serialize(cls, o: Any):
+        pass
 
     @classmethod
-    def deserialize(cls, o: object, t: SerializationType):
+    def deserialize(cls, o: Any):
         pass

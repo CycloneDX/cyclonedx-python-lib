@@ -35,7 +35,6 @@ from cyclonedx.model import (
     ExternalReference,
     ExternalReferenceType,
     HashType,
-    License,
     Note,
     NoteText,
     OrganizationalContact,
@@ -65,6 +64,7 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
+from cyclonedx.model.license import DisjunctiveLicense, LicenseChoice, LicenseExpression
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
@@ -267,7 +267,7 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
-    bom.metadata.licenses = [License(
+    bom.metadata.licenses = [DisjunctiveLicense(
         id='Apache-2.0', text=AttachedText(
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
         ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
@@ -307,7 +307,7 @@ def get_bom_with_services_complex() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[License(name='Commercial')],
+            licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -335,7 +335,7 @@ def get_bom_with_nested_services() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[License(name='Commercial')],
+            licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -474,7 +474,7 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[License(id='MIT')],
+        licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
     )
 
@@ -485,7 +485,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[License(id='MIT')],
+        licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
     )
 
@@ -660,8 +660,8 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
 
 def get_bom_metadata_licenses_invalid() -> Bom:
     return Bom(metadata=BomMetaData(licenses=[
-        LicenseChoice(expression='Apache-2.0 OR MIT'),
-        LicenseChoice(license=License(id='MIT')),
+        LicenseExpression(value='Apache-2.0 OR MIT'),
+        DisjunctiveLicense(id='MIT'),
     ]))
 
 
@@ -671,8 +671,8 @@ def get_invalid_license_repository() -> List[LicenseChoice]:
     see https://github.com/CycloneDX/specification/pull/205
     """
     return [
-        LicenseChoice(expression='Apache-2.0 OR MIT'),
-        LicenseChoice(license=License(id='GPL-2.0-only')),
+        LicenseExpression(value='Apache-2.0 OR MIT'),
+        DisjunctiveLicense(id='GPL-2.0-only'),
     ]
 
 
@@ -713,8 +713,8 @@ def get_bom_service_licenses_invalid() -> Bom:
 
 def get_bom_with_multiple_licenses() -> Bom:
     multi_licenses = (
-        LicenseChoice(license=License(id='MIT')),
-        LicenseChoice(license=License(name='foo license')),
+        DisjunctiveLicense(id='MIT'),
+        DisjunctiveLicense(name='foo license'),
     )
     return _makeBom(
         metadata=BomMetaData(
