@@ -1,0 +1,125 @@
+{
+  "components": [
+    {
+      "bom-ref": "C2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "c-with-SPDX",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "C1",
+      "licenses": [
+        {
+          "expression": "Apache-2.0 OR MIT"
+        }
+      ],
+      "name": "c-with-expression",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "C3",
+      "licenses": [
+        {
+          "license": {
+            "name": "(c) ACME Inc."
+          }
+        }
+      ],
+      "name": "c-with-name",
+      "type": "library",
+      "version": ""
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "C1"
+    },
+    {
+      "ref": "C2"
+    },
+    {
+      "ref": "C3"
+    },
+    {
+      "ref": "S1"
+    },
+    {
+      "ref": "S2"
+    },
+    {
+      "ref": "S3"
+    },
+    {
+      "ref": "my-app"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "my-app",
+      "licenses": [
+        {
+          "license": {
+            "name": "proprietary"
+          }
+        }
+      ],
+      "name": "app",
+      "type": "application",
+      "version": ""
+    },
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "services": [
+    {
+      "bom-ref": "S2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "s-with-SPDX"
+    },
+    {
+      "bom-ref": "S1",
+      "licenses": [
+        {
+          "expression": "Apache-2.0 OR MIT"
+        }
+      ],
+      "name": "s-with-expression"
+    },
+    {
+      "bom-ref": "S3",
+      "licenses": [
+        {
+          "license": {
+            "name": "(c) ACME Inc."
+          }
+        }
+      ],
+      "name": "s-with-name"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2"
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+      </tool>
+    </tools>
+    <component type="application" bom-ref="my-app">
+      <name>app</name>
+      <version/>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+        <license>
+          <name>foo license</name>
+        </license>
+      </licenses>
+    </component>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="my-compo">
+      <name>comp</name>
+      <version/>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+        <license>
+          <name>foo license</name>
+        </license>
+      </licenses>
+    </component>
+  </components>
+  <services>
+    <service bom-ref="my-serv">
+      <name>serv</name>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+        <license>
+          <name>foo license</name>
+        </license>
+      </licenses>
+    </service>
+  </services>
+  <dependencies>
+    <dependency ref="my-app"/>
+    <dependency ref="my-compo"/>
+    <dependency ref="my-serv"/>
+  </dependencies>
+</bom>

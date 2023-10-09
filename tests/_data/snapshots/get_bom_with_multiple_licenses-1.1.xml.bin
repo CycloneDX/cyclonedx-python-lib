@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <components>
+    <component type="library" bom-ref="my-compo">
+      <name>comp</name>
+      <version/>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+        <license>
+          <name>foo license</name>
+        </license>
+      </licenses>
+    </component>
+  </components>
+</bom>
