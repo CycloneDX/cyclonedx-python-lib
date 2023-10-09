@@ -140,7 +140,9 @@ class LicenseRepositoryHelper(BaseHelper):
         for li in o:
             tag = li.tag if default_ns is None else li.tag.replace(f'{{{default_ns}}}', '')
             if tag == 'license':
-                repo.add(DisjunctiveLicense.from_xml(li, default_ns))
+                repo.add(DisjunctiveLicense.from_xml(  # type:ignore[attr-defined]
+                    li, default_ns))
             elif tag == 'expression':
-                repo.add(LicenseExpression(li.text))
+                repo.add(LicenseExpression.from_xml(  # type:ignore[attr-defined]
+                    li, default_ns))
         return repo
