@@ -104,7 +104,6 @@ MOCK_UUID = (
     'a3f4096d-4211-4d68-9d2b-13973c86aca9',
 )
 
-
 BOM_SERIAL_NUMBER = UUID('1441d33a-e0fc-45b5-af3b-61ee52a88bac')
 BOM_TIMESTAMP = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
 
@@ -717,6 +716,27 @@ def get_bom_service_licenses_invalid() -> Bom:
     ])
 
 
+def get_bom_with_multiple_licenses() -> Bom:
+    multi_licenses = (
+        LicenseChoice(license=License(id='MIT')),
+        LicenseChoice(license=License(name='foo license')),
+    )
+    return _makeBom(
+        metadata=BomMetaData(
+            licenses=multi_licenses,
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',
+                                licenses=multi_licenses)
+        ),
+        components=[Component(name='comp', type=ComponentType.LIBRARY, bom_ref='my-compo',
+                              licenses=multi_licenses)],
+        services=[Service(name='serv', bom_ref='my-serv',
+                          licenses=multi_licenses)]
+    )
+
+
+# ---
+
+
 all_get_bom_funct_valid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid')
@@ -741,4 +761,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_nested_services,
     get_bom_with_services_complex,
     get_bom_with_services_simple,
+    get_bom_with_multiple_licenses,
 }
