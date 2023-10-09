@@ -54,6 +54,7 @@ class DisjunctiveLicense:
         self._url = url
 
     @property
+    @serializable.xml_sequence(1)
     def id(self) -> Optional[str]:
         """
         A valid SPDX license ID
@@ -70,6 +71,7 @@ class DisjunctiveLicense:
             self._name = None
 
     @property
+    @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
         If SPDX does not define the license used, this field may be used to provide the license name.
@@ -86,6 +88,7 @@ class DisjunctiveLicense:
             self._id = None
 
     @property
+    @serializable.xml_sequence(2)
     def text(self) -> Optional[AttachedText]:
         """
         Specifies the optional full text of the attachment
@@ -100,6 +103,7 @@ class DisjunctiveLicense:
         self._text = text
 
     @property
+    @serializable.xml_sequence(3)
     def url(self) -> Optional[XsUri]:
         """
         The URL to the attachment file. If the attachment is a license or BOM, an externalReference should also be

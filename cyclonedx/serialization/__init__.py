@@ -88,7 +88,7 @@ class UrnUuidHelper(BaseHelper):
 class LicenseRepositoryHelper(BaseHelper):
     @classmethod
     def json_normalize(cls, o: LicenseRepository, *,
-                       view_: Optional[Type['ViewType']],
+                       view: Optional[Type['ViewType']],
                        **__: Any) -> Any:
         if len(o) == 0:
             return None
@@ -99,23 +99,24 @@ class LicenseRepositoryHelper(BaseHelper):
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
             return [{'expression': str(expression.value)}]
         return [{'license': json_loads(li.as_json(  # type:ignore[union-attr]
-            view_=view_))} for li in o]
+            view_=view))} for li in o]
 
     @classmethod
-    def json_deserialize(cls, o: List[Dict[str, Any]]) -> LicenseRepository:
-        licenses = LicenseRepository()
+    def json_denormalize(cls, o: List[Dict[str, Any]],
+                         **__: Any) -> LicenseRepository:
+        repo = LicenseRepository()
         for li in o:
             if 'license' in li:
-                licenses.add(DisjunctiveLicense.from_json(  # type:ignore[attr-defined]
+                repo.add(DisjunctiveLicense.from_json(  # type:ignore[attr-defined]
                     li['license']))
             elif 'expression' in li:
-                licenses.add(LicenseExpression(li['expression']))
-        return licenses
+                repo.add(LicenseExpression(li['expression']))
+        return repo
 
     @classmethod
     def xml_normalize(cls, o: LicenseRepository, *,
                       element_name: str,
-                      view_: Optional[Type['ViewType']],
+                      view: Optional[Type['ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
         if len(o) == 0:
@@ -124,13 +125,22 @@ class LicenseRepositoryHelper(BaseHelper):
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
             elem.append(expression.as_xml(  # type:ignore[attr-defined]
-                view_, as_string=False, element_name='expression', xmlns=xmlns))
+                view, as_string=False, element_name='expression', xmlns=xmlns))
         else:
             for li in o:
                 elem.append(li.as_xml(  # type:ignore[union-attr]
-                    view_, as_string=False, element_name='license', xmlns=xmlns))
+                    view, as_string=False, element_name='license', xmlns=xmlns))
         return elem
 
     @classmethod
-    def xml_deserialize(cls, o: Any) -> Any:
-        pass
+    def xml_denormalize(cls, o: Element,
+                        default_ns: Optional[str],
+                        **__: Any) -> LicenseRepository:
+        repo = LicenseRepository()
+        for li in o:
+            tag = li.tag if default_ns is None else li.tag.replace(f'{{{default_ns}}}', '')
+            if tag == 'license':
+                repo.add(DisjunctiveLicense.from_xml(li, default_ns))
+            elif tag == 'expression':
+                repo.add(LicenseExpression(li.text))
+        return repo
