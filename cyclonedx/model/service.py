@@ -18,14 +18,14 @@ from typing import Any, Iterable, Optional, Union
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import BomRefHelper
+from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
+from .license import LicenseRepository, LicenseChoice
 
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
 from . import (
     ComparableTuple,
     DataClassification,
     ExternalReference,
-    LicenseChoice,
     OrganizationalEntity,
     Property,
     XsUri,
@@ -245,9 +245,9 @@ class Service(Dependable):
         self._data = SortedSet(data)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(10)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Service is licensed.
 
@@ -258,7 +258,7 @@ class Service(Dependable):
 
     @licenses.setter
     def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+        self._licenses = LicenseRepository(licenses)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
