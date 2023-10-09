@@ -18,17 +18,17 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
-from typing import Any, Dict, List, TYPE_CHECKING, Optional, Type
+from json import loads as json_loads
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type
 from uuid import UUID
+from xml.etree.ElementTree import Element
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 from serializable.helpers import BaseHelper
 
-from ..model.license import LicenseRepository, LicenseExpression, DisjunctiveLicense
 from ..model.bom_ref import BomRef
-
-from json import loads as json_loads
+from ..model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
 
 if TYPE_CHECKING:  # pragma: no cover
     from serializable import ViewType
@@ -85,13 +85,11 @@ class UrnUuidHelper(BaseHelper):
             raise ValueError(f'UUID string supplied ({o}) does not parse!')
 
 
-from xml.etree.ElementTree import Element
-
-
 class LicenseRepositoryHelper(BaseHelper):
     @classmethod
     def json_normalize(cls, o: LicenseRepository, *,
-                       view_: Optional[Type['ViewType']]) -> Any:
+                       view_: Optional[Type['ViewType']],
+                       **__: Any) -> Any:
         if len(o) == 0:
             return None
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
@@ -100,14 +98,16 @@ class LicenseRepositoryHelper(BaseHelper):
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
             return [{'expression': str(expression.value)}]
-        return [{'license': json_loads(li.as_json(view_=view_))} for li in o]
+        return [{'license': json_loads(li.as_json(  # type:ignore[union-attr]
+            view_=view_))} for li in o]
 
     @classmethod
     def json_deserialize(cls, o: List[Dict[str, Any]]) -> LicenseRepository:
         licenses = LicenseRepository()
         for li in o:
             if 'license' in li:
-                licenses.add(DisjunctiveLicense.from_json(li['license']))
+                licenses.add(DisjunctiveLicense.from_json(  # type:ignore[attr-defined]
+                    li['license']))
             elif 'expression' in li:
                 licenses.add(LicenseExpression(li['expression']))
         return licenses
@@ -116,16 +116,19 @@ class LicenseRepositoryHelper(BaseHelper):
     def xml_normalize(cls, o: LicenseRepository, *,
                       element_name: str,
                       view_: Optional[Type['ViewType']],
-                      xmlns: Optional[str]) -> Optional[Element]:
+                      xmlns: Optional[str],
+                      **__: Any) -> Optional[Element]:
         if len(o) == 0:
             return None
         elem = Element(element_name)
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
-            elem.append(expression.as_xml(view_, as_string=False, element_name='expression', xmlns=xmlns))
+            elem.append(expression.as_xml(  # type:ignore[attr-defined]
+                view_, as_string=False, element_name='expression', xmlns=xmlns))
         else:
             for li in o:
-                elem.append(li.as_xml(view_, as_string=False, element_name='license', xmlns=xmlns))
+                elem.append(li.as_xml(  # type:ignore[union-attr]
+                    view_, as_string=False, element_name='license', xmlns=xmlns))
         return elem
 
     @classmethod

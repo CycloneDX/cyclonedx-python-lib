@@ -806,7 +806,7 @@ class Component(Dependable):
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = [LicenseExpression(license_str)]
+                self.licenses = LicenseRepository([LicenseExpression(license_str)])
 
     @property
     @serializable.xml_attribute()
