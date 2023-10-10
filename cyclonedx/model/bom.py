@@ -39,7 +39,7 @@ from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Pr
 from .bom_ref import BomRef
 from .component import Component
 from .dependency import Dependable, Dependency
-from .license import LicenseChoice, LicenseExpression, LicenseRepository
+from .license import License, LicenseExpression, LicenseRepository
 from .service import Service
 from .vulnerability import Vulnerability
 
@@ -60,7 +60,7 @@ class BomMetaData:
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
                  manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
-                 licenses: Optional[Iterable[LicenseChoice]] = None,
+                 licenses: Optional[Iterable[License]] = None,
                  properties: Optional[Iterable[Property]] = None,
                  timestamp: Optional[datetime] = None) -> None:
         self.timestamp = timestamp or get_now_utc()
@@ -199,7 +199,7 @@ class BomMetaData:
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+    def licenses(self, licenses: Iterable[License]) -> None:
         self._licenses = LicenseRepository(licenses)
 
     @property

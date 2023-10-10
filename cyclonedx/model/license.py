@@ -185,8 +185,8 @@ class LicenseExpression:
         return f'<LicenseExpression value={self._value!r}>'
 
 
-LicenseChoice = Union[LicenseExpression, DisjunctiveLicense]
+License = Union[LicenseExpression, DisjunctiveLicense]
 
 
-class LicenseRepository(SortedSet[LicenseChoice]):
+class LicenseRepository(SortedSet[License]):
     pass

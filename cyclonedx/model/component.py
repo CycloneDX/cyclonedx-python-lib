@@ -50,7 +50,7 @@ from . import (
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .issue import IssueType
-from .license import LicenseChoice, LicenseExpression, LicenseRepository
+from .license import License, LicenseExpression, LicenseRepository
 from .release_note import ReleaseNotes
 
 
@@ -182,7 +182,7 @@ class ComponentEvidence:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
     """
 
-    def __init__(self, *, licenses: Optional[Iterable[LicenseChoice]] = None,
+    def __init__(self, *, licenses: Optional[Iterable[License]] = None,
                  copyright: Optional[Iterable[Copyright]] = None) -> None:
         if not licenses and not copyright:
             raise NoPropertiesProvidedException(
@@ -204,7 +204,7 @@ class ComponentEvidence:
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+    def licenses(self, licenses: Iterable[License]) -> None:
         self._licenses = LicenseRepository(licenses)
 
     @property
@@ -753,7 +753,7 @@ class Component(Dependable):
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
-                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[LicenseChoice]] = None,
+                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[License]] = None,
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
@@ -1039,7 +1039,7 @@ class Component(Dependable):
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+    def licenses(self, licenses: Iterable[License]) -> None:
         self._licenses = LicenseRepository(licenses)
 
     @property

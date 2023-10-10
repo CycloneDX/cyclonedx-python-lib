@@ -24,7 +24,7 @@ from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
 from . import ComparableTuple, DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
 from .bom_ref import BomRef
 from .dependency import Dependable
-from .license import LicenseChoice, LicenseRepository
+from .license import License, LicenseRepository
 from .release_note import ReleaseNotes
 
 """
@@ -49,7 +49,7 @@ class Service(Dependable):
                  group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
                  endpoints: Optional[Iterable[XsUri]] = None, authenticated: Optional[bool] = None,
                  x_trust_boundary: Optional[bool] = None, data: Optional[Iterable[DataClassification]] = None,
-                 licenses: Optional[Iterable[LicenseChoice]] = None,
+                 licenses: Optional[Iterable[License]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  properties: Optional[Iterable[Property]] = None,
                  services: Optional[Iterable['Service']] = None,
@@ -250,7 +250,7 @@ class Service(Dependable):
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
+    def licenses(self, licenses: Iterable[License]) -> None:
         self._licenses = LicenseRepository(licenses)
 
     @property

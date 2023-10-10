@@ -17,7 +17,7 @@ from typing import Optional
 
 from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
 from ..model import AttachedText, XsUri
-from ..model.license import DisjunctiveLicense, LicenseChoice, LicenseExpression
+from ..model.license import DisjunctiveLicense, License, LicenseExpression
 from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression
 
 
@@ -58,7 +58,7 @@ class LicenseChoiceFactory:
     def __init__(self, *, license_factory: LicenseFactory) -> None:
         self.license_factory = license_factory
 
-    def make_from_string(self, expression_or_name_or_spdx: str) -> LicenseChoice:
+    def make_from_string(self, expression_or_name_or_spdx: str) -> License:
         """Make a :type:`cyclonedx.model.LicenseChoice` from a string.
 
         Priority: SPDX license ID, SPDX license expression, named license

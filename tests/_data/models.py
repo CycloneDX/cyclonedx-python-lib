@@ -64,7 +64,7 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from cyclonedx.model.license import DisjunctiveLicense, LicenseChoice, LicenseExpression
+from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
@@ -690,7 +690,7 @@ def get_bom_metadata_licenses_invalid() -> Bom:
     return Bom(metadata=BomMetaData(licenses=get_invalid_license_repository()))
 
 
-def get_invalid_license_repository() -> List[LicenseChoice]:
+def get_invalid_license_repository() -> List[License]:
     """
     license expression and a license -- this is an invalid constellation according to schema
     see https://github.com/CycloneDX/specification/pull/205
