@@ -94,7 +94,7 @@ class LicenseRepositoryHelper(BaseHelper):
             return None
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
-            # license expression and a license -- this is an invalid constellation according to schema
+            # mixed license expression and license? this is an invalid constellation according to schema!
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
             return [{'expression': str(expression.value)}]
@@ -124,6 +124,9 @@ class LicenseRepositoryHelper(BaseHelper):
         elem = Element(element_name)
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
+            # mixed license expression and license? this is an invalid constellation according to schema!
+            # see https://github.com/CycloneDX/specification/pull/205
+            # but models need to allow it for backwards compatibility with JSON CDX < 1.5
             elem.append(expression.as_xml(  # type:ignore[attr-defined]
                 view, as_string=False, element_name='expression', xmlns=xmlns))
         else:
