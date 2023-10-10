@@ -19,7 +19,7 @@ from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLi
 from ..model.license import DisjunctiveLicense, LicenseExpression
 from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from ..model import AttachedText, XsUri
     from ..model.license import License
 
