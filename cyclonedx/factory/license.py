@@ -13,32 +13,51 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
-from ..model import AttachedText, XsUri
-from ..model.license import DisjunctiveLicense, License, LicenseExpression
+from ..model.license import DisjunctiveLicense, LicenseExpression
 from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression
+
+if TYPE_CHECKING:
+    from ..model import AttachedText, XsUri
+    from ..model.license import License
 
 
 class LicenseFactory:
     """Factory for :class:`cyclonedx.model.License`."""
 
-    def make_from_string(self, name_or_spdx: str, *,
-                         license_text: Optional[AttachedText] = None,
-                         license_url: Optional[XsUri] = None) -> DisjunctiveLicense:
-        """Make a :class:`cyclonedx.model.License` from a string."""
+    def make_from_string(self, value: str, *,
+                         license_text: Optional['AttachedText'] = None,
+                         license_url: Optional['XsUri'] = None) -> 'License':
+        """Make a :class:`cyclonedx.model.license.License` from a string."""
         try:
-            return self.make_with_id(name_or_spdx, text=license_text, url=license_url)
+            return self.make_with_id(value, text=license_text, url=license_url)
         except InvalidSpdxLicenseException:
-            return self.make_with_name(name_or_spdx, text=license_text, url=license_url)
+            pass
+        try:
+            return self.make_with_expression(value)
+        except InvalidLicenseExpressionException:
+            pass
+        return self.make_with_name(value, text=license_text, url=license_url)
+
+    def make_with_expression(self, value: str) -> LicenseExpression:
+        """Make a :class:`cyclonedx.model.license.LicenseExpression` with a compound expression.
+
+        Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
+
+        :raises InvalidLicenseExpressionException: if :param value: is not known/supported license expression
+        """
+        if is_spdx_compound_expression(value):
+            return LicenseExpression(value)
+        raise InvalidLicenseExpressionException(value)
 
     def make_with_id(self, spdx_id: str, *,
-                     text: Optional[AttachedText] = None,
-                     url: Optional[XsUri] = None) -> DisjunctiveLicense:
-        """Make a :class:`cyclonedx.model.License` from an SPDX-ID.
+                     text: Optional['AttachedText'] = None,
+                     url: Optional['XsUri'] = None) -> DisjunctiveLicense:
+        """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` from an SPDX-ID.
 
-        :raises InvalidSpdxLicenseException: if `spdx_id` was not known/supported SPDX-ID
+        :raises InvalidSpdxLicenseException: if :param spdx_id: was not known/supported SPDX-ID
         """
         spdx_license_id = spdx_fixup(spdx_id)
         if spdx_license_id is None:
@@ -46,46 +65,7 @@ class LicenseFactory:
         return DisjunctiveLicense(id=spdx_license_id, text=text, url=url)
 
     def make_with_name(self, name: str, *,
-                       text: Optional[AttachedText] = None,
-                       url: Optional[XsUri] = None) -> DisjunctiveLicense:
-        """Make a :class:`cyclonedx.model.License` with a name."""
+                       text: Optional['AttachedText'] = None,
+                       url: Optional['XsUri'] = None) -> DisjunctiveLicense:
+        """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` with a name."""
         return DisjunctiveLicense(name=name, text=text, url=url)
-
-
-class LicenseChoiceFactory:
-    """Factory for :type:`cyclonedx.model.LicenseChoice`."""
-
-    def __init__(self, *, license_factory: LicenseFactory) -> None:
-        self.license_factory = license_factory
-
-    def make_from_string(self, expression_or_name_or_spdx: str) -> License:
-        """Make a :type:`cyclonedx.model.LicenseChoice` from a string.
-
-        Priority: SPDX license ID, SPDX license expression, named license
-        """
-        try:
-            return self.license_factory.make_with_id(expression_or_name_or_spdx)
-        except InvalidSpdxLicenseException:
-            pass
-        try:
-            return self.make_with_compound_expression(expression_or_name_or_spdx)
-        except InvalidLicenseExpressionException:
-            pass
-        return self.license_factory.make_with_name(expression_or_name_or_spdx)
-
-    def make_with_compound_expression(self, compound_expression: str) -> LicenseExpression:
-        """Make a :class:`cyclonedx.model.LicenseExpression` with a compound expression.
-
-        Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
-
-        :raises InvalidLicenseExpressionException: if `expression` is not known/supported license expression
-        """
-        if is_spdx_compound_expression(compound_expression):
-            return LicenseExpression(compound_expression)
-        raise InvalidLicenseExpressionException(compound_expression)
-
-    def make_with_license(self, name_or_spdx: str, *,
-                          license_text: Optional[AttachedText] = None,
-                          license_url: Optional[XsUri] = None) -> DisjunctiveLicense:
-        """Make a :class:`cyclonedx.model.License`."""
-        return self.license_factory.make_from_string(name_or_spdx, license_text=license_text, license_url=license_url)
