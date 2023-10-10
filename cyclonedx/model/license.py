@@ -202,9 +202,10 @@ if TYPE_CHECKING:  # pragma: no cover
         If you wanted a certain order, then you should also express whether the items are concat by `AND` or `OR`.
         If you wanted to do so, you should use :class:`LicenseExpression`.
 
-        As a model, this MUST accept multiple LicenseExpression along with multiple DisjunctiveLicense
-        this was an accepted in CycloneDX JSON before v1.5.
+        As a model, this MUST accept multiple :class:`LicenseExpression` along with
+        multiple :class:`DisjunctiveLicense`, as this was an accepted in CycloneDX JSON before v1.5.
         So for modeling purposes, this is supported.
+        Denormalizers/deserializers will be thankful.
         The normalization/serialization process SHOULD take care of these facts and do what is needed.
         """
 else:
@@ -215,8 +216,9 @@ else:
         If you wanted a certain order, then you should also express whether the items are concat by `AND` or `OR`.
         If you wanted to do so, you should use :class:`LicenseExpression`.
 
-        As a model, this MUST accept multiple LicenseExpression along with multiple DisjunctiveLicense
-        this was an accepted in CycloneDX JSON before v1.5.
+        As a model, this MUST accept multiple :class:`LicenseExpression` along with
+        multiple :class:`DisjunctiveLicense`, as this was an accepted in CycloneDX JSON before v1.5.
         So for modeling purposes, this is supported.
+        Denormalizers/deserializers will be thankful.
         The normalization/serialization process SHOULD take care of these facts and do what is needed.
         """
