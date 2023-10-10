@@ -41,16 +41,16 @@ class LicenseFactory:
             pass
         return self.make_with_name(value, text=license_text, url=license_url)
 
-    def make_with_expression(self, value: str) -> LicenseExpression:
+    def make_with_expression(self, expression: str) -> LicenseExpression:
         """Make a :class:`cyclonedx.model.license.LicenseExpression` with a compound expression.
 
         Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
 
         :raises InvalidLicenseExpressionException: if param `value` is not known/supported license expression
         """
-        if is_spdx_compound_expression(value):
-            return LicenseExpression(value)
-        raise InvalidLicenseExpressionException(value)
+        if is_spdx_compound_expression(expression):
+            return LicenseExpression(expression)
+        raise InvalidLicenseExpressionException(expression)
 
     def make_with_id(self, spdx_id: str, *,
                      text: Optional['AttachedText'] = None,
