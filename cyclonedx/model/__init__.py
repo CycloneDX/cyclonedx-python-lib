@@ -15,7 +15,6 @@
 
 import hashlib
 import re
-import warnings
 from datetime import datetime, timezone
 from enum import Enum
 from itertools import zip_longest
@@ -28,7 +27,6 @@ from .. import __version__ as __ThisToolVersion
 from ..exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
-    MutuallyExclusivePropertiesException,
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
@@ -444,20 +442,19 @@ class XsUri(serializable.helpers.BaseHelper):
         return self._uri
 
     @classmethod
-    def serialize(cls, o: object) -> str:
+    def serialize(cls, o: Any) -> str:
         if isinstance(o, XsUri):
             return str(o)
-
         raise ValueError(f'Attempt to serialize a non-XsUri: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object) -> 'XsUri':
+    def deserialize(cls, o: Any) -> 'XsUri':
         try:
             return XsUri(uri=str(o))
         except ValueError:
             raise ValueError(f'XsUri string supplied ({o}) does not parse!')
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
             return hash(other) == hash(self)
         return False
@@ -577,181 +574,6 @@ class ExternalReference:
 
     def __repr__(self) -> str:
         return f'<ExternalReference {self.type.name}, {self.url}>'
-
-
-@serializable.serializable_class
-class License:
-    """
-    This is our internal representation of `licenseType` complex type that can be used in multiple places within
-    a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
-    """
-
-    def __init__(self, *, id: Optional[str] = None, name: Optional[str] = None,
-                 text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
-        if not id and not name:
-            raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
-        if id and name:
-            warnings.warn(
-                'Both `id` and `name` have been supplied - `name` will be ignored!',
-                RuntimeWarning
-            )
-        self.id = id
-        if not id:
-            self.name = name
-        else:
-            self.name = None
-        self.text = text
-        self.url = url
-
-    @property
-    def id(self) -> Optional[str]:
-        """
-        A valid SPDX license ID
-
-        Returns:
-            `str` or `None`
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id: Optional[str]) -> None:
-        self._id = id
-
-    @property
-    def name(self) -> Optional[str]:
-        """
-        If SPDX does not define the license used, this field may be used to provide the license name.
-
-        Returns:
-            `str` or `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    def text(self) -> Optional[AttachedText]:
-        """
-        Specifies the optional full text of the attachment
-
-        Returns:
-            `AttachedText` else `None`
-        """
-        return self._text
-
-    @text.setter
-    def text(self, text: Optional[AttachedText]) -> None:
-        self._text = text
-
-    @property
-    def url(self) -> Optional[XsUri]:
-        """
-        The URL to the attachment file. If the attachment is a license or BOM, an externalReference should also be
-        specified for completeness.
-
-        Returns:
-            `XsUri` or `None`
-        """
-        return self._url
-
-    @url.setter
-    def url(self, url: Optional[XsUri]) -> None:
-        self._url = url
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, License):
-            return hash(other) == hash(self)
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, License):
-            return ComparableTuple((self.id, self.name)) < ComparableTuple((other.id, other.name))
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash((self.id, self.name, self.text, self.url))
-
-    def __repr__(self) -> str:
-        return f'<License id={self.id}, name={self.name}>'
-
-
-@serializable.serializable_class
-class LicenseChoice:
-    """
-    This is our internal representation of `licenseChoiceType` complex type that can be used in multiple places within
-    a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
-    """
-
-    def __init__(self, *, license: Optional[License] = None, expression: Optional[str] = None) -> None:
-        if not license and not expression:
-            raise NoPropertiesProvidedException(
-                'One of `license` or `expression` must be supplied - neither supplied'
-            )
-        if license and expression:
-            warnings.warn(
-                'Both `license` and `expression` have been supplied - `license` will take precedence',
-                RuntimeWarning
-            )
-        self.license = license
-        if not license:
-            self.expression = expression
-        else:
-            self.expression = None
-
-    @property
-    def license(self) -> Optional[License]:
-        """
-        License definition
-
-        Returns:
-            `License` or `None`
-        """
-        return self._license
-
-    @license.setter
-    def license(self, license: Optional[License]) -> None:
-        self._license = license
-
-    @property
-    def expression(self) -> Optional[str]:
-        """
-        A valid SPDX license expression (not enforced).
-
-        Refer to https://spdx.org/specifications for syntax requirements.
-
-        Returns:
-            `str` or `None`
-        """
-        return self._expression
-
-    @expression.setter
-    def expression(self, expression: Optional[str]) -> None:
-        self._expression = expression
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, LicenseChoice):
-            return hash(other) == hash(self)
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, LicenseChoice):
-            return ComparableTuple((self.license, self.expression)) < ComparableTuple(
-                (other.license, other.expression))
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash((self.license, self.expression))
-
-    def __repr__(self) -> str:
-        return f'<LicenseChoice license={self.license}, expression={self.expression}>'
 
 
 @serializable.serializable_class

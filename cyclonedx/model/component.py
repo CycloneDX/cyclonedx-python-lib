@@ -33,7 +33,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from ..serialization import BomRefHelper, PackageUrl
+from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
     AttachedText,
     ComparableTuple,
@@ -42,7 +42,6 @@ from . import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
-    LicenseChoice,
     OrganizationalEntity,
     Property,
     XsUri,
@@ -51,6 +50,7 @@ from . import (
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .issue import IssueType
+from .license import License, LicenseExpression, LicenseRepository
 from .release_note import ReleaseNotes
 
 
@@ -182,7 +182,7 @@ class ComponentEvidence:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
     """
 
-    def __init__(self, *, licenses: Optional[Iterable[LicenseChoice]] = None,
+    def __init__(self, *, licenses: Optional[Iterable[License]] = None,
                  copyright: Optional[Iterable[Copyright]] = None) -> None:
         if not licenses and not copyright:
             raise NoPropertiesProvidedException(
@@ -193,8 +193,8 @@ class ComponentEvidence:
         self.copyright = copyright or []  # type: ignore
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'license')
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    @serializable.type_mapping(LicenseRepositoryHelper)
+    def licenses(self) -> LicenseRepository:
         """
         Optional list of licenses obtained during analysis.
 
@@ -204,8 +204,8 @@ class ComponentEvidence:
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+    def licenses(self, licenses: Iterable[License]) -> None:
+        self._licenses = LicenseRepository(licenses)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
@@ -753,7 +753,7 @@ class Component(Dependable):
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
-                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[LicenseChoice]] = None,
+                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[License]] = None,
                  copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
@@ -806,7 +806,7 @@ class Component(Dependable):
                 'standard', DeprecationWarning
             )
             if not licenses:
-                self.licenses = [LicenseChoice(expression=license_str)]  # type: ignore
+                self.licenses = LicenseRepository([LicenseExpression(license_str)])
 
     @property
     @serializable.xml_attribute()
@@ -1027,9 +1027,9 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(10)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Component is licensed.
 
@@ -1039,8 +1039,8 @@ class Component(Dependable):
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+    def licenses(self, licenses: Iterable[License]) -> None:
+        self._licenses = LicenseRepository(licenses)
 
     @property
     @serializable.xml_sequence(11)

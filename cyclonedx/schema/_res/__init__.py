@@ -14,15 +14,16 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from os.path import dirname, join
-from typing import Dict, Optional
-
-from .. import SchemaVersion
-
 """
 Content in here is internal, not for public use.
 Breaking changes without notice may happen.
 """
+
+
+from os.path import dirname, join
+from typing import Dict, Optional
+
+from .. import SchemaVersion
 
 __DIR = dirname(__file__)
 

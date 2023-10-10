@@ -35,8 +35,6 @@ from cyclonedx.model import (
     ExternalReference,
     ExternalReferenceType,
     HashType,
-    License,
-    LicenseChoice,
     Note,
     NoteText,
     OrganizationalContact,
@@ -66,6 +64,7 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
+from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
@@ -103,7 +102,6 @@ MOCK_UUID = (
     '1a2f9dfc-3c86-48c7-8ca7-1db488d5c2a0',
     'a3f4096d-4211-4d68-9d2b-13973c86aca9',
 )
-
 
 BOM_SERIAL_NUMBER = UUID('1441d33a-e0fc-45b5-af3b-61ee52a88bac')
 BOM_TIMESTAMP = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
@@ -269,11 +267,14 @@ def get_bom_just_complete_metadata() -> Bom:
     bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
     bom.metadata.supplier = get_org_entity_2()
-    bom.metadata.licenses = [LicenseChoice(license=License(
-        id='Apache-2.0', text=AttachedText(
-            content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=', encoding=Encoding.BASE_64
-        ), url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt')
-    ))]
+    bom.metadata.licenses = [DisjunctiveLicense(
+        id='Apache-2.0',
+        url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt'),
+        text=AttachedText(
+            encoding=Encoding.BASE_64,
+            content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE='
+        )
+    )]
     bom.metadata.properties = get_properties_1()
     return bom
 
@@ -309,9 +310,7 @@ def get_bom_with_services_complex() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[
-                LicenseChoice(expression='Commercial')
-            ],
+            licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -339,9 +338,7 @@ def get_bom_with_nested_services() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[
-                LicenseChoice(expression='Commercial')
-            ],
+            licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -480,7 +477,7 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
     )
 
@@ -491,7 +488,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[LicenseChoice(expression='MIT License')],
+        licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
     )
 
@@ -664,21 +661,43 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
     return VulnerabilitySource(name='OWASP', url=XsUri('https://owasp.org'))
 
 
+def get_bom_with_licenses() -> Bom:
+    return _makeBom(
+        metadata=BomMetaData(
+            licenses=[DisjunctiveLicense(id='CC-BY-1.0')],
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',
+                                licenses=[DisjunctiveLicense(name='proprietary')])
+        ),
+        components=[
+            Component(name='c-with-expression', type=ComponentType.LIBRARY, bom_ref='C1',
+                      licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+            Component(name='c-with-SPDX', type=ComponentType.LIBRARY, bom_ref='C2',
+                      licenses=[DisjunctiveLicense(id='Apache-2.0')]),
+            Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
+                      licenses=[DisjunctiveLicense(name='(c) ACME Inc.')]),
+        ],
+        services=[
+            Service(name='s-with-expression', bom_ref='S1',
+                    licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+            Service(name='s-with-SPDX', bom_ref='S2',
+                    licenses=[DisjunctiveLicense(id='Apache-2.0')]),
+            Service(name='s-with-name', bom_ref='S3',
+                    licenses=[DisjunctiveLicense(name='(c) ACME Inc.')]),
+        ])
+
+
 def get_bom_metadata_licenses_invalid() -> Bom:
-    return Bom(metadata=BomMetaData(licenses=[
-        LicenseChoice(expression='Apache-2.0 OR MIT'),
-        LicenseChoice(license=License(id='MIT')),
-    ]))
+    return Bom(metadata=BomMetaData(licenses=get_invalid_license_repository()))
 
 
-def get_invalid_license_repository() -> List[LicenseChoice]:
+def get_invalid_license_repository() -> List[License]:
     """
     license expression and a license -- this is an invalid constellation according to schema
     see https://github.com/CycloneDX/specification/pull/205
     """
     return [
-        LicenseChoice(expression='Apache-2.0 OR MIT'),
-        LicenseChoice(license=License(id='GPL-2.0-only')),
+        LicenseExpression(value='Apache-2.0 OR MIT'),
+        DisjunctiveLicense(id='GPL-2.0-only'),
     ]
 
 
@@ -717,6 +736,27 @@ def get_bom_service_licenses_invalid() -> Bom:
     ])
 
 
+def get_bom_with_multiple_licenses() -> Bom:
+    multi_licenses = (
+        DisjunctiveLicense(id='MIT'),
+        DisjunctiveLicense(name='foo license'),
+    )
+    return _makeBom(
+        metadata=BomMetaData(
+            licenses=multi_licenses,
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',
+                                licenses=multi_licenses)
+        ),
+        components=[Component(name='comp', type=ComponentType.LIBRARY, bom_ref='my-compo',
+                              licenses=multi_licenses)],
+        services=[Service(name='serv', bom_ref='my-serv',
+                          licenses=multi_licenses)]
+    )
+
+
+# ---
+
+
 all_get_bom_funct_valid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid')
@@ -728,6 +768,8 @@ all_get_bom_funct_invalid = tuple(
 )
 
 all_get_bom_funct_with_incomplete_deps = {
+    # List of functions that return BOM with an incomplte dependency graph.
+    # It is expected that some process auto-fixes this before actual serialization takes place.
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
     get_bom_with_component_setuptools_complete,
@@ -741,4 +783,6 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_nested_services,
     get_bom_with_services_complex,
     get_bom_with_services_simple,
+    get_bom_with_licenses,
+    get_bom_with_multiple_licenses,
 }

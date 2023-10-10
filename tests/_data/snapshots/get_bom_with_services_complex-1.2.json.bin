@@ -52,7 +52,9 @@
       "group": "a-group",
       "licenses": [
         {
-          "expression": "Commercial"
+          "license": {
+            "name": "Commercial"
+          }
         }
       ],
       "name": "my-first-service",

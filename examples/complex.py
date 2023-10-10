@@ -20,7 +20,7 @@ import sys
 from packageurl import PackageURL
 
 from cyclonedx.exception import MissingOptionalDependencyException
-from cyclonedx.factory.license import LicenseChoiceFactory, LicenseFactory
+from cyclonedx.factory.license import LicenseFactory
 from cyclonedx.model import OrganizationalEntity, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
@@ -38,7 +38,7 @@ if TYPE_CHECKING:
     from cyclonedx.validation.xml import XmlValidator
 
 
-lc_factory = LicenseChoiceFactory(license_factory=LicenseFactory())
+lc_factory = LicenseFactory()
 
 # region build the BOM
 

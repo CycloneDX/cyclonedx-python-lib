@@ -25,8 +25,6 @@ from uuid import UUID, uuid4
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import UrnUuidHelper
-
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..parser import BaseParser
 from ..schema.schema import (
@@ -36,19 +34,12 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from . import (
-    ExternalReference,
-    LicenseChoice,
-    OrganizationalContact,
-    OrganizationalEntity,
-    Property,
-    ThisTool,
-    Tool,
-    get_now_utc,
-)
+from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
+from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool, get_now_utc
 from .bom_ref import BomRef
 from .component import Component
 from .dependency import Dependable, Dependency
+from .license import License, LicenseExpression, LicenseRepository
 from .service import Service
 from .vulnerability import Vulnerability
 
@@ -69,7 +60,7 @@ class BomMetaData:
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
                  manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
-                 licenses: Optional[Iterable[LicenseChoice]] = None,
+                 licenses: Optional[Iterable[License]] = None,
                  properties: Optional[Iterable[Property]] = None,
                  timestamp: Optional[datetime] = None) -> None:
         self.timestamp = timestamp or get_now_utc()
@@ -196,9 +187,9 @@ class BomMetaData:
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(7)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this BOM is licensed.
 
@@ -208,8 +199,8 @@ class BomMetaData:
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+    def licenses(self, licenses: Iterable[License]) -> None:
+        self._licenses = LicenseRepository(licenses)
 
     @property
     @serializable.view(SchemaVersion1Dot3)
@@ -585,7 +576,7 @@ class Bom:
             chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
             self.services
         ):
-            if len(elem.licenses) > 1 and any(li.expression for li in elem.licenses):
+            if len(elem.licenses) > 1 and any(isinstance(li, LicenseExpression) for li in elem.licenses):
                 raise LicenseExpressionAlongWithOthersException(
                     f'Found LicenseExpression along with others licenses in: {elem!r}')
 
