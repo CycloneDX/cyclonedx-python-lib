@@ -186,7 +186,17 @@ class LicenseExpression:
 
 
 License = Union[LicenseExpression, DisjunctiveLicense]
+"""TypeAlias for a union of supported license models.
+
+- :class:`LicenseExpression`
+- :class:`DisjunctiveLicense`
+"""
 
 
 class LicenseRepository(SortedSet[License]):
-    pass
+    """Collection of :class:`License`.
+
+    This is a `set`, not a `list`.  Order MUST NOT matter here.
+    If you wanted a certain order, then you should also express whether the items are concat by `AND` or `OR`.
+    If you wanted to do so, you should use :class:`LicenseExpression`.
+    """
