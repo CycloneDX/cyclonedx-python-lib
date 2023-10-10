@@ -199,4 +199,9 @@ class LicenseRepository(SortedSet[License]):
     This is a `set`, not a `list`.  Order MUST NOT matter here.
     If you wanted a certain order, then you should also express whether the items are concat by `AND` or `OR`.
     If you wanted to do so, you should use :class:`LicenseExpression`.
+
+    As a model, this shall accept multiple LicenseExpression along with multiple DisjunctiveLicense
+    this was an accepted in CycloneDX JSON before v1.5.
+    So for modeling purposes, this shall be still supported.
+    The normalization/serialization process should take care of these facts and do what is needed.
     """
