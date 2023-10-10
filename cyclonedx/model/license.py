@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import warnings
-from typing import Any, Optional, TypeAlias, Union
+from typing import Any, Optional, Union
 
 import serializable
 from sortedcontainers import SortedSet
@@ -185,7 +185,7 @@ class LicenseExpression:
         return f'<LicenseExpression value={self._value!r}>'
 
 
-LicenseChoice: TypeAlias = Union[LicenseExpression, DisjunctiveLicense]
+LicenseChoice = Union[LicenseExpression, DisjunctiveLicense]
 
 
 class LicenseRepository(SortedSet[LicenseChoice]):
