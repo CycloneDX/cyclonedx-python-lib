@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 
 class LicenseFactory:
-    """Factory for :class:`cyclonedx.model.License`."""
+    """Factory for :class:`cyclonedx.model.license.License`."""
 
     def make_from_string(self, value: str, *,
                          license_text: Optional['AttachedText'] = None,
@@ -46,7 +46,7 @@ class LicenseFactory:
 
         Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
 
-        :raises InvalidLicenseExpressionException: if :param value: is not known/supported license expression
+        :raises InvalidLicenseExpressionException: if param `value` is not known/supported license expression
         """
         if is_spdx_compound_expression(value):
             return LicenseExpression(value)
@@ -57,7 +57,7 @@ class LicenseFactory:
                      url: Optional['XsUri'] = None) -> DisjunctiveLicense:
         """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` from an SPDX-ID.
 
-        :raises InvalidSpdxLicenseException: if :param spdx_id: was not known/supported SPDX-ID
+        :raises InvalidSpdxLicenseException: if param `spdx_id` was not known/supported SPDX-ID
         """
         spdx_license_id = spdx_fixup(spdx_id)
         if spdx_license_id is None:
