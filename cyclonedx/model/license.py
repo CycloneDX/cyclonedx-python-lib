@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import warnings
-from typing import Any, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Optional, Union, overload
 
 import serializable
 from sortedcontainers import SortedSet
@@ -192,16 +192,31 @@ License = Union[LicenseExpression, DisjunctiveLicense]
 - :class:`DisjunctiveLicense`
 """
 
+if TYPE_CHECKING:  # pragma: no cover
+    # workaround for https://github.com/python/mypy/issues/5264
+    # this code path is taken when static code analysis or documentation tools runs through.
+    class LicenseRepository(SortedSet[License]):
+        """Collection of :class:`License`.
 
-class LicenseRepository(SortedSet):
-    """Collection of :class:`License`.
+        This is a `set`, not a `list`.  Order MUST NOT matter here.
+        If you wanted a certain order, then you should also express whether the items are concat by `AND` or `OR`.
+        If you wanted to do so, you should use :class:`LicenseExpression`.
 
-    This is a `set`, not a `list`.  Order MUST NOT matter here.
-    If you wanted a certain order, then you should also express whether the items are concat by `AND` or `OR`.
-    If you wanted to do so, you should use :class:`LicenseExpression`.
+        As a model, this MUST accept multiple LicenseExpression along with multiple DisjunctiveLicense
+        this was an accepted in CycloneDX JSON before v1.5.
+        So for modeling purposes, this is supported.
+        The normalization/serialization process SHOULD take care of these facts and do what is needed.
+        """
+else:
+    class LicenseRepository(SortedSet):
+        """Collection of :class:`License`.
 
-    As a model, this shall accept multiple LicenseExpression along with multiple DisjunctiveLicense
-    this was an accepted in CycloneDX JSON before v1.5.
-    So for modeling purposes, this shall be still supported.
-    The normalization/serialization process should take care of these facts and do what is needed.
-    """
+        This is a `set`, not a `list`.  Order MUST NOT matter here.
+        If you wanted a certain order, then you should also express whether the items are concat by `AND` or `OR`.
+        If you wanted to do so, you should use :class:`LicenseExpression`.
+
+        As a model, this MUST accept multiple LicenseExpression along with multiple DisjunctiveLicense
+        this was an accepted in CycloneDX JSON before v1.5.
+        So for modeling purposes, this is supported.
+        The normalization/serialization process SHOULD take care of these facts and do what is needed.
+        """
