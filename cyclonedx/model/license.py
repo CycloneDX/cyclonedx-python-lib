@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import warnings
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, overload
 
 import serializable
 from sortedcontainers import SortedSet
@@ -193,7 +193,7 @@ License = Union[LicenseExpression, DisjunctiveLicense]
 """
 
 
-class LicenseRepository(SortedSet[License]):
+class LicenseRepository(SortedSet):
     """Collection of :class:`License`.
 
     This is a `set`, not a `list`.  Order MUST NOT matter here.
