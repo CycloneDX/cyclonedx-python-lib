@@ -20,4 +20,4 @@ Python library for generating and representing CycloneDX software bill-of-materi
 
 # !! version is managed by semantic_release
 # do not use typing here, or else `semantic_release` might have issues finding the variable
-__version__ = "5.0.0-alpha.1"
+__version__ = "5.0.0-rc.1"
