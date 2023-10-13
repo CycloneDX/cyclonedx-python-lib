@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple
 from ..exception import MissingOptionalDependencyException
 from ..schema import OutputFormat
 from ..schema._res import BOM_XML as _S_BOM
-from . import BaseValidator, ValidationError, Validator
+from . import BaseSchemaBasedValidator, SchemaBasedValidator, ValidationError
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
@@ -37,7 +37,7 @@ except ImportError as err:
     ), err
 
 
-class _BaseXmlValidator(BaseValidator, ABC):
+class _BaseXmlValidator(BaseSchemaBasedValidator, ABC):
 
     @property
     def output_format(self) -> Literal[OutputFormat.XML]:
@@ -86,7 +86,7 @@ class _BaseXmlValidator(BaseValidator, ABC):
             return self.__validator
 
 
-class XmlValidator(_BaseXmlValidator, Validator):
+class XmlValidator(_BaseXmlValidator, BaseSchemaBasedValidator, SchemaBasedValidator):
     """Validator for CycloneDX documents in XML format."""
 
     @property

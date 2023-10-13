@@ -23,7 +23,7 @@ from unittest import TestCase
 from ddt import data, ddt, named_data, unpack
 
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from cyclonedx.validation import get_instance as get_validator
+from cyclonedx.validation.schema import get_instance as get_validator
 
 UNDEFINED_FORMAT_VERSION = {
     (OutputFormat.JSON, SchemaVersion.V1_1),
@@ -45,8 +45,8 @@ class TestGetInstance(TestCase):
         self.assertIs(validator.schema_version, sv)
 
     @data(
-        *(('foo', sv, (TypeError, "unexpected output_format: 'foo'")) for sv in SchemaVersion),
-        *((f, v, (ValueError, f'unsupported schema_version: {v}')) for f, v in UNDEFINED_FORMAT_VERSION)
+        *(('foo', sv, (ValueError, 'Unexpected output_format')) for sv in SchemaVersion),
+        *((f, v, (ValueError, 'Unsupported schema_version')) for f, v in UNDEFINED_FORMAT_VERSION)
     )
     @unpack
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raisesRegex: Tuple) -> None:

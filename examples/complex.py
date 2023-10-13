@@ -28,7 +28,7 @@ from cyclonedx.output import get_instance as get_outputter
 from cyclonedx.output.json import JsonV1Dot4
 from cyclonedx.schema import SchemaVersion, OutputFormat
 from cyclonedx.validation.json import JsonStrictValidator
-from cyclonedx.validation import get_instance as get_validator
+from cyclonedx.validation.schema import get_instance as get_validator
 
 from typing import TYPE_CHECKING
 

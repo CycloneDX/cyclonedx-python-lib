@@ -48,7 +48,7 @@ class TestJsonValidator(TestCase):
 
     @idata(UNSUPPORTED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
-        with self.assertRaisesRegex(ValueError, f'unsupported schema_version: {schema_version}'):
+        with self.assertRaisesRegex(ValueError, 'Unsupported schema_version'):
             JsonValidator(schema_version)
 
     @idata(_dp('valid'))
@@ -82,7 +82,7 @@ class TestJsonStrictValidator(TestCase):
 
     @data(*UNSUPPORTED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
-        with self.assertRaisesRegex(ValueError, f'unsupported schema_version: {schema_version}'):
+        with self.assertRaisesRegex(ValueError, 'Unsupported schema_version'):
             JsonStrictValidator(schema_version)
 
     @idata(_dp('valid'))
