@@ -27,7 +27,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 from ..exception import MissingOptionalDependencyException
 from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
-from . import BaseValidator, ValidationError, Validator
+from . import BaseSchemaBasedValidator, SchemaBasedValidator, ValidationError
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
@@ -45,7 +45,7 @@ except ImportError as err:
     ), err
 
 
-class _BaseJsonValidator(BaseValidator, ABC):
+class _BaseJsonValidator(BaseSchemaBasedValidator, ABC):
     @property
     def output_format(self) -> Literal[OutputFormat.JSON]:
         return OutputFormat.JSON
@@ -98,7 +98,7 @@ class _BaseJsonValidator(BaseValidator, ABC):
                 ])
 
 
-class JsonValidator(_BaseJsonValidator, Validator):
+class JsonValidator(_BaseJsonValidator, SchemaBasedValidator):
     """Validator for CycloneDX documents in JSON format."""
 
     @property
@@ -106,7 +106,7 @@ class JsonValidator(_BaseJsonValidator, Validator):
         return _S_BOM.get(self.schema_version)
 
 
-class JsonStrictValidator(_BaseJsonValidator, Validator):
+class JsonStrictValidator(_BaseJsonValidator, SchemaBasedValidator):
     """Strict validator for CycloneDX documents in JSON format.
 
     In contrast to :class:`~JsonValidator`,

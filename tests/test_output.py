@@ -41,8 +41,8 @@ class TestTestGetInstance(TestCase):
         self.assertIs(outputter.schema_version, sv)
 
     @data(
-        *((of, 'foo', (TypeError, "unexpected schema_version: 'foo'")) for of in OutputFormat),
-        *(('foo', sv, (TypeError, "unexpected output_format: 'foo'")) for sv in SchemaVersion),
+        *((of, 'foo', (ValueError, f"Unknown {of.name}/schema_version: 'foo'")) for of in OutputFormat),
+        *(('foo', sv, (ValueError, "Unexpected output_format: 'foo'")) for sv in SchemaVersion),
     )
     @unpack
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raisesRegex: Tuple) -> None:

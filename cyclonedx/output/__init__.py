@@ -21,8 +21,7 @@ and according to different versions of the CycloneDX schema standard.
 
 import os
 from abc import ABC, abstractmethod
-from importlib import import_module
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Type, Union, overload
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Mapping, Optional, Type, Union, overload
 
 from ..schema import OutputFormat, SchemaVersion
 
@@ -130,15 +129,16 @@ def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
     :return: BaseOutput
     """
     # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
-    if not isinstance(output_format, OutputFormat):
-        raise TypeError(f"unexpected output_format: {output_format!r}")
-    if not isinstance(schema_version, SchemaVersion):
-        raise TypeError(f"unexpected schema_version: {schema_version!r}")
-    try:
-        module = import_module(f'.{output_format.name.lower()}', __package__)
-    except ImportError as error:
-        raise ValueError(f'Unknown output_format: {output_format.name}') from error
-    klass: Optional[Type[BaseOutput]] = module.BY_SCHEMA_VERSION.get(schema_version, None)
+    if TYPE_CHECKING:
+        BY_SCHEMA_VERSION: Mapping[SchemaVersion, Type[BaseOutput]]
+    if OutputFormat.JSON is output_format:
+        from .json import BY_SCHEMA_VERSION
+    elif OutputFormat.XML is output_format:
+        from .xml import BY_SCHEMA_VERSION
+    else:
+        raise ValueError(f"Unexpected output_format: {output_format!r}")
+
+    klass: Type[BaseOutput] = BY_SCHEMA_VERSION.get(schema_version, None)
     if klass is None:
-        raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version.name}')
-    return klass(bom=bom)
+        raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version!r}')
+    return klass(bom)
