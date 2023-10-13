@@ -98,7 +98,7 @@ class _BaseJsonValidator(BaseSchemaBasedValidator, ABC):
                 ])
 
 
-class JsonValidator(_BaseJsonValidator, SchemaBasedValidator):
+class JsonValidator(_BaseJsonValidator, BaseSchemaBasedValidator, SchemaBasedValidator):
     """Validator for CycloneDX documents in JSON format."""
 
     @property
@@ -106,7 +106,7 @@ class JsonValidator(_BaseJsonValidator, SchemaBasedValidator):
         return _S_BOM.get(self.schema_version)
 
 
-class JsonStrictValidator(_BaseJsonValidator, SchemaBasedValidator):
+class JsonStrictValidator(_BaseJsonValidator, BaseSchemaBasedValidator, SchemaBasedValidator):
     """Strict validator for CycloneDX documents in JSON format.
 
     In contrast to :class:`~JsonValidator`,

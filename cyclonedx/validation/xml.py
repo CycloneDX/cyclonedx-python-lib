@@ -86,7 +86,7 @@ class _BaseXmlValidator(BaseSchemaBasedValidator, ABC):
             return self.__validator
 
 
-class XmlValidator(_BaseXmlValidator, SchemaBasedValidator):
+class XmlValidator(_BaseXmlValidator, BaseSchemaBasedValidator, SchemaBasedValidator):
     """Validator for CycloneDX documents in XML format."""
 
     @property
