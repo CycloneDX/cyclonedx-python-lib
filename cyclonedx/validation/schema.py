@@ -49,7 +49,7 @@ def get_instance(output_format: OutputFormat, schema_version: 'SchemaVersion') -
     Raises error when no instance could be built.
     """
     # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
-    if TYPE_CHECKING:
+    if TYPE_CHECKING:  # pragma: no cover
         from typing import Type
         Validator: Type[BaseSchemaBasedValidator]
     if OutputFormat.JSON is output_format:

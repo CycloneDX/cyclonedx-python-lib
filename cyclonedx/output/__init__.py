@@ -129,7 +129,7 @@ def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
     :return: BaseOutput
     """
     # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
-    if TYPE_CHECKING:
+    if TYPE_CHECKING:  # pragma: no cover
         BY_SCHEMA_VERSION: Mapping[SchemaVersion, Type[BaseOutput]]
     if OutputFormat.JSON is output_format:
         from .json import BY_SCHEMA_VERSION
