@@ -138,7 +138,7 @@ def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
     else:
         raise ValueError(f"Unexpected output_format: {output_format!r}")
 
-    klass: Type[BaseOutput] = BY_SCHEMA_VERSION.get(schema_version, None)
+    klass = BY_SCHEMA_VERSION.get(schema_version, None)
     if klass is None:
         raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version!r}')
     return klass(bom)
