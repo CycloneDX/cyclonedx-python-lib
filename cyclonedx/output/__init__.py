@@ -20,6 +20,7 @@ and according to different versions of the CycloneDX schema standard.
 """
 
 import os
+import warnings
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Mapping, Optional, Type, Union, overload
 
@@ -40,11 +41,6 @@ class BaseOutput(ABC):
         super().__init__(**kwargs)
         self._bom = bom
         self._generated: bool = False
-
-    def _chained_components(self, container: Union['Bom', 'Component']) -> Iterable['Component']:
-        for component in container.components:
-            yield component
-            yield from self._chained_components(component)
 
     @property
     @abstractmethod
@@ -95,40 +91,37 @@ class BaseOutput(ABC):
 
 
 @overload
-def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.JSON],
-                 schema_version: SchemaVersion = ...) -> 'JsonOutputter':
+def make_outputter(bom: 'Bom', output_format: Literal[OutputFormat.JSON],
+                   schema_version: SchemaVersion) -> 'JsonOutputter':
     ...
 
 
 @overload
-def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.XML] = ...,
-                 schema_version: SchemaVersion = ...) -> 'XmlOutputter':
+def make_outputter(bom: 'Bom', output_format: Literal[OutputFormat.XML],
+                   schema_version: SchemaVersion) -> 'XmlOutputter':
     ...
 
 
 @overload
-def get_instance(bom: 'Bom', output_format: OutputFormat = ...,
-                 schema_version: SchemaVersion = ...
-                 ) -> Union['XmlOutputter', 'JsonOutputter']:
+def make_outputter(bom: 'Bom', output_format: OutputFormat,
+                   schema_version: SchemaVersion) -> Union['XmlOutputter', 'JsonOutputter']:
     ...
 
 
-def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
-                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
+def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: SchemaVersion) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.
 
     Pass in your BOM and optionally an output format and schema version (defaults to XML and latest schema version).
 
 
-    Raises error when no instance could be built.
+    Raises error when no instance could be made.
 
     :param bom: Bom
     :param output_format: OutputFormat
     :param schema_version: SchemaVersion
     :return: BaseOutput
     """
-    # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
     if TYPE_CHECKING:  # pragma: no cover
         BY_SCHEMA_VERSION: Mapping[SchemaVersion, Type[BaseOutput]]
     if OutputFormat.JSON is output_format:
@@ -142,3 +135,13 @@ def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
     if klass is None:
         raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version!r}')
     return klass(bom)
+
+
+def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
+                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
+    """DEPRECATED. use :func:`make_outputter` instead!"""
+    warnings.warn(
+        'function `get_instance()` is deprecated, use `make_outputter()` instead.',
+        DeprecationWarning
+    )
+    return make_outputter(bom, output_format, schema_version)
