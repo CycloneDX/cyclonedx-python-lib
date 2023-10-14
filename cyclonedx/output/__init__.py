@@ -42,11 +42,6 @@ class BaseOutput(ABC):
         self._bom = bom
         self._generated: bool = False
 
-    def _chained_components(self, container: Union['Bom', 'Component']) -> Iterable['Component']:
-        for component in container.components:
-            yield component
-            yield from self._chained_components(component)
-
     @property
     @abstractmethod
     def schema_version(self) -> SchemaVersion:
@@ -120,7 +115,7 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
     Pass in your BOM and optionally an output format and schema version (defaults to XML and latest schema version).
 
 
-    Raises error when no instance could be built.
+    Raises error when no instance could be made.
 
     :param bom: Bom
     :param output_format: OutputFormat

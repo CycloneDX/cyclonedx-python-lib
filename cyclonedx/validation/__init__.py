@@ -105,7 +105,7 @@ def make_schemabased_validator(output_format: OutputFormat, schema_version: 'Sch
                                ) -> 'BaseSchemabasedValidator':
     """get the default Schema-based Validator for a certain :class:``OutputFormat``.
 
-    Raises error when no instance could be built.
+    Raises error when no instance could be made.
     """
     # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
     if TYPE_CHECKING:  # pragma: no cover
