@@ -24,11 +24,11 @@ from cyclonedx.factory.license import LicenseFactory
 from cyclonedx.model import OrganizationalEntity, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
-from cyclonedx.output import get_instance as get_outputter
+from cyclonedx.output import make_outputter, LATEST_SUPPORTED_SCHEMA_VERSION
 from cyclonedx.output.json import JsonV1Dot4
 from cyclonedx.schema import SchemaVersion, OutputFormat
 from cyclonedx.validation.json import JsonStrictValidator
-from cyclonedx.validation.schema import get_instance as get_validator
+from cyclonedx.validation import make_schemabased_validator
 
 from typing import TYPE_CHECKING
 
@@ -99,10 +99,11 @@ print('', '=' * 30, '', sep='\n')
 # region XML
 """demo with implicit instructions for SchemaVersion, outputter and validator. TypeCheckers will catch errors."""
 
-my_xml_outputter: 'XmlOutputter' = get_outputter(bom, OutputFormat.XML)
+my_xml_outputter: 'XmlOutputter' = make_outputter(bom, OutputFormat.XML, LATEST_SUPPORTED_SCHEMA_VERSION)
 serialized_xml = my_xml_outputter.output_as_string(indent=2)
 print(serialized_xml)
-my_xml_validator: 'XmlValidator' = get_validator(my_xml_outputter.output_format, my_xml_outputter.schema_version)
+my_xml_validator: 'XmlValidator' = make_schemabased_validator(
+    my_xml_outputter.output_format, my_xml_outputter.schema_version)
 try:
     validation_errors = my_xml_validator.validate_str(serialized_xml)
     if validation_errors:

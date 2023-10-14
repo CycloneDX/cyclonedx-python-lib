@@ -24,7 +24,7 @@ from unittest.mock import Mock
 from ddt import data, ddt, named_data, unpack
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import get_instance as get_outputter
+from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 
 
@@ -35,7 +35,7 @@ class TestTestGetInstance(TestCase):
     @unpack
     def test_as_expected(self, of: OutputFormat, sv: SchemaVersion) -> None:
         bom = Mock(spec=Bom)
-        outputter = get_outputter(bom, of, sv)
+        outputter = make_outputter(bom, of, sv)
         self.assertIs(outputter.get_bom(), bom)
         self.assertIs(outputter.output_format, of)
         self.assertIs(outputter.schema_version, sv)
@@ -48,4 +48,4 @@ class TestTestGetInstance(TestCase):
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raisesRegex: Tuple) -> None:
         bom = Mock(spec=Bom)
         with self.assertRaisesRegex(*raisesRegex):
-            get_outputter(bom, of, sv)
+            make_outputter(bom, of, sv)

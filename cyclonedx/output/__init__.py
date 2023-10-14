@@ -20,6 +20,7 @@ and according to different versions of the CycloneDX schema standard.
 """
 
 import os
+import warnings
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Mapping, Optional, Type, Union, overload
 
@@ -95,26 +96,24 @@ class BaseOutput(ABC):
 
 
 @overload
-def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.JSON],
-                 schema_version: SchemaVersion = ...) -> 'JsonOutputter':
+def make_outputter(bom: 'Bom', output_format: Literal[OutputFormat.JSON],
+                   schema_version: SchemaVersion) -> 'JsonOutputter':
     ...
 
 
 @overload
-def get_instance(bom: 'Bom', output_format: Literal[OutputFormat.XML] = ...,
-                 schema_version: SchemaVersion = ...) -> 'XmlOutputter':
+def make_outputter(bom: 'Bom', output_format: Literal[OutputFormat.XML],
+                   schema_version: SchemaVersion) -> 'XmlOutputter':
     ...
 
 
 @overload
-def get_instance(bom: 'Bom', output_format: OutputFormat = ...,
-                 schema_version: SchemaVersion = ...
-                 ) -> Union['XmlOutputter', 'JsonOutputter']:
+def make_outputter(bom: 'Bom', output_format: OutputFormat,
+                   schema_version: SchemaVersion) -> Union['XmlOutputter', 'JsonOutputter']:
     ...
 
 
-def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
-                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
+def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: SchemaVersion) -> BaseOutput:
     """
     Helper method to quickly get the correct output class/formatter.
 
@@ -142,3 +141,13 @@ def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
     if klass is None:
         raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version!r}')
     return klass(bom)
+
+
+def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
+                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
+    """DEPRECATED. use :func:`make_outputter` instead!"""
+    warnings.warn(
+        'function `get_instance()` is deprecated, use `make_outputter()` instead.',
+        DeprecationWarning
+    )
+    return make_outputter(bom, output_format, schema_version)
