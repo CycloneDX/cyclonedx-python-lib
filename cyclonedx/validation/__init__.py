@@ -107,7 +107,6 @@ def make_schemabased_validator(output_format: OutputFormat, schema_version: 'Sch
 
     Raises error when no instance could be made.
     """
-    # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
     if TYPE_CHECKING:  # pragma: no cover
         from typing import Type
         Validator: Type[BaseSchemabasedValidator]

@@ -122,7 +122,6 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
     :param schema_version: SchemaVersion
     :return: BaseOutput
     """
-    # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
     if TYPE_CHECKING:  # pragma: no cover
         BY_SCHEMA_VERSION: Mapping[SchemaVersion, Type[BaseOutput]]
     if OutputFormat.JSON is output_format:
