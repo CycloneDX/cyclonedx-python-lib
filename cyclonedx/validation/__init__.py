@@ -15,12 +15,14 @@
 
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Optional, Protocol
+from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Union, overload
 
 from ..schema import OutputFormat
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
+    from .json import JsonValidator
+    from .xml import XmlValidator
 
 
 class ValidationError:
@@ -41,8 +43,8 @@ class ValidationError:
         return str(self.data)
 
 
-class SchemaBasedValidator(Protocol):
-    """Schema based Validator protocol"""
+class SchemabasedValidator(Protocol):
+    """Schema-based Validator protocol"""
 
     def validate_str(self, data: str) -> Optional[ValidationError]:
         """Validate a string
@@ -55,8 +57,8 @@ class SchemaBasedValidator(Protocol):
         ...
 
 
-class BaseSchemaBasedValidator(ABC, SchemaBasedValidator):
-    """Base Schema based Validator"""
+class BaseSchemabasedValidator(ABC, SchemabasedValidator):
+    """Base Schema-based Validator"""
 
     def __init__(self, schema_version: 'SchemaVersion') -> None:
         self.__schema_version = schema_version
@@ -79,3 +81,40 @@ class BaseSchemaBasedValidator(ABC, SchemaBasedValidator):
     def _schema_file(self) -> Optional[str]:
         """get the schema file according to schema version."""
         ...
+
+
+@overload
+def make_schemabased_validator(output_format: Literal[OutputFormat.JSON], schema_version: 'SchemaVersion'
+                               ) -> 'JsonValidator':
+    ...
+
+
+@overload
+def make_schemabased_validator(output_format: Literal[OutputFormat.XML], schema_version: 'SchemaVersion'
+                               ) -> 'XmlValidator':
+    ...
+
+
+@overload
+def make_schemabased_validator(output_format: OutputFormat, schema_version: 'SchemaVersion'
+                               ) -> Union['JsonValidator', 'XmlValidator']:
+    ...
+
+
+def make_schemabased_validator(output_format: OutputFormat, schema_version: 'SchemaVersion'
+                               ) -> 'BaseSchemabasedValidator':
+    """get the default Schema-based Validator for a certain :class:``OutputFormat``.
+
+    Raises error when no instance could be built.
+    """
+    # all exceptions are undocumented, as they are pure functional, and should be prevented by correct typing...
+    if TYPE_CHECKING:  # pragma: no cover
+        from typing import Type
+        Validator: Type[BaseSchemabasedValidator]
+    if OutputFormat.JSON is output_format:
+        from .json import JsonValidator as Validator
+    elif OutputFormat.XML is output_format:
+        from .xml import XmlValidator as Validator
+    else:
+        raise ValueError(f'Unexpected output_format: {output_format!r}')
+    return Validator(schema_version)

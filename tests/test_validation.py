@@ -23,7 +23,7 @@ from unittest import TestCase
 from ddt import data, ddt, named_data, unpack
 
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from cyclonedx.validation.schema import get_instance as get_validator
+from cyclonedx.validation import make_schemabased_validator
 
 UNDEFINED_FORMAT_VERSION = {
     (OutputFormat.JSON, SchemaVersion.V1_1),
@@ -32,7 +32,7 @@ UNDEFINED_FORMAT_VERSION = {
 
 
 @ddt
-class TestGetInstance(TestCase):
+class TestGetSchemabasedValidator(TestCase):
 
     @named_data(*([f'{f.name} {v.name}', f, v]
                   for f, v
@@ -40,7 +40,7 @@ class TestGetInstance(TestCase):
                   if (f, v) not in UNDEFINED_FORMAT_VERSION))
     @unpack
     def test_as_expected(self, of: OutputFormat, sv: SchemaVersion) -> None:
-        validator = get_validator(of, sv)
+        validator = make_schemabased_validator(of, sv)
         self.assertIs(validator.output_format, of)
         self.assertIs(validator.schema_version, sv)
 
@@ -51,4 +51,4 @@ class TestGetInstance(TestCase):
     @unpack
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raisesRegex: Tuple) -> None:
         with self.assertRaisesRegex(*raisesRegex):
-            get_validator(of, sv)
+            make_schemabased_validator(of, sv)
