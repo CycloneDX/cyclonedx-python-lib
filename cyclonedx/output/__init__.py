@@ -22,13 +22,12 @@ and according to different versions of the CycloneDX schema standard.
 import os
 import warnings
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Mapping, Optional, Type, Union, overload
+from typing import TYPE_CHECKING, Any, Literal, Mapping, Optional, Type, Union, overload
 
 from ..schema import OutputFormat, SchemaVersion
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
-    from ..model.component import Component
     from .json import Json as JsonOutputter
     from .xml import Xml as XmlOutputter
 
