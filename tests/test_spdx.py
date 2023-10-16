@@ -92,6 +92,7 @@ class TestSpdxIsCompoundExpression(TestCase):
         'MIT AND Apache-2.0 OR something-unknown'
         'something invalid',
         '(c) John Doe',
+        'Apache License, Version 2.0'
     )
     def test_negative(self, invalid_expression: str) -> None:
         actual = spdx.is_compound_expression(invalid_expression)
