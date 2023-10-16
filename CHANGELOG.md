@@ -2,6 +2,27 @@
 
 
 
+## v4.2.3 (2023-10-16)
+
+### Chore
+
+* chore: Update CONTRIBUTING.md
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@owasp.org&gt; ([`0ebaa21`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ebaa216d43a1389362dbdb33f9b49f43a21ab66))
+
+### Ci
+
+* ci: publish coverage report to codacy (#439)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0012a82`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0012a82382f9f33831a80aa0e26c0cbb7fd8984b))
+
+### Fix
+
+* fix: SPDX-expression-validation internal crashes are cought and handled (#471)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`5fa66a0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5fa66a043818eb5747dbd630496c6d31f818c0ab))
+
+
 ## v4.2.2 (2023-09-14)
 
 ### Chore
