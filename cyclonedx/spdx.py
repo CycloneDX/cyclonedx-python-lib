@@ -66,6 +66,9 @@ def is_compound_expression(value: str) -> bool:
     .. _SPDX license expression spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
     .. _license-expression library: https://github.com/nexB/license-expression
     """
-    return 0 == len(
-        __SPDX_EXPRESSION_LICENSING.validate(value).errors
-    )
+    try:
+        res = __SPDX_EXPRESSION_LICENSING.validate(value)
+    except Exception:
+        # the throw happens when internals crash due to unexpected input characters.
+        return False
+    return 0 == len(res.errors)
