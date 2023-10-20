@@ -141,6 +141,6 @@ def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
     """DEPRECATED. use :func:`make_outputter` instead!"""
     warnings.warn(
         'function `get_instance()` is deprecated, use `make_outputter()` instead.',
-        DeprecationWarning
+        category=DeprecationWarning, stacklevel=1
     )
     return make_outputter(bom, output_format, schema_version)

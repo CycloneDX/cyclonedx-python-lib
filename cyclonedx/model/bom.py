@@ -564,7 +564,7 @@ class Bom:
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
                 f'"root" Component to complete the Dependency Graph data.',
-                UserWarning
+                category=UserWarning, stacklevel=1
             )
 
         # 3. If a LicenseExpression is set, then there must be no other license.

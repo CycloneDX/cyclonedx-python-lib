@@ -19,13 +19,13 @@ Exceptions that are specific to the CycloneDX library implementation.
 """
 
 
-class CycloneDxException(Exception):
+class CycloneDxException(Exception):  # noqa: N818
     """
     Root exception thrown by this library.
     """
     pass
 
 
-class MissingOptionalDependencyException(CycloneDxException):
+class MissingOptionalDependencyException(CycloneDxException): # noqa: N818
     """Validation did not happen, due to missing dependencies."""
     pass

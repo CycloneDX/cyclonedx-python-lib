@@ -39,9 +39,9 @@ class TestOutputJson(TestCase, SnapshotMixin):
 
     @data(*UNSUPPORTED_SV)
     def test_unsupported_schema_raises(self, sv: SchemaVersion) -> None:
-        outputterClass = BY_SCHEMA_VERSION[sv]
-        self.assertTrue(issubclass(outputterClass, Json))
-        outputter = outputterClass(Mock(spec=Bom))
+        outputter_class = BY_SCHEMA_VERSION[sv]
+        self.assertTrue(issubclass(outputter_class, Json))
+        outputter = outputter_class(Mock(spec=Bom))
         with self.assertRaises(FormatNotSupportedException):
             outputter.output_as_string()
 
@@ -86,8 +86,8 @@ class TestFunctionalBySchemaVersion(TestCase):
 
     @idata(SchemaVersion)
     def test_get_outputter_expected(self, sv: SchemaVersion) -> None:
-        outputterClass = BY_SCHEMA_VERSION[sv]
-        self.assertTrue(issubclass(outputterClass, Json))
-        outputter = outputterClass(Mock(spec=Bom))
+        outputter_class = BY_SCHEMA_VERSION[sv]
+        self.assertTrue(issubclass(outputter_class, Json))
+        outputter = outputter_class(Mock(spec=Bom))
         self.assertIs(outputter.schema_version, sv)
         self.assertIs(outputter.output_format, OutputFormat.JSON)

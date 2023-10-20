@@ -74,8 +74,8 @@ class TestFunctionalBySchemaVersion(TestCase):
 
     @idata(SchemaVersion)
     def test_get_outputter_expected(self, sv: SchemaVersion) -> None:
-        outputterClass = BY_SCHEMA_VERSION[sv]
-        self.assertTrue(issubclass(outputterClass, Xml))
-        outputter = outputterClass(Mock(spec=Bom))
+        outputter_class = BY_SCHEMA_VERSION[sv]
+        self.assertTrue(issubclass(outputter_class, Xml))
+        outputter = outputter_class(Mock(spec=Bom))
         self.assertIs(outputter.schema_version, sv)
         self.assertIs(outputter.output_format, OutputFormat.XML)

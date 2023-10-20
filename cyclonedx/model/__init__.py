@@ -23,7 +23,7 @@ from typing import Any, Iterable, Optional, Tuple, TypeVar
 import serializable
 from sortedcontainers import SortedSet
 
-from .. import __version__ as __ThisToolVersion
+from .. import __version__ as __ThisToolVersion  # noqa: N812
 from ..exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
@@ -325,16 +325,16 @@ class HashType:
             )
         elif algorithm_prefix[0:3] == 'sha':
             return HashType(
-                alg=getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:])),
+                alg=getattr(HashAlgorithm, f'SHA_{algorithm_prefix[3:]}'),
                 content=parts[1].lower()
             )
         elif algorithm_prefix[0:6] == 'blake2':
             return HashType(
-                alg=getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:])),
+                alg=getattr(HashAlgorithm, f'BLAKE2b_{algorithm_prefix[6:]}'),
                 content=parts[1].lower()
             )
 
-        raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
+        raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
 
     def __init__(self, *, alg: HashAlgorithm, content: str) -> None:
         self.alg = alg

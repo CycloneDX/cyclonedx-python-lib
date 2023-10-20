@@ -733,18 +733,18 @@ class Component(Dependable):
             `Component` representing the supplied file
         """
         if not exists(absolute_file_path):
-            raise FileExistsError('Supplied file path \'{}\' does not exist'.format(absolute_file_path))
+            raise FileExistsError(f'Supplied file path {absolute_file_path!r} does not exist')
 
         sha1_hash: str = sha1sum(filename=absolute_file_path)
         return Component(
             name=path_for_bom if path_for_bom else absolute_file_path,
-            version='0.0.0-{}'.format(sha1_hash[0:12]),
+            version=f'0.0.0-{sha1_hash[0:12]}',
             hashes=[
                 HashType(alg=HashAlgorithm.SHA_1, content=sha1_hash)
             ],
             type=ComponentType.FILE, purl=PackageURL(
                 type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
-                version='0.0.0-{}'.format(sha1_hash[0:12])
+                version=f'0.0.0-{sha1_hash[0:12]}'
             )
         )
 
@@ -795,15 +795,15 @@ class Component(Dependable):
         if namespace:
             warnings.warn(
                 '`namespace` is deprecated and has been replaced with `group` to align with the CycloneDX standard',
-                DeprecationWarning
+                category=DeprecationWarning, stacklevel=1
             )
             if not group:
                 self.group = namespace
 
         if license_str:
             warnings.warn(
-                '`license_str` is deprecated and has been replaced with `licenses` to align with the CycloneDX '
-                'standard', DeprecationWarning
+                '`license_str` is deprecated and has been replaced with `licenses` to align with the CycloneDX standard',
+                category=DeprecationWarning, stacklevel=1
             )
             if not licenses:
                 self.licenses = LicenseRepository([LicenseExpression(license_str)])
@@ -1279,5 +1279,6 @@ class Component(Dependable):
         Returns:
             Declared namespace of this Component as `str` if declared, else `None`.
         """
-        warnings.warn('`Component.get_namespace()` is deprecated - use `Component.group`', DeprecationWarning)
+        warnings.warn('`Component.get_namespace()` is deprecated - use `Component.group`',
+                      category=DeprecationWarning, stacklevel=1)
         return self._group

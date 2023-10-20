@@ -66,7 +66,7 @@ class TestComponent(TestCase):
         test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.4', 'bom_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
         sha1_hash: str = sha1sum(filename=test_file)
-        expected_version = '0.0.0-{}'.format(sha1_hash[0:12])
+        expected_version = f'0.0.0-{sha1_hash[0:12]}'
         self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
         self.assertEqual(c.version, expected_version)
         purl = PackageURL(

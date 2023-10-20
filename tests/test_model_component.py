@@ -63,16 +63,16 @@ class TestModelCommit(TestCase):
 
     def test_same(self) -> None:
         ia_comitter = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Committer')
-        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
-        c2 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
+        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message='A commit message')
+        c2 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message='A commit message')
         self.assertEqual(hash(c1), hash(c2))
         self.assertTrue(c1 == c2)
 
     def test_not_same(self) -> None:
         ia_author = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Author')
         ia_comitter = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Committer')
-        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
-        c2 = Commit(uid='a-random-uid', author=ia_author, committer=ia_comitter, message="A commit message")
+        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message='A commit message')
+        c2 = Commit(uid='a-random-uid', author=ia_author, committer=ia_comitter, message='A commit message')
         self.assertNotEqual(hash(c1), hash(c2))
         self.assertFalse(c1 == c2)
 
@@ -259,15 +259,15 @@ class TestModelComponent(TestCase):
             Component(name='component-a', type=ComponentType.LIBRARY, group='group-2'),
             Component(name='component-a', type=ComponentType.FILE),
             Component(name='component-b', type=ComponentType.FILE),
-            Component(name='component-a', type=ComponentType.FILE, version="1.0.0"),
+            Component(name='component-a', type=ComponentType.FILE, version='1.0.0'),
         ]
         sorted_components = sorted(components)
         expected_components = reorder(components, expected_order)
         self.assertListEqual(sorted_components, expected_components)
 
     def test_nested_components_1(self) -> None:
-        comp_b = Component(name="comp_b")
-        comp_c = Component(name="comp_c")
+        comp_b = Component(name='comp_b')
+        comp_c = Component(name='comp_c')
         comp_b.components.add(comp_c)
 
         self.assertEqual(1, len(comp_b.components))
@@ -275,9 +275,9 @@ class TestModelComponent(TestCase):
         self.assertEqual(1, len(comp_b.get_all_nested_components(include_self=False)))
 
     def test_nested_components_2(self) -> None:
-        comp_a = Component(name="comp_a")
-        comp_b = Component(name="comp_b")
-        comp_c = Component(name="comp_c")
+        comp_a = Component(name='comp_a')
+        comp_b = Component(name='comp_b')
+        comp_c = Component(name='comp_c')
         comp_b.components.add(comp_c)
         comp_b.components.add(comp_a)
 

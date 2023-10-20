@@ -43,7 +43,7 @@ lc_factory = LicenseFactory()
 # region build the BOM
 
 bom = Bom()
-bom.metadata.component = rootComponent = Component(
+bom.metadata.component = root_component = Component(
     name='myApp',
     type=ComponentType.APPLICATION,
     licenses=[lc_factory.make_from_string('MIT')],
@@ -64,7 +64,7 @@ component1 = Component(
     purl=PackageURL('generic', 'acme', 'some-component', '1.33.7-beta.1')
 )
 bom.components.add(component1)
-bom.register_dependency(rootComponent, [component1])
+bom.register_dependency(root_component, [component1])
 
 component2 = Component(
     type=ComponentType.LIBRARY,
