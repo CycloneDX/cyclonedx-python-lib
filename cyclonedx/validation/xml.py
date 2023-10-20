@@ -51,7 +51,7 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
         __MDERROR = _missing_deps_error
 
         def validate_str(self, data: str) -> Optional[ValidationError]:
-            raise self.__MDERROR[0]  # from functionality_not_implemented_error[1]
+            raise self.__MDERROR[0] from self.__MDERROR[1]
     else:
         def validate_str(self, data: str) -> Optional[ValidationError]:
             return self._validata_data(

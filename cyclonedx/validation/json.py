@@ -54,11 +54,11 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
         # this is the def that is used for generating the documentation
         super().__init__(schema_version)
 
-    if _missing_deps_error:
+    if _missing_deps_error:  # noqa:C901
         __MDERROR = _missing_deps_error
 
         def validate_str(self, data: str) -> Optional[ValidationError]:
-            raise self.__MDERROR[0]  # from functionality_not_implemented_error[1]
+            raise self.__MDERROR[0] from self.__MDERROR[1]
 
     else:
         def validate_str(self, data: str) -> Optional[ValidationError]:
