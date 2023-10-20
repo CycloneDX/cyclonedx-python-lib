@@ -40,7 +40,7 @@ class ParserWarning:
         return self._warning
 
     def __repr__(self) -> str:
-        return f'<ParserWarning item=\'{self._item}\'>'
+        return f'<ParserWarning item={self._item!r}>'
 
 
 class BaseParser:

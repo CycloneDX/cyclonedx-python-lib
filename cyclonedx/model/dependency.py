@@ -37,8 +37,8 @@ class DependencyDependencies(serializable.BaseHelper):  # type: ignore
         raise ValueError(f'Attempt to serialize a non-Dependency: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: Any) -> Set["Dependency"]:
-        dependencies: Set["Dependency"] = set()
+    def deserialize(cls, o: Any) -> Set['Dependency']:
+        dependencies: Set['Dependency'] = set()
         if isinstance(o, list):
             for v in o:
                 dependencies.add(Dependency(ref=BomRef(value=v)))
@@ -54,7 +54,7 @@ class Dependency:
         See https://cyclonedx.org/docs/1.4/xml/#type_dependencyType
     """
 
-    def __init__(self, ref: BomRef, dependencies: Optional[Iterable["Dependency"]] = None) -> None:
+    def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
         self.ref = ref
         self.dependencies = SortedSet(dependencies or [])
 
@@ -72,11 +72,11 @@ class Dependency:
     @serializable.json_name('dependsOn')
     @serializable.type_mapping(DependencyDependencies)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'dependency')
-    def dependencies(self) -> "SortedSet[Dependency]":
+    def dependencies(self) -> 'SortedSet[Dependency]':
         return self._dependencies
 
     @dependencies.setter
-    def dependencies(self, dependencies: Iterable["Dependency"]) -> None:
+    def dependencies(self, dependencies: Iterable['Dependency']) -> None:
         self._dependencies = SortedSet(dependencies)
 
     def dependencies_as_bom_refs(self) -> Set[BomRef]:

@@ -503,10 +503,10 @@ class TestModelXsUri(TestCase):
         # expected sort order: (uri)
         expected_order = [2, 1, 3, 0]
         uris = [
-            XsUri(uri="d"),
-            XsUri(uri="b"),
-            XsUri(uri="a"),
-            XsUri(uri="c"),
+            XsUri(uri='d'),
+            XsUri(uri='b'),
+            XsUri(uri='a'),
+            XsUri(uri='c'),
         ]
         sorted_uris = sorted(uris)
         expected_uris = reorder(uris, expected_order)

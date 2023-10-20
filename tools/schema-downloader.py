@@ -19,7 +19,7 @@ from urllib.request import urlretrieve
 SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/master/schema/'
 TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res')
 
-bom_xsd = {
+BOM_XSD = {
     'versions': ['1.4', '1.3', '1.2', '1.1', '1.0'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.xsd',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.xsd'),
@@ -31,22 +31,22 @@ bom_xsd = {
 
 # "version" is not required but optional with a default value!
 #   this is wrong in schema<1.5
-_bomSchemaEnumMatch = re.compile(
+_BOM_SCHEMA_ENUM_RE = re.compile(
     r'("\$id": "(http://cyclonedx\.org/schema/bom.+?\.schema\.json)".*"enum": \[\s+")'
     r'http://cyclonedx\.org/schema/bom.+?\.schema\.json"',
     re.DOTALL)
-_bomSchemaEnumReplace = r'\1\2"'
+_BOM_SCHEMA_ENUM_REPL = r'\1\2"'
 
 
 # "version" is not required but optional with a default value!
 # this is wrong in schema<1.5
-_bomRequired = """
+_BOM_REQUIRED_S = """
   "required": [
     "bomFormat",
     "specVersion",
     "version"
   ],"""
-_bomRequiredReplace = """
+_BOM_REQUIRED_R = """
   "required": [
     "bomFormat",
     "specVersion"
@@ -55,20 +55,20 @@ _bomRequiredReplace = """
 
 # there was a case where the default value did not match the own pattern ...
 # this is wrong in schema<1.5
-_defaultWithPatternMatch = re.compile(r'\s+"default": "",(?![^}]*?"pattern": "\^\(\.\*\)\$")', re.MULTILINE)
-_defaultWithPatternReplace = r''
+_DEFAULTS_WITH_PATTERN_RE = re.compile(r'\s+"default": "",(?![^}]*?"pattern": "\^\(\.\*\)\$")', re.MULTILINE)
+_DEFAULTS_WITH_PATERN_REPL = r''
 
-bom_json_lax = {
+BOM_JSON_LAX = {
     'versions': ['1.4', '1.3', '1.2'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.schema.json',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.schema.json'),
     'replace': [
         ('spdx.schema.json', 'spdx.SNAPSHOT.schema.json'),
         ('jsf-0.82.schema.json', 'jsf-0.82.SNAPSHOT.schema.json'),
-        (_bomRequired, _bomRequiredReplace),
+        (_BOM_REQUIRED_S, _BOM_REQUIRED_R),
     ],
     'replaceRE': [
-        (_bomSchemaEnumMatch, _bomSchemaEnumReplace),
+        (_BOM_SCHEMA_ENUM_RE, _BOM_SCHEMA_ENUM_REPL),
         # there was a case where the default value did not match the own pattern ...
         # this is wrong in schema<1.5
         # with current SchemaValidator this is no longer required, as defaults are not applied
@@ -76,21 +76,21 @@ bom_json_lax = {
     ]
 }
 
-bom_json_strict = {
+BOM_JSON_STRICT = {
     'versions': ['1.3', '1.2'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s-strict.schema.json',
     'targetPattern': join(TARGET_ROOT, 'bom-%s-strict.SNAPSHOT.schema.json'),
-    'replace': bom_json_lax['replace'],
-    'replaceRE': bom_json_lax['replaceRE']
+    'replace': BOM_JSON_LAX['replace'],
+    'replaceRE': BOM_JSON_LAX['replaceRE']
 }
 
-other_downloadables = [
+OTHER_DOWNLOADABLES = [
     (f'{SOURCE_ROOT}spdx.schema.json', join(TARGET_ROOT, 'spdx.SNAPSHOT.schema.json')),
     (f'{SOURCE_ROOT}spdx.xsd', join(TARGET_ROOT, 'spdx.SNAPSHOT.xsd')),
     (f'{SOURCE_ROOT}jsf-0.82.schema.json', join(TARGET_ROOT, 'jsf-0.82.SNAPSHOT.schema.json')),
 ]
 
-for dspec in (bom_xsd, bom_json_lax, bom_json_strict):
+for dspec in (BOM_XSD, BOM_JSON_LAX, BOM_JSON_STRICT):
     for version in dspec['versions']:
         source = dspec['sourcePattern'].replace('%s', version)
         target = dspec['targetPattern'].replace('%s', version)
@@ -104,5 +104,5 @@ for dspec in (bom_xsd, bom_json_lax, bom_json_strict):
                     text = search.sub(replace, text)
                 tarf.write(text)
 
-for source, target in other_downloadables:
+for source, target in OTHER_DOWNLOADABLES:
     urlretrieve(source, target)

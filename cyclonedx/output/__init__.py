@@ -122,13 +122,13 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
     :return: BaseOutput
     """
     if TYPE_CHECKING:  # pragma: no cover
-        BY_SCHEMA_VERSION: Mapping[SchemaVersion, Type[BaseOutput]]
+        BY_SCHEMA_VERSION: Mapping[SchemaVersion, Type[BaseOutput]]  # noqa:N806
     if OutputFormat.JSON is output_format:
         from .json import BY_SCHEMA_VERSION
     elif OutputFormat.XML is output_format:
         from .xml import BY_SCHEMA_VERSION
     else:
-        raise ValueError(f"Unexpected output_format: {output_format!r}")
+        raise ValueError(f'Unexpected output_format: {output_format!r}')
 
     klass = BY_SCHEMA_VERSION.get(schema_version, None)
     if klass is None:
@@ -141,6 +141,6 @@ def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
     """DEPRECATED. use :func:`make_outputter` instead!"""
     warnings.warn(
         'function `get_instance()` is deprecated, use `make_outputter()` instead.',
-        DeprecationWarning
+        category=DeprecationWarning, stacklevel=1
     )
     return make_outputter(bom, output_format, schema_version)

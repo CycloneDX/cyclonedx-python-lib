@@ -170,7 +170,7 @@ class Service(Dependable):
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'endpoint')
     @serializable.xml_sequence(6)
-    def endpoints(self) -> "SortedSet[XsUri]":
+    def endpoints(self) -> 'SortedSet[XsUri]':
         """
         A list of endpoints URI's this service provides.
 
@@ -224,7 +224,7 @@ class Service(Dependable):
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
     @serializable.xml_sequence(9)
-    def data(self) -> "SortedSet[DataClassification]":
+    def data(self) -> 'SortedSet[DataClassification]':
         """
         Specifies the data classification.
 
@@ -256,7 +256,7 @@ class Service(Dependable):
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(11)
-    def external_references(self) -> "SortedSet[ExternalReference]":
+    def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the Service.
 
@@ -310,7 +310,7 @@ class Service(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(12)
-    def properties(self) -> "SortedSet[Property]":
+    def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.

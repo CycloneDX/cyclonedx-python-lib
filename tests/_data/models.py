@@ -107,7 +107,7 @@ BOM_SERIAL_NUMBER = UUID('1441d33a-e0fc-45b5-af3b-61ee52a88bac')
 BOM_TIMESTAMP = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
 
 
-def _makeBom(**kwargs: Any) -> Bom:
+def _make_bom(**kwargs: Any) -> Bom:
     bom = Bom(**kwargs)
     bom.serial_number = BOM_SERIAL_NUMBER
     bom.metadata.timestamp = BOM_TIMESTAMP
@@ -115,29 +115,29 @@ def _makeBom(**kwargs: Any) -> Bom:
 
 
 def get_bom_with_component_setuptools_basic() -> Bom:
-    return _makeBom(components=[get_component_setuptools_simple()])
+    return _make_bom(components=[get_component_setuptools_simple()])
 
 
 def get_bom_with_component_setuptools_with_cpe() -> Bom:
     component = get_component_setuptools_simple()
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
-    return _makeBom(components=[component])
+    return _make_bom(components=[component])
 
 
 def get_bom_with_component_setuptools_no_component_version() -> Bom:
-    return _makeBom(components=[get_component_setuptools_simple_no_version()])
+    return _make_bom(components=[get_component_setuptools_simple_no_version()])
 
 
 def get_bom_with_component_setuptools_with_release_notes() -> Bom:
     component = get_component_setuptools_simple()
     component.release_notes = get_release_notes()
-    return _makeBom(components=[component])
+    return _make_bom(components=[component])
 
 
 def get_bom_with_dependencies_valid() -> Bom:
     c1 = get_component_setuptools_simple()
     c2 = get_component_toml_with_hashes_with_references()
-    return _makeBom(
+    return _make_bom(
         components=[c1, c2], dependencies=[
             Dependency(ref=c1.bom_ref, dependencies=[
                 Dependency(ref=c2.bom_ref)
@@ -154,7 +154,7 @@ def get_bom_with_dependencies_hanging() -> Bom:
     """
     c1 = get_component_setuptools_simple('setuptools')
     c2 = get_component_toml_with_hashes_with_references('toml')
-    bom = _makeBom(
+    bom = _make_bom(
         version=23,
         metadata=BomMetaData(
             component=Component(name='rootComponent', type=ComponentType.APPLICATION, bom_ref='root-component'),
@@ -175,12 +175,12 @@ def get_bom_with_dependencies_unlinked_invalid() -> Bom:
     it is expected to throw on output.
     """
     c1 = get_component_setuptools_simple()
-    return _makeBom(components=[c1], dependencies=[Dependency(ref=BomRef('link-to-ref-not-in-document'))])
+    return _make_bom(components=[c1], dependencies=[Dependency(ref=BomRef('link-to-ref-not-in-document'))])
 
 
 def get_bom_with_metadata_component_and_dependencies() -> Bom:
     cs = get_component_toml_with_hashes_with_references()
-    bom = _makeBom(components=[cs])
+    bom = _make_bom(components=[cs])
     bom.metadata.component = get_component_setuptools_simple()
     bom.dependencies.add(
         Dependency(ref=bom.metadata.component.bom_ref, dependencies=[
@@ -191,11 +191,11 @@ def get_bom_with_metadata_component_and_dependencies() -> Bom:
 
 
 def get_bom_with_component_setuptools_complete() -> Bom:
-    return _makeBom(components=[get_component_setuptools_complete()])
+    return _make_bom(components=[get_component_setuptools_complete()])
 
 
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
-    bom = _makeBom()
+    bom = _make_bom()
     component = get_component_setuptools_simple()
     if not component.purl:
         raise ValueError('purl is required here')
@@ -258,11 +258,11 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
 
 
 def get_bom_with_component_toml_1() -> Bom:
-    return _makeBom(components=[get_component_toml_with_hashes_with_references()])
+    return _make_bom(components=[get_component_toml_with_hashes_with_references()])
 
 
 def get_bom_just_complete_metadata() -> Bom:
-    bom = _makeBom()
+    bom = _make_bom()
     bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
     bom.metadata.component = get_component_setuptools_complete()
     bom.metadata.manufacture = get_org_entity_1()
@@ -280,14 +280,14 @@ def get_bom_just_complete_metadata() -> Bom:
 
 
 def get_bom_with_external_references() -> Bom:
-    bom = _makeBom(external_references=[
+    bom = _make_bom(external_references=[
         get_external_reference_1(), get_external_reference_2()
     ])
     return bom
 
 
 def get_bom_with_services_simple() -> Bom:
-    bom = _makeBom(services=[
+    bom = _make_bom(services=[
         Service(name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service'),
         Service(name='my-second-service', bom_ref='my-specific-bom-ref-for-my-second-service')
     ])
@@ -299,7 +299,7 @@ def get_bom_with_services_simple() -> Bom:
 
 
 def get_bom_with_services_complex() -> Bom:
-    bom = _makeBom(services=[
+    bom = _make_bom(services=[
         Service(
             name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service',
             provider=get_org_entity_1(), group='a-group', version='1.2.3',
@@ -327,7 +327,7 @@ def get_bom_with_services_complex() -> Bom:
 
 
 def get_bom_with_nested_services() -> Bom:
-    bom = _makeBom(services=[
+    bom = _make_bom(services=[
         Service(
             name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service',
             provider=get_org_entity_1(), group='a-group', version='1.2.3',
@@ -381,10 +381,10 @@ def get_bom_for_issue_275_components() -> Bom:
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/275
     """
 
-    app = Component(bom_ref=MOCK_UUID[0], name="app", version="1.0.0")
-    comp_a = Component(bom_ref=MOCK_UUID[1], name="comp_a", version="1.0.0")
-    comp_b = Component(bom_ref=MOCK_UUID[2], name="comp_b", version="1.0.0")
-    comp_c = Component(bom_ref=MOCK_UUID[3], name="comp_c", version="1.0.0")
+    app = Component(bom_ref=MOCK_UUID[0], name='app', version='1.0.0')
+    comp_a = Component(bom_ref=MOCK_UUID[1], name='comp_a', version='1.0.0')
+    comp_b = Component(bom_ref=MOCK_UUID[2], name='comp_b', version='1.0.0')
+    comp_c = Component(bom_ref=MOCK_UUID[3], name='comp_c', version='1.0.0')
 
     comp_b.components.add(comp_c)
     # comp_b.dependencies.add(comp_c.bom_ref)
@@ -393,7 +393,7 @@ def get_bom_for_issue_275_components() -> Bom:
     # app.dependencies.add(comp_a.bom_ref)
     # app.dependencies.add(comp_b.bom_ref)
 
-    bom = _makeBom(components=libs)
+    bom = _make_bom(components=libs)
     bom.metadata.component = app
     bom.register_dependency(target=app, depends_on=[comp_a, comp_b])
     bom.register_dependency(target=comp_b, depends_on=[comp_c])
@@ -421,7 +421,7 @@ def get_bom_for_issue_328_components() -> Bom:
     """regression test for issue #328
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/328
     """
-    bom = _makeBom()
+    bom = _make_bom()
 
     comp_root = Component(type=ComponentType.APPLICATION,
                           name='my-project', version='1', bom_ref='my-project')
@@ -583,7 +583,7 @@ def get_pedigree_1() -> Pedigree:
             get_component_toml_with_hashes_with_references(bom_ref='e7abdcca-5ba2-4f29-b2cf-b1e1ef788e66'),
             get_component_setuptools_simple(bom_ref='ded1d73e-1fca-4302-b520-f1bc53979958')
         ],
-        commits=[Commit(uid='a-random-uid', message="A commit message")],
+        commits=[Commit(uid='a-random-uid', message='A commit message')],
         patches=[Patch(type=PatchClassification.BACKPORT)],
         notes='Some notes here please'
     )
@@ -602,12 +602,12 @@ def get_release_notes() -> ReleaseNotes:
     ).decode(encoding='UTF-8')
 
     return ReleaseNotes(
-        type='major', title="Release Notes Title",
+        type='major', title='Release Notes Title',
         featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
         social_image=XsUri('https://cyclonedx.org/cyclonedx-icon.png'),
-        description="This release is a test release", timestamp=MOCK_TIMESTAMP,
+        description='This release is a test release', timestamp=MOCK_TIMESTAMP,
         aliases=[
-            "First Test Release"
+            'First Test Release'
         ],
         tags=['test', 'alpha'],
         resolves=[get_issue_1()],
@@ -662,7 +662,7 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
 
 
 def get_bom_with_licenses() -> Bom:
-    return _makeBom(
+    return _make_bom(
         metadata=BomMetaData(
             licenses=[DisjunctiveLicense(id='CC-BY-1.0')],
             component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',
@@ -741,7 +741,7 @@ def get_bom_with_multiple_licenses() -> Bom:
         DisjunctiveLicense(id='MIT'),
         DisjunctiveLicense(name='foo license'),
     )
-    return _makeBom(
+    return _make_bom(
         metadata=BomMetaData(
             licenses=multi_licenses,
             component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',

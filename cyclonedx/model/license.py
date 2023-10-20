@@ -46,7 +46,7 @@ class DisjunctiveLicense:
         if id and name:
             warnings.warn(
                 'Both `id` and `name` have been supplied - `name` will be ignored!',
-                RuntimeWarning
+                category=RuntimeWarning, stacklevel=1
             )
         self._id = id
         self._name = name if not id else None

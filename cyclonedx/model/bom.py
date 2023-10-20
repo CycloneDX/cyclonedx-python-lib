@@ -94,7 +94,7 @@ class BomMetaData:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(2)
-    def tools(self) -> "SortedSet[Tool]":
+    def tools(self) -> 'SortedSet[Tool]':
         """
         Tools used to create this BOM.
 
@@ -110,7 +110,7 @@ class BomMetaData:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
     @serializable.xml_sequence(3)
-    def authors(self) -> "SortedSet[OrganizationalContact]":
+    def authors(self) -> 'SortedSet[OrganizationalContact]':
         """
         The person(s) who created the BOM.
 
@@ -207,7 +207,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(8)
-    def properties(self) -> "SortedSet[Property]":
+    def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
@@ -335,7 +335,7 @@ class Bom:
     @serializable.include_none(SchemaVersion1Dot1)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
     @serializable.xml_sequence(2)
-    def components(self) -> "SortedSet[Component]":
+    def components(self) -> 'SortedSet[Component]':
         """
         Get all the Components currently in this Bom.
 
@@ -348,7 +348,7 @@ class Bom:
     def components(self, components: Iterable[Component]) -> None:
         self._components = SortedSet(components)
 
-    def get_component_by_purl(self, purl: Optional["PackageURL"]) -> Optional[Component]:
+    def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
         """
         Get a Component already in the Bom by its PURL
 
@@ -394,7 +394,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     @serializable.xml_sequence(3)
-    def services(self) -> "SortedSet[Service]":
+    def services(self) -> 'SortedSet[Service]':
         """
         Get all the Services currently in this Bom.
 
@@ -414,7 +414,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(4)
-    def external_references(self) -> "SortedSet[ExternalReference]":
+    def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
 
@@ -438,7 +438,7 @@ class Bom:
 
         return components
 
-    def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> "SortedSet[Vulnerability]":
+    def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> 'SortedSet[Vulnerability]':
         """
         Get all known Vulnerabilities that affect the supplied bom_ref.
 
@@ -469,7 +469,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
     @serializable.xml_sequence(8)
-    def vulnerabilities(self) -> "SortedSet[Vulnerability]":
+    def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
         """
         Get all the Vulnerabilities in this BOM.
 
@@ -497,7 +497,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
     @serializable.xml_sequence(5)
-    def dependencies(self) -> "SortedSet[Dependency]":
+    def dependencies(self) -> 'SortedSet[Dependency]':
         return self._dependencies
 
     @dependencies.setter
@@ -564,7 +564,7 @@ class Bom:
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
                 f'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
                 f'"root" Component to complete the Dependency Graph data.',
-                UserWarning
+                category=UserWarning, stacklevel=1
             )
 
         # 3. If a LicenseExpression is set, then there must be no other license.

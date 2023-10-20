@@ -67,15 +67,15 @@ class TestModelIssueTypeSource(TestCase):
             IssueTypeSource()
 
     def test_same(self) -> None:
-        its_1 = IssueTypeSource(name="The Source", url=XsUri('https://cyclonedx.org'))
-        its_2 = IssueTypeSource(name="The Source", url=XsUri('https://cyclonedx.org'))
+        its_1 = IssueTypeSource(name='The Source', url=XsUri('https://cyclonedx.org'))
+        its_2 = IssueTypeSource(name='The Source', url=XsUri('https://cyclonedx.org'))
         self.assertNotEqual(id(its_1), id(its_2))
         self.assertEqual(hash(its_1), hash(its_2))
         self.assertTrue(its_1 == its_2)
 
     def test_not_same(self) -> None:
-        its_1 = IssueTypeSource(name="The Source", url=XsUri('https://cyclonedx.org'))
-        its_2 = IssueTypeSource(name="Not the Source", url=XsUri('https://cyclonedx.org'))
+        its_1 = IssueTypeSource(name='The Source', url=XsUri('https://cyclonedx.org'))
+        its_2 = IssueTypeSource(name='Not the Source', url=XsUri('https://cyclonedx.org'))
         self.assertNotEqual(id(its_1), id(its_2))
         self.assertNotEqual(hash(its_1), hash(its_2))
         self.assertFalse(its_1 == its_2)

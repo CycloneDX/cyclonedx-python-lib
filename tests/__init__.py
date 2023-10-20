@@ -45,20 +45,21 @@ if RECREATE_SNAPSHOTS:
 class SnapshotMixin:
 
     @staticmethod
-    def getSnapshotFile(snapshot_name: str) -> str:
+    def getSnapshotFile(snapshot_name: str) -> str:  # noqa: N802
         return join(SNAPSHOTS_DIRECTORY, f'{snapshot_name}.bin')
 
     @classmethod
-    def writeSnapshot(cls, snapshot_name: str, data: str) -> None:
+    def writeSnapshot(cls, snapshot_name: str, data: str) -> None:  # noqa: N802
         with open(cls.getSnapshotFile(snapshot_name), 'w') as s:
             s.write(data)
 
     @classmethod
-    def readSnapshot(cls, snapshot_name: str) -> str:
+    def readSnapshot(cls, snapshot_name: str) -> str:  # noqa: N802
         with open(cls.getSnapshotFile(snapshot_name), 'r') as s:
             return s.read()
 
-    def assertEqualSnapshot(self: Union[TestCase, 'SnapshotMixin'], actual: str, snapshot_name: str) -> None:
+    def assertEqualSnapshot(self: Union[TestCase, 'SnapshotMixin'],  # noqa: N802
+                            actual: str, snapshot_name: str) -> None:
         if RECREATE_SNAPSHOTS:
             self.writeSnapshot(snapshot_name, actual)
         _omd = self.maxDiff
@@ -71,36 +72,38 @@ class SnapshotMixin:
 
 
 class DeepCompareMixin:
-    def assertDeepEqual(self: Union[TestCase, 'DeepCompareMixin'], first: Any, second: Any,
+    def assertDeepEqual(self: Union[TestCase, 'DeepCompareMixin'],  # noqa: N802
+                        first: Any, second: Any,
                         msg: Optional[str] = None) -> None:
         """costly compare, but very verbose"""
         _omd = self.maxDiff
         self.maxDiff = None
         try:
             self.maxDiff = None
-            dd1 = self.__deepDict(first)
-            dd2 = self.__deepDict(second)
+            dd1 = self.__deep_dict(first)
+            dd2 = self.__deep_dict(second)
             self.assertDictEqual(dd1, dd2, msg)
         finally:
             self.maxDiff = _omd
 
-    def __deepDict(self, o: Any) -> Any:
+    def __deep_dict(self, o: Any) -> Any:
         if isinstance(o, tuple):
-            return tuple(self.__deepDict(i) for i in o)
+            return tuple(self.__deep_dict(i) for i in o)
         if isinstance(o, list):
-            return list(self.__deepDict(i) for i in o)
+            return list(self.__deep_dict(i) for i in o)
         if isinstance(o, dict):
-            return {k: self.__deepDict(v) for k, v in o.items()}
+            return {k: self.__deep_dict(v) for k, v in o.items()}
         if isinstance(o, (set, SortedSet)):
             # this method returns dict. `dict` is not hashable, so use `tuple` instead.
-            return tuple(self.__deepDict(i) for i in sorted(o, key=hash)) + ('%conv:%set',)
+            return tuple(self.__deep_dict(i) for i in sorted(o, key=hash)) + ('%conv:%set',)
         if hasattr(o, '__dict__'):
-            d = {a: self.__deepDict(v) for a, v in o.__dict__.items() if '__' not in a}
+            d = {a: self.__deep_dict(v) for a, v in o.__dict__.items() if '__' not in a}
             d['%conv'] = str(type(o))
             return d
         return o
 
-    def assertBomDeepEqual(self: Union[TestCase, 'DeepCompareMixin'], expected: 'Bom', actual: 'Bom',
+    def assertBomDeepEqual(self: Union[TestCase, 'DeepCompareMixin'],  # noqa: N802
+                           expected: 'Bom', actual: 'Bom',
                            msg: Optional[str] = None, *,
                            fuzzy_deps: bool = True) -> None:
         # deps might have been upgraded on serialization, so they might differ
@@ -112,12 +115,13 @@ class DeepCompareMixin:
         try:
             self.assertDeepEqual(expected, actual, msg)
             if fuzzy_deps:
-                self._assertDependenciesFuzzyEqual(edeps, adeps)
+                self.assertDependenciesFuzzyEqual(edeps, adeps)
         finally:
             expected.dependencies = edeps
             actual.dependencies = adeps
 
-    def _assertDependenciesFuzzyEqual(self: TestCase, a: Iterable['Dependency'], b: Iterable['Dependency']) -> None:
+    def assertDependenciesFuzzyEqual(self: TestCase,  # noqa: N802
+                                     a: Iterable['Dependency'], b: Iterable['Dependency']) -> None:
         delta = set(a) ^ set(b)
         for d in delta:
             # only actual relevant dependencies shall be taken into account.
