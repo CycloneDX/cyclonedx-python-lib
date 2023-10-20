@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
-version = "5.0.0-rc.1"
+version = "5.0.0-rc.2"
 description = "A library for producing CycloneDX SBOM (Software Bill of Materials) files."
 authors = [
   "Paul Horton <phorton@sonatype.com>",
