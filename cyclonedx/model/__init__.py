@@ -13,10 +13,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import hashlib
 import re
 from datetime import datetime, timezone
 from enum import Enum
+from hashlib import sha1
 from itertools import zip_longest
 from typing import Any, Iterable, Optional, Tuple, TypeVar
 
@@ -55,7 +55,7 @@ def sha1sum(filename: str) -> str:
     Returns:
         SHA-1 hash
     """
-    h = hashlib.sha1()
+    h = sha1()
     with open(filename, 'rb') as f:
         for byte_block in iter(lambda: f.read(4096), b""):
             h.update(byte_block)
