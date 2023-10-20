@@ -209,7 +209,7 @@ class ComponentEvidence:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
-    def copyright(self) -> "SortedSet[Copyright]":
+    def copyright(self) -> 'SortedSet[Copyright]':
         """
         Optional list of copyright statements.
 
@@ -388,7 +388,7 @@ class Patch:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'issue')
-    def resolves(self) -> "SortedSet[IssueType]":
+    def resolves(self) -> 'SortedSet[IssueType]':
         """
         Optional list of issues resolved by this patch.
 
@@ -510,7 +510,7 @@ class Pedigree:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'commit')
     @serializable.xml_sequence(4)
-    def commits(self) -> "SortedSet[Commit]":
+    def commits(self) -> 'SortedSet[Commit]':
         """
         A list of zero or more commits which provide a trail describing how the component deviates from an ancestor,
         descendant, or variant.
@@ -530,7 +530,7 @@ class Pedigree:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     @serializable.xml_sequence(5)
-    def patches(self) -> "SortedSet[Patch]":
+    def patches(self) -> 'SortedSet[Patch]':
         """
         A list of zero or more patches describing how the component deviates from an ancestor, descendant, or variant.
         Patches may be complimentary to commits or may be used in place of commits.
@@ -802,7 +802,8 @@ class Component(Dependable):
 
         if license_str:
             warnings.warn(
-                '`license_str` is deprecated and has been replaced with `licenses` to align with the CycloneDX standard',
+                '`license_str` is deprecated and has been'
+                ' replaced with `licenses` to align with the CycloneDX standard',
                 category=DeprecationWarning, stacklevel=1
             )
             if not licenses:
@@ -953,10 +954,10 @@ class Component(Dependable):
         self._name = name
 
     @property
-    @serializable.include_none(SchemaVersion1Dot0, "")
-    @serializable.include_none(SchemaVersion1Dot1, "")
-    @serializable.include_none(SchemaVersion1Dot2, "")
-    @serializable.include_none(SchemaVersion1Dot3, "")
+    @serializable.include_none(SchemaVersion1Dot0, '')
+    @serializable.include_none(SchemaVersion1Dot1, '')
+    @serializable.include_none(SchemaVersion1Dot2, '')
+    @serializable.include_none(SchemaVersion1Dot3, '')
     @serializable.xml_sequence(6)
     def version(self) -> Optional[str]:
         """
@@ -1009,7 +1010,7 @@ class Component(Dependable):
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     @serializable.xml_sequence(9)
-    def hashes(self) -> "SortedSet[HashType]":
+    def hashes(self) -> 'SortedSet[HashType]':
         """
         Optional list of hashes that help specify the integrity of this Component.
 
@@ -1148,7 +1149,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(17)
-    def external_references(self) -> "SortedSet[ExternalReference]":
+    def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the component or to the project the component
         describes.
@@ -1167,7 +1168,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(18)
-    def properties(self) -> "SortedSet[Property]":
+    def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.
@@ -1232,7 +1233,7 @@ class Component(Dependable):
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
-    def get_all_nested_components(self, include_self: bool = False) -> Set["Component"]:
+    def get_all_nested_components(self, include_self: bool = False) -> Set['Component']:
         components = set()
         if include_self:
             components.add(self)

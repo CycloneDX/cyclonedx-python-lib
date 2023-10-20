@@ -26,6 +26,6 @@ class CycloneDxException(Exception):  # noqa: N818
     pass
 
 
-class MissingOptionalDependencyException(CycloneDxException): # noqa: N818
+class MissingOptionalDependencyException(CycloneDxException):  # noqa: N818
     """Validation did not happen, due to missing dependencies."""
     pass

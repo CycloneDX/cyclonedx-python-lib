@@ -57,7 +57,7 @@ def sha1sum(filename: str) -> str:
     """
     h = sha1()
     with open(filename, 'rb') as f:
-        for byte_block in iter(lambda: f.read(4096), b""):
+        for byte_block in iter(lambda: f.read(4096), b''):
             h.update(byte_block)
     return h.hexdigest()
 
@@ -102,10 +102,10 @@ class DataFlow(str, Enum):
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/xml/#type_dataFlowType
     """
-    INBOUND = "inbound"
-    OUTBOUND = "outbound"
-    BI_DIRECTIONAL = "bi-directional"
-    UNKNOWN = "unknown"
+    INBOUND = 'inbound'
+    OUTBOUND = 'outbound'
+    BI_DIRECTIONAL = 'bi-directional'
+    UNKNOWN = 'unknown'
 
 
 @serializable.serializable_class
@@ -542,7 +542,7 @@ class ExternalReference:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
-    def hashes(self) -> "SortedSet[HashType]":
+    def hashes(self) -> 'SortedSet[HashType]':
         """
         The hashes of the external reference (if applicable).
 
@@ -779,9 +779,9 @@ class Note:
             if not re.search(Note._LOCALE_TYPE_REGEX, locale):
                 self._locale = None
                 raise InvalidLocaleTypeException(
-                    f"Supplied locale '{locale}' is not a valid locale. "
-                    f"Locale string should be formatted as the ISO-639 (or higher) language code and optional "
-                    f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
+                    f'Supplied locale {locale!r} is not a valid locale.'
+                    ' Locale string should be formatted as the ISO-639 (or higher) language code and optional'
+                    " ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
                 )
 
     def __eq__(self, other: object) -> bool:
@@ -922,7 +922,7 @@ class OrganizationalEntity:
     @serializable.json_name('url')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'url')
     @serializable.xml_sequence(2)
-    def urls(self) -> "SortedSet[XsUri]":
+    def urls(self) -> 'SortedSet[XsUri]':
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
 
@@ -939,7 +939,7 @@ class OrganizationalEntity:
     @serializable.json_name('contact')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'contact')
     @serializable.xml_sequence(3)
-    def contacts(self) -> "SortedSet[OrganizationalContact]":
+    def contacts(self) -> 'SortedSet[OrganizationalContact]':
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
 
@@ -1037,7 +1037,7 @@ class Tool:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     @serializable.xml_sequence(4)
-    def hashes(self) -> "SortedSet[HashType]":
+    def hashes(self) -> 'SortedSet[HashType]':
         """
         The hashes of the tool (if applicable).
 
@@ -1054,7 +1054,7 @@ class Tool:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
-    def external_references(self) -> "SortedSet[ExternalReference]":
+    def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         External References provide a way to document systems, sites, and information that may be relevant but which
         are not included with the BOM.

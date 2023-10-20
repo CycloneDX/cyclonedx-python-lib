@@ -196,7 +196,7 @@ class IssueType:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'url')
     @serializable.xml_sequence(5)
-    def references(self) -> "SortedSet[XsUri]":
+    def references(self) -> 'SortedSet[XsUri]':
         """
         Any reference URLs related to this issue.
 

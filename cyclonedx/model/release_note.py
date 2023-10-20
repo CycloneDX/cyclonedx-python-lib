@@ -141,7 +141,7 @@ class ReleaseNotes:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'alias')
     @serializable.xml_sequence(7)
-    def aliases(self) -> "SortedSet[str]":
+    def aliases(self) -> 'SortedSet[str]':
         """
         One or more alternate names the release may be referred to. This may include unofficial terms used by
         development and marketing teams (e.g. code names).
@@ -158,7 +158,7 @@ class ReleaseNotes:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
     @serializable.xml_sequence(8)
-    def tags(self) -> "SortedSet[str]":
+    def tags(self) -> 'SortedSet[str]':
         """
         One or more tags that may aid in search or retrieval of the release note.
 
@@ -174,7 +174,7 @@ class ReleaseNotes:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'issue')
     @serializable.xml_sequence(9)
-    def resolves(self) -> "SortedSet[IssueType]":
+    def resolves(self) -> 'SortedSet[IssueType]':
         """
         A collection of issues that have been resolved.
 
@@ -190,7 +190,7 @@ class ReleaseNotes:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'note')
     @serializable.xml_sequence(10)
-    def notes(self) -> "SortedSet[Note]":
+    def notes(self) -> 'SortedSet[Note]':
         """
         Zero or more release notes containing the locale and content. Multiple note elements may be specified to support
         release notes in a wide variety of languages.
@@ -207,7 +207,7 @@ class ReleaseNotes:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(11)
-    def properties(self) -> "SortedSet[Property]":
+    def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a name-value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions. Unlike
