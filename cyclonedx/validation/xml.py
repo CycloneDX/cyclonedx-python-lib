@@ -29,7 +29,11 @@ if TYPE_CHECKING:  # pragma: no cover
 
 _missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
-    from lxml.etree import XMLParser, XMLSchema, fromstring as xml_fromstring  # type:ignore[import-untyped]
+    from lxml.etree import (  # type:ignore[import-untyped] # nosec B410
+        XMLParser,
+        XMLSchema,
+        fromstring as xml_fromstring,
+    )
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'
@@ -55,7 +59,9 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
     else:
         def validate_str(self, data: str) -> Optional[ValidationError]:
             return self._validata_data(
-                xml_fromstring(bytes(data, encoding='utf8'), parser=self.__xml_parser))
+                xml_fromstring(  # nosec B320
+                    bytes(data, encoding='utf8'),
+                    parser=self.__xml_parser))
 
         def _validata_data(self, data: Any) -> Optional[ValidationError]:
             validator = self._validator  # may throw on error that MUST NOT be caught

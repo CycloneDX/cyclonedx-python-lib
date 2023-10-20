@@ -1,0 +1,4 @@
+# https://bandit.readthedocs.io
+[bandit]
+exclude = docs,.venv
+skips = B101
