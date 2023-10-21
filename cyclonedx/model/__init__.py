@@ -55,7 +55,7 @@ def sha1sum(filename: str) -> str:
     Returns:
         SHA-1 hash
     """
-    h = sha1()  # nosec B303,B324
+    h = sha1()  # nosec B303, B324
     with open(filename, 'rb') as f:
         for byte_block in iter(lambda: f.read(4096), b''):
             h.update(byte_block)

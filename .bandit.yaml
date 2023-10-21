@@ -1,8 +1,0 @@
-# https://bandit.readthedocs.io
-
-exclude_dirs:
-  - docs
-  - .venv
-
-skips:
-  - B101
