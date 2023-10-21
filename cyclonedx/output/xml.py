@@ -17,8 +17,8 @@
 
 
 from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Type, Union
-from xml.dom.minidom import parseString as dom_parseString
-from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps
+from xml.dom.minidom import parseString as dom_parseString  # nosec B408
+from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps  # nosec B405
 
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
@@ -80,7 +80,8 @@ class Xml(BaseSchemaVersion, BaseOutput):
                          indent: Optional[Union[int, str]] = None,
                          **kwargs: Any) -> str:
         self.generate()
-        return self._bom_xml if indent is None else dom_parseString(self._bom_xml).toprettyxml(
+        return self._bom_xml if indent is None else dom_parseString(  # nosecc B318
+            self._bom_xml).toprettyxml(
             indent=self.__make_indent(indent)
             # do not set `encoding` - this would convert result to binary, not string
         )
