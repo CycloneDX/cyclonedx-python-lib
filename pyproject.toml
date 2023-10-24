@@ -24,8 +24,11 @@ packages = [
   { include = "cyclonedx" }
 ]
 include = [
-  "README.md", "LICENSE", "NOTICE",
-  { path = "tests", format = "sdist" },
+  # all is an object -> prevent parse issue like https://github.com/CycloneDX/cyclonedx-python-lib/network/updates/740004978
+  { path="README.md", format =["sdist","wheel"] },
+  { path="LICENSE", format=["sdist","wheel"] },
+  { path="NOTICE", format=["sdist","wheel"] },
+  { path="tests", format=["sdist"] },
 ]
 exclude = [
   # exclude dotfiles
