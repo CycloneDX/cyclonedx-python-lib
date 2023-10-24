@@ -36,7 +36,7 @@ class DisjunctiveLicense:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/json/#components_items_licenses
     """
 
     def __init__(self, *, id: Optional[str] = None, name: Optional[str] = None,
@@ -57,7 +57,11 @@ class DisjunctiveLicense:
     @serializable.xml_sequence(1)
     def id(self) -> Optional[str]:
         """
-        A valid SPDX license ID
+        A SPDX license ID.
+
+        .. note::
+          See the list of expected values:
+          https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_license_id
 
         Returns:
             `str` or `None`
@@ -144,7 +148,8 @@ class LicenseExpression:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_expression
     """
 
     def __init__(self, value: str) -> None:
