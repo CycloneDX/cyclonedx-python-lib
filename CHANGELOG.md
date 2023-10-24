@@ -2,6 +2,131 @@
 
 
 
+## v5.0.0 (2023-10-24)
+
+### Breaking
+
+* feat!: v5.0.0 (#440)
+
+BREAKING CHANGES
+----------------
+* Dropped support for python&lt;3.8 ([#436] via [#441]; enable [#433])
+* Reworked license related models, collections, and factories ([#365] via [#466])
+* Behavior
+  * Method `model.bom.Bom.validate()` will throw `exception.LicenseExpressionAlongWithOthersException`, if detecting invalid license constellation ([#453] via [#452])
+  * Fixed tuple comparison when unequal lengths (via [#461])
+* API
+  * Enum `schema.SchemaVersion` is no longer string-like ([#442] via [#447])
+  * Enum `schema.OutputVersion` is no longer string-like ([#442] via [#447])
+  * Abstract class `output.BaseOutput` requires implementation of new method `output_format` ([#446] via [#447])
+  * Abstract method `output.BaseOutput.output_as_string()` got new optional parameter `indent` ([#437] via [#458])
+  * Abstract method `output.BaseOutput.output_as_string()` accepts arbitrary kwargs (via [#458], [#462])
+  * Removed class `factory.license.LicenseChoiceFactory` (via [#466])  
+    The old functionality was integrated into `factory.license.LicenseFactory`.
+  * Method `factory.license.LicenseFactory.make_from_string()`&#39;s parameter `name_or_spdx` was renamed to `value` (via [#466])
+  * Method `factory.license.LicenseFactory.make_from_string()`&#39;s return value can also be a `LicenseExpression` ([#365] via [#466])  
+    The behavior imitates the old `factory.license.LicenseChoiceFactory.make_from_string()`
+  * Renamed class `module.License` to `module.license.DisjunctliveLicense` ([#365] via [#466])
+  * Removed class `module.LicenseChoice` ([#365] via [#466])  
+    Use dedicated classes `module.license.DisjunctliveLicense` and `module.license.LicenseExpression` instead
+  * All occurrences of `models.LicenseChoice` were replaced by `models.licenses.License` ([#365] via [#466])
+  * All occurrences of `SortedSet[LicenseChoice]` were specialized to `models.license.LicenseRepository` ([#365] via [#466])
+
+
+Fixed
+----------------
+* Serialization of multy-licenses ([#365] via [#466])
+* Detect unused &#34;dependent&#34; components in `model.bom.validate()` (via [#464])
+
+
+Changed 
+----------------
+* Updated latest supported list of supported SPDX license identifiers (via [#433])
+* Shipped schema files are moved to a protected space (via [#433])  
+  These files were never intended for public use.
+* XML output uses a default namespace, which makes results smaller. ([#438] via [#458])
+
+
+Added
+----------------
+* Support for Python 3.12 (via [#460])
+* JSON- &amp; XML-Validators ([#432], [#446] via [#433], [#448])  
+  The functionality might require additional dependencies, that can be installed with the extra &#34;validation&#34;.  
+  See the docs in section &#34;Installation&#34; for details.
+* JSON &amp; XML can be generated in a more human-friendly form ([#437], [#438] via [#458])
+* Type hints, typings &amp; overloads for better integration downstream (via [#463])
+* API
+  * New function `output.make_outputter()` (via [#469])  
+    This replaces the deprecated function `output.get_instance()`.
+  * New sub-package `validation` ([#432], [#446] via [#433], [#448], [#469], [#468], [#469])
+  * New class `exception.MissingOptionalDependencyException` ([#432] via [#433])
+  * New class `exception.LicenseExpressionAlongWithOthersException` ([#453] via [#452])
+  * New dictionaries `output.{json,xml}.BY_SCHEMA_VERSION` ([#446] via [#447])
+  * Existing implementations of class `output.BaseOutput` now have a new method `output_format` ([#446] via [#447])
+  * Existing implementations of method `output.BaseOutput.output_as_string()` got new optional parameter `indent` ([#437] via [#458])
+  * Existing implementations of method `output.BaseOutput.output_to_file()` got new optional parameter `indent` ([#437] via [#458])
+  * New method `factory.license.LicenseFactory.make_with_expression()` (via [#466])
+  * New class `model.license.DisjunctiveLicense` ([#365] via [#466])
+  * New class `model.license.LicenseExpression` ([#365] via [#466])
+  * New class `model.license.LicenseRepository` ([#365] via [#466])
+  * New class `serialization.LicenseRepositoryHelper` ([#365] via [#466])
+
+
+Deprecated
+----------------
+* Function `output.get_instance()` might be removed, use `output.make_outputter()` instead (via [#469])
+
+
+Tests
+----------------
+* Added validation tests with official CycloneDX schema test data ([#432] via [#433])
+* Use proper snapshots, instead of pseudo comparison ([#437] via [#464])
+* Added regression test for bug [#365] (via [#466], [#467])
+
+
+Misc
+----------------
+* Dependencies: bumped `py-serializable@^0.15.0`, was `@^0.11.1` (via [#458], [#463], [#464], [#466])
+* Style: streamlined quotes and strings (via [#472])
+* Chore: bumped internal dev- and QA-tools ([#436] via [#441], [#472])
+* Chore: added more QA tools to prevent common security issues (via [#473])
+
+
+[#432]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/432
+[#433]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/433
+[#436]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/436
+[#437]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/437
+[#365]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/365
+[#438]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/438
+[#440]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/440
+[#441]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/441
+[#442]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/442
+[#446]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/446
+[#447]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/447
+[#448]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/448
+[#452]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/452
+[#453]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/453
+[#458]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/458
+[#460]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/460
+[#461]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/461
+[#462]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/462
+[#463]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/463
+[#464]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/464
+[#466]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/466
+[#467]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/467
+[#468]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/468
+[#469]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/469
+[#472]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/472
+[#473]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/473
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@owasp.org&gt;
+Signed-off-by: semantic-release &lt;semantic-release&gt;
+Co-authored-by: semantic-release &lt;semantic-release&gt; ([`26b151c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/26b151cba7d7d484f23ee7888444f09ad6d016b1))
+
+
 ## v4.2.3 (2023-10-16)
 
 ### Chore
