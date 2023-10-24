@@ -13,9 +13,8 @@
 
 ----
 
-This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all
-project dependencies. CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple 
-to parse.
+This Python package can render and read valid [CycloneDX][link_website] documents.  
+CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple to parse.
 
 **This module is not designed for standalone use.**
 
