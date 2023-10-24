@@ -2,6 +2,50 @@
 
 
 
+## v5.0.1 (2023-10-24)
+
+### Chore
+
+* chore(deps): bump python-semantic-release/python-semantic-release (#474)
+
+Bumps [python-semantic-release/python-semantic-release](https://github.com/python-semantic-release/python-semantic-release) from 8.0.8 to 8.3.0.
+- [Release notes](https://github.com/python-semantic-release/python-semantic-release/releases)
+- [Changelog](https://github.com/python-semantic-release/python-semantic-release/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python-semantic-release/python-semantic-release/compare/v8.0.8...v8.3.0)
+
+---
+updated-dependencies:
+- dependency-name: python-semantic-release/python-semantic-release
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9c3ffac`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9c3ffac34e89610ccc4f9701444127e1e6f5ee07))
+
+* chore: make `pyproject` parsable by dependabot (#477)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c4eaaa5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c4eaaa54d98da43d0cdbb19b5f61e06a21f1cc58))
+
+### Documentation
+
+* docs: revisit project meta (#475)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c3254d0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c3254d055f3cda96d2849222a0bba7be8cf486a3))
+
+* docs: fix RTFD build (#476)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b9fcfb4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b9fcfb40af366fdee7258ccb720e0fad27994824))
+
+### Unknown
+
+* &#34;chore(deps): revert bump python-semantic-release/python-semantic-release (#474)&#34;
+
+This reverts commit 9c3ffac34e89610ccc4f9701444127e1e6f5ee07.
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`aae7304`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/aae73048c7aebe5920ec888225bdbde08111601b))
+
+
 ## v5.0.0 (2023-10-24)
 
 ### Breaking
