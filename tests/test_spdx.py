@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,16 +17,15 @@
 
 from itertools import chain
 from json import load as json_load
-from os.path import join as path_join
 from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
 
 from cyclonedx import spdx
+from cyclonedx.schema._res import SPDX_JSON
 
-from . import CDX_SCHEMA_DIRECTORY
-
-with open(path_join(CDX_SCHEMA_DIRECTORY, 'spdx.schema.json')) as spdx_schema:
+# rework access
+with open(SPDX_JSON) as spdx_schema:
     KNOWN_SPDX_IDS = json_load(spdx_schema)['enum']
 
 VALID_COMPOUND_EXPRESSIONS = {

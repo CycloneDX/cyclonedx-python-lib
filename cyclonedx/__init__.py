@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,6 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Python library for generating and representing CycloneDX software bill-of-materials.
@@ -20,4 +20,5 @@ Python library for generating and representing CycloneDX software bill-of-materi
 
 # !! version is managed by semantic_release
 # do not use typing here, or else `semantic_release` might have issues finding the variable
-__version__ = "4.2.3"
+# flake8: noqa
+__version__ = "5.0.0-rc.2"

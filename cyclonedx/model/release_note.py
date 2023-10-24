@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +51,7 @@ class ReleaseNotes:
         self.notes = notes or []  # type: ignore
         self.properties = properties or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def type(self) -> str:
         """
@@ -79,7 +77,7 @@ class ReleaseNotes:
     def type(self, type: str) -> None:
         self._type = type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def title(self) -> Optional[str]:
         """
@@ -91,7 +89,7 @@ class ReleaseNotes:
     def title(self, title: Optional[str]) -> None:
         self._title = title
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def featured_image(self) -> Optional[XsUri]:
         """
@@ -103,7 +101,7 @@ class ReleaseNotes:
     def featured_image(self, featured_image: Optional[XsUri]) -> None:
         self._featured_image = featured_image
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(4)
     def social_image(self) -> Optional[XsUri]:
         """
@@ -115,7 +113,7 @@ class ReleaseNotes:
     def social_image(self, social_image: Optional[XsUri]) -> None:
         self._social_image = social_image
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(5)
     def description(self) -> Optional[str]:
         """
@@ -127,7 +125,7 @@ class ReleaseNotes:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
     @serializable.xml_sequence(6)
     def timestamp(self) -> Optional[datetime]:
@@ -140,10 +138,10 @@ class ReleaseNotes:
     def timestamp(self, timestamp: Optional[datetime]) -> None:
         self._timestamp = timestamp
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'alias')
     @serializable.xml_sequence(7)
-    def aliases(self) -> "SortedSet[str]":
+    def aliases(self) -> 'SortedSet[str]':
         """
         One or more alternate names the release may be referred to. This may include unofficial terms used by
         development and marketing teams (e.g. code names).
@@ -157,10 +155,10 @@ class ReleaseNotes:
     def aliases(self, aliases: Iterable[str]) -> None:
         self._aliases = SortedSet(aliases)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
     @serializable.xml_sequence(8)
-    def tags(self) -> "SortedSet[str]":
+    def tags(self) -> 'SortedSet[str]':
         """
         One or more tags that may aid in search or retrieval of the release note.
 
@@ -173,10 +171,10 @@ class ReleaseNotes:
     def tags(self, tags: Iterable[str]) -> None:
         self._tags = SortedSet(tags)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'issue')
     @serializable.xml_sequence(9)
-    def resolves(self) -> "SortedSet[IssueType]":
+    def resolves(self) -> 'SortedSet[IssueType]':
         """
         A collection of issues that have been resolved.
 
@@ -189,10 +187,10 @@ class ReleaseNotes:
     def resolves(self, resolves: Iterable[IssueType]) -> None:
         self._resolves = SortedSet(resolves)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'note')
     @serializable.xml_sequence(10)
-    def notes(self) -> "SortedSet[Note]":
+    def notes(self) -> 'SortedSet[Note]':
         """
         Zero or more release notes containing the locale and content. Multiple note elements may be specified to support
         release notes in a wide variety of languages.
@@ -206,10 +204,10 @@ class ReleaseNotes:
     def notes(self, notes: Iterable[Note]) -> None:
         self._notes = SortedSet(notes)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(11)
-    def properties(self) -> "SortedSet[Property]":
+    def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a name-value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions. Unlike

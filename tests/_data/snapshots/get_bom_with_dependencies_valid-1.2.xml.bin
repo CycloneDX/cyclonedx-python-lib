@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+      </tool>
+    </tools>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
+      <author>Test Author</author>
+      <name>setuptools</name>
+      <version>50.3.2</version>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+      </licenses>
+      <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+    </component>
+    <component type="library" bom-ref="pkg:pypi/toml@0.10.2?extension=tar.gz">
+      <name>toml</name>
+      <version>0.10.2</version>
+      <hashes>
+        <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+      </hashes>
+      <purl>pkg:pypi/toml@0.10.2?extension=tar.gz</purl>
+      <externalReferences>
+        <reference type="distribution">
+          <url>https://cyclonedx.org</url>
+          <comment>No comment</comment>
+        </reference>
+      </externalReferences>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
+      <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
+    </dependency>
+    <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
+  </dependencies>
+</bom>

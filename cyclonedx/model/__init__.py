@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -15,21 +13,20 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import hashlib
 import re
-import warnings
 from datetime import datetime, timezone
 from enum import Enum
+from hashlib import sha1
+from itertools import zip_longest
 from typing import Any, Iterable, Optional, Tuple, TypeVar
 
 import serializable
 from sortedcontainers import SortedSet
 
-from .. import __version__ as __ThisToolVersion
+from .. import __version__ as __ThisToolVersion  # noqa: N812
 from ..exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
-    MutuallyExclusivePropertiesException,
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
@@ -58,9 +55,9 @@ def sha1sum(filename: str) -> str:
     Returns:
         SHA-1 hash
     """
-    h = hashlib.sha1()
+    h = sha1()  # nosec B303, B324
     with open(filename, 'rb') as f:
-        for byte_block in iter(lambda: f.read(4096), b""):
+        for byte_block in iter(lambda: f.read(4096), b''):
             h.update(byte_block)
     return h.hexdigest()
 
@@ -74,31 +71,27 @@ class ComparableTuple(Tuple[Optional[_T], ...]):
     """
 
     def __lt__(self, other: Any) -> bool:
-        for s, o in zip(self, other):
+        for s, o in zip_longest(self, other):
             if s == o:
                 continue
+            # the idea is to have any consistent order, not necessarily "natural" order.
             if s is None:
                 return False
             if o is None:
                 return True
-            if s < o:
-                return True
-            if s > o:
-                return False
+            return True if s < o else False
         return False
 
     def __gt__(self, other: Any) -> bool:
-        for s, o in zip(self, other):
+        for s, o in zip_longest(self, other):
             if s == o:
                 continue
+            # the idea is to have any consistent order, not necessarily "natural" order.
             if s is None:
                 return True
             if o is None:
                 return False
-            if s < o:
-                return False
-            if s > o:
-                return True
+            return True if s > o else False
         return False
 
 
@@ -109,10 +102,10 @@ class DataFlow(str, Enum):
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/xml/#type_dataFlowType
     """
-    INBOUND = "inbound"
-    OUTBOUND = "outbound"
-    BI_DIRECTIONAL = "bi-directional"
-    UNKNOWN = "unknown"
+    INBOUND = 'inbound'
+    OUTBOUND = 'outbound'
+    BI_DIRECTIONAL = 'bi-directional'
+    UNKNOWN = 'unknown'
 
 
 @serializable.serializable_class
@@ -129,7 +122,7 @@ class DataClassification:
         self.flow = flow
         self.classification = classification
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def flow(self) -> DataFlow:
         """
@@ -153,7 +146,7 @@ class DataClassification:
     def flow(self, flow: DataFlow) -> None:
         self._flow = flow
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def classification(self) -> str:
         """
@@ -207,7 +200,7 @@ class AttachedText:
         self.encoding = encoding
         self.content = content
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     @serializable.xml_name('content-type')
     def content_type(self) -> str:
@@ -223,7 +216,7 @@ class AttachedText:
     def content_type(self, content_type: str) -> None:
         self._content_type = content_type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def encoding(self) -> Optional[Encoding]:
         """
@@ -238,7 +231,7 @@ class AttachedText:
     def encoding(self, encoding: Optional[Encoding]) -> None:
         self._encoding = encoding
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def content(self) -> str:
         """
@@ -332,22 +325,22 @@ class HashType:
             )
         elif algorithm_prefix[0:3] == 'sha':
             return HashType(
-                alg=getattr(HashAlgorithm, 'SHA_{}'.format(algorithm_prefix[3:])),
+                alg=getattr(HashAlgorithm, f'SHA_{algorithm_prefix[3:]}'),
                 content=parts[1].lower()
             )
         elif algorithm_prefix[0:6] == 'blake2':
             return HashType(
-                alg=getattr(HashAlgorithm, 'BLAKE2b_{}'.format(algorithm_prefix[6:])),
+                alg=getattr(HashAlgorithm, f'BLAKE2b_{algorithm_prefix[6:]}'),
                 content=parts[1].lower()
             )
 
-        raise UnknownHashTypeException(f"Unable to determine hash type from '{composite_hash}'")
+        raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
 
     def __init__(self, *, alg: HashAlgorithm, content: str) -> None:
         self.alg = alg
         self.content = content
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def alg(self) -> HashAlgorithm:
         """
@@ -362,7 +355,7 @@ class HashType:
     def alg(self, alg: HashAlgorithm) -> None:
         self._alg = alg
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def content(self) -> str:
         """
@@ -442,27 +435,26 @@ class XsUri(serializable.helpers.BaseHelper):
             )
         self._uri = uri
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('.')
     @serializable.xml_name('.')
     def uri(self) -> str:
         return self._uri
 
     @classmethod
-    def serialize(cls, o: object) -> str:
+    def serialize(cls, o: Any) -> str:
         if isinstance(o, XsUri):
             return str(o)
-
         raise ValueError(f'Attempt to serialize a non-XsUri: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object) -> 'XsUri':
+    def deserialize(cls, o: Any) -> 'XsUri':
         try:
             return XsUri(uri=str(o))
         except ValueError:
             raise ValueError(f'XsUri string supplied ({o}) does not parse!')
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
             return hash(other) == hash(self)
         return False
@@ -499,7 +491,7 @@ class ExternalReference:
         self.type = type
         self.hashes = hashes or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def url(self) -> XsUri:
         """
@@ -528,7 +520,7 @@ class ExternalReference:
     def comment(self, comment: Optional[str]) -> None:
         self._comment = comment
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def type(self) -> ExternalReferenceType:
         """
@@ -546,11 +538,11 @@ class ExternalReference:
     def type(self, type: ExternalReferenceType) -> None:
         self._type = type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
-    def hashes(self) -> "SortedSet[HashType]":
+    def hashes(self) -> 'SortedSet[HashType]':
         """
         The hashes of the external reference (if applicable).
 
@@ -585,181 +577,6 @@ class ExternalReference:
 
 
 @serializable.serializable_class
-class License:
-    """
-    This is our internal representation of `licenseType` complex type that can be used in multiple places within
-    a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseType
-    """
-
-    def __init__(self, *, id: Optional[str] = None, name: Optional[str] = None,
-                 text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
-        if not id and not name:
-            raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
-        if id and name:
-            warnings.warn(
-                'Both `id` and `name` have been supplied - `name` will be ignored!',
-                RuntimeWarning
-            )
-        self.id = id
-        if not id:
-            self.name = name
-        else:
-            self.name = None
-        self.text = text
-        self.url = url
-
-    @property
-    def id(self) -> Optional[str]:
-        """
-        A valid SPDX license ID
-
-        Returns:
-            `str` or `None`
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id: Optional[str]) -> None:
-        self._id = id
-
-    @property
-    def name(self) -> Optional[str]:
-        """
-        If SPDX does not define the license used, this field may be used to provide the license name.
-
-        Returns:
-            `str` or `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    def text(self) -> Optional[AttachedText]:
-        """
-        Specifies the optional full text of the attachment
-
-        Returns:
-            `AttachedText` else `None`
-        """
-        return self._text
-
-    @text.setter
-    def text(self, text: Optional[AttachedText]) -> None:
-        self._text = text
-
-    @property
-    def url(self) -> Optional[XsUri]:
-        """
-        The URL to the attachment file. If the attachment is a license or BOM, an externalReference should also be
-        specified for completeness.
-
-        Returns:
-            `XsUri` or `None`
-        """
-        return self._url
-
-    @url.setter
-    def url(self, url: Optional[XsUri]) -> None:
-        self._url = url
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, License):
-            return hash(other) == hash(self)
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, License):
-            return ComparableTuple((self.id, self.name)) < ComparableTuple((other.id, other.name))
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash((self.id, self.name, self.text, self.url))
-
-    def __repr__(self) -> str:
-        return f'<License id={self.id}, name={self.name}>'
-
-
-@serializable.serializable_class
-class LicenseChoice:
-    """
-    This is our internal representation of `licenseChoiceType` complex type that can be used in multiple places within
-    a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_licenseChoiceType
-    """
-
-    def __init__(self, *, license: Optional[License] = None, expression: Optional[str] = None) -> None:
-        if not license and not expression:
-            raise NoPropertiesProvidedException(
-                'One of `license` or `expression` must be supplied - neither supplied'
-            )
-        if license and expression:
-            warnings.warn(
-                'Both `license` and `expression` have been supplied - `license` will take precedence',
-                RuntimeWarning
-            )
-        self.license = license
-        if not license:
-            self.expression = expression
-        else:
-            self.expression = None
-
-    @property
-    def license(self) -> Optional[License]:
-        """
-        License definition
-
-        Returns:
-            `License` or `None`
-        """
-        return self._license
-
-    @license.setter
-    def license(self, license: Optional[License]) -> None:
-        self._license = license
-
-    @property
-    def expression(self) -> Optional[str]:
-        """
-        A valid SPDX license expression (not enforced).
-
-        Refer to https://spdx.org/specifications for syntax requirements.
-
-        Returns:
-            `str` or `None`
-        """
-        return self._expression
-
-    @expression.setter
-    def expression(self, expression: Optional[str]) -> None:
-        self._expression = expression
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, LicenseChoice):
-            return hash(other) == hash(self)
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, LicenseChoice):
-            return ComparableTuple((self.license, self.expression)) < ComparableTuple(
-                (other.license, other.expression))
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash((self.license, self.expression))
-
-    def __repr__(self) -> str:
-        return f'<LicenseChoice license={self.license}, expression={self.expression}>'
-
-
-@serializable.serializable_class
 class Property:
     """
     This is our internal representation of `propertyType` complex type that can be used in multiple places within
@@ -775,7 +592,7 @@ class Property:
         self.name = name
         self.value = value
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def name(self) -> str:
         """
@@ -792,7 +609,7 @@ class Property:
     def name(self, name: str) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def value(self) -> str:
         """
@@ -842,7 +659,7 @@ class NoteText:
         self.content_type = content_type or NoteText.DEFAULT_CONTENT_TYPE
         self.encoding = encoding
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def content(self) -> str:
         """
@@ -857,7 +674,7 @@ class NoteText:
     def content(self, content: str) -> None:
         self._content = content
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     @serializable.xml_name('content-type')
     def content_type(self) -> Optional[str]:
@@ -875,7 +692,7 @@ class NoteText:
     def content_type(self, content_type: str) -> None:
         self._content_type = content_type
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_attribute()
     def encoding(self) -> Optional[Encoding]:
         """
@@ -940,7 +757,7 @@ class Note:
     def text(self, text: NoteText) -> None:
         self._text = text
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def locale(self) -> Optional[str]:
         """
@@ -962,9 +779,9 @@ class Note:
             if not re.search(Note._LOCALE_TYPE_REGEX, locale):
                 self._locale = None
                 raise InvalidLocaleTypeException(
-                    f"Supplied locale '{locale}' is not a valid locale. "
-                    f"Locale string should be formatted as the ISO-639 (or higher) language code and optional "
-                    f"ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
+                    f'Supplied locale {locale!r} is not a valid locale.'
+                    ' Locale string should be formatted as the ISO-639 (or higher) language code and optional'
+                    " ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
                 )
 
     def __eq__(self, other: object) -> bool:
@@ -1003,7 +820,7 @@ class OrganizationalContact:
         self.email = email
         self.phone = phone
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
@@ -1018,7 +835,7 @@ class OrganizationalContact:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def email(self) -> Optional[str]:
         """
@@ -1033,7 +850,7 @@ class OrganizationalContact:
     def email(self, email: Optional[str]) -> None:
         self._email = email
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def phone(self) -> Optional[str]:
         """
@@ -1086,7 +903,7 @@ class OrganizationalEntity:
         self.urls = urls or []  # type: ignore
         self.contacts = contacts or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def name(self) -> Optional[str]:
         """
@@ -1101,11 +918,11 @@ class OrganizationalEntity:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('url')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'url')
     @serializable.xml_sequence(2)
-    def urls(self) -> "SortedSet[XsUri]":
+    def urls(self) -> 'SortedSet[XsUri]':
         """
         Get a list of URLs of the organization. Multiple URLs are allowed.
 
@@ -1118,11 +935,11 @@ class OrganizationalEntity:
     def urls(self, urls: Iterable[XsUri]) -> None:
         self._urls = SortedSet(urls)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('contact')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'contact')
     @serializable.xml_sequence(3)
-    def contacts(self) -> "SortedSet[OrganizationalContact]":
+    def contacts(self) -> 'SortedSet[OrganizationalContact]':
         """
         Get a list of contact person at the organization. Multiple contacts are allowed.
 
@@ -1172,7 +989,7 @@ class Tool:
         self.hashes = hashes or []  # type: ignore
         self.external_references = external_references or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def vendor(self) -> Optional[str]:
         """
@@ -1187,7 +1004,7 @@ class Tool:
     def vendor(self, vendor: Optional[str]) -> None:
         self._vendor = vendor
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def name(self) -> Optional[str]:
         """
@@ -1202,7 +1019,7 @@ class Tool:
     def name(self, name: Optional[str]) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def version(self) -> Optional[str]:
         """
@@ -1217,10 +1034,10 @@ class Tool:
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     @serializable.xml_sequence(4)
-    def hashes(self) -> "SortedSet[HashType]":
+    def hashes(self) -> 'SortedSet[HashType]':
         """
         The hashes of the tool (if applicable).
 
@@ -1233,11 +1050,11 @@ class Tool:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
-    def external_references(self) -> "SortedSet[ExternalReference]":
+    def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         External References provide a way to document systems, sites, and information that may be relevant but which
         are not included with the BOM.
@@ -1289,7 +1106,7 @@ class IdentifiableAction:
         self.name = name
         self.email = email
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
     def timestamp(self) -> Optional[datetime]:
         """
@@ -1362,7 +1179,7 @@ class Copyright:
     def __init__(self, *, text: str) -> None:
         self.text = text
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_name('.')
     def text(self) -> str:
         """

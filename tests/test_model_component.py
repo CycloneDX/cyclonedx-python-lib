@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +16,9 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import datetime
-from typing import List
+from typing import Any, List
 from unittest import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
@@ -44,8 +42,8 @@ from cyclonedx.model.component import (
     Pedigree,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
-from tests.data import (
-    MOCK_UUID_7,
+from tests import reorder, uuid_generator
+from tests._data.models import (
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
     get_component_toml_with_hashes_with_references,
@@ -54,7 +52,6 @@ from tests.data import (
     get_pedigree_1,
     get_swid_1,
     get_swid_2,
-    reorder,
 )
 
 
@@ -66,16 +63,16 @@ class TestModelCommit(TestCase):
 
     def test_same(self) -> None:
         ia_comitter = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Committer')
-        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
-        c2 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
+        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message='A commit message')
+        c2 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message='A commit message')
         self.assertEqual(hash(c1), hash(c2))
         self.assertTrue(c1 == c2)
 
     def test_not_same(self) -> None:
         ia_author = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Author')
         ia_comitter = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Committer')
-        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message="A commit message")
-        c2 = Commit(uid='a-random-uid', author=ia_author, committer=ia_comitter, message="A commit message")
+        c1 = Commit(uid='a-random-uid', author=ia_comitter, committer=ia_comitter, message='A commit message')
+        c2 = Commit(uid='a-random-uid', author=ia_author, committer=ia_comitter, message='A commit message')
         self.assertNotEqual(hash(c1), hash(c2))
         self.assertFalse(c1 == c2)
 
@@ -107,14 +104,13 @@ class TestModelCommit(TestCase):
 
 class TestModelComponent(TestCase):
 
-    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
-    def test_empty_basic_component(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
+    def test_empty_basic_component(self, *_: Any, **__: Any) -> None:
         c = Component(name='test-component')
-        mock_uuid.assert_called()
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertIsNone(c.mime_type)
-        self.assertEqual(str(c.bom_ref), '6f266d1c-760f-4552-ae3b-41a9b74232fa')
+        self.assertEqual(str(c.bom_ref), '00000000-0000-4000-8000-000000000001')
         self.assertIsNone(c.supplier)
         self.assertIsNone(c.author)
         self.assertIsNone(c.publisher)
@@ -132,8 +128,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c.components), 0)
         self.assertEqual(len(c.get_all_nested_components(include_self=True)), 1)
 
-    @patch('cyclonedx.model.component.uuid4', return_value=MOCK_UUID_7)
-    def test_multiple_basic_components(self, mock_uuid: Mock) -> None:
+    def test_multiple_basic_components(self) -> None:
         c1 = Component(name='test-component')
         self.assertEqual(c1.name, 'test-component')
         self.assertIsNone(c1.version)
@@ -149,8 +144,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c2.hashes), 0)
 
         self.assertNotEqual(c1, c2)
-
-        mock_uuid.assert_called()
 
     def test_external_references(self) -> None:
         c = Component(name='test-component')
@@ -266,15 +259,15 @@ class TestModelComponent(TestCase):
             Component(name='component-a', type=ComponentType.LIBRARY, group='group-2'),
             Component(name='component-a', type=ComponentType.FILE),
             Component(name='component-b', type=ComponentType.FILE),
-            Component(name='component-a', type=ComponentType.FILE, version="1.0.0"),
+            Component(name='component-a', type=ComponentType.FILE, version='1.0.0'),
         ]
         sorted_components = sorted(components)
         expected_components = reorder(components, expected_order)
         self.assertListEqual(sorted_components, expected_components)
 
     def test_nested_components_1(self) -> None:
-        comp_b = Component(name="comp_b")
-        comp_c = Component(name="comp_c")
+        comp_b = Component(name='comp_b')
+        comp_c = Component(name='comp_c')
         comp_b.components.add(comp_c)
 
         self.assertEqual(1, len(comp_b.components))
@@ -282,9 +275,9 @@ class TestModelComponent(TestCase):
         self.assertEqual(1, len(comp_b.get_all_nested_components(include_self=False)))
 
     def test_nested_components_2(self) -> None:
-        comp_a = Component(name="comp_a")
-        comp_b = Component(name="comp_b")
-        comp_c = Component(name="comp_c")
+        comp_a = Component(name='comp_a')
+        comp_b = Component(name='comp_b')
+        comp_c = Component(name='comp_c')
         comp_b.components.add(comp_c)
         comp_b.components.add(comp_a)
 
@@ -429,7 +422,7 @@ class TestModelPatch(TestCase):
         ]
 
         # expected sort order: (type, [diff], sorted(resolves))
-        expected_order = [5, 4, 2, 3, 1, 0]
+        expected_order = [5, 4, 3, 2, 1, 0]
         patches = [
             Patch(type=PatchClassification.MONKEY),
             Patch(type=PatchClassification.MONKEY, diff=diff_b),

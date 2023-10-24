@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,22 +14,22 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
+from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
 from cyclonedx.model.service import Service
-from tests.data import MOCK_UUID_8, MOCK_UUID_9, reorder
+from tests import reorder, uuid_generator
 
 
 class TestModelService(TestCase):
 
-    @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_8)
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
     def test_minimal_service(self, mock_uuid: Mock) -> None:
         s = Service(name='my-test-service')
         mock_uuid.assert_called()
         self.assertEqual(s.name, 'my-test-service')
-        self.assertEqual(str(s.bom_ref), str(MOCK_UUID_8))
+        self.assertEqual(str(s.bom_ref), '00000000-0000-4000-8000-000000000001')
         self.assertIsNone(s.provider)
         self.assertIsNone(s.group)
         self.assertIsNone(s.version)
@@ -46,16 +44,15 @@ class TestModelService(TestCase):
         self.assertFalse(s.release_notes)
         self.assertFalse(s.properties)
 
-    @patch('cyclonedx.model.service.uuid4', return_value=MOCK_UUID_9)
-    def test_service_with_services(self, mock_uuid: Mock) -> None:
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
+    def test_service_with_services(self, *_: Any, **__: Any) -> None:
         parent_service = Service(name='parent-service')
         parent_service.services = [
             Service(name='child-service-1'),
-            Service(name='child-service-2')
+            Service(name='child-service-2'),
         ]
-        mock_uuid.assert_called()
         self.assertEqual(parent_service.name, 'parent-service')
-        self.assertEqual(str(parent_service.bom_ref), str(MOCK_UUID_9))
+        self.assertEqual(str(parent_service.bom_ref), '00000000-0000-4000-8000-000000000001')
         self.assertIsNone(parent_service.provider)
         self.assertIsNone(parent_service.group)
         self.assertIsNone(parent_service.version)

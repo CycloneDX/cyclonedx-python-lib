@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +15,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import json
 from abc import abstractmethod
-from typing import Optional
+from json import dumps as json_dumps, loads as json_loads
+from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Type, Union
 
 from ..exception.output import FormatNotSupportedException
-from ..model.bom import Bom
-from ..schema import SchemaVersion
+from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
     BaseSchemaVersion,
@@ -35,19 +32,28 @@ from ..schema.schema import (
 )
 from . import BaseOutput
 
+if TYPE_CHECKING:  # pragma: no cover
+    from ..model.bom import Bom
+
 
 class Json(BaseOutput, BaseSchemaVersion):
 
-    def __init__(self, bom: Bom) -> None:
+    def __init__(self, bom: 'Bom') -> None:
         super().__init__(bom=bom)
-        self._json_output: str = ''
+        self._bom_json: Dict[str, Any] = dict()
 
     @property
     def schema_version(self) -> SchemaVersion:
         return self.schema_version_enum
 
+    @property
+    def output_format(self) -> Literal[OutputFormat.JSON]:
+        return OutputFormat.JSON
+
     def generate(self, force_regeneration: bool = False) -> None:
-        # New Way
+        if self.generated and not force_regeneration:
+            return
+
         schema_uri: Optional[str] = self._get_schema_uri()
         if not schema_uri:
             raise FormatNotSupportedException(
@@ -58,27 +64,22 @@ class Json(BaseOutput, BaseSchemaVersion):
             'bomFormat': 'CycloneDX',
             'specVersion': self.schema_version.to_version()
         }
-        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
-        if self.generated and force_regeneration:
-            self.get_bom().validate()
-            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
-            bom_json.update(_json_core)
-            self._json_output = json.dumps(bom_json)
-            self.generated = True
-            return
-        elif self.generated:
-            return
-        else:
-            self.get_bom().validate()
-            bom_json = json.loads(self.get_bom().as_json(view_=_view))  # type: ignore
-            bom_json.update(_json_core)
-            self._json_output = json.dumps(bom_json)
-            self.generated = True
-            return
+        _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
+        bom = self.get_bom()
+        bom.validate()
+        bom_json: Dict[str, Any] = json_loads(
+            bom.as_json(  # type:ignore[attr-defined]
+                view_=_view))
+        bom_json.update(_json_core)
+        self._bom_json = bom_json
+        self.generated = True
 
-    def output_as_string(self) -> str:
+    def output_as_string(self, *,
+                         indent: Optional[Union[int, str]] = None,
+                         **kwargs: Any) -> str:
         self.generate()
-        return self._json_output
+        return json_dumps(self._bom_json,
+                          indent=indent)
 
     @abstractmethod
     def _get_schema_uri(self) -> Optional[str]:
@@ -87,29 +88,38 @@ class Json(BaseOutput, BaseSchemaVersion):
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> None:
         return None
 
 
 class JsonV1Dot1(Json, SchemaVersion1Dot1):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> None:
         return None
 
 
 class JsonV1Dot2(Json, SchemaVersion1Dot2):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> str:
         return 'http://cyclonedx.org/schema/bom-1.2b.schema.json'
 
 
 class JsonV1Dot3(Json, SchemaVersion1Dot3):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> str:
         return 'http://cyclonedx.org/schema/bom-1.3a.schema.json'
 
 
 class JsonV1Dot4(Json, SchemaVersion1Dot4):
 
-    def _get_schema_uri(self) -> Optional[str]:
+    def _get_schema_uri(self) -> str:
         return 'http://cyclonedx.org/schema/bom-1.4.schema.json'
+
+
+BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Json]] = {
+    SchemaVersion.V1_4: JsonV1Dot4,
+    SchemaVersion.V1_3: JsonV1Dot3,
+    SchemaVersion.V1_2: JsonV1Dot2,
+    SchemaVersion.V1_1: JsonV1Dot1,
+    SchemaVersion.V1_0: JsonV1Dot0,
+}

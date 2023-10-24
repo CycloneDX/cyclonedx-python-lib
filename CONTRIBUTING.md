@@ -12,7 +12,7 @@ This project uses [poetry]. Have it installed and setup first.
 To install dev-dependencies and tools:
 
 ```shell
-poetry install
+poetry install --all-extras
 ```
 
 ## Code style
@@ -23,8 +23,12 @@ Get it all applied via:
 
 ```shell
 poetry run isort .
-poetry run flake8 cyclonedx/ tests/ typings/
+poetry run autopep8 -ir cyclonedx/ tests/ typings/ examples/
 ```
+
+This project prefers `f'strings'` over `'string'.format()`.  
+This project prefers `'single quotes'` over `"double quotes"`.  
+This project prefers `lower_snake_case` variable names.  
 
 ## Documentation
 
@@ -45,7 +49,7 @@ make html
 Run all tests in dedicated environments, via:
 
 ```shell
-poetry run tox
+poetry run tox run
 ```
 
 ## Sign off your commits

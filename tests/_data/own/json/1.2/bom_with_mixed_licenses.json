@@ -1,0 +1,47 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "metadata": {
+    "component": {
+      "description": "before CDX 1.5 it was allowed to mix `expression` and `license`",
+      "licenses": [
+        {"expression": "MIT OR Apache-2.0"},
+        {"license": {"id": "MIT"}},
+        {"license": {"name": "foo license"}}
+      ],
+      "name": "app",
+      "type": "application"
+    },
+    "licenses": [
+      {"license": {"name": "foo license"}},
+      {"license": {"id": "MIT"}},
+      {"expression": "MIT OR Apache-2.0"}
+    ]
+  },
+  "components": [
+    {
+      "description": "before CDX 1.5 it was allowed to mix `expression` and `license`",
+      "licenses": [
+        {"license": {"id": "MIT"}},
+        {"license": {"name": "foo license"}},
+        {"expression": "MIT OR Apache-2.0"}
+      ],
+      "name": "comp",
+      "type": "library"
+    }
+  ],
+  "services": [
+    {
+      "description": "before CDX 1.5 it was allowed to mix `expression` and `license`",
+      "licenses": [
+        {"license": {"name": "foo license"}},
+        {"expression": "MIT OR Apache-2.0"},
+        {"license": {"id": "MIT"}}
+      ],
+      "name": "serv"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1337
+}

@@ -1,9 +1,9 @@
 # Correct as of 27 May 2022
 # sortedcontainers does not have PEP561 type hints, and there are no published typeshed hints.
-# The contents of this file were obtained from 
+# The contents of this file were obtained from
 #  https://github.com/althonos/python-sortedcontainers/blob/d0a225d7fd0fb4c54532b8798af3cbeebf97e2d5/sortedcontainers/sortedset.pyi
 
-from typing import (  # Iterator,; Tuple,; Type,
+from typing import (  # Iterator,; Tuple,; Type, Set
     Any,
     Callable,
     Hashable,
@@ -12,7 +12,6 @@ from typing import (  # Iterator,; Tuple,; Type,
     MutableSet,
     Optional,
     Sequence,
-    Set,
     TypeVar,
     Union,
     overload,

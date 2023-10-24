@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +20,8 @@ from unittest import TestCase
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import XsUri
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-
-from .data import get_issue_1, get_issue_2, reorder
+from tests import reorder
+from tests._data.models import get_issue_1, get_issue_2
 
 
 class TestModelIssueType(TestCase):
@@ -69,15 +67,15 @@ class TestModelIssueTypeSource(TestCase):
             IssueTypeSource()
 
     def test_same(self) -> None:
-        its_1 = IssueTypeSource(name="The Source", url=XsUri('https://cyclonedx.org'))
-        its_2 = IssueTypeSource(name="The Source", url=XsUri('https://cyclonedx.org'))
+        its_1 = IssueTypeSource(name='The Source', url=XsUri('https://cyclonedx.org'))
+        its_2 = IssueTypeSource(name='The Source', url=XsUri('https://cyclonedx.org'))
         self.assertNotEqual(id(its_1), id(its_2))
         self.assertEqual(hash(its_1), hash(its_2))
         self.assertTrue(its_1 == its_2)
 
     def test_not_same(self) -> None:
-        its_1 = IssueTypeSource(name="The Source", url=XsUri('https://cyclonedx.org'))
-        its_2 = IssueTypeSource(name="Not the Source", url=XsUri('https://cyclonedx.org'))
+        its_1 = IssueTypeSource(name='The Source', url=XsUri('https://cyclonedx.org'))
+        its_2 = IssueTypeSource(name='Not the Source', url=XsUri('https://cyclonedx.org'))
         self.assertNotEqual(id(its_1), id(its_2))
         self.assertNotEqual(hash(its_1), hash(its_2))
         self.assertFalse(its_1 == its_2)

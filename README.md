@@ -1,4 +1,4 @@
-# Python Library for generating CycloneDX
+# CycloneDX Python Library
 
 [![shield_pypi-version]][link_pypi]
 [![shield_conda-forge-version]][link_conda-forge]

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +19,7 @@ from unittest import TestCase
 
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.dependency import Dependency
-from tests.data import reorder
+from tests import reorder
 
 
 class TestDependency(TestCase):
@@ -30,14 +28,14 @@ class TestDependency(TestCase):
         # expected sort order: (value)
         expected_order = [3, 2, 0, 1]
         deps = [
-            Dependency(ref=BomRef(value="be2c6502-7e9a-47db-9a66-e34f729810a3"), dependencies=[
-                Dependency(ref=BomRef(value="0b049d09-64c0-4490-a0f5-c84d9aacf857")),
-                Dependency(ref=BomRef(value="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda"))
+            Dependency(ref=BomRef(value='be2c6502-7e9a-47db-9a66-e34f729810a3'), dependencies=[
+                Dependency(ref=BomRef(value='0b049d09-64c0-4490-a0f5-c84d9aacf857')),
+                Dependency(ref=BomRef(value='17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda'))
             ]),
-            Dependency(ref=BomRef(value="cd3e9c95-9d41-49e7-9924-8cf0465ae789")),
-            Dependency(ref=BomRef(value="17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda")),
-            Dependency(ref=BomRef(value="0b049d09-64c0-4490-a0f5-c84d9aacf857"), dependencies=[
-                Dependency(ref=BomRef(value="cd3e9c95-9d41-49e7-9924-8cf0465ae789"))
+            Dependency(ref=BomRef(value='cd3e9c95-9d41-49e7-9924-8cf0465ae789')),
+            Dependency(ref=BomRef(value='17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda')),
+            Dependency(ref=BomRef(value='0b049d09-64c0-4490-a0f5-c84d9aacf857'), dependencies=[
+                Dependency(ref=BomRef(value='cd3e9c95-9d41-49e7-9924-8cf0465ae789'))
             ])
         ]
         sorted_deps = sorted(deps)

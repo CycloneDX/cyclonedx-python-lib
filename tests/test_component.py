@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from os.path import dirname, join
+from os.path import join
 from unittest import TestCase
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -25,10 +23,8 @@ from packageurl import PackageURL
 
 from cyclonedx.model import sha1sum
 from cyclonedx.model.component import Component
-
-from .data import get_component_setuptools_simple
-
-FIXTURES_DIRECTORY = join('fixtures', 'xml', '1.4')
+from tests import OWN_DATA_DIRECTORY
+from tests._data.models import get_component_setuptools_simple
 
 
 class TestComponent(TestCase):
@@ -66,11 +62,11 @@ class TestComponent(TestCase):
         self.assertEqual(purl.version, '50.3.2')
         self.assertEqual(purl.qualifiers, {'extension': 'tar.gz'})
 
-    def test_from_file_with_path_for_bom(self) -> None:
-        test_file = join(dirname(__file__), FIXTURES_DIRECTORY, 'bom_setuptools.xml')
+    def test_from_xml_file_with_path_for_bom(self) -> None:
+        test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.4', 'bom_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
         sha1_hash: str = sha1sum(filename=test_file)
-        expected_version = '0.0.0-{}'.format(sha1_hash[0:12])
+        expected_version = f'0.0.0-{sha1_hash[0:12]}'
         self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
         self.assertEqual(c.version, expected_version)
         purl = PackageURL(

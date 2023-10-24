@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,15 +30,15 @@ from .bom_ref import BomRef
 class DependencyDependencies(serializable.BaseHelper):  # type: ignore
 
     @classmethod
-    def serialize(cls, o: object) -> List[str]:
+    def serialize(cls, o: Any) -> List[str]:
         if isinstance(o, SortedSet):
             return list(map(lambda i: str(i.ref), o))
 
         raise ValueError(f'Attempt to serialize a non-Dependency: {o.__class__}')
 
     @classmethod
-    def deserialize(cls, o: object) -> Set["Dependency"]:
-        dependencies: Set["Dependency"] = set()
+    def deserialize(cls, o: Any) -> Set['Dependency']:
+        dependencies: Set['Dependency'] = set()
         if isinstance(o, list):
             for v in o:
                 dependencies.add(Dependency(ref=BomRef(value=v)))
@@ -56,11 +54,11 @@ class Dependency:
         See https://cyclonedx.org/docs/1.4/xml/#type_dependencyType
     """
 
-    def __init__(self, ref: BomRef, dependencies: Optional[Iterable["Dependency"]] = None) -> None:
+    def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
         self.ref = ref
         self.dependencies = SortedSet(dependencies or [])
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.type_mapping(BomRefHelper)
     @serializable.xml_attribute()
     def ref(self) -> BomRef:
@@ -70,15 +68,15 @@ class Dependency:
     def ref(self, ref: BomRef) -> None:
         self._ref = ref
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('dependsOn')
     @serializable.type_mapping(DependencyDependencies)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'dependency')
-    def dependencies(self) -> "SortedSet[Dependency]":
+    def dependencies(self) -> 'SortedSet[Dependency]':
         return self._dependencies
 
     @dependencies.setter
-    def dependencies(self, dependencies: Iterable["Dependency"]) -> None:
+    def dependencies(self, dependencies: Iterable['Dependency']) -> None:
         self._dependencies = SortedSet(dependencies)
 
     def dependencies_as_bom_refs(self) -> Set[BomRef]:
@@ -110,4 +108,4 @@ class Dependable(ABC):
     @property
     @abstractmethod
     def bom_ref(self) -> BomRef:
-        pass
+        ...

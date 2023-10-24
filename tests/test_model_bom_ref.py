@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,7 @@
 from unittest import TestCase
 
 from cyclonedx.model.bom_ref import BomRef
-
-from .data import reorder
+from tests import reorder
 
 
 class TestBomRef(TestCase):

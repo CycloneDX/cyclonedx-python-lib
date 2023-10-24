@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +15,27 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+
+from typing import Callable
 from unittest import TestCase
 from uuid import uuid4
 
-from cyclonedx.model import (
-    License,
-    LicenseChoice,
-    OrganizationalContact,
-    OrganizationalEntity,
-    Property,
-    ThisTool,
-    Tool,
-)
+from ddt import ddt, named_data
+
+from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException
+from cyclonedx.model import OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
-
-from .data import (
+from cyclonedx.model.license import DisjunctiveLicense
+from tests._data.models import (
+    get_bom_component_licenses_invalid,
+    get_bom_component_nested_licenses_invalid,
     get_bom_for_issue_275_components,
+    get_bom_metadata_component_licenses_invalid,
+    get_bom_metadata_component_nested_licenses_invalid,
+    get_bom_metadata_licenses_invalid,
+    get_bom_service_licenses_invalid,
     get_bom_with_component_setuptools_with_vulnerability,
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
@@ -68,8 +69,8 @@ class TestBomMetaData(TestCase):
         manufacturer = OrganizationalEntity(name='test_manufacturer')
         supplier = OrganizationalEntity(name='test_supplier')
         licenses = [
-            LicenseChoice(license=License(id='MIT')),
-            LicenseChoice(license=License(id='Apache-2.0')),
+            DisjunctiveLicense(id='MIT'),
+            DisjunctiveLicense(id='Apache-2.0'),
         ]
         properties = [
             Property(name='property_1', value='value_1'),
@@ -97,6 +98,7 @@ class TestBomMetaData(TestCase):
         self.assertTrue(tools[1] in metadata.tools)
 
 
+@ddt
 class TestBom(TestCase):
 
     def test_bom_metadata_tool_this_tool(self) -> None:
@@ -168,6 +170,19 @@ class TestBom(TestCase):
         self.assertIsInstance(bom.metadata.component, Component)
         self.assertEqual(2, len(bom.components))
         bom.validate()
+
+    @named_data(
+        ['metadata_licenses', get_bom_metadata_licenses_invalid],
+        ['metadata_component_licenses', get_bom_metadata_component_licenses_invalid],
+        ['metadata_component_nested_licenses', get_bom_metadata_component_nested_licenses_invalid],
+        ['component_licenses', get_bom_component_licenses_invalid],
+        ['component_nested_licenses', get_bom_component_nested_licenses_invalid],
+        ['service_licenses', get_bom_service_licenses_invalid],
+    )
+    def test_validate_with_invalid_license_constellation_throws(self, get_bom: Callable[[], Bom]) -> None:
+        bom = get_bom()
+        with self.assertRaises(LicenseExpressionAlongWithOthersException):
+            bom.validate()
 
     # def test_bom_nested_services_issue_275(self) -> None:
     #    """regression test for issue #275

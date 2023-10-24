@@ -1,0 +1,65 @@
+{
+  "components": [
+    {
+      "bom-ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+      "externalReferences": [
+        {
+          "comment": "No comment",
+          "type": "distribution",
+          "url": "https://cyclonedx.org"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+        }
+      ],
+      "name": "toml",
+      "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+      "type": "library",
+      "version": "0.10.2"
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": [
+        "pkg:pypi/toml@0.10.2?extension=tar.gz"
+      ],
+      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+    },
+    {
+      "ref": "pkg:pypi/toml@0.10.2?extension=tar.gz"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "author": "Test Author",
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "setuptools",
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "type": "library",
+      "version": "50.3.2"
+    },
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2"
+}

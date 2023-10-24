@@ -46,24 +46,48 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e flake8 -s false
+        run: poetry run tox run -e flake8 -s false
+
+  security-issues:
+    name: find Security Issues
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v4
+      - name: Setup Python Environment
+        # see https://github.com/actions/setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
+          architecture: 'x64'
+      - name: Install poetry
+        # see https://github.com/marketplace/actions/setup-poetry
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Install dependencies
+        run: poetry install --no-root
+      - name: Run tox
+        run: poetry run tox run -e bandit -s false
 
   static-code-analysis:
-    name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factor }})
+    name: StaticCodingAnalysis (py${{ matrix.python-version}} ${{ matrix.toxenv-factors }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         include:
-          - # test with the locked dependencies
+          - # test with the latest dependencies
             os: ubuntu-latest
-            python-version: '3.11'
-            toxenv-factor: 'locked'
+            python-version: '3.12'
+            toxenv-factors: '-current'
           - # test with the lowest dependencies
             os: ubuntu-latest
-            python-version: '3.7'
-            toxenv-factor: 'lowest'
+            python-version: '3.8'
+            toxenv-factors: '-lowest'
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
@@ -82,10 +106,10 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
       - name: Run tox
-        run: poetry run tox -e mypy-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run -e mypy${{ matrix.toxenv-factors }} -s false
 
   build-and-test:
-    name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factor }})
+    name: Test (${{ matrix.os }} py${{ matrix.python-version }} ${{ matrix.toxenv-factors }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
@@ -93,17 +117,14 @@ jobs:
       matrix:
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         python-version:
-          - "3.11" # highest supported
+          - "3.12" # highest supported
+          - "3.11"
           - "3.10"
           - "3.9"
-          - "3.8"
-          - "3.7"  # lowest supported
-        toxenv-factor: ['locked']
-        include:
-          - # test with the lowest dependencies
-            os: ubuntu-latest
-            python-version: '3.7'
-            toxenv-factor: 'lowest'
+          - "3.8"  # lowest supported
+        toxenv-factors:
+          - '-allExtras'
+          - '-noExtras'
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
@@ -135,14 +156,14 @@ jobs:
       - name: Ensure build successful
         run: poetry build
       - name: Run tox
-        run: poetry run tox -e py-${{ matrix.toxenv-factor }} -s false
+        run: poetry run tox run -e py${{ matrix.toxenv-factors }} -s false
       - name: Generate coverage reports
+        if: ${{ failure() || success() }}
         shell: bash
         run: |
           set -eux
-          poetry run coverage report
-          poetry run coverage xml -o "$REPORTS_DIR/coverage.${{ matrix.os }}_py${{ matrix.python-version }}_${{ matrix.toxenv-factor }}.cobertura.xml"
-          # poetry run coverage lcov -o "$REPORTS_DIR/coverage.${{ matrix.os }}_py${{ matrix.python-version }}_${{ matrix.toxenv-factor }}.lcov.xml"
+          poetry run coverage report -m
+          poetry run coverage xml -o '${{ env.REPORTS_DIR }}/coverage/${{ matrix.os }}_py${{ matrix.python-version }}_${{ matrix.toxenv-factors }}.cobertura.xml'
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact
@@ -172,12 +193,19 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ env.CODACY_PROJECT_TOKEN }}
-          coverage-reports: ${{ env.REPORTS_DIR }}/coverage.*
+          coverage-reports: ${{ env.REPORTS_DIR }}/coverage/*
 
   examples:
-    name: Examples
+    name: Examples E:${{ matrix.install-extras || '<none>' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        install-extras:
+          - '' # none
+          - json-validation
+          - xml-validation
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
@@ -186,7 +214,7 @@ jobs:
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: '>=3.7 <=3.11'  # supported version range
+          python-version: '>=3.8 <=3.12'  # supported version range
       - name: Validate Python Environment
         shell: python
         run: |
@@ -198,7 +226,7 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install package and prod dependencies
-        run: poetry install --only=main -vvv
+        run: poetry install --only=main --extras='${{ matrix.install-extras }}' -vvv
       - name: run all examples
         run: >
           find examples -type f -name '*.py' -print0

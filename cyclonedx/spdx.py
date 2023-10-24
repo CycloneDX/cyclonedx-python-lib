@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,6 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 __all__ = [
     'is_supported_id', 'fixup_id',
@@ -20,19 +20,20 @@ __all__ = [
 ]
 
 from json import load as json_load
-from os.path import dirname, join as path_join
 from typing import TYPE_CHECKING, Dict, Optional, Set
 
 from license_expression import get_spdx_licensing  # type: ignore
 
-if TYPE_CHECKING:
+from .schema._res import SPDX_JSON as __SPDX_JSON_SCHEMA
+
+if TYPE_CHECKING:  # pragma: no cover
     from license_expression import Licensing
 
 # region init
 # python's internal module loader will assure that this init-part runs only once.
 
 # !!! this requires to ship the actual schema data with the package.
-with open(path_join(dirname(__file__), 'schema', 'spdx.schema.json')) as schema:
+with open(__SPDX_JSON_SCHEMA) as schema:
     __IDS: Set[str] = set(json_load(schema).get('enum', []))
 assert len(__IDS) > 0, 'known SPDX-IDs should be non-empty set'
 

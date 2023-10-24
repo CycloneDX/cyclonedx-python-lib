@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,8 +35,6 @@ from cyclonedx.model import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
-    License,
-    LicenseChoice,
     Note,
     NoteText,
     OrganizationalContact,
@@ -47,8 +43,7 @@ from cyclonedx.model import (
     XsUri,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-
-from .data import reorder
+from tests import reorder
 
 
 class DummyStringEnum(str, Enum):
@@ -135,6 +130,14 @@ class TestComparableTuple(TestCase):
         self.assertNotEqual(tuple1, tuple2)
         self.assertNotEqual(tuple2, tuple1)
 
+    def test_compare_last_item_missing(self) -> None:
+        tuple1 = ComparableTuple((1, 2, 3, 4, 5))
+        tuple2 = ComparableTuple((1, 2, 3, 4))
+        self.assertLess(tuple1, tuple2)
+        self.assertGreater(tuple2, tuple1)
+        self.assertNotEqual(tuple1, tuple2)
+        self.assertNotEqual(tuple2, tuple1)
+
     def test_compare_enum(self) -> None:
         tuple1 = ComparableTuple((DummyStringEnum.FIRST, ))
         tuple2 = ComparableTuple((DummyStringEnum.SECOND, ))
@@ -150,41 +153,6 @@ class TestComparableTuple(TestCase):
         self.assertGreater(tuple2, tuple1)
         self.assertNotEqual(tuple1, tuple2)
         self.assertNotEqual(tuple2, tuple1)
-
-
-class TestModelLicense(TestCase):
-
-    def test_sort(self) -> None:
-        # expected sort order: ([id], [name])
-        expected_order = [1, 0, 3, 2]
-        licenses = [
-            License(id='MIT'),
-            License(id='Apache-2.0'),
-            License(name='MIT'),
-            License(name='Apache-2.0'),
-        ]
-        sorted_licenses = sorted(licenses)
-        expected_licenses = reorder(licenses, expected_order)
-        self.assertListEqual(sorted_licenses, expected_licenses)
-
-
-class TestModelLicenseChoice(TestCase):
-
-    def test_sort(self) -> None:
-        license_a = License(id='Apache-2.0')
-        license_b = License(id='MIT')
-
-        # expected sort order: ([license], [expression])
-        expected_order = [1, 0, 3, 2]
-        licenses = [
-            LicenseChoice(license=license_b),
-            LicenseChoice(license=license_a),
-            LicenseChoice(expression='MIT'),
-            LicenseChoice(expression='Apache-2.0'),
-        ]
-        sorted_licenses = sorted(licenses)
-        expected_licenses = reorder(licenses, expected_order)
-        self.assertListEqual(sorted_licenses, expected_licenses)
 
 
 class TestModelCopyright(TestCase):
@@ -535,10 +503,10 @@ class TestModelXsUri(TestCase):
         # expected sort order: (uri)
         expected_order = [2, 1, 3, 0]
         uris = [
-            XsUri(uri="d"),
-            XsUri(uri="b"),
-            XsUri(uri="a"),
-            XsUri(uri="c"),
+            XsUri(uri='d'),
+            XsUri(uri='b'),
+            XsUri(uri='a'),
+            XsUri(uri='c'),
         ]
         sorted_uris = sorted(uris)
         expected_uris = reorder(uris, expected_order)

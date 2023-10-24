@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,7 +20,7 @@ author = 'Paul Horton, Jan Kowalleck, Steve Springett, Patrick Dwyer'
 
 # The full version, including alpha/beta/rc tags
 # !! version is managed by semantic_release
-release = '4.2.3'
+release = '5.0.0-rc.2'
 
 # -- General configuration ---------------------------------------------------
 
@@ -31,15 +29,18 @@ release = '4.2.3'
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.viewcode",
+    # "sphinx.ext.viewcode",
     "autoapi.extension",
     "sphinx_rtd_theme",
     "m2r2"
 ]
 
+
 # Document Python Code
 autoapi_type = 'python'
 autoapi_dirs = ['../cyclonedx']
+# see https://sphinx-autoapi.readthedocs.io/en/latest/reference/config.html#confval-autoapi_options
+autoapi_options = ['show-module-summary', 'members', 'undoc-members', 'inherited-members', 'show-inheritance']
 
 source_suffix = ['.rst', '.md']
 
@@ -49,7 +50,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.venv']
 
 # -- Options for HTML output -------------------------------------------------
 

@@ -1,0 +1,40 @@
+{
+  "components": [
+    {
+      "author": "Test Author",
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "setuptools",
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "type": "library",
+      "version": "50.3.2"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3"
+}

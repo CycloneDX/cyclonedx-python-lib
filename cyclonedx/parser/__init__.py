@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,6 +11,8 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 
 """
 Set of classes and methods which allow for quick creation of a Bom instance from your environment or Python project.
@@ -40,7 +40,7 @@ class ParserWarning:
         return self._warning
 
     def __repr__(self) -> str:
-        return f'<ParserWarning item=\'{self._item}\'>'
+        return f'<ParserWarning item={self._item!r}>'
 
 
 class BaseParser:

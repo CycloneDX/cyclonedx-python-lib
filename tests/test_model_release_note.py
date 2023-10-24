@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,18 +41,18 @@ class TestModelReleaseNote(TestCase):
     def test_complete(self) -> None:
         timestamp: datetime.datetime = datetime.datetime.utcnow()
         rn = ReleaseNotes(
-            type='major', title="Release Notes Title",
+            type='major', title='Release Notes Title',
             featured_image=XsUri('https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png'),
             social_image=XsUri('https://cyclonedx.org/cyclonedx-icon.png'),
-            description="This release is a test release", timestamp=timestamp,
+            description='This release is a test release', timestamp=timestamp,
             aliases=[
-                "First Test Release"
+                'First Test Release'
             ],
             tags=['test', 'alpha'],
             resolves=[],
             notes=[]
         )
-        rn.aliases.add("Release Alpha")
+        rn.aliases.add('Release Alpha')
         rn.tags.add('testing')
 
         self.assertEqual(rn.type, 'major')
@@ -65,7 +63,7 @@ class TestModelReleaseNote(TestCase):
         )
         self.assertEqual(str(rn.social_image), 'https://cyclonedx.org/cyclonedx-icon.png')
         self.assertEqual(rn.description, 'This release is a test release')
-        self.assertSetEqual(rn.aliases, {"Release Alpha", "First Test Release"})
+        self.assertSetEqual(rn.aliases, {'Release Alpha', 'First Test Release'})
         self.assertSetEqual(rn.tags, {'test', 'testing', 'alpha'})
         self.assertSetEqual(rn.resolves, set())
         self.assertFalse(rn.notes)

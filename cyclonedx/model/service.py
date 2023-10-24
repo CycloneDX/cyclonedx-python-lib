@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,25 +14,17 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from typing import Any, Iterable, Optional, Union
-from uuid import uuid4
 
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import BomRefHelper
+from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
 
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
-from . import (
-    ComparableTuple,
-    DataClassification,
-    ExternalReference,
-    LicenseChoice,
-    OrganizationalEntity,
-    Property,
-    XsUri,
-)
+from . import ComparableTuple, DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
 from .bom_ref import BomRef
 from .dependency import Dependable
+from .license import License, LicenseRepository
 from .release_note import ReleaseNotes
 
 """
@@ -59,16 +49,16 @@ class Service(Dependable):
                  group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
                  endpoints: Optional[Iterable[XsUri]] = None, authenticated: Optional[bool] = None,
                  x_trust_boundary: Optional[bool] = None, data: Optional[Iterable[DataClassification]] = None,
-                 licenses: Optional[Iterable[LicenseChoice]] = None,
+                 licenses: Optional[Iterable[License]] = None,
                  external_references: Optional[Iterable[ExternalReference]] = None,
                  properties: Optional[Iterable[Property]] = None,
                  services: Optional[Iterable['Service']] = None,
                  release_notes: Optional[ReleaseNotes] = None,
                  ) -> None:
-        if type(bom_ref) == BomRef:
+        if isinstance(bom_ref, BomRef):
             self._bom_ref = bom_ref
         else:
-            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else str(uuid4()))
+            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
         self.provider = provider
         self.group = group
         self.name = name
@@ -84,7 +74,7 @@ class Service(Dependable):
         self.release_notes = release_notes
         self.properties = properties or []  # type: ignore
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRefHelper)
     @serializable.xml_attribute()
@@ -101,7 +91,7 @@ class Service(Dependable):
         """
         return self._bom_ref
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(1)
     def provider(self) -> Optional[OrganizationalEntity]:
         """
@@ -116,7 +106,7 @@ class Service(Dependable):
     def provider(self, provider: Optional[OrganizationalEntity]) -> None:
         self._provider = provider
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(2)
     def group(self) -> Optional[str]:
         """
@@ -132,7 +122,7 @@ class Service(Dependable):
     def group(self, group: Optional[str]) -> None:
         self._group = group
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(3)
     def name(self) -> str:
         """
@@ -147,7 +137,7 @@ class Service(Dependable):
     def name(self, name: str) -> None:
         self._name = name
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(4)
     def version(self) -> Optional[str]:
         """
@@ -162,7 +152,7 @@ class Service(Dependable):
     def version(self, version: Optional[str]) -> None:
         self._version = version
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(5)
     def description(self) -> Optional[str]:
         """
@@ -177,10 +167,10 @@ class Service(Dependable):
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'endpoint')
     @serializable.xml_sequence(6)
-    def endpoints(self) -> "SortedSet[XsUri]":
+    def endpoints(self) -> 'SortedSet[XsUri]':
         """
         A list of endpoints URI's this service provides.
 
@@ -193,7 +183,7 @@ class Service(Dependable):
     def endpoints(self, endpoints: Iterable[XsUri]) -> None:
         self._endpoints = SortedSet(endpoints)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_sequence(7)
     def authenticated(self) -> Optional[bool]:
         """
@@ -211,7 +201,7 @@ class Service(Dependable):
     def authenticated(self, authenticated: Optional[bool]) -> None:
         self._authenticated = authenticated
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.json_name('x-trust-boundary')
     @serializable.xml_name('x-trust-boundary')
     @serializable.xml_sequence(8)
@@ -231,10 +221,10 @@ class Service(Dependable):
     def x_trust_boundary(self, x_trust_boundary: Optional[bool]) -> None:
         self._x_trust_boundary = x_trust_boundary
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
     @serializable.xml_sequence(9)
-    def data(self) -> "SortedSet[DataClassification]":
+    def data(self) -> 'SortedSet[DataClassification]':
         """
         Specifies the data classification.
 
@@ -247,10 +237,10 @@ class Service(Dependable):
     def data(self, data: Iterable[DataClassification]) -> None:
         self._data = SortedSet(data)
 
-    @property  # type: ignore[misc]
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'licenses')
+    @property
+    @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(10)
-    def licenses(self) -> "SortedSet[LicenseChoice]":
+    def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Service is licensed.
 
@@ -260,13 +250,13 @@ class Service(Dependable):
         return self._licenses
 
     @licenses.setter
-    def licenses(self, licenses: Iterable[LicenseChoice]) -> None:
-        self._licenses = SortedSet(licenses)
+    def licenses(self, licenses: Iterable[License]) -> None:
+        self._licenses = LicenseRepository(licenses)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(11)
-    def external_references(self) -> "SortedSet[ExternalReference]":
+    def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the Service.
 
@@ -279,7 +269,7 @@ class Service(Dependable):
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     @serializable.xml_sequence(13)
     def services(self) -> "SortedSet['Service']":
@@ -299,7 +289,7 @@ class Service(Dependable):
     def services(self, services: Iterable['Service']) -> None:
         self._services = SortedSet(services)
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_sequence(14)
     def release_notes(self) -> Optional[ReleaseNotes]:
@@ -315,12 +305,12 @@ class Service(Dependable):
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
-    @property  # type: ignore[misc]
+    @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(12)
-    def properties(self) -> "SortedSet[Property]":
+    def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
         officially supported in the standard without having to use additional namespaces or create extensions.

@@ -1,0 +1,106 @@
+{
+  "dependencies": [
+    {
+      "ref": "my-specific-bom-ref-for-cpl"
+    },
+    {
+      "ref": "my-specific-bom-ref-for-my-first-service"
+    },
+    {
+      "ref": "my-specific-bom-ref-for-my-second-service"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "my-specific-bom-ref-for-cpl",
+      "name": "cyclonedx-python-lib",
+      "type": "library",
+      "version": "1.0.0"
+    },
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "services": [
+    {
+      "authenticated": false,
+      "bom-ref": "my-specific-bom-ref-for-my-first-service",
+      "data": [
+        {
+          "classification": "public",
+          "flow": "outbound"
+        }
+      ],
+      "description": "Description goes here",
+      "endpoints": [
+        "/api/thing/1",
+        "/api/thing/2"
+      ],
+      "externalReferences": [
+        {
+          "comment": "No comment",
+          "hashes": [
+            {
+              "alg": "SHA-256",
+              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+            }
+          ],
+          "type": "distribution",
+          "url": "https://cyclonedx.org"
+        }
+      ],
+      "group": "a-group",
+      "licenses": [
+        {
+          "license": {
+            "name": "Commercial"
+          }
+        }
+      ],
+      "name": "my-first-service",
+      "properties": [
+        {
+          "name": "key1",
+          "value": "val1"
+        },
+        {
+          "name": "key2",
+          "value": "val2"
+        }
+      ],
+      "provider": {
+        "contact": [
+          {
+            "email": "someone@somewhere.tld",
+            "name": "A N Other",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "email": "paul.horton@owasp.org",
+            "name": "Paul Horton"
+          }
+        ],
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org"
+        ]
+      },
+      "version": "1.2.3",
+      "x-trust-boundary": true
+    },
+    {
+      "bom-ref": "my-specific-bom-ref-for-my-second-service",
+      "name": "my-second-service"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3"
+}

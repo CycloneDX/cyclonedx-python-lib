@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,27 +11,92 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-
-from enum import Enum
-
-
-class OutputFormat(str, Enum):
-    JSON: str = 'Json'
-    XML: str = 'Xml'
+# Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-class SchemaVersion(str, Enum):
-    V1_0: str = 'V1Dot0'
-    V1_1: str = 'V1Dot1'
-    V1_2: str = 'V1Dot2'
-    V1_3: str = 'V1Dot3'
-    V1_4: str = 'V1Dot4'
+from enum import Enum, auto, unique
+from typing import Any, Type, TypeVar
+
+
+@unique
+class OutputFormat(Enum):
+    """Output formats.
+
+    Cases are hashable.
+
+    Do not rely on the actual/literal values, just use enum cases, like so:
+        my_of = OutputFormat.XML
+    """
+
+    JSON = auto()
+    XML = auto()
+
+    def __hash__(self) -> int:
+        return hash(self.name)
+
+    def __eq__(self, other: Any) -> bool:
+        return self is other
+
+
+_SV = TypeVar('_SV', bound='SchemaVersion')
+
+
+@unique
+class SchemaVersion(Enum):
+    """
+    Schema version.
+
+    Cases are hashable.
+    Cases are comparable(!=,>=,>,==,<,<=)
+
+    Do not rely on the actual/literal values, just use enum cases, like so:
+        my_sv = SchemaVersion.V1_3
+    """
+
+    V1_4 = (1, 4)
+    V1_3 = (1, 3)
+    V1_2 = (1, 2)
+    V1_1 = (1, 1)
+    V1_0 = (1, 0)
+
+    @classmethod
+    def from_version(cls: Type[_SV], version: str) -> _SV:
+        """Return instance based of a version string - e.g. `1.4`"""
+        return cls(tuple(map(int, version.split('.')))[:2])
 
     def to_version(self) -> str:
-        """
-        Return as a version string - e.g. `1.4`
+        """Return as a version string - e.g. `1.4`"""
+        return '.'.join(map(str, self.value))
 
-        Returns:
-            `str` version
-        """
-        return f'{self.value[1]}.{self.value[5]}'
+    def __ne__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value != other.value
+        return NotImplemented  # pragma: no cover
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value < other.value
+        return NotImplemented  # pragma: no cover
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value <= other.value
+        return NotImplemented  # pragma: no cover
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value == other.value
+        return NotImplemented  # pragma: no cover
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value >= other.value
+        return NotImplemented  # pragma: no cover
+
+    def __gt__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value > other.value
+        return NotImplemented  # pragma: no cover
+
+    def __hash__(self) -> int:
+        return hash(self.name)

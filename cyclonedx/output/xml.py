@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # This file is part of CycloneDX Python Lib
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +15,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Optional
-from xml.etree import ElementTree
 
-from ..exception.output import BomGenerationErrorException
-from ..model.bom import Bom
-from ..schema import SchemaVersion
+from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Type, Union
+from xml.dom.minidom import parseString as dom_parseString  # nosec B408
+from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps  # nosec B405
+
+from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
     BaseSchemaVersion,
@@ -34,44 +32,59 @@ from ..schema.schema import (
 )
 from . import BaseOutput
 
+if TYPE_CHECKING:  # pragma: no cover
+    from ..model.bom import Bom
 
-class Xml(BaseOutput, BaseSchemaVersion):
-    XML_VERSION_DECLARATION: str = '<?xml version="1.0" encoding="UTF-8"?>'
 
-    def __init__(self, bom: Bom) -> None:
+class Xml(BaseSchemaVersion, BaseOutput):
+    def __init__(self, bom: 'Bom') -> None:
         super().__init__(bom=bom)
-        self._root_bom_element: Optional[ElementTree.Element] = None
+        self._bom_xml: str = ''
 
     @property
     def schema_version(self) -> SchemaVersion:
         return self.schema_version_enum
 
+    @property
+    def output_format(self) -> Literal[OutputFormat.XML]:
+        return OutputFormat.XML
+
     def generate(self, force_regeneration: bool = False) -> None:
-        # New way
-        _view = SCHEMA_VERSIONS.get(self.get_schema_version())
-        if self.generated and force_regeneration:
-            self.get_bom().validate()
-            self._root_bom_element = self.get_bom().as_xml(  # type: ignore
-                view_=_view, as_string=False, xmlns=self.get_target_namespace()
-            )
-            self.generated = True
-            return
-        elif self.generated:
-            return
-        else:
-            self.get_bom().validate()
-            self._root_bom_element = self.get_bom().as_xml(  # type: ignore
-                view_=_view, as_string=False, xmlns=self.get_target_namespace()
-            )
-            self.generated = True
+        if self.generated and not force_regeneration:
             return
 
-    def output_as_string(self) -> str:
+        _view = SCHEMA_VERSIONS[self.schema_version_enum]
+        bom = self.get_bom()
+        bom.validate()
+        xmlns = self.get_target_namespace()
+        self._bom_xml = '<?xml version="1.0" ?>\n' + xml_dumps(
+            bom.as_xml(  # type:ignore[attr-defined]
+                _view, as_string=False, xmlns=xmlns),
+            method='xml', default_namespace=xmlns, encoding='unicode',
+            # `xml-declaration` is inconsistent/bugged in py38, especially on Windows it will print a non-UTF8 codepage.
+            # Furthermore, it might add an encoding of "utf-8" which is redundant default value of XML.
+            # -> so we write the declaration manually, as long as py38 is supported.
+            xml_declaration=False)
+
+        self.generated = True
+
+    @staticmethod
+    def __make_indent(v: Optional[Union[int, str]]) -> str:
+        if isinstance(v, int):
+            return ' ' * v
+        if isinstance(v, str):
+            return v
+        return ''
+
+    def output_as_string(self, *,
+                         indent: Optional[Union[int, str]] = None,
+                         **kwargs: Any) -> str:
         self.generate()
-        if self.generated and self._root_bom_element is not None:
-            return str(Xml.XML_VERSION_DECLARATION + ElementTree.tostring(self._root_bom_element, encoding='unicode'))
-
-        raise BomGenerationErrorException('There was no Root XML Element after BOM generation.')
+        return self._bom_xml if indent is None else dom_parseString(  # nosecc B318
+            self._bom_xml).toprettyxml(
+            indent=self.__make_indent(indent)
+            # do not set `encoding` - this would convert result to binary, not string
+        )
 
     def get_target_namespace(self) -> str:
         return f'http://cyclonedx.org/schema/bom/{self.get_schema_version()}'
@@ -79,8 +92,8 @@ class Xml(BaseOutput, BaseSchemaVersion):
 
 class XmlV1Dot0(Xml, SchemaVersion1Dot0):
 
-    def _create_bom_element(self) -> ElementTree.Element:
-        return ElementTree.Element('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
+    def _create_bom_element(self) -> XmlElement:
+        return XmlElement('bom', {'xmlns': self.get_target_namespace(), 'version': '1'})
 
 
 class XmlV1Dot1(Xml, SchemaVersion1Dot1):
@@ -97,3 +110,12 @@ class XmlV1Dot3(Xml, SchemaVersion1Dot3):
 
 class XmlV1Dot4(Xml, SchemaVersion1Dot4):
     pass
+
+
+BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Xml]] = {
+    SchemaVersion.V1_4: XmlV1Dot4,
+    SchemaVersion.V1_3: XmlV1Dot3,
+    SchemaVersion.V1_2: XmlV1Dot2,
+    SchemaVersion.V1_1: XmlV1Dot1,
+    SchemaVersion.V1_0: XmlV1Dot0,
+}
