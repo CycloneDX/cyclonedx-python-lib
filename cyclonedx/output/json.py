@@ -30,7 +30,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from . import BaseOutput
+from . import BaseOutput, BomRefDiscriminator
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
@@ -67,9 +67,10 @@ class Json(BaseOutput, BaseSchemaVersion):
         _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
         bom = self.get_bom()
         bom.validate()
-        bom_json: Dict[str, Any] = json_loads(
-            bom.as_json(  # type:ignore[attr-defined]
-                view_=_view))
+        with BomRefDiscriminator.from_bom(bom):
+            bom_json: Dict[str, Any] = json_loads(
+                bom.as_json(  # type:ignore[attr-defined]
+                    view_=_view))
         bom_json.update(_json_core)
         self._bom_json = bom_json
         self.generated = True

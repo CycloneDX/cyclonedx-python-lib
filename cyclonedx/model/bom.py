@@ -543,13 +543,13 @@ class Bom:
             self.register_dependency(target=_s)
 
         # 1. Make sure dependencies are all in this Bom.
-        all_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
+        component_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
             map(lambda s: s.bom_ref, self.services))
-        all_dependency_bom_refs = set(chain((d.ref for d in self.dependencies),
-                                            chain.from_iterable(
-                                                d.dependencies_as_bom_refs() for d in self.dependencies)))
-
-        dependency_diff = all_dependency_bom_refs - all_bom_refs
+        dependency_bom_refs = set(chain(
+            (d.ref for d in self.dependencies),
+            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies)
+        ))
+        dependency_diff = dependency_bom_refs - component_bom_refs
         if len(dependency_diff) > 0:
             raise UnknownComponentDependencyException(
                 f'One or more Components have Dependency references to Components/Services that are not known in this '
