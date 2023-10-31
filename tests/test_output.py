@@ -24,7 +24,8 @@ from unittest.mock import Mock
 from ddt import data, ddt, named_data, unpack
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.output import make_outputter
+from cyclonedx.model.bom_ref import BomRef
+from cyclonedx.output import BomRefDiscriminator, make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 
 
@@ -49,3 +50,30 @@ class TestTestGetInstance(TestCase):
         bom = Mock(spec=Bom)
         with self.assertRaisesRegex(*raises_regex):
             make_outputter(bom, of, sv)
+
+
+class TestBomRefDiscriminator(TestCase):
+
+    def test_discriminate_and_reset_with(self) -> None:
+        bomref1 = BomRef('djdlkfjdslkf')
+        bomref2 = BomRef('djdlkfjdslkf')
+        self.assertEqual(bomref1.value, bomref2.value, 'blank')
+        discr = BomRefDiscriminator([bomref1, bomref2])
+        self.assertEqual(bomref1.value, bomref2.value, 'init')
+        discr.discriminate()
+        self.assertNotEqual(bomref1.value, bomref2.value, 'should be discriminated')
+        discr.reset()
+        self.assertEqual('djdlkfjdslkf', bomref1.value)
+        self.assertEqual('djdlkfjdslkf', bomref2.value)
+
+    def test_discriminate_and_reset_manually(self) -> None:
+        bomref1 = BomRef('djdlkfjdslkf')
+        bomref2 = BomRef('djdlkfjdslkf')
+        self.assertEqual(bomref1.value, bomref2.value, 'blank')
+        discr = BomRefDiscriminator([bomref1, bomref2])
+        self.assertEqual(bomref1.value, bomref2.value, 'init')
+        with discr:
+            self.assertNotEqual(bomref1.value, bomref2.value, 'should be discriminated')
+        discr.reset()
+        self.assertEqual('djdlkfjdslkf', bomref1.value)
+        self.assertEqual('djdlkfjdslkf', bomref2.value)

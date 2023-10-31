@@ -20,7 +20,7 @@ import sys
 from datetime import datetime, timezone
 from decimal import Decimal
 from inspect import getmembers, isfunction
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Tuple
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -752,6 +752,18 @@ def get_bom_with_multiple_licenses() -> Bom:
         services=[Service(name='serv', bom_ref='my-serv',
                           licenses=multi_licenses)]
     )
+
+
+def bom_all_same_bomref() -> Tuple[Bom, int]:
+    bom = Bom()
+    bom.metadata.component = Component(name='root', bom_ref='foo', components=[
+        Component(name='root.sub', bom_ref='foo')])
+    bom.components.add(Component(name='comp', bom_ref='foo', components=[
+        Component(name='comp.sub', bom_ref='foo')]))
+    bom.services.add(Service(name='serv', bom_ref='foo'))
+    bom.vulnerabilities.add(Vulnerability(id='vuln', bom_ref='foo'))
+    nr_bomrefs = 6  # number of bom-refs used
+    return bom, nr_bomrefs
 
 
 # ---
