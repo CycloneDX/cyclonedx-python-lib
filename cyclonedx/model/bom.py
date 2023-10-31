@@ -19,7 +19,7 @@
 import warnings
 from datetime import datetime
 from itertools import chain
-from typing import TYPE_CHECKING, Iterable, Optional, Set, Union
+from typing import TYPE_CHECKING, Generator, Iterable, Optional, Union
 from uuid import UUID, uuid4
 
 import serializable
@@ -427,16 +427,11 @@ class Bom:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    def _get_all_components(self) -> Set[Component]:
-        components: Set[Component] = set()
+    def _get_all_components(self) -> Generator[Component, None, None]:
         if self.metadata.component:
-            components.update(self.metadata.component.get_all_nested_components(include_self=True))
-
-        # Add Components and sub Components
+            yield from self.metadata.component.get_all_nested_components(include_self=True)
         for c in self.components:
-            components.update(c.get_all_nested_components(include_self=True))
-
-        return components
+            yield from c.get_all_nested_components(include_self=True)
 
     def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> 'SortedSet[Vulnerability]':
         """
