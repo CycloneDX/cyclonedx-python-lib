@@ -30,7 +30,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
 )
-from . import BaseOutput
+from . import BaseOutput, BomRefDiscriminator
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
@@ -57,14 +57,16 @@ class Xml(BaseSchemaVersion, BaseOutput):
         bom = self.get_bom()
         bom.validate()
         xmlns = self.get_target_namespace()
-        self._bom_xml = '<?xml version="1.0" ?>\n' + xml_dumps(
-            bom.as_xml(  # type:ignore[attr-defined]
-                _view, as_string=False, xmlns=xmlns),
-            method='xml', default_namespace=xmlns, encoding='unicode',
-            # `xml-declaration` is inconsistent/bugged in py38, especially on Windows it will print a non-UTF8 codepage.
-            # Furthermore, it might add an encoding of "utf-8" which is redundant default value of XML.
-            # -> so we write the declaration manually, as long as py38 is supported.
-            xml_declaration=False)
+        with BomRefDiscriminator.from_bom(bom):
+            self._bom_xml = '<?xml version="1.0" ?>\n' + xml_dumps(
+                bom.as_xml(  # type:ignore[attr-defined]
+                    _view, as_string=False, xmlns=xmlns),
+                method='xml', default_namespace=xmlns, encoding='unicode',
+                # `xml-declaration` is inconsistent/bugged in py38,
+                # especially on Windows it will print a non-UTF8 codepage.
+                # Furthermore, it might add an encoding of "utf-8" which is redundant default value of XML.
+                # -> so we write the declaration manually, as long as py38 is supported.
+                xml_declaration=False)
 
         self.generated = True
 

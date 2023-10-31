@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-
+import re
 from typing import Any, Callable
 from unittest import TestCase
 from unittest.mock import Mock, patch
@@ -29,7 +29,7 @@ from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
 from tests import SnapshotMixin, mksname, uuid_generator
-from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid
+from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
 
 @ddt
@@ -67,6 +67,13 @@ class TestOutputXml(TestCase, SnapshotMixin):
         )):
             return None  # expected
         raise error.exception
+
+    def test_bomref_not_duplicate(self) -> None:
+        bom, nr_bomrefs = bom_all_same_bomref()
+        output = BY_SCHEMA_VERSION[SchemaVersion.V1_4](bom).output_as_string()
+        found = re.findall(r'bom-ref="(.*?)"', output)
+        self.assertEqual(nr_bomrefs, len(found))
+        self.assertCountEqual(set(found), found, 'expected unique items')
 
 
 @ddt
