@@ -176,7 +176,7 @@ class BomRefDiscriminator:
             bomref.value = original_value
 
     def _make_unique(self) -> str:
-        return f'{self._prefix}{str(random())[1:]}{str(random())[1:]}'
+        return f'{self._prefix}{str(random())[1:]}{str(random())[1:]}'  # nosec B311
 
     @classmethod
     def from_bom(cls, bom: 'Bom', prefix: str = 'BomRef') -> 'BomRefDiscriminator':
