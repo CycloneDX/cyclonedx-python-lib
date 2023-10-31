@@ -2,6 +2,23 @@
 
 
 
+## v5.1.0 (2023-10-31)
+
+### Documentation
+
+* docs: advance license docs
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f61a730`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f61a7303de1d5dacf0917a1d66f5ebe0732ccd75))
+
+### Feature
+
+* feat: guarantee unique `BomRef`s in serialization result (#479)
+
+Incorporate `output.BomRefDiscriminator` on serialization
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a648775`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a648775bb5195621e17fdbae92950ab6d56a665a))
+
+
 ## v5.0.1 (2023-10-24)
 
 ### Chore
