@@ -35,7 +35,7 @@
           },
           {
             "type": "documentation",
-            "url": "https://cyclonedx.github.io/cyclonedx-python-lib/"
+            "url": "https://cyclonedx-python-library.readthedocs.io/"
           },
           {
             "type": "issue-tracker",
@@ -55,7 +55,7 @@
           },
           {
             "type": "website",
-            "url": "https://cyclonedx.org"
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
           }
         ],
         "name": "cyclonedx-python-lib",
