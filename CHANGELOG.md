@@ -2,6 +2,15 @@
 
 
 
+## v5.1.1 (2023-11-02)
+
+### Fix
+
+* fix: update own `externalReferences` (#480)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`edb3dde`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/edb3dde889c06755dd1963ed21dd803db3ea0dcc))
+
+
 ## v5.1.0 (2023-10-31)
 
 ### Documentation
