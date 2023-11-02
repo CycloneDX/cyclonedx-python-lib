@@ -1211,38 +1211,41 @@ class Copyright:
         return f'<Copyright text={self.text}>'
 
 
-ThisTool = Tool(vendor='CycloneDX', name='cyclonedx-python-lib', version=__ThisToolVersion or 'UNKNOWN')
-ThisTool.external_references.update([
-    ExternalReference(
-        type=ExternalReferenceType.BUILD_SYSTEM,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
-    ),
-    ExternalReference(
-        type=ExternalReferenceType.DISTRIBUTION,
-        url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
-    ),
-    ExternalReference(
-        type=ExternalReferenceType.DOCUMENTATION,
-        url=XsUri('https://cyclonedx.github.io/cyclonedx-python-lib/')
-    ),
-    ExternalReference(
-        type=ExternalReferenceType.ISSUE_TRACKER,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
-    ),
-    ExternalReference(
-        type=ExternalReferenceType.LICENSE,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
-    ),
-    ExternalReference(
-        type=ExternalReferenceType.RELEASE_NOTES,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
-    ),
-    ExternalReference(
-        type=ExternalReferenceType.VCS,
-        url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
-    ),
-    ExternalReference(
-        type=ExternalReferenceType.WEBSITE,
-        url=XsUri('https://cyclonedx.org')
-    )
-])
+ThisTool = Tool(
+    vendor='CycloneDX',
+    name='cyclonedx-python-lib',
+    version=__ThisToolVersion or 'UNKNOWN',
+    external_references=[
+        ExternalReference(
+            type=ExternalReferenceType.BUILD_SYSTEM,
+            url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
+        ),
+        ExternalReference(
+            type=ExternalReferenceType.DISTRIBUTION,
+            url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
+        ),
+        ExternalReference(
+            type=ExternalReferenceType.DOCUMENTATION,
+            url=XsUri('https://cyclonedx-python-library.readthedocs.io/')
+        ),
+        ExternalReference(
+            type=ExternalReferenceType.ISSUE_TRACKER,
+            url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
+        ),
+        ExternalReference(
+            type=ExternalReferenceType.LICENSE,
+            url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
+        ),
+        ExternalReference(
+            type=ExternalReferenceType.RELEASE_NOTES,
+            url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
+        ),
+        ExternalReference(
+            type=ExternalReferenceType.VCS,
+            url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
+        ),
+        ExternalReference(
+            type=ExternalReferenceType.WEBSITE,
+            url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/#readme')
+        )
+    ])
