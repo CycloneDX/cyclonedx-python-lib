@@ -54,11 +54,16 @@ classifiers = [
   'Typing :: Typed',
 ]
 keywords = [
-  "BOM", "SBOM", "SCA", "OWASP",
+  "CycloneDX", "library",
+  "OWASP", "SCA",
+  "Software Bill of Materials", "Bill of Materials",
+  "BOM", "SBOM", "VEX", "VDR", "OBOM", "MBOM", "SaaSBOM",
+  "SPDX", "PackageURL", "PURL",
 ]
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+"Funding" = "https://owasp.org/donate/?reponame=www-project-cyclonedx&title=OWASP+CycloneDX"
 
 [tool.poetry.dependencies]
 # ATTENTION: keep `deps.lowest.r` file in sync
