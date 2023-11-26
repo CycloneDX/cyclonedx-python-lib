@@ -20,6 +20,40 @@
     "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
+        "externalReferences": [
+          {
+            "type": "build-system",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+          },
+          {
+            "type": "distribution",
+            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+          },
+          {
+            "type": "documentation",
+            "url": "https://cyclonedx-python-library.readthedocs.io/"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+          },
+          {
+            "type": "license",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+          },
+          {
+            "type": "release-notes",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
+          }
+        ],
         "name": "cyclonedx-python-lib",
         "vendor": "CycloneDX",
         "version": "TESTING"
@@ -45,6 +79,12 @@
       "externalReferences": [
         {
           "comment": "No comment",
+          "hashes": [
+            {
+              "alg": "SHA-256",
+              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+            }
+          ],
           "type": "distribution",
           "url": "https://cyclonedx.org"
         }
@@ -58,6 +98,16 @@
         }
       ],
       "name": "my-first-service",
+      "properties": [
+        {
+          "name": "key1",
+          "value": "val1"
+        },
+        {
+          "name": "key2",
+          "value": "val2"
+        }
+      ],
       "provider": {
         "contact": [
           {
@@ -74,6 +124,65 @@
         "url": [
           "https://cyclonedx.org"
         ]
+      },
+      "releaseNotes": {
+        "aliases": [
+          "First Test Release"
+        ],
+        "description": "This release is a test release",
+        "featuredImage": "https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png",
+        "notes": [
+          {
+            "locale": "en-GB",
+            "text": {
+              "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==",
+              "contentType": "text/plain; charset=UTF-8",
+              "encoding": "base64"
+            }
+          },
+          {
+            "locale": "en-US",
+            "text": {
+              "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==",
+              "contentType": "text/plain; charset=UTF-8",
+              "encoding": "base64"
+            }
+          }
+        ],
+        "properties": [
+          {
+            "name": "key1",
+            "value": "val1"
+          },
+          {
+            "name": "key2",
+            "value": "val2"
+          }
+        ],
+        "resolves": [
+          {
+            "description": "Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...",
+            "id": "CVE-2021-44228",
+            "name": "Apache Log3Shell",
+            "references": [
+              "https://central.sonatype.org/news/20211213_log4shell_help",
+              "https://logging.apache.org/log4j/2.x/security.html"
+            ],
+            "source": {
+              "name": "NVD",
+              "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-44228"
+            },
+            "type": "security"
+          }
+        ],
+        "socialImage": "https://cyclonedx.org/cyclonedx-icon.png",
+        "tags": [
+          "alpha",
+          "test"
+        ],
+        "timestamp": "2023-08-15T01:23:45.678900+00:00",
+        "title": "Release Notes Title",
+        "type": "major"
       },
       "services": [
         {
@@ -114,7 +223,7 @@
       "name": "my-second-service",
       "services": [
         {
-          "bom-ref": "00000000-0000-4000-8000-000000000004",
+          "bom-ref": "00000000-0000-4000-8000-000000000001",
           "group": "what-group",
           "name": "yet-another-nested-service",
           "provider": {
@@ -144,7 +253,7 @@
     }
   ],
   "version": 1,
-  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.2"
+  "specVersion": "1.5"
 }

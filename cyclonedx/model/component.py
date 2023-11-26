@@ -32,6 +32,7 @@ from ..schema.schema import (
     SchemaVersion1Dot2,
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
+    SchemaVersion1Dot5,
 )
 from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
@@ -255,12 +256,16 @@ class ComponentType(str, Enum):
     """
     APPLICATION = 'application'
     CONTAINER = 'container'
+    DATA = 'data'
     DEVICE = 'device'
+    DEVICE_DRIVER = 'device-driver'
     FILE = 'file'
     FIRMWARE = 'firmware'
     FRAMEWORK = 'framework'
     LIBRARY = 'library'
+    MACHINE_LEARNING_MODEL = 'machine-learning-model'
     OPERATING_SYSTEM = 'operating-system'
+    PLATFORM = 'platform'
 
 
 class Diff:
@@ -528,6 +533,7 @@ class Pedigree:
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     @serializable.xml_sequence(5)
     def patches(self) -> 'SortedSet[Patch]':
@@ -849,6 +855,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -867,6 +874,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(1)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
@@ -886,6 +894,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(2)
     def author(self) -> Optional[str]:
         """
@@ -1028,6 +1037,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(10)
     def licenses(self) -> LicenseRepository:
@@ -1098,6 +1108,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(14)
     def swid(self) -> Optional[Swid]:
         """
@@ -1127,6 +1138,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(16)
     def pedigree(self) -> Optional[Pedigree]:
         """
@@ -1147,6 +1159,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(17)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -1166,6 +1179,7 @@ class Component(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(18)
     def properties(self) -> 'SortedSet[Property]':
@@ -1203,6 +1217,7 @@ class Component(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(20)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
@@ -1219,6 +1234,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(21)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """

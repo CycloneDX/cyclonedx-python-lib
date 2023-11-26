@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
   <metadata>
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
@@ -86,31 +86,6 @@
         <property name="key1">val1</property>
         <property name="key2">val2</property>
       </properties>
-      <services>
-        <service bom-ref="my-specific-bom-ref-for-second-nested-service">
-          <provider>
-            <name>CycloneDX</name>
-            <url>https://cyclonedx.org</url>
-            <contact>
-              <name>A N Other</name>
-              <email>someone@somewhere.tld</email>
-              <phone>+44 (0)1234 567890</phone>
-            </contact>
-            <contact>
-              <name>Paul Horton</name>
-              <email>paul.horton@owasp.org</email>
-            </contact>
-          </provider>
-          <group>no-group</group>
-          <name>second-nested-service</name>
-          <version>3.2.1</version>
-          <authenticated>true</authenticated>
-          <x-trust-boundary>false</x-trust-boundary>
-        </service>
-        <service bom-ref="my-specific-bom-ref-for-first-nested-service">
-          <name>first-nested-service</name>
-        </service>
-      </services>
       <releaseNotes>
         <type>major</type>
         <title>Release Notes Title</title>
@@ -158,29 +133,6 @@
     </service>
     <service bom-ref="my-specific-bom-ref-for-my-second-service">
       <name>my-second-service</name>
-      <services>
-        <service bom-ref="00000000-0000-4000-8000-000000000002">
-          <provider>
-            <name>CycloneDX</name>
-            <url>https://cyclonedx.org</url>
-            <contact>
-              <name>A N Other</name>
-              <email>someone@somewhere.tld</email>
-              <phone>+44 (0)1234 567890</phone>
-            </contact>
-            <contact>
-              <name>Paul Horton</name>
-              <email>paul.horton@owasp.org</email>
-            </contact>
-          </provider>
-          <group>what-group</group>
-          <name>yet-another-nested-service</name>
-          <version>6.5.4</version>
-        </service>
-        <service bom-ref="my-specific-bom-ref-for-another-nested-service">
-          <name>another-nested-service</name>
-        </service>
-      </services>
     </service>
   </services>
   <dependencies>

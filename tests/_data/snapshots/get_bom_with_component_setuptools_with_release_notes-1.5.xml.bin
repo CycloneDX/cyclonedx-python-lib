@@ -1,0 +1,99 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
+      </tool>
+    </tools>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
+      <author>Test Author</author>
+      <name>setuptools</name>
+      <version>50.3.2</version>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+      </licenses>
+      <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+      <releaseNotes>
+        <type>major</type>
+        <title>Release Notes Title</title>
+        <featuredImage>https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png</featuredImage>
+        <socialImage>https://cyclonedx.org/cyclonedx-icon.png</socialImage>
+        <description>This release is a test release</description>
+        <timestamp>2023-08-15T01:23:45.678900+00:00</timestamp>
+        <aliases>
+          <alias>First Test Release</alias>
+        </aliases>
+        <tags>
+          <tag>alpha</tag>
+          <tag>test</tag>
+        </tags>
+        <resolves>
+          <issue type="security">
+            <id>CVE-2021-44228</id>
+            <name>Apache Log3Shell</name>
+            <description>Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...</description>
+            <source>
+              <name>NVD</name>
+              <url>https://nvd.nist.gov/vuln/detail/CVE-2021-44228</url>
+            </source>
+            <references>
+              <url>https://central.sonatype.org/news/20211213_log4shell_help</url>
+              <url>https://logging.apache.org/log4j/2.x/security.html</url>
+            </references>
+          </issue>
+        </resolves>
+        <notes>
+          <note>
+            <locale>en-GB</locale>
+            <text content-type="text/plain; charset=UTF-8" encoding="base64">U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==</text>
+          </note>
+          <note>
+            <locale>en-US</locale>
+            <text content-type="text/plain; charset=UTF-8" encoding="base64">U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==</text>
+          </note>
+        </notes>
+        <properties>
+          <property name="key1">val1</property>
+          <property name="key2">val2</property>
+        </properties>
+      </releaseNotes>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz"/>
+  </dependencies>
+</bom>

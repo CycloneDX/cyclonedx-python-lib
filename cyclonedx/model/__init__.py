@@ -30,7 +30,7 @@ from ..exception.model import (
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5
 
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
@@ -395,22 +395,45 @@ class ExternalReferenceType(str, Enum):
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReferenceType
     """
 
+    ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
     ADVISORIES = 'advisories'
+    ATTESTATION = 'attestation'  # Only supported in >= 1.5
     BOM = 'bom'
     BUILD_META = 'build-meta'
     BUILD_SYSTEM = 'build-system'
+    CERTIFICATION_REPORT = 'certification-report'  # Only supported in >= 1.5
     CHAT = 'chat'
+    CODIFIED_INFRASTRUCTURE = 'codified-infrastructure'  # Only supported in >= 1.5
+    COMPONENT_ANALYSIS_REPORT = 'component-analysis-report'  # Only supported in >= 1.5
+    CONFIGURATION = 'configuration'  # Only supported in >= 1.5
     DISTRIBUTION = 'distribution'
+    DISTRIBUTION_INTAKE = 'distribution-intake'  # Only supported in >= 1.5
     DOCUMENTATION = 'documentation'
+    DYNAMIC_ANALYSIS_REPORT = 'dynamic-analysis-report'  # Only supported in >= 1.5
+    EVIDENCE = 'evidence'  # Only supported in >= 1.5
+    EXPLOITABILITY_STATEMENT = 'exploitability-statement'  # Only supported in >= 1.5
+    FORMULATION = 'formulation'  # Only supported in >= 1.5
     ISSUE_TRACKER = 'issue-tracker'
     LICENSE = 'license'
+    LOG = 'log'  # Only supported in >= 1.5
     MAILING_LIST = 'mailing-list'
+    MATURITY_REPORT = 'maturity-report'  # Only supported in >= 1.5
+    MODEL_CARD = 'model-card'  # Only supported in >= 1.5
     OTHER = 'other'
+    PENTEST_REPORT = 'pentest-report'  # Only supported in >= 1.5
+    POAM = 'poam'  # Only supported in >= 1.5
+    QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
     RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
+    RISK_ASSESSMENT = 'risk-assessment'  # Only supported in >= 1.5
+    RUNTIME_ANALYSIS_REPORT = 'runtime-analysis-report'  # Only supported in >= 1.5
+    SECURITY_CONTACT = 'security-contact'  # Only supported in >= 1.5
+    STATIC_ANALYSIS_REPORT = 'static-analysis-report'  # Only supported in >= 1.5
     SOCIAL = 'social'
     SCM = 'vcs'
     SUPPORT = 'support'
+    THREAT_MODEL = 'threat-model'  # Only supported in >= 1.5
     VCS = 'vcs'
+    VULNERABILITY_ASSERTION = 'vulnerability-assertion'  # Only supported in >= 1.5
     WEBSITE = 'website'
 
 
@@ -541,6 +564,7 @@ class ExternalReference:
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
     def hashes(self) -> 'SortedSet[HashType]':
         """
@@ -1052,6 +1076,7 @@ class Tool:
 
     @property
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
     def external_references(self) -> 'SortedSet[ExternalReference]':

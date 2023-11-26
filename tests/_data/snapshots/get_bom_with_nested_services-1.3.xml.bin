@@ -89,7 +89,7 @@
     <service bom-ref="my-specific-bom-ref-for-my-second-service">
       <name>my-second-service</name>
       <services>
-        <service bom-ref="00000000-0000-4000-8000-000000000002">
+        <service bom-ref="00000000-0000-4000-8000-000000000003">
           <provider>
             <name>CycloneDX</name>
             <url>https://cyclonedx.org</url>

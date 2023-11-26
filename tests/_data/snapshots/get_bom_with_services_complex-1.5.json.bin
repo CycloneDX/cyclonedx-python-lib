@@ -184,76 +184,16 @@
         "title": "Release Notes Title",
         "type": "major"
       },
-      "services": [
-        {
-          "authenticated": true,
-          "bom-ref": "my-specific-bom-ref-for-second-nested-service",
-          "group": "no-group",
-          "name": "second-nested-service",
-          "provider": {
-            "contact": [
-              {
-                "email": "someone@somewhere.tld",
-                "name": "A N Other",
-                "phone": "+44 (0)1234 567890"
-              },
-              {
-                "email": "paul.horton@owasp.org",
-                "name": "Paul Horton"
-              }
-            ],
-            "name": "CycloneDX",
-            "url": [
-              "https://cyclonedx.org"
-            ]
-          },
-          "version": "3.2.1",
-          "x-trust-boundary": false
-        },
-        {
-          "bom-ref": "my-specific-bom-ref-for-first-nested-service",
-          "name": "first-nested-service"
-        }
-      ],
       "version": "1.2.3",
       "x-trust-boundary": true
     },
     {
       "bom-ref": "my-specific-bom-ref-for-my-second-service",
-      "name": "my-second-service",
-      "services": [
-        {
-          "bom-ref": "00000000-0000-4000-8000-000000000002",
-          "group": "what-group",
-          "name": "yet-another-nested-service",
-          "provider": {
-            "contact": [
-              {
-                "email": "someone@somewhere.tld",
-                "name": "A N Other",
-                "phone": "+44 (0)1234 567890"
-              },
-              {
-                "email": "paul.horton@owasp.org",
-                "name": "Paul Horton"
-              }
-            ],
-            "name": "CycloneDX",
-            "url": [
-              "https://cyclonedx.org"
-            ]
-          },
-          "version": "6.5.4"
-        },
-        {
-          "bom-ref": "my-specific-bom-ref-for-another-nested-service",
-          "name": "another-nested-service"
-        }
-      ]
+      "name": "my-second-service"
     }
   ],
   "version": 1,
-  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.4"
+  "specVersion": "1.5"
 }

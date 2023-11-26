@@ -20,7 +20,7 @@ SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/master/
 TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res')
 
 BOM_XSD = {
-    'versions': ['1.4', '1.3', '1.2', '1.1', '1.0'],
+    'versions': ['1.5', '1.4', '1.3', '1.2', '1.1', '1.0'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.xsd',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.xsd'),
     'replace': [],
@@ -59,7 +59,7 @@ _DEFAULTS_WITH_PATTERN_RE = re.compile(r'\s+"default": "",(?![^}]*?"pattern": "\
 _DEFAULTS_WITH_PATERN_REPL = r''
 
 BOM_JSON_LAX = {
-    'versions': ['1.4', '1.3', '1.2'],
+    'versions': ['1.5', '1.4', '1.3', '1.2'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.schema.json',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.schema.json'),
     'replace': [
@@ -96,7 +96,7 @@ for dspec in (BOM_XSD, BOM_JSON_LAX, BOM_JSON_STRICT):
         target = dspec['targetPattern'].replace('%s', version)
         tempfile, _ = urlretrieve(source)  # nosec B310
         with open(tempfile, 'r') as tmpf:
-            with open(target, 'w') as tarf:
+            with open(target, 'w', newline='\n') as tarf:
                 text = tmpf.read()
                 for search, replace in dspec['replace']:
                     text = text.replace(search, replace)
