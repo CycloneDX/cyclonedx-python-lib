@@ -255,17 +255,17 @@ class ComponentType(str, Enum):
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_classification
     """
     APPLICATION = 'application'
-    CONTAINER = 'container'
-    DATA = 'data'
+    CONTAINER = 'container'  # Only supported in >= 1.2
+    DATA = 'data'  # Only supported in >= 1.5
     DEVICE = 'device'
-    DEVICE_DRIVER = 'device-driver'
-    FILE = 'file'
-    FIRMWARE = 'firmware'
+    DEVICE_DRIVER = 'device-driver'  # Only supported in >= 1.5
+    FILE = 'file'  # Only supported in >= 1.1
+    FIRMWARE = 'firmware'  # Only supported in >= 1.2
     FRAMEWORK = 'framework'
     LIBRARY = 'library'
-    MACHINE_LEARNING_MODEL = 'machine-learning-model'
+    MACHINE_LEARNING_MODEL = 'machine-learning-model'  # Only supported in >= 1.5
     OPERATING_SYSTEM = 'operating-system'
-    PLATFORM = 'platform'
+    PLATFORM = 'platform'  # Only supported in >= 1.5
 
 
 class Diff:
