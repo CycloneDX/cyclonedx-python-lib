@@ -185,6 +185,11 @@ class ComponentEvidence:
 
     def __init__(self, *, licenses: Optional[Iterable[License]] = None,
                  copyright: Optional[Iterable[Copyright]] = None) -> None:
+        if not licenses and not copyright:
+            raise NoPropertiesProvidedException(
+                'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
+            )
+
         self.licenses = licenses or []  # type: ignore
         self.copyright = copyright or []  # type: ignore
 
