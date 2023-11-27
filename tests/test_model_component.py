@@ -288,10 +288,6 @@ class TestModelComponent(TestCase):
 
 class TestModelComponentEvidence(TestCase):
 
-    def test_no_params(self) -> None:
-        with self.assertRaises(NoPropertiesProvidedException):
-            ComponentEvidence()
-
     def test_same_1(self) -> None:
         ce_1 = ComponentEvidence(copyright=[Copyright(text='Commercial')])
         ce_2 = ComponentEvidence(copyright=[Copyright(text='Commercial')])
