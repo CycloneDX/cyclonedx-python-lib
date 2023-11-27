@@ -998,7 +998,10 @@ class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
 
-    Tool(s) are the things used in the creation of the BOM.
+    Tool(s) are the things used in the creation of the CycloneDX document.
+
+    Tool might be deprecated since CycloneDX 1.5, but it is not deprecated i this library.
+    In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType

@@ -122,6 +122,16 @@ class DisjunctiveLicense:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    # @property
+    # ...
+    # @serializable.xml_sequence(4)
+    # def licensing(self) -> ...:
+    #     ...  # TODO since CDX1.5
+    #
+    # @licensing.setter
+    # def licensing(self, ...) -> None:
+    #     ...  # TODO since CDX1.5
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, DisjunctiveLicense):
             return hash(other) == hash(self)

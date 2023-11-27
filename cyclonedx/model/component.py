@@ -1249,6 +1249,28 @@ class Component(Dependable):
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(22)
+    # def model_card(self) -> ...:
+    #     ...  # TODO since CDX1.5
+    #
+    # @model_card.setter
+    # def model_card(self, ...) -> None:
+    #     ...  # TODO since CDX1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(23)
+    # def data(self) -> ...:
+    #     ...  # TODO since CDX1.5
+    #
+    # @data.setter
+    # def data(self, ...) -> None:
+    #     ...  # TODO since CDX1.5
+
     def get_all_nested_components(self, include_self: bool = False) -> Set['Component']:
         components = set()
         if include_self:

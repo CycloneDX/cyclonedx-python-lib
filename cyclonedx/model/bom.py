@@ -92,9 +92,21 @@ class BomMetaData:
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(2)
+    # def lifecycles(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @lifecycles.setter
+    # def lifecycles(self, ...) -> None:
+    #    ... # TODO since CDX1.5
+
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
-    @serializable.xml_sequence(2)
+    @serializable.xml_sequence(3)
+    # since CDX1.5 also supports `Component` and `Services`, not only `Tool`
     def tools(self) -> 'SortedSet[Tool]':
         """
         Tools used to create this BOM.
@@ -110,7 +122,7 @@ class BomMetaData:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
-    @serializable.xml_sequence(3)
+    @serializable.xml_sequence(4)
     def authors(self) -> 'SortedSet[OrganizationalContact]':
         """
         The person(s) who created the BOM.
@@ -129,7 +141,7 @@ class BomMetaData:
         self._authors = SortedSet(authors)
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.xml_sequence(5)
     def component(self) -> Optional[Component]:
         """
         The (optional) component that the BOM describes.
@@ -154,7 +166,7 @@ class BomMetaData:
         self._component = component
 
     @property
-    @serializable.xml_sequence(5)
+    @serializable.xml_sequence(6)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
         The organization that manufactured the component that the BOM describes.
@@ -169,7 +181,7 @@ class BomMetaData:
         self._manufacture = manufacture
 
     @property
-    @serializable.xml_sequence(6)
+    @serializable.xml_sequence(7)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
         The organization that supplied the component that the BOM describes.
@@ -190,7 +202,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.type_mapping(LicenseRepositoryHelper)
-    @serializable.xml_sequence(7)
+    @serializable.xml_sequence(8)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this BOM is licensed.
@@ -209,7 +221,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(9)
     def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
