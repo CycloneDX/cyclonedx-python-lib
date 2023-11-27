@@ -14,7 +14,8 @@
 ----
 
 This Python package can render and read valid [CycloneDX][link_website] documents.  
-CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple to parse.
+OWASP CycloneDX is a full-stack Bill of Materials (BOM) standard
+that provides advanced supply chain capabilities for cyber risk reduction.
 
 **This module is not designed for standalone use.**
 
