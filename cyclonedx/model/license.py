@@ -124,6 +124,7 @@ class DisjunctiveLicense:
 
     # @property
     # ...
+    # @serializable.view(SchemaVersion1Dot5)
     # @serializable.xml_sequence(4)
     # def licensing(self) -> ...:
     #     ...  # TODO since CDX1.5

@@ -327,6 +327,15 @@ class Bom:
         self._serial_number = serial_number
 
     @property
+    @serializable.xml_attribute()
+    def version(self) -> int:
+        return self._version
+
+    @version.setter
+    def version(self, version: int) -> None:
+        self._version = version
+
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
@@ -365,46 +374,6 @@ class Bom:
     @components.setter
     def components(self, components: Iterable[Component]) -> None:
         self._components = SortedSet(components)
-
-    def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
-        """
-        Get a Component already in the Bom by its PURL
-
-        Args:
-             purl:
-                An instance of `packageurl.PackageURL` to look and find `Component`.
-
-        Returns:
-            `Component` or `None`
-        """
-        if purl:
-            found = [x for x in self.components if x.purl == purl]
-            if len(found) == 1:
-                return found[0]
-
-        return None
-
-    def get_urn_uuid(self) -> str:
-        """
-        Get the unique reference for this Bom.
-
-        Returns:
-            URN formatted UUID that uniquely identified this Bom instance.
-        """
-        return self.serial_number.urn
-
-    def has_component(self, component: Component) -> bool:
-        """
-        Check whether this Bom contains the provided Component.
-
-        Args:
-            component:
-                The instance of `cyclonedx.model.component.Component` to check if this Bom contains.
-
-        Returns:
-            `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
-        """
-        return component in self.components
 
     @property
     @serializable.view(SchemaVersion1Dot2)
@@ -447,6 +416,104 @@ class Bom:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    @property
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
+    @serializable.xml_sequence(5)
+    def dependencies(self) -> 'SortedSet[Dependency]':
+        return self._dependencies
+
+    @dependencies.setter
+    def dependencies(self, dependencies: Iterable[Dependency]) -> None:
+        self._dependencies = SortedSet(dependencies)
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot3)
+    # @serializable.view(SchemaVersion1Dot4)
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(6)
+    # def compositions(self) -> ...:
+    #     ...  # TODO Since CDX 1.3
+    #
+    # @compositions.setter
+    # def compositions(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.3
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot3)
+    # @serializable.view(SchemaVersion1Dot4)
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(7)
+    # def properties(self) -> ...:
+    #     ... # TODO Since CDX 1.3
+    #
+    # @properties.setter
+    # def properties(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.3
+
+    @property
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
+    @serializable.xml_sequence(8)
+    def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
+        """
+        Get all the Vulnerabilities in this BOM.
+
+        Returns:
+             Set of `Vulnerability`
+        """
+        return self._vulnerabilities
+
+    @vulnerabilities.setter
+    def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
+        self._vulnerabilities = SortedSet(vulnerabilities)
+
+    def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
+        """
+        Get a Component already in the Bom by its PURL
+
+        Args:
+             purl:
+                An instance of `packageurl.PackageURL` to look and find `Component`.
+
+        Returns:
+            `Component` or `None`
+        """
+        if purl:
+            found = [x for x in self.components if x.purl == purl]
+            if len(found) == 1:
+                return found[0]
+
+        return None
+
+    def get_urn_uuid(self) -> str:
+        """
+        Get the unique reference for this Bom.
+
+        Returns:
+            URN formatted UUID that uniquely identified this Bom instance.
+        """
+        return self.serial_number.urn
+
+    def has_component(self, component: Component) -> bool:
+        """
+        Check whether this Bom contains the provided Component.
+
+        Args:
+            component:
+                The instance of `cyclonedx.model.component.Component` to check if this Bom contains.
+
+        Returns:
+            `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
+        """
+        return component in self.components
+
     def _get_all_components(self) -> Generator[Component, None, None]:
         if self.metadata.component:
             yield from self.metadata.component.get_all_nested_components(include_self=True)
@@ -479,47 +546,6 @@ class Bom:
             `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
         """
         return bool(self.vulnerabilities)
-
-    @property
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
-    @serializable.xml_sequence(8)
-    def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
-        """
-        Get all the Vulnerabilities in this BOM.
-
-        Returns:
-             Set of `Vulnerability`
-        """
-        return self._vulnerabilities
-
-    @vulnerabilities.setter
-    def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
-        self._vulnerabilities = SortedSet(vulnerabilities)
-
-    @property
-    @serializable.xml_attribute()
-    def version(self) -> int:
-        return self._version
-
-    @version.setter
-    def version(self, version: int) -> None:
-        self._version = version
-
-    @property
-    @serializable.view(SchemaVersion1Dot2)
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
-    @serializable.xml_sequence(5)
-    def dependencies(self) -> 'SortedSet[Dependency]':
-        return self._dependencies
-
-    @dependencies.setter
-    def dependencies(self, dependencies: Iterable[Dependency]) -> None:
-        self._dependencies = SortedSet(dependencies)
 
     def register_dependency(self, target: Dependable, depends_on: Optional[Iterable[Dependable]] = None) -> None:
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)

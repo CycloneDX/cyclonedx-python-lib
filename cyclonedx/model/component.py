@@ -185,16 +185,45 @@ class ComponentEvidence:
 
     def __init__(self, *, licenses: Optional[Iterable[License]] = None,
                  copyright: Optional[Iterable[Copyright]] = None) -> None:
-        if not licenses and not copyright:
-            raise NoPropertiesProvidedException(
-                'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
-            )
-
         self.licenses = licenses or []  # type: ignore
         self.copyright = copyright or []  # type: ignore
 
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(1)
+    # def identity(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @identity.setter
+    # def identity(self, ...) -> None:
+    #    ... # TODO since CDX1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(2)
+    # def occurrences(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @occurrences.setter
+    # def occurrences(self, ...) -> None:
+    #    ... # TODO since CDX1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(3)
+    # def callstack(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @callstack.setter
+    # def callstack(self, ...) -> None:
+    #    ... # TODO since CDX1.5
+
     @property
     @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.xml_sequence(4)
     def licenses(self) -> LicenseRepository:
         """
         Optional list of licenses obtained during analysis.
@@ -210,6 +239,7 @@ class ComponentEvidence:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
+    @serializable.xml_sequence(5)
     def copyright(self) -> 'SortedSet[Copyright]':
         """
         Optional list of copyright statements.

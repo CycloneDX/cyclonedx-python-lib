@@ -223,6 +223,7 @@ class Service(Dependable):
 
     # @property
     # ...
+    # @serializable.view(SchemaVersion1Dot5)
     # @serializable.xml_sequence(9)
     # def trust_zone(self) -> ...:
     #     ... # since CDX1.5
