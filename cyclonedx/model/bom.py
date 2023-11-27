@@ -33,6 +33,7 @@ from ..schema.schema import (
     SchemaVersion1Dot2,
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
+    SchemaVersion1Dot5,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
 from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool, get_now_utc
@@ -53,7 +54,7 @@ class BomMetaData:
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.4/#type_metadata
+        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.5/#type_metadata
     """
 
     def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
@@ -91,9 +92,20 @@ class BomMetaData:
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(2)
+    # def lifecycles(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @lifecycles.setter
+    # def lifecycles(self, ...) -> None:
+    #    ... # TODO since CDX1.5
+
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
-    @serializable.xml_sequence(2)
+    @serializable.xml_sequence(3)
     def tools(self) -> 'SortedSet[Tool]':
         """
         Tools used to create this BOM.
@@ -101,15 +113,17 @@ class BomMetaData:
         Returns:
             `Set` of `Tool` objects.
         """
+        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
         return self._tools
 
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
+        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
         self._tools = SortedSet(tools)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
-    @serializable.xml_sequence(3)
+    @serializable.xml_sequence(4)
     def authors(self) -> 'SortedSet[OrganizationalContact]':
         """
         The person(s) who created the BOM.
@@ -128,7 +142,7 @@ class BomMetaData:
         self._authors = SortedSet(authors)
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.xml_sequence(5)
     def component(self) -> Optional[Component]:
         """
         The (optional) component that the BOM describes.
@@ -153,7 +167,7 @@ class BomMetaData:
         self._component = component
 
     @property
-    @serializable.xml_sequence(5)
+    @serializable.xml_sequence(6)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
         The organization that manufactured the component that the BOM describes.
@@ -168,7 +182,7 @@ class BomMetaData:
         self._manufacture = manufacture
 
     @property
-    @serializable.xml_sequence(6)
+    @serializable.xml_sequence(7)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
         The organization that supplied the component that the BOM describes.
@@ -187,8 +201,9 @@ class BomMetaData:
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.type_mapping(LicenseRepositoryHelper)
-    @serializable.xml_sequence(7)
+    @serializable.xml_sequence(8)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this BOM is licensed.
@@ -205,8 +220,9 @@ class BomMetaData:
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(9)
     def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -294,6 +310,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_attribute()
     def serial_number(self) -> UUID:
         """
@@ -310,9 +327,19 @@ class Bom:
         self._serial_number = serial_number
 
     @property
+    @serializable.xml_attribute()
+    def version(self) -> int:
+        return self._version
+
+    @version.setter
+    def version(self, version: int) -> None:
+        self._version = version
+
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(1)
     def metadata(self) -> BomMetaData:
         """
@@ -347,6 +374,127 @@ class Bom:
     @components.setter
     def components(self, components: Iterable[Component]) -> None:
         self._components = SortedSet(components)
+
+    @property
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.xml_sequence(3)
+    def services(self) -> 'SortedSet[Service]':
+        """
+        Get all the Services currently in this Bom.
+
+        Returns:
+             Set of `Service` in this BOM
+        """
+        return self._services
+
+    @services.setter
+    def services(self, services: Iterable[Service]) -> None:
+        self._services = SortedSet(services)
+
+    @property
+    @serializable.view(SchemaVersion1Dot1)
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    @serializable.xml_sequence(4)
+    def external_references(self) -> 'SortedSet[ExternalReference]':
+        """
+        Provides the ability to document external references related to the BOM or to the project the BOM describes.
+
+        Returns:
+            Set of `ExternalReference`
+        """
+        return self._external_references
+
+    @external_references.setter
+    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
+        self._external_references = SortedSet(external_references)
+
+    @property
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
+    @serializable.xml_sequence(5)
+    def dependencies(self) -> 'SortedSet[Dependency]':
+        return self._dependencies
+
+    @dependencies.setter
+    def dependencies(self, dependencies: Iterable[Dependency]) -> None:
+        self._dependencies = SortedSet(dependencies)
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot3)
+    # @serializable.view(SchemaVersion1Dot4)
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(6)
+    # def compositions(self) -> ...:
+    #     ...  # TODO Since CDX 1.3
+    #
+    # @compositions.setter
+    # def compositions(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.3
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot3)
+    # @serializable.view(SchemaVersion1Dot4)
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(7)
+    # def properties(self) -> ...:
+    #     ... # TODO Since CDX 1.3
+    #
+    # @properties.setter
+    # def properties(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.3
+
+    @property
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
+    @serializable.xml_sequence(8)
+    def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
+        """
+        Get all the Vulnerabilities in this BOM.
+
+        Returns:
+             Set of `Vulnerability`
+        """
+        return self._vulnerabilities
+
+    @vulnerabilities.setter
+    def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
+        self._vulnerabilities = SortedSet(vulnerabilities)
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(9)
+    # def annotations(self) -> ...:
+    #     ... # TODO Since CDX 1.5
+    #
+    # @annotations.setter
+    # def annotations(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @formulation.xml_sequence(10)
+    # def formulation(self) -> ...:
+    #     ... # TODO Since CDX 1.5
+    #
+    # @formulation.setter
+    # def formulation(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.5
 
     def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
         """
@@ -388,45 +536,6 @@ class Bom:
         """
         return component in self.components
 
-    @property
-    @serializable.view(SchemaVersion1Dot2)
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
-    @serializable.xml_sequence(3)
-    def services(self) -> 'SortedSet[Service]':
-        """
-        Get all the Services currently in this Bom.
-
-        Returns:
-             Set of `Service` in this BOM
-        """
-        return self._services
-
-    @services.setter
-    def services(self, services: Iterable[Service]) -> None:
-        self._services = SortedSet(services)
-
-    @property
-    @serializable.view(SchemaVersion1Dot1)
-    @serializable.view(SchemaVersion1Dot2)
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(4)
-    def external_references(self) -> 'SortedSet[ExternalReference]':
-        """
-        Provides the ability to document external references related to the BOM or to the project the BOM describes.
-
-        Returns:
-            Set of `ExternalReference`
-        """
-        return self._external_references
-
-    @external_references.setter
-    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = SortedSet(external_references)
-
     def _get_all_components(self) -> Generator[Component, None, None]:
         if self.metadata.component:
             yield from self.metadata.component.get_all_nested_components(include_self=True)
@@ -459,45 +568,6 @@ class Bom:
             `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
         """
         return bool(self.vulnerabilities)
-
-    @property
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
-    @serializable.xml_sequence(8)
-    def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
-        """
-        Get all the Vulnerabilities in this BOM.
-
-        Returns:
-             Set of `Vulnerability`
-        """
-        return self._vulnerabilities
-
-    @vulnerabilities.setter
-    def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
-        self._vulnerabilities = SortedSet(vulnerabilities)
-
-    @property
-    @serializable.xml_attribute()
-    def version(self) -> int:
-        return self._version
-
-    @version.setter
-    def version(self, version: int) -> None:
-        self._version = version
-
-    @property
-    @serializable.view(SchemaVersion1Dot2)
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
-    @serializable.xml_sequence(5)
-    def dependencies(self) -> 'SortedSet[Dependency]':
-        return self._dependencies
-
-    @dependencies.setter
-    def dependencies(self, dependencies: Iterable[Dependency]) -> None:
-        self._dependencies = SortedSet(dependencies)
 
     def register_dependency(self, target: Dependable, depends_on: Optional[Iterable[Dependable]] = None) -> None:
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)

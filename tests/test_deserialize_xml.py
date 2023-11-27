@@ -23,7 +23,8 @@ from unittest.mock import patch
 from ddt import ddt, named_data
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.output import LATEST_SUPPORTED_SCHEMA_VERSION
+from cyclonedx.schema import OutputFormat
 from tests import DeepCompareMixin, SnapshotMixin, mksname, uuid_generator
 from tests._data.models import all_get_bom_funct_valid, all_get_bom_funct_with_incomplete_deps
 
@@ -36,7 +37,7 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
-        snapshot_name = mksname(get_bom, SchemaVersion.V1_4, OutputFormat.XML)
+        snapshot_name = mksname(get_bom, LATEST_SUPPORTED_SCHEMA_VERSION, OutputFormat.XML)
         expected = get_bom()
         with open(self.getSnapshotFile(snapshot_name), 'r') as s:
             bom = Bom.from_xml(s)

@@ -20,7 +20,7 @@ from unittest import TestCase
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.output import get_instance
-from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot4
+from cyclonedx.output.xml import XmlV1Dot3, XmlV1Dot5
 from cyclonedx.schema import OutputFormat, SchemaVersion
 
 
@@ -33,11 +33,11 @@ class TestGetInstanceGeneric(TestCase):
 
     def test_get_instance_default(self) -> None:
         i = get_instance(self._bom)
-        self.assertIsInstance(i, XmlV1Dot4)
+        self.assertIsInstance(i, XmlV1Dot5)
 
     def test_get_instance_xml_default(self) -> None:
         i = get_instance(bom=self._bom, output_format=OutputFormat.XML)
-        self.assertIsInstance(i, XmlV1Dot4)
+        self.assertIsInstance(i, XmlV1Dot5)
 
     def test_get_instance_xml_v1_3(self) -> None:
         i = get_instance(bom=self._bom, output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_3)
