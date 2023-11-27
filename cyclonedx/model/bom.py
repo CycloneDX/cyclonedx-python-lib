@@ -106,7 +106,6 @@ class BomMetaData:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(3)
-    # since CDX1.5 also supports `Component` and `Services`, not only `Tool`
     def tools(self) -> 'SortedSet[Tool]':
         """
         Tools used to create this BOM.
@@ -114,10 +113,12 @@ class BomMetaData:
         Returns:
             `Set` of `Tool` objects.
         """
+        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
         return self._tools
 
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
+        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
         self._tools = SortedSet(tools)
 
     @property

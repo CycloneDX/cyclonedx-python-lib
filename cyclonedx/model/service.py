@@ -221,9 +221,19 @@ class Service(Dependable):
     def x_trust_boundary(self, x_trust_boundary: Optional[bool]) -> None:
         self._x_trust_boundary = x_trust_boundary
 
+    # @property
+    # ...
+    # @serializable.xml_sequence(9)
+    # def trust_zone(self) -> ...:
+    #     ... # since CDX1.5
+    #
+    # @trust_zone.setter
+    # def trust_zone(self, ...) -> None:
+    #     ... # since CDX1.5
+
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
-    @serializable.xml_sequence(9)
+    @serializable.xml_sequence(10)
     def data(self) -> 'SortedSet[DataClassification]':
         """
         Specifies the data classification.
@@ -231,6 +241,7 @@ class Service(Dependable):
         Returns:
             Set of `DataClassification`
         """
+        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._data
 
     @data.setter
@@ -239,7 +250,7 @@ class Service(Dependable):
 
     @property
     @serializable.type_mapping(LicenseRepositoryHelper)
-    @serializable.xml_sequence(10)
+    @serializable.xml_sequence(11)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Service is licensed.
@@ -247,6 +258,7 @@ class Service(Dependable):
         Returns:
             Set of `LicenseChoice`
         """
+        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._licenses
 
     @licenses.setter
@@ -255,7 +267,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(11)
+    @serializable.xml_sequence(12)
     def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the Service.
@@ -270,8 +282,28 @@ class Service(Dependable):
         self._external_references = SortedSet(external_references)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(13)
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
+
+    @property
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.xml_sequence(14)
     def services(self) -> "SortedSet['Service']":
         """
         A list of services included or deployed behind the parent service.
@@ -292,7 +324,7 @@ class Service(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(14)
+    @serializable.xml_sequence(15)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
         Specifies optional release notes.
@@ -305,26 +337,6 @@ class Service(Dependable):
     @release_notes.setter
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
-
-    @property
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(12)
-    def properties(self) -> 'SortedSet[Property]':
-        """
-        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
-        officially supported in the standard without having to use additional namespaces or create extensions.
-
-        Return:
-            Set of `Property`
-        """
-        return self._properties
-
-    @properties.setter
-    def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = SortedSet(properties)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Service):
