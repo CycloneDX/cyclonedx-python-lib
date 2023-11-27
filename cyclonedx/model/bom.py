@@ -474,6 +474,28 @@ class Bom:
     def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
         self._vulnerabilities = SortedSet(vulnerabilities)
 
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(9)
+    # def annotations(self) -> ...:
+    #     ... # TODO Since CDX 1.5
+    #
+    # @annotations.setter
+    # def annotations(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @formulation.xml_sequence(10)
+    # def formulation(self) -> ...:
+    #     ... # TODO Since CDX 1.5
+    #
+    # @formulation.setter
+    # def formulation(self, ...) -> None:
+    #     ...  # TODO Since CDX 1.5
+
     def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
         """
         Get a Component already in the Bom by its PURL
