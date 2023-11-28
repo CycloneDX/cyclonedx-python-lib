@@ -18,18 +18,24 @@ from enum import Enum
 from itertools import chain
 from json import load as json_load
 from os.path import join
-from typing import Generator, Type
+from typing import Any, Generator, Type
 from unittest import TestCase
+from unittest.mock import patch
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
 from ddt import ddt, idata, named_data
 
+from cyclonedx.model import AttachedText
 from cyclonedx.model.bom import Bom
+from cyclonedx.model.component import Component
+from cyclonedx.model.license import DisjunctiveLicense
+from cyclonedx.model.service import DataClassification, Service
 from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
 from cyclonedx.validation import make_schemabased_validator
-from tests import SnapshotMixin
+from tests import SnapshotMixin, uuid_generator
+from tests._data.models import _make_bom
 
 # region SUT: all the enums
 
@@ -72,14 +78,14 @@ def dp_enum_from_xml_schemas(xpath: str) -> Generator[str, None, None]:
             yield el.get('value')
 
 
-def dp_cases_from_json_schemas(*jsonpath: str) -> Generator[str, None, None]:
+def dp_cases_from_json_schemas(*jsonpointer: str) -> Generator[str, None, None]:
     for sf in SCHEMA_JSON.values():
         if sf is None:
             continue
         with open(sf) as sfh:
             data = json_load(sfh)
         try:
-            for pp in jsonpath:
+            for pp in jsonpointer:
                 data = data[pp]
         except KeyError:
             pass
@@ -128,9 +134,33 @@ class TestEnumDataFlow(_EnumTestCase):
         super()._test_knows_value(DataFlow, value)
 
     @named_data(*NAMED_OF_SV)
-    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion) -> None:
-        from cyclonedx.model.service import DataClassification, Service
-        bom = Bom(services=[Service(name='dummy', data=(
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(services=[Service(name='dummy', data=(
             DataClassification(flow=df, classification=df.name) for df in DataFlow
+        ))])
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumEncoding(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='encoding']"),
+        dp_cases_from_json_schemas('definitions', 'attachment', 'properties', 'encoding'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(Encoding, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, licenses=(
+            DisjunctiveLicense(name=f'att.encoding: {encoding.name}', text=AttachedText(
+                content=f'att.encoding: {encoding.name}', encoding=encoding
+            ))
+            for encoding in Encoding
         ))])
         super()._test_cases_render_valid(bom, of, sv)

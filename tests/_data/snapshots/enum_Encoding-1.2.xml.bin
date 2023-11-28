@@ -10,17 +10,18 @@
       </tool>
     </tools>
   </metadata>
-  <services>
-    <service bom-ref="00000000-0000-4000-8000-000000000008">
+  <components>
+    <component type="library" bom-ref="00000000-0000-4000-8000-000000000008">
       <name>dummy</name>
-      <data>
-        <classification flow="bi-directional">BI_DIRECTIONAL</classification>
-        <classification flow="inbound">INBOUND</classification>
-        <classification flow="outbound">OUTBOUND</classification>
-        <classification flow="unknown">UNKNOWN</classification>
-      </data>
-    </service>
-  </services>
+      <version/>
+      <licenses>
+        <license>
+          <name>att.encoding: BASE_64</name>
+          <text content-type="text/plain" encoding="base64">att.encoding: BASE_64</text>
+        </license>
+      </licenses>
+    </component>
+  </components>
   <dependencies>
     <dependency ref="00000000-0000-4000-8000-000000000008"/>
   </dependencies>

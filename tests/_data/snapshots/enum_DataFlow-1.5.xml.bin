@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:b8607640-b0ba-4082-b19a-bdb49db138da" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
   <metadata>
-    <timestamp>2023-11-28T12:51:06.726898+00:00</timestamp>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
       <tool>
         <vendor>CycloneDX</vendor>
         <name>cyclonedx-python-lib</name>
-        <version>5.1.1</version>
+        <version>TESTING</version>
         <externalReferences>
           <reference type="build-system">
             <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
@@ -37,7 +37,7 @@
     </tools>
   </metadata>
   <services>
-    <service bom-ref="98757d99-da8f-4588-8058-174f747453bc">
+    <service bom-ref="00000000-0000-4000-8000-000000000005">
       <name>dummy</name>
       <data>
         <classification flow="bi-directional">BI_DIRECTIONAL</classification>
@@ -48,6 +48,6 @@
     </service>
   </services>
   <dependencies>
-    <dependency ref="98757d99-da8f-4588-8058-174f747453bc"/>
+    <dependency ref="00000000-0000-4000-8000-000000000005"/>
   </dependencies>
 </bom>

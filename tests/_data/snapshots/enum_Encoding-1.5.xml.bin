@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
   <metadata>
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
@@ -36,18 +36,18 @@
       </tool>
     </tools>
   </metadata>
-  <services>
-    <service bom-ref="00000000-0000-4000-8000-000000000006">
+  <components>
+    <component type="library" bom-ref="00000000-0000-4000-8000-000000000005">
       <name>dummy</name>
-      <data>
-        <classification flow="bi-directional">BI_DIRECTIONAL</classification>
-        <classification flow="inbound">INBOUND</classification>
-        <classification flow="outbound">OUTBOUND</classification>
-        <classification flow="unknown">UNKNOWN</classification>
-      </data>
-    </service>
-  </services>
+      <licenses>
+        <license>
+          <name>att.encoding: BASE_64</name>
+          <text content-type="text/plain" encoding="base64">att.encoding: BASE_64</text>
+        </license>
+      </licenses>
+    </component>
+  </components>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000006"/>
+    <dependency ref="00000000-0000-4000-8000-000000000005"/>
   </dependencies>
 </bom>

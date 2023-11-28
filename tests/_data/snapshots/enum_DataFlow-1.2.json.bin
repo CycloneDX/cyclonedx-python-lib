@@ -1,23 +1,23 @@
 {
   "dependencies": [
     {
-      "ref": "9df95027-c2f0-48c1-9801-e67d8f57a01f"
+      "ref": "00000000-0000-4000-8000-000000000004"
     }
   ],
   "metadata": {
-    "timestamp": "2023-11-28T12:51:06.717902+00:00",
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
         "name": "cyclonedx-python-lib",
         "vendor": "CycloneDX",
-        "version": "5.1.1"
+        "version": "TESTING"
       }
     ]
   },
-  "serialNumber": "urn:uuid:142992be-a8f2-451f-8666-b90f0d5d104e",
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "services": [
     {
-      "bom-ref": "9df95027-c2f0-48c1-9801-e67d8f57a01f",
+      "bom-ref": "00000000-0000-4000-8000-000000000004",
       "data": [
         {
           "classification": "BI_DIRECTIONAL",
