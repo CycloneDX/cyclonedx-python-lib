@@ -338,3 +338,26 @@ class TestEnumImpactAnalysisResponse(_EnumTestCase):
             ))
         )])
         super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumImpactAnalysisState(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisStateType']"),
+        dp_cases_from_json_schemas('definitions', 'impactAnalysisState'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ImpactAnalysisState, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(vulnerabilities=(
+            Vulnerability(
+                bom_ref=f'vuln-wit-hstate-{ias.name}',
+                analysis=VulnerabilityAnalysis(state=ias)
+            ) for ias in ImpactAnalysisState
+        ))
+        super()._test_cases_render_valid(bom, of, sv)

@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
+      </tool>
+    </tools>
+  </metadata>
+  <vulnerabilities>
+    <vulnerability bom-ref="vuln-wit-hstate-RESOLVED_WITH_PEDIGREE">
+      <analysis>
+        <state>resolved_with_pedigree</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-hstate-IN_TRIAGE">
+      <analysis>
+        <state>in_triage</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-hstate-FALSE_POSITIVE">
+      <analysis>
+        <state>false_positive</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-hstate-NOT_AFFECTED">
+      <analysis>
+        <state>not_affected</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-hstate-EXPLOITABLE">
+      <analysis>
+        <state>exploitable</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-hstate-RESOLVED">
+      <analysis>
+        <state>resolved</state>
+      </analysis>
+    </vulnerability>
+  </vulnerabilities>
+</bom>
