@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import warnings
+
 from enum import Enum
 from os.path import exists
 from typing import Any, Iterable, Optional, Set, Union
@@ -51,7 +51,7 @@ from . import (
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .issue import IssueType
-from .license import License, LicenseExpression, LicenseRepository
+from .license import License, LicenseRepository
 from .release_note import ReleaseNotes
 
 
@@ -789,7 +789,8 @@ class Component(Dependable):
             )
         )
 
-    def __init__(self, *, name: str, type: ComponentType = ComponentType.LIBRARY,
+    def __init__(self, *,
+                 name: str, type: ComponentType = ComponentType.LIBRARY,
                  mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
@@ -800,9 +801,7 @@ class Component(Dependable):
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
-                 modified: bool = False,
-                 # Deprecated parameters kept for backwards compatibility
-                 namespace: Optional[str] = None, license_str: Optional[str] = None
+                 modified: bool = False
                  ) -> None:
         self.type = type
         self.mime_type = mime_type
@@ -831,24 +830,6 @@ class Component(Dependable):
         self.components = components or []  # type: ignore
         self.evidence = evidence
         self.release_notes = release_notes
-
-        # Deprecated for 1.4, but kept for some backwards compatibility
-        if namespace:
-            warnings.warn(
-                '`namespace` is deprecated and has been replaced with `group` to align with the CycloneDX standard',
-                category=DeprecationWarning, stacklevel=1
-            )
-            if not group:
-                self.group = namespace
-
-        if license_str:
-            warnings.warn(
-                '`license_str` is deprecated and has been'
-                ' replaced with `licenses` to align with the CycloneDX standard',
-                category=DeprecationWarning, stacklevel=1
-            )
-            if not licenses:
-                self.licenses = LicenseRepository([LicenseExpression(license_str)])
 
     @property
     @serializable.xml_attribute()
@@ -1344,15 +1325,3 @@ class Component(Dependable):
     def __repr__(self) -> str:
         return f'<Component bom-ref={self.bom_ref}, group={self.group}, name={self.name}, ' \
                f'version={self.version}, type={self.type}>'
-
-    # Deprecated methods
-    def get_namespace(self) -> Optional[str]:
-        """
-        Get the namespace of this Component.
-
-        Returns:
-            Declared namespace of this Component as `str` if declared, else `None`.
-        """
-        warnings.warn('`Component.get_namespace()` is deprecated - use `Component.group`',
-                      category=DeprecationWarning, stacklevel=1)
-        return self._group
