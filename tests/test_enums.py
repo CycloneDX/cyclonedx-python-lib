@@ -52,7 +52,7 @@ from cyclonedx.model.component import (  # isort:skip
 )
 from cyclonedx.model.impact_analysis import (  # isort:skip
     ImpactAnalysisAffectedStatus,
-    ImpactAnalysisJustification,  # TODO
+    ImpactAnalysisJustification,
     ImpactAnalysisResponse,  # TODO
     ImpactAnalysisState,  # TODO
 )
@@ -61,7 +61,7 @@ from cyclonedx.model.issue import (  # isort:skip
 )
 from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilityScoreSource,  # TODO
-    VulnerabilitySeverity, BomTargetVersionRange, BomTarget, Vulnerability,  # TODO
+    VulnerabilitySeverity, BomTargetVersionRange, BomTarget, Vulnerability, VulnerabilityAnalysis,  # TODO
 )
 
 # endregion SUT
@@ -285,8 +285,32 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(vulnerabilities=[Vulnerability(affects=[BomTarget(ref='urn:cdx:bom23/1#comp42', versions=(
-            BomTargetVersionRange(version=f'1.33.7+{iaas.name}', status=iaas)
-            for iaas in ImpactAnalysisAffectedStatus
-        ))])])
+        bom = _make_bom(vulnerabilities=[Vulnerability(
+            bom_ref='dummy', affects=[BomTarget(ref='urn:cdx:bom23/1#comp42', versions=(
+                BomTargetVersionRange(version=f'1.33.7+{iaas.name}', status=iaas)
+                for iaas in ImpactAnalysisAffectedStatus
+            ))])])
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumImpactAnalysisJustification(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisJustificationType']"),
+        dp_cases_from_json_schemas('definitions', 'impactAnalysisJustification'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ImpactAnalysisJustification, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(vulnerabilities=(
+            Vulnerability(
+                bom_ref=f'vuln-with-{iaj.name}',
+                analysis=VulnerabilityAnalysis(justification=iaj)
+            ) for iaj in ImpactAnalysisJustification
+        ))
         super()._test_cases_render_valid(bom, of, sv)
