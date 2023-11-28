@@ -1,0 +1,80 @@
+{
+  "dependencies": [
+    {
+      "ref": "4df41f1e-717b-44a7-b448-6bdd45cee13f"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-11-28T12:51:06.695654+00:00",
+    "tools": [
+      {
+        "externalReferences": [
+          {
+            "type": "build-system",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+          },
+          {
+            "type": "distribution",
+            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+          },
+          {
+            "type": "documentation",
+            "url": "https://cyclonedx-python-library.readthedocs.io/"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+          },
+          {
+            "type": "license",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+          },
+          {
+            "type": "release-notes",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
+          }
+        ],
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "5.1.1"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:c9a795d8-e0ee-4f02-869a-3d5222134389",
+  "services": [
+    {
+      "bom-ref": "4df41f1e-717b-44a7-b448-6bdd45cee13f",
+      "data": [
+        {
+          "classification": "BI_DIRECTIONAL",
+          "flow": "bi-directional"
+        },
+        {
+          "classification": "INBOUND",
+          "flow": "inbound"
+        },
+        {
+          "classification": "OUTBOUND",
+          "flow": "outbound"
+        },
+        {
+          "classification": "UNKNOWN",
+          "flow": "unknown"
+        }
+      ],
+      "name": "dummy"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4"
+}

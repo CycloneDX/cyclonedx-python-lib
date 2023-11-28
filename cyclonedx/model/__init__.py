@@ -169,6 +169,12 @@ class DataClassification:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, DataClassification):
+            return ComparableTuple((self.flow, self.classification)) < \
+                ComparableTuple((other.flow, other.classification))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.flow, self.classification))
 

@@ -1,0 +1,46 @@
+{
+  "dependencies": [
+    {
+      "ref": "9df95027-c2f0-48c1-9801-e67d8f57a01f"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-11-28T12:51:06.717902+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "5.1.1"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:142992be-a8f2-451f-8666-b90f0d5d104e",
+  "services": [
+    {
+      "bom-ref": "9df95027-c2f0-48c1-9801-e67d8f57a01f",
+      "data": [
+        {
+          "classification": "BI_DIRECTIONAL",
+          "flow": "bi-directional"
+        },
+        {
+          "classification": "INBOUND",
+          "flow": "inbound"
+        },
+        {
+          "classification": "OUTBOUND",
+          "flow": "outbound"
+        },
+        {
+          "classification": "UNKNOWN",
+          "flow": "unknown"
+        }
+      ],
+      "name": "dummy"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2"
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.3" serialNumber="urn:uuid:1c510ba1-1327-4b30-be01-02aa7459ae2a" version="1">
+  <metadata>
+    <timestamp>2023-11-28T12:51:06.794899+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>5.1.1</version>
+      </tool>
+    </tools>
+  </metadata>
+  <services>
+    <service bom-ref="57ebc953-76b0-4883-a44a-68c87674b31b">
+      <name>dummy</name>
+      <data>
+        <classification flow="bi-directional">BI_DIRECTIONAL</classification>
+        <classification flow="inbound">INBOUND</classification>
+        <classification flow="outbound">OUTBOUND</classification>
+        <classification flow="unknown">UNKNOWN</classification>
+      </data>
+    </service>
+  </services>
+  <dependencies>
+    <dependency ref="57ebc953-76b0-4883-a44a-68c87674b31b"/>
+  </dependencies>
+</bom>

@@ -48,8 +48,8 @@ BOM_JSON: Dict[SchemaVersion, Optional[str]] = {
 
 BOM_JSON_STRICT: Dict[SchemaVersion, Optional[str]] = {
     # >= v1.4 is already strict - no special file here
-    SchemaVersion.V1_5: join(__DIR, 'bom-1.5.SNAPSHOT.schema.json'),
-    SchemaVersion.V1_4: join(__DIR, 'bom-1.4.SNAPSHOT.schema.json'),
+    SchemaVersion.V1_5: BOM_JSON[SchemaVersion.V1_5],
+    SchemaVersion.V1_4: BOM_JSON[SchemaVersion.V1_4],
     # <= 1.3 need special files
     SchemaVersion.V1_3: join(__DIR, 'bom-1.3-strict.SNAPSHOT.schema.json'),
     SchemaVersion.V1_2: join(__DIR, 'bom-1.2-strict.SNAPSHOT.schema.json'),
