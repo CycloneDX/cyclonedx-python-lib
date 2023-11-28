@@ -53,7 +53,7 @@ from cyclonedx.model.component import (  # isort:skip
 from cyclonedx.model.impact_analysis import (  # isort:skip
     ImpactAnalysisAffectedStatus,
     ImpactAnalysisJustification,
-    ImpactAnalysisResponse,  # TODO
+    ImpactAnalysisResponse,
     ImpactAnalysisState,  # TODO
 )
 from cyclonedx.model.issue import (  # isort:skip
@@ -313,4 +313,28 @@ class TestEnumImpactAnalysisJustification(_EnumTestCase):
                 analysis=VulnerabilityAnalysis(justification=iaj)
             ) for iaj in ImpactAnalysisJustification
         ))
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumImpactAnalysisResponse(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisResponsesType']"),
+        dp_cases_from_json_schemas('definitions', 'vulnerability', 'properties', 'analysis', 'properties', 'response',
+                                   'items'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ImpactAnalysisResponse, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(vulnerabilities=[Vulnerability(
+            bom_ref='dummy',
+            analysis=VulnerabilityAnalysis(responses=(
+                iar for iar in ImpactAnalysisResponse
+            ))
+        )])
         super()._test_cases_render_valid(bom, of, sv)
