@@ -20,7 +20,6 @@ and according to different versions of the CycloneDX schema standard.
 """
 
 import os
-import warnings
 from abc import ABC, abstractmethod
 from itertools import chain
 from random import random
@@ -137,16 +136,6 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
     if klass is None:
         raise ValueError(f'Unknown {output_format.name}/schema_version: {schema_version!r}')
     return klass(bom)
-
-
-def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
-                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
-    """DEPRECATED. use :func:`make_outputter` instead!"""
-    warnings.warn(
-        'function `get_instance()` is deprecated, use `make_outputter()` instead.',
-        category=DeprecationWarning, stacklevel=1
-    )
-    return make_outputter(bom, output_format, schema_version)
 
 
 class BomRefDiscriminator:
