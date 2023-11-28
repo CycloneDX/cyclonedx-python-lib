@@ -26,7 +26,6 @@ import serializable
 from sortedcontainers import SortedSet
 
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
-from ..parser import BaseParser
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -260,27 +259,9 @@ class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
 
-    You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
-    from a `cyclonedx.parser.BaseParser` implementation.
-
     Once you have an instance of `cyclonedx.model.bom.Bom`, you can pass this to an instance of
     `cyclonedx.output.BaseOutput` to produce a CycloneDX document according to a specific schema version and format.
     """
-
-    @staticmethod
-    def from_parser(parser: BaseParser) -> 'Bom':
-        """
-        Create a Bom instance from a Parser object.
-
-        Args:
-            parser (`cyclonedx.parser.BaseParser`): A valid parser instance.
-
-        Returns:
-            `cyclonedx.model.bom.Bom`: A Bom instance that represents the valid data held in the supplied parser.
-        """
-        bom = Bom()
-        bom.components.update(parser.get_components())
-        return bom
 
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
