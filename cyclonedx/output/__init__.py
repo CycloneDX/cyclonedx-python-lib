@@ -33,8 +33,6 @@ if TYPE_CHECKING:  # pragma: no cover
     from .json import Json as JsonOutputter
     from .xml import Xml as XmlOutputter
 
-LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_5
-
 
 class BaseOutput(ABC):
 
