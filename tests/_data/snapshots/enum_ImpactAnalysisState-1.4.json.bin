@@ -50,37 +50,37 @@
       "analysis": {
         "state": "resolved_with_pedigree"
       },
-      "bom-ref": "vuln-wit-hstate-RESOLVED_WITH_PEDIGREE"
+      "bom-ref": "vuln-wit-state-RESOLVED_WITH_PEDIGREE"
     },
     {
       "analysis": {
         "state": "in_triage"
       },
-      "bom-ref": "vuln-wit-hstate-IN_TRIAGE"
+      "bom-ref": "vuln-wit-state-IN_TRIAGE"
     },
     {
       "analysis": {
         "state": "false_positive"
       },
-      "bom-ref": "vuln-wit-hstate-FALSE_POSITIVE"
+      "bom-ref": "vuln-wit-state-FALSE_POSITIVE"
     },
     {
       "analysis": {
         "state": "not_affected"
       },
-      "bom-ref": "vuln-wit-hstate-NOT_AFFECTED"
+      "bom-ref": "vuln-wit-state-NOT_AFFECTED"
     },
     {
       "analysis": {
         "state": "exploitable"
       },
-      "bom-ref": "vuln-wit-hstate-EXPLOITABLE"
+      "bom-ref": "vuln-wit-state-EXPLOITABLE"
     },
     {
       "analysis": {
         "state": "resolved"
       },
-      "bom-ref": "vuln-wit-hstate-RESOLVED"
+      "bom-ref": "vuln-wit-state-RESOLVED"
     }
   ],
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",

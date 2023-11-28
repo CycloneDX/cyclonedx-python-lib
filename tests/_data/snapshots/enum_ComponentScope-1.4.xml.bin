@@ -37,22 +37,22 @@
     </tools>
   </metadata>
   <components>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000012">
-      <name>dummy scoped: EXCLUDED</name>
+    <component type="library" bom-ref="scoped-REQUIRED">
+      <name>dummy</name>
+      <scope>required</scope>
+    </component>
+    <component type="library" bom-ref="scoped-EXCLUDED">
+      <name>dummy</name>
       <scope>excluded</scope>
     </component>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000011">
-      <name>dummy scoped: OPTIONAL</name>
+    <component type="library" bom-ref="scoped-OPTIONAL">
+      <name>dummy</name>
       <scope>optional</scope>
-    </component>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000010">
-      <name>dummy scoped: REQUIRED</name>
-      <scope>required</scope>
     </component>
   </components>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000010"/>
-    <dependency ref="00000000-0000-4000-8000-000000000011"/>
-    <dependency ref="00000000-0000-4000-8000-000000000012"/>
+    <dependency ref="scoped-EXCLUDED"/>
+    <dependency ref="scoped-OPTIONAL"/>
+    <dependency ref="scoped-REQUIRED"/>
   </dependencies>
 </bom>

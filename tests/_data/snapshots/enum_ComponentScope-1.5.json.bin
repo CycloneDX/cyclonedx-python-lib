@@ -1,33 +1,33 @@
 {
   "components": [
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000003",
-      "name": "dummy scoped: EXCLUDED",
+      "bom-ref": "scoped-REQUIRED",
+      "name": "dummy",
+      "scope": "required",
+      "type": "library"
+    },
+    {
+      "bom-ref": "scoped-EXCLUDED",
+      "name": "dummy",
       "scope": "excluded",
       "type": "library"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000002",
-      "name": "dummy scoped: OPTIONAL",
+      "bom-ref": "scoped-OPTIONAL",
+      "name": "dummy",
       "scope": "optional",
-      "type": "library"
-    },
-    {
-      "bom-ref": "00000000-0000-4000-8000-000000000001",
-      "name": "dummy scoped: REQUIRED",
-      "scope": "required",
       "type": "library"
     }
   ],
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000001"
+      "ref": "scoped-EXCLUDED"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000002"
+      "ref": "scoped-OPTIONAL"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000003"
+      "ref": "scoped-REQUIRED"
     }
   ],
   "metadata": {

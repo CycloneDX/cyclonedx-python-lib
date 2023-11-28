@@ -1,4 +1,37 @@
 {
+  "components": [
+    {
+      "bom-ref": "dummy",
+      "name": "dummy",
+      "pedigree": {
+        "patches": [
+          {
+            "resolves": [
+              {
+                "id": "issue-DEFECT",
+                "type": "defect"
+              },
+              {
+                "id": "issue-ENHANCEMENT",
+                "type": "enhancement"
+              },
+              {
+                "id": "issue-SECURITY",
+                "type": "security"
+              }
+            ],
+            "type": "backport"
+          }
+        ]
+      },
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
+    }
+  ],
   "metadata": {
     "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
@@ -45,45 +78,7 @@
   },
   "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "version": 1,
-  "vulnerabilities": [
-    {
-      "analysis": {
-        "state": "resolved_with_pedigree"
-      },
-      "bom-ref": "vuln-wit-state-RESOLVED_WITH_PEDIGREE"
-    },
-    {
-      "analysis": {
-        "state": "in_triage"
-      },
-      "bom-ref": "vuln-wit-state-IN_TRIAGE"
-    },
-    {
-      "analysis": {
-        "state": "false_positive"
-      },
-      "bom-ref": "vuln-wit-state-FALSE_POSITIVE"
-    },
-    {
-      "analysis": {
-        "state": "not_affected"
-      },
-      "bom-ref": "vuln-wit-state-NOT_AFFECTED"
-    },
-    {
-      "analysis": {
-        "state": "exploitable"
-      },
-      "bom-ref": "vuln-wit-state-EXPLOITABLE"
-    },
-    {
-      "analysis": {
-        "state": "resolved"
-      },
-      "bom-ref": "vuln-wit-state-RESOLVED"
-    }
-  ],
-  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.5"
+  "specVersion": "1.4"
 }

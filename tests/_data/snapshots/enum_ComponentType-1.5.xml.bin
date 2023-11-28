@@ -37,55 +37,55 @@
     </tools>
   </metadata>
   <components>
-    <component type="application" bom-ref="00000000-0000-4000-8000-000000000031">
-      <name>dummy type: APPLICATION</name>
+    <component type="application" bom-ref="typed-APPLICATION">
+      <name>dummy</name>
     </component>
-    <component type="container" bom-ref="00000000-0000-4000-8000-000000000032">
-      <name>dummy type: CONTAINER</name>
+    <component type="container" bom-ref="typed-CONTAINER">
+      <name>dummy</name>
     </component>
-    <component type="data" bom-ref="00000000-0000-4000-8000-000000000033">
-      <name>dummy type: DATA</name>
+    <component type="data" bom-ref="typed-DATA">
+      <name>dummy</name>
     </component>
-    <component type="device" bom-ref="00000000-0000-4000-8000-000000000034">
-      <name>dummy type: DEVICE</name>
+    <component type="device" bom-ref="typed-DEVICE">
+      <name>dummy</name>
     </component>
-    <component type="device-driver" bom-ref="00000000-0000-4000-8000-000000000035">
-      <name>dummy type: DEVICE_DRIVER</name>
+    <component type="device-driver" bom-ref="typed-DEVICE_DRIVER">
+      <name>dummy</name>
     </component>
-    <component type="file" bom-ref="00000000-0000-4000-8000-000000000036">
-      <name>dummy type: FILE</name>
+    <component type="file" bom-ref="typed-FILE">
+      <name>dummy</name>
     </component>
-    <component type="firmware" bom-ref="00000000-0000-4000-8000-000000000037">
-      <name>dummy type: FIRMWARE</name>
+    <component type="firmware" bom-ref="typed-FIRMWARE">
+      <name>dummy</name>
     </component>
-    <component type="framework" bom-ref="00000000-0000-4000-8000-000000000038">
-      <name>dummy type: FRAMEWORK</name>
+    <component type="framework" bom-ref="typed-FRAMEWORK">
+      <name>dummy</name>
     </component>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000039">
-      <name>dummy type: LIBRARY</name>
+    <component type="library" bom-ref="typed-LIBRARY">
+      <name>dummy</name>
     </component>
-    <component type="machine-learning-model" bom-ref="00000000-0000-4000-8000-00000000003a">
-      <name>dummy type: MACHINE_LEARNING_MODEL</name>
+    <component type="machine-learning-model" bom-ref="typed-MACHINE_LEARNING_MODEL">
+      <name>dummy</name>
     </component>
-    <component type="operating-system" bom-ref="00000000-0000-4000-8000-00000000003b">
-      <name>dummy type: OPERATING_SYSTEM</name>
+    <component type="operating-system" bom-ref="typed-OPERATING_SYSTEM">
+      <name>dummy</name>
     </component>
-    <component type="platform" bom-ref="00000000-0000-4000-8000-00000000003c">
-      <name>dummy type: PLATFORM</name>
+    <component type="platform" bom-ref="typed-PLATFORM">
+      <name>dummy</name>
     </component>
   </components>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000031"/>
-    <dependency ref="00000000-0000-4000-8000-000000000032"/>
-    <dependency ref="00000000-0000-4000-8000-000000000033"/>
-    <dependency ref="00000000-0000-4000-8000-000000000034"/>
-    <dependency ref="00000000-0000-4000-8000-000000000035"/>
-    <dependency ref="00000000-0000-4000-8000-000000000036"/>
-    <dependency ref="00000000-0000-4000-8000-000000000037"/>
-    <dependency ref="00000000-0000-4000-8000-000000000038"/>
-    <dependency ref="00000000-0000-4000-8000-000000000039"/>
-    <dependency ref="00000000-0000-4000-8000-00000000003a"/>
-    <dependency ref="00000000-0000-4000-8000-00000000003b"/>
-    <dependency ref="00000000-0000-4000-8000-00000000003c"/>
+    <dependency ref="typed-APPLICATION"/>
+    <dependency ref="typed-CONTAINER"/>
+    <dependency ref="typed-DATA"/>
+    <dependency ref="typed-DEVICE"/>
+    <dependency ref="typed-DEVICE_DRIVER"/>
+    <dependency ref="typed-FILE"/>
+    <dependency ref="typed-FIRMWARE"/>
+    <dependency ref="typed-FRAMEWORK"/>
+    <dependency ref="typed-LIBRARY"/>
+    <dependency ref="typed-MACHINE_LEARNING_MODEL"/>
+    <dependency ref="typed-OPERATING_SYSTEM"/>
+    <dependency ref="typed-PLATFORM"/>
   </dependencies>
 </bom>

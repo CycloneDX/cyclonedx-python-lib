@@ -37,7 +37,7 @@
     </tools>
   </metadata>
   <components>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000005">
+    <component type="library" bom-ref="dummy">
       <name>dummy</name>
       <externalReferences>
         <reference type="adversary-model">
@@ -161,6 +161,6 @@
     </component>
   </components>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000005"/>
+    <dependency ref="dummy"/>
   </dependencies>
 </bom>

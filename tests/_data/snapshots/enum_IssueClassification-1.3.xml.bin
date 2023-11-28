@@ -16,10 +16,19 @@
       <version/>
       <pedigree>
         <patches>
-          <patch type="backport"/>
-          <patch type="cherry-pick"/>
-          <patch type="monkey"/>
-          <patch type="unofficial"/>
+          <patch type="backport">
+            <resolves>
+              <issue type="defect">
+                <id>issue-DEFECT</id>
+              </issue>
+              <issue type="enhancement">
+                <id>issue-ENHANCEMENT</id>
+              </issue>
+              <issue type="security">
+                <id>issue-SECURITY</id>
+              </issue>
+            </resolves>
+          </patch>
         </patches>
       </pedigree>
     </component>

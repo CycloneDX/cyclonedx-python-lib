@@ -1,102 +1,102 @@
 {
   "components": [
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000001",
-      "name": "dummy type: APPLICATION",
+      "bom-ref": "typed-APPLICATION",
+      "name": "dummy",
       "type": "application"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000002",
-      "name": "dummy type: CONTAINER",
+      "bom-ref": "typed-CONTAINER",
+      "name": "dummy",
       "type": "container"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000003",
-      "name": "dummy type: DATA",
+      "bom-ref": "typed-DATA",
+      "name": "dummy",
       "type": "data"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000004",
-      "name": "dummy type: DEVICE",
+      "bom-ref": "typed-DEVICE",
+      "name": "dummy",
       "type": "device"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000005",
-      "name": "dummy type: DEVICE_DRIVER",
+      "bom-ref": "typed-DEVICE_DRIVER",
+      "name": "dummy",
       "type": "device-driver"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000006",
-      "name": "dummy type: FILE",
+      "bom-ref": "typed-FILE",
+      "name": "dummy",
       "type": "file"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000007",
-      "name": "dummy type: FIRMWARE",
+      "bom-ref": "typed-FIRMWARE",
+      "name": "dummy",
       "type": "firmware"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000008",
-      "name": "dummy type: FRAMEWORK",
+      "bom-ref": "typed-FRAMEWORK",
+      "name": "dummy",
       "type": "framework"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000009",
-      "name": "dummy type: LIBRARY",
+      "bom-ref": "typed-LIBRARY",
+      "name": "dummy",
       "type": "library"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-00000000000a",
-      "name": "dummy type: MACHINE_LEARNING_MODEL",
+      "bom-ref": "typed-MACHINE_LEARNING_MODEL",
+      "name": "dummy",
       "type": "machine-learning-model"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-00000000000b",
-      "name": "dummy type: OPERATING_SYSTEM",
+      "bom-ref": "typed-OPERATING_SYSTEM",
+      "name": "dummy",
       "type": "operating-system"
     },
     {
-      "bom-ref": "00000000-0000-4000-8000-00000000000c",
-      "name": "dummy type: PLATFORM",
+      "bom-ref": "typed-PLATFORM",
+      "name": "dummy",
       "type": "platform"
     }
   ],
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000001"
+      "ref": "typed-APPLICATION"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000002"
+      "ref": "typed-CONTAINER"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000003"
+      "ref": "typed-DATA"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000004"
+      "ref": "typed-DEVICE"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000005"
+      "ref": "typed-DEVICE_DRIVER"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000006"
+      "ref": "typed-FILE"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000007"
+      "ref": "typed-FIRMWARE"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000008"
+      "ref": "typed-FRAMEWORK"
     },
     {
-      "ref": "00000000-0000-4000-8000-000000000009"
+      "ref": "typed-LIBRARY"
     },
     {
-      "ref": "00000000-0000-4000-8000-00000000000a"
+      "ref": "typed-MACHINE_LEARNING_MODEL"
     },
     {
-      "ref": "00000000-0000-4000-8000-00000000000b"
+      "ref": "typed-OPERATING_SYSTEM"
     },
     {
-      "ref": "00000000-0000-4000-8000-00000000000c"
+      "ref": "typed-PLATFORM"
     }
   ],
   "metadata": {

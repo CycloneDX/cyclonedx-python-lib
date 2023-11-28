@@ -2,19 +2,28 @@
   "components": [
     {
       "bom-ref": "dummy",
-      "licenses": [
-        {
-          "license": {
-            "name": "att.encoding: BASE_64",
-            "text": {
-              "content": "att.encoding: BASE_64",
-              "contentType": "text/plain",
-              "encoding": "base64"
-            }
-          }
-        }
-      ],
       "name": "dummy",
+      "pedigree": {
+        "patches": [
+          {
+            "resolves": [
+              {
+                "id": "issue-DEFECT",
+                "type": "defect"
+              },
+              {
+                "id": "issue-ENHANCEMENT",
+                "type": "enhancement"
+              },
+              {
+                "id": "issue-SECURITY",
+                "type": "security"
+              }
+            ],
+            "type": "backport"
+          }
+        ]
+      },
       "type": "library",
       "version": ""
     }

@@ -11,7 +11,7 @@
     </tools>
   </metadata>
   <components>
-    <component type="library" bom-ref="00000000-0000-4000-8000-000000000007">
+    <component type="library" bom-ref="dummy">
       <name>dummy</name>
       <version/>
       <hashes>
@@ -31,6 +31,6 @@
     </component>
   </components>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000007"/>
+    <dependency ref="dummy"/>
   </dependencies>
 </bom>

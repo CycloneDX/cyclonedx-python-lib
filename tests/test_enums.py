@@ -57,7 +57,7 @@ from cyclonedx.model.impact_analysis import (  # isort:skip
     ImpactAnalysisState,  # TODO
 )
 from cyclonedx.model.issue import (  # isort:skip
-    IssueClassification,  # TODO
+    IssueClassification, IssueType,  # TODO
 )
 from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilityScoreSource,  # TODO
@@ -137,8 +137,9 @@ class TestEnumDataFlow(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(services=[Service(name='dummy', data=(
-            DataClassification(flow=df, classification=df.name) for df in DataFlow
+        bom = _make_bom(services=[Service(bom_ref='dummy', data=(
+            DataClassification(flow=df, classification=df.name)
+            for df in DataFlow
         ))])
         super()._test_cases_render_valid(bom, of, sv)
 
@@ -157,11 +158,10 @@ class TestEnumEncoding(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, licenses=(
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=(
             DisjunctiveLicense(name=f'att.encoding: {encoding.name}', text=AttachedText(
                 content=f'att.encoding: {encoding.name}', encoding=encoding
-            ))
-            for encoding in Encoding
+            )) for encoding in Encoding
         ))])
         super()._test_cases_render_valid(bom, of, sv)
 
@@ -180,10 +180,12 @@ class TestEnumExternalReferenceType(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, external_references=(
-            ExternalReference(type=extref, url=XsUri(f'tests/{extref.name}'))
-            for extref in ExternalReferenceType
-        ))])
+        bom = _make_bom(components=[
+            Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', external_references=(
+                ExternalReference(type=extref, url=XsUri(f'tests/{extref.name}'))
+                for extref in ExternalReferenceType
+            ))
+        ])
         super()._test_cases_render_valid(bom, of, sv)
 
 
@@ -201,7 +203,7 @@ class TestEnumHashAlgorithm(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, hashes=(
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', hashes=(
             HashType(alg=alg, content='ae2b1fca515949e5d54fb22b8ed95575')
             for alg in HashAlgorithm
         ))])
@@ -223,7 +225,7 @@ class TestEnumComponentScope(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=(
-            Component(name=f'dummy scoped: {scope.name}', type=ComponentType.LIBRARY, scope=scope)
+            Component(bom_ref=f'scoped-{scope.name}', name='dummy', type=ComponentType.LIBRARY, scope=scope)
             for scope in ComponentScope
         ))
         super()._test_cases_render_valid(bom, of, sv)
@@ -244,7 +246,7 @@ class TestEnumComponentType(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=(
-            Component(name=f'dummy type: {ct.name}', type=ct)
+            Component(bom_ref=f'typed-{ct.name}', name='dummy', type=ct)
             for ct in ComponentType
         ))
         super()._test_cases_render_valid(bom, of, sv)
@@ -264,10 +266,12 @@ class TestEnumPatchClassification(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(components=[Component(name=f'dummy', type=ComponentType.LIBRARY, pedigree=Pedigree(patches=(
-            Patch(type=pc)
-            for pc in PatchClassification
-        )))])
+        bom = _make_bom(components=[
+            Component(name=f'dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=(
+                Patch(type=pc)
+                for pc in PatchClassification
+            )))
+        ])
         super()._test_cases_render_valid(bom, of, sv)
 
 
@@ -289,7 +293,8 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
             bom_ref='dummy', affects=[BomTarget(ref='urn:cdx:bom23/1#comp42', versions=(
                 BomTargetVersionRange(version=f'1.33.7+{iaas.name}', status=iaas)
                 for iaas in ImpactAnalysisAffectedStatus
-            ))])])
+            ))]
+        )])
         super()._test_cases_render_valid(bom, of, sv)
 
 
@@ -356,8 +361,33 @@ class TestEnumImpactAnalysisState(_EnumTestCase):
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=(
             Vulnerability(
-                bom_ref=f'vuln-wit-hstate-{ias.name}',
+                bom_ref=f'vuln-wit-state-{ias.name}',
                 analysis=VulnerabilityAnalysis(state=ias)
             ) for ias in ImpactAnalysisState
         ))
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumIssueClassification(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='issueClassification']"),
+        dp_cases_from_json_schemas('definitions', 'issue', 'properties/type'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(IssueClassification, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[
+            Component(name=f'dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=[
+                Patch(type=PatchClassification.BACKPORT, resolves=(
+                    IssueType(type=ic, id=f'issue-{ic.name}')
+                    for ic in IssueClassification
+                ))
+            ]))
+        ])
         super()._test_cases_render_valid(bom, of, sv)

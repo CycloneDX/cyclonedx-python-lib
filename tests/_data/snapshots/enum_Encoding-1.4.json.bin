@@ -1,7 +1,7 @@
 {
   "components": [
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000002",
+      "bom-ref": "dummy",
       "licenses": [
         {
           "license": {
@@ -20,7 +20,7 @@
   ],
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000002"
+      "ref": "dummy"
     }
   ],
   "metadata": {

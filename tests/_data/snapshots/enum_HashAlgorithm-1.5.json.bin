@@ -1,7 +1,7 @@
 {
   "components": [
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000001",
+      "bom-ref": "dummy",
       "hashes": [
         {
           "alg": "BLAKE2b-256",
@@ -58,7 +58,7 @@
   ],
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000001"
+      "ref": "dummy"
     }
   ],
   "metadata": {
