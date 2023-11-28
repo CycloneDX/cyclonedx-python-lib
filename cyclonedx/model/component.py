@@ -279,7 +279,7 @@ class ComponentScope(str, Enum):
     """
     REQUIRED = 'required'
     OPTIONAL = 'optional'
-    EXCLUDED = 'excluded'
+    EXCLUDED = 'excluded'  # Only supported in >= 1.1
 
 
 class ComponentType(str, Enum):

@@ -25,9 +25,9 @@ from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
 from ddt import ddt, idata, named_data
 
-from cyclonedx.model import AttachedText
+from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component
+from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.service import DataClassification, Service
 from cyclonedx.output import make_outputter
@@ -43,25 +43,25 @@ from cyclonedx.model import (  # isort:skip
     DataFlow,
     Encoding,
     ExternalReferenceType,
-    HashAlgorithm
-)
-from cyclonedx.model.impact_analysis import (  # isort:skip
-    ImpactAnalysisAffectedStatus,
-    ImpactAnalysisJustification,
-    ImpactAnalysisResponse,
-    ImpactAnalysisState,
+    HashAlgorithm,
 )
 from cyclonedx.model.component import (  # isort:skip
     ComponentScope,
     ComponentType,
-    PatchClassification
+    PatchClassification,
+)
+from cyclonedx.model.impact_analysis import (  # isort:skip
+    ImpactAnalysisAffectedStatus,  # TODO
+    ImpactAnalysisJustification,  # TODO
+    ImpactAnalysisResponse,  # TODO
+    ImpactAnalysisState,  # TODO
 )
 from cyclonedx.model.issue import (  # isort:skip
-    IssueClassification
+    IssueClassification,  # TODO
 )
 from cyclonedx.model.vulnerability import (  # isort:skip
-    VulnerabilityScoreSource,
-    VulnerabilitySeverity
+    VulnerabilityScoreSource,  # TODO
+    VulnerabilitySeverity,  # TODO
 )
 
 # endregion SUT
@@ -163,4 +163,109 @@ class TestEnumEncoding(_EnumTestCase):
             ))
             for encoding in Encoding
         ))])
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumExternalReferenceType(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='externalReferenceType']"),
+        dp_cases_from_json_schemas('definitions', 'externalReference', 'properties', 'type'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ExternalReferenceType, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, external_references=(
+            ExternalReference(type=extref, url=XsUri(f'tests/{extref.name}'))
+            for extref in ExternalReferenceType
+        ))])
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumHashAlgorithm(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='hashAlg']"),
+        dp_cases_from_json_schemas('definitions', 'hash-alg'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(HashAlgorithm, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, hashes=(
+            HashType(alg=alg, content='ae2b1fca515949e5d54fb22b8ed95575')
+            for alg in HashAlgorithm
+        ))])
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumComponentScope(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='scope']"),
+        dp_cases_from_json_schemas('definitions', 'component', 'properties', 'scope'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ComponentScope, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=(
+            Component(name=f'dummy scoped: {scope.name}', type=ComponentType.LIBRARY, scope=scope)
+            for scope in ComponentScope
+        ))
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumComponentType(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='classification']"),
+        dp_cases_from_json_schemas('definitions', 'component', 'properties', 'type'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ComponentType, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=(
+            Component(name=f'dummy type: {ct.name}', type=ct)
+            for ct in ComponentType
+        ))
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumPatchClassification(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='patchClassification']"),
+        dp_cases_from_json_schemas('definitions', 'patch', 'properties', 'type'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(PatchClassification, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[Component(name=f'dummy', type=ComponentType.LIBRARY, pedigree=Pedigree(patches=(
+            Patch(type=pc)
+            for pc in PatchClassification
+        )))])
         super()._test_cases_render_valid(bom, of, sv)

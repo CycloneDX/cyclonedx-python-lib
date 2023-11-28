@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
+      </tool>
+    </tools>
+  </metadata>
+  <components>
+    <component type="application" bom-ref="00000000-0000-4000-8000-000000000031">
+      <name>dummy type: APPLICATION</name>
+    </component>
+    <component type="container" bom-ref="00000000-0000-4000-8000-000000000032">
+      <name>dummy type: CONTAINER</name>
+    </component>
+    <component type="data" bom-ref="00000000-0000-4000-8000-000000000033">
+      <name>dummy type: DATA</name>
+    </component>
+    <component type="device" bom-ref="00000000-0000-4000-8000-000000000034">
+      <name>dummy type: DEVICE</name>
+    </component>
+    <component type="device-driver" bom-ref="00000000-0000-4000-8000-000000000035">
+      <name>dummy type: DEVICE_DRIVER</name>
+    </component>
+    <component type="file" bom-ref="00000000-0000-4000-8000-000000000036">
+      <name>dummy type: FILE</name>
+    </component>
+    <component type="firmware" bom-ref="00000000-0000-4000-8000-000000000037">
+      <name>dummy type: FIRMWARE</name>
+    </component>
+    <component type="framework" bom-ref="00000000-0000-4000-8000-000000000038">
+      <name>dummy type: FRAMEWORK</name>
+    </component>
+    <component type="library" bom-ref="00000000-0000-4000-8000-000000000039">
+      <name>dummy type: LIBRARY</name>
+    </component>
+    <component type="machine-learning-model" bom-ref="00000000-0000-4000-8000-00000000003a">
+      <name>dummy type: MACHINE_LEARNING_MODEL</name>
+    </component>
+    <component type="operating-system" bom-ref="00000000-0000-4000-8000-00000000003b">
+      <name>dummy type: OPERATING_SYSTEM</name>
+    </component>
+    <component type="platform" bom-ref="00000000-0000-4000-8000-00000000003c">
+      <name>dummy type: PLATFORM</name>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="00000000-0000-4000-8000-000000000031"/>
+    <dependency ref="00000000-0000-4000-8000-000000000032"/>
+    <dependency ref="00000000-0000-4000-8000-000000000033"/>
+    <dependency ref="00000000-0000-4000-8000-000000000034"/>
+    <dependency ref="00000000-0000-4000-8000-000000000035"/>
+    <dependency ref="00000000-0000-4000-8000-000000000036"/>
+    <dependency ref="00000000-0000-4000-8000-000000000037"/>
+    <dependency ref="00000000-0000-4000-8000-000000000038"/>
+    <dependency ref="00000000-0000-4000-8000-000000000039"/>
+    <dependency ref="00000000-0000-4000-8000-00000000003a"/>
+    <dependency ref="00000000-0000-4000-8000-00000000003b"/>
+    <dependency ref="00000000-0000-4000-8000-00000000003c"/>
+  </dependencies>
+</bom>

@@ -1,0 +1,151 @@
+{
+  "components": [
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000001",
+      "name": "dummy type: APPLICATION",
+      "type": "application"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000002",
+      "name": "dummy type: CONTAINER",
+      "type": "container"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000003",
+      "name": "dummy type: DATA",
+      "type": "data"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000004",
+      "name": "dummy type: DEVICE",
+      "type": "device"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000005",
+      "name": "dummy type: DEVICE_DRIVER",
+      "type": "device-driver"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000006",
+      "name": "dummy type: FILE",
+      "type": "file"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000007",
+      "name": "dummy type: FIRMWARE",
+      "type": "firmware"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000008",
+      "name": "dummy type: FRAMEWORK",
+      "type": "framework"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-000000000009",
+      "name": "dummy type: LIBRARY",
+      "type": "library"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-00000000000a",
+      "name": "dummy type: MACHINE_LEARNING_MODEL",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-00000000000b",
+      "name": "dummy type: OPERATING_SYSTEM",
+      "type": "operating-system"
+    },
+    {
+      "bom-ref": "00000000-0000-4000-8000-00000000000c",
+      "name": "dummy type: PLATFORM",
+      "type": "platform"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "00000000-0000-4000-8000-000000000001"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000002"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000003"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000004"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000005"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000006"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000007"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000008"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-000000000009"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-00000000000a"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-00000000000b"
+    },
+    {
+      "ref": "00000000-0000-4000-8000-00000000000c"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "externalReferences": [
+          {
+            "type": "build-system",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+          },
+          {
+            "type": "distribution",
+            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+          },
+          {
+            "type": "documentation",
+            "url": "https://cyclonedx-python-library.readthedocs.io/"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+          },
+          {
+            "type": "license",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+          },
+          {
+            "type": "release-notes",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
+          }
+        ],
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5"
+}
