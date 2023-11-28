@@ -16,30 +16,47 @@
 
 from enum import Enum
 from itertools import chain
+from json import load as json_load
 from os.path import join
 from typing import Generator, Type
 from unittest import TestCase
-from xml.etree.ElementTree import parse as xml_parse
-from json import load as json_load
+from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
 from ddt import ddt, idata, named_data
 
-from cyclonedx.schema._res import BOM_XML as SCHEMA_XML, BOM_JSON as SCHEMA_JSON
-from cyclonedx.schema import SchemaVersion, OutputFormat
-from cyclonedx.output import make_outputter
-from cyclonedx.validation import make_schemabased_validator
 from cyclonedx.model.bom import Bom
-
+from cyclonedx.output import make_outputter
+from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
+from cyclonedx.validation import make_schemabased_validator
 from tests import SnapshotMixin
 
-# region SUT
+# region SUT: all the enums
 
-from cyclonedx.model import DataFlow, Encoding, HashAlgorithm, ExternalReferenceType
-from cyclonedx.model.component import ComponentScope, ComponentType, PatchClassification
-from cyclonedx.model.impact_analysis import ImpactAnalysisAffectedStatus, ImpactAnalysisJustification, \
-    ImpactAnalysisResponse, ImpactAnalysisResponse, ImpactAnalysisState
-from cyclonedx.model.issue import IssueClassification
-from cyclonedx.model.vulnerability import VulnerabilityScoreSource, VulnerabilitySeverity
+from cyclonedx.model import (  # isort:skip
+    DataFlow,
+    Encoding,
+    ExternalReferenceType,
+    HashAlgorithm
+)
+from cyclonedx.model.impact_analysis import (  # isort:skip
+    ImpactAnalysisAffectedStatus,
+    ImpactAnalysisJustification,
+    ImpactAnalysisResponse,
+    ImpactAnalysisState,
+)
+from cyclonedx.model.component import (  # isort:skip
+    ComponentScope,
+    ComponentType,
+    PatchClassification
+)
+from cyclonedx.model.issue import (  # isort:skip
+    IssueClassification
+)
+from cyclonedx.model.vulnerability import (  # isort:skip
+    VulnerabilityScoreSource,
+    VulnerabilitySeverity
+)
 
 # endregion SUT
 
@@ -51,11 +68,8 @@ def dp_enum_from_xml_schemas(xpath: str) -> Generator[str, None, None]:
     for sf in SCHEMA_XML.values():
         if sf is None:
             continue
-        yield from (
-            el.get('value')
-            for el in
-            xml_parse(sf).getroot().iterfind(f'{xpath}/{SCHEMA_NS}restriction/{SCHEMA_NS}enumeration')
-        )
+        for el in xml_parse(sf).iterfind(f'{xpath}/{SCHEMA_NS}restriction/{SCHEMA_NS}enumeration'):  # nosec B314
+            yield el.get('value')
 
 
 def dp_cases_from_json_schemas(*jsonpath: str) -> Generator[str, None, None]:
@@ -115,7 +129,7 @@ class TestEnumDataFlow(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion) -> None:
-        from cyclonedx.model.service import Service, DataClassification
+        from cyclonedx.model.service import DataClassification, Service
         bom = Bom(services=[Service(name='dummy', data=(
             DataClassification(flow=df, classification=df.name) for df in DataFlow
         ))])
