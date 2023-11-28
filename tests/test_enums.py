@@ -275,7 +275,7 @@ class TestEnumPatchClassification(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
-            Component(name=f'dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=(
+            Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=(
                 Patch(type=pc)
                 for pc in PatchClassification
             )))
@@ -391,7 +391,7 @@ class TestEnumIssueClassification(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
-            Component(name=f'dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=[
+            Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=[
                 Patch(type=PatchClassification.BACKPORT, resolves=(
                     IssueType(type=ic, id=f'issue-{ic.name}')
                     for ic in IssueClassification
