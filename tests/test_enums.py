@@ -28,8 +28,16 @@ from ddt import ddt, idata, named_data
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, Patch, Pedigree
+from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.service import DataClassification, Service
+from cyclonedx.model.vulnerability import (
+    BomTarget,
+    BomTargetVersionRange,
+    Vulnerability,
+    VulnerabilityAnalysis,
+    VulnerabilityRating,
+)
 from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
@@ -54,15 +62,14 @@ from cyclonedx.model.impact_analysis import (  # isort:skip
     ImpactAnalysisAffectedStatus,
     ImpactAnalysisJustification,
     ImpactAnalysisResponse,
-    ImpactAnalysisState,  # TODO
+    ImpactAnalysisState,
 )
 from cyclonedx.model.issue import (  # isort:skip
-    IssueClassification, IssueType,  # TODO
+    IssueClassification,
 )
 from cyclonedx.model.vulnerability import (  # isort:skip
-    VulnerabilityScoreSource,  # TODO
-    VulnerabilitySeverity, BomTargetVersionRange, BomTarget, Vulnerability, VulnerabilityAnalysis,
-    VulnerabilityRating,  # TODO
+    VulnerabilityScoreSource,
+    VulnerabilitySeverity,
 )
 
 # endregion SUT
@@ -409,6 +416,28 @@ class TestEnumVulnerabilityScoreSource(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', ratings=(
-            VulnerabilityRating(method=vss) for vss in VulnerabilityScoreSource
+            VulnerabilityRating(method=vss)
+            for vss in VulnerabilityScoreSource
+        ))])
+        super()._test_cases_render_valid(bom, of, sv)
+
+
+@ddt
+class TestEnumVulnerabilitySeverity(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='severityType']"),
+        dp_cases_from_json_schemas('definitions', 'severity'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(VulnerabilitySeverity, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', ratings=(
+            VulnerabilityRating(severity=vs)
+            for vs in VulnerabilitySeverity
         ))])
         super()._test_cases_render_valid(bom, of, sv)
