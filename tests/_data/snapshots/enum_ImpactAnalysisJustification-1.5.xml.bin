@@ -37,9 +37,9 @@
     </tools>
   </metadata>
   <vulnerabilities>
-    <vulnerability bom-ref="vuln-with-CODE_NOT_PRESENT">
+    <vulnerability bom-ref="vuln-with-CODE_NOT_REACHABLE">
       <analysis>
-        <justification>code_not_present</justification>
+        <justification>code_not_reachable</justification>
       </analysis>
     </vulnerability>
     <vulnerability bom-ref="vuln-with-REQUIRES_DEPENDENCY">
@@ -47,19 +47,9 @@
         <justification>requires_dependency</justification>
       </analysis>
     </vulnerability>
-    <vulnerability bom-ref="vuln-with-REQUIRES_ENVIRONMENT">
+    <vulnerability bom-ref="vuln-with-CODE_NOT_PRESENT">
       <analysis>
-        <justification>requires_environment</justification>
-      </analysis>
-    </vulnerability>
-    <vulnerability bom-ref="vuln-with-PROTECTED_AT_RUNTIME">
-      <analysis>
-        <justification>protected_at_runtime</justification>
-      </analysis>
-    </vulnerability>
-    <vulnerability bom-ref="vuln-with-CODE_NOT_REACHABLE">
-      <analysis>
-        <justification>code_not_reachable</justification>
+        <justification>code_not_present</justification>
       </analysis>
     </vulnerability>
     <vulnerability bom-ref="vuln-with-PROTECTED_BY_COMPILER">
@@ -67,19 +57,29 @@
         <justification>protected_by_compiler</justification>
       </analysis>
     </vulnerability>
-    <vulnerability bom-ref="vuln-with-PROTECTED_AT_PERIMITER">
-      <analysis>
-        <justification>protected_at_perimeter</justification>
-      </analysis>
-    </vulnerability>
     <vulnerability bom-ref="vuln-with-PROTECTED_BY_MITIGATING_CONTROL">
       <analysis>
         <justification>protected_by_mitigating_control</justification>
       </analysis>
     </vulnerability>
+    <vulnerability bom-ref="vuln-with-PROTECTED_AT_RUNTIME">
+      <analysis>
+        <justification>protected_at_runtime</justification>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-with-PROTECTED_AT_PERIMITER">
+      <analysis>
+        <justification>protected_at_perimeter</justification>
+      </analysis>
+    </vulnerability>
     <vulnerability bom-ref="vuln-with-REQUIRES_CONFIGURATION">
       <analysis>
         <justification>requires_configuration</justification>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-with-REQUIRES_ENVIRONMENT">
+      <analysis>
+        <justification>requires_environment</justification>
       </analysis>
     </vulnerability>
   </vulnerabilities>

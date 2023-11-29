@@ -95,6 +95,7 @@ class ComparableTuple(Tuple[Optional[_T], ...]):
         return False
 
 
+@serializable.serializable_enum
 class DataFlow(str, Enum):
     """
     This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
@@ -182,6 +183,7 @@ class DataClassification:
         return f'<DataClassification flow={self.flow}>'
 
 
+@serializable.serializable_enum
 class Encoding(str, Enum):
     """
     This is our internal representation of the encoding simple type within the CycloneDX standard.
@@ -276,6 +278,7 @@ class AttachedText:
         return f'<AttachedText content-type={self.content_type}, encoding={self.encoding}>'
 
 
+@serializable.serializable_enum
 class HashAlgorithm(str, Enum):
     """
     This is our internal representation of the hashAlg simple type within the CycloneDX standard.
@@ -396,6 +399,7 @@ class HashType:
         return f'<HashType {self.alg.name}:{self.content}>'
 
 
+@serializable.serializable_enum
 class ExternalReferenceType(str, Enum):
     """
     Enum object that defines the permissible 'types' for an External Reference according to the CycloneDX schema.

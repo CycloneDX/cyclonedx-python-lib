@@ -270,6 +270,7 @@ class ComponentEvidence:
         return f'<ComponentEvidence id={id(self)}>'
 
 
+@serializable.serializable_enum
 class ComponentScope(str, Enum):
     """
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
@@ -282,6 +283,7 @@ class ComponentScope(str, Enum):
     EXCLUDED = 'excluded'  # Only supported in >= 1.1
 
 
+@serializable.serializable_enum
 class ComponentType(str, Enum):
     """
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
@@ -365,6 +367,7 @@ class Diff:
         return f'<Diff url={self.url}>'
 
 
+@serializable.serializable_enum
 class PatchClassification(str, Enum):
     """
     Enum object that defines the permissible `patchClassification`s.

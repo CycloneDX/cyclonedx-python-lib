@@ -48,9 +48,9 @@
   "vulnerabilities": [
     {
       "analysis": {
-        "justification": "code_not_present"
+        "justification": "code_not_reachable"
       },
-      "bom-ref": "vuln-with-CODE_NOT_PRESENT"
+      "bom-ref": "vuln-with-CODE_NOT_REACHABLE"
     },
     {
       "analysis": {
@@ -60,21 +60,9 @@
     },
     {
       "analysis": {
-        "justification": "requires_environment"
+        "justification": "code_not_present"
       },
-      "bom-ref": "vuln-with-REQUIRES_ENVIRONMENT"
-    },
-    {
-      "analysis": {
-        "justification": "protected_at_runtime"
-      },
-      "bom-ref": "vuln-with-PROTECTED_AT_RUNTIME"
-    },
-    {
-      "analysis": {
-        "justification": "code_not_reachable"
-      },
-      "bom-ref": "vuln-with-CODE_NOT_REACHABLE"
+      "bom-ref": "vuln-with-CODE_NOT_PRESENT"
     },
     {
       "analysis": {
@@ -84,21 +72,33 @@
     },
     {
       "analysis": {
-        "justification": "protected_at_perimeter"
-      },
-      "bom-ref": "vuln-with-PROTECTED_AT_PERIMITER"
-    },
-    {
-      "analysis": {
         "justification": "protected_by_mitigating_control"
       },
       "bom-ref": "vuln-with-PROTECTED_BY_MITIGATING_CONTROL"
     },
     {
       "analysis": {
+        "justification": "protected_at_runtime"
+      },
+      "bom-ref": "vuln-with-PROTECTED_AT_RUNTIME"
+    },
+    {
+      "analysis": {
+        "justification": "protected_at_perimeter"
+      },
+      "bom-ref": "vuln-with-PROTECTED_AT_PERIMITER"
+    },
+    {
+      "analysis": {
         "justification": "requires_configuration"
       },
       "bom-ref": "vuln-with-REQUIRES_CONFIGURATION"
+    },
+    {
+      "analysis": {
+        "justification": "requires_environment"
+      },
+      "bom-ref": "vuln-with-REQUIRES_ENVIRONMENT"
     }
   ],
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",

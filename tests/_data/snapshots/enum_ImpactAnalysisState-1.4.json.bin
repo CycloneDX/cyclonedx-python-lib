@@ -48,9 +48,9 @@
   "vulnerabilities": [
     {
       "analysis": {
-        "state": "resolved_with_pedigree"
+        "state": "resolved"
       },
-      "bom-ref": "vuln-wit-state-RESOLVED_WITH_PEDIGREE"
+      "bom-ref": "vuln-wit-state-RESOLVED"
     },
     {
       "analysis": {
@@ -60,15 +60,15 @@
     },
     {
       "analysis": {
-        "state": "false_positive"
-      },
-      "bom-ref": "vuln-wit-state-FALSE_POSITIVE"
-    },
-    {
-      "analysis": {
         "state": "not_affected"
       },
       "bom-ref": "vuln-wit-state-NOT_AFFECTED"
+    },
+    {
+      "analysis": {
+        "state": "false_positive"
+      },
+      "bom-ref": "vuln-wit-state-FALSE_POSITIVE"
     },
     {
       "analysis": {
@@ -78,9 +78,9 @@
     },
     {
       "analysis": {
-        "state": "resolved"
+        "state": "resolved_with_pedigree"
       },
-      "bom-ref": "vuln-wit-state-RESOLVED"
+      "bom-ref": "vuln-wit-state-RESOLVED_WITH_PEDIGREE"
     }
   ],
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",

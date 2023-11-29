@@ -37,9 +37,9 @@
     </tools>
   </metadata>
   <vulnerabilities>
-    <vulnerability bom-ref="vuln-wit-state-RESOLVED_WITH_PEDIGREE">
+    <vulnerability bom-ref="vuln-wit-state-RESOLVED">
       <analysis>
-        <state>resolved_with_pedigree</state>
+        <state>resolved</state>
       </analysis>
     </vulnerability>
     <vulnerability bom-ref="vuln-wit-state-IN_TRIAGE">
@@ -47,14 +47,14 @@
         <state>in_triage</state>
       </analysis>
     </vulnerability>
-    <vulnerability bom-ref="vuln-wit-state-FALSE_POSITIVE">
-      <analysis>
-        <state>false_positive</state>
-      </analysis>
-    </vulnerability>
     <vulnerability bom-ref="vuln-wit-state-NOT_AFFECTED">
       <analysis>
         <state>not_affected</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-state-FALSE_POSITIVE">
+      <analysis>
+        <state>false_positive</state>
       </analysis>
     </vulnerability>
     <vulnerability bom-ref="vuln-wit-state-EXPLOITABLE">
@@ -62,9 +62,9 @@
         <state>exploitable</state>
       </analysis>
     </vulnerability>
-    <vulnerability bom-ref="vuln-wit-state-RESOLVED">
+    <vulnerability bom-ref="vuln-wit-state-RESOLVED_WITH_PEDIGREE">
       <analysis>
-        <state>resolved</state>
+        <state>resolved_with_pedigree</state>
       </analysis>
     </vulnerability>
   </vulnerabilities>
