@@ -26,7 +26,7 @@ from enum import Enum
 from hashlib import sha1
 from itertools import zip_longest
 from json import loads as json_loads
-from typing import Any, Dict, Generator, Iterable, List, Optional, Set, Tuple, Type, TypeVar
+from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type, TypeVar
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -314,8 +314,8 @@ class HashAlgorithm(str, Enum):
 class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
-    __CASES: Dict[Type[serializable.ViewType], Set[HashAlgorithm]] = dict()
-    __CASES[SchemaVersion1Dot0] = {
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[HashAlgorithm]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({
         HashAlgorithm.MD5,
         HashAlgorithm.SHA_1,
         HashAlgorithm.SHA_256,
@@ -323,7 +323,7 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
         HashAlgorithm.SHA_512,
         HashAlgorithm.SHA3_256,
         HashAlgorithm.SHA3_512,
-    }
+    })
     __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0]
     __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1] | {
         HashAlgorithm.BLAKE2B_256,
@@ -497,9 +497,9 @@ class ExternalReferenceType(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReferenceType
     """
-
+    # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
     ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
-    ADVISORIES = 'advisories'
+    ADVISORIES = 'advisories'  # ?
     ATTESTATION = 'attestation'  # Only supported in >= 1.5
     BOM = 'bom'
     BUILD_META = 'build-meta'
@@ -522,7 +522,6 @@ class ExternalReferenceType(str, Enum):
     MAILING_LIST = 'mailing-list'
     MATURITY_REPORT = 'maturity-report'  # Only supported in >= 1.5
     MODEL_CARD = 'model-card'  # Only supported in >= 1.5
-    OTHER = 'other'
     PENTEST_REPORT = 'pentest-report'  # Only supported in >= 1.5
     POAM = 'poam'  # Only supported in >= 1.5
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
@@ -538,6 +537,87 @@ class ExternalReferenceType(str, Enum):
     VCS = 'vcs'
     VULNERABILITY_ASSERTION = 'vulnerability-assertion'  # Only supported in >= 1.5
     WEBSITE = 'website'
+    # --
+    OTHER = 'other'
+
+
+class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ExternalReferenceType]] = dict()
+    __CASES[SchemaVersion1Dot1] = frozenset({
+        ExternalReferenceType.VCS,
+        ExternalReferenceType.ISSUE_TRACKER,
+        ExternalReferenceType.WEBSITE,
+        ExternalReferenceType.ADVISORIES,
+        ExternalReferenceType.BOM,
+        ExternalReferenceType.MAILING_LIST,
+        ExternalReferenceType.SOCIAL,
+        ExternalReferenceType.CHAT,
+        ExternalReferenceType.DOCUMENTATION,
+        ExternalReferenceType.SUPPORT,
+        ExternalReferenceType.DISTRIBUTION,
+        ExternalReferenceType.LICENSE,
+        ExternalReferenceType.BUILD_META,
+        ExternalReferenceType.BUILD_SYSTEM,
+        ExternalReferenceType.OTHER,
+    })
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1]
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3] | {
+        ExternalReferenceType.RELEASE_NOTES
+    }
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4] | {
+        ExternalReferenceType.DISTRIBUTION_INTAKE,
+        ExternalReferenceType.SECURITY_CONTACT,
+        ExternalReferenceType.MODEL_CARD,
+        ExternalReferenceType.LOG,
+        ExternalReferenceType.CONFIGURATION,
+        ExternalReferenceType.EVIDENCE,
+        ExternalReferenceType.FORMULATION,
+        ExternalReferenceType.ATTESTATION,
+        ExternalReferenceType.THREAT_MODEL,
+        ExternalReferenceType.ADVERSARY_MODEL,
+        ExternalReferenceType.RISK_ASSESSMENT,
+        ExternalReferenceType.VULNERABILITY_ASSERTION,
+        ExternalReferenceType.EXPLOITABILITY_STATEMENT,
+        ExternalReferenceType.PENTEST_REPORT,
+        ExternalReferenceType.STATIC_ANALYSIS_REPORT,
+        ExternalReferenceType.DYNAMIC_ANALYSIS_REPORT,
+        ExternalReferenceType.RUNTIME_ANALYSIS_REPORT,
+        ExternalReferenceType.COMPONENT_ANALYSIS_REPORT,
+        ExternalReferenceType.MATURITY_REPORT,
+        ExternalReferenceType.CERTIFICATION_REPORT,
+        ExternalReferenceType.QUALITY_METRICS,
+        ExternalReferenceType.CODIFIED_INFRASTRUCTURE,
+        ExternalReferenceType.POAM,
+    }
+
+    @classmethod
+    def __normalize(cls, extref: ExternalReferenceType, view: Type[serializable.ViewType]) -> str:
+        return (
+            extref
+            if extref in cls.__CASES.get(view, ())
+            else ExternalReferenceType.OTHER
+        ).value
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ExternalReferenceType:
+        return ExternalReferenceType(o)
 
 
 @serializable.serializable_class
@@ -647,6 +727,7 @@ class ExternalReference:
         self._comment = comment
 
     @property
+    @serializable.type_mapping(_ExternalReferenceSerializationHelper)
     @serializable.xml_attribute()
     def type(self) -> ExternalReferenceType:
         """
