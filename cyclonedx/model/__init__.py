@@ -315,26 +315,26 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS IS NON-PUBLIC  """
 
     __cases: Dict[Type[serializable.ViewType], Set[HashAlgorithm]] = dict()
-    __cases[SchemaVersion1Dot0] = \
-        __cases[SchemaVersion1Dot1] = {
+    __cases[SchemaVersion1Dot0] = {
         HashAlgorithm.MD5,
         HashAlgorithm.SHA_1,
         HashAlgorithm.SHA_256,
         HashAlgorithm.SHA_384,
         HashAlgorithm.SHA_512,
         HashAlgorithm.SHA3_256,
-        HashAlgorithm.SHA3_512
+        HashAlgorithm.SHA3_512,
     }
-    __cases[SchemaVersion1Dot2] = \
-        __cases[SchemaVersion1Dot3] = \
-        __cases[SchemaVersion1Dot4] = \
-        __cases[SchemaVersion1Dot5] = __cases[SchemaVersion1Dot1].union({
-            HashAlgorithm.BLAKE2B_256,
-            HashAlgorithm.BLAKE2B_384,
-            HashAlgorithm.BLAKE2B_512,
-            HashAlgorithm.BLAKE3,
-            HashAlgorithm.SHA3_384
-        })
+    __cases[SchemaVersion1Dot1] = __cases[SchemaVersion1Dot0]
+    __cases[SchemaVersion1Dot2] = __cases[SchemaVersion1Dot1].union({
+        HashAlgorithm.BLAKE2B_256,
+        HashAlgorithm.BLAKE2B_384,
+        HashAlgorithm.BLAKE2B_512,
+        HashAlgorithm.BLAKE3,
+        HashAlgorithm.SHA3_384,
+    })
+    __cases[SchemaVersion1Dot3] = __cases[SchemaVersion1Dot2]
+    __cases[SchemaVersion1Dot4] = __cases[SchemaVersion1Dot3]
+    __cases[SchemaVersion1Dot5] = __cases[SchemaVersion1Dot4]
 
     @classmethod
     def __prep(cls, hts: Iterable['HashType'], v: Type[serializable.ViewType]) -> Generator['HashType', None, None]:
