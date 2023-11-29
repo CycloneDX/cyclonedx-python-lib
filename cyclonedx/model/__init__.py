@@ -353,9 +353,9 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
         assert view is not None
         return [
             json_loads(
-                i.as_json(  # type:ignore[attr-defined]
+                ht.as_json(  # type:ignore[attr-defined]
                     view_=view)
-            ) for i in cls.__prep(o, view)
+            ) for ht in cls.__prep(o, view)
         ]
 
     @classmethod
@@ -367,24 +367,28 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
         assert view is not None
         elem = XmlElement(element_name)
         elem.extend(
-            i.as_xml(  # type:ignore[attr-defined]
+            ht.as_xml(  # type:ignore[attr-defined]
                 view_=view, as_string=False, element_name='hash', xmlns=xmlns
-            ) for i in cls.__prep(o, view)
+            ) for ht in cls.__prep(o, view)
         )
         return elem
 
     @classmethod
     def json_denormalize(cls, o: Any,
                          **__: Any) -> List['HashType']:
-        return [HashType.from_json(  # type:ignore[attr-defined]
-            i) for i in o]
+        return [
+            HashType.from_json(  # type:ignore[attr-defined]
+                ht) for ht in o
+        ]
 
     @classmethod
     def xml_denormalize(cls, o: 'XmlElement', *,
                         default_ns: Optional[str],
                         **__: Any) -> List['HashType']:
-        return [HashType.from_xml(  # type:ignore[attr-defined]
-            i, default_ns) for i in o]
+        return [
+            HashType.from_xml(  # type:ignore[attr-defined]
+                ht, default_ns) for ht in o
+        ]
 
 
 @serializable.serializable_class
