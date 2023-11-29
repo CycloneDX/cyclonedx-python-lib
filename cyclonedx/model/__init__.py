@@ -296,7 +296,7 @@ class HashAlgorithm(str, Enum):
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.3/#type_hashAlg
     """
-    # see _HashTypeRepositorySerializationHelper.__cases for case-map
+    # see `_HashTypeRepositorySerializationHelper.__CASES` for view/case map
     BLAKE2B_256 = 'BLAKE2b-256'  # Only supported in >= 1.2
     BLAKE2B_384 = 'BLAKE2b-384'  # Only supported in >= 1.2
     BLAKE2B_512 = 'BLAKE2b-512'  # Only supported in >= 1.2
