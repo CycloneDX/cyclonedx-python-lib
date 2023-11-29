@@ -128,11 +128,11 @@ class LicenseRepositoryHelper(BaseHelper):
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
             elem.append(expression.as_xml(  # type:ignore[attr-defined]
-                view, as_string=False, element_name='expression', xmlns=xmlns))
+                view_=view, as_string=False, element_name='expression', xmlns=xmlns))
         else:
             for li in o:
                 elem.append(li.as_xml(  # type:ignore[union-attr]
-                    view, as_string=False, element_name='license', xmlns=xmlns))
+                    view_=view, as_string=False, element_name='license', xmlns=xmlns))
         return elem
 
     @classmethod

@@ -16,11 +16,11 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-import warnings
 from datetime import datetime
 from itertools import chain
 from typing import TYPE_CHECKING, Generator, Iterable, Optional, Union
 from uuid import UUID, uuid4
+from warnings import warn
 
 import serializable
 from sortedcontainers import SortedSet
@@ -598,7 +598,7 @@ class Bom:
         dependency_diff = dependency_bom_refs - component_bom_refs
         if len(dependency_diff) > 0:
             raise UnknownComponentDependencyException(
-                f'One or more Components have Dependency references to Components/Services that are not known in this '
+                'One or more Components have Dependency references to Components/Services that are not known in this '
                 f'BOM. They are: {dependency_diff}')
 
         # 2. if root component is set: dependencies should exist for the Component this BOM is describing
@@ -606,10 +606,10 @@ class Bom:
             lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type: ignore[union-attr]
             self.dependencies
         )):
-            warnings.warn(
+            warn(
                 f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
-                f'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
-                f'"root" Component to complete the Dependency Graph data.',
+                'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
+                '"root" Component to complete the Dependency Graph data.',
                 category=UserWarning, stacklevel=1
             )
 

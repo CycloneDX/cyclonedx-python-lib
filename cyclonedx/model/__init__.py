@@ -13,12 +13,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+"""
+Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
+
+You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
+from a `cyclonedx.parser.BaseParser` implementation.
+"""
+
 import re
 from datetime import datetime, timezone
 from enum import Enum
 from hashlib import sha1
 from itertools import zip_longest
-from typing import Any, Iterable, Optional, Tuple, TypeVar
+from json import loads as json_loads
+from typing import Any, Dict, Generator, Iterable, List, Optional, Set, Tuple, Type, TypeVar
+from warnings import warn
+from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
 import serializable
 from sortedcontainers import SortedSet
@@ -30,14 +40,14 @@ from ..exception.model import (
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5
-
-"""
-Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
-
-You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or generate a `cyclonedx.model.bom.Bom`
-from a `cyclonedx.parser.BaseParser` implementation.
-"""
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+    SchemaVersion1Dot5,
+)
 
 
 def get_now_utc() -> datetime:
@@ -286,7 +296,7 @@ class HashAlgorithm(str, Enum):
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.3/#type_hashAlg
     """
-
+    # see _HashTypeRepositorySerializationHelper.__cases for case-map
     BLAKE2B_256 = 'BLAKE2b-256'  # Only supported in >= 1.2
     BLAKE2B_384 = 'BLAKE2b-384'  # Only supported in >= 1.2
     BLAKE2B_512 = 'BLAKE2b-512'  # Only supported in >= 1.2
@@ -299,6 +309,82 @@ class HashAlgorithm(str, Enum):
     SHA3_256 = 'SHA3-256'
     SHA3_384 = 'SHA3-384'  # Only supported in >= 1.2
     SHA3_512 = 'SHA3-512'
+
+
+class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS IS NON-PUBLIC  """
+
+    __cases: Dict[Type[serializable.ViewType], Set[HashAlgorithm]] = dict()
+    __cases[SchemaVersion1Dot0] = \
+        __cases[SchemaVersion1Dot1] = {
+        HashAlgorithm.MD5,
+        HashAlgorithm.SHA_1,
+        HashAlgorithm.SHA_256,
+        HashAlgorithm.SHA_384,
+        HashAlgorithm.SHA_512,
+        HashAlgorithm.SHA3_256,
+        HashAlgorithm.SHA3_512
+    }
+    __cases[SchemaVersion1Dot2] = \
+        __cases[SchemaVersion1Dot3] = \
+        __cases[SchemaVersion1Dot4] = \
+        __cases[SchemaVersion1Dot5] = __cases[SchemaVersion1Dot1].union({
+            HashAlgorithm.BLAKE2B_256,
+            HashAlgorithm.BLAKE2B_384,
+            HashAlgorithm.BLAKE2B_512,
+            HashAlgorithm.BLAKE3,
+            HashAlgorithm.SHA3_384
+        })
+
+    @classmethod
+    def __prep(cls, hts: Iterable['HashType'], v: Type[serializable.ViewType]) -> Generator['HashType', None, None]:
+        cases = cls.__cases[v]
+        for ht in hts:
+            if ht.alg in cases:
+                yield ht
+            else:
+                warn(f'serialization omitted due to unsupported HashAlgorithm: {ht!r}',
+                     category=UserWarning, stacklevel=0)
+
+    @classmethod
+    def json_normalize(cls, o: Iterable['HashType'], *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> List[Any]:
+        assert view is not None
+        return [
+            json_loads(
+                i.as_json(  # type:ignore[attr-defined]
+                    view_=view)
+            ) for i in cls.__prep(o, view)
+        ]
+
+    @classmethod
+    def xml_normalize(cls, o: Iterable['HashType'], *,
+                      element_name: str,
+                      view: Optional[Type[serializable.ViewType]],
+                      xmlns: Optional[str],
+                      **__: Any) -> XmlElement:
+        assert view is not None
+        elem = XmlElement(element_name)
+        elem.extend(
+            i.as_xml(  # type:ignore[attr-defined]
+                view_=view, as_string=False, element_name='hash', xmlns=xmlns
+            ) for i in cls.__prep(o, view)
+        )
+        return elem
+
+    @classmethod
+    def json_denormalize(cls, o: Any,
+                         **__: Any) -> List['HashType']:
+        return [HashType.from_json(  # type:ignore[attr-defined]
+            i) for i in o]
+
+    @classmethod
+    def xml_denormalize(cls, o: 'XmlElement', *,
+                        default_ns: Optional[str],
+                        **__: Any) -> List['HashType']:
+        return [HashType.from_xml(  # type:ignore[attr-defined]
+            i, default_ns) for i in o]
 
 
 @serializable.serializable_class
@@ -578,7 +664,7 @@ class ExternalReference:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     def hashes(self) -> 'SortedSet[HashType]':
         """
         The hashes of the external reference (if applicable).
@@ -1075,7 +1161,7 @@ class Tool:
         self._version = version
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     @serializable.xml_sequence(4)
     def hashes(self) -> 'SortedSet[HashType]':
         """

@@ -46,6 +46,7 @@ from . import (
     OrganizationalEntity,
     Property,
     XsUri,
+    _HashTypeRepositorySerializationHelper,
     sha1sum,
 )
 from .bom_ref import BomRef
@@ -1036,7 +1037,7 @@ class Component(Dependable):
         self._scope = scope
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     @serializable.xml_sequence(9)
     def hashes(self) -> 'SortedSet[HashType]':
         """
