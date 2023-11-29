@@ -325,13 +325,13 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
         HashAlgorithm.SHA3_512,
     }
     __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0]
-    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1].union({
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1] | {
         HashAlgorithm.BLAKE2B_256,
         HashAlgorithm.BLAKE2B_384,
         HashAlgorithm.BLAKE2B_512,
         HashAlgorithm.BLAKE3,
         HashAlgorithm.SHA3_384,
-    })
+    }
     __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
