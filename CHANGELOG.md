@@ -2,6 +2,240 @@
 
 
 
+## v6.0.0-rc.1 (2023-11-30)
+
+### Breaking
+
+* feat!: v6.0.0 RC1
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`dada5d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/dada5d72680701c65608b88e0f739341accf854f))
+
+### Chore
+
+* chore(deps-dev): update mypy requirement from 1.7.0 to 1.7.1 (#487)
+
+Updates the requirements on [mypy](https://github.com/python/mypy) to permit the latest version.
+- [Changelog](https://github.com/python/mypy/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python/mypy/compare/v1.7.0...v1.7.1)
+
+---
+updated-dependencies:
+- dependency-name: mypy
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`78957e6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/78957e6592be2106de7933f5b54a0916194980e3))
+
+* chore(deps-dev): update mypy requirement from 1.6.1 to 1.7.0 (#484)
+
+Updates the requirements on [mypy](https://github.com/python/mypy) to permit the latest version.
+- [Changelog](https://github.com/python/mypy/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python/mypy/compare/v1.6.1...v1.7.0)
+
+---
+updated-dependencies:
+- dependency-name: mypy
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`c716ba3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c716ba3751017e2f88367b660dbc11866c2feb1d))
+
+* chore(deps-dev): update ddt requirement from 1.6.0 to 1.7.0 (#483)
+
+Updates the requirements on [ddt](https://github.com/datadriventests/ddt) to permit the latest version.
+- [Release notes](https://github.com/datadriventests/ddt/releases)
+- [Commits](https://github.com/datadriventests/ddt/compare/1.6.0...1.7.0)
+
+---
+updated-dependencies:
+- dependency-name: ddt
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`8a1f7b9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8a1f7b9678e888654a373965b7902428525f7d60))
+
+* chore: mograte dev-dependencies to new poetry layout (#482)
+
+see https://python-poetry.org/docs/managing-dependencies/#dependency-groups
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a85585c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a85585cf5e445ba5e67a027b4d1161911df6467d))
+
+* chore(deps-dev): update flake8-isort requirement from 6.1.0  to 6.1.1 (#481)
+
+Updates the requirements on [flake8-isort](https://github.com/gforcada/flake8-isort) to permit the latest version.
+- [Changelog](https://github.com/gforcada/flake8-isort/blob/main/CHANGES.rst)
+- [Commits](https://github.com/gforcada/flake8-isort/compare/6.1.0...6.1.1)
+
+---
+updated-dependencies:
+- dependency-name: flake8-isort
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`fc74ddd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fc74dddc8add79be31d3747ddce9241bce2e4fed))
+
+### Documentation
+
+* docs: keywaords &amp; funding (#486)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3189e59`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3189e59ff8e3d3d10f7b949b5a08397ff3d3642b))
+
+### Feature
+
+* feat: add basic support for CDX 1.5 (#488)
+
+This PR introduces basic support for CDX 1.5.
+
+Ref:
+- #404
+
+**Schema:**
+
+- Extended schema-downloader and added specification files,
+- Adapted `README` and `SchemaVersion` for 1.5
+
+**Model:**
+
+- Added `SchemaVersion1Dot5`, serializable annotations,
+- Extended `ComponentType` and `ExternalReferenceType` enums
+
+**Tests:**
+
+- Generated snapshots for 1.5.
+- In some existing tests `bom-ref` changed, since 1.5 is now listed before 1.4
+
+**Chore:**
+
+-  Added `newline = &#39;\n&#39;` to schema-downloader and `writeSnapshot` for cross-platform support
+
+----
+
+* feat: add basic support for CDX 1.5
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+
+* docs: note minversions of `HashAlgorithm` cases
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* docs: set ref after schema download
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: add the newly missing/TODO elements
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* docs: note minversions of `ComponentType` cases
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* docs: update to latest CDX meta
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* feat: new enum cases fr VulnerabilityScoreSource
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* tests: adjust to latest implementation
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* revert deletion by accident
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+---------
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0546677`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0546677f7ea82ab176836b4d4432a7e3dc6db230))
+
+### Unknown
+
+* Feat: prevent unknwon enums from rendering (#496)
+
+- fixes #490
+- BC: Component serialization may throw `cyclonedx.exception.serialization.SerializationOfUnsupportedComponentTypeException`
+- feat: serialization have own exceptions of `cyclonedx.exception.serialization.*`
+- tests: lots of (functional) tests related to enums and serialization
+- misc: bump `py-serializable@^0.15` -&gt; `@^0.16`
+
+
+details &amp; progress: 
+
+- [x] `DataFlow`
+- [x] `Encoding`
+- [x] `HashAlgorithm` 
+- [x] `ExternalReferenceType`
+       convert &#34;unknown&#34; to `other`
+- [x] `component.ComponentScope`
+- [x] `component.ComponentType`.   &gt; tests done, migrator open  
+       Unclear how to proceed. dropping the info is a bad idea here.   
+       Best would be to throw an exception and abort the rendering.
+- [x] `component.PatchClassification`
+- [x] `impact_analysis.ImpactAnalysisAffectedStatus`
+- [x] `impact_analysis.ImpactAnalysisJustification`
+- [x] `impact_analysis.ImpactAnalysisResponse`
+- [x] `impact_analysis.ImpactAnalysisState`
+- [x] `issue.IssueClassification`
+- [x] `vulnerability.VulnerabilityScoreSource` 
+         convert &#34;unknown&#34; to `other`
+- [x] `vulnerability.VulnerabilitySeverity`
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6c204f7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6c204f7f6afbc49fe936931c6188380a8072f650))
+
+* bc: remove parser API (#495)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ac1f48a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ac1f48afae06f16f2375398658dd86076758a84a))
+
+* bc: remove const `output.LATEST_SUPPORTED_SCHEMA_VERSION` (#494)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b10dc83`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b10dc83f1036d22693342ef8711502a899a3f5bb))
+
+* Remove deprecated  6.0.0 (#493)
+
+* bc: remove deprecated functionality
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* tests: remove unused/outdated tests
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e9cc5ee`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e9cc5ee75ccf466040c2c4d6f5e8b5de8e24a666))
+
+* tests: remove unused test snapshots
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`cb0d5b6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cb0d5b6a455ca6aef3070b4f473fec18202b3a2b))
+
+
 ## v5.1.1 (2023-11-02)
 
 ### Fix
