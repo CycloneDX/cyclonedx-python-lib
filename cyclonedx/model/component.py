@@ -18,7 +18,7 @@
 
 from enum import Enum
 from os.path import exists
-from typing import Any, Iterable, Optional, Set, Union
+from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
@@ -26,6 +26,7 @@ from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
 from ..exception.model import NoPropertiesProvidedException
+from ..exception.serialization import SerializationOfUnsupportedComponentTypeException
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -46,6 +47,7 @@ from . import (
     OrganizationalEntity,
     Property,
     XsUri,
+    _HashTypeRepositorySerializationHelper,
     sha1sum,
 )
 from .bom_ref import BomRef
@@ -270,6 +272,7 @@ class ComponentEvidence:
         return f'<ComponentEvidence id={id(self)}>'
 
 
+@serializable.serializable_enum
 class ComponentScope(str, Enum):
     """
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
@@ -277,11 +280,54 @@ class ComponentScope(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_scope
     """
+    # see `_ComponentScopeSerializationHelper.__CASES` for view/case map
     REQUIRED = 'required'
     OPTIONAL = 'optional'
-    EXCLUDED = 'excluded'
+    EXCLUDED = 'excluded'  # Only supported in >= 1.1
 
 
+class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ComponentScope]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({
+        ComponentScope.REQUIRED,
+        ComponentScope.OPTIONAL,
+    })
+    __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0] | {
+        ComponentScope.EXCLUDED,
+    }
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1]
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+
+    @classmethod
+    def __normalize(cls, cs: ComponentScope, view: Type[serializable.ViewType]) -> Optional[str]:
+        return cs.value \
+            if cs in cls.__CASES.get(view, ()) \
+            else None
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ComponentScope:
+        return ComponentScope(o)
+
+
+@serializable.serializable_enum
 class ComponentType(str, Enum):
     """
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
@@ -289,6 +335,7 @@ class ComponentType(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_classification
     """
+    # see `_ComponentTypeSerializationHelper.__CASES` for view/case map
     APPLICATION = 'application'
     CONTAINER = 'container'  # Only supported in >= 1.2
     DATA = 'data'  # Only supported in >= 1.5
@@ -301,6 +348,58 @@ class ComponentType(str, Enum):
     MACHINE_LEARNING_MODEL = 'machine-learning-model'  # Only supported in >= 1.5
     OPERATING_SYSTEM = 'operating-system'
     PLATFORM = 'platform'  # Only supported in >= 1.5
+
+
+class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ComponentType]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({
+        ComponentType.APPLICATION,
+        ComponentType.DEVICE,
+        ComponentType.FRAMEWORK,
+        ComponentType.LIBRARY,
+        ComponentType.OPERATING_SYSTEM,
+    })
+    __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0] | {
+        ComponentType.FILE,
+    }
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1] | {
+        ComponentType.CONTAINER,
+        ComponentType.FIRMWARE,
+    }
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4] | {
+        ComponentType.DATA,
+        ComponentType.DEVICE_DRIVER,
+        ComponentType.MACHINE_LEARNING_MODEL,
+        ComponentType.PLATFORM,
+    }
+
+    @classmethod
+    def __normalize(cls, ct: ComponentType, view: Type[serializable.ViewType]) -> Optional[str]:
+        if ct in cls.__CASES.get(view, ()):
+            return ct.value
+        raise SerializationOfUnsupportedComponentTypeException(f'unsupported {ct!r} for view {view!r}')
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ComponentType:
+        return ComponentType(o)
 
 
 class Diff:
@@ -365,6 +464,7 @@ class Diff:
         return f'<Diff url={self.url}>'
 
 
+@serializable.serializable_enum
 class PatchClassification(str, Enum):
     """
     Enum object that defines the permissible `patchClassification`s.
@@ -832,6 +932,7 @@ class Component(Dependable):
         self.release_notes = release_notes
 
     @property
+    @serializable.type_mapping(_ComponentTypeSerializationHelper)
     @serializable.xml_attribute()
     def type(self) -> ComponentType:
         """
@@ -1016,6 +1117,7 @@ class Component(Dependable):
         self._description = description
 
     @property
+    @serializable.type_mapping(_ComponentScopeSerializationHelper)
     @serializable.xml_sequence(8)
     def scope(self) -> Optional[ComponentScope]:
         """
@@ -1033,7 +1135,7 @@ class Component(Dependable):
         self._scope = scope
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     @serializable.xml_sequence(9)
     def hashes(self) -> 'SortedSet[HashType]':
         """

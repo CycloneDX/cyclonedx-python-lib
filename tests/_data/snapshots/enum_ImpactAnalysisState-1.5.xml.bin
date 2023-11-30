@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
+      </tool>
+    </tools>
+  </metadata>
+  <vulnerabilities>
+    <vulnerability bom-ref="vuln-wit-state-EXPLOITABLE">
+      <id>vuln-wit-state-EXPLOITABLE</id>
+      <analysis>
+        <state>exploitable</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-state-FALSE_POSITIVE">
+      <id>vuln-wit-state-FALSE_POSITIVE</id>
+      <analysis>
+        <state>false_positive</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-state-IN_TRIAGE">
+      <id>vuln-wit-state-IN_TRIAGE</id>
+      <analysis>
+        <state>in_triage</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-state-NOT_AFFECTED">
+      <id>vuln-wit-state-NOT_AFFECTED</id>
+      <analysis>
+        <state>not_affected</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-state-RESOLVED">
+      <id>vuln-wit-state-RESOLVED</id>
+      <analysis>
+        <state>resolved</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-state-RESOLVED_WITH_PEDIGREE">
+      <id>vuln-wit-state-RESOLVED_WITH_PEDIGREE</id>
+      <analysis>
+        <state>resolved_with_pedigree</state>
+      </analysis>
+    </vulnerability>
+  </vulnerabilities>
+</bom>

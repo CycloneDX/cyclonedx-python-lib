@@ -19,6 +19,7 @@ import re
 from typing import Any, Callable
 from unittest import TestCase
 from unittest.mock import Mock, patch
+from warnings import warn
 
 from ddt import ddt, idata, named_data, unpack
 
@@ -48,8 +49,10 @@ class TestOutputXml(TestCase, SnapshotMixin):
         try:
             errors = XmlValidator(sv).validate_str(xml)
         except MissingOptionalDependencyException:
-            errors = None  # skipped validation
-        self.assertIsNone(errors)
+            warn('!!! skipped schema validation',
+                 category=UserWarning, stacklevel=0)
+        else:
+            self.assertIsNone(errors)
         self.assertEqualSnapshot(xml, snapshot_name)
 
     @named_data(*(

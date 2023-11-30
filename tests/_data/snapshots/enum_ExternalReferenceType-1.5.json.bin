@@ -1,0 +1,221 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy",
+      "externalReferences": [
+        {
+          "type": "adversary-model",
+          "url": "tests/ADVERSARY_MODEL"
+        },
+        {
+          "type": "advisories",
+          "url": "tests/ADVISORIES"
+        },
+        {
+          "type": "attestation",
+          "url": "tests/ATTESTATION"
+        },
+        {
+          "type": "bom",
+          "url": "tests/BOM"
+        },
+        {
+          "type": "build-meta",
+          "url": "tests/BUILD_META"
+        },
+        {
+          "type": "build-system",
+          "url": "tests/BUILD_SYSTEM"
+        },
+        {
+          "type": "certification-report",
+          "url": "tests/CERTIFICATION_REPORT"
+        },
+        {
+          "type": "chat",
+          "url": "tests/CHAT"
+        },
+        {
+          "type": "codified-infrastructure",
+          "url": "tests/CODIFIED_INFRASTRUCTURE"
+        },
+        {
+          "type": "component-analysis-report",
+          "url": "tests/COMPONENT_ANALYSIS_REPORT"
+        },
+        {
+          "type": "configuration",
+          "url": "tests/CONFIGURATION"
+        },
+        {
+          "type": "distribution",
+          "url": "tests/DISTRIBUTION"
+        },
+        {
+          "type": "distribution-intake",
+          "url": "tests/DISTRIBUTION_INTAKE"
+        },
+        {
+          "type": "documentation",
+          "url": "tests/DOCUMENTATION"
+        },
+        {
+          "type": "dynamic-analysis-report",
+          "url": "tests/DYNAMIC_ANALYSIS_REPORT"
+        },
+        {
+          "type": "evidence",
+          "url": "tests/EVIDENCE"
+        },
+        {
+          "type": "exploitability-statement",
+          "url": "tests/EXPLOITABILITY_STATEMENT"
+        },
+        {
+          "type": "formulation",
+          "url": "tests/FORMULATION"
+        },
+        {
+          "type": "issue-tracker",
+          "url": "tests/ISSUE_TRACKER"
+        },
+        {
+          "type": "license",
+          "url": "tests/LICENSE"
+        },
+        {
+          "type": "log",
+          "url": "tests/LOG"
+        },
+        {
+          "type": "mailing-list",
+          "url": "tests/MAILING_LIST"
+        },
+        {
+          "type": "maturity-report",
+          "url": "tests/MATURITY_REPORT"
+        },
+        {
+          "type": "model-card",
+          "url": "tests/MODEL_CARD"
+        },
+        {
+          "type": "other",
+          "url": "tests/OTHER"
+        },
+        {
+          "type": "pentest-report",
+          "url": "tests/PENTEST_REPORT"
+        },
+        {
+          "type": "poam",
+          "url": "tests/POAM"
+        },
+        {
+          "type": "quality-metrics",
+          "url": "tests/QUALITY_METRICS"
+        },
+        {
+          "type": "release-notes",
+          "url": "tests/RELEASE_NOTES"
+        },
+        {
+          "type": "risk-assessment",
+          "url": "tests/RISK_ASSESSMENT"
+        },
+        {
+          "type": "runtime-analysis-report",
+          "url": "tests/RUNTIME_ANALYSIS_REPORT"
+        },
+        {
+          "type": "security-contact",
+          "url": "tests/SECURITY_CONTACT"
+        },
+        {
+          "type": "social",
+          "url": "tests/SOCIAL"
+        },
+        {
+          "type": "static-analysis-report",
+          "url": "tests/STATIC_ANALYSIS_REPORT"
+        },
+        {
+          "type": "support",
+          "url": "tests/SUPPORT"
+        },
+        {
+          "type": "threat-model",
+          "url": "tests/THREAT_MODEL"
+        },
+        {
+          "type": "vcs",
+          "url": "tests/SCM"
+        },
+        {
+          "type": "vulnerability-assertion",
+          "url": "tests/VULNERABILITY_ASSERTION"
+        },
+        {
+          "type": "website",
+          "url": "tests/WEBSITE"
+        }
+      ],
+      "name": "dummy",
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "externalReferences": [
+          {
+            "type": "build-system",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+          },
+          {
+            "type": "distribution",
+            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+          },
+          {
+            "type": "documentation",
+            "url": "https://cyclonedx-python-library.readthedocs.io/"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+          },
+          {
+            "type": "license",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+          },
+          {
+            "type": "release-notes",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
+          }
+        ],
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5"
+}

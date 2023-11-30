@@ -20,7 +20,7 @@ from typing import Dict, Literal, Type
 
 from serializable import ViewType
 
-from ..schema import SchemaVersion
+from . import SchemaVersion
 
 
 class BaseSchemaVersion(ABC, ViewType):

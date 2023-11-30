@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <components>
+    <component type="library" bom-ref="scoped-EXCLUDED">
+      <name>dummy-EXCLUDED</name>
+      <version/>
+      <scope>excluded</scope>
+    </component>
+    <component type="library" bom-ref="scoped-OPTIONAL">
+      <name>dummy-OPTIONAL</name>
+      <version/>
+      <scope>optional</scope>
+    </component>
+    <component type="library" bom-ref="scoped-REQUIRED">
+      <name>dummy-REQUIRED</name>
+      <version/>
+      <scope>required</scope>
+    </component>
+  </components>
+</bom>

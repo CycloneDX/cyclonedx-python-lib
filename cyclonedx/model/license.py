@@ -15,18 +15,20 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import warnings
+
+"""
+License related things
+"""
+
+
 from typing import TYPE_CHECKING, Any, Optional, Union
+from warnings import warn
 
 import serializable
 from sortedcontainers import SortedSet
 
 from ..exception.model import MutuallyExclusivePropertiesException
 from . import AttachedText, ComparableTuple, XsUri
-
-"""
-License related things
-"""
 
 
 @serializable.serializable_class(name='license')
@@ -44,7 +46,7 @@ class DisjunctiveLicense:
         if not id and not name:
             raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
         if id and name:
-            warnings.warn(
+            warn(
                 'Both `id` and `name` have been supplied - `name` will be ignored!',
                 category=RuntimeWarning, stacklevel=1
             )
