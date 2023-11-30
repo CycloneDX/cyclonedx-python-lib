@@ -253,7 +253,7 @@ class _DP_ComponentType():  # noqa: N801
     JSON_SCHEMA_POINTER = ('definitions', 'component', 'properties', 'type')
 
     @classmethod
-    def unsupported_cases(cls) -> Generator[Tuple[str, Any, ...], None, None]:
+    def unsupported_cases(cls) -> Generator[Tuple[str, OutputFormat, SchemaVersion, ComponentType], None, None]:
         for name, of, sv in NAMED_OF_SV:
             if OutputFormat.XML is of:
                 schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], cls.XML_SCHEMA_XPATH))
