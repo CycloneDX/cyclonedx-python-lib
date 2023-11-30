@@ -1,7 +1,7 @@
 {
   "dependencies": [
     {
-      "ref": "00000000-0000-4000-8000-000000000004"
+      "ref": "dummy"
     }
   ],
   "metadata": {
@@ -17,7 +17,7 @@
   "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "services": [
     {
-      "bom-ref": "00000000-0000-4000-8000-000000000004",
+      "bom-ref": "dummy",
       "data": [
         {
           "classification": "BI_DIRECTIONAL",

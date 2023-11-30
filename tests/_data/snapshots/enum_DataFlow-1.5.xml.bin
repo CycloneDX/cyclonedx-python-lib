@@ -37,7 +37,7 @@
     </tools>
   </metadata>
   <services>
-    <service bom-ref="00000000-0000-4000-8000-000000000005">
+    <service bom-ref="dummy">
       <name>dummy</name>
       <data>
         <classification flow="bi-directional">BI_DIRECTIONAL</classification>
@@ -48,6 +48,6 @@
     </service>
   </services>
   <dependencies>
-    <dependency ref="00000000-0000-4000-8000-000000000005"/>
+    <dependency ref="dummy"/>
   </dependencies>
 </bom>

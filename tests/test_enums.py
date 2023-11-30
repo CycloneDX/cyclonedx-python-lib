@@ -145,7 +145,7 @@ class TestEnumDataFlow(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(services=[Service(bom_ref='dummy', data=(
+        bom = _make_bom(services=[Service(name='dummy', bom_ref='dummy', data=(
             DataClassification(flow=df, classification=df.name)
             for df in DataFlow
         ))])
