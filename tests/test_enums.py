@@ -17,10 +17,10 @@
 from enum import Enum
 from itertools import chain
 from json import load as json_load
-from os.path import join
 from typing import Any, Generator, Iterable, Tuple, Type
 from unittest import TestCase
 from unittest.mock import patch
+from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
 from ddt import ddt, idata, named_data
@@ -43,6 +43,7 @@ from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
 from cyclonedx.validation import make_schemabased_validator
+from exception import MissingOptionalDependencyException
 from tests import SnapshotMixin, uuid_generator
 from tests._data.models import _make_bom
 
@@ -129,13 +130,25 @@ class _EnumTestCase(TestCase, SnapshotMixin):
         ec = enum(value)  # throws valueError if value unknown
         self.assertTrue(ec.name)  # TODO test for an expected name
 
-    def _test_cases_render_valid(self, bom: Bom, of: OutputFormat, sv: SchemaVersion) -> None:
-        snapshot_name = join(f'enum_{type(self).__name__.removeprefix("TestEnum")}-{sv.to_version()}.{of.name.lower()}')
+    @staticmethod
+    def __str_rmp(s: str, p: str) -> str:
+        # str.removeprefix() for all py versions
+        pl = len(p)
+        return s[pl:] if s[:pl] == p else s
+
+    def _test_cases_render(self, bom: Bom, of: OutputFormat, sv: SchemaVersion) -> None:
+        snapshot_name = f'enum_{self.__str_rmp(type(self).__name__, "TestEnum")}-{sv.to_version()}.{of.name.lower()}'
 
         output = make_outputter(bom, of, sv).output_as_string(indent=2)
-        validation_errors = make_schemabased_validator(of, sv).validate_str(output)
 
-        self.assertIsNone(validation_errors)
+        try:
+            validation_errors = make_schemabased_validator(of, sv).validate_str(output)
+        except MissingOptionalDependencyException:
+            warn('!!! skipped schema validation',
+                 category=UserWarning, stacklevel=0)
+        else:
+            self.assertIsNone(validation_errors)
+
         self.assertEqualSnapshot(output, snapshot_name)
 
 
@@ -157,7 +170,7 @@ class TestEnumDataFlow(_EnumTestCase):
             DataClassification(flow=df, classification=df.name)
             for df in DataFlow
         ))])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -179,7 +192,7 @@ class TestEnumEncoding(_EnumTestCase):
                 content=f'att.encoding: {encoding.name}', encoding=encoding
             )) for encoding in Encoding
         ))])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -202,7 +215,7 @@ class TestEnumExternalReferenceType(_EnumTestCase):
                 for extref in ExternalReferenceType
             ))
         ])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -223,7 +236,7 @@ class TestEnumHashAlgorithm(_EnumTestCase):
             HashType(alg=alg, content='ae2b1fca515949e5d54fb22b8ed95575')
             for alg in HashAlgorithm
         ))])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -245,7 +258,7 @@ class TestEnumComponentScope(_EnumTestCase):
                       type=ComponentType.LIBRARY, scope=scope)
             for scope in ComponentScope
         ))
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 class _DP_ComponentType():  # noqa: N801
@@ -291,7 +304,7 @@ class TestEnumComponentType(_EnumTestCase):
             for ct in ComponentType
             if ct.value in schema_cases
         ))
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
     @named_data(*_DP_ComponentType.unsupported_cases())
     def test_cases_render_raises_on_unsupported(self, of: OutputFormat, sv: SchemaVersion,
@@ -301,7 +314,7 @@ class TestEnumComponentType(_EnumTestCase):
             Component(bom_ref=f'typed-{ct.name}', name=f'dummy {ct.name}', type=ct)
         ])
         with self.assertRaises(SerializationOfUnsupportedComponentTypeException):
-            super()._test_cases_render_valid(bom, of, sv)
+            super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -324,7 +337,7 @@ class TestEnumPatchClassification(_EnumTestCase):
                 for pc in PatchClassification
             )))
         ])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -347,7 +360,7 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
                 for iaas in ImpactAnalysisAffectedStatus
             ))]
         )])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -370,7 +383,7 @@ class TestEnumImpactAnalysisJustification(_EnumTestCase):
                 analysis=VulnerabilityAnalysis(justification=iaj)
             ) for iaj in ImpactAnalysisJustification
         ))
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -394,7 +407,7 @@ class TestEnumImpactAnalysisResponse(_EnumTestCase):
                 iar for iar in ImpactAnalysisResponse
             ))
         )])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -417,7 +430,7 @@ class TestEnumImpactAnalysisState(_EnumTestCase):
                 analysis=VulnerabilityAnalysis(state=ias)
             ) for ias in ImpactAnalysisState
         ))
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -442,7 +455,7 @@ class TestEnumIssueClassification(_EnumTestCase):
                 ))
             ]))
         ])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -463,7 +476,7 @@ class TestEnumVulnerabilityScoreSource(_EnumTestCase):
             VulnerabilityRating(method=vss)
             for vss in VulnerabilityScoreSource
         ))])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)
 
 
 @ddt
@@ -484,4 +497,4 @@ class TestEnumVulnerabilitySeverity(_EnumTestCase):
             VulnerabilityRating(severity=vs)
             for vs in VulnerabilitySeverity
         ))])
-        super()._test_cases_render_valid(bom, of, sv)
+        super()._test_cases_render(bom, of, sv)

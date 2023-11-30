@@ -20,6 +20,7 @@ import re
 from typing import Any, Callable
 from unittest import TestCase
 from unittest.mock import Mock, patch
+from warnings import warn
 
 from ddt import data, ddt, idata, named_data, unpack
 
@@ -61,8 +62,10 @@ class TestOutputJson(TestCase, SnapshotMixin):
         try:
             errors = JsonStrictValidator(sv).validate_str(json)
         except MissingOptionalDependencyException:
-            errors = None  # skipped validation
-        self.assertIsNone(errors)
+            warn('!!! skipped schema validation',
+                 category=UserWarning, stacklevel=0)
+        else:
+            self.assertIsNone(errors)
         self.assertEqualSnapshot(json, snapshot_name)
 
     @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
