@@ -40,6 +40,7 @@ from ..exception.model import (
     NoPropertiesProvidedException,
     UnknownHashTypeException,
 )
+from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -641,25 +642,6 @@ class XsUri(serializable.helpers.BaseHelper):
             )
         self._uri = uri
 
-    @property
-    @serializable.json_name('.')
-    @serializable.xml_name('.')
-    def uri(self) -> str:
-        return self._uri
-
-    @classmethod
-    def serialize(cls, o: Any) -> str:
-        if isinstance(o, XsUri):
-            return str(o)
-        raise ValueError(f'Attempt to serialize a non-XsUri: {o.__class__}')
-
-    @classmethod
-    def deserialize(cls, o: Any) -> 'XsUri':
-        try:
-            return XsUri(uri=str(o))
-        except ValueError:
-            raise ValueError(f'XsUri string supplied ({o}) does not parse!')
-
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
             return hash(other) == hash(self)
@@ -678,6 +660,28 @@ class XsUri(serializable.helpers.BaseHelper):
 
     def __str__(self) -> str:
         return self._uri
+
+    @property
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
+    def uri(self) -> str:
+        return self._uri
+
+    @classmethod
+    def serialize(cls, o: Any) -> str:
+        if isinstance(o, XsUri):
+            return str(o)
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-XsUri: {o!r}')
+
+    @classmethod
+    def deserialize(cls, o: Any) -> 'XsUri':
+        try:
+            return XsUri(uri=str(o))
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'XsUri string supplied does not parse: {o!r}'
+            ) from err
 
 
 @serializable.serializable_class

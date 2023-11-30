@@ -63,7 +63,6 @@ class NoPropertiesProvidedException(CycloneDxModelException):
     """
     Raised when attempting to construct a model class and providing NO values (where all properites are defined as
     Optional, but at least one is required).
-
     """
     pass
 

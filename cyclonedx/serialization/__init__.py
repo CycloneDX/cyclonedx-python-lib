@@ -27,6 +27,7 @@ from xml.etree.ElementTree import Element  # nosec B405
 from packageurl import PackageURL
 from serializable.helpers import BaseHelper
 
+from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..model.bom_ref import BomRef
 from ..model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
 
@@ -40,15 +41,17 @@ class BomRefHelper(BaseHelper):
     def serialize(cls, o: Any) -> str:
         if isinstance(o, BomRef):
             return o.value
-
-        raise ValueError(f'Attempt to serialize a non-BomRef: {o.__class__}')
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-BomRef: {o!r}')
 
     @classmethod
     def deserialize(cls, o: Any) -> BomRef:
         try:
             return BomRef(value=str(o))
-        except ValueError:
-            raise ValueError(f'BomRef string supplied ({o}) does not parse!')
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'BomRef string supplied does not parse: {o!r}'
+            ) from err
 
 
 class PackageUrl(BaseHelper):
@@ -57,15 +60,17 @@ class PackageUrl(BaseHelper):
     def serialize(cls, o: Any, ) -> str:
         if isinstance(o, PackageURL):
             return str(o.to_string())
-
-        raise ValueError(f'Attempt to serialize a non-PackageURL: {o.__class__}')
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-PackageURL: {o!r}')
 
     @classmethod
     def deserialize(cls, o: Any) -> PackageURL:
         try:
             return PackageURL.from_string(purl=str(o))
-        except ValueError:
-            raise ValueError(f'PURL string supplied ({o}) does not parse!')
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'PURL string supplied does not parse: {o!r}'
+            ) from err
 
 
 class UrnUuidHelper(BaseHelper):
@@ -74,15 +79,17 @@ class UrnUuidHelper(BaseHelper):
     def serialize(cls, o: Any) -> str:
         if isinstance(o, UUID):
             return o.urn
-
-        raise ValueError(f'Attempt to serialize a non-UUID: {o.__class__}')
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-UUID: {o!r}')
 
     @classmethod
     def deserialize(cls, o: Any) -> UUID:
         try:
             return UUID(str(o))
-        except ValueError:
-            raise ValueError(f'UUID string supplied ({o}) does not parse!')
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'UUID string supplied does not parse: {o!r}'
+            ) from err
 
 
 class LicenseRepositoryHelper(BaseHelper):
@@ -98,8 +105,14 @@ class LicenseRepositoryHelper(BaseHelper):
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
             return [{'expression': str(expression.value)}]
-        return [{'license': json_loads(li.as_json(  # type:ignore[union-attr]
-            view_=view))} for li in o]
+        return [
+            {'license': json_loads(
+                li.as_json(  # type:ignore[attr-defined]
+                    view_=view)
+            )}
+            for li in o
+            if isinstance(li, DisjunctiveLicense)
+        ]
 
     @classmethod
     def json_denormalize(cls, o: List[Dict[str, Any]],
@@ -111,6 +124,8 @@ class LicenseRepositoryHelper(BaseHelper):
                     li['license']))
             elif 'expression' in li:
                 repo.add(LicenseExpression(li['expression']))
+            else:
+                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
         return repo
 
     @classmethod
@@ -130,9 +145,12 @@ class LicenseRepositoryHelper(BaseHelper):
             elem.append(expression.as_xml(  # type:ignore[attr-defined]
                 view_=view, as_string=False, element_name='expression', xmlns=xmlns))
         else:
-            for li in o:
-                elem.append(li.as_xml(  # type:ignore[union-attr]
-                    view_=view, as_string=False, element_name='license', xmlns=xmlns))
+            elem.extend(
+                li.as_xml(  # type:ignore[attr-defined]
+                    view_=view, as_string=False, element_name='license', xmlns=xmlns)
+                for li in o
+                if isinstance(li, DisjunctiveLicense)
+            )
         return elem
 
     @classmethod
@@ -148,4 +166,6 @@ class LicenseRepositoryHelper(BaseHelper):
             elif tag == 'expression':
                 repo.add(LicenseExpression.from_xml(  # type:ignore[attr-defined]
                     li, default_ns))
+            else:
+                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
         return repo
