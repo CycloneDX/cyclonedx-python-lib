@@ -25,6 +25,7 @@ from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
 from ddt import ddt, idata, named_data
 
+from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.exception.serialization import SerializationOfUnsupportedComponentTypeException
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom
@@ -43,7 +44,6 @@ from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
 from cyclonedx.validation import make_schemabased_validator
-from exception import MissingOptionalDependencyException
 from tests import SnapshotMixin, uuid_generator
 from tests._data.models import _make_bom
 
