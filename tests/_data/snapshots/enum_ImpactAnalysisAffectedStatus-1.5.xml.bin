@@ -38,6 +38,7 @@
   </metadata>
   <vulnerabilities>
     <vulnerability bom-ref="dummy">
+      <id>dummy</id>
       <affects>
         <target>
           <ref>urn:cdx:bom23/1#comp42</ref>

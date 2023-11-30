@@ -37,32 +37,38 @@
     </tools>
   </metadata>
   <vulnerabilities>
-    <vulnerability bom-ref="vuln-wit-state-RESOLVED">
+    <vulnerability bom-ref="vuln-wit-state-EXPLOITABLE">
+      <id>vuln-wit-state-EXPLOITABLE</id>
       <analysis>
-        <state>resolved</state>
+        <state>exploitable</state>
+      </analysis>
+    </vulnerability>
+    <vulnerability bom-ref="vuln-wit-state-FALSE_POSITIVE">
+      <id>vuln-wit-state-FALSE_POSITIVE</id>
+      <analysis>
+        <state>false_positive</state>
       </analysis>
     </vulnerability>
     <vulnerability bom-ref="vuln-wit-state-IN_TRIAGE">
+      <id>vuln-wit-state-IN_TRIAGE</id>
       <analysis>
         <state>in_triage</state>
       </analysis>
     </vulnerability>
     <vulnerability bom-ref="vuln-wit-state-NOT_AFFECTED">
+      <id>vuln-wit-state-NOT_AFFECTED</id>
       <analysis>
         <state>not_affected</state>
       </analysis>
     </vulnerability>
-    <vulnerability bom-ref="vuln-wit-state-FALSE_POSITIVE">
+    <vulnerability bom-ref="vuln-wit-state-RESOLVED">
+      <id>vuln-wit-state-RESOLVED</id>
       <analysis>
-        <state>false_positive</state>
-      </analysis>
-    </vulnerability>
-    <vulnerability bom-ref="vuln-wit-state-EXPLOITABLE">
-      <analysis>
-        <state>exploitable</state>
+        <state>resolved</state>
       </analysis>
     </vulnerability>
     <vulnerability bom-ref="vuln-wit-state-RESOLVED_WITH_PEDIGREE">
+      <id>vuln-wit-state-RESOLVED_WITH_PEDIGREE</id>
       <analysis>
         <state>resolved_with_pedigree</state>
       </analysis>

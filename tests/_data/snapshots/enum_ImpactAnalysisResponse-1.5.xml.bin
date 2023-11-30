@@ -38,6 +38,7 @@
   </metadata>
   <vulnerabilities>
     <vulnerability bom-ref="dummy">
+      <id>dummy</id>
       <analysis>
         <responses>
           <response>can_not_fix</response>

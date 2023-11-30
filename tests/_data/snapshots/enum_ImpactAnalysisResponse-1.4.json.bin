@@ -56,7 +56,8 @@
           "workaround_available"
         ]
       },
-      "bom-ref": "dummy"
+      "bom-ref": "dummy",
+      "id": "dummy"
     }
   ],
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",

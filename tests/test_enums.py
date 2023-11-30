@@ -342,7 +342,7 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(
-            bom_ref='dummy', affects=[BomTarget(ref='urn:cdx:bom23/1#comp42', versions=(
+            bom_ref='dummy', id='dummy', affects=[BomTarget(ref='urn:cdx:bom23/1#comp42', versions=(
                 BomTargetVersionRange(version=f'1.33.7+{iaas.name}', status=iaas)
                 for iaas in ImpactAnalysisAffectedStatus
             ))]
@@ -366,7 +366,7 @@ class TestEnumImpactAnalysisJustification(_EnumTestCase):
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=(
             Vulnerability(
-                bom_ref=f'vuln-with-{iaj.name}',
+                bom_ref=f'vuln-with-{iaj.name}', id=f'vuln-with-{iaj.name}',
                 analysis=VulnerabilityAnalysis(justification=iaj)
             ) for iaj in ImpactAnalysisJustification
         ))
@@ -389,7 +389,7 @@ class TestEnumImpactAnalysisResponse(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(
-            bom_ref='dummy',
+            bom_ref='dummy', id='dummy',
             analysis=VulnerabilityAnalysis(responses=(
                 iar for iar in ImpactAnalysisResponse
             ))
@@ -413,7 +413,7 @@ class TestEnumImpactAnalysisState(_EnumTestCase):
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=(
             Vulnerability(
-                bom_ref=f'vuln-wit-state-{ias.name}',
+                bom_ref=f'vuln-wit-state-{ias.name}', id=f'vuln-wit-state-{ias.name}',
                 analysis=VulnerabilityAnalysis(state=ias)
             ) for ias in ImpactAnalysisState
         ))
@@ -459,7 +459,7 @@ class TestEnumVulnerabilityScoreSource(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', ratings=(
+        bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', id='dummy', ratings=(
             VulnerabilityRating(method=vss)
             for vss in VulnerabilityScoreSource
         ))])
@@ -480,7 +480,7 @@ class TestEnumVulnerabilitySeverity(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', ratings=(
+        bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', id='dummy', ratings=(
             VulnerabilityRating(severity=vs)
             for vs in VulnerabilitySeverity
         ))])

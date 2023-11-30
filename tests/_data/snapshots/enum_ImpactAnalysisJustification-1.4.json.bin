@@ -48,57 +48,66 @@
   "vulnerabilities": [
     {
       "analysis": {
-        "justification": "code_not_reachable"
-      },
-      "bom-ref": "vuln-with-CODE_NOT_REACHABLE"
-    },
-    {
-      "analysis": {
-        "justification": "requires_dependency"
-      },
-      "bom-ref": "vuln-with-REQUIRES_DEPENDENCY"
-    },
-    {
-      "analysis": {
         "justification": "code_not_present"
       },
-      "bom-ref": "vuln-with-CODE_NOT_PRESENT"
+      "bom-ref": "vuln-with-CODE_NOT_PRESENT",
+      "id": "vuln-with-CODE_NOT_PRESENT"
     },
     {
       "analysis": {
-        "justification": "protected_by_compiler"
+        "justification": "code_not_reachable"
       },
-      "bom-ref": "vuln-with-PROTECTED_BY_COMPILER"
-    },
-    {
-      "analysis": {
-        "justification": "protected_by_mitigating_control"
-      },
-      "bom-ref": "vuln-with-PROTECTED_BY_MITIGATING_CONTROL"
-    },
-    {
-      "analysis": {
-        "justification": "protected_at_runtime"
-      },
-      "bom-ref": "vuln-with-PROTECTED_AT_RUNTIME"
+      "bom-ref": "vuln-with-CODE_NOT_REACHABLE",
+      "id": "vuln-with-CODE_NOT_REACHABLE"
     },
     {
       "analysis": {
         "justification": "protected_at_perimeter"
       },
-      "bom-ref": "vuln-with-PROTECTED_AT_PERIMITER"
+      "bom-ref": "vuln-with-PROTECTED_AT_PERIMITER",
+      "id": "vuln-with-PROTECTED_AT_PERIMITER"
+    },
+    {
+      "analysis": {
+        "justification": "protected_at_runtime"
+      },
+      "bom-ref": "vuln-with-PROTECTED_AT_RUNTIME",
+      "id": "vuln-with-PROTECTED_AT_RUNTIME"
+    },
+    {
+      "analysis": {
+        "justification": "protected_by_compiler"
+      },
+      "bom-ref": "vuln-with-PROTECTED_BY_COMPILER",
+      "id": "vuln-with-PROTECTED_BY_COMPILER"
+    },
+    {
+      "analysis": {
+        "justification": "protected_by_mitigating_control"
+      },
+      "bom-ref": "vuln-with-PROTECTED_BY_MITIGATING_CONTROL",
+      "id": "vuln-with-PROTECTED_BY_MITIGATING_CONTROL"
     },
     {
       "analysis": {
         "justification": "requires_configuration"
       },
-      "bom-ref": "vuln-with-REQUIRES_CONFIGURATION"
+      "bom-ref": "vuln-with-REQUIRES_CONFIGURATION",
+      "id": "vuln-with-REQUIRES_CONFIGURATION"
+    },
+    {
+      "analysis": {
+        "justification": "requires_dependency"
+      },
+      "bom-ref": "vuln-with-REQUIRES_DEPENDENCY",
+      "id": "vuln-with-REQUIRES_DEPENDENCY"
     },
     {
       "analysis": {
         "justification": "requires_environment"
       },
-      "bom-ref": "vuln-with-REQUIRES_ENVIRONMENT"
+      "bom-ref": "vuln-with-REQUIRES_ENVIRONMENT",
+      "id": "vuln-with-REQUIRES_ENVIRONMENT"
     }
   ],
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
