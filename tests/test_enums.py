@@ -18,13 +18,14 @@ from enum import Enum
 from itertools import chain
 from json import load as json_load
 from os.path import join
-from typing import Any, Generator, Iterable, Type
+from typing import Any, Generator, Iterable, Tuple, Type
 from unittest import TestCase
 from unittest.mock import patch
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
 from ddt import ddt, idata, named_data
 
+from cyclonedx.exception.serialization import SerializationOfUnsupportedComponentTypeException
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, Patch, Pedigree
@@ -42,7 +43,6 @@ from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
 from cyclonedx.validation import make_schemabased_validator
-from exception.serialization import SerializationOfUnsupportedComponentTypeException
 from tests import SnapshotMixin, uuid_generator
 from tests._data.models import _make_bom
 
@@ -248,14 +248,30 @@ class TestEnumComponentScope(_EnumTestCase):
         super()._test_cases_render_valid(bom, of, sv)
 
 
+class _DP_ComponentType():  # noqa: N801
+    XML_SCHEMA_XPATH = f"./{SCHEMA_NS}simpleType[@name='classification']"
+    JSON_SCHEMA_POINTER = ('definitions', 'component', 'properties', 'type')
+
+    @classmethod
+    def unsupported_cases(cls) -> Generator[Tuple[str, Any, ...], None, None]:
+        for name, of, sv in NAMED_OF_SV:
+            if OutputFormat.XML is of:
+                schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], cls.XML_SCHEMA_XPATH))
+            elif OutputFormat.JSON is of:
+                schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], cls.JSON_SCHEMA_POINTER))
+            else:
+                raise ValueError(f'unexpected of: {of!r}')
+            for ct in ComponentType:
+                if ct.value not in schema_cases:
+                    yield f'{name}-{ct.name}', of, sv, ct
+
+
 @ddt
 class TestEnumComponentType(_EnumTestCase):
-    __xml_schema_xpath = f"./{SCHEMA_NS}simpleType[@name='classification']"
-    __json_schemas_jsonpointer = ('definitions', 'component', 'properties', 'type')
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(__xml_schema_xpath),
-        dp_cases_from_json_schemas(*__json_schemas_jsonpointer),
+        dp_cases_from_xml_schemas(_DP_ComponentType.XML_SCHEMA_XPATH),
+        dp_cases_from_json_schemas(*_DP_ComponentType.JSON_SCHEMA_POINTER),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ComponentType, value)
@@ -265,9 +281,9 @@ class TestEnumComponentType(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         if OutputFormat.XML is of:
-            schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], self.__xml_schema_xpath))
+            schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], _DP_ComponentType.XML_SCHEMA_XPATH))
         elif OutputFormat.JSON is of:
-            schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], self.__json_schemas_jsonpointer))
+            schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], _DP_ComponentType.JSON_SCHEMA_POINTER))
         else:
             raise ValueError(f'unexpected of: {of!r}')
         bom = _make_bom(components=(
@@ -277,23 +293,13 @@ class TestEnumComponentType(_EnumTestCase):
         ))
         super()._test_cases_render_valid(bom, of, sv)
 
-    @named_data(*NAMED_OF_SV)
-    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
-    def test_cases_render_raises_on_unsupported(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
-        if OutputFormat.XML is of:
-            schema_cases = ()  # TODO
-        elif OutputFormat.JSON is of:
-            schema_cases = ()  # TODO
-        else:
-            raise ValueError(f'unexpected of: {of!r}')
-        if len(schema_cases) == 0:
-            return None
-        bom = _make_bom(components=(
+    @named_data(*_DP_ComponentType.unsupported_cases())
+    def test_cases_render_raises_on_unsupported(self, of: OutputFormat, sv: SchemaVersion,
+                                                ct: ComponentType,
+                                                *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[
             Component(bom_ref=f'typed-{ct.name}', name=f'dummy {ct.name}', type=ct)
-            for ct in ComponentType
-            if ct.value in schema_cases
-        ))
+        ])
         with self.assertRaises(SerializationOfUnsupportedComponentTypeException):
             super()._test_cases_render_valid(bom, of, sv)
 
