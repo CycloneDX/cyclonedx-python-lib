@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
   <metadata>
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
@@ -43,14 +43,8 @@
     <component type="container" bom-ref="typed-CONTAINER">
       <name>dummy CONTAINER</name>
     </component>
-    <component type="data" bom-ref="typed-DATA">
-      <name>dummy DATA</name>
-    </component>
     <component type="device" bom-ref="typed-DEVICE">
       <name>dummy DEVICE</name>
-    </component>
-    <component type="device-driver" bom-ref="typed-DEVICE_DRIVER">
-      <name>dummy DEVICE_DRIVER</name>
     </component>
     <component type="file" bom-ref="typed-FILE">
       <name>dummy FILE</name>
@@ -64,28 +58,18 @@
     <component type="library" bom-ref="typed-LIBRARY">
       <name>dummy LIBRARY</name>
     </component>
-    <component type="machine-learning-model" bom-ref="typed-MACHINE_LEARNING_MODEL">
-      <name>dummy MACHINE_LEARNING_MODEL</name>
-    </component>
     <component type="operating-system" bom-ref="typed-OPERATING_SYSTEM">
       <name>dummy OPERATING_SYSTEM</name>
-    </component>
-    <component type="platform" bom-ref="typed-PLATFORM">
-      <name>dummy PLATFORM</name>
     </component>
   </components>
   <dependencies>
     <dependency ref="typed-APPLICATION"/>
     <dependency ref="typed-CONTAINER"/>
-    <dependency ref="typed-DATA"/>
     <dependency ref="typed-DEVICE"/>
-    <dependency ref="typed-DEVICE_DRIVER"/>
     <dependency ref="typed-FILE"/>
     <dependency ref="typed-FIRMWARE"/>
     <dependency ref="typed-FRAMEWORK"/>
     <dependency ref="typed-LIBRARY"/>
-    <dependency ref="typed-MACHINE_LEARNING_MODEL"/>
     <dependency ref="typed-OPERATING_SYSTEM"/>
-    <dependency ref="typed-PLATFORM"/>
   </dependencies>
 </bom>

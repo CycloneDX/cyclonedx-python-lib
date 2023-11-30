@@ -11,19 +11,9 @@
       "type": "container"
     },
     {
-      "bom-ref": "typed-DATA",
-      "name": "dummy DATA",
-      "type": "data"
-    },
-    {
       "bom-ref": "typed-DEVICE",
       "name": "dummy DEVICE",
       "type": "device"
-    },
-    {
-      "bom-ref": "typed-DEVICE_DRIVER",
-      "name": "dummy DEVICE_DRIVER",
-      "type": "device-driver"
     },
     {
       "bom-ref": "typed-FILE",
@@ -46,19 +36,9 @@
       "type": "library"
     },
     {
-      "bom-ref": "typed-MACHINE_LEARNING_MODEL",
-      "name": "dummy MACHINE_LEARNING_MODEL",
-      "type": "machine-learning-model"
-    },
-    {
       "bom-ref": "typed-OPERATING_SYSTEM",
       "name": "dummy OPERATING_SYSTEM",
       "type": "operating-system"
-    },
-    {
-      "bom-ref": "typed-PLATFORM",
-      "name": "dummy PLATFORM",
-      "type": "platform"
     }
   ],
   "dependencies": [
@@ -69,13 +49,7 @@
       "ref": "typed-CONTAINER"
     },
     {
-      "ref": "typed-DATA"
-    },
-    {
       "ref": "typed-DEVICE"
-    },
-    {
-      "ref": "typed-DEVICE_DRIVER"
     },
     {
       "ref": "typed-FILE"
@@ -90,13 +64,7 @@
       "ref": "typed-LIBRARY"
     },
     {
-      "ref": "typed-MACHINE_LEARNING_MODEL"
-    },
-    {
       "ref": "typed-OPERATING_SYSTEM"
-    },
-    {
-      "ref": "typed-PLATFORM"
     }
   ],
   "metadata": {
@@ -145,7 +113,7 @@
   },
   "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "version": 1,
-  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.5"
+  "specVersion": "1.4"
 }

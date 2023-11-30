@@ -18,7 +18,7 @@ from enum import Enum
 from itertools import chain
 from json import load as json_load
 from os.path import join
-from typing import Any, Generator, Type
+from typing import Any, Generator, Iterable, Type
 from unittest import TestCase
 from unittest.mock import patch
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
@@ -42,6 +42,7 @@ from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
 from cyclonedx.validation import make_schemabased_validator
+from exception.serialization import SerializationOfUnsupportedComponentTypeException
 from tests import SnapshotMixin, uuid_generator
 from tests._data.models import _make_bom
 
@@ -78,28 +79,35 @@ from cyclonedx.model.vulnerability import (  # isort:skip
 SCHEMA_NS = '{http://www.w3.org/2001/XMLSchema}'
 
 
-def dp_enum_from_xml_schemas(xpath: str) -> Generator[str, None, None]:
+def dp_cases_from_xml_schema(sf: str, xpath: str) -> Generator[str, None, None]:
+    for el in xml_parse(sf).iterfind(f'{xpath}/{SCHEMA_NS}restriction/{SCHEMA_NS}enumeration'):  # nosec B314
+        yield el.get('value')
+
+
+def dp_cases_from_xml_schemas(xpath: str) -> Generator[str, None, None]:
     for sf in SCHEMA_XML.values():
         if sf is None:
             continue
-        for el in xml_parse(sf).iterfind(f'{xpath}/{SCHEMA_NS}restriction/{SCHEMA_NS}enumeration'):  # nosec B314
-            yield el.get('value')
+        yield from dp_cases_from_xml_schema(sf, xpath)
+
+
+def dp_cases_from_json_schema(sf: str, jsonpointer: Iterable[str]) -> Generator[str, None, None]:
+    with open(sf) as sfh:
+        data = json_load(sfh)
+    try:
+        for pp in jsonpointer:
+            data = data[pp]
+    except KeyError:
+        return
+    for value in data['enum']:
+        yield value
 
 
 def dp_cases_from_json_schemas(*jsonpointer: str) -> Generator[str, None, None]:
     for sf in SCHEMA_JSON.values():
         if sf is None:
             continue
-        with open(sf) as sfh:
-            data = json_load(sfh)
-        try:
-            for pp in jsonpointer:
-                data = data[pp]
-        except KeyError:
-            pass
-        else:
-            for value in data['enum']:
-                yield value
+        yield from dp_cases_from_json_schema(sf, jsonpointer)
 
 
 UNSUPPORTED_OF_SV = frozenset([
@@ -135,7 +143,7 @@ class _EnumTestCase(TestCase, SnapshotMixin):
 class TestEnumDataFlow(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='dataFlowType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='dataFlowType']"),
         dp_cases_from_json_schemas('definitions', 'dataFlowDirection'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -156,7 +164,7 @@ class TestEnumDataFlow(_EnumTestCase):
 class TestEnumEncoding(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='encoding']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='encoding']"),
         dp_cases_from_json_schemas('definitions', 'attachment', 'properties', 'encoding'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -178,7 +186,7 @@ class TestEnumEncoding(_EnumTestCase):
 class TestEnumExternalReferenceType(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='externalReferenceType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='externalReferenceType']"),
         dp_cases_from_json_schemas('definitions', 'externalReference', 'properties', 'type'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -201,7 +209,7 @@ class TestEnumExternalReferenceType(_EnumTestCase):
 class TestEnumHashAlgorithm(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='hashAlg']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='hashAlg']"),
         dp_cases_from_json_schemas('definitions', 'hash-alg'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -222,7 +230,7 @@ class TestEnumHashAlgorithm(_EnumTestCase):
 class TestEnumComponentScope(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='scope']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='scope']"),
         dp_cases_from_json_schemas('definitions', 'component', 'properties', 'scope'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -242,10 +250,12 @@ class TestEnumComponentScope(_EnumTestCase):
 
 @ddt
 class TestEnumComponentType(_EnumTestCase):
+    __xml_schema_xpath = f"./{SCHEMA_NS}simpleType[@name='classification']"
+    __json_schemas_jsonpointer = ('definitions', 'component', 'properties', 'type')
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='classification']"),
-        dp_cases_from_json_schemas('definitions', 'component', 'properties', 'type'),
+        dp_cases_from_xml_schemas(__xml_schema_xpath),
+        dp_cases_from_json_schemas(*__json_schemas_jsonpointer),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ComponentType, value)
@@ -254,18 +264,45 @@ class TestEnumComponentType(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        if OutputFormat.XML is of:
+            schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], self.__xml_schema_xpath))
+        elif OutputFormat.JSON is of:
+            schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], self.__json_schemas_jsonpointer))
+        else:
+            raise ValueError(f'unexpected of: {of!r}')
         bom = _make_bom(components=(
-            Component(bom_ref=f'typed-{ct.name}', name='dummy', type=ct)
+            Component(bom_ref=f'typed-{ct.name}', name=f'dummy {ct.name}', type=ct)
             for ct in ComponentType
+            if ct.value in schema_cases
         ))
         super()._test_cases_render_valid(bom, of, sv)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+    def test_cases_render_raises_on_unsupported(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        if OutputFormat.XML is of:
+            schema_cases = ()  # TODO
+        elif OutputFormat.JSON is of:
+            schema_cases = ()  # TODO
+        else:
+            raise ValueError(f'unexpected of: {of!r}')
+        if len(schema_cases) == 0:
+            return None
+        bom = _make_bom(components=(
+            Component(bom_ref=f'typed-{ct.name}', name=f'dummy {ct.name}', type=ct)
+            for ct in ComponentType
+            if ct.value in schema_cases
+        ))
+        with self.assertRaises(SerializationOfUnsupportedComponentTypeException):
+            super()._test_cases_render_valid(bom, of, sv)
 
 
 @ddt
 class TestEnumPatchClassification(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='patchClassification']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='patchClassification']"),
         dp_cases_from_json_schemas('definitions', 'patch', 'properties', 'type'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -288,7 +325,7 @@ class TestEnumPatchClassification(_EnumTestCase):
 class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisAffectedStatusType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisAffectedStatusType']"),
         dp_cases_from_json_schemas('definitions', 'affectedStatus'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -311,7 +348,7 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
 class TestEnumImpactAnalysisJustification(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisJustificationType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisJustificationType']"),
         dp_cases_from_json_schemas('definitions', 'impactAnalysisJustification'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -334,7 +371,7 @@ class TestEnumImpactAnalysisJustification(_EnumTestCase):
 class TestEnumImpactAnalysisResponse(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisResponsesType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisResponsesType']"),
         dp_cases_from_json_schemas('definitions', 'vulnerability', 'properties', 'analysis', 'properties', 'response',
                                    'items'),
     )))
@@ -358,7 +395,7 @@ class TestEnumImpactAnalysisResponse(_EnumTestCase):
 class TestEnumImpactAnalysisState(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisStateType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='impactAnalysisStateType']"),
         dp_cases_from_json_schemas('definitions', 'impactAnalysisState'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -381,7 +418,7 @@ class TestEnumImpactAnalysisState(_EnumTestCase):
 class TestEnumIssueClassification(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='issueClassification']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='issueClassification']"),
         dp_cases_from_json_schemas('definitions', 'issue', 'properties', 'type'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -406,7 +443,7 @@ class TestEnumIssueClassification(_EnumTestCase):
 class TestEnumVulnerabilityScoreSource(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='scoreSourceType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='scoreSourceType']"),
         dp_cases_from_json_schemas('definitions', 'scoreMethod'),
     )))
     def test_knows_value(self, value: str) -> None:
@@ -427,7 +464,7 @@ class TestEnumVulnerabilityScoreSource(_EnumTestCase):
 class TestEnumVulnerabilitySeverity(_EnumTestCase):
 
     @idata(set(chain(
-        dp_enum_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='severityType']"),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='severityType']"),
         dp_cases_from_json_schemas('definitions', 'severity'),
     )))
     def test_knows_value(self, value: str) -> None:
