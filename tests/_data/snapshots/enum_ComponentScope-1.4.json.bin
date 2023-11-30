@@ -1,21 +1,21 @@
 {
   "components": [
     {
-      "bom-ref": "scoped-REQUIRED",
-      "name": "dummy",
-      "scope": "required",
-      "type": "library"
-    },
-    {
       "bom-ref": "scoped-EXCLUDED",
-      "name": "dummy",
+      "name": "dummy-EXCLUDED",
       "scope": "excluded",
       "type": "library"
     },
     {
       "bom-ref": "scoped-OPTIONAL",
-      "name": "dummy",
+      "name": "dummy-OPTIONAL",
       "scope": "optional",
+      "type": "library"
+    },
+    {
+      "bom-ref": "scoped-REQUIRED",
+      "name": "dummy-REQUIRED",
+      "scope": "required",
       "type": "library"
     }
   ],

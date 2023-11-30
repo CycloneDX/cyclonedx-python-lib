@@ -18,7 +18,7 @@
 
 from enum import Enum
 from os.path import exists
-from typing import Any, Iterable, Optional, Set, Union
+from typing import Any, Iterable, Optional, Set, Union, FrozenSet, Type, Dict
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
@@ -279,9 +279,51 @@ class ComponentScope(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_scope
     """
+    # see `_ComponentScopeSerializationHelper.__CASES` for view/case map
     REQUIRED = 'required'
     OPTIONAL = 'optional'
     EXCLUDED = 'excluded'  # Only supported in >= 1.1
+
+
+class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ComponentScope]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({
+        ComponentScope.REQUIRED,
+        ComponentScope.OPTIONAL,
+    })
+    __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0] | {
+        ComponentScope.EXCLUDED,
+    }
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1]
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+
+    @classmethod
+    def __normalize(cls, cs: ComponentScope, view: Type[serializable.ViewType]) -> Optional[str]:
+        return cs.value \
+            if cs in cls.__CASES.get(view, ()) \
+            else None
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ComponentScope:
+        return ComponentScope(o)
 
 
 @serializable.serializable_enum
@@ -1020,6 +1062,7 @@ class Component(Dependable):
         self._description = description
 
     @property
+    @serializable.type_mapping(_ComponentScopeSerializationHelper)
     @serializable.xml_sequence(8)
     def scope(self) -> Optional[ComponentScope]:
         """

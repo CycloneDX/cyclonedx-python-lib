@@ -233,7 +233,7 @@ class TestEnumComponentScope(_EnumTestCase):
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=(
-            Component(bom_ref=f'scoped-{scope.name}', name='dummy', type=ComponentType.LIBRARY, scope=scope)
+            Component(bom_ref=f'scoped-{scope.name}', name=f'dummy-{scope.name}', type=ComponentType.LIBRARY, scope=scope)
             for scope in ComponentScope
         ))
         super()._test_cases_render_valid(bom, of, sv)
