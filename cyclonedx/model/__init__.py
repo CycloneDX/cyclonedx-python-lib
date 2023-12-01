@@ -500,7 +500,7 @@ class ExternalReferenceType(str, Enum):
     """
     # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
     ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
-    ADVISORIES = 'advisories'  # ?
+    ADVISORIES = 'advisories'
     ATTESTATION = 'attestation'  # Only supported in >= 1.5
     BOM = 'bom'
     BUILD_META = 'build-meta'
