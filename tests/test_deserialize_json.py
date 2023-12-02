@@ -28,13 +28,13 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname, uuid_generator
-from tests._data.models import all_get_bom_funct_valid, all_get_bom_funct_with_incomplete_deps
+from tests._data.models import all_get_bom_funct_valid_immut, all_get_bom_funct_with_incomplete_deps
 
 
 @ddt
 class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
 
-    @named_data(*all_get_bom_funct_valid)
+    @named_data(*all_get_bom_funct_valid_immut)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:

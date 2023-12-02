@@ -1,0 +1,47 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy",
+      "externalReferences": [
+        {
+          "comment": "nothing special",
+          "type": "other",
+          "url": "https://acme.org"
+        },
+        {
+          "comment": "pre-encoded",
+          "type": "other",
+          "url": "https://acme.org/?bar%5b23%5D=42"
+        },
+        {
+          "comment": "control characters",
+          "type": "other",
+          "url": "https://acme.org/?foo=sp%20ace&bar%5B23%5D=42&lt=1%3C2&gt=3%3E2&cb=%7Blol%7D"
+        }
+      ],
+      "name": "dummy",
+      "type": "library",
+      "version": ""
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2"
+}
