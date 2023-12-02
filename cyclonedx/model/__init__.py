@@ -430,7 +430,7 @@ class XsUri(serializable.helpers.BaseHelper):
 
     _INVALID_URI_REGEX = re.compile(r'%(?![0-9A-F]{2})|#.*#', re.IGNORECASE + re.MULTILINE)
 
-    __SPEC_REPLACEMENTS: List[Tuple[str, str]] = [
+    __SPEC_REPLACEMENTS: List[Tuple[str, str]] = (
         (' ', '%20'),
         ('[', '%5B'),
         (']', '%5D'),
@@ -438,7 +438,7 @@ class XsUri(serializable.helpers.BaseHelper):
         ('>', '%3E'),
         ('{', '%7B'),
         ('}', '%7D'),
-    ]
+    )
 
     @staticmethod
     def __spec_replace(v: str, r: Tuple[str, str]) -> str:
