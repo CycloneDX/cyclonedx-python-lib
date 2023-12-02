@@ -754,6 +754,31 @@ def get_bom_with_multiple_licenses() -> Bom:
     )
 
 
+def get_bom_for_issue_497_urls() -> Bom:
+    """regression test for issue #497
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/497
+    """
+    return _make_bom(components=[
+        Component(name='dummy', bom_ref='dummy', external_references=[
+            ExternalReference(
+                type=ExternalReferenceType.OTHER,
+                comment='nothing special',
+                url=XsUri('https://acme.org')
+            ),
+            ExternalReference(
+                type=ExternalReferenceType.OTHER,
+                comment='control characters',
+                url=XsUri('https://acme.org/?foo=sp ace&bar[23]=42&lt=1<2&gt=3>2&cb={lol}')
+            ),
+            ExternalReference(
+                type=ExternalReferenceType.OTHER,
+                comment='pre-encoded',
+                url=XsUri('https://acme.org/?bar%5b23%5D=42')
+            ),
+        ])
+    ])
+
+
 def bom_all_same_bomref() -> Tuple[Bom, int]:
     bom = Bom()
     bom.metadata.component = Component(name='root', bom_ref='foo', components=[
@@ -774,13 +799,18 @@ all_get_bom_funct_valid = tuple(
     if n.startswith('get_bom_') and not n.endswith('_invalid')
 )
 
+all_get_bom_funct_valid_immut = tuple(
+    (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
+    if n.startswith('get_bom_') and not n.endswith('_invalid') and not n.endswith('_migrate')
+)
+
 all_get_bom_funct_invalid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and n.endswith('_invalid')
 )
 
 all_get_bom_funct_with_incomplete_deps = {
-    # List of functions that return BOM with an incomplte dependency graph.
+    # List of functions that return BOM with an incomplete dependency graph.
     # It is expected that some process auto-fixes this before actual serialization takes place.
     get_bom_just_complete_metadata,
     get_bom_with_component_setuptools_basic,
@@ -797,4 +827,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_services_simple,
     get_bom_with_licenses,
     get_bom_with_multiple_licenses,
+    get_bom_for_issue_497_urls,
 }
