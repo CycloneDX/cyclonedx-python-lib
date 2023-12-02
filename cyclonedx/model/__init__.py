@@ -19,7 +19,7 @@ from enum import Enum
 from functools import reduce
 from hashlib import sha1
 from itertools import zip_longest
-from typing import Any, Iterable, List, Optional, Tuple, TypeVar
+from typing import Any, Iterable, Optional, Tuple, TypeVar
 
 import serializable
 from sortedcontainers import SortedSet
@@ -430,7 +430,7 @@ class XsUri(serializable.helpers.BaseHelper):
 
     _INVALID_URI_REGEX = re.compile(r'%(?![0-9A-F]{2})|#.*#', re.IGNORECASE + re.MULTILINE)
 
-    __SPEC_REPLACEMENTS: List[Tuple[str, str]] = (
+    __SPEC_REPLACEMENTS = (
         (' ', '%20'),
         ('[', '%5B'),
         (']', '%5D'),
