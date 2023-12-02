@@ -23,6 +23,7 @@ from a `cyclonedx.parser.BaseParser` implementation.
 import re
 from datetime import datetime, timezone
 from enum import Enum
+from functools import reduce
 from hashlib import sha1
 from itertools import zip_longest
 from json import loads as json_loads
@@ -631,16 +632,47 @@ class XsUri(serializable.helpers.BaseHelper):
 
     .. note::
         See XSD definition for xsd:anyURI: http://www.datypic.com/sc/xsd/t-xsd_anyURI.html
+        See JSON Schema definition for iri-reference: https://tools.ietf.org/html/rfc3987
     """
 
     _INVALID_URI_REGEX = re.compile(r'%(?![0-9A-F]{2})|#.*#', re.IGNORECASE + re.MULTILINE)
+
+    __SPEC_REPLACEMENTS = (
+        (' ', '%20'),
+        ('[', '%5B'),
+        (']', '%5D'),
+        ('<', '%3C'),
+        ('>', '%3E'),
+        ('{', '%7B'),
+        ('}', '%7D'),
+    )
+
+    @staticmethod
+    def __spec_replace(v: str, r: Tuple[str, str]) -> str:
+        return v.replace(*r)
+
+    @classmethod
+    def _spec_migrate(cls, o: str) -> str:
+        """
+         Make a string valid to
+         - XML::anyURI spec.
+         - JSON::iri-reference spec.
+
+         BEST EFFORT IMPLEMENTATION
+
+         @see http://www.w3.org/TR/xmlschema-2/#anyURI
+         @see http://www.datypic.com/sc/xsd/t-xsd_anyURI.html
+         @see https://datatracker.ietf.org/doc/html/rfc2396
+         @see https://datatracker.ietf.org/doc/html/rfc3987
+        """
+        return reduce(cls.__spec_replace, cls.__SPEC_REPLACEMENTS, o)
 
     def __init__(self, uri: str) -> None:
         if re.search(XsUri._INVALID_URI_REGEX, uri):
             raise InvalidUriException(
                 f"Supplied value '{uri}' does not appear to be a valid URI."
             )
-        self._uri = uri
+        self._uri = self._spec_migrate(uri)
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
