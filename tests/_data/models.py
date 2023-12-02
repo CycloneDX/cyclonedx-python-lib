@@ -796,21 +796,17 @@ def bom_all_same_bomref() -> Tuple[Bom, int]:
 
 all_get_bom_funct_valid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
-    if n.startswith('get_bom_')
-    and not n.endswith('_invalid')
+    if n.startswith('get_bom_') and not n.endswith('_invalid')
 )
 
 all_get_bom_funct_valid_immut = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
-    if n.startswith('get_bom_')
-    and not n.endswith('_invalid')
-    and not n.endswith('_migrate')
+    if n.startswith('get_bom_') and not n.endswith('_invalid') and not n.endswith('_migrate')
 )
 
 all_get_bom_funct_invalid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
-    if n.startswith('get_bom_')
-    and n.endswith('_invalid')
+    if n.startswith('get_bom_') and n.endswith('_invalid')
 )
 
 all_get_bom_funct_with_incomplete_deps = {
