@@ -2,6 +2,93 @@
 
 
 
+## v5.2.0 (2023-12-02)
+
+### Chore
+
+* chore(deps-dev): update mypy requirement from 1.7.0 to 1.7.1 (#487)
+
+Updates the requirements on [mypy](https://github.com/python/mypy) to permit the latest version.
+- [Changelog](https://github.com/python/mypy/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python/mypy/compare/v1.7.0...v1.7.1)
+
+---
+updated-dependencies:
+- dependency-name: mypy
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`78957e6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/78957e6592be2106de7933f5b54a0916194980e3))
+
+* chore(deps-dev): update mypy requirement from 1.6.1 to 1.7.0 (#484)
+
+Updates the requirements on [mypy](https://github.com/python/mypy) to permit the latest version.
+- [Changelog](https://github.com/python/mypy/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python/mypy/compare/v1.6.1...v1.7.0)
+
+---
+updated-dependencies:
+- dependency-name: mypy
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`c716ba3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c716ba3751017e2f88367b660dbc11866c2feb1d))
+
+* chore(deps-dev): update ddt requirement from 1.6.0 to 1.7.0 (#483)
+
+Updates the requirements on [ddt](https://github.com/datadriventests/ddt) to permit the latest version.
+- [Release notes](https://github.com/datadriventests/ddt/releases)
+- [Commits](https://github.com/datadriventests/ddt/compare/1.6.0...1.7.0)
+
+---
+updated-dependencies:
+- dependency-name: ddt
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`8a1f7b9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8a1f7b9678e888654a373965b7902428525f7d60))
+
+* chore: mograte dev-dependencies to new poetry layout (#482)
+
+see https://python-poetry.org/docs/managing-dependencies/#dependency-groups
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a85585c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a85585cf5e445ba5e67a027b4d1161911df6467d))
+
+* chore(deps-dev): update flake8-isort requirement from 6.1.0  to 6.1.1 (#481)
+
+Updates the requirements on [flake8-isort](https://github.com/gforcada/flake8-isort) to permit the latest version.
+- [Changelog](https://github.com/gforcada/flake8-isort/blob/main/CHANGES.rst)
+- [Commits](https://github.com/gforcada/flake8-isort/compare/6.1.0...6.1.1)
+
+---
+updated-dependencies:
+- dependency-name: flake8-isort
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`fc74ddd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fc74dddc8add79be31d3747ddce9241bce2e4fed))
+
+### Documentation
+
+* docs: keywaords &amp; funding (#486)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3189e59`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3189e59ff8e3d3d10f7b949b5a08397ff3d3642b))
+
+### Feature
+
+* feat: `model.XsUri` migrate control characters according to spec (#498)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/497
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e490429`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e49042976f8577af4061c34394db270612488cdf))
+
+
 ## v5.1.1 (2023-11-02)
 
 ### Fix
