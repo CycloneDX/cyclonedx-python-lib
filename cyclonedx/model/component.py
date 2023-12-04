@@ -25,7 +25,8 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
-from .._internal import ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
+from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import NoPropertiesProvidedException
 from ..exception.serialization import SerializationOfUnsupportedComponentTypeException
 from ..schema.schema import (
@@ -48,7 +49,6 @@ from . import (
     Property,
     XsUri,
     _HashTypeRepositorySerializationHelper,
-    sha1sum,
 )
 from .bom_ref import BomRef
 from .dependency import Dependable
@@ -886,7 +886,7 @@ class Component(Dependable):
         if not exists(absolute_file_path):
             raise FileExistsError(f'Supplied file path {absolute_file_path!r} does not exist')
 
-        sha1_hash: str = sha1sum(filename=absolute_file_path)
+        sha1_hash: str = _file_sha1sum(absolute_file_path)
         return Component(
             name=path_for_bom if path_for_bom else absolute_file_path,
             version=f'0.0.0-{sha1_hash[0:12]}',

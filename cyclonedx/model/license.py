@@ -27,7 +27,7 @@ from warnings import warn
 import serializable
 from sortedcontainers import SortedSet
 
-from .._internal import ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from . import AttachedText, XsUri
 

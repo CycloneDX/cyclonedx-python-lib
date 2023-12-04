@@ -22,7 +22,7 @@ from typing import Any, Iterable, List, Optional, Set
 import serializable
 from sortedcontainers import SortedSet
 
-from .._internal import ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 

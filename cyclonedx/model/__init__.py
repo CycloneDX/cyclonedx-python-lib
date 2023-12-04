@@ -24,7 +24,6 @@ import re
 from datetime import datetime, timezone
 from enum import Enum
 from functools import reduce
-from hashlib import sha1
 from json import loads as json_loads
 from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type
 from warnings import warn
@@ -34,7 +33,7 @@ import serializable
 from sortedcontainers import SortedSet
 
 from .. import __version__ as __ThisToolVersion  # noqa: N812
-from .._internal import ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
@@ -54,24 +53,6 @@ from ..schema.schema import (
 
 def get_now_utc() -> datetime:
     return datetime.now(tz=timezone.utc)
-
-
-def sha1sum(filename: str) -> str:
-    """
-    Generate a SHA1 hash of the provided file.
-
-    Args:
-        filename:
-            Absolute path to file to hash as `str`
-
-    Returns:
-        SHA-1 hash
-    """
-    h = sha1()  # nosec B303, B324
-    with open(filename, 'rb') as f:
-        for byte_block in iter(lambda: f.read(4096), b''):
-            h.update(byte_block)
-    return h.hexdigest()
 
 
 @serializable.serializable_enum

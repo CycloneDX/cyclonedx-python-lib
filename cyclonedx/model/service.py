@@ -29,7 +29,7 @@ from sortedcontainers import SortedSet
 
 from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
 
-from .._internal import ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5
 from . import DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
 from .bom_ref import BomRef

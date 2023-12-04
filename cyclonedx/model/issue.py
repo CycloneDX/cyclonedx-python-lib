@@ -19,7 +19,7 @@ from typing import Any, Iterable, Optional
 import serializable
 from sortedcontainers import SortedSet
 
-from .._internal import ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import NoPropertiesProvidedException
 from . import XsUri
 
