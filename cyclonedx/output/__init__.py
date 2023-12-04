@@ -150,13 +150,13 @@ class BomRefDiscriminator:
         self.reset()
 
     def discriminate(self) -> None:
-        known_values = set()
+        known_values = []
         for bomref, _ in self._bomrefs:
             value = bomref.value
             if value is None or value in known_values:
                 value = self._make_unique()
                 bomref.value = value
-            known_values.add(value)
+            known_values.append(value)
 
     def reset(self) -> None:
         for bomref, original_value in self._bomrefs:

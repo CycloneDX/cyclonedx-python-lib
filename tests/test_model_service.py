@@ -24,12 +24,10 @@ from tests import reorder, uuid_generator
 
 class TestModelService(TestCase):
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
-    def test_minimal_service(self, mock_uuid: Mock) -> None:
+    def test_minimal_service(self) -> None:
         s = Service(name='my-test-service')
-        mock_uuid.assert_called()
         self.assertEqual(s.name, 'my-test-service')
-        self.assertEqual(str(s.bom_ref), '00000000-0000-4000-8000-000000000001')
+        self.assertIsNone(s.bom_ref.value)
         self.assertIsNone(s.provider)
         self.assertIsNone(s.group)
         self.assertIsNone(s.version)
@@ -44,15 +42,14 @@ class TestModelService(TestCase):
         self.assertFalse(s.release_notes)
         self.assertFalse(s.properties)
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
-    def test_service_with_services(self, *_: Any, **__: Any) -> None:
+    def test_service_with_services(self) -> None:
         parent_service = Service(name='parent-service')
         parent_service.services = [
             Service(name='child-service-1'),
             Service(name='child-service-2'),
         ]
         self.assertEqual(parent_service.name, 'parent-service')
-        self.assertEqual(str(parent_service.bom_ref), '00000000-0000-4000-8000-000000000001')
+        self.assertIsNone(parent_service.bom_ref.value)
         self.assertIsNone(parent_service.provider)
         self.assertIsNone(parent_service.group)
         self.assertIsNone(parent_service.version)

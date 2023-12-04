@@ -164,7 +164,7 @@ class TestEnumDataFlow(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(services=[Service(name='dummy', bom_ref='dummy', data=(
             DataClassification(flow=df, classification=df.name)
@@ -185,7 +185,7 @@ class TestEnumEncoding(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=(
             DisjunctiveLicense(name=f'att.encoding: {encoding.name}', text=AttachedText(
@@ -207,7 +207,7 @@ class TestEnumExternalReferenceType(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
             Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', external_references=(
@@ -230,7 +230,7 @@ class TestEnumHashAlgorithm(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', hashes=(
             HashType(alg=alg, content='ae2b1fca515949e5d54fb22b8ed95575')
@@ -251,7 +251,7 @@ class TestEnumComponentScope(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=(
             Component(bom_ref=f'scoped-{scope.name}', name=f'dummy-{scope.name}',
@@ -291,7 +291,7 @@ class TestEnumComponentType(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         if OutputFormat.XML is of:
             schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], _DP_ComponentType.XML_SCHEMA_XPATH))
@@ -329,7 +329,7 @@ class TestEnumPatchClassification(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
             Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=(
@@ -352,7 +352,7 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(
             bom_ref='dummy', id='dummy', affects=[BomTarget(ref='urn:cdx:bom23/1#comp42', versions=(
@@ -375,7 +375,7 @@ class TestEnumImpactAnalysisJustification(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=(
             Vulnerability(
@@ -399,7 +399,7 @@ class TestEnumImpactAnalysisResponse(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(
             bom_ref='dummy', id='dummy',
@@ -422,7 +422,7 @@ class TestEnumImpactAnalysisState(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=(
             Vulnerability(
@@ -445,7 +445,7 @@ class TestEnumIssueClassification(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
             Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', pedigree=Pedigree(patches=[
@@ -470,7 +470,7 @@ class TestEnumVulnerabilityScoreSource(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', id='dummy', ratings=(
             VulnerabilityRating(method=vss)
@@ -491,7 +491,7 @@ class TestEnumVulnerabilitySeverity(_EnumTestCase):
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
+
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', id='dummy', ratings=(
             VulnerabilityRating(severity=vs)

@@ -104,13 +104,12 @@ class TestModelCommit(TestCase):
 
 class TestModelComponent(TestCase):
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
-    def test_empty_basic_component(self, *_: Any, **__: Any) -> None:
+    def test_empty_basic_component(self) -> None:
         c = Component(name='test-component')
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertIsNone(c.mime_type)
-        self.assertEqual(str(c.bom_ref), '00000000-0000-4000-8000-000000000001')
+        self.assertIsNone(c.bom_ref.value)
         self.assertIsNone(c.supplier)
         self.assertIsNone(c.author)
         self.assertIsNone(c.publisher)
