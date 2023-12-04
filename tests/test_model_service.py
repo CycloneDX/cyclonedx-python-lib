@@ -14,12 +14,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-from typing import Any
+
+
 from unittest import TestCase
-from unittest.mock import Mock, patch
 
 from cyclonedx.model.service import Service
-from tests import reorder, uuid_generator
+from tests import reorder
 
 
 class TestModelService(TestCase):

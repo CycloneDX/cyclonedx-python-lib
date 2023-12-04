@@ -31,7 +31,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
-from tests import SnapshotMixin, mksname, uuid_generator
+from tests import SnapshotMixin, mksname
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
 UNSUPPORTED_SV = frozenset((SchemaVersion.V1_1, SchemaVersion.V1_0,))

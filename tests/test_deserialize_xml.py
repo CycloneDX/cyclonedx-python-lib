@@ -24,7 +24,7 @@ from ddt import ddt, named_data
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from tests import DeepCompareMixin, SnapshotMixin, mksname, uuid_generator
+from tests import DeepCompareMixin, SnapshotMixin, mksname
 from tests._data.models import all_get_bom_funct_valid_immut, all_get_bom_funct_with_incomplete_deps
 
 

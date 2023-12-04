@@ -16,9 +16,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import datetime
-from typing import Any, List
+from typing import List
 from unittest import TestCase
-from unittest.mock import patch
 
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
@@ -42,7 +41,7 @@ from cyclonedx.model.component import (
     Pedigree,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
-from tests import reorder, uuid_generator
+from tests import reorder
 from tests._data.models import (
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
