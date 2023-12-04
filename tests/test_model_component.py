@@ -16,9 +16,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import datetime
-from typing import Any, List
+from typing import List
 from unittest import TestCase
-from unittest.mock import patch
 
 from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
@@ -42,7 +41,7 @@ from cyclonedx.model.component import (
     Pedigree,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType
-from tests import reorder, uuid_generator
+from tests import reorder
 from tests._data.models import (
     get_component_setuptools_simple,
     get_component_setuptools_simple_no_version,
@@ -104,13 +103,12 @@ class TestModelCommit(TestCase):
 
 class TestModelComponent(TestCase):
 
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(version=4))
-    def test_empty_basic_component(self, *_: Any, **__: Any) -> None:
+    def test_empty_basic_component(self) -> None:
         c = Component(name='test-component')
         self.assertEqual(c.name, 'test-component')
         self.assertEqual(c.type, ComponentType.LIBRARY)
         self.assertIsNone(c.mime_type)
-        self.assertEqual(str(c.bom_ref), '00000000-0000-4000-8000-000000000001')
+        self.assertIsNone(c.bom_ref.value)
         self.assertIsNone(c.supplier)
         self.assertIsNone(c.author)
         self.assertIsNone(c.publisher)

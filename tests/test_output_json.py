@@ -31,7 +31,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
-from tests import SnapshotMixin, mksname, uuid_generator
+from tests import SnapshotMixin, mksname
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
 UNSUPPORTED_SV = frozenset((SchemaVersion.V1_1, SchemaVersion.V1_0,))
@@ -54,7 +54,6 @@ class TestOutputJson(TestCase, SnapshotMixin):
                   if sv not in UNSUPPORTED_SV))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
-    @patch('cyclonedx.model.bom_ref.uuid4', side_effect=uuid_generator(0, version=4))
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
         snapshot_name = mksname(get_bom, sv, OutputFormat.JSON)
         bom = get_bom()

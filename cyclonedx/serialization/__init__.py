@@ -38,7 +38,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class BomRefHelper(BaseHelper):
 
     @classmethod
-    def serialize(cls, o: Any) -> str:
+    def serialize(cls, o: Any) -> Optional[str]:
         if isinstance(o, BomRef):
             return o.value
         raise SerializationOfUnexpectedValueException(

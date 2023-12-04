@@ -360,7 +360,9 @@ def get_bom_with_nested_services() -> Bom:
             bom_ref='my-specific-bom-ref-for-my-second-service',
             services=[
                 Service(
-                    name='yet-another-nested-service', provider=get_org_entity_1(), group='what-group', version='6.5.4'
+                    name='yet-another-nested-service',
+                    bom_ref='yet-another-nested-service',
+                    provider=get_org_entity_1(), group='what-group', version='6.5.4'
                 ),
                 Service(
                     name='another-nested-service',
