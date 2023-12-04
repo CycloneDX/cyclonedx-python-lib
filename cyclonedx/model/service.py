@@ -13,19 +13,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Iterable, Optional, Union
-
-import serializable
-from sortedcontainers import SortedSet
-
-from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
-
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5
-from . import ComparableTuple, DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
-from .bom_ref import BomRef
-from .dependency import Dependable
-from .license import License, LicenseRepository
-from .release_note import ReleaseNotes
 
 """
 This set of classes represents the data that is possible about known Services.
@@ -33,6 +20,22 @@ This set of classes represents the data that is possible about known Services.
 .. note::
     See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.4/xml/#type_servicesType
 """
+
+
+from typing import Any, Iterable, Optional, Union
+
+import serializable
+from sortedcontainers import SortedSet
+
+from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
+
+from .._internal import ComparableTuple as _ComparableTuple
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5
+from . import DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
+from .bom_ref import BomRef
+from .dependency import Dependable
+from .license import License, LicenseRepository
+from .release_note import ReleaseNotes
 
 
 @serializable.serializable_class
@@ -346,8 +349,11 @@ class Service(Dependable):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Service):
-            return ComparableTuple((self.group, self.name, self.version)) < \
-                ComparableTuple((other.group, other.name, other.version))
+            return _ComparableTuple((
+                self.group, self.name, self.version
+            )) < _ComparableTuple((
+                other.group, other.name, other.version
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:

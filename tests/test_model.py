@@ -20,6 +20,7 @@ import datetime
 from enum import Enum
 from unittest import TestCase
 
+from cyclonedx._internal import ComparableTuple
 from cyclonedx.exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
@@ -27,7 +28,6 @@ from cyclonedx.exception.model import (
     UnknownHashTypeException,
 )
 from cyclonedx.model import (
-    ComparableTuple,
     Copyright,
     Encoding,
     ExternalReference,

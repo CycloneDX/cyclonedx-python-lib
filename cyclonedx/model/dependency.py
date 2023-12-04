@@ -15,15 +15,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional, Set
 
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.model import ComparableTuple
-from cyclonedx.serialization import BomRefHelper
-
+from .._internal import ComparableTuple as _ComparableTuple
+from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 
 
@@ -89,8 +89,11 @@ class Dependency:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Dependency):
-            return ComparableTuple((self.ref, tuple(self.dependencies))) < ComparableTuple(
-                (other.ref, tuple(other.dependencies)))
+            return _ComparableTuple((
+                self.ref, _ComparableTuple(self.dependencies)
+            )) < _ComparableTuple((
+                other.ref, _ComparableTuple(other.dependencies)
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:

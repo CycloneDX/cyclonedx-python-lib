@@ -25,6 +25,7 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
+from .._internal import ComparableTuple as _ComparableTuple
 from ..exception.model import NoPropertiesProvidedException
 from ..exception.serialization import SerializationOfUnsupportedComponentTypeException
 from ..schema.schema import (
@@ -38,7 +39,6 @@ from ..schema.schema import (
 from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
     AttachedText,
-    ComparableTuple,
     Copyright,
     ExternalReference,
     HashAlgorithm,
@@ -163,8 +163,11 @@ class Commit:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
-            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < ComparableTuple(
-                (other.uid, other.url, other.author, other.committer, other.message))
+            return _ComparableTuple((
+                self.uid, self.url, self.author, self.committer, self.message
+            )) < _ComparableTuple((
+                other.uid, other.url, other.author, other.committer, other.message
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -454,7 +457,11 @@ class Diff:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Diff):
-            return ComparableTuple((self.url, self.text)) < ComparableTuple((other.url, other.text))
+            return _ComparableTuple((
+                self.url, self.text
+            )) < _ComparableTuple((
+                other.url, other.text
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -548,8 +555,11 @@ class Patch:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < ComparableTuple(
-                (other.type, other.diff, ComparableTuple(other.resolves)))
+            return _ComparableTuple((
+                self.type, self.diff, _ComparableTuple(self.resolves)
+            )) < _ComparableTuple((
+                other.type, other.diff, _ComparableTuple(other.resolves)
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1412,8 +1422,11 @@ class Component(Dependable):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return ComparableTuple((self.type, self.group, self.name, self.version)) < ComparableTuple(
-                (other.type, other.group, other.name, other.version))
+            return _ComparableTuple((
+                self.type, self.group, self.name, self.version
+            )) < _ComparableTuple((
+                other.type, other.group, other.name, other.version
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:

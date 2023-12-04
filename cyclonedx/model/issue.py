@@ -19,8 +19,9 @@ from typing import Any, Iterable, Optional
 import serializable
 from sortedcontainers import SortedSet
 
+from .._internal import ComparableTuple as _ComparableTuple
 from ..exception.model import NoPropertiesProvidedException
-from . import ComparableTuple, XsUri
+from . import XsUri
 
 
 @serializable.serializable_enum
@@ -89,7 +90,11 @@ class IssueTypeSource:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueTypeSource):
-            return ComparableTuple((self.name, self.url)) < ComparableTuple((other.name, other.url))
+            return _ComparableTuple((
+                self.name, self.url
+            )) < _ComparableTuple((
+                other.name, other.url
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -217,8 +222,11 @@ class IssueType:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
-            return ComparableTuple((self.type, self.id, self.name, self.description, self.source)) < \
-                ComparableTuple((other.type, other.id, other.name, other.description, other.source))
+            return _ComparableTuple((
+                self.type, self.id, self.name, self.description, self.source
+            )) < _ComparableTuple((
+                other.type, other.id, other.name, other.description, other.source
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
