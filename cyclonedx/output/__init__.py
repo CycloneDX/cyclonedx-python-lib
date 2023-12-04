@@ -153,7 +153,7 @@ class BomRefDiscriminator:
         known_values = set()
         for bomref, _ in self._bomrefs:
             value = bomref.value
-            if value in known_values:
+            if value is None or value in known_values:
                 value = self._make_unique()
                 bomref.value = value
             known_values.add(value)

@@ -16,7 +16,6 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from typing import Any, Optional
-from uuid import uuid4
 
 
 class BomRef:
@@ -30,31 +29,31 @@ class BomRef:
     """
 
     def __init__(self, value: Optional[str] = None) -> None:
-        self.value = value or str(uuid4())
+        self.value = value
 
     @property
-    def value(self) -> str:
+    def value(self) -> Optional[str]:
         return self._value
 
     @value.setter
-    def value(self, value: str) -> None:
-        self._value = value
+    def value(self, value: Optional[str]) -> None:
+        self._value = value or None
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomRef):
-            return other.value == self.value
+            return str(other) == str(self)
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, BomRef):
-            return self.value < other.value
+            return str(self) < str(other)
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.value)
+        return hash(str(self))
 
     def __repr__(self) -> str:
-        return f'<BomRef {self.value}>'
+        return f'<BomRef {self._value!r}>'
 
     def __str__(self) -> str:
-        return self.value
+        return self.value or ''
