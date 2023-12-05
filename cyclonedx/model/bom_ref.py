@@ -42,7 +42,7 @@ class BomRef:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomRef):
-            return str(other) == str(self)
+            return other._value == self._value
         return False
 
     def __lt__(self, other: Any) -> bool:
@@ -57,4 +57,7 @@ class BomRef:
         return f'<BomRef {self._value!r}>'
 
     def __str__(self) -> str:
-        return self.value or ''
+        return self._value or ''
+
+    def __bool__(self) -> bool:
+        return self._value is not None
