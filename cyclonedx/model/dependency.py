@@ -23,22 +23,24 @@ import serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.serialization import SerializationOfUnexpectedValueException
 from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 
 
-class DependencyDependencies(serializable.BaseHelper):  # type: ignore
+class _DependencyRepositorySerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
 
     @classmethod
     def serialize(cls, o: Any) -> List[str]:
         if isinstance(o, SortedSet):
             return list(map(lambda i: str(i.ref), o))
-
-        raise ValueError(f'Attempt to serialize a non-Dependency: {o.__class__}')
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-DependencyRepository: {o!r}')
 
     @classmethod
     def deserialize(cls, o: Any) -> Set['Dependency']:
-        dependencies: Set['Dependency'] = set()
+        dependencies = set()
         if isinstance(o, list):
             for v in o:
                 dependencies.add(Dependency(ref=BomRef(value=v)))
@@ -56,7 +58,7 @@ class Dependency:
 
     def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
         self.ref = ref
-        self.dependencies = SortedSet(dependencies or [])
+        self.dependencies = dependencies or []  # type:ignore[assignment]
 
     @property
     @serializable.type_mapping(BomRefHelper)
@@ -70,7 +72,7 @@ class Dependency:
 
     @property
     @serializable.json_name('dependsOn')
-    @serializable.type_mapping(DependencyDependencies)
+    @serializable.type_mapping(_DependencyRepositorySerializationHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'dependency')
     def dependencies(self) -> 'SortedSet[Dependency]':
         return self._dependencies
