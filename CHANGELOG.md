@@ -2,7 +2,167 @@
 
 
 
+## v6.0.0-rc.2 (2023-12-05)
+
+### Breaking
+
+* feat!: v6.0.0 RC2
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3c3ebd7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3c3ebd74de72bf35831c7710047cfeee27840e91))
+
+### Chore
+
+* chore(deps): update sphinx-rtd-theme requirement (#499)
+
+Updates the requirements on [sphinx-rtd-theme](https://github.com/readthedocs/sphinx_rtd_theme) to permit the latest version.
+- [Changelog](https://github.com/readthedocs/sphinx_rtd_theme/blob/master/docs/changelog.rst)
+- [Commits](https://github.com/readthedocs/sphinx_rtd_theme/compare/1.3.0...2.0.0)
+
+---
+updated-dependencies:
+- dependency-name: sphinx-rtd-theme
+  dependency-type: direct:production
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`5d6dd41`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5d6dd417e0c13e596dab6c76b610788bbbb96093))
+
+* chore(deps-dev): update flake8-bugbear requirement (#500)
+
+Updates the requirements on [flake8-bugbear](https://github.com/PyCQA/flake8-bugbear) to permit the latest version.
+- [Release notes](https://github.com/PyCQA/flake8-bugbear/releases)
+- [Commits](https://github.com/PyCQA/flake8-bugbear/compare/23.9.16...23.11.28)
+
+---
+updated-dependencies:
+- dependency-name: flake8-bugbear
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`e9a12b9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e9a12b93a9866dcb6d9a48396a7c5378d5c5f5e5))
+
+* chore(deps): update py-serializable requirement (#501)
+
+Updates the requirements on [py-serializable](https://github.com/madpah/serializable) to permit the latest version.
+- [Release notes](https://github.com/madpah/serializable/releases)
+- [Changelog](https://github.com/madpah/serializable/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/madpah/serializable/compare/v0.15.0...v0.16.0)
+
+---
+updated-dependencies:
+- dependency-name: py-serializable
+  dependency-type: direct:production
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`04435ab`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/04435abe926b6fa877bd0194733ae87b3bad9610))
+
+* chore(deps-dev): update tox requirement from 4.11.3 to 4.11.4 (#502)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to permit the latest version.
+- [Release notes](https://github.com/tox-dev/tox/releases)
+- [Changelog](https://github.com/tox-dev/tox/blob/main/docs/changelog.rst)
+- [Commits](https://github.com/tox-dev/tox/compare/4.11.3...4.11.4)
+
+---
+updated-dependencies:
+- dependency-name: tox
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`8bf0e39`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8bf0e39f62c57c8afb6b7c152156e7af1f02bd5d))
+
+### Refactor
+
+* refactor: revisit `type:ignore` (#507)
+
+* refactor: remove uspecific type-ignores
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: revisi all type ignores
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`690646c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/690646c5929cdd7054db81be559b5794a4484ec7))
+
+### Unknown
+
+* revisit `BomRef`
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1fe7cae`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1fe7cae990ec475db54abc4f08b79a761eb45d3f))
+
+* docs
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`8eb7786`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8eb778679a99e3e75e36883268acf266a7ef1de6))
+
+* BC: Helpes internal (#506)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/503
+
+removes the following symbols from public API:
+- `models.ComparableTuple`
+- `model.sha1sum`
+- `model.get_now_utc`
+- `model.dependency.DependencyDependencies`
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7c669be`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7c669be5814851958569e2c70019ba887b284573))
+
+* `BomRef.value`   default `None`  (#505)
+
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b9193a2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b9193a20cc8cb741e41986dbe44a7222fdd505fd))
+
+* Merge remote-tracking branch &#39;origin/main&#39; into 6.0.0-dev ([`ef76c49`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ef76c49e96bf8bd2003f1b75fac422ea940943ef))
+
+* tests: add test snapshots
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`d1dc14b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d1dc14bfe73c300319ab1eb31a68326f68001446))
+
+
 ## v5.2.0 (2023-12-02)
+
+### Feature
+
+* feat: `model.XsUri` migrate control characters according to spec (#498)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/497
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e490429`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e49042976f8577af4061c34394db270612488cdf))
+
+### Style
+
+* style: comments/reformat
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1627280`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/162728059366ac217cb6f00e1a4bfec85ec66175))
+
+### Unknown
+
+* Merge branch &#39;main&#39; into 6.0.0-dev ([`a82d88e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a82d88e8140f27a27ea333fa7d0fbb7c0dec39d7))
+
+* revert RC chaneglog
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`9b9edcd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9b9edcd8d3597f6fbce54e4fe1a135d1cbcdec66))
+
+
+## v6.0.0-rc.1 (2023-11-30)
+
+### Breaking
+
+* feat!: v6.0.0 RC1
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`dada5d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/dada5d72680701c65608b88e0f739341accf854f))
 
 ### Chore
 
@@ -80,13 +240,154 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3189e59`](https:
 
 ### Feature
 
-* feat: `model.XsUri` migrate control characters according to spec (#498)
+* feat: add basic support for CDX 1.5 (#488)
 
-fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/497
+This PR introduces basic support for CDX 1.5.
+
+Ref:
+- #404
+
+**Schema:**
+
+- Extended schema-downloader and added specification files,
+- Adapted `README` and `SchemaVersion` for 1.5
+
+**Model:**
+
+- Added `SchemaVersion1Dot5`, serializable annotations,
+- Extended `ComponentType` and `ExternalReferenceType` enums
+
+**Tests:**
+
+- Generated snapshots for 1.5.
+- In some existing tests `bom-ref` changed, since 1.5 is now listed before 1.4
+
+**Chore:**
+
+-  Added `newline = &#39;\n&#39;` to schema-downloader and `writeSnapshot` for cross-platform support
+
+----
+
+* feat: add basic support for CDX 1.5
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+
+* docs: note minversions of `HashAlgorithm` cases
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* docs: set ref after schema download
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: add the newly missing/TODO elements
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* docs: note minversions of `ComponentType` cases
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* docs: update to latest CDX meta
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* feat: new enum cases fr VulnerabilityScoreSource
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* refactor: adjust xml child order for CDX1.5
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* tests: adjust to latest implementation
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* revert deletion by accident
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
 
 ---------
 
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e490429`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e49042976f8577af4061c34394db270612488cdf))
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0546677`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0546677f7ea82ab176836b4d4432a7e3dc6db230))
+
+### Unknown
+
+* Feat: prevent unknwon enums from rendering (#496)
+
+- fixes #490
+- BC: Component serialization may throw `cyclonedx.exception.serialization.SerializationOfUnsupportedComponentTypeException`
+- feat: serialization have own exceptions of `cyclonedx.exception.serialization.*`
+- tests: lots of (functional) tests related to enums and serialization
+- misc: bump `py-serializable@^0.15` -&gt; `@^0.16`
+
+
+details &amp; progress: 
+
+- [x] `DataFlow`
+- [x] `Encoding`
+- [x] `HashAlgorithm` 
+- [x] `ExternalReferenceType`
+       convert &#34;unknown&#34; to `other`
+- [x] `component.ComponentScope`
+- [x] `component.ComponentType`.   &gt; tests done, migrator open  
+       Unclear how to proceed. dropping the info is a bad idea here.   
+       Best would be to throw an exception and abort the rendering.
+- [x] `component.PatchClassification`
+- [x] `impact_analysis.ImpactAnalysisAffectedStatus`
+- [x] `impact_analysis.ImpactAnalysisJustification`
+- [x] `impact_analysis.ImpactAnalysisResponse`
+- [x] `impact_analysis.ImpactAnalysisState`
+- [x] `issue.IssueClassification`
+- [x] `vulnerability.VulnerabilityScoreSource` 
+         convert &#34;unknown&#34; to `other`
+- [x] `vulnerability.VulnerabilitySeverity`
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6c204f7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6c204f7f6afbc49fe936931c6188380a8072f650))
+
+* bc: remove parser API (#495)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ac1f48a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ac1f48afae06f16f2375398658dd86076758a84a))
+
+* bc: remove const `output.LATEST_SUPPORTED_SCHEMA_VERSION` (#494)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b10dc83`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b10dc83f1036d22693342ef8711502a899a3f5bb))
+
+* Remove deprecated  6.0.0 (#493)
+
+* bc: remove deprecated functionality
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+* tests: remove unused/outdated tests
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e9cc5ee`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e9cc5ee75ccf466040c2c4d6f5e8b5de8e24a666))
+
+* tests: remove unused test snapshots
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`cb0d5b6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cb0d5b6a455ca6aef3070b4f473fec18202b3a2b))
 
 
 ## v5.1.1 (2023-11-02)
