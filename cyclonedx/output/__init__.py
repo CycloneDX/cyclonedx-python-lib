@@ -139,7 +139,7 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
 class BomRefDiscriminator:
 
     def __init__(self, bomrefs: Iterable['BomRef'], prefix: str = 'BomRef') -> None:
-        # do not use dict/ set here, different BomRefs with same value have same hash abd would shadow each other
+        # do not use dict/set here, different BomRefs with same value have same hash and would shadow each other
         self._bomrefs = tuple((bomref, bomref.value) for bomref in bomrefs)
         self._prefix = prefix
 
