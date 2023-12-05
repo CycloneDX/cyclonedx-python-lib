@@ -15,7 +15,7 @@
 
 
 """
-!!! ALL CLASSES IN HERE ARE INTERNAL.
+!!! ALL SYMBOLS IN HERE ARE INTERNAL.
 Everything might change without any notice.
 """
 
