@@ -21,13 +21,11 @@ from a `cyclonedx.parser.BaseParser` implementation.
 """
 
 import re
-from datetime import datetime, timezone
+from datetime import datetime
 from enum import Enum
 from functools import reduce
-from hashlib import sha1
-from itertools import zip_longest
 from json import loads as json_loads
-from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type, TypeVar
+from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -35,6 +33,7 @@ import serializable
 from sortedcontainers import SortedSet
 
 from .. import __version__ as __ThisToolVersion  # noqa: N812
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import (
     InvalidLocaleTypeException,
     InvalidUriException,
@@ -50,61 +49,6 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
 )
-
-
-def get_now_utc() -> datetime:
-    return datetime.now(tz=timezone.utc)
-
-
-def sha1sum(filename: str) -> str:
-    """
-    Generate a SHA1 hash of the provided file.
-
-    Args:
-        filename:
-            Absolute path to file to hash as `str`
-
-    Returns:
-        SHA-1 hash
-    """
-    h = sha1()  # nosec B303, B324
-    with open(filename, 'rb') as f:
-        for byte_block in iter(lambda: f.read(4096), b''):
-            h.update(byte_block)
-    return h.hexdigest()
-
-
-_T = TypeVar('_T')
-
-
-class ComparableTuple(Tuple[Optional[_T], ...]):
-    """
-    Allows comparison of tuples, allowing for None values.
-    """
-
-    def __lt__(self, other: Any) -> bool:
-        for s, o in zip_longest(self, other):
-            if s == o:
-                continue
-            # the idea is to have any consistent order, not necessarily "natural" order.
-            if s is None:
-                return False
-            if o is None:
-                return True
-            return True if s < o else False
-        return False
-
-    def __gt__(self, other: Any) -> bool:
-        for s, o in zip_longest(self, other):
-            if s == o:
-                continue
-            # the idea is to have any consistent order, not necessarily "natural" order.
-            if s is None:
-                return True
-            if o is None:
-                return False
-            return True if s > o else False
-        return False
 
 
 @serializable.serializable_enum
@@ -184,8 +128,11 @@ class DataClassification:
 
     def __lt__(self, other: object) -> bool:
         if isinstance(other, DataClassification):
-            return ComparableTuple((self.flow, self.classification)) < \
-                ComparableTuple((other.flow, other.classification))
+            return _ComparableTuple((
+                self.flow, self.classification
+            )) < _ComparableTuple((
+                other.flow, other.classification
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -279,8 +226,11 @@ class AttachedText:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, AttachedText):
-            return ComparableTuple((self.content_type, self.content, self.encoding)) < \
-                ComparableTuple((other.content_type, other.content, other.encoding))
+            return _ComparableTuple((
+                self.content_type, self.content, self.encoding
+            )) < _ComparableTuple((
+                other.content_type, other.content, other.encoding
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -481,7 +431,11 @@ class HashType:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, HashType):
-            return ComparableTuple((self.alg, self.content)) < ComparableTuple((other.alg, other.content))
+            return _ComparableTuple((
+                self.alg, self.content
+            )) < _ComparableTuple((
+                other.alg, other.content
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -806,8 +760,11 @@ class ExternalReference:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ExternalReference):
-            return ComparableTuple((self._type, self._url, self._comment)) < \
-                ComparableTuple((other._type, other._url, other._comment))
+            return _ComparableTuple((
+                self._type, self._url, self._comment
+            )) < _ComparableTuple((
+                other._type, other._url, other._comment
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -875,7 +832,11 @@ class Property:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Property):
-            return ComparableTuple((self.name, self.value)) < ComparableTuple((other.name, other.value))
+            return _ComparableTuple((
+                self.name, self.value
+            )) < _ComparableTuple((
+                other.name, other.value
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -958,8 +919,11 @@ class NoteText:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, NoteText):
-            return ComparableTuple((self.content, self.content_type, self.encoding)) < \
-                ComparableTuple((other.content, other.content_type, other.encoding))
+            return _ComparableTuple((
+                self.content, self.content_type, self.encoding
+            )) < _ComparableTuple((
+                other.content, other.content_type, other.encoding
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1035,7 +999,11 @@ class Note:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Note):
-            return ComparableTuple((self.locale, self.text)) < ComparableTuple((other.locale, other.text))
+            return _ComparableTuple((
+                self.locale, self.text
+            )) < _ComparableTuple((
+                other.locale, other.text
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1116,8 +1084,11 @@ class OrganizationalContact:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, OrganizationalContact):
-            return ComparableTuple((self.name, self.email, self.phone)) < \
-                ComparableTuple((other.name, other.email, other.phone))
+            return _ComparableTuple((
+                self.name, self.email, self.phone
+            )) < _ComparableTuple((
+                other.name, other.email, other.phone
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1323,8 +1294,11 @@ class Tool:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Tool):
-            return ComparableTuple((self.vendor, self.name, self.version)) < \
-                ComparableTuple((other.vendor, other.name, other.version))
+            return _ComparableTuple((
+                self.vendor, self.name, self.version
+            )) < _ComparableTuple((
+                other.vendor, other.name, other.version
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1404,8 +1378,11 @@ class IdentifiableAction:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IdentifiableAction):
-            return ComparableTuple((self.timestamp, self.name, self.email)) < \
-                ComparableTuple((other.timestamp, other.name, other.email))
+            return _ComparableTuple((
+                self.timestamp, self.name, self.email
+            )) < _ComparableTuple((
+                other.timestamp, other.name, other.email
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:

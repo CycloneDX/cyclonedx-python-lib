@@ -27,8 +27,9 @@ from warnings import warn
 import serializable
 from sortedcontainers import SortedSet
 
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
-from . import AttachedText, ComparableTuple, XsUri
+from . import AttachedText, XsUri
 
 
 @serializable.serializable_class(name='license')
@@ -142,7 +143,11 @@ class DisjunctiveLicense:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, DisjunctiveLicense):
-            return ComparableTuple((self._id, self._name)) < ComparableTuple((other._id, other._name))
+            return _ComparableTuple((
+                self._id, self._name
+            )) < _ComparableTuple((
+                other._id, other._name
+            ))
         if isinstance(other, LicenseExpression):
             return False  # self after any LicenseExpression
         return NotImplemented

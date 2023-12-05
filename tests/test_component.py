@@ -21,7 +21,7 @@ from unittest import TestCase
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 
-from cyclonedx.model import sha1sum
+from cyclonedx._internal.hash import file_sha1sum as _file_sha1sum
 from cyclonedx.model.component import Component
 from tests import OWN_DATA_DIRECTORY
 from tests._data.models import get_component_setuptools_simple
@@ -65,7 +65,7 @@ class TestComponent(TestCase):
     def test_from_xml_file_with_path_for_bom(self) -> None:
         test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.4', 'bom_setuptools.xml')
         c = Component.for_file(absolute_file_path=test_file, path_for_bom='fixtures/bom_setuptools.xml')
-        sha1_hash: str = sha1sum(filename=test_file)
+        sha1_hash: str = _file_sha1sum(filename=test_file)
         expected_version = f'0.0.0-{sha1_hash[0:12]}'
         self.assertEqual(c.name, 'fixtures/bom_setuptools.xml')
         self.assertEqual(c.version, expected_version)

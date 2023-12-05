@@ -25,6 +25,8 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
+from .._internal.compare import ComparableTuple as _ComparableTuple
+from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import NoPropertiesProvidedException
 from ..exception.serialization import SerializationOfUnsupportedComponentTypeException
 from ..schema.schema import (
@@ -38,7 +40,6 @@ from ..schema.schema import (
 from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
     AttachedText,
-    ComparableTuple,
     Copyright,
     ExternalReference,
     HashAlgorithm,
@@ -48,7 +49,6 @@ from . import (
     Property,
     XsUri,
     _HashTypeRepositorySerializationHelper,
-    sha1sum,
 )
 from .bom_ref import BomRef
 from .dependency import Dependable
@@ -163,8 +163,11 @@ class Commit:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
-            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < ComparableTuple(
-                (other.uid, other.url, other.author, other.committer, other.message))
+            return _ComparableTuple((
+                self.uid, self.url, self.author, self.committer, self.message
+            )) < _ComparableTuple((
+                other.uid, other.url, other.author, other.committer, other.message
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -454,7 +457,11 @@ class Diff:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Diff):
-            return ComparableTuple((self.url, self.text)) < ComparableTuple((other.url, other.text))
+            return _ComparableTuple((
+                self.url, self.text
+            )) < _ComparableTuple((
+                other.url, other.text
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -548,8 +555,11 @@ class Patch:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < ComparableTuple(
-                (other.type, other.diff, ComparableTuple(other.resolves)))
+            return _ComparableTuple((
+                self.type, self.diff, _ComparableTuple(self.resolves)
+            )) < _ComparableTuple((
+                other.type, other.diff, _ComparableTuple(other.resolves)
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -876,7 +886,7 @@ class Component(Dependable):
         if not exists(absolute_file_path):
             raise FileExistsError(f'Supplied file path {absolute_file_path!r} does not exist')
 
-        sha1_hash: str = sha1sum(filename=absolute_file_path)
+        sha1_hash: str = _file_sha1sum(absolute_file_path)
         return Component(
             name=path_for_bom if path_for_bom else absolute_file_path,
             version=f'0.0.0-{sha1_hash[0:12]}',
@@ -1412,8 +1422,11 @@ class Component(Dependable):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return ComparableTuple((self.type, self.group, self.name, self.version)) < ComparableTuple(
-                (other.type, other.group, other.name, other.version))
+            return _ComparableTuple((
+                self.type, self.group, self.name, self.version
+            )) < _ComparableTuple((
+                other.type, other.group, other.name, other.version
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
