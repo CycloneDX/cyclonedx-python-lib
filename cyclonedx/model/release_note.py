@@ -45,11 +45,11 @@ class ReleaseNotes:
         self.social_image = social_image
         self.description = description
         self.timestamp = timestamp
-        self.aliases = aliases or []  # type: ignore
-        self.tags = tags or []  # type: ignore
-        self.resolves = resolves or []  # type: ignore
-        self.notes = notes or []  # type: ignore
-        self.properties = properties or []  # type: ignore
+        self.aliases = aliases or []
+        self.tags = tags or []
+        self.resolves = resolves or []
+        self.notes = notes or []
+        self.properties = properties or []
 
     @property
     @serializable.xml_sequence(1)

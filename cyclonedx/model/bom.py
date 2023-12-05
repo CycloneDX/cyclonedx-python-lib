@@ -65,13 +65,13 @@ class BomMetaData:
                  properties: Optional[Iterable[Property]] = None,
                  timestamp: Optional[datetime] = None) -> None:
         self.timestamp = timestamp or _get_now_utc()
-        self.tools = tools or []  # type: ignore
-        self.authors = authors or []  # type: ignore
+        self.tools = tools or []
+        self.authors = authors or []
         self.component = component
         self.manufacture = manufacture
         self.supplier = supplier
-        self.licenses = licenses or []  # type: ignore
-        self.properties = properties or []  # type: ignore
+        self.licenses = licenses or []
+        self.properties = properties or []
 
         if not tools:
             self.tools.add(ThisTool)
@@ -284,7 +284,7 @@ class Bom:
         self.services = services or []  # type:ignore[assignment]
         self.external_references = external_references or []  # type:ignore[assignment]
         self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
-        self.dependencies = dependencies or SortedSet()  # type:ignore[assignment]
+        self.dependencies = dependencies or []  # type:ignore[assignment]
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -553,22 +553,21 @@ class Bom:
 
     def register_dependency(self, target: Dependable, depends_on: Optional[Iterable[Dependable]] = None) -> None:
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
-
-        if _d and depends_on:
+        if _d:
             # Dependency Target already registered - but it might have new dependencies to add
-            _d.dependencies = _d.dependencies.union(  # type: ignore
-                set(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on)) if depends_on else []
-            )
-        elif not _d:
+            if depends_on:
+                _d.dependencies.update(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on))
+        else:
             # First time we are seeing this target as a Dependency
             self._dependencies.add(Dependency(
                 ref=target.bom_ref,
                 dependencies=map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on) if depends_on else []
             ))
 
-        # Ensure dependents are registered with no further dependents in the Dependency Graph as per CDX specification
-        for _d2 in depends_on if depends_on else []:
-            self.register_dependency(target=_d2, depends_on=None)
+        if depends_on:
+            # Ensure dependents are registered with no further dependents in the DependencyGraph
+            for _d2 in depends_on:
+                self.register_dependency(target=_d2, depends_on=None)
 
     def urn(self) -> str:
         return f'urn:cdx:{self.serial_number}/{self.version}'
