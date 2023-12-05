@@ -25,6 +25,7 @@ from warnings import warn
 import serializable
 from sortedcontainers import SortedSet
 
+from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -35,7 +36,7 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool, get_now_utc
+from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
 from .bom_ref import BomRef
 from .component import Component
 from .dependency import Dependable, Dependency
@@ -63,7 +64,7 @@ class BomMetaData:
                  licenses: Optional[Iterable[License]] = None,
                  properties: Optional[Iterable[Property]] = None,
                  timestamp: Optional[datetime] = None) -> None:
-        self.timestamp = timestamp or get_now_utc()
+        self.timestamp = timestamp or _get_now_utc()
         self.tools = tools or []  # type: ignore
         self.authors = authors or []  # type: ignore
         self.component = component
@@ -277,13 +278,13 @@ class Bom:
             New, empty `cyclonedx.model.bom.Bom` instance.
         """
         self.serial_number = serial_number or uuid4()
-        self.metadata = metadata or BomMetaData()
-        self.components = components or []  # type: ignore
-        self.services = services or []  # type: ignore
-        self.external_references = SortedSet(external_references or [])
-        self.vulnerabilities = SortedSet(vulnerabilities or [])
         self.version = version
-        self.dependencies = SortedSet(dependencies) or SortedSet()
+        self.metadata = metadata or BomMetaData()
+        self.components = components or []  # type:ignore[assignment]
+        self.services = services or []  # type:ignore[assignment]
+        self.external_references = external_references or []  # type:ignore[assignment]
+        self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
+        self.dependencies = dependencies or SortedSet()  # type:ignore[assignment]
 
     @property
     @serializable.type_mapping(UrnUuidHelper)

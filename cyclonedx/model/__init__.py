@@ -21,7 +21,7 @@ from a `cyclonedx.parser.BaseParser` implementation.
 """
 
 import re
-from datetime import datetime, timezone
+from datetime import datetime
 from enum import Enum
 from functools import reduce
 from json import loads as json_loads
@@ -49,10 +49,6 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
 )
-
-
-def get_now_utc() -> datetime:
-    return datetime.now(tz=timezone.utc)
 
 
 @serializable.serializable_enum
