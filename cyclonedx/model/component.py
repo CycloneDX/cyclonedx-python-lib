@@ -195,8 +195,8 @@ class ComponentEvidence:
                 'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.licenses = licenses or []
-        self.copyright = copyright or []
+        self.licenses = licenses or []  # type:ignore[assignment]
+        self.copyright = copyright or []  # type:ignore[assignment]
 
     # @property
     # ...
@@ -498,7 +498,7 @@ class Patch:
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
         self.type = type
         self.diff = diff
-        self.resolves = resolves or []
+        self.resolves = resolves or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_attribute()
@@ -593,11 +593,11 @@ class Pedigree:
                 'provided for `Pedigree`'
             )
 
-        self.ancestors = ancestors or []
-        self.descendants = descendants or []
-        self.variants = variants or []
-        self.commits = commits or []
-        self.patches = patches or []
+        self.ancestors = ancestors or []  # type:ignore[assignment]
+        self.descendants = descendants or []  # type:ignore[assignment]
+        self.variants = variants or []  # type:ignore[assignment]
+        self.commits = commits or []  # type:ignore[assignment]
+        self.patches = patches or []  # type:ignore[assignment]
         self.notes = notes
 
     @property
@@ -927,17 +927,17 @@ class Component(Dependable):
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = hashes or []
-        self.licenses = licenses or []
+        self.hashes = hashes or []  # type:ignore[assignment]
+        self.licenses = licenses or []  # type:ignore[assignment]
         self.copyright = copyright
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
         self.modified = modified
         self.pedigree = pedigree
-        self.external_references = external_references or []
-        self.properties = properties or []
-        self.components = components or []
+        self.external_references = external_references or []  # type:ignore[assignment]
+        self.properties = properties or []  # type:ignore[assignment]
+        self.components = components or []  # type:ignore[assignment]
         self.evidence = evidence
         self.release_notes = release_notes
 

@@ -685,7 +685,7 @@ class ExternalReference:
         self.url = url
         self.comment = comment
         self.type = type
-        self.hashes = hashes or []
+        self.hashes = hashes or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(1)
@@ -1115,8 +1115,8 @@ class OrganizationalEntity:
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
         self.name = name
-        self.urls = urls or []
-        self.contacts = contacts or []
+        self.urls = urls or []  # type:ignore[assignment]
+        self.contacts = contacts or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(1)
@@ -1204,8 +1204,8 @@ class Tool:
         self.vendor = vendor
         self.name = name
         self.version = version
-        self.hashes = hashes or []
-        self.external_references = external_references or []
+        self.hashes = hashes or []  # type:ignore[assignment]
+        self.external_references = external_references or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(1)

@@ -22,7 +22,7 @@ __all__ = [
 from json import load as json_load
 from typing import TYPE_CHECKING, Dict, Optional, Set
 
-from license_expression import get_spdx_licensing
+from license_expression import get_spdx_licensing  # type:ignore[import-untyped]
 
 from .schema._res import SPDX_JSON as __SPDX_JSON_SCHEMA
 

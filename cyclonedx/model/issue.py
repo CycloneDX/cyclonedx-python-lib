@@ -122,7 +122,7 @@ class IssueType:
         self.name = name
         self.description = description
         self.source = source
-        self.references = references or []
+        self.references = references or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_attribute()
