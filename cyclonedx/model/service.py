@@ -67,15 +67,15 @@ class Service(Dependable):
         self.name = name
         self.version = version
         self.description = description
-        self.endpoints = endpoints or []  # type: ignore
+        self.endpoints = endpoints or []  # type:ignore[assignment]
         self.authenticated = authenticated
         self.x_trust_boundary = x_trust_boundary
-        self.data = data or []  # type: ignore
-        self.licenses = licenses or []  # type: ignore
-        self.external_references = external_references or []  # type: ignore
-        self.services = services or []  # type: ignore
+        self.data = data or []  # type:ignore[assignment]
+        self.licenses = licenses or []  # type:ignore[assignment]
+        self.external_references = external_references or []  # type:ignore[assignment]
+        self.services = services or []  # type:ignore[assignment]
         self.release_notes = release_notes
-        self.properties = properties or []  # type: ignore
+        self.properties = properties or []  # type:ignore[assignment]
 
     @property
     @serializable.json_name('bom-ref')
