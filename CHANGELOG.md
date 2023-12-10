@@ -2,6 +2,232 @@
 
 
 
+## v6.0.0 (2023-12-10)
+
+### Breaking
+
+* feat!: v6.0.0  (#492)
+
+### Breaking Changes
+
+* Removed symbols that were already marked as deprecated (via [#493])
+* Removed symbols in `parser.*` ([#489] via [#495])
+* Removed `output.LATEST_SUPPORTED_SCHEMA_VERSION` ([#491] via [#494])
+* Serialization of unsupported enum values might downgrade/migrate/omit them  ([#490] via [#496])  
+  Handling might raise warnings if a data loss occurred due to omitting.  
+  The result is a guaranteed valid XML/JSON, since no (enum-)invalid values are rendered.
+* Serialization of any `model.component.Component` with unsupported `type` raises `exception.serialization.SerializationOfUnsupportedComponentTypeException` ([#490] via [#496])
+* Object `model.bom_ref.BomRef`&#39;s property `value` defaults to `Null`, was arbitrary `UUID` ([#504] via [#505])  
+  This change does not affect serialization. All `bom-ref`s are guaranteed to have unique values on rendering.
+* Removed helpers from public API ([#503] via [#506])
+
+### Added
+
+* Basic support for CycloneDX 1.5 ([#404] via [#488])
+  * No data models were enhanced nor added, yet.  
+    Pull requests to add functionality are welcome.
+  * Existing enumerable got new cases, to reflect features of CycloneDX 1.5 ([#404] via [#488])
+  * Outputters were enabled to render CycloneDX 1.5 ([#404] via [#488])
+
+### Tests
+
+* Created (regression/unit/integration/functional) tests for CycloneDX 1.5 ([#404] via [#488])
+* Created (regression/functional) tests for Enums&#39; handling and completeness ([#490] via [#496])
+
+### Misc
+
+* Bumped dependency `py-serializable@^0.16`, was `@^0.15` (via [#496])
+
+
+----
+
+### API Changes — the details for migration
+
+* Added new sub-package `exception.serialization` (via [#496])
+* Removed class `models.ComparableTuple` ([#503] via [#506])
+* Enum `model.ExternalReferenceType` got new cases, to reflect features for CycloneDX 1.5 ([#404] via [#488])
+* Removed function `models.get_now_utc` ([#503] via [#506])
+* Removed function `models.sha1sum` ([#503] via [#506])
+* Enum `model.component.ComponentType` got new cases, to reflect features for CycloneDX 1.5 ([#404] via [#488])
+* Removed `model.component.Component.__init__()`&#39;s deprecated optional kwarg `namespace` (via [#493])  
+  Use kwarg `group` instead.
+* Removed `model.component.Component.__init__()`&#39;s deprecated optional kwarg `license_str` (via [#493])  
+  Use kwarg `licenses` instead.
+* Removed deprecated method `model.component.Component.get_namespace()` (via [#493])
+* Removed class `models.dependency.DependencyDependencies` ([#503] via [#506])
+* Removed `model.vulnerability.Vulnerability.__init__()`&#39;s deprecated optional kwarg `source_name` (via [#493])  
+  Use kwarg `source` instead.
+* Removed `model.vulnerability.Vulnerability.__init__()`&#39;s deprecated optional kwarg `source_url` (via [#493])  
+  Use kwarg `source` instead.
+* Removed `model.vulnerability.Vulnerability.__init__()`&#39;s deprecated optional kwarg `recommendations` (via [#493])  
+  Use kwarg `recommendation` instead.
+* Removed `model.vulnerability.VulnerabilityRating.__init__()`&#39;s deprecated optional kwarg `score_base` (via [#493])  
+  Use kwarg `score` instead.
+* Enum `model.vulnerability.VulnerabilityScoreSource` got new cases, to reflect features for CycloneDX 1.5 ([#404] via [#488])
+* Removed `output.LATEST_SUPPORTED_SCHEMA_VERSION` ([#491] via [#494])
+* Removed deprecated function `output.get_instance()` (via [#493])  
+  Use function `output.make_outputter()` instead.
+* Added new class `output.json.JsonV1Dot5`, to reflect CycloneDX 1.5 ([#404] via [#488])
+* Added new item to dict `output.json.BY_SCHEMA_VERSION`, to reflect CycloneDX 1.5 ([#404] via [#488])
+* Added new class `output.xml.XmlV1Dot5`, to reflect CycloneDX 1.5 ([#404] via [#488])
+* Added new item to dict `output.xml.BY_SCHEMA_VERSION`, to reflect CycloneDX 1.5 ([#404] via [#488])
+* Removed class `parser.ParserWarning` ([#489] via [#495])
+* Removed class `parser.BaseParser` ([#489] via [#495])
+* Enum `schema.SchemaVersion` got new case `V1_5`, to reflect CycloneDX 1.5 ([#404] via [#488])
+
+
+[#404]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/404
+[#488]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/488
+[#489]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/489
+[#490]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/490
+[#491]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/491
+[#493]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/493
+[#494]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/494
+[#495]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/495
+[#496]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/496
+[#503]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/503
+[#504]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/504
+[#505]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/505
+[#506]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/506
+
+---------
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: semantic-release &lt;semantic-release&gt;
+Co-authored-by: Johannes Feichtner &lt;343448+Churro@users.noreply.github.com&gt;
+Co-authored-by: semantic-release &lt;semantic-release&gt; ([`74865f8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/74865f8e498c9723c2ce3556ceecb6a3cfc4c490))
+
+### Chore
+
+* chore(deps): bump python-semantic-release/python-semantic-release (#509)
+
+Bumps [python-semantic-release/python-semantic-release](https://github.com/python-semantic-release/python-semantic-release) from 8.0.8 to 8.5.0.
+- [Release notes](https://github.com/python-semantic-release/python-semantic-release/releases)
+- [Changelog](https://github.com/python-semantic-release/python-semantic-release/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python-semantic-release/python-semantic-release/compare/v8.0.8...v8.5.0)
+
+---
+updated-dependencies:
+- dependency-name: python-semantic-release/python-semantic-release
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9ed9ab1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9ed9ab129e5123b061a9cd358d418f026d2e8b7a))
+
+* chore(deps-dev): update isort requirement from 5.12.0 to 5.13.0 (#512)
+
+Updates the requirements on [isort](https://github.com/pycqa/isort) to permit the latest version.
+- [Release notes](https://github.com/pycqa/isort/releases)
+- [Changelog](https://github.com/PyCQA/isort/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/pycqa/isort/compare/5.12.0...5.13.0)
+
+---
+updated-dependencies:
+- dependency-name: isort
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`0eba631`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0eba631c628faab454eabba66755d311606c536a))
+
+* chore(deps-dev): update bandit requirement from 1.7.5 to 1.7.6 (#510)
+
+Updates the requirements on [bandit](https://github.com/PyCQA/bandit) to permit the latest version.
+- [Release notes](https://github.com/PyCQA/bandit/releases)
+- [Commits](https://github.com/PyCQA/bandit/compare/1.7.5...1.7.6)
+
+---
+updated-dependencies:
+- dependency-name: bandit
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`153b07a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/153b07a28047c408e0dc442330aa1505e74c175e))
+
+* chore(deps): bump actions/setup-python from 4 to 5 (#508)
+
+Bumps [actions/setup-python](https://github.com/actions/setup-python) from 4 to 5.
+- [Release notes](https://github.com/actions/setup-python/releases)
+- [Commits](https://github.com/actions/setup-python/compare/v4...v5)
+
+---
+updated-dependencies:
+- dependency-name: actions/setup-python
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`4e3e0e0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4e3e0e0e873ff45a4d6605728cb1160cd912e3cf))
+
+* chore(deps): update sphinx-rtd-theme requirement (#499)
+
+Updates the requirements on [sphinx-rtd-theme](https://github.com/readthedocs/sphinx_rtd_theme) to permit the latest version.
+- [Changelog](https://github.com/readthedocs/sphinx_rtd_theme/blob/master/docs/changelog.rst)
+- [Commits](https://github.com/readthedocs/sphinx_rtd_theme/compare/1.3.0...2.0.0)
+
+---
+updated-dependencies:
+- dependency-name: sphinx-rtd-theme
+  dependency-type: direct:production
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`5d6dd41`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5d6dd417e0c13e596dab6c76b610788bbbb96093))
+
+* chore(deps-dev): update flake8-bugbear requirement (#500)
+
+Updates the requirements on [flake8-bugbear](https://github.com/PyCQA/flake8-bugbear) to permit the latest version.
+- [Release notes](https://github.com/PyCQA/flake8-bugbear/releases)
+- [Commits](https://github.com/PyCQA/flake8-bugbear/compare/23.9.16...23.11.28)
+
+---
+updated-dependencies:
+- dependency-name: flake8-bugbear
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`e9a12b9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e9a12b93a9866dcb6d9a48396a7c5378d5c5f5e5))
+
+* chore(deps): update py-serializable requirement (#501)
+
+Updates the requirements on [py-serializable](https://github.com/madpah/serializable) to permit the latest version.
+- [Release notes](https://github.com/madpah/serializable/releases)
+- [Changelog](https://github.com/madpah/serializable/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/madpah/serializable/compare/v0.15.0...v0.16.0)
+
+---
+updated-dependencies:
+- dependency-name: py-serializable
+  dependency-type: direct:production
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`04435ab`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/04435abe926b6fa877bd0194733ae87b3bad9610))
+
+* chore(deps-dev): update tox requirement from 4.11.3 to 4.11.4 (#502)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to permit the latest version.
+- [Release notes](https://github.com/tox-dev/tox/releases)
+- [Changelog](https://github.com/tox-dev/tox/blob/main/docs/changelog.rst)
+- [Commits](https://github.com/tox-dev/tox/compare/4.11.3...4.11.4)
+
+---
+updated-dependencies:
+- dependency-name: tox
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`8bf0e39`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8bf0e39f62c57c8afb6b7c152156e7af1f02bd5d))
+
+
 ## v5.2.0 (2023-12-02)
 
 ### Chore
