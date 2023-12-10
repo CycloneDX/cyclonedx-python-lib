@@ -330,8 +330,8 @@ class TestModelIssueType(TestCase):
                 XsUri('https://central.sonatype.org/news/20211213_log4shell_help')
             ]
         )
-        self.assertEqual(it.type, IssueClassification.SECURITY),
-        self.assertEqual(it.id, 'CVE-2021-44228'),
+        self.assertEqual(it.type, IssueClassification.SECURITY)
+        self.assertEqual(it.id, 'CVE-2021-44228')
         self.assertEqual(it.name, 'Apache Log3Shell')
         self.assertEqual(
             it.description,
@@ -344,7 +344,7 @@ class TestModelIssueType(TestCase):
             'is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging '
             'Services projects.'
         )
-        self.assertEqual(it.source.name, 'NVD'),
+        self.assertEqual(it.source.name, 'NVD')
         self.assertEqual(it.source.url, XsUri('https://nvd.nist.gov/vuln/detail/CVE-2021-44228'))
         self.assertSetEqual(it.references, {
             XsUri('https://logging.apache.org/log4j/2.x/security.html'),
