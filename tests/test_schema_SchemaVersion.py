@@ -21,7 +21,8 @@ from ddt import ddt, idata, unpack
 
 from cyclonedx.schema import SchemaVersion
 
-SORTED_SV = (SchemaVersion.V1_4,
+SORTED_SV = (SchemaVersion.V1_5,
+             SchemaVersion.V1_4,
              SchemaVersion.V1_3,
              SchemaVersion.V1_2,
              SchemaVersion.V1_1,

@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.0" version="1">
+  <components>
+    <component type="application">
+      <name>dummy APPLICATION</name>
+      <version/>
+      <modified>false</modified>
+    </component>
+    <component type="device">
+      <name>dummy DEVICE</name>
+      <version/>
+      <modified>false</modified>
+    </component>
+    <component type="framework">
+      <name>dummy FRAMEWORK</name>
+      <version/>
+      <modified>false</modified>
+    </component>
+    <component type="library">
+      <name>dummy LIBRARY</name>
+      <version/>
+      <modified>false</modified>
+    </component>
+    <component type="operating-system">
+      <name>dummy OPERATING_SYSTEM</name>
+      <version/>
+      <modified>false</modified>
+    </component>
+  </components>
+</bom>

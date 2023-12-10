@@ -15,9 +15,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from enum import Enum
-
-import serializable
 
 """
 This set of classes represents the data about Impact Analysis.
@@ -27,6 +24,11 @@ Impact Analysis is new for CycloneDX schema version 1.
 .. note::
     See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.4
 """
+
+
+from enum import Enum
+
+import serializable
 
 
 @serializable.serializable_enum

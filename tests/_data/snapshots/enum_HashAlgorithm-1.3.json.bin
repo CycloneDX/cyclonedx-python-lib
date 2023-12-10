@@ -1,0 +1,80 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy",
+      "hashes": [
+        {
+          "alg": "BLAKE2b-256",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "BLAKE2b-384",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "BLAKE2b-512",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "BLAKE3",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "MD5",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "SHA3-256",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "SHA3-384",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        },
+        {
+          "alg": "SHA3-512",
+          "content": "ae2b1fca515949e5d54fb22b8ed95575"
+        }
+      ],
+      "name": "dummy",
+      "type": "library",
+      "version": ""
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3"
+}

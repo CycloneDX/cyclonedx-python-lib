@@ -20,7 +20,7 @@ from typing import Dict, Literal, Type
 
 from serializable import ViewType
 
-from ..schema import SchemaVersion
+from . import SchemaVersion
 
 
 class BaseSchemaVersion(ABC, ViewType):
@@ -32,6 +32,13 @@ class BaseSchemaVersion(ABC, ViewType):
 
     def get_schema_version(self) -> str:
         return self.schema_version_enum.to_version()
+
+
+class SchemaVersion1Dot5(BaseSchemaVersion):
+
+    @property
+    def schema_version_enum(self) -> Literal[SchemaVersion.V1_5]:
+        return SchemaVersion.V1_5
 
 
 class SchemaVersion1Dot4(BaseSchemaVersion):
@@ -70,6 +77,7 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
 
 
 SCHEMA_VERSIONS: Dict[SchemaVersion, Type[BaseSchemaVersion]] = {
+    SchemaVersion.V1_5: SchemaVersion1Dot5,
     SchemaVersion.V1_4: SchemaVersion1Dot4,
     SchemaVersion.V1_3: SchemaVersion1Dot3,
     SchemaVersion.V1_2: SchemaVersion1Dot2,

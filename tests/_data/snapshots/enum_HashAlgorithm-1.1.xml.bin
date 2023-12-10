@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <components>
+    <component type="library" bom-ref="dummy">
+      <name>dummy</name>
+      <version/>
+      <hashes>
+        <hash alg="MD5">ae2b1fca515949e5d54fb22b8ed95575</hash>
+        <hash alg="SHA-1">ae2b1fca515949e5d54fb22b8ed95575</hash>
+        <hash alg="SHA-256">ae2b1fca515949e5d54fb22b8ed95575</hash>
+        <hash alg="SHA-384">ae2b1fca515949e5d54fb22b8ed95575</hash>
+        <hash alg="SHA-512">ae2b1fca515949e5d54fb22b8ed95575</hash>
+        <hash alg="SHA3-256">ae2b1fca515949e5d54fb22b8ed95575</hash>
+        <hash alg="SHA3-512">ae2b1fca515949e5d54fb22b8ed95575</hash>
+      </hashes>
+    </component>
+  </components>
+</bom>

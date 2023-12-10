@@ -20,7 +20,6 @@ and according to different versions of the CycloneDX schema standard.
 """
 
 import os
-import warnings
 from abc import ABC, abstractmethod
 from itertools import chain
 from random import random
@@ -33,8 +32,6 @@ if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom_ref import BomRef
     from .json import Json as JsonOutputter
     from .xml import Xml as XmlOutputter
-
-LATEST_SUPPORTED_SCHEMA_VERSION = SchemaVersion.V1_4
 
 
 class BaseOutput(ABC):
@@ -139,20 +136,10 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
     return klass(bom)
 
 
-def get_instance(bom: 'Bom', output_format: OutputFormat = OutputFormat.XML,
-                 schema_version: SchemaVersion = LATEST_SUPPORTED_SCHEMA_VERSION) -> BaseOutput:
-    """DEPRECATED. use :func:`make_outputter` instead!"""
-    warnings.warn(
-        'function `get_instance()` is deprecated, use `make_outputter()` instead.',
-        category=DeprecationWarning, stacklevel=1
-    )
-    return make_outputter(bom, output_format, schema_version)
-
-
 class BomRefDiscriminator:
 
     def __init__(self, bomrefs: Iterable['BomRef'], prefix: str = 'BomRef') -> None:
-        # do not use dict/ set here, different BomRefs with same value have same hash abd would shadow each other
+        # do not use dict/set here, different BomRefs with same value have same hash and would shadow each other
         self._bomrefs = tuple((bomref, bomref.value) for bomref in bomrefs)
         self._prefix = prefix
 
@@ -163,13 +150,13 @@ class BomRefDiscriminator:
         self.reset()
 
     def discriminate(self) -> None:
-        known_values = set()
+        known_values = []
         for bomref, _ in self._bomrefs:
             value = bomref.value
-            if value in known_values:
+            if value is None or value in known_values:
                 value = self._make_unique()
                 bomref.value = value
-            known_values.add(value)
+            known_values.append(value)
 
     def reset(self) -> None:
         for bomref, original_value in self._bomrefs:

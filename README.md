@@ -13,10 +13,13 @@
 
 ----
 
-This Python package can render and read valid [CycloneDX][link_website] documents.  
-CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple to parse.
+OWASP [CycloneDX][link_website] is a full-stack Bill of Materials (BOM) standard
+that provides advanced supply chain capabilities for cyber risk reduction.
 
-**This module is not designed for standalone use.**
+This Python package provides data models, validators and more, 
+to help you create/render/read CycloneDX documents.
+
+**This package is not designed for standalone use. It is a library.**
 
 As of version `3.0.0`, the internal data model was adjusted to allow CycloneDX VEX documents to be produced as per
 [official examples](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) linking a VEX 
@@ -26,6 +29,8 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
 [CycloneDX Python][cyclonedx-python] or [Jake][jake].
 
 Alternatively, you can use this module yourself in your application to programmatically generate CycloneDX BOMs.
+
+## Documentation
 
 View the documentation [here](https://cyclonedx-python-library.readthedocs.io/).
 

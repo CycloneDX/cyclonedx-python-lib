@@ -1,0 +1,188 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy",
+      "externalReferences": [
+        {
+          "type": "other",
+          "url": "tests/ADVERSARY_MODEL"
+        },
+        {
+          "type": "advisories",
+          "url": "tests/ADVISORIES"
+        },
+        {
+          "type": "other",
+          "url": "tests/ATTESTATION"
+        },
+        {
+          "type": "bom",
+          "url": "tests/BOM"
+        },
+        {
+          "type": "build-meta",
+          "url": "tests/BUILD_META"
+        },
+        {
+          "type": "build-system",
+          "url": "tests/BUILD_SYSTEM"
+        },
+        {
+          "type": "other",
+          "url": "tests/CERTIFICATION_REPORT"
+        },
+        {
+          "type": "chat",
+          "url": "tests/CHAT"
+        },
+        {
+          "type": "other",
+          "url": "tests/CODIFIED_INFRASTRUCTURE"
+        },
+        {
+          "type": "other",
+          "url": "tests/COMPONENT_ANALYSIS_REPORT"
+        },
+        {
+          "type": "other",
+          "url": "tests/CONFIGURATION"
+        },
+        {
+          "type": "distribution",
+          "url": "tests/DISTRIBUTION"
+        },
+        {
+          "type": "other",
+          "url": "tests/DISTRIBUTION_INTAKE"
+        },
+        {
+          "type": "documentation",
+          "url": "tests/DOCUMENTATION"
+        },
+        {
+          "type": "other",
+          "url": "tests/DYNAMIC_ANALYSIS_REPORT"
+        },
+        {
+          "type": "other",
+          "url": "tests/EVIDENCE"
+        },
+        {
+          "type": "other",
+          "url": "tests/EXPLOITABILITY_STATEMENT"
+        },
+        {
+          "type": "other",
+          "url": "tests/FORMULATION"
+        },
+        {
+          "type": "issue-tracker",
+          "url": "tests/ISSUE_TRACKER"
+        },
+        {
+          "type": "license",
+          "url": "tests/LICENSE"
+        },
+        {
+          "type": "other",
+          "url": "tests/LOG"
+        },
+        {
+          "type": "mailing-list",
+          "url": "tests/MAILING_LIST"
+        },
+        {
+          "type": "other",
+          "url": "tests/MATURITY_REPORT"
+        },
+        {
+          "type": "other",
+          "url": "tests/MODEL_CARD"
+        },
+        {
+          "type": "other",
+          "url": "tests/OTHER"
+        },
+        {
+          "type": "other",
+          "url": "tests/PENTEST_REPORT"
+        },
+        {
+          "type": "other",
+          "url": "tests/POAM"
+        },
+        {
+          "type": "other",
+          "url": "tests/QUALITY_METRICS"
+        },
+        {
+          "type": "other",
+          "url": "tests/RELEASE_NOTES"
+        },
+        {
+          "type": "other",
+          "url": "tests/RISK_ASSESSMENT"
+        },
+        {
+          "type": "other",
+          "url": "tests/RUNTIME_ANALYSIS_REPORT"
+        },
+        {
+          "type": "other",
+          "url": "tests/SECURITY_CONTACT"
+        },
+        {
+          "type": "social",
+          "url": "tests/SOCIAL"
+        },
+        {
+          "type": "other",
+          "url": "tests/STATIC_ANALYSIS_REPORT"
+        },
+        {
+          "type": "support",
+          "url": "tests/SUPPORT"
+        },
+        {
+          "type": "other",
+          "url": "tests/THREAT_MODEL"
+        },
+        {
+          "type": "vcs",
+          "url": "tests/SCM"
+        },
+        {
+          "type": "other",
+          "url": "tests/VULNERABILITY_ASSERTION"
+        },
+        {
+          "type": "website",
+          "url": "tests/WEBSITE"
+        }
+      ],
+      "name": "dummy",
+      "type": "library",
+      "version": ""
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2"
+}

@@ -13,19 +13,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Iterable, Optional, Union
-
-import serializable
-from sortedcontainers import SortedSet
-
-from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
-
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
-from . import ComparableTuple, DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
-from .bom_ref import BomRef
-from .dependency import Dependable
-from .license import License, LicenseRepository
-from .release_note import ReleaseNotes
 
 """
 This set of classes represents the data that is possible about known Services.
@@ -33,6 +20,22 @@ This set of classes represents the data that is possible about known Services.
 .. note::
     See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.4/xml/#type_servicesType
 """
+
+
+from typing import Any, Iterable, Optional, Union
+
+import serializable
+from sortedcontainers import SortedSet
+
+from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
+
+from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5
+from . import DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
+from .bom_ref import BomRef
+from .dependency import Dependable
+from .license import License, LicenseRepository
+from .release_note import ReleaseNotes
 
 
 @serializable.serializable_class
@@ -64,15 +67,15 @@ class Service(Dependable):
         self.name = name
         self.version = version
         self.description = description
-        self.endpoints = endpoints or []  # type: ignore
+        self.endpoints = endpoints or []  # type:ignore[assignment]
         self.authenticated = authenticated
         self.x_trust_boundary = x_trust_boundary
-        self.data = data or []  # type: ignore
-        self.licenses = licenses or []  # type: ignore
-        self.external_references = external_references or []  # type: ignore
-        self.services = services or []  # type: ignore
+        self.data = data or []  # type:ignore[assignment]
+        self.licenses = licenses or []  # type:ignore[assignment]
+        self.external_references = external_references or []  # type:ignore[assignment]
+        self.services = services or []  # type:ignore[assignment]
         self.release_notes = release_notes
-        self.properties = properties or []  # type: ignore
+        self.properties = properties or []  # type:ignore[assignment]
 
     @property
     @serializable.json_name('bom-ref')
@@ -221,9 +224,20 @@ class Service(Dependable):
     def x_trust_boundary(self, x_trust_boundary: Optional[bool]) -> None:
         self._x_trust_boundary = x_trust_boundary
 
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(9)
+    # def trust_zone(self) -> ...:
+    #     ... # since CDX1.5
+    #
+    # @trust_zone.setter
+    # def trust_zone(self, ...) -> None:
+    #     ... # since CDX1.5
+
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
-    @serializable.xml_sequence(9)
+    @serializable.xml_sequence(10)
     def data(self) -> 'SortedSet[DataClassification]':
         """
         Specifies the data classification.
@@ -231,6 +245,7 @@ class Service(Dependable):
         Returns:
             Set of `DataClassification`
         """
+        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._data
 
     @data.setter
@@ -239,7 +254,7 @@ class Service(Dependable):
 
     @property
     @serializable.type_mapping(LicenseRepositoryHelper)
-    @serializable.xml_sequence(10)
+    @serializable.xml_sequence(11)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Service is licensed.
@@ -247,6 +262,7 @@ class Service(Dependable):
         Returns:
             Set of `LicenseChoice`
         """
+        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._licenses
 
     @licenses.setter
@@ -255,7 +271,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(11)
+    @serializable.xml_sequence(12)
     def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the Service.
@@ -270,8 +286,28 @@ class Service(Dependable):
         self._external_references = SortedSet(external_references)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(13)
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
+
+    @property
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
+    @serializable.xml_sequence(14)
     def services(self) -> "SortedSet['Service']":
         """
         A list of services included or deployed behind the parent service.
@@ -291,7 +327,8 @@ class Service(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_sequence(14)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_sequence(15)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
         Specifies optional release notes.
@@ -305,25 +342,6 @@ class Service(Dependable):
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
-    @property
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(12)
-    def properties(self) -> 'SortedSet[Property]':
-        """
-        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
-        officially supported in the standard without having to use additional namespaces or create extensions.
-
-        Return:
-            Set of `Property`
-        """
-        return self._properties
-
-    @properties.setter
-    def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = SortedSet(properties)
-
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Service):
             return hash(other) == hash(self)
@@ -331,8 +349,11 @@ class Service(Dependable):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Service):
-            return ComparableTuple((self.group, self.name, self.version)) < \
-                ComparableTuple((other.group, other.name, other.version))
+            return _ComparableTuple((
+                self.group, self.name, self.version
+            )) < _ComparableTuple((
+                other.group, other.name, other.version
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:

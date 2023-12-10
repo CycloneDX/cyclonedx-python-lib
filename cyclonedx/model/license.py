@@ -15,18 +15,21 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import warnings
-from typing import TYPE_CHECKING, Any, Optional, Union
-
-import serializable
-from sortedcontainers import SortedSet
-
-from ..exception.model import MutuallyExclusivePropertiesException
-from . import AttachedText, ComparableTuple, XsUri
 
 """
 License related things
 """
+
+
+from typing import TYPE_CHECKING, Any, Optional, Union
+from warnings import warn
+
+import serializable
+from sortedcontainers import SortedSet
+
+from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.model import MutuallyExclusivePropertiesException
+from . import AttachedText, XsUri
 
 
 @serializable.serializable_class(name='license')
@@ -44,7 +47,7 @@ class DisjunctiveLicense:
         if not id and not name:
             raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
         if id and name:
-            warnings.warn(
+            warn(
                 'Both `id` and `name` have been supplied - `name` will be ignored!',
                 category=RuntimeWarning, stacklevel=1
             )
@@ -122,6 +125,17 @@ class DisjunctiveLicense:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(4)
+    # def licensing(self) -> ...:
+    #     ...  # TODO since CDX1.5
+    #
+    # @licensing.setter
+    # def licensing(self, ...) -> None:
+    #     ...  # TODO since CDX1.5
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, DisjunctiveLicense):
             return hash(other) == hash(self)
@@ -129,7 +143,11 @@ class DisjunctiveLicense:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, DisjunctiveLicense):
-            return ComparableTuple((self._id, self._name)) < ComparableTuple((other._id, other._name))
+            return _ComparableTuple((
+                self._id, self._name
+            )) < _ComparableTuple((
+                other._id, other._name
+            ))
         if isinstance(other, LicenseExpression):
             return False  # self after any LicenseExpression
         return NotImplemented

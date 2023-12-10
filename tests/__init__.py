@@ -50,7 +50,7 @@ class SnapshotMixin:
 
     @classmethod
     def writeSnapshot(cls, snapshot_name: str, data: str) -> None:  # noqa: N802
-        with open(cls.getSnapshotFile(snapshot_name), 'w') as s:
+        with open(cls.getSnapshotFile(snapshot_name), 'w', newline='\n') as s:
             s.write(data)
 
     @classmethod

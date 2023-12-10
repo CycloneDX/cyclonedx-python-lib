@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
+      </tool>
+    </tools>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="dummy">
+      <name>dummy</name>
+      <externalReferences>
+        <reference type="adversary-model">
+          <url>tests/ADVERSARY_MODEL</url>
+        </reference>
+        <reference type="advisories">
+          <url>tests/ADVISORIES</url>
+        </reference>
+        <reference type="attestation">
+          <url>tests/ATTESTATION</url>
+        </reference>
+        <reference type="bom">
+          <url>tests/BOM</url>
+        </reference>
+        <reference type="build-meta">
+          <url>tests/BUILD_META</url>
+        </reference>
+        <reference type="build-system">
+          <url>tests/BUILD_SYSTEM</url>
+        </reference>
+        <reference type="certification-report">
+          <url>tests/CERTIFICATION_REPORT</url>
+        </reference>
+        <reference type="chat">
+          <url>tests/CHAT</url>
+        </reference>
+        <reference type="codified-infrastructure">
+          <url>tests/CODIFIED_INFRASTRUCTURE</url>
+        </reference>
+        <reference type="component-analysis-report">
+          <url>tests/COMPONENT_ANALYSIS_REPORT</url>
+        </reference>
+        <reference type="configuration">
+          <url>tests/CONFIGURATION</url>
+        </reference>
+        <reference type="distribution">
+          <url>tests/DISTRIBUTION</url>
+        </reference>
+        <reference type="distribution-intake">
+          <url>tests/DISTRIBUTION_INTAKE</url>
+        </reference>
+        <reference type="documentation">
+          <url>tests/DOCUMENTATION</url>
+        </reference>
+        <reference type="dynamic-analysis-report">
+          <url>tests/DYNAMIC_ANALYSIS_REPORT</url>
+        </reference>
+        <reference type="evidence">
+          <url>tests/EVIDENCE</url>
+        </reference>
+        <reference type="exploitability-statement">
+          <url>tests/EXPLOITABILITY_STATEMENT</url>
+        </reference>
+        <reference type="formulation">
+          <url>tests/FORMULATION</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>tests/ISSUE_TRACKER</url>
+        </reference>
+        <reference type="license">
+          <url>tests/LICENSE</url>
+        </reference>
+        <reference type="log">
+          <url>tests/LOG</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>tests/MAILING_LIST</url>
+        </reference>
+        <reference type="maturity-report">
+          <url>tests/MATURITY_REPORT</url>
+        </reference>
+        <reference type="model-card">
+          <url>tests/MODEL_CARD</url>
+        </reference>
+        <reference type="other">
+          <url>tests/OTHER</url>
+        </reference>
+        <reference type="pentest-report">
+          <url>tests/PENTEST_REPORT</url>
+        </reference>
+        <reference type="poam">
+          <url>tests/POAM</url>
+        </reference>
+        <reference type="quality-metrics">
+          <url>tests/QUALITY_METRICS</url>
+        </reference>
+        <reference type="release-notes">
+          <url>tests/RELEASE_NOTES</url>
+        </reference>
+        <reference type="risk-assessment">
+          <url>tests/RISK_ASSESSMENT</url>
+        </reference>
+        <reference type="runtime-analysis-report">
+          <url>tests/RUNTIME_ANALYSIS_REPORT</url>
+        </reference>
+        <reference type="security-contact">
+          <url>tests/SECURITY_CONTACT</url>
+        </reference>
+        <reference type="social">
+          <url>tests/SOCIAL</url>
+        </reference>
+        <reference type="static-analysis-report">
+          <url>tests/STATIC_ANALYSIS_REPORT</url>
+        </reference>
+        <reference type="support">
+          <url>tests/SUPPORT</url>
+        </reference>
+        <reference type="threat-model">
+          <url>tests/THREAT_MODEL</url>
+        </reference>
+        <reference type="vcs">
+          <url>tests/SCM</url>
+        </reference>
+        <reference type="vulnerability-assertion">
+          <url>tests/VULNERABILITY_ASSERTION</url>
+        </reference>
+        <reference type="website">
+          <url>tests/WEBSITE</url>
+        </reference>
+      </externalReferences>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy"/>
+  </dependencies>
+</bom>

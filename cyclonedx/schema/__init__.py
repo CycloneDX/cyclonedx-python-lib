@@ -53,6 +53,7 @@ class SchemaVersion(Enum):
         my_sv = SchemaVersion.V1_3
     """
 
+    V1_5 = (1, 5)
     V1_4 = (1, 4)
     V1_3 = (1, 3)
     V1_2 = (1, 2)

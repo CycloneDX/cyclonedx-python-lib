@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
+      </tool>
+    </tools>
+    <component type="application" bom-ref="my-app">
+      <name>app</name>
+      <licenses>
+        <license>
+          <name>proprietary</name>
+        </license>
+      </licenses>
+    </component>
+    <licenses>
+      <license>
+        <id>CC-BY-1.0</id>
+      </license>
+    </licenses>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="C2">
+      <name>c-with-SPDX</name>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+    </component>
+    <component type="library" bom-ref="C1">
+      <name>c-with-expression</name>
+      <licenses>
+        <expression>Apache-2.0 OR MIT</expression>
+      </licenses>
+    </component>
+    <component type="library" bom-ref="C3">
+      <name>c-with-name</name>
+      <licenses>
+        <license>
+          <name>(c) ACME Inc.</name>
+        </license>
+      </licenses>
+    </component>
+  </components>
+  <services>
+    <service bom-ref="S2">
+      <name>s-with-SPDX</name>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+    </service>
+    <service bom-ref="S1">
+      <name>s-with-expression</name>
+      <licenses>
+        <expression>Apache-2.0 OR MIT</expression>
+      </licenses>
+    </service>
+    <service bom-ref="S3">
+      <name>s-with-name</name>
+      <licenses>
+        <license>
+          <name>(c) ACME Inc.</name>
+        </license>
+      </licenses>
+    </service>
+  </services>
+  <dependencies>
+    <dependency ref="C1"/>
+    <dependency ref="C2"/>
+    <dependency ref="C3"/>
+    <dependency ref="S1"/>
+    <dependency ref="S2"/>
+    <dependency ref="S3"/>
+    <dependency ref="my-app"/>
+  </dependencies>
+</bom>

@@ -20,7 +20,7 @@ concurrency:
 env:
   REPORTS_DIR: CI_reports
   PYTHON_VERSION_DEFAULT: "3.11"
-  POETRY_VERSION: "1.4.1"
+  POETRY_VERSION: "1.7.1"
   TESTS_REPORTS_ARTIFACT: tests-reports
 
 jobs:

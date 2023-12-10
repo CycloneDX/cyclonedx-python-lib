@@ -13,26 +13,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import re
-from datetime import datetime, timezone
-from enum import Enum
-from functools import reduce
-from hashlib import sha1
-from itertools import zip_longest
-from typing import Any, Iterable, Optional, Tuple, TypeVar
-
-import serializable
-from sortedcontainers import SortedSet
-
-from .. import __version__ as __ThisToolVersion  # noqa: N812
-from ..exception.model import (
-    InvalidLocaleTypeException,
-    InvalidUriException,
-    NoPropertiesProvidedException,
-    UnknownHashTypeException,
-)
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4
-
 """
 Uniform set of models to represent objects within a CycloneDX software bill-of-materials.
 
@@ -40,62 +20,38 @@ You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or 
 from a `cyclonedx.parser.BaseParser` implementation.
 """
 
+import re
+from datetime import datetime
+from enum import Enum
+from functools import reduce
+from json import loads as json_loads
+from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type
+from warnings import warn
+from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
-def get_now_utc() -> datetime:
-    return datetime.now(tz=timezone.utc)
+import serializable
+from sortedcontainers import SortedSet
 
-
-def sha1sum(filename: str) -> str:
-    """
-    Generate a SHA1 hash of the provided file.
-
-    Args:
-        filename:
-            Absolute path to file to hash as `str`
-
-    Returns:
-        SHA-1 hash
-    """
-    h = sha1()  # nosec B303, B324
-    with open(filename, 'rb') as f:
-        for byte_block in iter(lambda: f.read(4096), b''):
-            h.update(byte_block)
-    return h.hexdigest()
-
-
-_T = TypeVar('_T')
-
-
-class ComparableTuple(Tuple[Optional[_T], ...]):
-    """
-    Allows comparison of tuples, allowing for None values.
-    """
-
-    def __lt__(self, other: Any) -> bool:
-        for s, o in zip_longest(self, other):
-            if s == o:
-                continue
-            # the idea is to have any consistent order, not necessarily "natural" order.
-            if s is None:
-                return False
-            if o is None:
-                return True
-            return True if s < o else False
-        return False
-
-    def __gt__(self, other: Any) -> bool:
-        for s, o in zip_longest(self, other):
-            if s == o:
-                continue
-            # the idea is to have any consistent order, not necessarily "natural" order.
-            if s is None:
-                return True
-            if o is None:
-                return False
-            return True if s > o else False
-        return False
+from .. import __version__ as __ThisToolVersion  # noqa: N812
+from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.model import (
+    InvalidLocaleTypeException,
+    InvalidUriException,
+    NoPropertiesProvidedException,
+    UnknownHashTypeException,
+)
+from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+    SchemaVersion1Dot5,
+)
 
 
+@serializable.serializable_enum
 class DataFlow(str, Enum):
     """
     This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
@@ -113,6 +69,9 @@ class DataFlow(str, Enum):
 class DataClassification:
     """
     This is our internal representation of the `dataClassificationType` complex type within the CycloneDX standard.
+
+    DataClassification might be deprecated since CycloneDX 1.5, but it is not deprecated in this library.
+    In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
         See the CycloneDX Schema for dataClassificationType:
@@ -167,6 +126,15 @@ class DataClassification:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, DataClassification):
+            return _ComparableTuple((
+                self.flow, self.classification
+            )) < _ComparableTuple((
+                other.flow, other.classification
+            ))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.flow, self.classification))
 
@@ -174,6 +142,7 @@ class DataClassification:
         return f'<DataClassification flow={self.flow}>'
 
 
+@serializable.serializable_enum
 class Encoding(str, Enum):
     """
     This is our internal representation of the encoding simple type within the CycloneDX standard.
@@ -257,8 +226,11 @@ class AttachedText:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, AttachedText):
-            return ComparableTuple((self.content_type, self.content, self.encoding)) < \
-                ComparableTuple((other.content_type, other.content, other.encoding))
+            return _ComparableTuple((
+                self.content_type, self.content, self.encoding
+            )) < _ComparableTuple((
+                other.content_type, other.content, other.encoding
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -268,6 +240,7 @@ class AttachedText:
         return f'<AttachedText content-type={self.content_type}, encoding={self.encoding}>'
 
 
+@serializable.serializable_enum
 class HashAlgorithm(str, Enum):
     """
     This is our internal representation of the hashAlg simple type within the CycloneDX standard.
@@ -275,19 +248,99 @@ class HashAlgorithm(str, Enum):
     .. note::
         See the CycloneDX Schema: https://cyclonedx.org/docs/1.3/#type_hashAlg
     """
-
-    BLAKE2B_256 = 'BLAKE2b-256'
-    BLAKE2B_384 = 'BLAKE2b-384'
-    BLAKE2B_512 = 'BLAKE2b-512'
-    BLAKE3 = 'BLAKE3'
+    # see `_HashTypeRepositorySerializationHelper.__CASES` for view/case map
+    BLAKE2B_256 = 'BLAKE2b-256'  # Only supported in >= 1.2
+    BLAKE2B_384 = 'BLAKE2b-384'  # Only supported in >= 1.2
+    BLAKE2B_512 = 'BLAKE2b-512'  # Only supported in >= 1.2
+    BLAKE3 = 'BLAKE3'  # Only supported in >= 1.2
     MD5 = 'MD5'
     SHA_1 = 'SHA-1'
     SHA_256 = 'SHA-256'
     SHA_384 = 'SHA-384'
     SHA_512 = 'SHA-512'
     SHA3_256 = 'SHA3-256'
-    SHA3_384 = 'SHA3-384'
+    SHA3_384 = 'SHA3-384'  # Only supported in >= 1.2
     SHA3_512 = 'SHA3-512'
+
+
+class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[HashAlgorithm]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({
+        HashAlgorithm.MD5,
+        HashAlgorithm.SHA_1,
+        HashAlgorithm.SHA_256,
+        HashAlgorithm.SHA_384,
+        HashAlgorithm.SHA_512,
+        HashAlgorithm.SHA3_256,
+        HashAlgorithm.SHA3_512,
+    })
+    __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0]
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1] | {
+        HashAlgorithm.BLAKE2B_256,
+        HashAlgorithm.BLAKE2B_384,
+        HashAlgorithm.BLAKE2B_512,
+        HashAlgorithm.BLAKE3,
+        HashAlgorithm.SHA3_384,
+    }
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+
+    @classmethod
+    def __prep(cls, hts: Iterable['HashType'], view: Type[serializable.ViewType]) -> Generator['HashType', None, None]:
+        cases = cls.__CASES.get(view, ())
+        for ht in hts:
+            if ht.alg in cases:
+                yield ht
+            else:
+                warn(f'serialization omitted due to unsupported HashAlgorithm: {ht!r}',
+                     category=UserWarning, stacklevel=0)
+
+    @classmethod
+    def json_normalize(cls, o: Iterable['HashType'], *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> List[Any]:
+        assert view is not None
+        return [
+            json_loads(
+                ht.as_json(  # type:ignore[attr-defined]
+                    view_=view)
+            ) for ht in cls.__prep(o, view)
+        ]
+
+    @classmethod
+    def xml_normalize(cls, o: Iterable['HashType'], *,
+                      element_name: str,
+                      view: Optional[Type[serializable.ViewType]],
+                      xmlns: Optional[str],
+                      **__: Any) -> XmlElement:
+        assert view is not None
+        elem = XmlElement(element_name)
+        elem.extend(
+            ht.as_xml(  # type:ignore[attr-defined]
+                view_=view, as_string=False, element_name='hash', xmlns=xmlns
+            ) for ht in cls.__prep(o, view)
+        )
+        return elem
+
+    @classmethod
+    def json_denormalize(cls, o: Any,
+                         **__: Any) -> List['HashType']:
+        return [
+            HashType.from_json(  # type:ignore[attr-defined]
+                ht) for ht in o
+        ]
+
+    @classmethod
+    def xml_denormalize(cls, o: 'XmlElement', *,
+                        default_ns: Optional[str],
+                        **__: Any) -> List['HashType']:
+        return [
+            HashType.from_xml(  # type:ignore[attr-defined]
+                ht, default_ns) for ht in o
+        ]
 
 
 @serializable.serializable_class
@@ -378,7 +431,11 @@ class HashType:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, HashType):
-            return ComparableTuple((self.alg, self.content)) < ComparableTuple((other.alg, other.content))
+            return _ComparableTuple((
+                self.alg, self.content
+            )) < _ComparableTuple((
+                other.alg, other.content
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -388,6 +445,7 @@ class HashType:
         return f'<HashType {self.alg.name}:{self.content}>'
 
 
+@serializable.serializable_enum
 class ExternalReferenceType(str, Enum):
     """
     Enum object that defines the permissible 'types' for an External Reference according to the CycloneDX schema.
@@ -395,24 +453,127 @@ class ExternalReferenceType(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReferenceType
     """
-
+    # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
+    ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
     ADVISORIES = 'advisories'
+    ATTESTATION = 'attestation'  # Only supported in >= 1.5
     BOM = 'bom'
     BUILD_META = 'build-meta'
     BUILD_SYSTEM = 'build-system'
+    CERTIFICATION_REPORT = 'certification-report'  # Only supported in >= 1.5
     CHAT = 'chat'
+    CODIFIED_INFRASTRUCTURE = 'codified-infrastructure'  # Only supported in >= 1.5
+    COMPONENT_ANALYSIS_REPORT = 'component-analysis-report'  # Only supported in >= 1.5
+    CONFIGURATION = 'configuration'  # Only supported in >= 1.5
     DISTRIBUTION = 'distribution'
+    DISTRIBUTION_INTAKE = 'distribution-intake'  # Only supported in >= 1.5
     DOCUMENTATION = 'documentation'
+    DYNAMIC_ANALYSIS_REPORT = 'dynamic-analysis-report'  # Only supported in >= 1.5
+    EVIDENCE = 'evidence'  # Only supported in >= 1.5
+    EXPLOITABILITY_STATEMENT = 'exploitability-statement'  # Only supported in >= 1.5
+    FORMULATION = 'formulation'  # Only supported in >= 1.5
     ISSUE_TRACKER = 'issue-tracker'
     LICENSE = 'license'
+    LOG = 'log'  # Only supported in >= 1.5
     MAILING_LIST = 'mailing-list'
-    OTHER = 'other'
+    MATURITY_REPORT = 'maturity-report'  # Only supported in >= 1.5
+    MODEL_CARD = 'model-card'  # Only supported in >= 1.5
+    PENTEST_REPORT = 'pentest-report'  # Only supported in >= 1.5
+    POAM = 'poam'  # Only supported in >= 1.5
+    QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
     RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
+    RISK_ASSESSMENT = 'risk-assessment'  # Only supported in >= 1.5
+    RUNTIME_ANALYSIS_REPORT = 'runtime-analysis-report'  # Only supported in >= 1.5
+    SECURITY_CONTACT = 'security-contact'  # Only supported in >= 1.5
+    STATIC_ANALYSIS_REPORT = 'static-analysis-report'  # Only supported in >= 1.5
     SOCIAL = 'social'
     SCM = 'vcs'
     SUPPORT = 'support'
+    THREAT_MODEL = 'threat-model'  # Only supported in >= 1.5
     VCS = 'vcs'
+    VULNERABILITY_ASSERTION = 'vulnerability-assertion'  # Only supported in >= 1.5
     WEBSITE = 'website'
+    # --
+    OTHER = 'other'
+
+
+class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ExternalReferenceType]] = dict()
+    __CASES[SchemaVersion1Dot1] = frozenset({
+        ExternalReferenceType.VCS,
+        ExternalReferenceType.ISSUE_TRACKER,
+        ExternalReferenceType.WEBSITE,
+        ExternalReferenceType.ADVISORIES,
+        ExternalReferenceType.BOM,
+        ExternalReferenceType.MAILING_LIST,
+        ExternalReferenceType.SOCIAL,
+        ExternalReferenceType.CHAT,
+        ExternalReferenceType.DOCUMENTATION,
+        ExternalReferenceType.SUPPORT,
+        ExternalReferenceType.DISTRIBUTION,
+        ExternalReferenceType.LICENSE,
+        ExternalReferenceType.BUILD_META,
+        ExternalReferenceType.BUILD_SYSTEM,
+        ExternalReferenceType.OTHER,
+    })
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1]
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3] | {
+        ExternalReferenceType.RELEASE_NOTES
+    }
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4] | {
+        ExternalReferenceType.DISTRIBUTION_INTAKE,
+        ExternalReferenceType.SECURITY_CONTACT,
+        ExternalReferenceType.MODEL_CARD,
+        ExternalReferenceType.LOG,
+        ExternalReferenceType.CONFIGURATION,
+        ExternalReferenceType.EVIDENCE,
+        ExternalReferenceType.FORMULATION,
+        ExternalReferenceType.ATTESTATION,
+        ExternalReferenceType.THREAT_MODEL,
+        ExternalReferenceType.ADVERSARY_MODEL,
+        ExternalReferenceType.RISK_ASSESSMENT,
+        ExternalReferenceType.VULNERABILITY_ASSERTION,
+        ExternalReferenceType.EXPLOITABILITY_STATEMENT,
+        ExternalReferenceType.PENTEST_REPORT,
+        ExternalReferenceType.STATIC_ANALYSIS_REPORT,
+        ExternalReferenceType.DYNAMIC_ANALYSIS_REPORT,
+        ExternalReferenceType.RUNTIME_ANALYSIS_REPORT,
+        ExternalReferenceType.COMPONENT_ANALYSIS_REPORT,
+        ExternalReferenceType.MATURITY_REPORT,
+        ExternalReferenceType.CERTIFICATION_REPORT,
+        ExternalReferenceType.QUALITY_METRICS,
+        ExternalReferenceType.CODIFIED_INFRASTRUCTURE,
+        ExternalReferenceType.POAM,
+    }
+
+    @classmethod
+    def __normalize(cls, extref: ExternalReferenceType, view: Type[serializable.ViewType]) -> str:
+        return (
+            extref
+            if extref in cls.__CASES.get(view, ())
+            else ExternalReferenceType.OTHER
+        ).value
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ExternalReferenceType:
+        return ExternalReferenceType(o)
 
 
 @serializable.serializable_class
@@ -467,25 +628,6 @@ class XsUri(serializable.helpers.BaseHelper):
             )
         self._uri = self._spec_migrate(uri)
 
-    @property
-    @serializable.json_name('.')
-    @serializable.xml_name('.')
-    def uri(self) -> str:
-        return self._uri
-
-    @classmethod
-    def serialize(cls, o: Any) -> str:
-        if isinstance(o, XsUri):
-            return str(o)
-        raise ValueError(f'Attempt to serialize a non-XsUri: {o.__class__}')
-
-    @classmethod
-    def deserialize(cls, o: Any) -> 'XsUri':
-        try:
-            return XsUri(uri=str(o))
-        except ValueError:
-            raise ValueError(f'XsUri string supplied ({o}) does not parse!')
-
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
             return hash(other) == hash(self)
@@ -505,6 +647,28 @@ class XsUri(serializable.helpers.BaseHelper):
     def __str__(self) -> str:
         return self._uri
 
+    @property
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
+    def uri(self) -> str:
+        return self._uri
+
+    @classmethod
+    def serialize(cls, o: Any) -> str:
+        if isinstance(o, XsUri):
+            return str(o)
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-XsUri: {o!r}')
+
+    @classmethod
+    def deserialize(cls, o: Any) -> 'XsUri':
+        try:
+            return XsUri(uri=str(o))
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'XsUri string supplied does not parse: {o!r}'
+            ) from err
+
 
 @serializable.serializable_class
 class ExternalReference:
@@ -521,7 +685,7 @@ class ExternalReference:
         self.url = url
         self.comment = comment
         self.type = type
-        self.hashes = hashes or []  # type: ignore
+        self.hashes = hashes or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(1)
@@ -553,6 +717,7 @@ class ExternalReference:
         self._comment = comment
 
     @property
+    @serializable.type_mapping(_ExternalReferenceSerializationHelper)
     @serializable.xml_attribute()
     def type(self) -> ExternalReferenceType:
         """
@@ -573,7 +738,8 @@ class ExternalReference:
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     def hashes(self) -> 'SortedSet[HashType]':
         """
         The hashes of the external reference (if applicable).
@@ -594,8 +760,11 @@ class ExternalReference:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ExternalReference):
-            return ComparableTuple((self._type, self._url, self._comment)) < \
-                ComparableTuple((other._type, other._url, other._comment))
+            return _ComparableTuple((
+                self._type, self._url, self._comment
+            )) < _ComparableTuple((
+                other._type, other._url, other._comment
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -663,7 +832,11 @@ class Property:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Property):
-            return ComparableTuple((self.name, self.value)) < ComparableTuple((other.name, other.value))
+            return _ComparableTuple((
+                self.name, self.value
+            )) < _ComparableTuple((
+                other.name, other.value
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -746,8 +919,11 @@ class NoteText:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, NoteText):
-            return ComparableTuple((self.content, self.content_type, self.encoding)) < \
-                ComparableTuple((other.content, other.content_type, other.encoding))
+            return _ComparableTuple((
+                self.content, self.content_type, self.encoding
+            )) < _ComparableTuple((
+                other.content, other.content_type, other.encoding
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -823,7 +999,11 @@ class Note:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Note):
-            return ComparableTuple((self.locale, self.text)) < ComparableTuple((other.locale, other.text))
+            return _ComparableTuple((
+                self.locale, self.text
+            )) < _ComparableTuple((
+                other.locale, other.text
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -904,8 +1084,11 @@ class OrganizationalContact:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, OrganizationalContact):
-            return ComparableTuple((self.name, self.email, self.phone)) < \
-                ComparableTuple((other.name, other.email, other.phone))
+            return _ComparableTuple((
+                self.name, self.email, self.phone
+            )) < _ComparableTuple((
+                other.name, other.email, other.phone
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -932,8 +1115,8 @@ class OrganizationalEntity:
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
         self.name = name
-        self.urls = urls or []  # type: ignore
-        self.contacts = contacts or []  # type: ignore
+        self.urls = urls or []  # type:ignore[assignment]
+        self.contacts = contacts or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(1)
@@ -1006,7 +1189,10 @@ class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
 
-    Tool(s) are the things used in the creation of the BOM.
+    Tool(s) are the things used in the creation of the CycloneDX document.
+
+    Tool might be deprecated since CycloneDX 1.5, but it is not deprecated i this library.
+    In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
@@ -1018,8 +1204,8 @@ class Tool:
         self.vendor = vendor
         self.name = name
         self.version = version
-        self.hashes = hashes or []  # type: ignore
-        self.external_references = external_references or []  # type: ignore
+        self.hashes = hashes or []  # type:ignore[assignment]
+        self.external_references = external_references or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(1)
@@ -1067,7 +1253,7 @@ class Tool:
         self._version = version
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     @serializable.xml_sequence(4)
     def hashes(self) -> 'SortedSet[HashType]':
         """
@@ -1084,6 +1270,7 @@ class Tool:
 
     @property
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -1107,8 +1294,11 @@ class Tool:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Tool):
-            return ComparableTuple((self.vendor, self.name, self.version)) < \
-                ComparableTuple((other.vendor, other.name, other.version))
+            return _ComparableTuple((
+                self.vendor, self.name, self.version
+            )) < _ComparableTuple((
+                other.vendor, other.name, other.version
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1188,8 +1378,11 @@ class IdentifiableAction:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IdentifiableAction):
-            return ComparableTuple((self.timestamp, self.name, self.email)) < \
-                ComparableTuple((other.timestamp, other.name, other.email))
+            return _ComparableTuple((
+                self.timestamp, self.name, self.email
+            )) < _ComparableTuple((
+                other.timestamp, other.name, other.email
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:

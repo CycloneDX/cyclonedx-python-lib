@@ -15,28 +15,31 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-import warnings
+
 from enum import Enum
 from os.path import exists
-from typing import Any, Iterable, Optional, Set, Union
+from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
+from .._internal.compare import ComparableTuple as _ComparableTuple
+from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import NoPropertiesProvidedException
+from ..exception.serialization import SerializationOfUnsupportedComponentTypeException
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
     SchemaVersion1Dot2,
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
+    SchemaVersion1Dot5,
 )
 from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
     AttachedText,
-    ComparableTuple,
     Copyright,
     ExternalReference,
     HashAlgorithm,
@@ -45,12 +48,12 @@ from . import (
     OrganizationalEntity,
     Property,
     XsUri,
-    sha1sum,
+    _HashTypeRepositorySerializationHelper,
 )
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .issue import IssueType
-from .license import License, LicenseExpression, LicenseRepository
+from .license import License, LicenseRepository
 from .release_note import ReleaseNotes
 
 
@@ -160,8 +163,11 @@ class Commit:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
-            return ComparableTuple((self.uid, self.url, self.author, self.committer, self.message)) < ComparableTuple(
-                (other.uid, other.url, other.author, other.committer, other.message))
+            return _ComparableTuple((
+                self.uid, self.url, self.author, self.committer, self.message
+            )) < _ComparableTuple((
+                other.uid, other.url, other.author, other.committer, other.message
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -189,11 +195,45 @@ class ComponentEvidence:
                 'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.licenses = licenses or []  # type: ignore
-        self.copyright = copyright or []  # type: ignore
+        self.licenses = licenses or []  # type:ignore[assignment]
+        self.copyright = copyright or []  # type:ignore[assignment]
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(1)
+    # def identity(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @identity.setter
+    # def identity(self, ...) -> None:
+    #    ... # TODO since CDX1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(2)
+    # def occurrences(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @occurrences.setter
+    # def occurrences(self, ...) -> None:
+    #    ... # TODO since CDX1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(3)
+    # def callstack(self) -> ...:
+    #    ... # TODO since CDX1.5
+    #
+    # @callstack.setter
+    # def callstack(self, ...) -> None:
+    #    ... # TODO since CDX1.5
 
     @property
     @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.xml_sequence(4)
     def licenses(self) -> LicenseRepository:
         """
         Optional list of licenses obtained during analysis.
@@ -209,6 +249,7 @@ class ComponentEvidence:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
+    @serializable.xml_sequence(5)
     def copyright(self) -> 'SortedSet[Copyright]':
         """
         Optional list of copyright statements.
@@ -234,6 +275,7 @@ class ComponentEvidence:
         return f'<ComponentEvidence id={id(self)}>'
 
 
+@serializable.serializable_enum
 class ComponentScope(str, Enum):
     """
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
@@ -241,11 +283,54 @@ class ComponentScope(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_scope
     """
+    # see `_ComponentScopeSerializationHelper.__CASES` for view/case map
     REQUIRED = 'required'
     OPTIONAL = 'optional'
-    EXCLUDED = 'excluded'
+    EXCLUDED = 'excluded'  # Only supported in >= 1.1
 
 
+class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ComponentScope]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({
+        ComponentScope.REQUIRED,
+        ComponentScope.OPTIONAL,
+    })
+    __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0] | {
+        ComponentScope.EXCLUDED,
+    }
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1]
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+
+    @classmethod
+    def __normalize(cls, cs: ComponentScope, view: Type[serializable.ViewType]) -> Optional[str]:
+        return cs.value \
+            if cs in cls.__CASES.get(view, ()) \
+            else None
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ComponentScope:
+        return ComponentScope(o)
+
+
+@serializable.serializable_enum
 class ComponentType(str, Enum):
     """
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
@@ -253,14 +338,71 @@ class ComponentType(str, Enum):
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_classification
     """
+    # see `_ComponentTypeSerializationHelper.__CASES` for view/case map
     APPLICATION = 'application'
-    CONTAINER = 'container'
+    CONTAINER = 'container'  # Only supported in >= 1.2
+    DATA = 'data'  # Only supported in >= 1.5
     DEVICE = 'device'
-    FILE = 'file'
-    FIRMWARE = 'firmware'
+    DEVICE_DRIVER = 'device-driver'  # Only supported in >= 1.5
+    FILE = 'file'  # Only supported in >= 1.1
+    FIRMWARE = 'firmware'  # Only supported in >= 1.2
     FRAMEWORK = 'framework'
     LIBRARY = 'library'
+    MACHINE_LEARNING_MODEL = 'machine-learning-model'  # Only supported in >= 1.5
     OPERATING_SYSTEM = 'operating-system'
+    PLATFORM = 'platform'  # Only supported in >= 1.5
+
+
+class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ComponentType]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({
+        ComponentType.APPLICATION,
+        ComponentType.DEVICE,
+        ComponentType.FRAMEWORK,
+        ComponentType.LIBRARY,
+        ComponentType.OPERATING_SYSTEM,
+    })
+    __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0] | {
+        ComponentType.FILE,
+    }
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1] | {
+        ComponentType.CONTAINER,
+        ComponentType.FIRMWARE,
+    }
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4] | {
+        ComponentType.DATA,
+        ComponentType.DEVICE_DRIVER,
+        ComponentType.MACHINE_LEARNING_MODEL,
+        ComponentType.PLATFORM,
+    }
+
+    @classmethod
+    def __normalize(cls, ct: ComponentType, view: Type[serializable.ViewType]) -> Optional[str]:
+        if ct in cls.__CASES.get(view, ()):
+            return ct.value
+        raise SerializationOfUnsupportedComponentTypeException(f'unsupported {ct!r} for view {view!r}')
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ComponentType:
+        return ComponentType(o)
 
 
 class Diff:
@@ -315,7 +457,11 @@ class Diff:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Diff):
-            return ComparableTuple((self.url, self.text)) < ComparableTuple((other.url, other.text))
+            return _ComparableTuple((
+                self.url, self.text
+            )) < _ComparableTuple((
+                other.url, other.text
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -325,6 +471,7 @@ class Diff:
         return f'<Diff url={self.url}>'
 
 
+@serializable.serializable_enum
 class PatchClassification(str, Enum):
     """
     Enum object that defines the permissible `patchClassification`s.
@@ -351,7 +498,7 @@ class Patch:
                  resolves: Optional[Iterable[IssueType]] = None) -> None:
         self.type = type
         self.diff = diff
-        self.resolves = resolves or []  # type: ignore
+        self.resolves = resolves or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_attribute()
@@ -408,8 +555,11 @@ class Patch:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return ComparableTuple((self.type, self.diff, ComparableTuple(self.resolves))) < ComparableTuple(
-                (other.type, other.diff, ComparableTuple(other.resolves)))
+            return _ComparableTuple((
+                self.type, self.diff, _ComparableTuple(self.resolves)
+            )) < _ComparableTuple((
+                other.type, other.diff, _ComparableTuple(other.resolves)
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -443,11 +593,11 @@ class Pedigree:
                 'provided for `Pedigree`'
             )
 
-        self.ancestors = ancestors or []  # type: ignore
-        self.descendants = descendants or []  # type: ignore
-        self.variants = variants or []  # type: ignore
-        self.commits = commits or []  # type: ignore
-        self.patches = patches or []  # type: ignore
+        self.ancestors = ancestors or []  # type:ignore[assignment]
+        self.descendants = descendants or []  # type:ignore[assignment]
+        self.variants = variants or []  # type:ignore[assignment]
+        self.commits = commits or []  # type:ignore[assignment]
+        self.patches = patches or []  # type:ignore[assignment]
         self.notes = notes
 
     @property
@@ -528,6 +678,7 @@ class Pedigree:
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     @serializable.xml_sequence(5)
     def patches(self) -> 'SortedSet[Patch]':
@@ -735,7 +886,7 @@ class Component(Dependable):
         if not exists(absolute_file_path):
             raise FileExistsError(f'Supplied file path {absolute_file_path!r} does not exist')
 
-        sha1_hash: str = sha1sum(filename=absolute_file_path)
+        sha1_hash: str = _file_sha1sum(absolute_file_path)
         return Component(
             name=path_for_bom if path_for_bom else absolute_file_path,
             version=f'0.0.0-{sha1_hash[0:12]}',
@@ -748,7 +899,8 @@ class Component(Dependable):
             )
         )
 
-    def __init__(self, *, name: str, type: ComponentType = ComponentType.LIBRARY,
+    def __init__(self, *,
+                 name: str, type: ComponentType = ComponentType.LIBRARY,
                  mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
                  supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
@@ -759,9 +911,7 @@ class Component(Dependable):
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
-                 modified: bool = False,
-                 # Deprecated parameters kept for backwards compatibility
-                 namespace: Optional[str] = None, license_str: Optional[str] = None
+                 modified: bool = False
                  ) -> None:
         self.type = type
         self.mime_type = mime_type
@@ -777,39 +927,22 @@ class Component(Dependable):
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = hashes or []  # type: ignore
-        self.licenses = licenses or []  # type: ignore
+        self.hashes = hashes or []  # type:ignore[assignment]
+        self.licenses = licenses or []  # type:ignore[assignment]
         self.copyright = copyright
         self.cpe = cpe
         self.purl = purl
         self.swid = swid
         self.modified = modified
         self.pedigree = pedigree
-        self.external_references = external_references or []  # type: ignore
-        self.properties = properties or []  # type: ignore
-        self.components = components or []  # type: ignore
+        self.external_references = external_references or []  # type:ignore[assignment]
+        self.properties = properties or []  # type:ignore[assignment]
+        self.components = components or []  # type:ignore[assignment]
         self.evidence = evidence
         self.release_notes = release_notes
 
-        # Deprecated for 1.4, but kept for some backwards compatibility
-        if namespace:
-            warnings.warn(
-                '`namespace` is deprecated and has been replaced with `group` to align with the CycloneDX standard',
-                category=DeprecationWarning, stacklevel=1
-            )
-            if not group:
-                self.group = namespace
-
-        if license_str:
-            warnings.warn(
-                '`license_str` is deprecated and has been'
-                ' replaced with `licenses` to align with the CycloneDX standard',
-                category=DeprecationWarning, stacklevel=1
-            )
-            if not licenses:
-                self.licenses = LicenseRepository([LicenseExpression(license_str)])
-
     @property
+    @serializable.type_mapping(_ComponentTypeSerializationHelper)
     @serializable.xml_attribute()
     def type(self) -> ComponentType:
         """
@@ -849,6 +982,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -867,6 +1001,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(1)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
@@ -886,6 +1021,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(2)
     def author(self) -> Optional[str]:
         """
@@ -991,6 +1127,7 @@ class Component(Dependable):
         self._description = description
 
     @property
+    @serializable.type_mapping(_ComponentScopeSerializationHelper)
     @serializable.xml_sequence(8)
     def scope(self) -> Optional[ComponentScope]:
         """
@@ -1008,7 +1145,7 @@ class Component(Dependable):
         self._scope = scope
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'hash')
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     @serializable.xml_sequence(9)
     def hashes(self) -> 'SortedSet[HashType]':
         """
@@ -1028,6 +1165,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(10)
     def licenses(self) -> LicenseRepository:
@@ -1098,6 +1236,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(14)
     def swid(self) -> Optional[Swid]:
         """
@@ -1127,6 +1266,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(16)
     def pedigree(self) -> Optional[Pedigree]:
         """
@@ -1147,6 +1287,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(17)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -1166,6 +1307,7 @@ class Component(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(18)
     def properties(self) -> 'SortedSet[Property]':
@@ -1203,6 +1345,7 @@ class Component(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(20)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
@@ -1219,6 +1362,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_sequence(21)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
@@ -1232,6 +1376,28 @@ class Component(Dependable):
     @release_notes.setter
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(22)
+    # def model_card(self) -> ...:
+    #     ...  # TODO since CDX1.5
+    #
+    # @model_card.setter
+    # def model_card(self, ...) -> None:
+    #     ...  # TODO since CDX1.5
+
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.xml_sequence(23)
+    # def data(self) -> ...:
+    #     ...  # TODO since CDX1.5
+    #
+    # @data.setter
+    # def data(self, ...) -> None:
+    #     ...  # TODO since CDX1.5
 
     def get_all_nested_components(self, include_self: bool = False) -> Set['Component']:
         components = set()
@@ -1256,8 +1422,11 @@ class Component(Dependable):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return ComparableTuple((self.type, self.group, self.name, self.version)) < ComparableTuple(
-                (other.type, other.group, other.name, other.version))
+            return _ComparableTuple((
+                self.type, self.group, self.name, self.version
+            )) < _ComparableTuple((
+                other.type, other.group, other.name, other.version
+            ))
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1271,15 +1440,3 @@ class Component(Dependable):
     def __repr__(self) -> str:
         return f'<Component bom-ref={self.bom_ref}, group={self.group}, name={self.name}, ' \
                f'version={self.version}, type={self.type}>'
-
-    # Deprecated methods
-    def get_namespace(self) -> Optional[str]:
-        """
-        Get the namespace of this Component.
-
-        Returns:
-            Declared namespace of this Component as `str` if declared, else `None`.
-        """
-        warnings.warn('`Component.get_namespace()` is deprecated - use `Component.group`',
-                      category=DeprecationWarning, stacklevel=1)
-        return self._group
