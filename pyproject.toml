@@ -12,7 +12,6 @@ authors = [
   "Jan Kowalleck <jan.kowalleck@gmail.com>",
 ]
 maintainers = [
-  "Paul Horton <phorton@sonatype.com>",
   "Jan Kowalleck <jan.kowalleck@gmail.com>",
 ]
 license = "Apache-2.0"
