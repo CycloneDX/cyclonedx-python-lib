@@ -2,6 +2,72 @@
 
 
 
+## v6.1.0 (2023-12-22)
+
+### Chore
+
+* chore: update maintainers
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`87c72d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/87c72d7f589faea67c5f90f041531468f8ae480c))
+
+* chore(deps): bump python-semantic-release/python-semantic-release (#515)
+
+Bumps [python-semantic-release/python-semantic-release](https://github.com/python-semantic-release/python-semantic-release) from 8.5.0 to 8.5.1.
+- [Release notes](https://github.com/python-semantic-release/python-semantic-release/releases)
+- [Changelog](https://github.com/python-semantic-release/python-semantic-release/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python-semantic-release/python-semantic-release/compare/v8.5.0...v8.5.1)
+
+---
+updated-dependencies:
+- dependency-name: python-semantic-release/python-semantic-release
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`0f56ec4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0f56ec471268d0b27c5956b93021a982945873a2))
+
+* chore(deps-dev): update coverage requirement from 7.3.2 to 7.3.3 (#517)
+
+Updates the requirements on [coverage](https://github.com/nedbat/coveragepy) to permit the latest version.
+- [Release notes](https://github.com/nedbat/coveragepy/releases)
+- [Changelog](https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst)
+- [Commits](https://github.com/nedbat/coveragepy/compare/7.3.2...7.3.3)
+
+---
+updated-dependencies:
+- dependency-name: coverage
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`a57e2f6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a57e2f6ee14d015e58e2175dcbb087d971731f92))
+
+* chore(deps-dev): update isort requirement from 5.13.0 to 5.13.2 (#516)
+
+Updates the requirements on [isort](https://github.com/pycqa/isort) to permit the latest version.
+- [Release notes](https://github.com/pycqa/isort/releases)
+- [Changelog](https://github.com/PyCQA/isort/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/pycqa/isort/compare/5.13.0...5.13.2)
+
+---
+updated-dependencies:
+- dependency-name: isort
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`84874a3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/84874a39610b0108335413da23f50b2911c20c78))
+
+### Feature
+
+* feat: add function to map python `hashlib` algorithms to CycloneDX (#519)
+
+new API: `model.HashType.from_hashlib_alg()`
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`81f8cf5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/81f8cf59b1f40ffbd213789a8b1b621a01e3f631))
+
+
 ## v6.0.0 (2023-12-10)
 
 ### Breaking
