@@ -343,6 +343,25 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
         ]
 
 
+_MAP_HASHLIB: Dict[str, HashAlgorithm] = {
+    # from hashlib.algorithms_guaranteed
+    'md5': HashAlgorithm.MD5,
+    'sha1': HashAlgorithm.SHA_1,
+    # sha224:
+    'sha256': HashAlgorithm.SHA_256,
+    'sha384': HashAlgorithm.SHA_384,
+    'sha512': HashAlgorithm.SHA_512,
+    # blake2b:
+    # blake2s:
+    # sha3_224:
+    'sha3_256': HashAlgorithm.SHA3_256,
+    'sha3_384': HashAlgorithm.SHA3_384,
+    'sha3_512': HashAlgorithm.SHA3_512,
+    # shake_128:
+    # shake_256:
+}
+
+
 @serializable.serializable_class
 class HashType:
     """
@@ -351,6 +370,30 @@ class HashType:
     .. note::
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.3/#type_hashType
     """
+
+    @staticmethod
+    def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':
+        """
+        Attempts to convert a hashlib-algorithm to our internal model classes.
+
+        Args:
+             hashlib_alg:
+                Hash algorith - like it is used by `hashlib`.
+                Example: `sha256`.
+
+            content:
+                Hash value.
+
+        Raises:
+            `UnknownHashTypeException` if the algorithm of hash cannot be determined.
+
+        Returns:
+            An instance of `HashType`.
+        """
+        alg = _MAP_HASHLIB.get(hashlib_alg.lower())
+        if alg is None:
+            raise UnknownHashTypeException(f'Unable to determine hash alg for {hashlib_alg!r}')
+        return HashType(alg=alg, content=content)
 
     @staticmethod
     def from_composite_str(composite_hash: str) -> 'HashType':

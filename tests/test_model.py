@@ -20,6 +20,8 @@ import datetime
 from enum import Enum
 from unittest import TestCase
 
+from ddt import ddt, named_data
+
 from cyclonedx._internal.compare import ComparableTuple
 from cyclonedx.exception.model import (
     InvalidLocaleTypeException,
@@ -139,8 +141,8 @@ class TestComparableTuple(TestCase):
         self.assertNotEqual(tuple2, tuple1)
 
     def test_compare_enum(self) -> None:
-        tuple1 = ComparableTuple((DummyStringEnum.FIRST, ))
-        tuple2 = ComparableTuple((DummyStringEnum.SECOND, ))
+        tuple1 = ComparableTuple((DummyStringEnum.FIRST,))
+        tuple2 = ComparableTuple((DummyStringEnum.SECOND,))
         self.assertLess(tuple1, tuple2)
         self.assertGreater(tuple2, tuple1)
         self.assertNotEqual(tuple1, tuple2)
@@ -239,19 +241,34 @@ class TestModelExternalReference(TestCase):
         self.assertListEqual(sorted_refs, expected_refs)
 
 
+@ddt
 class TestModelHashType(TestCase):
 
-    def test_hash_type_from_composite_str_1(self) -> None:
-        h = HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
-        self.assertEqual(h.alg, HashAlgorithm.SHA_256)
-        self.assertEqual(h.content, '806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
+    @named_data(
+        ('sha256', 'sha256', '806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b', HashAlgorithm.SHA_256),
+        ('MD5', 'MD5', 'dc26cd71b80d6757139f38156a43c545', HashAlgorithm.MD5),
+    )
+    def test_hash_type_from_hashlib_alg(self, alg: str, content: str, e_alg: HashAlgorithm) -> None:
+        h = HashType.from_hashlib_alg(alg, content)
+        self.assertIs(h.alg, e_alg)
+        self.assertEqual(h.content, content)
 
-    def test_hash_type_from_composite_str_2(self) -> None:
-        h = HashType.from_composite_str('md5:dc26cd71b80d6757139f38156a43c545')
-        self.assertEqual(h.alg, HashAlgorithm.MD5)
-        self.assertEqual(h.content, 'dc26cd71b80d6757139f38156a43c545')
+    def test_hash_type_from_hashlib_alg_throws_on_unknown(self) -> None:
+        with self.assertRaises(UnknownHashTypeException):
+            HashType.from_hashlib_alg('unknown', 'dc26cd71b80d6757139f38156a43c545')
 
-    def test_hash_type_from_unknown(self) -> None:
+    @named_data(
+        ('sha256', 'sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b',
+         HashAlgorithm.SHA_256, '806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b'),
+        ('MD5', 'MD5:dc26cd71b80d6757139f38156a43c545',
+         HashAlgorithm.MD5, 'dc26cd71b80d6757139f38156a43c545'),
+    )
+    def test_hash_type_from_composite_str(self, composite: str, e_alg: HashAlgorithm, e_content: str) -> None:
+        h = HashType.from_composite_str(composite)
+        self.assertIs(h.alg, e_alg)
+        self.assertEqual(h.content, e_content)
+
+    def test_hash_type_from_composite_str_throws_on_unknown(self) -> None:
         with self.assertRaises(UnknownHashTypeException):
             HashType.from_composite_str('unknown:dc26cd71b80d6757139f38156a43c545')
 
