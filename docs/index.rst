@@ -34,6 +34,12 @@ This library was designed to be used by developers - you can use this module you
 programmatically generate SBOMs.
 
 
+.. _CycloneDX Python: https://pypi.org/project/cyclonedx-bom/
+.. _Jake: https://pypi.org/project/jake
+.. _CycloneDX Tool Center: https://cyclonedx.org/tool-center/
+.. _official examples: https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -44,9 +50,3 @@ programmatically generate SBOMs.
    contributing
    support
    changelog
-
-
-.. _CycloneDX Python: https://pypi.org/project/cyclonedx-bom/
-.. _Jake: https://pypi.org/project/jake
-.. _CycloneDX Tool Center: https://cyclonedx.org/tool-center/
-.. _official examples: https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory
