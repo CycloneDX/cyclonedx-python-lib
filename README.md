@@ -19,16 +19,13 @@ that provides advanced supply chain capabilities for cyber risk reduction.
 This Python package provides data models, validators and more, 
 to help you create/render/read CycloneDX documents.
 
-**This package is not designed for standalone use. It is a library.**
+**This package is not designed for standalone use. It is a software library.**
 
 As of version `3.0.0`, the internal data model was adjusted to allow CycloneDX VEX documents to be produced as per
-[official examples](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) linking a VEX 
-documents to a separate BOM document.
+[official examples](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) linking VEX to a separate CycloneDX document.
 
 If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout 
 [CycloneDX Python][cyclonedx-python] or [Jake][jake].
-
-Alternatively, you can use this module yourself in your application to programmatically generate CycloneDX BOMs.
 
 ## Documentation
 

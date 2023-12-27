@@ -15,29 +15,26 @@
 CycloneDX’s Python Library documentation
 ====================================================
 
-CycloneDX is a lightweight BOM specification that is easily created, human-readable, and simple to parse.
+OWASP `CycloneDX`_ is a full-stack Bill of Materials (BOM) standard
+that provides advanced supply chain capabilities for cyber risk reduction.
 
-This CycloneDX module for Python can generate valid CycloneDX bill-of-material document containing an aggregate of all
-project dependencies.
+This Python package provides data models, validators and more,
+to help you create/render/read CycloneDX documents.
 
-As of version ``3.0.0``, the internal data model was adjusted to allow CycloneDX VEX documents to be produced as per
-`official examples`_ linking VEX to a separate BOM.
+**This package is not designed for standalone use. It is a software library.**
 
-This module is not designed for standalone use (i.e. it is not executable on it’s own). If you’re looking for a
-CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout:
+As of version ``3.0.0`` of this library, the internal data model was adjusted to allow CycloneDX VEX documents to be produced as per
+`official examples`_ linking VEX to a separate CycloneDX document.
 
-* `CycloneDX Python`_
-* `Jake`_
-* `CycloneDX Tool Center`_
-
-This library was designed to be used by developers - you can use this module yourself in your application to
-programmatically generate SBOMs.
+If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout
+`CycloneDX Python`_ or `Jake`_.
 
 
+.. _CycloneDX: https://cyclonedx.org/
+.. _official examples: https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory
 .. _CycloneDX Python: https://pypi.org/project/cyclonedx-bom/
 .. _Jake: https://pypi.org/project/jake
 .. _CycloneDX Tool Center: https://cyclonedx.org/tool-center/
-.. _official examples: https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory
 
 
 .. toctree::
