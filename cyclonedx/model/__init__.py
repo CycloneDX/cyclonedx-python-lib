@@ -1234,7 +1234,7 @@ class Tool:
 
     Tool(s) are the things used in the creation of the CycloneDX document.
 
-    Tool might be deprecated since CycloneDX 1.5, but it is not deprecated i this library.
+    Tool might be deprecated since CycloneDX 1.5, but it is not deprecated in this library.
     In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
