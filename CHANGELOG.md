@@ -2,6 +2,86 @@
 
 
 
+## v6.2.0 (2023-12-31)
+
+### Build
+
+* build: allow additional major-version RC branch patterns
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f8af156`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f8af156c9c38f737b7067722d2a96f8a2a4fcb48))
+
+### Chore
+
+* chore(deps-dev): update coverage requirement from 7.3.3 to 7.4.0 (#524)
+
+Updates the requirements on [coverage](https://github.com/nedbat/coveragepy) to permit the latest version.
+- [Release notes](https://github.com/nedbat/coveragepy/releases)
+- [Changelog](https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst)
+- [Commits](https://github.com/nedbat/coveragepy/compare/7.3.3...7.4.0)
+
+---
+updated-dependencies:
+- dependency-name: coverage
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9bcc223`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9bcc223b783306cf2255b3910acf5518d7ea223c))
+
+* chore(deps-dev): update mypy requirement from 1.7.1 to 1.8.0 (#521)
+
+Updates the requirements on [mypy](https://github.com/python/mypy) to permit the latest version.
+- [Changelog](https://github.com/python/mypy/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python/mypy/compare/v1.7.1...v1.8.0)
+
+---
+updated-dependencies:
+- dependency-name: mypy
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`720046e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/720046e2f69c64216b5ef847ad5f76a95f450a8f))
+
+### Documentation
+
+* docs: fix typo
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`2563996`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/25639967c93ad464e486f2fe6a148b3be439f43d))
+
+* docs: update intro and description
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f0bd05d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f0bd05dc854b5b71421b82cfb527fcb8f41a7c4a))
+
+* docs: buld docs on ubuntu22.04 python311
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b3e9ab7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b3e9ab77696f2ee763f1746f8142bdf471477c39))
+
+### Feature
+
+* feat: allow `lxml` requirement in range of `&gt;=4,&lt;6` (#523)
+
+Updates the requirements on [lxml](https://github.com/lxml/lxml) to permit the latest version.
+- [Release notes](https://github.com/lxml/lxml/releases)
+- [Changelog](https://github.com/lxml/lxml/blob/master/CHANGES.txt)
+- [Commits](https://github.com/lxml/lxml/compare/lxml-4.0.0...lxml-5.0.0)
+
+---
+updated-dependencies:
+- dependency-name: lxml
+  dependency-type: direct:production
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`7d12b9a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7d12b9a9f7a2fdc5e6bb12f891c6f4291e20e65e))
+
+### Unknown
+
+* docs
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7dcd166`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7dcd16621002713dcf1ce8e17bc5762320fae4fa))
+
+
 ## v6.1.0 (2023-12-22)
 
 ### Chore
