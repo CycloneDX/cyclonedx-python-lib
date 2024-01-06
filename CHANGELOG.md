@@ -2,6 +2,56 @@
 
 
 
+## v6.3.0 (2024-01-06)
+
+### Chore
+
+* chore(deps-dev): update flake8 requirement from 6.1.0 to 7.0.0 (#528)
+
+Updates the requirements on [flake8](https://github.com/pycqa/flake8) to permit the latest version.
+- [Commits](https://github.com/pycqa/flake8/compare/6.1.0...7.0.0)
+
+---
+updated-dependencies:
+- dependency-name: flake8
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`6b7ed78`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6b7ed786845d21bf079c0a636d9e689ce278644c))
+
+* chore(deps-dev): update ddt requirement from 1.7.0 to 1.7.1 (#527)
+
+Updates the requirements on [ddt](https://github.com/datadriventests/ddt) to permit the latest version.
+- [Release notes](https://github.com/datadriventests/ddt/releases)
+- [Commits](https://github.com/datadriventests/ddt/compare/1.7.0...1.7.1)
+
+---
+updated-dependencies:
+- dependency-name: ddt
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9a58e7e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9a58e7ee921a077425ee45f23e9cfbb8341d7ef5))
+
+### Documentation
+
+* docs: add `Documentation` url to project meta
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1080b73`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1080b7387a0bbc49a067cd2efefb1545470947e5))
+
+* docs: add `Documentation` url to project meta
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c4288b3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c4288b35e0e1050f0982f7492cfcd3bea34b445c))
+
+### Feature
+
+* feat: enable dependency `py-serializable 0.17` (#529)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`9f24220`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9f24220029cd18cd191f63876899cd86be52dce1))
+
+
 ## v6.2.0 (2023-12-31)
 
 ### Build

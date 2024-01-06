@@ -21,4 +21,4 @@ Python library for generating and representing CycloneDX software bill-of-materi
 # !! version is managed by semantic_release
 # do not use typing here, or else `semantic_release` might have issues finding the variable
 # flake8: noqa
-__version__ = "6.2.0"
+__version__ = "6.3.0"
