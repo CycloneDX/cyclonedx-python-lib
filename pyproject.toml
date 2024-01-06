@@ -61,7 +61,6 @@ keywords = [
 ]
 
 [tool.poetry.urls]
-"Documentation" = "https://cyclonedx-python-library.readthedocs.io/"
 "Bug Tracker" = "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
 "Funding" = "https://owasp.org/donate/?reponame=www-project-cyclonedx&title=OWASP+CycloneDX"
 
