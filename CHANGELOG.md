@@ -2,6 +2,74 @@
 
 
 
+## v6.4.0 (2024-01-22)
+
+### Chore
+
+* chore(deps-dev): update tox requirement from 4.12.0 to 4.12.1 (#533)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to permit the latest version.
+- [Release notes](https://github.com/tox-dev/tox/releases)
+- [Changelog](https://github.com/tox-dev/tox/blob/main/docs/changelog.rst)
+- [Commits](https://github.com/tox-dev/tox/compare/4.12.0...4.12.1)
+
+---
+updated-dependencies:
+- dependency-name: tox
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`74094d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/74094d70c15afdd9991f8b731d318f66b686cf62))
+
+* chore(deps-dev): update flake8-bugbear requirement (#534)
+
+Updates the requirements on [flake8-bugbear](https://github.com/PyCQA/flake8-bugbear) to permit the latest version.
+- [Release notes](https://github.com/PyCQA/flake8-bugbear/releases)
+- [Commits](https://github.com/PyCQA/flake8-bugbear/compare/23.12.2...24.1.17)
+
+---
+updated-dependencies:
+- dependency-name: flake8-bugbear
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`6e6f374`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6e6f374ba282a67c9458b414704a3d86f4b593b4))
+
+* chore: doc flake8 config
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`bd4c078`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bd4c0781139bc93e28438390650ef1c7484597bb))
+
+* chore(deps-dev): update tox requirement from 4.11.4 to 4.12.0 (#530)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to permit the latest version.
+- [Release notes](https://github.com/tox-dev/tox/releases)
+- [Changelog](https://github.com/tox-dev/tox/blob/main/docs/changelog.rst)
+- [Commits](https://github.com/tox-dev/tox/compare/4.11.4...4.12.0)
+
+---
+updated-dependencies:
+- dependency-name: tox
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`130918a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/130918a78d003255f1d80e6fe2031752c3baa6d1))
+
+### Documentation
+
+* docs: add OpenSSF Best Practices shield (#532)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`59c4381`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/59c43814b07db0aa881d87192939eb93e79b0cc2))
+
+### Feature
+
+* feat: support `py-serializable` v1.0 (#531)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e1e7277`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e1e72777d8a355c6854f4d9eb26c1e2083c806df))
+
+
 ## v6.3.0 (2024-01-06)
 
 ### Chore
