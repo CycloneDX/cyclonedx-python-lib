@@ -31,16 +31,16 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
-from tests import SnapshotMixin, mksname
+from tests import UNDEFINED_SCHEMA_VERSIONS, SnapshotMixin, mksname
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
-UNSUPPORTED_SV = frozenset((SchemaVersion.V1_1, SchemaVersion.V1_0,))
+_UNDEFINED_SCHEMA_VERSIONS = UNDEFINED_SCHEMA_VERSIONS[OutputFormat.JSON]
 
 
 @ddt
 class TestOutputJson(TestCase, SnapshotMixin):
 
-    @data(*UNSUPPORTED_SV)
+    @data(*_UNDEFINED_SCHEMA_VERSIONS)
     def test_unsupported_schema_raises(self, sv: SchemaVersion) -> None:
         outputter_class = BY_SCHEMA_VERSION[sv]
         self.assertTrue(issubclass(outputter_class, Json))
@@ -51,7 +51,7 @@ class TestOutputJson(TestCase, SnapshotMixin):
     @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
                   for n, gb in all_get_bom_funct_valid
                   for sv in SchemaVersion
-                  if sv not in UNSUPPORTED_SV))
+                  if sv not in _UNDEFINED_SCHEMA_VERSIONS))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
@@ -70,7 +70,7 @@ class TestOutputJson(TestCase, SnapshotMixin):
     @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
                   for n, gb in all_get_bom_funct_invalid
                   for sv in SchemaVersion
-                  if sv not in UNSUPPORTED_SV))
+                  if sv not in _UNDEFINED_SCHEMA_VERSIONS))
     @unpack
     def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion) -> None:
         bom = get_bom()

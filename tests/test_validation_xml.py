@@ -25,14 +25,14 @@ from ddt import ddt, idata, unpack
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SCHEMA_TESTDATA_DIRECTORY
+from tests import SCHEMA_TESTDATA_DIRECTORY, UNDEFINED_SCHEMA_VERSIONS
 
-UNSUPPORTED_SCHEMA_VERSIONS = set()
+_UNDEFINED_SCHEMA_VERSIONS = UNDEFINED_SCHEMA_VERSIONS[OutputFormat.XML]
 
 
 def _dp(prefix: str) -> Generator:
     return (
-        (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
+        (sv, tf) for sv in SchemaVersion if sv not in _UNDEFINED_SCHEMA_VERSIONS
         for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.xml'))
     )
 
@@ -40,13 +40,13 @@ def _dp(prefix: str) -> Generator:
 @ddt
 class TestXmlValidator(TestCase):
 
-    @idata(sv for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS)
+    @idata(sv for sv in SchemaVersion if sv not in _UNDEFINED_SCHEMA_VERSIONS)
     def test_validator_as_expected(self, schema_version: SchemaVersion) -> None:
         validator = XmlValidator(schema_version)
         self.assertIs(validator.schema_version, schema_version)
         self.assertIs(validator.output_format, OutputFormat.XML)
 
-    @idata(UNSUPPORTED_SCHEMA_VERSIONS)
+    @idata(_UNDEFINED_SCHEMA_VERSIONS)
     def test_throws_with_unsupported_schema_version(self, schema_version: SchemaVersion) -> None:
         with self.assertRaisesRegex(ValueError, f'unsupported schema_version: {schema_version}'):
             XmlValidator(schema_version)
