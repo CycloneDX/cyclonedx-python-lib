@@ -17,7 +17,7 @@
 
 
 from glob import iglob
-from os.path import join
+from os.path import basename, join
 from typing import Any, Callable
 from unittest import TestCase
 from unittest.mock import patch
@@ -26,13 +26,19 @@ from ddt import ddt, named_data
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from tests import SCHEMA_TESTDATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
+from tests import (
+    LATEST_SUPPORTED_SCHEMA,
+    SCHEMA_TESTDATA_DIRECTORY,
+    UNDEFINED_SCHEMA_VERSIONS,
+    DeepCompareMixin,
+    SnapshotMixin,
+    mksname,
+)
 from tests._data.models import all_get_bom_funct_valid_immut, all_get_bom_funct_with_incomplete_deps
 
 # only latest schema will have all data populated in serialized form
-_LATEST_SUPPORTED_SCHEMA = SchemaVersion.V1_5
 
-_UNSUPPORTED_SCHEMA_VERSIONS = ()
+_UNDEFINED_SCHEMA_VERSIONS = UNDEFINED_SCHEMA_VERSIONS[OutputFormat.XML]
 
 
 @ddt
@@ -41,7 +47,8 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
     @named_data(*all_get_bom_funct_valid_immut)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
-        snapshot_name = mksname(get_bom, _LATEST_SUPPORTED_SCHEMA, OutputFormat.XML)
+        # only latest schema will have all data populated in serialized form
+        snapshot_name = mksname(get_bom, LATEST_SUPPORTED_SCHEMA, OutputFormat.XML)
         expected = get_bom()
         with open(self.getSnapshotFile(snapshot_name), 'r') as s:
             bom = Bom.from_xml(s)
@@ -49,8 +56,10 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
 
     @named_data(*(
-        (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'valid-*.json'))
+        (f'{sv.name}/{basename(tf)}', tf)
+        for sv in SchemaVersion if sv not in _UNDEFINED_SCHEMA_VERSIONS
+        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'valid-*.xml'))
     ))
-    def test_schemaTestData(self) -> None:
-        Bom.from_xml(s)
+    def test_schemaTestData(self, tf: str) -> None:
+        with open(tf, 'r') as s:
+            Bom.from_xml(s)

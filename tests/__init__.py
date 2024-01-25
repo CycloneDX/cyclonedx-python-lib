@@ -42,6 +42,9 @@ UNDEFINED_SCHEMA_VERSIONS: Dict[OutputFormat, Set[SchemaVersion]] = {
     OutputFormat.JSON: {SchemaVersion.V1_0, SchemaVersion.V1_1, },
 }
 
+LATEST_SUPPORTED_SCHEMA = SchemaVersion.V1_5
+
+
 RECREATE_SNAPSHOTS = '1' == getenv('CDX_TEST_RECREATE_SNAPSHOTS')
 if RECREATE_SNAPSHOTS:
     print('!!! WILL RECREATE ALL SNAPSHOTS !!!')
