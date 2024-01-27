@@ -92,9 +92,9 @@ try:
 except MissingOptionalDependencyException as error:
     print('JSON-validation was skipped due to', error)
 
-print('', '=' * 30, '', sep='\n')
-
 # endregion JSON
+
+print('', '=' * 30, '', sep='\n')
 
 # region XML
 """demo with implicit instructions for SchemaVersion, outputter and validator. TypeCheckers will catch errors."""
