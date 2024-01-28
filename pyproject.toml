@@ -93,7 +93,7 @@ autopep8 = "2.0.4"
 mypy = "1.8.0"
 tox = "4.12.1"
 xmldiff = "2.6.3"
-bandit = "1.7.6"
+bandit = "1.7.7"
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html
