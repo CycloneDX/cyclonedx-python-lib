@@ -34,10 +34,7 @@ class _DependencyRepositorySerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def serialize(cls, o: Any) -> List[str]:
         if isinstance(o, (SortedSet, set)):
-            # sorting might not be static, in case a ref-value was discriminated right before serialization.
-            # see `BomRefDiscriminator`
-            # Lets better sort again for reproducibility.
-            return list(sorted(map(lambda i: str(i.ref), o)))
+            return [str(i.ref) for i in o]
         raise SerializationOfUnexpectedValueException(
             f'Attempt to serialize a non-DependencyRepository: {o!r}')
 

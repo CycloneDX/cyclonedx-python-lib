@@ -243,3 +243,45 @@ class TestBom(TestCase):
             self.assertEqual(len(d2), len(bom_dep.dependencies))
             for dd in d2:
                 self.assertIn(dd.bom_ref, bom_dep.dependencies_as_bom_refs())
+
+    def test_regression_issue_539(self) -> None:
+        """regression test for issue #539
+        see https://github.com/CycloneDX/cyclonedx-python-lib/issues/539
+        """
+        # for showcasing purposes, bom-ref values MUST NOT be set
+        bom = Bom()
+        bom.metadata.component = root_component = Component(
+            name='myApp',
+            type=ComponentType.APPLICATION,
+        )
+        component1 = Component(
+            type=ComponentType.LIBRARY,
+            name='some-component',
+        )
+        component2 = Component(
+            type=ComponentType.LIBRARY,
+            name='some-library',
+        )
+        component3 = Component(
+            type=ComponentType.LIBRARY,
+            name='another-library',
+        )
+        bom.components.add(component1)
+        bom.components.add(component2)
+        bom.components.add(component3)
+        bom.register_dependency(root_component, [component1])
+        bom.register_dependency(component1, [component2])
+        bom.register_dependency(root_component, [component3])
+        # region assert root_component
+        d = next((d for d in bom.dependencies if d.ref is root_component.bom_ref), None)
+        self.assertIsNotNone(d, f'missing {root_component.bom_ref!r} in {bom.dependencies!r}')
+        self.assertEqual(2, len(d.dependencies))
+        self.assertIn(d.dependencies[0].ref, (component1.bom_ref, component3.bom_ref))
+        self.assertIn(d.dependencies[1].ref, (component1.bom_ref, component3.bom_ref))
+        # endregion assert root_component
+        # region assert component1
+        d = next((d for d in bom.dependencies if d.ref is component1.bom_ref), None)
+        self.assertIsNotNone(d, f'missing {component1.bom_ref!r} in {bom.dependencies!r}')
+        self.assertEqual(1, len(d.dependencies))
+        self.assertIs(component2.bom_ref, d.dependencies[0].ref)
+        # endregion assert component1
