@@ -17,22 +17,40 @@
 
 from unittest import TestCase
 
+from ddt import ddt, named_data
+
 from cyclonedx.model.bom_ref import BomRef
 from tests import reorder
 
 
+@ddt
 class TestBomRef(TestCase):
 
     def test_sort(self) -> None:
         # expected sort order: (value)
         expected_order = [0, 1, 2, 4, 3]
         refs = [
-            BomRef(value='a'),
-            BomRef(value='b'),
-            BomRef(value='c'),
-            BomRef(value='f'),
-            BomRef(value='d'),
+            BomRef('a'),
+            BomRef('b'),
+            BomRef('c'),
+            BomRef('f'),
+            BomRef('d'),
         ]
         sorted_refs = sorted(refs)
         expected_refs = reorder(refs, expected_order)
         self.assertListEqual(sorted_refs, expected_refs)
+
+    @named_data(
+        ('A-A', BomRef('A'), BomRef('A')),
+    )
+    def test_equal(self, a: BomRef, b: BomRef) -> None:
+        self.assertEqual(a, b)
+
+    @named_data(
+        ('None-None', BomRef(), BomRef()),
+        ('X-None', BomRef('X'), BomRef()),
+        ('None-X', BomRef(), BomRef('X')),
+        ('A-B', BomRef('A'), BomRef('B')),
+    )
+    def test_unequal(self, a: BomRef, b: BomRef) -> None:
+        self.assertNotEqual(a, b)

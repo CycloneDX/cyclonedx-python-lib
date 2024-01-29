@@ -234,7 +234,7 @@ class TestBom(TestCase):
     def test_register_dependency(self, dependencies: Tuple[Tuple[Component, Tuple[Component, ...]], ...]) -> None:
         bom = Bom()
         for d1, d2 in dependencies:
-            bom.components.update((d1, ), d2)
+            bom.components.update((d1,), d2)
             bom.register_dependency(d1, d2)
         bom_deps = tuple(bom.dependencies)
         for d1, d2 in dependencies:
