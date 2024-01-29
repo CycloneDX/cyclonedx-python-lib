@@ -22,6 +22,8 @@ from ddt import ddt, named_data
 from cyclonedx.model.bom_ref import BomRef
 from tests import reorder
 
+_BomRefNoneValue = BomRef(None)
+
 
 @ddt
 class TestBomRef(TestCase):
@@ -42,20 +44,33 @@ class TestBomRef(TestCase):
 
     @named_data(
         ('A-A', BomRef('A'), BomRef('A')),
+        ('self-BomRefNoneValue', _BomRefNoneValue, _BomRefNoneValue),
     )
     def test_equal(self, a: BomRef, b: BomRef) -> None:
         self.assertEqual(a, b)
 
     @named_data(
-        ('None-None', BomRef(), BomRef()),
-        ('X-None', BomRef('X'), BomRef()),
-        ('None-X', BomRef(), BomRef('X')),
+        ('other-BomRefNoneValue', BomRef(None), _BomRefNoneValue),
+        ('None-None', BomRef(None), BomRef(None)),
+        ('X-None', BomRef('X'), BomRef(None)),
+        ('None-X', BomRef(None), BomRef('X')),
         ('A-B', BomRef('A'), BomRef('B')),
     )
     def test_unequal(self, a: BomRef, b: BomRef) -> None:
         self.assertNotEqual(a, b)
 
     @named_data(
+        ('A-A', BomRef('A'), BomRef('A')),
+        ('self-BomRefNoneValue', _BomRefNoneValue, _BomRefNoneValue),
+    )
+    def test_hashes_equal(self, a: BomRef, b: BomRef) -> None:
+        self.assertEqual(hash(a), hash(b))
+        # internal usage of hash
+        self.assertEqual(1, len({a, b}))  # set
+        self.assertEqual(1, len({a: 1, b: 2}))  # dict
+
+    @named_data(
+        ('other-BomRefNoneValue', BomRef(None), _BomRefNoneValue),
         ('None-None', BomRef(), BomRef()),
         ('X-None', BomRef('X'), BomRef()),
         ('None-X', BomRef(), BomRef('X')),
