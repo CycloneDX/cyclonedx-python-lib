@@ -1438,5 +1438,5 @@ class Component(Dependable):
         ))
 
     def __repr__(self) -> str:
-        return f'<Component bom-ref={self.bom_ref}, group={self.group}, name={self.name}, ' \
+        return f'<Component bom-ref={self.bom_ref!r}, group={self.group}, name={self.name}, ' \
                f'version={self.version}, type={self.type}>'

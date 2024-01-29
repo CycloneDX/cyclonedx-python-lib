@@ -23,7 +23,7 @@ class BomRef:
     """
     An identifier that can be used to reference objects elsewhere in the BOM.
 
-    This copies a similar pattern used in the CycloneDX Python Library.
+    This copies a similar pattern used in the CycloneDX PHP Library.
 
     .. note::
         See https://github.com/CycloneDX/cyclonedx-php-library/blob/master/docs/dev/decisions/BomDependencyDataModel.md
@@ -38,12 +38,17 @@ class BomRef:
 
     @value.setter
     def value(self, value: Optional[str]) -> None:
+        # empty strings become `None`
         self._value = value or None
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, BomRef):
-            return other._value == self._value
-        return False
+        return (self is other) or (
+            isinstance(other, BomRef)
+            # `None` value is no determinator in this domain
+            and other._value is not None
+            and self._value is not None
+            and other._value == self._value
+        )
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, BomRef):
@@ -51,10 +56,10 @@ class BomRef:
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(str(self))
+        return hash(self._value or f'__id__{id(self)}')
 
     def __repr__(self) -> str:
-        return f'<BomRef {self._value!r}>'
+        return f'<BomRef {self._value!r} id={id(self)}>'
 
     def __str__(self) -> str:
         return self._value or ''

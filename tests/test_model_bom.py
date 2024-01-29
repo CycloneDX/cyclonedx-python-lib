@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Callable
+from typing import Callable, Tuple
 from unittest import TestCase
 from uuid import uuid4
 
@@ -209,3 +209,37 @@ class TestBom(TestCase):
 
         self.assertIs(result, setuptools_simple)
         self.assertIsNone(bom.get_component_by_purl(get_component_setuptools_simple_no_version().purl))
+
+    @named_data(
+        ('none', tuple()),
+        # a = anonymous - bom-ref auto-set
+        # k = known - has bom-ref.value set
+        # d = known duplicate - has bom-ref.value set same as another
+        ('A(a), B(a)', ((Component(name='A'), tuple()),
+                        (Component(name='B'), tuple()))),
+        ('A(k), B(k)', ((Component(name='A', bom_ref='A'), tuple()),
+                        (Component(name='B', bom_ref='B'), tuple()))),
+        ('A(a) {A1(a)}, B(a) {B1(a)}', ((Component(name='A'), (Component(name='A1'),)),
+                                        (Component(name='B'), (Component(name='B1'),)))),
+        ('A(k) {A1(a)}', ((Component(name='A', bom_ref='A'), (Component(name='1'),)),)),
+        ('A(a) {A1(a), A2(a)}', ((Component(name='A'), (Component(name='A1'), Component(name='A2'))),)),
+        ('A(a) {A1(k)}', ((Component(name='A'), (Component(name='B', bom_ref='A1'),)),)),
+        ('A(k) {A1(k)}', ((Component(name='A', bom_ref='A'), (Component(name='A1', bom_ref='A1'),)),)),
+        ('A(d) {A1(d)}', ((Component(name='A', bom_ref='D'), (Component(name='B', bom_ref='D'),)),)),
+        ('duplicate name(a)', ((Component(name='A'), tuple()),
+                               (Component(name='A'), tuple()),)),
+        ('duplicate name(k)', ((Component(name='A', bom_ref='A1'), tuple()),
+                               (Component(name='A', bom_ref='A2'), tuple()))),
+    )
+    def test_register_dependency(self, dependencies: Tuple[Tuple[Component, Tuple[Component, ...]], ...]) -> None:
+        bom = Bom()
+        for d1, d2 in dependencies:
+            bom.components.update((d1, ), d2)
+            bom.register_dependency(d1, d2)
+        bom_deps = tuple(bom.dependencies)
+        for d1, d2 in dependencies:
+            bom_dep = next((bd for bd in bom_deps if bd.ref is d1.bom_ref), None)
+            self.assertIsNotNone(bom_dep, f'missing {d1.bom_ref!r} in {bom_deps!r}')
+            self.assertEqual(len(d2), len(bom_dep.dependencies))
+            for dd in d2:
+                self.assertIn(dd.bom_ref, bom_dep.dependencies_as_bom_refs())

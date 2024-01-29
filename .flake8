@@ -18,3 +18,7 @@ ignore =
     ANN101,ANN102
     # ignore ANN401 for dynamically typed *args and **kwargs
     ANN401
+    # See https://www.flake8rules.com/rules/W503.html
+    # > Despite being in the best practice section, this will soon be considered an anti-pattern.
+    # So lets ignore this "suggestion" that is actually an anti-pattern already!
+    W503
