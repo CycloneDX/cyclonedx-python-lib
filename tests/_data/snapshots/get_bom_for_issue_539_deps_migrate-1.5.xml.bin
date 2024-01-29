@@ -52,8 +52,8 @@
   </components>
   <dependencies>
     <dependency ref="TESTING_BomRef1">
-      <dependency ref="TESTING_BomRef3"/>
       <dependency ref="TESTING_BomRef2"/>
+      <dependency ref="TESTING_BomRef3"/>
     </dependency>
     <dependency ref="TESTING_BomRef3">
       <dependency ref="TESTING_BomRef4"/>

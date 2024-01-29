@@ -22,8 +22,8 @@
   "dependencies": [
     {
       "dependsOn": [
-        "TESTING_BomRef3",
-        "TESTING_BomRef2"
+        "TESTING_BomRef2",
+        "TESTING_BomRef3"
       ],
       "ref": "TESTING_BomRef1"
     },
