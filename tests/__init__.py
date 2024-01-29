@@ -23,8 +23,8 @@ from uuid import UUID
 
 from sortedcontainers import SortedSet
 
-from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.output import BomRefDiscriminator as _BomRefDiscriminator
+from cyclonedx.schema import OutputFormat, SchemaVersion
 
 if TYPE_CHECKING:
     from cyclonedx.model.bom import Bom

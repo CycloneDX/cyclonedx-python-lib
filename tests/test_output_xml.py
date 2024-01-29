@@ -29,7 +29,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SnapshotMixin, mksname, BomRefDiscriminator
+from tests import BomRefDiscriminator, SnapshotMixin, mksname
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
 
