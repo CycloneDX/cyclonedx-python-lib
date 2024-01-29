@@ -54,3 +54,15 @@ class TestBomRef(TestCase):
     )
     def test_unequal(self, a: BomRef, b: BomRef) -> None:
         self.assertNotEqual(a, b)
+
+    @named_data(
+        ('None-None', BomRef(), BomRef()),
+        ('X-None', BomRef('X'), BomRef()),
+        ('None-X', BomRef(), BomRef('X')),
+        ('A-B', BomRef('A'), BomRef('B')),
+    )
+    def test_hashes_differ(self, a: BomRef, b: BomRef) -> None:
+        self.assertNotEqual(hash(a), hash(b))
+        # internal usage of hash
+        self.assertEqual(2, len({a, b}))  # set
+        self.assertEqual(2, len({a: 1, b: 2}))  # dict
