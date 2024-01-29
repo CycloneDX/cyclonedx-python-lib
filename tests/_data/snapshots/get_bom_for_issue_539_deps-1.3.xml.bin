@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.3" serialNumber="urn:uuid:e32d430c-53be-4d75-b08e-d22ab01589ff" version="1">
+  <metadata>
+    <timestamp>2024-01-29T14:00:34.803834+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+      </tool>
+    </tools>
+    <component type="application" bom-ref="BomRef.2838901941353795.005163843567328463">
+      <name>myApp</name>
+      <version/>
+    </component>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="BomRef.32348657305261774.2602590734367287">
+      <name>another-library</name>
+      <version/>
+    </component>
+    <component type="library" bom-ref="BomRef.5898270222500388.0697903756098821">
+      <name>some-component</name>
+      <version/>
+    </component>
+    <component type="library" bom-ref="BomRef.10411747629639012.7214960353560109">
+      <name>some-library</name>
+      <version/>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="BomRef.2838901941353795.005163843567328463">
+      <dependency ref="BomRef.32348657305261774.2602590734367287"/>
+      <dependency ref="BomRef.10411747629639012.7214960353560109"/>
+      <dependency ref="BomRef.5898270222500388.0697903756098821"/>
+    </dependency>
+  </dependencies>
+</bom>

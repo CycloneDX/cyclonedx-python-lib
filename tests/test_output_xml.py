@@ -29,7 +29,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SnapshotMixin, mksname
+from tests import SnapshotMixin, mksname, BomRefDiscriminator
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
 
@@ -41,6 +41,7 @@ class TestOutputXml(TestCase, SnapshotMixin):
     ))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.output.xml.BomRefDiscriminator', BomRefDiscriminator)
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
         snapshot_name = mksname(get_bom, sv, OutputFormat.XML)
         bom = get_bom()

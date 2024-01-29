@@ -781,6 +781,37 @@ def get_bom_for_issue_497_urls() -> Bom:
     ])
 
 
+def get_bom_for_issue_539_deps_migrate() -> Bom:
+    """regression test for issue #539
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/539
+    """
+    # for showcasing purposes, bom-ref values MUST NOT be set
+    bom = _make_bom()
+    bom.metadata.component = root_component = Component(
+        name='myApp',
+        type=ComponentType.APPLICATION,
+    )
+    component1 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-component',
+    )
+    component2 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+    )
+    component3 = Component(
+        type=ComponentType.LIBRARY,
+        name='another-library',
+    )
+    bom.components.add(component1)
+    bom.components.add(component2)
+    bom.components.add(component3)
+    bom.register_dependency(root_component, [component1])
+    bom.register_dependency(component1, [component2])
+    bom.register_dependency(root_component, [component3])
+    return bom
+
+
 def bom_all_same_bomref() -> Tuple[Bom, int]:
     bom = Bom()
     bom.metadata.component = Component(name='root', bom_ref='foo', components=[
@@ -830,4 +861,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_licenses,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
+    get_bom_for_issue_539_deps_migrate,
 }

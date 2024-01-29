@@ -44,7 +44,8 @@ class BomRef:
     def __eq__(self, other: object) -> bool:
         return (self is other) or (
             isinstance(other, BomRef)
-            # `None` value is no determinator in this domain
+            # `None` value is not discriminative in this domain
+            # see also: `BomRefDiscriminator`
             and other._value is not None
             and self._value is not None
             and other._value == self._value
