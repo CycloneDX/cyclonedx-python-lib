@@ -2,6 +2,69 @@
 
 
 
+## v6.4.1 (2024-01-30)
+
+### Chore
+
+* chore(deps-dev): update bandit requirement from 1.7.6 to 1.7.7 (#542)
+
+Updates the requirements on [bandit](https://github.com/PyCQA/bandit) to permit the latest version.
+- [Release notes](https://github.com/PyCQA/bandit/releases)
+- [Commits](https://github.com/PyCQA/bandit/compare/1.7.6...1.7.7)
+
+---
+updated-dependencies:
+- dependency-name: bandit
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`0d159c2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0d159c29cab7cd57e2028a302ef24f1947de235d))
+
+* chore(deps-dev): update coverage requirement from 7.4.0 to 7.4.1 (#541)
+
+Updates the requirements on [coverage](https://github.com/nedbat/coveragepy) to permit the latest version.
+- [Release notes](https://github.com/nedbat/coveragepy/releases)
+- [Changelog](https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst)
+- [Commits](https://github.com/nedbat/coveragepy/compare/7.4.0...7.4.1)
+
+---
+updated-dependencies:
+- dependency-name: coverage
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`fa82a24`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fa82a2413f1aa350d16ad3ac0c5163da97e29e34))
+
+### Documentation
+
+* docs: ship docs with `sdist` build (#544)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`52ef01c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/52ef01c99319d5aed950e7f6ef6fcfe731ac8b2f))
+
+* docs: refactor example
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c1776b7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c1776b718b81cf72ef0c0251504e0d3631e30b17))
+
+### Fix
+
+* fix: `model.BomRef` no longer equal to unset peers (#543)
+
+  fixes [#539](https://github.com/CycloneDX/cyclonedx-python-lib/issues/539) 
+
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1fd7fee`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1fd7fee9dec888c10087921f2e5a7a60062fb419))
+
+### Unknown
+
+* tests: fetched schema 1.5 test data from spec (#536)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`394cc87`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/394cc87b3247b6f57af4073f5548f1c5eada2b9b))
+
+
 ## v6.4.0 (2024-01-22)
 
 ### Chore
