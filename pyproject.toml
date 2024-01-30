@@ -23,15 +23,19 @@ packages = [
   { include = "cyclonedx" }
 ]
 include = [
-  # all is an object -> prevent parse issue like https://github.com/CycloneDX/cyclonedx-python-lib/network/updates/740004978
+  # all is an object -> prevent parse issue with dependabot
   { path="README.md", format =["sdist","wheel"] },
   { path="LICENSE", format=["sdist","wheel"] },
   { path="NOTICE", format=["sdist","wheel"] },
   { path="tests", format=["sdist"] },
+  { path="CHANGELOG.md", format=["sdist"] },
+  { path="docs", format=["sdist"] },
+  { path="examples", format=["sdist"] },
 ]
 exclude = [
-  # exclude dotfiles
-  "**/.*"
+  # exclude dotfiles and dotfolders
+  "**/.*",
+  "docs/_build", "docs/processes",
 ]
 classifiers = [
   # Trove classifiers - https://packaging.python.org/specifications/core-metadata/#metadata-classifier
