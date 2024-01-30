@@ -33,8 +33,8 @@ class _DependencyRepositorySerializationHelper(serializable.helpers.BaseHelper):
 
     @classmethod
     def serialize(cls, o: Any) -> List[str]:
-        if isinstance(o, SortedSet):
-            return list(map(lambda i: str(i.ref), o))
+        if isinstance(o, (SortedSet, set)):
+            return [str(i.ref) for i in o]
         raise SerializationOfUnexpectedValueException(
             f'Attempt to serialize a non-DependencyRepository: {o!r}')
 
@@ -102,7 +102,7 @@ class Dependency:
         return hash((self.ref, tuple(self.dependencies)))
 
     def __repr__(self) -> str:
-        return f'<Dependency ref={self.ref}, targets={len(self.dependencies)}>'
+        return f'<Dependency ref={self.ref!r}, targets={len(self.dependencies)}>'
 
 
 class Dependable(ABC):

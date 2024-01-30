@@ -23,6 +23,7 @@ from uuid import UUID
 
 from sortedcontainers import SortedSet
 
+from cyclonedx.output import BomRefDiscriminator as _BomRefDiscriminator
 from cyclonedx.schema import OutputFormat, SchemaVersion
 
 if TYPE_CHECKING:
@@ -143,6 +144,14 @@ def uuid_generator(offset: int = 0, version: int = 4) -> Generator[UUID, None, N
     while True:
         v += 1
         yield UUID(int=v, version=version)
+
+
+class BomRefDiscriminator(_BomRefDiscriminator):
+    __uiter = 0
+
+    def _make_unique(self) -> str:
+        self.__uiter += 1
+        return f'TESTING_{self._prefix}{self.__uiter}'
 
 
 _SNAME_EXT = {
