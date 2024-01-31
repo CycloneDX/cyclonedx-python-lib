@@ -12,4 +12,8 @@
    #
    # SPDX-License-Identifier: Apache-2.0
 
+=========
+Changelog
+=========
+
 .. mdinclude:: ../CHANGELOG.md

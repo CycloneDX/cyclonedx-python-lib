@@ -74,7 +74,7 @@ See the [LICENSE][license_file] file for the full license.
 [link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-python-lib/actions/workflows/python.yml?query=branch%3Amain
 [link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
 [link_conda-forge]: https://anaconda.org/conda-forge/cyclonedx-python-lib
-[link_rtfd]: https://cyclonedx-python-library.readthedocs.io/en/latest/?badge=latest
+[link_rtfd]: https://cyclonedx-python-library.readthedocs.io/en/latest/
 [link_codacy]: https://app.codacy.com/gh/CycloneDX/cyclonedx-python-lib
 [link_ossf-best-practices]: https://www.bestpractices.dev/projects/7956
 [link_website]: https://cyclonedx.org/
