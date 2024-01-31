@@ -17,15 +17,12 @@ Architecture
 
 This library broadly is separated into three key functional areas:
 
-1. **Parser**: Downstream tools may provide concrete implementation of the :py:mod:`cyclonedx.parser.BaseParser` which
-   can easily help you build a Model from your project or ecosystem.
-   For Python specific parser implementations see `cyclonedx-python`_
-2. **Model**: Internal models used to unify data from different parsers
+1. **Model**: Internal models used to unify data from different parsers
 
     **Note:** As of version 4.0.0 of this library we support deserialization from JSON and XML as well as
     serialization to JSON and XML.
 
-3. **Output**: Choose and configure an output which allows you to define output format as well as the CycloneDX schema
+2. **Output**: Choose and configure an output which allows you to define output format as well as the CycloneDX schema
    version
 
 When wishing to generate a BOM, the process is as follows:
