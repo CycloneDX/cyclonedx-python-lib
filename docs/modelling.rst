@@ -15,8 +15,9 @@
 Modelling
 =========
 
-You can create a BOM Model from either a :py:mod:`cyclonedx.parser` instance or manually using the methods available
-directly on the :py:mod:`cyclonedx.model.bom.Bom` class.
+You can create a BOM Model from either manually using the methods available
+directly on the :py:class:`cyclonedx.model.bom.Bom` class,
+or deserialize a JSON/XML via :py:meth:`cyclonedx.model.bom.Bom.from_json`/:py:meth:`cyclonedx.model.bom.Bom.from_xml`
 
 Vulnerabilities are supported by the Model as of version 0.3.0.
 
@@ -74,21 +75,6 @@ you use a library such as `defusedxml` instead of the native `xml.etree.ElementT
 
     with open('/path/to/my/cyclonedx.xml') as input_xml:
         deserialized_bom = cast(Bom, Bom.from_xml(data=ElementTree.fromstring(input_xml.read())))
-
-
-Example BOM using a Parser
---------------------------
-
-    **Note:** Concreate parser implementations were moved out of this library and into `CycloneDX Python`_ as of version
-    ``1.0.0``.
-
-.. code-block:: python
-
-    from cyclonedx.model.bom import Bom
-    from cyclonedx_py.parser.environment import EnvironmentParser
-
-    parser = EnvironmentParser()
-    bom = Bom.from_parser(parser=parser)
 
 
 

@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import sys
+from typing import TYPE_CHECKING
 
 from packageurl import PackageURL
 
@@ -26,11 +27,9 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.output import make_outputter
 from cyclonedx.output.json import JsonV1Dot5
-from cyclonedx.schema import SchemaVersion, OutputFormat
-from cyclonedx.validation.json import JsonStrictValidator
+from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation import make_schemabased_validator
-
-from typing import TYPE_CHECKING
+from cyclonedx.validation.json import JsonStrictValidator
 
 if TYPE_CHECKING:
     from cyclonedx.output.json import Json as JsonOutputter
