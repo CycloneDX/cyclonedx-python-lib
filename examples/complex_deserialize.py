@@ -259,4 +259,6 @@ print('bom_from_xml', repr(bom_from_xml))
 
 # endregion XML
 
+print('', '=' * 30, '', sep='\n')
+
 assert bom_from_json == bom_from_xml, 'expected to have equal BOMs from JSON and XML'
