@@ -97,7 +97,11 @@ json_data = """{
   "components": [
     {
       "bom-ref": "myComponent@1.33.7-beta.1",
+      "type": "library",
       "group": "acme",
+      "name": "some-component",
+      "version": "1.33.7-beta.1",
+      "purl": "pkg:generic/acme/some-component@1.33.7-beta.1",
       "licenses": [
         {
           "license": {
@@ -105,31 +109,27 @@ json_data = """{
           }
         }
       ],
-      "name": "some-component",
-      "purl": "pkg:generic/acme/some-component@1.33.7-beta.1",
       "supplier": {
         "name": "Acme Inc",
         "url": [
           "https://www.acme.org"
         ]
-      },
-      "type": "library",
-      "version": "1.33.7-beta.1"
+      }
     },
     {
-      "bom-ref": "BomRef.2877573778418705.9674206387900521",
+      "bom-ref": "some-lib",
+      "type": "library",
+      "name": "some-library",
       "licenses": [
         {
           "expression": "GPL-3.0-only WITH Classpath-exception-2.0"
         }
-      ],
-      "name": "some-library",
-      "type": "library"
+      ]
     }
   ],
   "dependencies": [
     {
-      "ref": "BomRef.2877573778418705.9674206387900521"
+      "ref": "some-lib"
     },
     {
       "dependsOn": [
@@ -139,7 +139,7 @@ json_data = """{
     },
     {
       "dependsOn": [
-        "BomRef.2877573778418705.9674206387900521"
+        "some-lib"
       ],
       "ref": "myComponent@1.33.7-beta.1"
     }
@@ -228,7 +228,7 @@ xml_data = """<?xml version="1.0" ?>
       </licenses>
       <purl>pkg:generic/acme/some-component@1.33.7-beta.1</purl>
     </component>
-    <component type="library" bom-ref="BomRef.5983238561690385.037690394679553596">
+    <component type="library" bom-ref="some-lib">
       <name>some-library</name>
       <licenses>
         <expression>GPL-3.0-only WITH Classpath-exception-2.0</expression>
@@ -236,12 +236,12 @@ xml_data = """<?xml version="1.0" ?>
     </component>
   </components>
   <dependencies>
-    <dependency ref="BomRef.5983238561690385.037690394679553596"/>
+    <dependency ref="some-lib"/>
     <dependency ref="myApp">
       <dependency ref="myComponent@1.33.7-beta.1"/>
     </dependency>
     <dependency ref="myComponent@1.33.7-beta.1">
-      <dependency ref="BomRef.5983238561690385.037690394679553596"/>
+      <dependency ref="some-lib"/>
     </dependency>
   </dependencies>
 </bom>"""
@@ -256,4 +256,7 @@ except MissingOptionalDependencyException as error:
     print('XML-validation was skipped due to', error)
 bom_from_xml = Bom.from_xml(SafeElementTree.fromstring(xml_data))
 print('bom_from_xml', repr(bom_from_xml))
+
 # endregion XML
+
+assert bom_from_json == bom_from_xml, 'expected to have equal BOMs from JSON and XML'
