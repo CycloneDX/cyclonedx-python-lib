@@ -42,8 +42,8 @@ json_data = """{
     "timestamp": "2024-02-10T21:38:53.313120+00:00",
     "tools": [
       {
-        "name": "cyclonedx-python-lib",
         "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
         "version": "6.4.1",
         "externalReferences": [
           {
@@ -83,15 +83,15 @@ json_data = """{
     ],
     "component": {
       "bom-ref": "myApp",
+      "name": "myApp",
+      "type": "application",
       "licenses": [
         {
           "license": {
             "id": "MIT"
           }
         }
-      ],
-      "name": "myApp",
-      "type": "application"
+      ]
     }
   },
   "components": [
@@ -261,4 +261,5 @@ print('bom_from_xml', repr(bom_from_xml))
 
 print('', '=' * 30, '', sep='\n')
 
+print('assert bom_from_json equals bom_from_xml')
 assert bom_from_json == bom_from_xml, 'expected to have equal BOMs from JSON and XML'
