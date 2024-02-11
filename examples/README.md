@@ -1,6 +1,7 @@
 # Examples
 
-* [Build & Serialize](build_and_serialize.py)
+* [Build & Serialize](complex_serialize.py)
+* [Deserialize](complex_deserialize.py)
 
 ----
 
