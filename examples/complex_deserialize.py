@@ -154,7 +154,8 @@ try:
     print('JSON valid')
 except MissingOptionalDependencyException as error:
     print('JSON-validation was skipped due to', error)
-bom_from_json = Bom.from_json(json_loads(json_data))
+bom_from_json = Bom.from_json(  # type: ignore[attr-defined]
+    json_loads(json_data))
 print('bom_from_json', repr(bom_from_json))
 
 # endregion JSON
@@ -254,7 +255,8 @@ try:
     print('XML valid')
 except MissingOptionalDependencyException as error:
     print('XML-validation was skipped due to', error)
-bom_from_xml = Bom.from_xml(SafeElementTree.fromstring(xml_data))
+bom_from_xml = Bom.from_xml(  # type: ignore[attr-defined]
+    SafeElementTree.fromstring(xml_data))
 print('bom_from_xml', repr(bom_from_xml))
 
 # endregion XML
