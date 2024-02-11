@@ -27,10 +27,10 @@ include = [
   { path="README.md", format =["sdist","wheel"] },
   { path="LICENSE", format=["sdist","wheel"] },
   { path="NOTICE", format=["sdist","wheel"] },
-  { path="tests", format=["sdist"] },
   { path="CHANGELOG.md", format=["sdist"] },
   { path="docs", format=["sdist"] },
   { path="examples", format=["sdist"] },
+  { path="tests", format=["sdist"] },
 ]
 exclude = [
   # exclude dotfiles and dotfolders

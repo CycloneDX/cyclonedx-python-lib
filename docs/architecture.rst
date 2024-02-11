@@ -17,7 +17,7 @@ Architecture
 
 This library broadly is separated into three key functional areas:
 
-1. **Model**: Internal models used to unify data from different parsers
+1. **Model**: Internal models used to unify data.
 
     **Note:** As of version 4.0.0 of this library we support deserialization from JSON and XML as well as
     serialization to JSON and XML.
@@ -30,7 +30,6 @@ When wishing to generate a BOM, the process is as follows:
 1. Generate a Model by either:
     1. Programmatically using this library
     2. By deserializing from an existing CycloneDX BOM document
-    3. From a :py:mod:`cyclonedx.parser`
 2. Output the Model using an :py:mod:`cyclonedx.output` instance that reflects the schema version and format you require
 
 .. toctree::
