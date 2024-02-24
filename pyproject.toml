@@ -84,7 +84,7 @@ xml-validation = ["lxml"]
 
 [tool.poetry.group.dev.dependencies]
 ddt = "1.7.1"
-coverage = "7.4.1"
+coverage = "7.4.3"
 flake8 = { version="7.0.0", python=">=3.8.1" }
 flake8-annotations = { version="3.0.1", python=">=3.8.1" }
 flake8-bugbear = { version="24.2.6", python=">=3.8.1" }
