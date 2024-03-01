@@ -2,6 +2,116 @@
 
 
 
+## v6.4.2 (2024-03-01)
+
+### Build
+
+* build: use poetry v1.8.1 (#560)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6f81dfa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6f81dfaed32b76f251647f6291791e714ab158a3))
+
+### Chore
+
+* chore(deps-dev): update coverage requirement from 7.4.1 to 7.4.3 (#558)
+
+Updates the requirements on [coverage](https://github.com/nedbat/coveragepy) to permit the latest version.
+- [Release notes](https://github.com/nedbat/coveragepy/releases)
+- [Changelog](https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst)
+- [Commits](https://github.com/nedbat/coveragepy/compare/7.4.1...7.4.3)
+
+---
+updated-dependencies:
+- dependency-name: coverage
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`2b7f261`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2b7f261585faa6237e635b18d5ecaf03d81439ba))
+
+* chore(deps): bump Gr1N/setup-poetry from 8 to 9 (#555)
+
+Bumps [Gr1N/setup-poetry](https://github.com/gr1n/setup-poetry) from 8 to 9.
+- [Release notes](https://github.com/gr1n/setup-poetry/releases)
+- [Commits](https://github.com/gr1n/setup-poetry/compare/v8...v9)
+
+---
+updated-dependencies:
+- dependency-name: Gr1N/setup-poetry
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`178ce32`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/178ce32c0da822b8f1b4d13b427d6f21ea252b59))
+
+* chore(deps-dev): update tox requirement from 4.12.1 to 4.13.0 (#553)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to permit the latest version.
+- [Release notes](https://github.com/tox-dev/tox/releases)
+- [Changelog](https://github.com/tox-dev/tox/blob/main/docs/changelog.rst)
+- [Commits](https://github.com/tox-dev/tox/compare/4.12.1...4.13.0)
+
+---
+updated-dependencies:
+- dependency-name: tox
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`77fb2ec`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/77fb2ec3593fac577a48894f329a77a7ac6d417c))
+
+* chore(deps-dev): update flake8-quotes requirement from 3.3.2 to 3.4.0 (#552)
+
+Updates the requirements on [flake8-quotes](https://github.com/zheller/flake8-quotes) to permit the latest version.
+- [Commits](https://github.com/zheller/flake8-quotes/compare/3.3.2...3.4.0)
+
+---
+updated-dependencies:
+- dependency-name: flake8-quotes
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`cd8e67c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cd8e67c15ae09a07f51f15855c1ae05734352f52))
+
+* chore(deps-dev): update flake8-bugbear requirement (#549)
+
+Updates the requirements on [flake8-bugbear](https://github.com/PyCQA/flake8-bugbear) to permit the latest version.
+- [Release notes](https://github.com/PyCQA/flake8-bugbear/releases)
+- [Commits](https://github.com/PyCQA/flake8-bugbear/compare/24.1.17...24.2.6)
+
+---
+updated-dependencies:
+- dependency-name: flake8-bugbear
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`153d83e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/153d83e5a18a2696d49884319fd156628a19cd7b))
+
+### Documentation
+
+* docs: update architecture description and examples (#550)
+
+
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a19fd28`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a19fd2828355ae031164ef7a0dda2a8ea2365108))
+
+* docs: exclude internal docs from rendering (#545)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7e55dfe`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7e55dfe213cb2a88b3686f9e8bf93cf4642a2ccd))
+
+### Unknown
+
+* docs
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`63cff7e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/63cff7ee697c9d5fb96da3c8c16f7c9bc7b34e58))
+
+* docs (#546)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b0e5b43`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b0e5b43880e17ec6ce23d5d4e1e7a9a2547c1e79))
+
+
 ## v6.4.1 (2024-01-30)
 
 ### Chore
