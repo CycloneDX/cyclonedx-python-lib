@@ -405,6 +405,7 @@ class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
         return ComponentType(o)
 
 
+@serializable.serializable_class
 class Diff:
     """
     Our internal representation of the `diffType` complex type.
