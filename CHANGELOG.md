@@ -2,6 +2,38 @@
 
 
 
+## v6.4.3 (2024-03-04)
+
+### Chore
+
+* chore(deps-dev): update ddt requirement from 1.7.1 to 1.7.2 (#563)
+
+Updates the requirements on [ddt](https://github.com/datadriventests/ddt) to permit the latest version.
+- [Release notes](https://github.com/datadriventests/ddt/releases)
+- [Commits](https://github.com/datadriventests/ddt/compare/1.7.1...1.7.2)
+
+---
+updated-dependencies:
+- dependency-name: ddt
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`53cb8a9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/53cb8a9aa2630e992467525ff246a0f6e6759100))
+
+### Fix
+
+* fix: serialization of `model.component.Diff` (#557)
+
+Fixes #556 
+
+---------
+
+Signed-off-by: rcross-lc &lt;151086351+rcross-lc@users.noreply.github.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`22fa873`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/22fa8734bf1a3a8789ad7578bfa0c86cf0a49d4a))
+
+
 ## v6.4.2 (2024-03-01)
 
 ### Build
