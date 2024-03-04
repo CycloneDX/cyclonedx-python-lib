@@ -153,6 +153,14 @@
         "notes": "Some notes here please",
         "patches": [
           {
+            "diff": {
+              "text": {
+                "content": "LS0tIGZvbwkyMDI0LTAzLTA0IDEyOjQxOjExLjQxODc1OTE0NSArMDEwMAorKysgYmFyCTIwMjQtMDMtMDQgMTI6NDE6MjguMzE1NTE3ODQ3ICswMTAwCkBAIC0xLDIgKzEsMiBAQAotaGVsbG8gd29ybGQuCitIZWxsbyB3b3JsZC4KIAo=",
+                "contentType": "text/x-diff",
+                "encoding": "base64"
+              },
+              "url": "https://acme.com/my-patch.diff"
+            },
             "type": "backport"
           }
         ],

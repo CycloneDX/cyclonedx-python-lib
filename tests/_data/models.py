@@ -51,6 +51,7 @@ from cyclonedx.model.component import (
     ComponentEvidence,
     ComponentScope,
     ComponentType,
+    Diff,
     Patch,
     PatchClassification,
     Pedigree,
@@ -586,7 +587,13 @@ def get_pedigree_1() -> Pedigree:
             get_component_setuptools_simple(bom_ref='ded1d73e-1fca-4302-b520-f1bc53979958')
         ],
         commits=[Commit(uid='a-random-uid', message='A commit message')],
-        patches=[Patch(type=PatchClassification.BACKPORT)],
+        patches=[Patch(type=PatchClassification.BACKPORT, diff=Diff(
+            url=XsUri('https://acme.com/my-patch.diff'),
+            text=AttachedText(encoding=Encoding.BASE_64, content_type='text/x-diff',
+                              content='LS0tIGZvbwkyMDI0LTAzLTA0IDEyOjQxOjExLjQxODc1OTE0NSArMDEwMAorKysgYmFyCTIwMjQtMDMt'
+                                      'MDQgMTI6NDE6MjguMzE1NTE3ODQ3ICswMTAwCkBAIC0xLDIgKzEsMiBAQAotaGVsbG8gd29ybGQuCitI'
+                                      'ZWxsbyB3b3JsZC4KIAo=')
+        ))],
         notes='Some notes here please'
     )
 
