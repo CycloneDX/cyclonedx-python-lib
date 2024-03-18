@@ -44,7 +44,7 @@ from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
 from cyclonedx.validation import make_schemabased_validator
-from tests import SnapshotMixin
+from tests import UNDEFINED_SCHEMA_VERSIONS, SnapshotMixin
 from tests._data.models import _make_bom
 
 # region SUT: all the enums
@@ -111,16 +111,11 @@ def dp_cases_from_json_schemas(*jsonpointer: str) -> Generator[str, None, None]:
         yield from dp_cases_from_json_schema(sf, jsonpointer)
 
 
-UNSUPPORTED_OF_SV = frozenset([
-    (OutputFormat.JSON, SchemaVersion.V1_1),
-    (OutputFormat.JSON, SchemaVersion.V1_0),
-])
-
 NAMED_OF_SV = tuple(
     (f'{of.name}-{sv.to_version()}', of, sv)
     for of in OutputFormat
     for sv in SchemaVersion
-    if (of, sv) not in UNSUPPORTED_OF_SV
+    if sv not in UNDEFINED_SCHEMA_VERSIONS.get(of, ())
 )
 
 

@@ -16,8 +16,9 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
+from glob import iglob
 from json import loads as json_loads
-from os.path import join
+from os.path import basename, join
 from typing import Any, Callable
 from unittest import TestCase
 from unittest.mock import patch
@@ -27,8 +28,18 @@ from ddt import data, ddt, named_data
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
+from tests import (
+    LATEST_SUPPORTED_SCHEMA,
+    OWN_DATA_DIRECTORY,
+    SCHEMA_TESTDATA_DIRECTORY,
+    UNDEFINED_SCHEMA_VERSIONS,
+    DeepCompareMixin,
+    SnapshotMixin,
+    mksname,
+)
 from tests._data.models import all_get_bom_funct_valid_immut, all_get_bom_funct_with_incomplete_deps
+
+_UNDEFINED_SCHEMA_VERSIONS = UNDEFINED_SCHEMA_VERSIONS[OutputFormat.JSON]
 
 
 @ddt
@@ -38,7 +49,7 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
-        snapshot_name = mksname(get_bom, SchemaVersion.V1_5, OutputFormat.JSON)
+        snapshot_name = mksname(get_bom, LATEST_SUPPORTED_SCHEMA, OutputFormat.JSON)
         expected = get_bom()
         json = json_loads(self.readSnapshot(snapshot_name))
         bom = Bom.from_json(json)
@@ -71,3 +82,12 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         test(bom.metadata.component.licenses)
         test(list(bom.components)[0].licenses)
         test(list(bom.services)[0].licenses)
+
+    @named_data(*(
+        (f'{sv.name}/{basename(tf)}', tf)
+        for sv in SchemaVersion if sv not in _UNDEFINED_SCHEMA_VERSIONS
+        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'valid-*.json'))
+    ))
+    def test_schemaTestData(self, tf: str) -> None:
+        with open(tf, 'r') as s:
+            Bom.from_json(json_loads(s.read()))

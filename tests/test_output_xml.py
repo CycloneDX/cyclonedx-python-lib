@@ -21,20 +21,31 @@ from unittest import TestCase
 from unittest.mock import Mock, patch
 from warnings import warn
 
-from ddt import ddt, idata, named_data, unpack
+from ddt import data, ddt, idata, named_data, unpack
 
 from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SnapshotMixin, mksname
+from tests import UNDEFINED_SCHEMA_VERSIONS, SnapshotMixin, mksname
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
+
+_UNDEFINED_SCHEMA_VERSIONS = UNDEFINED_SCHEMA_VERSIONS[OutputFormat.XML]
 
 
 @ddt
 class TestOutputXml(TestCase, SnapshotMixin):
+
+    @data(*_UNDEFINED_SCHEMA_VERSIONS)
+    def test_unsupported_schema_raises(self, sv: SchemaVersion) -> None:
+        outputter_class = BY_SCHEMA_VERSION[sv]
+        self.assertTrue(issubclass(outputter_class, Xml))
+        outputter = outputter_class(Mock(spec=Bom))
+        with self.assertRaises(FormatNotSupportedException):
+            outputter.output_as_string()
 
     @named_data(*(
         (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion

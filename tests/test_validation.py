@@ -24,20 +24,17 @@ from ddt import data, ddt, named_data, unpack
 
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation import make_schemabased_validator
-
-UNDEFINED_FORMAT_VERSION = {
-    (OutputFormat.JSON, SchemaVersion.V1_1),
-    (OutputFormat.JSON, SchemaVersion.V1_0),
-}
+from tests import UNDEFINED_SCHEMA_VERSIONS
 
 
 @ddt
 class TestGetSchemabasedValidator(TestCase):
 
-    @named_data(*([f'{f.name} {v.name}', f, v]
-                  for f, v
-                  in product(OutputFormat, SchemaVersion)
-                  if (f, v) not in UNDEFINED_FORMAT_VERSION))
+    @named_data(
+        *([f'{of.name} {sv.name}', of, sv]
+          for of, sv in product(OutputFormat, SchemaVersion)
+          if sv not in UNDEFINED_SCHEMA_VERSIONS.get(of, ()))
+    )
     @unpack
     def test_as_expected(self, of: OutputFormat, sv: SchemaVersion) -> None:
         validator = make_schemabased_validator(of, sv)
@@ -46,7 +43,9 @@ class TestGetSchemabasedValidator(TestCase):
 
     @data(
         *(('foo', sv, (ValueError, 'Unexpected output_format')) for sv in SchemaVersion),
-        *((f, v, (ValueError, 'Unsupported schema_version')) for f, v in UNDEFINED_FORMAT_VERSION)
+        *((of, sv, (ValueError, 'Unsupported schema_version'))
+          for of in UNDEFINED_SCHEMA_VERSIONS
+          for sv in UNDEFINED_SCHEMA_VERSIONS[of])
     )
     @unpack
     def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raises_regex: Tuple) -> None:

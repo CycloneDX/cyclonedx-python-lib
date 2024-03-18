@@ -17,7 +17,7 @@
 
 from os import getenv, path
 from os.path import join
-from typing import TYPE_CHECKING, Any, Generator, Iterable, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, List, Optional, Set, TypeVar, Union
 from unittest import TestCase
 from uuid import UUID
 
@@ -37,6 +37,14 @@ _TESTDATA_DIRECTORY = path.join(path.dirname(__file__), '_data')
 SCHEMA_TESTDATA_DIRECTORY = path.join(_TESTDATA_DIRECTORY, 'schemaTestData')
 OWN_DATA_DIRECTORY = path.join(_TESTDATA_DIRECTORY, 'own')
 SNAPSHOTS_DIRECTORY = path.join(_TESTDATA_DIRECTORY, 'snapshots')
+
+UNDEFINED_SCHEMA_VERSIONS: Dict[OutputFormat, Set[SchemaVersion]] = {
+    OutputFormat.XML: set(),
+    OutputFormat.JSON: {SchemaVersion.V1_0, SchemaVersion.V1_1, },
+}
+
+LATEST_SUPPORTED_SCHEMA = SchemaVersion.V1_5
+
 
 RECREATE_SNAPSHOTS = '1' == getenv('CDX_TEST_RECREATE_SNAPSHOTS')
 if RECREATE_SNAPSHOTS:
