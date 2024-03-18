@@ -37,7 +37,7 @@ try:
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'
-        'Please install `cyclonedx-python-lib` with the extra "json-validation".\n'
+        'Please install `cyclonedx-python-lib` with the extra "xml-validation".\n'
     ), err
 
 
