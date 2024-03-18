@@ -2,6 +2,98 @@
 
 
 
+## v6.4.4 (2024-03-18)
+
+### Chore
+
+* chore(deps-dev): update coverage requirement from 7.4.3 to 7.4.4 (#570)
+
+Updates the requirements on [coverage](https://github.com/nedbat/coveragepy) to permit the latest version.
+- [Release notes](https://github.com/nedbat/coveragepy/releases)
+- [Changelog](https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst)
+- [Commits](https://github.com/nedbat/coveragepy/compare/7.4.3...7.4.4)
+
+---
+updated-dependencies:
+- dependency-name: coverage
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`3a2e427`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3a2e427ba9967f11c15cd1a47c59a933b699c87b))
+
+* chore(deps): bump python-semantic-release/python-semantic-release (#564)
+
+Bumps [python-semantic-release/python-semantic-release](https://github.com/python-semantic-release/python-semantic-release) from 8.5.1 to 9.1.1.
+- [Release notes](https://github.com/python-semantic-release/python-semantic-release/releases)
+- [Changelog](https://github.com/python-semantic-release/python-semantic-release/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python-semantic-release/python-semantic-release/compare/v8.5.1...v9.1.1)
+
+---
+updated-dependencies:
+- dependency-name: python-semantic-release/python-semantic-release
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`d20a590`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d20a5902582facab0636e9ff8a261edcaf886a3e))
+
+* chore(deps-dev): update tox requirement from 4.13.0 to 4.14.1 (#567)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to permit the latest version.
+- [Release notes](https://github.com/tox-dev/tox/releases)
+- [Changelog](https://github.com/tox-dev/tox/blob/main/docs/changelog.rst)
+- [Commits](https://github.com/tox-dev/tox/compare/4.13.0...4.14.1)
+
+---
+updated-dependencies:
+- dependency-name: tox
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`2dcc60e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2dcc60e53ec66d642c728596ff25fed4df5659a0))
+
+* chore(deps-dev): update bandit requirement from 1.7.7 to 1.7.8 (#566)
+
+Updates the requirements on [bandit](https://github.com/PyCQA/bandit) to permit the latest version.
+- [Release notes](https://github.com/PyCQA/bandit/releases)
+- [Commits](https://github.com/PyCQA/bandit/compare/1.7.7...1.7.8)
+
+---
+updated-dependencies:
+- dependency-name: bandit
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`eb1a252`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/eb1a2525c09e0dd10f11ff83b451a4db4fb00d9b))
+
+* chore(deps-dev): update mypy requirement from 1.8.0 to 1.9.0 (#565)
+
+Updates the requirements on [mypy](https://github.com/python/mypy) to permit the latest version.
+- [Changelog](https://github.com/python/mypy/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/python/mypy/compare/v1.8.0...1.9.0)
+
+---
+updated-dependencies:
+- dependency-name: mypy
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`3ce0f3a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3ce0f3a373d9f1b07af50d9b707f766ea446e518))
+
+### Fix
+
+* fix: wrong extra name for xml validation (#571)
+
+
+
+Signed-off-by: Christoph Reiter &lt;reiter.christoph@gmail.com&gt; ([`10e38e2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/10e38e25095de4b2dafbfcd1fd81dce7a9c0f124))
+
+
 ## v6.4.3 (2024-03-04)
 
 ### Chore
@@ -1501,32 +1593,7 @@ Co-authored-by: Michael Schlenker &lt;michael.schlenker@contact-software.com&gt;
 
 ## v4.0.0 (2023-03-20)
 
-### Chore
-
-* chore(deps): bump relekang/python-semantic-release from 7.31.2 to 7.33.1 (#345)
-
-Bumps [relekang/python-semantic-release](https://github.com/relekang/python-semantic-release) from 7.31.2 to 7.33.1.
-- [Release notes](https://github.com/relekang/python-semantic-release/releases)
-- [Changelog](https://github.com/python-semantic-release/python-semantic-release/blob/master/CHANGELOG.md)
-- [Commits](https://github.com/relekang/python-semantic-release/compare/v7.31.2...v7.33.1)
-
----
-updated-dependencies:
-- dependency-name: relekang/python-semantic-release
-  dependency-type: direct:production
-  update-type: version-update:semver-minor
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`a011d89`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a011d89ce6cee9e56bcfcc9a9338fa1e559721f7))
-
-* chore: package manifest fix link to homepage and documentation (#291)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f2350b4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f2350b4e2b0fb7668ca987e523c53acb6ac6fefb))
-
-### Feature
+### Breaking
 
 * feat: Release 4.0.0 #341)
 
@@ -1647,6 +1714,31 @@ Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt;
 Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
 Co-authored-by: Hakan Dilek &lt;hakandilek@gmail.com&gt;
 Co-authored-by: Hakan Dilek &lt;hakandilek@users.noreply.github.com&gt; ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
+
+### Chore
+
+* chore(deps): bump relekang/python-semantic-release from 7.31.2 to 7.33.1 (#345)
+
+Bumps [relekang/python-semantic-release](https://github.com/relekang/python-semantic-release) from 7.31.2 to 7.33.1.
+- [Release notes](https://github.com/relekang/python-semantic-release/releases)
+- [Changelog](https://github.com/python-semantic-release/python-semantic-release/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/relekang/python-semantic-release/compare/v7.31.2...v7.33.1)
+
+---
+updated-dependencies:
+- dependency-name: relekang/python-semantic-release
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`a011d89`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a011d89ce6cee9e56bcfcc9a9338fa1e559721f7))
+
+* chore: package manifest fix link to homepage and documentation (#291)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f2350b4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f2350b4e2b0fb7668ca987e523c53acb6ac6fefb))
 
 ### Unknown
 
