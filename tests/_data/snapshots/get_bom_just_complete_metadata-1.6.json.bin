@@ -1,4 +1,86 @@
 {
+  "metadata": {
+    "authors": [
+      {
+        "email": "someone@somewhere.tld",
+        "name": "A N Other",
+        "phone": "+44 (0)1234 567890"
+      },
+      {
+        "email": "paul.horton@owasp.org",
+        "name": "Paul Horton"
+      }
+    ],
+    "component": {
+      "components": [
+        {
+          "name": "setuptools",
+          "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+          "type": "library",
+          "version": "50.3.2"
+        },
+        {
+          "name": "toml",
+          "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+          "type": "library",
+          "version": "0.10.2"
+        }
+      ],
+      "copyright": "Apache 2.0 baby!",
+      "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
+      "description": "This component is awesome",
+      "name": "setuptools",
+      "publisher": "CycloneDX",
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "type": "library",
+      "version": "50.3.2"
+    },
+    "licenses": [
+      {
+        "license": {
+          "id": "Apache-2.0",
+          "text": {
+            "content": "VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=",
+            "contentType": "text/plain",
+            "encoding": "base64"
+          },
+          "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      }
+    ],
+    "properties": [
+      {
+        "name": "key1",
+        "value": "val1"
+      },
+      {
+        "name": "key2",
+        "value": "val2"
+      }
+    ],
+    "supplier": {
+      "contact": [
+        {
+          "email": "someone@somewhere.tld",
+          "name": "A N Other",
+          "phone": "+44 (0)1234 567890"
+        }
+      ],
+      "name": "Cyclone DX",
+      "url": [
+        "https://cyclonedx.org/"
+      ]
+    },
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
