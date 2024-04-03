@@ -181,6 +181,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(6)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
@@ -402,6 +403,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     @serializable.xml_sequence(3)
     def services(self) -> 'SortedSet[Service]':
@@ -423,6 +425,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(4)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -443,6 +446,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
     @serializable.xml_sequence(5)
     def dependencies(self) -> 'SortedSet[Dependency]':
@@ -481,6 +485,7 @@ class Bom:
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
     @serializable.xml_sequence(8)
     def vulnerabilities(self) -> 'SortedSet[Vulnerability]':

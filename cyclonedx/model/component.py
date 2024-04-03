@@ -309,6 +309,7 @@ class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
 
     @classmethod
     def __normalize(cls, cs: ComponentScope, view: Type[serializable.ViewType]) -> Optional[str]:
@@ -689,6 +690,7 @@ class Pedigree:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     @serializable.xml_sequence(5)
     def patches(self) -> 'SortedSet[Patch]':
@@ -880,18 +882,18 @@ class OmniBorId(serializable.helpers.BaseHelper):
 
     _VALID_OMNIBOR_ID_REGEX = re.compile(r'^gitoid:(blob|tree|commit|tag):sha(1|256):([a-z0-9]+)$')
 
-    def __init__(self, omnibor_id: str) -> None:
-        if OmniBorId._VALID_OMNIBOR_ID_REGEX.match(omnibor_id) is None:
+    def __init__(self, id: str) -> None:
+        if OmniBorId._VALID_OMNIBOR_ID_REGEX.match(id) is None:
             raise InvalidOmniBorIdException(
-                f'Supplied value "{omnibor_id} does not meet format specification.'
+                f'Supplied value "{id} does not meet format specification.'
             )
-        self._omnibor_id = omnibor_id
+        self._id = id
 
     @property
     @serializable.json_name('.')
     @serializable.xml_name('.')
-    def omnibor_id(self) -> str:
-        return self._omnibor_id
+    def id(self) -> str:
+        return self._id
 
     @classmethod
     def serialize(cls, o: Any) -> str:
@@ -903,7 +905,7 @@ class OmniBorId(serializable.helpers.BaseHelper):
     @classmethod
     def deserialize(cls, o: Any) -> 'OmniBorId':
         try:
-            return OmniBorId(omnibor_id=str(o))
+            return OmniBorId(id=str(o))
         except ValueError as err:
             raise CycloneDxDeserializationException(
                 f'OmniBorId string supplied does not parse: {o!r}'
@@ -916,17 +918,17 @@ class OmniBorId(serializable.helpers.BaseHelper):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, OmniBorId):
-            return self._omnibor_id < other._omnibor_id
+            return self._id < other._id
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self._omnibor_id)
+        return hash(self._id)
 
     def __repr__(self) -> str:
-        return f'<OmniBorId {self._omnibor_id}>'
+        return f'<OmniBorId {self._id}>'
 
     def __str__(self) -> str:
-        return self._omnibor_id
+        return self._id
 
 
 @serializable.serializable_class
@@ -1145,6 +1147,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)  # todo: this is deprecated in v1.6?
     @serializable.xml_sequence(4)
     def author(self) -> Optional[str]:
         """
@@ -1289,6 +1292,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.type_mapping(LicenseRepositoryHelper)
     @serializable.xml_sequence(12)
     def licenses(self) -> LicenseRepository:
@@ -1399,6 +1403,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(18)
     def swid(self) -> Optional[Swid]:
         """
@@ -1414,7 +1419,7 @@ class Component(Dependable):
         self._swid = swid
 
     @property
-    @serializable.view(SchemaVersion1Dot0)
+    @serializable.view(SchemaVersion1Dot0)  # todo: Deprecated in v1.3
     @serializable.xml_sequence(19)
     def modified(self) -> bool:
         return self._modified
@@ -1429,6 +1434,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(20)
     def pedigree(self) -> Optional[Pedigree]:
         """
@@ -1450,6 +1456,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(21)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -1470,6 +1477,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(22)
     def properties(self) -> 'SortedSet[Property]':
@@ -1508,6 +1516,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(24)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
@@ -1525,6 +1534,7 @@ class Component(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(25)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """

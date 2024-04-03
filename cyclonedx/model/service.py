@@ -30,7 +30,7 @@ from sortedcontainers import SortedSet
 from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5
+from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
 from .bom_ref import BomRef
 from .dependency import Dependable
@@ -98,7 +98,7 @@ class Service(Dependable):
     @serializable.xml_sequence(1)
     def provider(self) -> Optional[OrganizationalEntity]:
         """
-        Get the The organization that provides the service.
+        Get the organization that provides the service.
 
         Returns:
             `OrganizationalEntity` if set else `None`
@@ -289,6 +289,7 @@ class Service(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(13)
     def properties(self) -> 'SortedSet[Property]':
@@ -328,6 +329,7 @@ class Service(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(15)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """

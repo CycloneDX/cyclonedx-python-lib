@@ -288,6 +288,7 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
 
     @classmethod
     def __prep(cls, hts: Iterable['HashType'], view: Type[serializable.ViewType]) -> Generator['HashType', None, None]:
@@ -793,6 +794,7 @@ class ExternalReference:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     def hashes(self) -> 'SortedSet[HashType]':
         """
@@ -1325,6 +1327,7 @@ class Tool:
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
     def external_references(self) -> 'SortedSet[ExternalReference]':

@@ -7,6 +7,32 @@
         <vendor>CycloneDX</vendor>
         <name>cyclonedx-python-lib</name>
         <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
       </tool>
     </tools>
   </metadata>
@@ -36,10 +62,19 @@
           <email>paul.horton@owasp.org</email>
         </author>
       </authors>
+      <author>Test Author</author>
       <name>setuptools</name>
       <version>50.3.2</version>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+      </licenses>
       <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
       <omniborId>gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64</omniborId>
     </component>
   </components>
+  <dependencies>
+    <dependency ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz"/>
+  </dependencies>
 </bom>
