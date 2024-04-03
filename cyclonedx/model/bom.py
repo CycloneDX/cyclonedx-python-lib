@@ -76,10 +76,9 @@ class BomMetaData:
         self.manufacture = manufacture
         if manufacture:
             warn(
-                "`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. "
-                "Please use `bom.metadata.component.manufacturer` instead.",
+                '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
+                'Please use `bom.metadata.component.manufacturer` instead.',
                 DeprecationWarning)
-
 
         if not tools:
             self.tools.add(ThisTool)
