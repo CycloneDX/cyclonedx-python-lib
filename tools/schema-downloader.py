@@ -20,7 +20,7 @@ SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/master/
 TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res')
 
 BOM_XSD = {
-    'versions': ['1.5', '1.4', '1.3', '1.2', '1.1', '1.0'],
+    'versions': ['1.6', '1.5', '1.4', '1.3', '1.2', '1.1', '1.0'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.xsd',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.xsd'),
     'replace': [],

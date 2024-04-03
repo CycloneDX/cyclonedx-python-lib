@@ -34,6 +34,13 @@ class BaseSchemaVersion(ABC, ViewType):
         return self.schema_version_enum.to_version()
 
 
+class SchemaVersion1Dot6(BaseSchemaVersion):
+
+    @property
+    def schema_version_enum(self) -> Literal[SchemaVersion.V1_6]:
+        return SchemaVersion.V1_6
+
+
 class SchemaVersion1Dot5(BaseSchemaVersion):
 
     @property
@@ -77,6 +84,7 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
 
 
 SCHEMA_VERSIONS: Dict[SchemaVersion, Type[BaseSchemaVersion]] = {
+    SchemaVersion.V1_6: SchemaVersion1Dot6,
     SchemaVersion.V1_5: SchemaVersion1Dot5,
     SchemaVersion.V1_4: SchemaVersion1Dot4,
     SchemaVersion.V1_3: SchemaVersion1Dot3,
