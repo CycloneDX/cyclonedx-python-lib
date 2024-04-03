@@ -1,20 +1,24 @@
 {
   "components": [
     {
+      "bom-ref": "C2",
       "name": "c-with-SPDX",
       "type": "library"
     },
     {
+      "bom-ref": "C1",
       "name": "c-with-expression",
       "type": "library"
     },
     {
+      "bom-ref": "C3",
       "name": "c-with-name",
       "type": "library"
     }
   ],
   "metadata": {
     "component": {
+      "bom-ref": "my-app",
       "name": "app",
       "type": "application"
     },

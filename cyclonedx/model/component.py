@@ -24,6 +24,7 @@ from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
 import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
+from warnings import warn
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
@@ -49,7 +50,7 @@ from . import (
     OrganizationalEntity,
     Property,
     XsUri,
-    _HashTypeRepositorySerializationHelper,
+    _HashTypeRepositorySerializationHelper, OrganizationalContact,
 )
 from .bom_ref import BomRef
 from .dependency import Dependable
@@ -908,7 +909,7 @@ class Component(Dependable):
     def __init__(self, *,
                  name: str, type: ComponentType = ComponentType.LIBRARY,
                  mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
-                 supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
+                 supplier: Optional[OrganizationalEntity] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
                  hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[License]] = None,
@@ -917,7 +918,10 @@ class Component(Dependable):
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
-                 modified: bool = False
+                 modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
+                 authors: Optional[Iterable[OrganizationalContact]] = None,
+                 # Deprecated in v1.6
+                 author: Optional[str] = None,
                  ) -> None:
         self.type = type
         self.mime_type = mime_type
@@ -926,7 +930,9 @@ class Component(Dependable):
         else:
             self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
         self.supplier = supplier
-        self.author = author
+        self.manufacturer = manufacturer
+        self.authors = authors or []  # type:ignore[assignment]
+
         self.publisher = publisher
         self.group = group
         self.name = name
@@ -946,6 +952,13 @@ class Component(Dependable):
         self.components = components or []  # type:ignore[assignment]
         self.evidence = evidence
         self.release_notes = release_notes
+
+        self.author = author
+        if author:
+            warn(
+                '`.component.author` is deprecated from CycloneDX v1.6 onwards. '
+                'Please use `@.authors` or `@.manufacturer` instead.',
+                DeprecationWarning)
 
     @property
     @serializable.type_mapping(_ComponentTypeSerializationHelper)
@@ -989,6 +1002,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -1008,6 +1022,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(1)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
@@ -1024,11 +1039,48 @@ class Component(Dependable):
         self._supplier = supplier
 
     @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(2)
+    def manufacturer(self) -> Optional[OrganizationalEntity]:
+        """
+        The organization that created the component.
+        Manufacturer is common in components created through automated processes.
+        Components created through manual means may have `@.authors` instead.
+
+        Returns:
+            `OrganizationalEntity` if set else `None`
+        """
+        return self._manufacturer
+
+    @manufacturer.setter
+    def manufacturer(self, manufacturer: Optional[OrganizationalEntity]) -> None:
+        self._manufacturer = manufacturer
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
+    @serializable.xml_sequence(3)
+    def authors(self) -> 'SortedSet[OrganizationalContact]':
+        """
+        The person(s) who created the component.
+        Authors are common in components created through manual processes.
+        Components created through automated means may have `@.manufacturer` instead.
+
+        Returns:
+            `Iterable[OrganizationalContact]` if set else `None`
+        """
+        return self._authors
+
+    @authors.setter
+    def authors(self, authors: Iterable[OrganizationalEntity]) -> None:
+        self._authors = SortedSet(authors)
+
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(2)
+    @serializable.xml_sequence(4)
     def author(self) -> Optional[str]:
         """
         The person(s) or organization(s) that authored the component.
@@ -1043,7 +1095,7 @@ class Component(Dependable):
         self._author = author
 
     @property
-    @serializable.xml_sequence(3)
+    @serializable.xml_sequence(5)
     def publisher(self) -> Optional[str]:
         """
         The person(s) or organization(s) that published the component
@@ -1058,7 +1110,7 @@ class Component(Dependable):
         self._publisher = publisher
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.xml_sequence(6)
     def group(self) -> Optional[str]:
         """
         The grouping name or identifier. This will often be a shortened, single name of the company or project that
@@ -1077,7 +1129,7 @@ class Component(Dependable):
         self._group = group
 
     @property
-    @serializable.xml_sequence(5)
+    @serializable.xml_sequence(7)
     def name(self) -> str:
         """
         The name of the component.
@@ -1100,7 +1152,7 @@ class Component(Dependable):
     @serializable.include_none(SchemaVersion1Dot1, '')
     @serializable.include_none(SchemaVersion1Dot2, '')
     @serializable.include_none(SchemaVersion1Dot3, '')
-    @serializable.xml_sequence(6)
+    @serializable.xml_sequence(8)
     def version(self) -> Optional[str]:
         """
         The component version. The version should ideally comply with semantic versioning but is not enforced.
@@ -1118,7 +1170,7 @@ class Component(Dependable):
         self._version = version
 
     @property
-    @serializable.xml_sequence(7)
+    @serializable.xml_sequence(9)
     def description(self) -> Optional[str]:
         """
         Get the description of this Component.
@@ -1134,7 +1186,7 @@ class Component(Dependable):
 
     @property
     @serializable.type_mapping(_ComponentScopeSerializationHelper)
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(10)
     def scope(self) -> Optional[ComponentScope]:
         """
         Specifies the scope of the component.
@@ -1152,7 +1204,7 @@ class Component(Dependable):
 
     @property
     @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
-    @serializable.xml_sequence(9)
+    @serializable.xml_sequence(11)
     def hashes(self) -> 'SortedSet[HashType]':
         """
         Optional list of hashes that help specify the integrity of this Component.
@@ -1173,7 +1225,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.type_mapping(LicenseRepositoryHelper)
-    @serializable.xml_sequence(10)
+    @serializable.xml_sequence(12)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Component is licensed.
@@ -1188,7 +1240,7 @@ class Component(Dependable):
         self._licenses = LicenseRepository(licenses)
 
     @property
-    @serializable.xml_sequence(11)
+    @serializable.xml_sequence(13)
     def copyright(self) -> Optional[str]:
         """
         An optional copyright notice informing users of the underlying claims to copyright ownership in a published
@@ -1204,7 +1256,7 @@ class Component(Dependable):
         self._copyright = copyright
 
     @property
-    @serializable.xml_sequence(12)
+    @serializable.xml_sequence(14)
     def cpe(self) -> Optional[str]:
         """
         Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification.
@@ -1221,7 +1273,7 @@ class Component(Dependable):
 
     @property
     @serializable.type_mapping(PackageUrl)
-    @serializable.xml_sequence(13)
+    @serializable.xml_sequence(15)
     def purl(self) -> Optional[PackageURL]:
         """
         Specifies the package-url (PURL).
@@ -1243,7 +1295,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(14)
+    @serializable.xml_sequence(16)
     def swid(self) -> Optional[Swid]:
         """
         Specifies metadata and content for ISO-IEC 19770-2 Software Identification (SWID) Tags.
@@ -1259,7 +1311,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot0)
-    @serializable.xml_sequence(18)
+    @serializable.xml_sequence(17)
     def modified(self) -> bool:
         return self._modified
 
@@ -1273,7 +1325,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(16)
+    @serializable.xml_sequence(18)
     def pedigree(self) -> Optional[Pedigree]:
         """
         Component pedigree is a way to document complex supply chain scenarios where components are created,
@@ -1295,7 +1347,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(17)
+    @serializable.xml_sequence(19)
     def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the component or to the project the component
@@ -1315,7 +1367,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(18)
+    @serializable.xml_sequence(22)
     def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -1332,7 +1384,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
-    @serializable.xml_sequence(19)
+    @serializable.xml_sequence(23)
     def components(self) -> "SortedSet['Component']":
         """
         A list of software and hardware components included in the parent component. This is not a dependency tree. It
@@ -1352,7 +1404,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(20)
+    @serializable.xml_sequence(24)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
         Provides the ability to document evidence collected through various forms of extraction or analysis.
@@ -1369,7 +1421,7 @@ class Component(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(21)
+    @serializable.xml_sequence(25)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
         Specifies optional release notes.

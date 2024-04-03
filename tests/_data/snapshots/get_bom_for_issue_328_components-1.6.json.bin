@@ -1,10 +1,13 @@
 {
   "components": [
     {
+      "bom-ref": "component-A",
       "components": [
         {
+          "bom-ref": "component-B",
           "components": [
             {
+              "bom-ref": "component-C",
               "name": "C",
               "type": "library",
               "version": "1.0"
@@ -22,6 +25,7 @@
   ],
   "metadata": {
     "component": {
+      "bom-ref": "my-project",
       "name": "my-project",
       "type": "application",
       "version": "1"

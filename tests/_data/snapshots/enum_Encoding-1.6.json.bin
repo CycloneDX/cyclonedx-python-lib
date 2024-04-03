@@ -1,6 +1,7 @@
 {
   "components": [
     {
+      "bom-ref": "dummy",
       "name": "dummy",
       "type": "library"
     }

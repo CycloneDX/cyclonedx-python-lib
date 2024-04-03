@@ -1,6 +1,7 @@
 {
   "components": [
     {
+      "bom-ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "name": "toml",
       "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "type": "library",

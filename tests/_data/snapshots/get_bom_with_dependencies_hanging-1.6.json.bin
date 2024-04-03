@@ -1,12 +1,14 @@
 {
   "components": [
     {
+      "bom-ref": "setuptools",
       "name": "setuptools",
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
       "type": "library",
       "version": "50.3.2"
     },
     {
+      "bom-ref": "toml",
       "name": "toml",
       "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
       "type": "library",
@@ -15,6 +17,7 @@
   ],
   "metadata": {
     "component": {
+      "bom-ref": "root-component",
       "name": "rootComponent",
       "type": "application"
     },

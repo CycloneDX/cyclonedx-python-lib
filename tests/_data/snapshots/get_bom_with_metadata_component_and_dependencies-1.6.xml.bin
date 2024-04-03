@@ -9,14 +9,14 @@
         <version>TESTING</version>
       </tool>
     </tools>
-    <component type="library">
+    <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
       <name>setuptools</name>
       <version>50.3.2</version>
       <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
     </component>
   </metadata>
   <components>
-    <component type="library">
+    <component type="library" bom-ref="pkg:pypi/toml@0.10.2?extension=tar.gz">
       <name>toml</name>
       <version>0.10.2</version>
       <hashes/>

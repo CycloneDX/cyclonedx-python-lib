@@ -9,7 +9,7 @@
         <version>TESTING</version>
       </tool>
     </tools>
-    <component type="application">
+    <component type="application" bom-ref="my-app">
       <name>app</name>
     </component>
     <licenses>
@@ -22,7 +22,7 @@
     </licenses>
   </metadata>
   <components>
-    <component type="library">
+    <component type="library" bom-ref="my-compo">
       <name>comp</name>
     </component>
   </components>

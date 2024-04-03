@@ -12,14 +12,17 @@
       }
     ],
     "component": {
+      "bom-ref": "my-specific-bom-ref-for-dings",
       "components": [
         {
+          "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
           "name": "setuptools",
           "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
           "type": "library",
           "version": "50.3.2"
         },
         {
+          "bom-ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
           "name": "toml",
           "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
           "type": "library",
@@ -32,6 +35,23 @@
       "name": "setuptools",
       "publisher": "CycloneDX",
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "supplier": {
+        "contact": [
+          {
+            "email": "someone@somewhere.tld",
+            "name": "A N Other",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "email": "paul.horton@owasp.org",
+            "name": "Paul Horton"
+          }
+        ],
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org"
+        ]
+      },
       "type": "library",
       "version": "50.3.2"
     },

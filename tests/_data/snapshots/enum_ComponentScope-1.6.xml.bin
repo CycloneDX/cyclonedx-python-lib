@@ -11,13 +11,13 @@
     </tools>
   </metadata>
   <components>
-    <component type="library">
+    <component type="library" bom-ref="scoped-EXCLUDED">
       <name>dummy-EXCLUDED</name>
     </component>
-    <component type="library">
+    <component type="library" bom-ref="scoped-OPTIONAL">
       <name>dummy-OPTIONAL</name>
     </component>
-    <component type="library">
+    <component type="library" bom-ref="scoped-REQUIRED">
       <name>dummy-REQUIRED</name>
     </component>
   </components>

@@ -1,6 +1,7 @@
 {
   "components": [
     {
+      "bom-ref": "pkg:pypi/setuptools?extension=tar.gz",
       "name": "setuptools",
       "purl": "pkg:pypi/setuptools?extension=tar.gz",
       "type": "library"

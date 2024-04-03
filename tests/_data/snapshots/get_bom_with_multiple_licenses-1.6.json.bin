@@ -1,12 +1,14 @@
 {
   "components": [
     {
+      "bom-ref": "my-compo",
       "name": "comp",
       "type": "library"
     }
   ],
   "metadata": {
     "component": {
+      "bom-ref": "my-app",
       "name": "app",
       "type": "application"
     },

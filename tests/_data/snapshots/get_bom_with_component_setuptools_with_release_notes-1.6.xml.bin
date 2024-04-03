@@ -11,7 +11,7 @@
     </tools>
   </metadata>
   <components>
-    <component type="library">
+    <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
       <name>setuptools</name>
       <version>50.3.2</version>
       <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>

@@ -9,17 +9,17 @@
         <version>TESTING</version>
       </tool>
     </tools>
-    <component type="application">
+    <component type="application" bom-ref="root-component">
       <name>rootComponent</name>
     </component>
   </metadata>
   <components>
-    <component type="library">
+    <component type="library" bom-ref="setuptools">
       <name>setuptools</name>
       <version>50.3.2</version>
       <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
     </component>
-    <component type="library">
+    <component type="library" bom-ref="toml">
       <name>toml</name>
       <version>0.10.2</version>
       <hashes/>

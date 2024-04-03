@@ -1,14 +1,17 @@
 {
   "components": [
     {
+      "bom-ref": "scoped-EXCLUDED",
       "name": "dummy-EXCLUDED",
       "type": "library"
     },
     {
+      "bom-ref": "scoped-OPTIONAL",
       "name": "dummy-OPTIONAL",
       "type": "library"
     },
     {
+      "bom-ref": "scoped-REQUIRED",
       "name": "dummy-REQUIRED",
       "type": "library"
     }
