@@ -33,7 +33,8 @@ from ..schema.schema import (
     SchemaVersion1Dot2,
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
-    SchemaVersion1Dot5, SchemaVersion1Dot6,
+    SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
 from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool

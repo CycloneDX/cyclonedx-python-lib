@@ -64,7 +64,7 @@ class TestOutputJson(TestCase, SnapshotMixin):
             warn('!!! skipped schema validation',
                  category=UserWarning, stacklevel=0)
         else:
-            self.assertIsNone(errors)
+            self.assertIsNone(errors, json)
         self.assertEqualSnapshot(json, snapshot_name)
 
     @named_data(*((f'{n}-{sv.to_version()}', gb, sv)

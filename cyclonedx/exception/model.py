@@ -45,6 +45,14 @@ class InvalidLocaleTypeException(CycloneDxModelException):
     pass
 
 
+class InvalidOmniBorIdException(CycloneDxModelException):
+    """
+    Raised when a supplied value for an OmniBOR ID does not meet the format requirements
+    as defined at https://www.iana.org/assignments/uri-schemes/prov/gitoid.
+    """
+    pass
+
+
 class InvalidUriException(CycloneDxModelException):
     """
     Raised when a `str` is provided that needs to be a valid URI, but isn't.

@@ -51,7 +51,7 @@ class TestOutputXml(TestCase, SnapshotMixin):
             warn('!!! skipped schema validation',
                  category=UserWarning, stacklevel=0)
         else:
-            self.assertIsNone(errors)
+            self.assertIsNone(errors, xml)
         self.assertEqualSnapshot(xml, snapshot_name)
 
     @named_data(*(

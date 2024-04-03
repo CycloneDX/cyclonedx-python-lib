@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+      </tool>
+    </tools>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
+      <manufacturer>
+        <name>CycloneDX</name>
+        <url>https://cyclonedx.org</url>
+        <contact>
+          <name>A N Other</name>
+          <email>someone@somewhere.tld</email>
+          <phone>+44 (0)1234 567890</phone>
+        </contact>
+        <contact>
+          <name>Paul Horton</name>
+          <email>paul.horton@owasp.org</email>
+        </contact>
+      </manufacturer>
+      <authors>
+        <author>
+          <name>A N Other</name>
+          <email>someone@somewhere.tld</email>
+          <phone>+44 (0)1234 567890</phone>
+        </author>
+        <author>
+          <name>Paul Horton</name>
+          <email>paul.horton@owasp.org</email>
+        </author>
+      </authors>
+      <name>setuptools</name>
+      <version>50.3.2</version>
+      <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+      <omniborId>gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64</omniborId>
+    </component>
+  </components>
+</bom>

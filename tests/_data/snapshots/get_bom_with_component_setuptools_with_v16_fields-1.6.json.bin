@@ -1,0 +1,57 @@
+{
+  "components": [
+    {
+      "authors": [
+        {
+          "email": "someone@somewhere.tld",
+          "name": "A N Other",
+          "phone": "+44 (0)1234 567890"
+        },
+        {
+          "email": "paul.horton@owasp.org",
+          "name": "Paul Horton"
+        }
+      ],
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "manufacturer": {
+        "contact": [
+          {
+            "email": "someone@somewhere.tld",
+            "name": "A N Other",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "email": "paul.horton@owasp.org",
+            "name": "Paul Horton"
+          }
+        ],
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org"
+        ]
+      },
+      "name": "setuptools",
+      "omniborId": [
+        "gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+      ],
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "type": "library",
+      "version": "50.3.2"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

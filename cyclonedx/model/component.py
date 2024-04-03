@@ -14,22 +14,24 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
-
+import re
 from enum import Enum
 from os.path import exists
-from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
+from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Set, Type, Union
+from warnings import warn
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
-from warnings import warn
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
-from ..exception.model import NoPropertiesProvidedException
-from ..exception.serialization import SerializationOfUnsupportedComponentTypeException
+from ..exception.model import InvalidOmniBorIdException, NoPropertiesProvidedException
+from ..exception.serialization import (
+    SerializationOfUnexpectedValueException,
+    SerializationOfUnsupportedComponentTypeException, CycloneDxDeserializationException,
+)
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -47,10 +49,11 @@ from . import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
+    OrganizationalContact,
     OrganizationalEntity,
     Property,
     XsUri,
-    _HashTypeRepositorySerializationHelper, OrganizationalContact,
+    _HashTypeRepositorySerializationHelper,
 )
 from .bom_ref import BomRef
 from .dependency import Dependable
@@ -868,6 +871,65 @@ class Swid:
 
 
 @serializable.serializable_class
+class OmniBorId(serializable.helpers.BaseHelper):
+    """
+    Helper class that allows us to perform validation on data strings that must conform to
+    https://www.iana.org/assignments/uri-schemes/prov/gitoid.
+
+    """
+
+    _VALID_OMNIBOR_ID_REGEX = re.compile(r'^gitoid:(blob|tree|commit|tag):sha(1|256):([a-z0-9]+)$')
+
+    def __init__(self, omnibor_id: str) -> None:
+        if OmniBorId._VALID_OMNIBOR_ID_REGEX.match(omnibor_id) is None:
+            raise InvalidOmniBorIdException(
+                f'Supplied value "{omnibor_id} does not meet format specification.'
+            )
+        self._omnibor_id = omnibor_id
+
+    @property
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
+    def omnibor_id(self) -> str:
+        return self._omnibor_id
+
+    @classmethod
+    def serialize(cls, o: Any) -> str:
+        if isinstance(o, OmniBorId):
+            return str(o)
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-OmniBorId: {o!r}')
+
+    @classmethod
+    def deserialize(cls, o: Any) -> 'OmniBorId':
+        try:
+            return OmniBorId(omnibor_id=str(o))
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'OmniBorId string supplied does not parse: {o!r}'
+            ) from err
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, OmniBorId):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, OmniBorId):
+            return self._omnibor_id < other._omnibor_id
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._omnibor_id)
+
+    def __repr__(self) -> str:
+        return f'<OmniBorId {self._omnibor_id}>'
+
+    def __str__(self) -> str:
+        return self._omnibor_id
+
+
+@serializable.serializable_class
 class Component(Dependable):
     """
     This is our internal representation of a Component within a Bom.
@@ -920,6 +982,8 @@ class Component(Dependable):
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
                  modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None,
+                 omnibor_ids: Optional[Iterable[OmniBorId]] = None,
+                 # swhid: Optional[Iterable[str]] = None,
                  # Deprecated in v1.6
                  author: Optional[str] = None,
                  ) -> None:
@@ -932,7 +996,6 @@ class Component(Dependable):
         self.supplier = supplier
         self.manufacturer = manufacturer
         self.authors = authors or []  # type:ignore[assignment]
-
         self.publisher = publisher
         self.group = group
         self.name = name
@@ -944,6 +1007,8 @@ class Component(Dependable):
         self.copyright = copyright
         self.cpe = cpe
         self.purl = purl
+        self.omnibor_ids = omnibor_ids or []  # type:ignore[assignment]
+        # self.swhid = swhid or []  # type:ignore[assignment]
         self.swid = swid
         self.modified = modified
         self.pedigree = pedigree
@@ -1072,7 +1137,7 @@ class Component(Dependable):
         return self._authors
 
     @authors.setter
-    def authors(self, authors: Iterable[OrganizationalEntity]) -> None:
+    def authors(self, authors: Iterable[OrganizationalContact]) -> None:
         self._authors = SortedSet(authors)
 
     @property
@@ -1291,11 +1356,50 @@ class Component(Dependable):
         self._purl = purl
 
     @property
+    @serializable.json_name('omniborId')
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'omniborId')
+    @serializable.xml_sequence(16)
+    def omnibor_ids(self) -> 'SortedSet[OmniBorId]':
+        """
+        Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification
+        defined at: https://www.iana.org/assignments/uri-schemes/prov/gitoid
+
+        Returns:
+            `Iterable[str]` or `None`
+        """
+
+        return self._omnibor_ids
+
+    @omnibor_ids.setter
+    def omnibor_ids(self, omnibor_ids: Iterable[OmniBorId]) -> None:
+        self._omnibor_ids = SortedSet(omnibor_ids)
+
+    # @property
+    # @serializable.view(SchemaVersion1Dot6)
+    # @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='swhid')
+    # @serializable.xml_sequence(17)
+    # def swhid(self) -> SortedSet[str]:
+    #     """
+    #     Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and
+    #     conform to the specification defined at:
+    #     https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html
+    #
+    #     Returns:
+    #         `Iterable[swhid]` if set else `None`
+    #     """
+    #     return self._swhid
+
+    # @swhid.setter
+    # def swhid(self, swhid: Iterable[str]) -> None:
+    #     self._swhid = SortedSet(swhid)
+    #
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(16)
+    @serializable.xml_sequence(18)
     def swid(self) -> Optional[Swid]:
         """
         Specifies metadata and content for ISO-IEC 19770-2 Software Identification (SWID) Tags.
@@ -1311,7 +1415,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot0)
-    @serializable.xml_sequence(17)
+    @serializable.xml_sequence(19)
     def modified(self) -> bool:
         return self._modified
 
@@ -1325,7 +1429,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(18)
+    @serializable.xml_sequence(20)
     def pedigree(self) -> Optional[Pedigree]:
         """
         Component pedigree is a way to document complex supply chain scenarios where components are created,
@@ -1347,7 +1451,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(19)
+    @serializable.xml_sequence(21)
     def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the component or to the project the component

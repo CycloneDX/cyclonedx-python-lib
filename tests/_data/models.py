@@ -52,6 +52,7 @@ from cyclonedx.model.component import (
     ComponentScope,
     ComponentType,
     Diff,
+    OmniBorId,
     Patch,
     PatchClassification,
     Pedigree,
@@ -122,6 +123,15 @@ def get_bom_with_component_setuptools_basic() -> Bom:
 def get_bom_with_component_setuptools_with_cpe() -> Bom:
     component = get_component_setuptools_simple()
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
+    return _make_bom(components=[component])
+
+
+def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
+    component = get_component_setuptools_simple()
+    component.manufacturer = get_org_entity_1()
+    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.omnibor_ids = [OmniBorId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
+    # component.swhid = 'swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2'
     return _make_bom(components=[component])
 
 
@@ -837,4 +847,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_licenses,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
+    get_bom_with_component_setuptools_with_v16_fields,
 }
