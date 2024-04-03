@@ -1,0 +1,20 @@
+{
+  "components": [
+    {
+      "name": "dummy-EXCLUDED",
+      "type": "library"
+    },
+    {
+      "name": "dummy-OPTIONAL",
+      "type": "library"
+    },
+    {
+      "name": "dummy-REQUIRED",
+      "type": "library"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

@@ -73,6 +73,9 @@
         <reference type="configuration">
           <url>tests/CONFIGURATION</url>
         </reference>
+        <reference type="other">
+          <url>tests/DIGITAL_SIGNATURE</url>
+        </reference>
         <reference type="distribution">
           <url>tests/DISTRIBUTION</url>
         </reference>
@@ -84,6 +87,9 @@
         </reference>
         <reference type="dynamic-analysis-report">
           <url>tests/DYNAMIC_ANALYSIS_REPORT</url>
+        </reference>
+        <reference type="other">
+          <url>tests/ELECTRONIC_SIGNATURE</url>
         </reference>
         <reference type="evidence">
           <url>tests/EVIDENCE</url>
@@ -127,6 +133,9 @@
         <reference type="release-notes">
           <url>tests/RELEASE_NOTES</url>
         </reference>
+        <reference type="other">
+          <url>tests/RFC_9166</url>
+        </reference>
         <reference type="risk-assessment">
           <url>tests/RISK_ASSESSMENT</url>
         </reference>
@@ -138,6 +147,9 @@
         </reference>
         <reference type="social">
           <url>tests/SOCIAL</url>
+        </reference>
+        <reference type="other">
+          <url>tests/SOURCE_DISTRIBUTION</url>
         </reference>
         <reference type="static-analysis-report">
           <url>tests/STATIC_ANALYSIS_REPORT</url>

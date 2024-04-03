@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+  <components>
+    <component type="library">
+      <publisher>CycloneDX</publisher>
+      <name>setuptools</name>
+      <version>50.3.2</version>
+      <description>This component is awesome</description>
+      <copyright>Apache 2.0 baby!</copyright>
+      <cpe>cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*</cpe>
+      <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+      <components>
+        <component type="library">
+          <name>setuptools</name>
+          <version>50.3.2</version>
+          <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+        </component>
+        <component type="library">
+          <name>toml</name>
+          <version>0.10.2</version>
+          <hashes/>
+          <purl>pkg:pypi/toml@0.10.2?extension=tar.gz</purl>
+        </component>
+      </components>
+    </component>
+  </components>
+</bom>

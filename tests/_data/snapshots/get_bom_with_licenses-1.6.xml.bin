@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+  <components>
+    <component type="library">
+      <name>c-with-SPDX</name>
+    </component>
+    <component type="library">
+      <name>c-with-expression</name>
+    </component>
+    <component type="library">
+      <name>c-with-name</name>
+    </component>
+  </components>
+</bom>

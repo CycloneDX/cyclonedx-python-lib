@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+  <components>
+    <component type="library">
+      <name>dummy-EXCLUDED</name>
+    </component>
+    <component type="library">
+      <name>dummy-OPTIONAL</name>
+    </component>
+    <component type="library">
+      <name>dummy-REQUIRED</name>
+    </component>
+  </components>
+</bom>

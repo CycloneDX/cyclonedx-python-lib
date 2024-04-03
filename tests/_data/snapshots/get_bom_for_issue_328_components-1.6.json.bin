@@ -1,0 +1,27 @@
+{
+  "components": [
+    {
+      "components": [
+        {
+          "components": [
+            {
+              "name": "C",
+              "type": "library",
+              "version": "1.0"
+            }
+          ],
+          "name": "B",
+          "type": "library",
+          "version": "1.0"
+        }
+      ],
+      "name": "A",
+      "type": "library",
+      "version": "0.1"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

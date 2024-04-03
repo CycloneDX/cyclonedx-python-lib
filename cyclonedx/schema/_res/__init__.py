@@ -49,6 +49,7 @@ BOM_JSON: Dict[SchemaVersion, Optional[str]] = {
 }
 
 BOM_JSON_STRICT: Dict[SchemaVersion, Optional[str]] = {
+    SchemaVersion.V1_6: BOM_JSON[SchemaVersion.V1_6],
     # >= v1.4 is already strict - no special file here
     SchemaVersion.V1_5: BOM_JSON[SchemaVersion.V1_5],
     SchemaVersion.V1_4: BOM_JSON[SchemaVersion.V1_4],

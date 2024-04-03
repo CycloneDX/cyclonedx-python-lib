@@ -36,6 +36,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
 )
 from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
@@ -341,6 +342,7 @@ class ComponentType(str, Enum):
     # see `_ComponentTypeSerializationHelper.__CASES` for view/case map
     APPLICATION = 'application'
     CONTAINER = 'container'  # Only supported in >= 1.2
+    CRYPTOGRAPHIC_ASSET = 'cryptographic-asset'  # Only supported in >= 1.6
     DATA = 'data'  # Only supported in >= 1.5
     DEVICE = 'device'
     DEVICE_DRIVER = 'device-driver'  # Only supported in >= 1.5
@@ -378,6 +380,9 @@ class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
         ComponentType.DEVICE_DRIVER,
         ComponentType.MACHINE_LEARNING_MODEL,
         ComponentType.PLATFORM,
+    }
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5] | {
+        ComponentType.CRYPTOGRAPHIC_ASSET,
     }
 
     @classmethod

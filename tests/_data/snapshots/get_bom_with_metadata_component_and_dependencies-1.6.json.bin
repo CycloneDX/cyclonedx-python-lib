@@ -1,0 +1,14 @@
+{
+  "components": [
+    {
+      "name": "toml",
+      "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+      "type": "library",
+      "version": "0.10.2"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

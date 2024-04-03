@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+  <components>
+    <component type="library">
+      <name>comp_a</name>
+      <version>1.0.0</version>
+    </component>
+    <component type="library">
+      <name>comp_b</name>
+      <version>1.0.0</version>
+      <components>
+        <component type="library">
+          <name>comp_c</name>
+          <version>1.0.0</version>
+        </component>
+      </components>
+    </component>
+  </components>
+</bom>

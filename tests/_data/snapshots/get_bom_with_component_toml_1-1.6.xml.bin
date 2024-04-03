@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+  <components>
+    <component type="library">
+      <name>toml</name>
+      <version>0.10.2</version>
+      <hashes/>
+      <purl>pkg:pypi/toml@0.10.2?extension=tar.gz</purl>
+    </component>
+  </components>
+</bom>

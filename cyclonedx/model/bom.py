@@ -59,19 +59,27 @@ class BomMetaData:
 
     def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
-                 manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[License]] = None,
                  properties: Optional[Iterable[Property]] = None,
-                 timestamp: Optional[datetime] = None) -> None:
+                 timestamp: Optional[datetime] = None,
+                 # Deprecated as of v1.6
+                 manufacture: Optional[OrganizationalEntity] = None) -> None:
         self.timestamp = timestamp or _get_now_utc()
         self.tools = tools or []  # type:ignore[assignment]
         self.authors = authors or []  # type:ignore[assignment]
         self.component = component
-        self.manufacture = manufacture
         self.supplier = supplier
         self.licenses = licenses or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
+
+        self.manufacture = manufacture
+        if manufacture:
+            warn(
+                "`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. "
+                "Please use `bom.metadata.component.manufacturer` instead.",
+                DeprecationWarning)
+
 
         if not tools:
             self.tools.add(ThisTool)

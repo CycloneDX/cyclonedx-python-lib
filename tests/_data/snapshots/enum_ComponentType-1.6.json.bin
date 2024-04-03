@@ -1,0 +1,60 @@
+{
+  "components": [
+    {
+      "name": "dummy APPLICATION",
+      "type": "application"
+    },
+    {
+      "name": "dummy CONTAINER",
+      "type": "container"
+    },
+    {
+      "name": "dummy CRYPTOGRAPHIC_ASSET",
+      "type": "cryptographic-asset"
+    },
+    {
+      "name": "dummy DATA",
+      "type": "data"
+    },
+    {
+      "name": "dummy DEVICE",
+      "type": "device"
+    },
+    {
+      "name": "dummy DEVICE_DRIVER",
+      "type": "device-driver"
+    },
+    {
+      "name": "dummy FILE",
+      "type": "file"
+    },
+    {
+      "name": "dummy FIRMWARE",
+      "type": "firmware"
+    },
+    {
+      "name": "dummy FRAMEWORK",
+      "type": "framework"
+    },
+    {
+      "name": "dummy LIBRARY",
+      "type": "library"
+    },
+    {
+      "name": "dummy MACHINE_LEARNING_MODEL",
+      "type": "machine-learning-model"
+    },
+    {
+      "name": "dummy OPERATING_SYSTEM",
+      "type": "operating-system"
+    },
+    {
+      "name": "dummy PLATFORM",
+      "type": "platform"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

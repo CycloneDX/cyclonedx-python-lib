@@ -48,6 +48,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
 )
 
 
@@ -508,10 +509,12 @@ class ExternalReferenceType(str, Enum):
     CODIFIED_INFRASTRUCTURE = 'codified-infrastructure'  # Only supported in >= 1.5
     COMPONENT_ANALYSIS_REPORT = 'component-analysis-report'  # Only supported in >= 1.5
     CONFIGURATION = 'configuration'  # Only supported in >= 1.5
+    DIGITAL_SIGNATURE = 'digital-signature'  # Only supported in >= 1.6
     DISTRIBUTION = 'distribution'
     DISTRIBUTION_INTAKE = 'distribution-intake'  # Only supported in >= 1.5
     DOCUMENTATION = 'documentation'
     DYNAMIC_ANALYSIS_REPORT = 'dynamic-analysis-report'  # Only supported in >= 1.5
+    ELECTRONIC_SIGNATURE = 'electronic-signature'  # Only supported in >= 1.6
     EVIDENCE = 'evidence'  # Only supported in >= 1.5
     EXPLOITABILITY_STATEMENT = 'exploitability-statement'  # Only supported in >= 1.5
     FORMULATION = 'formulation'  # Only supported in >= 1.5
@@ -525,11 +528,13 @@ class ExternalReferenceType(str, Enum):
     POAM = 'poam'  # Only supported in >= 1.5
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
     RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
+    RFC_9166 = 'rfc-9116'  # Only supported in >= 1.6
     RISK_ASSESSMENT = 'risk-assessment'  # Only supported in >= 1.5
     RUNTIME_ANALYSIS_REPORT = 'runtime-analysis-report'  # Only supported in >= 1.5
     SECURITY_CONTACT = 'security-contact'  # Only supported in >= 1.5
     STATIC_ANALYSIS_REPORT = 'static-analysis-report'  # Only supported in >= 1.5
     SOCIAL = 'social'
+    SOURCE_DISTRIBUTION = 'source-distribution'  # Only supported in >= 1.6
     SCM = 'vcs'
     SUPPORT = 'support'
     THREAT_MODEL = 'threat-model'  # Only supported in >= 1.5
@@ -590,6 +595,12 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
         ExternalReferenceType.QUALITY_METRICS,
         ExternalReferenceType.CODIFIED_INFRASTRUCTURE,
         ExternalReferenceType.POAM,
+    }
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5] | {
+        ExternalReferenceType.SOURCE_DISTRIBUTION,
+        ExternalReferenceType.ELECTRONIC_SIGNATURE,
+        ExternalReferenceType.DIGITAL_SIGNATURE,
+        ExternalReferenceType.RFC_9166,
     }
 
     @classmethod

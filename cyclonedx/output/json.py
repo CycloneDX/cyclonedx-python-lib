@@ -30,6 +30,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
 )
 from . import BaseOutput, BomRefDiscriminator
 
@@ -124,7 +125,14 @@ class JsonV1Dot5(Json, SchemaVersion1Dot5):
         return 'http://cyclonedx.org/schema/bom-1.5.schema.json'
 
 
+class JsonV1Dot6(Json, SchemaVersion1Dot6):
+
+    def _get_schema_uri(self) -> str:
+        return 'http://cyclonedx.org/schema/bom-1.6.schema.json'
+
+
 BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Json]] = {
+    SchemaVersion.V1_6: JsonV1Dot6,
     SchemaVersion.V1_5: JsonV1Dot5,
     SchemaVersion.V1_4: JsonV1Dot4,
     SchemaVersion.V1_3: JsonV1Dot3,

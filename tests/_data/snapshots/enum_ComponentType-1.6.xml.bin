@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+  <components>
+    <component type="application">
+      <name>dummy APPLICATION</name>
+    </component>
+    <component type="container">
+      <name>dummy CONTAINER</name>
+    </component>
+    <component type="cryptographic-asset">
+      <name>dummy CRYPTOGRAPHIC_ASSET</name>
+    </component>
+    <component type="data">
+      <name>dummy DATA</name>
+    </component>
+    <component type="device">
+      <name>dummy DEVICE</name>
+    </component>
+    <component type="device-driver">
+      <name>dummy DEVICE_DRIVER</name>
+    </component>
+    <component type="file">
+      <name>dummy FILE</name>
+    </component>
+    <component type="firmware">
+      <name>dummy FIRMWARE</name>
+    </component>
+    <component type="framework">
+      <name>dummy FRAMEWORK</name>
+    </component>
+    <component type="library">
+      <name>dummy LIBRARY</name>
+    </component>
+    <component type="machine-learning-model">
+      <name>dummy MACHINE_LEARNING_MODEL</name>
+    </component>
+    <component type="operating-system">
+      <name>dummy OPERATING_SYSTEM</name>
+    </component>
+    <component type="platform">
+      <name>dummy PLATFORM</name>
+    </component>
+  </components>
+</bom>

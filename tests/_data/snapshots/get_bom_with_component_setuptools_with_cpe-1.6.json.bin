@@ -1,0 +1,15 @@
+{
+  "components": [
+    {
+      "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
+      "name": "setuptools",
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "type": "library",
+      "version": "50.3.2"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}
