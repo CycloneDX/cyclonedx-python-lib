@@ -95,6 +95,24 @@
           }
         }
       ],
+      "manufacturer": {
+        "contact": [
+          {
+            "email": "someone@somewhere.tld",
+            "name": "A N Other",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "email": "paul.horton@owasp.org",
+            "name": "Paul Horton"
+          }
+        ],
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org",
+          "https://cyclonedx.org/docs"
+        ]
+      },
       "name": "setuptools",
       "pedigree": {
         "ancestors": [
@@ -320,7 +338,8 @@
         ],
         "name": "CycloneDX",
         "url": [
-          "https://cyclonedx.org"
+          "https://cyclonedx.org",
+          "https://cyclonedx.org/docs"
         ]
       },
       "swid": {
@@ -363,7 +382,8 @@
       ],
       "name": "CycloneDX",
       "url": [
-        "https://cyclonedx.org"
+        "https://cyclonedx.org",
+        "https://cyclonedx.org/docs"
       ]
     },
     "properties": [

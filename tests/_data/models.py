@@ -52,7 +52,7 @@ from cyclonedx.model.component import (
     ComponentScope,
     ComponentType,
     Diff,
-    OmniBorId,
+    OmniborId,
     Patch,
     PatchClassification,
     Pedigree,
@@ -130,7 +130,7 @@ def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
     component = get_component_setuptools_simple()
     component.manufacturer = get_org_entity_1()
     component.authors = [get_org_contact_1(), get_org_contact_2()]
-    component.omnibor_ids = [OmniBorId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
+    component.omnibor_ids = [OmniborId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
     # component.swhid = 'swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2'
     return _make_bom(components=[component])
 
@@ -276,7 +276,8 @@ def get_bom_just_complete_metadata() -> Bom:
     bom = _make_bom()
     bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
     bom.metadata.component = get_component_setuptools_complete()
-    bom.metadata.manufacture = get_org_entity_1()
+    bom.metadata.component.manufacturer = get_org_entity_1()
+    bom.metadata.manufacture = get_org_entity_1()  # Deprecated from v1.6 onwards
     bom.metadata.supplier = get_org_entity_2()
     bom.metadata.licenses = [DisjunctiveLicense(
         id='Apache-2.0',
@@ -572,7 +573,8 @@ def get_org_contact_2() -> OrganizationalContact:
 
 def get_org_entity_1() -> OrganizationalEntity:
     return OrganizationalEntity(
-        name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[get_org_contact_1(), get_org_contact_2()]
+        name='CycloneDX', urls=[XsUri('https://cyclonedx.org'), XsUri('https://cyclonedx.org/docs')],
+        contacts=[get_org_contact_1(), get_org_contact_2()]
     )
 
 

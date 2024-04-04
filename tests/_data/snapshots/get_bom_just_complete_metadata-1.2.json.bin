@@ -219,7 +219,8 @@
         ],
         "name": "CycloneDX",
         "url": [
-          "https://cyclonedx.org"
+          "https://cyclonedx.org",
+          "https://cyclonedx.org/docs"
         ]
       },
       "swid": {
@@ -249,7 +250,8 @@
       ],
       "name": "CycloneDX",
       "url": [
-        "https://cyclonedx.org"
+        "https://cyclonedx.org",
+        "https://cyclonedx.org/docs"
       ]
     },
     "supplier": {

@@ -50,6 +50,7 @@
       <supplier>
         <name>CycloneDX</name>
         <url>https://cyclonedx.org</url>
+        <url>https://cyclonedx.org/docs</url>
         <contact>
           <name>A N Other</name>
           <email>someone@somewhere.tld</email>
@@ -60,6 +61,20 @@
           <email>paul.horton@owasp.org</email>
         </contact>
       </supplier>
+      <manufacturer>
+        <name>CycloneDX</name>
+        <url>https://cyclonedx.org</url>
+        <url>https://cyclonedx.org/docs</url>
+        <contact>
+          <name>A N Other</name>
+          <email>someone@somewhere.tld</email>
+          <phone>+44 (0)1234 567890</phone>
+        </contact>
+        <contact>
+          <name>Paul Horton</name>
+          <email>paul.horton@owasp.org</email>
+        </contact>
+      </manufacturer>
       <author>Test Author</author>
       <publisher>CycloneDX</publisher>
       <name>setuptools</name>
@@ -273,6 +288,7 @@
     <manufacture>
       <name>CycloneDX</name>
       <url>https://cyclonedx.org</url>
+      <url>https://cyclonedx.org/docs</url>
       <contact>
         <name>A N Other</name>
         <email>someone@somewhere.tld</email>

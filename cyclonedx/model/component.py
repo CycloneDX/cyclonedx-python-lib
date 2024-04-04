@@ -873,7 +873,7 @@ class Swid:
 
 
 @serializable.serializable_class
-class OmniBorId(serializable.helpers.BaseHelper):
+class OmniborId(serializable.helpers.BaseHelper):
     """
     Helper class that allows us to perform validation on data strings that must conform to
     https://www.iana.org/assignments/uri-schemes/prov/gitoid.
@@ -883,7 +883,7 @@ class OmniBorId(serializable.helpers.BaseHelper):
     _VALID_OMNIBOR_ID_REGEX = re.compile(r'^gitoid:(blob|tree|commit|tag):sha(1|256):([a-z0-9]+)$')
 
     def __init__(self, id: str) -> None:
-        if OmniBorId._VALID_OMNIBOR_ID_REGEX.match(id) is None:
+        if OmniborId._VALID_OMNIBOR_ID_REGEX.match(id) is None:
             raise InvalidOmniBorIdException(
                 f'Supplied value "{id} does not meet format specification.'
             )
@@ -897,27 +897,27 @@ class OmniBorId(serializable.helpers.BaseHelper):
 
     @classmethod
     def serialize(cls, o: Any) -> str:
-        if isinstance(o, OmniBorId):
+        if isinstance(o, OmniborId):
             return str(o)
         raise SerializationOfUnexpectedValueException(
             f'Attempt to serialize a non-OmniBorId: {o!r}')
 
     @classmethod
-    def deserialize(cls, o: Any) -> 'OmniBorId':
+    def deserialize(cls, o: Any) -> 'OmniborId':
         try:
-            return OmniBorId(id=str(o))
+            return OmniborId(id=str(o))
         except ValueError as err:
             raise CycloneDxDeserializationException(
                 f'OmniBorId string supplied does not parse: {o!r}'
             ) from err
 
     def __eq__(self, other: Any) -> bool:
-        if isinstance(other, OmniBorId):
+        if isinstance(other, OmniborId):
             return hash(other) == hash(self)
         return False
 
     def __lt__(self, other: Any) -> bool:
-        if isinstance(other, OmniBorId):
+        if isinstance(other, OmniborId):
             return self._id < other._id
         return NotImplemented
 
@@ -984,7 +984,7 @@ class Component(Dependable):
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
                  modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None,
-                 omnibor_ids: Optional[Iterable[OmniBorId]] = None,
+                 omnibor_ids: Optional[Iterable[OmniborId]] = None,
                  # swhid: Optional[Iterable[str]] = None,
                  # Deprecated in v1.6
                  author: Optional[str] = None,
@@ -1362,9 +1362,9 @@ class Component(Dependable):
     @property
     @serializable.json_name('omniborId')
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'omniborId')
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='omniborId')
     @serializable.xml_sequence(16)
-    def omnibor_ids(self) -> 'SortedSet[OmniBorId]':
+    def omnibor_ids(self) -> 'SortedSet[OmniborId]':
         """
         Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification
         defined at: https://www.iana.org/assignments/uri-schemes/prov/gitoid
@@ -1376,7 +1376,7 @@ class Component(Dependable):
         return self._omnibor_ids
 
     @omnibor_ids.setter
-    def omnibor_ids(self, omnibor_ids: Iterable[OmniBorId]) -> None:
+    def omnibor_ids(self, omnibor_ids: Iterable[OmniborId]) -> None:
         self._omnibor_ids = SortedSet(omnibor_ids)
 
     # @property
@@ -1606,7 +1606,8 @@ class Component(Dependable):
             self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
             self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
             self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
-            tuple(self.components), self.evidence, self.release_notes, self.modified
+            tuple(self.components), self.evidence, self.release_notes, self.modified, tuple(self.authors),
+            tuple(self.omnibor_ids),
         ))
 
     def __repr__(self) -> str:

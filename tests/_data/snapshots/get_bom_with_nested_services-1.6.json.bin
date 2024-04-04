@@ -122,7 +122,8 @@
         ],
         "name": "CycloneDX",
         "url": [
-          "https://cyclonedx.org"
+          "https://cyclonedx.org",
+          "https://cyclonedx.org/docs"
         ]
       },
       "releaseNotes": {
@@ -204,7 +205,8 @@
             ],
             "name": "CycloneDX",
             "url": [
-              "https://cyclonedx.org"
+              "https://cyclonedx.org",
+              "https://cyclonedx.org/docs"
             ]
           },
           "version": "3.2.1",
@@ -240,7 +242,8 @@
             ],
             "name": "CycloneDX",
             "url": [
-              "https://cyclonedx.org"
+              "https://cyclonedx.org",
+              "https://cyclonedx.org/docs"
             ]
           },
           "version": "6.5.4"
