@@ -17,7 +17,7 @@
 import re
 from enum import Enum
 from os.path import exists
-from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Set, Type, Union
+from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
 from warnings import warn
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -29,8 +29,9 @@ from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import InvalidOmniBorIdException, NoPropertiesProvidedException
 from ..exception.serialization import (
+    CycloneDxDeserializationException,
     SerializationOfUnexpectedValueException,
-    SerializationOfUnsupportedComponentTypeException, CycloneDxDeserializationException,
+    SerializationOfUnsupportedComponentTypeException,
 )
 from ..schema.schema import (
     SchemaVersion1Dot0,
