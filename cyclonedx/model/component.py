@@ -27,7 +27,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
-from ..exception.model import InvalidOmniBorIdException, NoPropertiesProvidedException
+from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, NoPropertiesProvidedException
 from ..exception.serialization import (
     CycloneDxDeserializationException,
     SerializationOfUnexpectedValueException,
@@ -933,6 +933,65 @@ class OmniborId(serializable.helpers.BaseHelper):
 
 
 @serializable.serializable_class
+class Swhid(serializable.helpers.BaseHelper):
+    """
+    Helper class that allows us to perform validation on data strings that must conform to
+    https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html.
+
+    """
+
+    _VALID_SWHID_REGEX = re.compile(r'^swh:1:(cnp|rel|rev|dir|cnt):([0-9a-z]{40})(.*)?$')
+
+    def __init__(self, id: str) -> None:
+        if Swhid._VALID_SWHID_REGEX.match(id) is None:
+            raise InvalidSwhidException(
+                f'Supplied value "{id} does not meet format specification.'
+            )
+        self._id = id
+
+    @property
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
+    def id(self) -> str:
+        return self._id
+
+    @classmethod
+    def serialize(cls, o: Any) -> str:
+        if isinstance(o, Swhid):
+            return str(o)
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-Swhid: {o!r}')
+
+    @classmethod
+    def deserialize(cls, o: Any) -> 'Swhid':
+        try:
+            return Swhid(id=str(o))
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'Swhid string supplied does not parse: {o!r}'
+            ) from err
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, Swhid):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Swhid):
+            return self._id < other._id
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._id)
+
+    def __repr__(self) -> str:
+        return f'<Swhid {self._id}>'
+
+    def __str__(self) -> str:
+        return self._id
+
+
+@serializable.serializable_class
 class Component(Dependable):
     """
     This is our internal representation of a Component within a Bom.
@@ -986,7 +1045,7 @@ class Component(Dependable):
                  modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None,
                  omnibor_ids: Optional[Iterable[OmniborId]] = None,
-                 # swhid: Optional[Iterable[str]] = None,
+                 swhids: Optional[Iterable[Swhid]] = None,
                  # Deprecated in v1.6
                  author: Optional[str] = None,
                  ) -> None:
@@ -1011,7 +1070,7 @@ class Component(Dependable):
         self.cpe = cpe
         self.purl = purl
         self.omnibor_ids = omnibor_ids or []  # type:ignore[assignment]
-        # self.swhid = swhid or []  # type:ignore[assignment]
+        self.swhids = swhids or []  # type:ignore[assignment]
         self.swid = swid
         self.modified = modified
         self.pedigree = pedigree
@@ -1380,25 +1439,26 @@ class Component(Dependable):
     def omnibor_ids(self, omnibor_ids: Iterable[OmniborId]) -> None:
         self._omnibor_ids = SortedSet(omnibor_ids)
 
-    # @property
-    # @serializable.view(SchemaVersion1Dot6)
-    # @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='swhid')
-    # @serializable.xml_sequence(17)
-    # def swhid(self) -> SortedSet[str]:
-    #     """
-    #     Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and
-    #     conform to the specification defined at:
-    #     https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html
-    #
-    #     Returns:
-    #         `Iterable[swhid]` if set else `None`
-    #     """
-    #     return self._swhid
+    @property
+    @serializable.json_name('swhid')
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='swhid')
+    @serializable.xml_sequence(17)
+    def swhids(self) -> 'SortedSet[Swhid]':
+        """
+        Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and
+        conform to the specification defined at:
+        https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html
 
-    # @swhid.setter
-    # def swhid(self, swhid: Iterable[str]) -> None:
-    #     self._swhid = SortedSet(swhid)
-    #
+        Returns:
+            `Iterable[Swhid]` if set else `None`
+        """
+        return self._swhids
+
+    @swhids.setter
+    def swhids(self, swhids: Iterable[Swhid]) -> None:
+        self._swhids = SortedSet(swhids)
+
     @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)

@@ -73,6 +73,10 @@
       </licenses>
       <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
       <omniborId>gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64</omniborId>
+      <swhid>swh:1:cnt:4d99d2d18326621ccdd70f5ea66c2e2ac236ad8b;origin=https://gitorious.org/ocamlp3l/ocamlp3l_cvs.git;visit=swh:1:snp:d7f1b9eb7ccb596c2622c4780febaa02549830f9;anchor=swh:1:rev:2db189928c94d62a3b4757b3eec68f0a4d4113f0;path=/Examples/SimpleFarm/simplefarm.ml;lines=9-15</swhid>
+      <swhid>swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2</swhid>
+      <swhid>swh:1:cnt:f10371aa7b8ccabca8479196d6cd640676fd4a04;origin=https://github.com/web-platform-tests/wpt;visit=swh:1:snp:b37d435721bbd450624165f334724e3585346499;anchor=swh:1:rev:259d0612af038d14f2cd889a14a3adb6c9e96d96;path=/html/semantics/document-metadata/the-meta-element/pragma-directives/attr-meta-http-equiv-refresh/support/x%3Burl=foo/</swhid>
+      <swhid>swh:1:rel:22ece559cc7cc2364edc5e5593d63ae8bd229f9f</swhid>
     </component>
   </components>
   <dependencies>

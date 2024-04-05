@@ -53,6 +53,14 @@ class InvalidOmniBorIdException(CycloneDxModelException):
     pass
 
 
+class InvalidSwhidException(CycloneDxModelException):
+    """
+    Raised when a supplied value for an Swhid does not meet the format requirements
+    as defined at https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html.
+    """
+    pass
+
+
 class InvalidUriException(CycloneDxModelException):
     """
     Raised when a `str` is provided that needs to be a valid URI, but isn't.
