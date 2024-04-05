@@ -59,6 +59,26 @@ from cyclonedx.model.component import (
     Swhid,
     Swid,
 )
+from cyclonedx.model.crypto import (
+    AlgorithmProperties,
+    CertificateProperties,
+    CryptoAssetType,
+    CryptoCertificationLevel,
+    CryptoExecutionEnvironment,
+    CryptoFunction,
+    CryptoImplementationPlatform,
+    CryptoMode,
+    CryptoPadding,
+    CryptoPrimitive,
+    CryptoProperties,
+    ProtocolProperties,
+    ProtocolPropertiesCipherSuite,
+    ProtocolPropertiesType,
+    RelatedCryptoMaterialProperties,
+    RelatedCryptoMaterialSecuredBy,
+    RelatedCryptoMaterialState,
+    RelatedCryptoMaterialType,
+)
 from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
@@ -127,6 +147,127 @@ def get_bom_with_component_setuptools_with_cpe() -> Bom:
     return _make_bom(components=[component])
 
 
+def get_crypto_properties_algorithm() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.ALGORITHM,
+        algorithm_properties=AlgorithmProperties(
+            primitive=CryptoPrimitive.KEM,
+            parameter_set_identifier='a-parameter-set-id',
+            curve='9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj',
+            execution_environment=CryptoExecutionEnvironment.SOFTWARE_PLAIN_RAM,
+            implementation_platform=CryptoImplementationPlatform.GENERIC,
+            certification_levels=[
+                CryptoCertificationLevel.FIPS140_1_L1,
+                CryptoCertificationLevel.FIPS140_2_L3,
+                CryptoCertificationLevel.OTHER
+            ],
+            mode=CryptoMode.EC,
+            padding=CryptoPadding.PKCS7,
+            crypto_functions=[
+                CryptoFunction.SIGN,
+                CryptoFunction.UNKNOWN
+            ],
+            classical_security_level=2,
+            nist_quantum_security_level=2
+        ),
+        oid='an-oid-here'
+    )
+
+
+def get_crypto_properties_certificate() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.CERTIFICATE,
+        certificate_properties=CertificateProperties(
+            subject_name='cyclonedx.org',
+            issuer_name='Cloudflare Inc ECC CA-3',
+            not_valid_before=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
+                                      tzinfo=timezone.utc),
+            not_valid_after=datetime(year=2024, month=5, day=19, hour=0, minute=59, second=59, microsecond=999999,
+                                     tzinfo=timezone.utc),
+            signature_algorithm_ref=None,
+            subject_public_key_ref=None,
+            certificate_format='pem',
+            certificate_extension='csr'
+        ),
+        oid='an-oid-here'
+    )
+
+
+def get_crypto_properties_protocol() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.PROTOCOL,
+        protocol_properties=ProtocolProperties(
+            type=ProtocolPropertiesType.TLS,
+            version='1.3',
+            cipher_suites=[
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_128_GCM_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_128_GCM_SHA256'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_256_GCM_SHA384',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_256_GCM_SHA384'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_CHACHA20_POLY1305_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_CHACHA20_POLY1305_SHA256'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_128_CCM_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_128_CCM_SHA256'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_128_CCM_8_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_128_CCM_8_SHA256'
+                    ]
+                )
+            ],
+        ),
+        oid='an-oid-here'
+    )
+
+
+def get_crypto_properties_related_material() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.RELATED_CRYPTO_MATERIAL,
+        related_crypto_material_properties=RelatedCryptoMaterialProperties(
+            type=RelatedCryptoMaterialType.DIGEST,
+            id='some-identifier',
+            state=RelatedCryptoMaterialState.ACTIVE,
+            algorithm_ref=None,
+            creation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
+                                   tzinfo=timezone.utc),
+            activation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
+                                     tzinfo=timezone.utc),
+            update_date=None,
+            expiration_date=datetime(year=2024, month=5, day=19, hour=0, minute=59, second=59, microsecond=999999,
+                                     tzinfo=timezone.utc),
+            value='some-random-value',
+            size=32,
+            format='a-format',
+            secured_by=RelatedCryptoMaterialSecuredBy(
+                mechanism='hard-work',
+                algorithm_ref=None
+            )
+        ),
+        oid='an-oid-here'
+    )
+
+
 def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
     component = get_component_setuptools_simple()
     component.manufacturer = get_org_entity_1()
@@ -147,6 +288,21 @@ def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
               'support/x%3Burl=foo/')
     ]
     return _make_bom(components=[component])
+
+
+def get_component_crypto_asset_protocol_tls_v13(
+    bom_ref: Optional[str] = '26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec'
+) -> Component:
+    return Component(
+        name='TLS', version='v1.3', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_protocol(),
+        tags=['protocl', 'tls']
+    )
+
+
+def get_bom_v16_with_crypto() -> Bom:
+    return _make_bom(components=[get_component_crypto_asset_protocol_tls_v13()])
 
 
 def get_bom_with_component_setuptools_no_component_version() -> Bom:

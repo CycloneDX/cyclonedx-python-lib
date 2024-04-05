@@ -45,10 +45,26 @@ class InvalidLocaleTypeException(CycloneDxModelException):
     pass
 
 
+class InvalidNistQuantumSecurityLevelException(CycloneDxModelException):
+    """
+    Raised when an invalid value is provided for an NIST Quantum Security Level
+    as defined at https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization/
+    evaluation-criteria/security-(evaluation-criteria).
+    """
+    pass
+
+
 class InvalidOmniBorIdException(CycloneDxModelException):
     """
     Raised when a supplied value for an OmniBOR ID does not meet the format requirements
     as defined at https://www.iana.org/assignments/uri-schemes/prov/gitoid.
+    """
+    pass
+
+
+class InvalidRelatedCryptoMaterialSizeException(CycloneDxModelException):
+    """
+    Raised when the supplied size of a Related Crypto Material is negative.
     """
     pass
 

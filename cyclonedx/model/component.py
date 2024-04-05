@@ -57,6 +57,7 @@ from . import (
     _HashTypeRepositorySerializationHelper,
 )
 from .bom_ref import BomRef
+from .crypto import CryptoProperties
 from .dependency import Dependable
 from .issue import IssueType
 from .license import License, LicenseRepository
@@ -1044,8 +1045,8 @@ class Component(Dependable):
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
                  modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None,
-                 omnibor_ids: Optional[Iterable[OmniborId]] = None,
-                 swhids: Optional[Iterable[Swhid]] = None,
+                 omnibor_ids: Optional[Iterable[OmniborId]] = None, swhids: Optional[Iterable[Swhid]] = None,
+                 crypto_properties: Optional[CryptoProperties] = None, tags: Optional[Iterable[str]] = None,
                  # Deprecated in v1.6
                  author: Optional[str] = None,
                  ) -> None:
@@ -1058,6 +1059,7 @@ class Component(Dependable):
         self.supplier = supplier
         self.manufacturer = manufacturer
         self.authors = authors or []  # type:ignore[assignment]
+        self.author = author
         self.publisher = publisher
         self.group = group
         self.name = name
@@ -1079,13 +1081,15 @@ class Component(Dependable):
         self.components = components or []  # type:ignore[assignment]
         self.evidence = evidence
         self.release_notes = release_notes
+        self.crypto_properties = crypto_properties
+        self.tags = tags or []  # type:ignore[assignment]
 
-        self.author = author
+        if modified:
+            warn('`.component.modified` is deprecated from CycloneDX v1.3 onwards. '
+                 'Please use `@.pedigree` instead.', DeprecationWarning)
         if author:
-            warn(
-                '`.component.author` is deprecated from CycloneDX v1.6 onwards. '
-                'Please use `@.authors` or `@.manufacturer` instead.',
-                DeprecationWarning)
+            warn('`.component.author` is deprecated from CycloneDX v1.6 onwards. '
+                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
 
     @property
     @serializable.type_mapping(_ComponentTypeSerializationHelper)
@@ -1631,6 +1635,44 @@ class Component(Dependable):
     # @data.setter
     # def data(self, ...) -> None:
     #     ...  # TODO since CDX1.5
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(30)
+    def crypto_properties(self) -> Optional[CryptoProperties]:
+        """
+        Cryptographic assets have properties that uniquely define them and that make them actionable for further
+        reasoning. As an example, it makes a difference if one knows the algorithm family (e.g. AES) or the specific
+        variant or instantiation (e.g. AES-128-GCM). This is because the security level and the algorithm primitive
+        (authenticated encryption) is only defined by the definition of the algorithm variant. The presence of a weak
+        cryptographic algorithm like SHA1 vs. HMAC-SHA1 also makes a difference.
+
+        Returns:
+            `CryptoProperties` or `None`
+        """
+        return self._crypto_properties
+
+    @crypto_properties.setter
+    def crypto_properties(self, crypto_properties: Optional[CryptoProperties]) -> None:
+        self._crypto_properties = crypto_properties
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
+    @serializable.xml_sequence(31)
+    def tags(self) -> 'SortedSet[str]':
+        """
+        Textual strings that aid in discovery, search, and retrieval of the associated object.
+        Tags often serve as a way to group or categorize similar or related objects by various attributes.
+
+        Returns:
+            `Iterable[str]`
+        """
+        return self._tags
+
+    @tags.setter
+    def tags(self, tags: Iterable[str]) -> None:
+        self._tags = SortedSet(tags)
 
     def get_all_nested_components(self, include_self: bool = False) -> Set['Component']:
         components = set()

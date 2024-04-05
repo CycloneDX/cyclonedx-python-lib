@@ -1,0 +1,108 @@
+{
+  "components": [
+    {
+      "bom-ref": "26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "oid": "an-oid-here",
+        "protocolProperties": {
+          "cipherSuites": [
+            {
+              "identifiers": [
+                "TLS_AES_128_CCM_8_SHA256"
+              ],
+              "name": "TLS_AES_128_CCM_8_SHA256"
+            },
+            {
+              "identifiers": [
+                "TLS_AES_128_CCM_SHA256"
+              ],
+              "name": "TLS_AES_128_CCM_SHA256"
+            },
+            {
+              "identifiers": [
+                "TLS_AES_128_GCM_SHA256"
+              ],
+              "name": "TLS_AES_128_GCM_SHA256"
+            },
+            {
+              "identifiers": [
+                "TLS_AES_256_GCM_SHA384"
+              ],
+              "name": "TLS_AES_256_GCM_SHA384"
+            },
+            {
+              "identifiers": [
+                "TLS_CHACHA20_POLY1305_SHA256"
+              ],
+              "name": "TLS_CHACHA20_POLY1305_SHA256"
+            }
+          ],
+          "type": "tls",
+          "version": "1.3"
+        }
+      },
+      "name": "TLS",
+      "tags": [
+        "protocl",
+        "tls"
+      ],
+      "type": "cryptographic-asset",
+      "version": "v1.3"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "externalReferences": [
+          {
+            "type": "build-system",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+          },
+          {
+            "type": "distribution",
+            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+          },
+          {
+            "type": "documentation",
+            "url": "https://cyclonedx-python-library.readthedocs.io/"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+          },
+          {
+            "type": "license",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+          },
+          {
+            "type": "release-notes",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
+          }
+        ],
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}
