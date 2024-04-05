@@ -290,10 +290,10 @@ class AlgorithmProperties:
         self.curve = curve
         self.execution_environment = execution_environment
         self.implementation_platform = implementation_platform
-        self.certification_levels = certification_levels
+        self.certification_levels = certification_levels or []  # type:ignore[assignment]
         self.mode = mode
         self.padding = padding
-        self.crypto_functions = crypto_functions
+        self.crypto_functions = crypto_functions or []  # type:ignore[assignment]
         self.classical_security_level = classical_security_level
         self.nist_quantum_security_level = nist_quantum_security_level
 
@@ -686,16 +686,16 @@ class RelatedCryptoMaterialType(str, Enum):
     INITIALIZATION_VECTOR = 'initialization-vector'
     KEY = 'key'
     NONCE = 'nonce'
-    PASSWORD = 'password'
+    PASSWORD = 'password'  # nosec
     PRIVATE_KEY = 'private-key'
     PUBLIC_KEY = 'public-key'
     SALT = 'salt'
-    SECRET_KEY = 'secret-key'
+    SECRET_KEY = 'secret-key'  # nosec
     SEED = 'seed'
-    SHARED_SECRET = 'shared-secret'
+    SHARED_SECRET = 'shared-secret'  # nosec
     SIGNATURE = 'signature'
     TAG = 'tag'
-    TOKEN = 'token'
+    TOKEN = 'token'  # nosec
 
     OTHER = 'other'
     UNKNOWN = 'unknown'
@@ -968,7 +968,7 @@ class RelatedCryptoMaterialProperties:
 
     @size.setter
     def size(self, size: Optional[int]) -> None:
-        if size < 0:
+        if size and size < 0:
             raise InvalidRelatedCryptoMaterialSizeException('Size must be greater than zero')
         self._size = size
 
@@ -1272,7 +1272,7 @@ class ProtocolProperties:
                  ikev2_transform_types: Optional[Ikev2TransformTypes] = None) -> None:
         self.type = type
         self.version = version
-        self.cipher_suites = cipher_suites
+        self.cipher_suites = cipher_suites or []  # type:ignore[assignment]
         self.ikev2_transform_types = ikev2_transform_types
 
     @property
@@ -1375,7 +1375,7 @@ class CryptoProperties:
 
     @property
     @serializable.xml_sequence(10)
-    def asset_type(self) -> CryptoAssetType:
+    def asset_type(self) -> Optional[CryptoAssetType]:
         """
         Cryptographic assets occur in several forms. Algorithms and protocols are most commonly implemented in
         specialized cryptographic libraries. They may however also be 'hardcoded' in software components. Certificates
@@ -1388,7 +1388,7 @@ class CryptoProperties:
         return self._asset_type
 
     @asset_type.setter
-    def asset_type(self, asset_type: CryptoAssetType) -> None:
+    def asset_type(self, asset_type: Optional[CryptoAssetType]) -> None:
         self._asset_type = asset_type
 
     @property
