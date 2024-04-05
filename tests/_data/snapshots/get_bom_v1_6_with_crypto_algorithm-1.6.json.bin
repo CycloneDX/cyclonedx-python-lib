@@ -1,0 +1,91 @@
+{
+  "components": [
+    {
+      "bom-ref": "8182921e-0588-472e-b8f9-9c527c68f067",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-1-l1",
+            "fips140-2-l3",
+            "other"
+          ],
+          "classicalSecurityLevel": 2,
+          "cryptoFunctions": [
+            "sign",
+            "unknown"
+          ],
+          "curve": "9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "mode": "ecb",
+          "nistQuantumSecurityLevel": 2,
+          "padding": "pkcs7",
+          "parameterSetIdentifier": "a-parameter-set-id",
+          "primitive": "kem"
+        },
+        "assetType": "algorithm",
+        "oid": "an-oid-here"
+      },
+      "name": "My Algorithm",
+      "tags": [
+        "algorithm"
+      ],
+      "type": "cryptographic-asset",
+      "version": "1.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "8182921e-0588-472e-b8f9-9c527c68f067"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "externalReferences": [
+          {
+            "type": "build-system",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/actions"
+          },
+          {
+            "type": "distribution",
+            "url": "https://pypi.org/project/cyclonedx-python-lib/"
+          },
+          {
+            "type": "documentation",
+            "url": "https://cyclonedx-python-library.readthedocs.io/"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+          },
+          {
+            "type": "license",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE"
+          },
+          {
+            "type": "release-notes",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
+          }
+        ],
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

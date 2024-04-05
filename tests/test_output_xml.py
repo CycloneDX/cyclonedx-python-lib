@@ -24,7 +24,8 @@ from warnings import warn
 from ddt import ddt, idata, named_data, unpack
 
 from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
-from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException, \
+    InvalidSwhidException, InvalidOmniBorIdException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
@@ -61,12 +62,14 @@ class TestOutputXml(TestCase, SnapshotMixin):
     ))
     @unpack
     def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion) -> None:
-        bom = get_bom()
-        outputter = BY_SCHEMA_VERSION[sv](bom)
         with self.assertRaises(CycloneDxException) as error:
+            bom = get_bom()
+            outputter = BY_SCHEMA_VERSION[sv](bom)
             outputter.output_as_string()
         if isinstance(error.exception, (
             LicenseExpressionAlongWithOthersException,
+            InvalidOmniBorIdException,
+            InvalidSwhidException,
             UnknownComponentDependencyException,
         )):
             return None  # expected

@@ -161,7 +161,7 @@ def get_crypto_properties_algorithm() -> CryptoProperties:
                 CryptoCertificationLevel.FIPS140_2_L3,
                 CryptoCertificationLevel.OTHER
             ],
-            mode=CryptoMode.EC,
+            mode=CryptoMode.ECB,
             padding=CryptoPadding.PKCS7,
             crypto_functions=[
                 CryptoFunction.SIGN,
@@ -290,6 +290,47 @@ def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
     return _make_bom(components=[component])
 
 
+def get_bom_with_component_setuptools_with_v16_fields_omnibor_id_invalid() -> Bom:
+    component = get_component_setuptools_simple()
+    component.manufacturer = get_org_entity_1()
+    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.omnibor_ids = [OmniborId('gitoid:stuff:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
+    return _make_bom(components=[component])
+
+
+def get_bom_with_component_setuptools_with_v16_fields_swhid_invalid() -> Bom:
+    component = get_component_setuptools_simple()
+    component.manufacturer = get_org_entity_1()
+    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.omnibor_ids = [OmniborId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
+    component.swhids = [
+        Swhid('swh:1:cntp:94a9ed024d3859793618152ea559a168bbcbb5e2'),
+    ]
+    return _make_bom(components=[component])
+
+
+def get_component_crypto_asset_algorithm(
+    bom_ref: Optional[str] = '8182921e-0588-472e-b8f9-9c527c68f067'
+) -> Component:
+    return Component(
+        name='My Algorithm', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_algorithm(),
+        tags=['algorithm']
+    )
+
+
+def get_component_crypto_asset_certificate(
+    bom_ref: Optional[str] = '1f4ed1e4-582a-4fa0-8c38-1b4facc16972'
+) -> Component:
+    return Component(
+        name='My Certificate', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_certificate(),
+        tags=['certificate']
+    )
+
+
 def get_component_crypto_asset_protocol_tls_v13(
     bom_ref: Optional[str] = '26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec'
 ) -> Component:
@@ -301,8 +342,40 @@ def get_component_crypto_asset_protocol_tls_v13(
     )
 
 
-def get_bom_v1_6_with_crypto() -> Bom:
+def get_component_crypto_asset_related_material(
+    bom_ref: Optional[str] = '332b3cee-078c-4789-ab15-887565b6fac5'
+) -> Component:
+    return Component(
+        name='My Encrypted Thing', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_related_material(),
+        tags=['encrypted', 'data']
+    )
+
+
+def get_bom_v1_6_with_crypto_algorithm() -> Bom:
+    c = get_component_crypto_asset_algorithm()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
+
+
+def get_bom_v1_6_with_crypto_certificate() -> Bom:
+    c = get_component_crypto_asset_certificate()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
+
+
+def get_bom_v1_6_with_crypto_protocol() -> Bom:
     c = get_component_crypto_asset_protocol_tls_v13()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
+
+
+def get_bom_v1_6_with_crypto_related_material() -> Bom:
+    c = get_component_crypto_asset_related_material()
     b = _make_bom(components=[c])
     b.register_dependency(c)
     return b
