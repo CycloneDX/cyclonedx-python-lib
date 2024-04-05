@@ -24,8 +24,12 @@ from warnings import warn
 from ddt import ddt, idata, named_data, unpack
 
 from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
-from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException, \
-    InvalidSwhidException, InvalidOmniBorIdException
+from cyclonedx.exception.model import (
+    InvalidOmniBorIdException,
+    InvalidSwhidException,
+    LicenseExpressionAlongWithOthersException,
+    UnknownComponentDependencyException,
+)
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion

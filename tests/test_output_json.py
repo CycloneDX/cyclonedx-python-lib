@@ -25,8 +25,12 @@ from warnings import warn
 from ddt import data, ddt, idata, named_data, unpack
 
 from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
-from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException, \
-    InvalidSwhidException, InvalidOmniBorIdException
+from cyclonedx.exception.model import (
+    InvalidOmniBorIdException,
+    InvalidSwhidException,
+    LicenseExpressionAlongWithOthersException,
+    UnknownComponentDependencyException,
+)
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
