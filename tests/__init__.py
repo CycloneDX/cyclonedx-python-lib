@@ -159,8 +159,8 @@ _SNAME_EXT = {
     OutputFormat.XML: 'xml',
 }
 
-
 _LIMIT_GET_BOM_BY_VERSION_REGEX = re.compile(r'^get_bom_(?P<sv>v(?P<major_version>1)_(?P<minor_version>[0-6]))?(.*)$')
+
 
 def mksname(purpose: Union[Any], sv: SchemaVersion, f: OutputFormat) -> Optional[str]:
     purpose = purpose if isinstance(purpose, str) else purpose.__name__
