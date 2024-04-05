@@ -27,7 +27,7 @@ This set of classes represents cryptoPropertiesType Complex Type in the CycloneD
 
 from datetime import datetime
 from enum import Enum
-from typing import Iterable, Optional, Any
+from typing import Any, Iterable, Optional
 
 import serializable
 from sortedcontainers import SortedSet
