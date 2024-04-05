@@ -301,8 +301,11 @@ def get_component_crypto_asset_protocol_tls_v13(
     )
 
 
-def get_bom_v16_with_crypto() -> Bom:
-    return _make_bom(components=[get_component_crypto_asset_protocol_tls_v13()])
+def get_bom_v1_6_with_crypto() -> Bom:
+    c = get_component_crypto_asset_protocol_tls_v13()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
 
 
 def get_bom_with_component_setuptools_no_component_version() -> Bom:

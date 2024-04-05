@@ -14,7 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
+import re
 from os import getenv, path
 from os.path import join
 from typing import TYPE_CHECKING, Any, Generator, Iterable, List, Optional, TypeVar, Union
@@ -160,6 +160,19 @@ _SNAME_EXT = {
 }
 
 
-def mksname(purpose: Union[Any], sv: SchemaVersion, f: OutputFormat) -> str:
+_LIMIT_GET_BOM_BY_VERSION_REGEX = re.compile(r'^get_bom_(?P<sv>v(?P<major_version>1)_(?P<minor_version>[0-6]))?(.*)$')
+
+def mksname(purpose: Union[Any], sv: SchemaVersion, f: OutputFormat) -> Optional[str]:
     purpose = purpose if isinstance(purpose, str) else purpose.__name__
+    restrict_to_schema = _LIMIT_GET_BOM_BY_VERSION_REGEX.match(purpose)
+    if restrict_to_schema:
+        mg = restrict_to_schema.groupdict()
+        if mg.get('sv') is not None:
+            # Restrict only to the schema version in the purpose or greater
+            restricted_to_sv = SchemaVersion.from_version(f'{mg.get("major_version")}.{mg.get("minor_version")}')
+            if sv >= restricted_to_sv:
+                return f'{purpose}-{sv.to_version()}.{_SNAME_EXT[f]}'
+            else:
+                return None
+
     return f'{purpose}-{sv.to_version()}.{_SNAME_EXT[f]}'
