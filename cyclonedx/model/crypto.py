@@ -199,13 +199,13 @@ class CryptoMode(str, Enum):
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    CB = 'cb'
-    CC = 'cc'
-    CF = 'cf'
-    CT = 'ct'
-    EC = 'ec'
-    GC = 'gc'
-    OF = 'of'
+    CBC = 'cbc'
+    CCM = 'ccm'
+    CFB = 'cfb'
+    CTR = 'ctr'
+    ECB = 'ecb'
+    GCM = 'gcm'
+    OFB = 'ofb'
 
     OTHER = 'other'
     UNKNOWN = 'unknown'
