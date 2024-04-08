@@ -29,8 +29,8 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
-from . import AttachedText, XsUri
 from ..schema.schema import SchemaVersion1Dot6
+from . import AttachedText, XsUri
 
 
 @serializable.serializable_class(name='license')
