@@ -40,6 +40,12 @@
     <component type="library" bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz">
       <manufacturer>
         <name>CycloneDX</name>
+        <address>
+          <country>GB</country>
+          <region>England</region>
+          <locality>Cheshire</locality>
+          <streetAddress>100 Main Street</streetAddress>
+        </address>
         <url>https://cyclonedx.org</url>
         <url>https://cyclonedx.org/docs</url>
         <contact>

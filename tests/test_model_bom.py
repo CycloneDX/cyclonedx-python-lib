@@ -23,7 +23,8 @@ from uuid import uuid4
 from ddt import ddt, named_data
 
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException
-from cyclonedx.model import OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
+from cyclonedx.model import Property, ThisTool, Tool
+from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType

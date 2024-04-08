@@ -291,6 +291,12 @@
       },
       "scope": "required",
       "supplier": {
+        "address": {
+          "country": "GB",
+          "locality": "Cheshire",
+          "region": "England",
+          "streetAddress": "100 Main Street"
+        },
         "contact": [
           {
             "email": "someone@somewhere.tld",

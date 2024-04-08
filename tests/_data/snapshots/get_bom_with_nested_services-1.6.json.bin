@@ -109,6 +109,12 @@
         }
       ],
       "provider": {
+        "address": {
+          "country": "GB",
+          "locality": "Cheshire",
+          "region": "England",
+          "streetAddress": "100 Main Street"
+        },
         "contact": [
           {
             "email": "someone@somewhere.tld",
@@ -192,6 +198,12 @@
           "group": "no-group",
           "name": "second-nested-service",
           "provider": {
+            "address": {
+              "country": "GB",
+              "locality": "Cheshire",
+              "region": "England",
+              "streetAddress": "100 Main Street"
+            },
             "contact": [
               {
                 "email": "someone@somewhere.tld",
@@ -229,6 +241,12 @@
           "group": "what-group",
           "name": "yet-another-nested-service",
           "provider": {
+            "address": {
+              "country": "GB",
+              "locality": "Cheshire",
+              "region": "England",
+              "streetAddress": "100 Main Street"
+            },
             "contact": [
               {
                 "email": "someone@somewhere.tld",

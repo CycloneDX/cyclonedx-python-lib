@@ -39,11 +39,11 @@ from cyclonedx.model import (
     IdentifiableAction,
     Note,
     NoteText,
-    OrganizationalContact,
     Property,
     Tool,
     XsUri,
 )
+from cyclonedx.model.contact import OrganizationalContact
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from tests import reorder
 

@@ -37,7 +37,8 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
+from . import ExternalReference, Property, ThisTool, Tool
+from .contact import OrganizationalContact, OrganizationalEntity
 from .bom_ref import BomRef
 from .component import Component
 from .dependency import Dependable, Dependency

@@ -49,6 +49,12 @@
     <component type="library" bom-ref="my-specific-bom-ref-for-dings">
       <supplier>
         <name>CycloneDX</name>
+        <address>
+          <country>GB</country>
+          <region>England</region>
+          <locality>Cheshire</locality>
+          <streetAddress>100 Main Street</streetAddress>
+        </address>
         <url>https://cyclonedx.org</url>
         <url>https://cyclonedx.org/docs</url>
         <contact>
@@ -63,6 +69,12 @@
       </supplier>
       <manufacturer>
         <name>CycloneDX</name>
+        <address>
+          <country>GB</country>
+          <region>England</region>
+          <locality>Cheshire</locality>
+          <streetAddress>100 Main Street</streetAddress>
+        </address>
         <url>https://cyclonedx.org</url>
         <url>https://cyclonedx.org/docs</url>
         <contact>
@@ -287,6 +299,12 @@
     </component>
     <manufacture>
       <name>CycloneDX</name>
+      <address>
+        <country>GB</country>
+        <region>England</region>
+        <locality>Cheshire</locality>
+        <streetAddress>100 Main Street</streetAddress>
+      </address>
       <url>https://cyclonedx.org</url>
       <url>https://cyclonedx.org/docs</url>
       <contact>
@@ -301,6 +319,14 @@
     </manufacture>
     <supplier>
       <name>Cyclone DX</name>
+      <address>
+        <country>US</country>
+        <region>Texas</region>
+        <locality>Austin</locality>
+        <postOfficeBoxNumber>105a</postOfficeBoxNumber>
+        <postalCode>12345</postalCode>
+        <streetAddress>100 Yee-Ha Street</streetAddress>
+      </address>
       <url>https://cyclonedx.org/</url>
       <contact>
         <name>A N Other</name>

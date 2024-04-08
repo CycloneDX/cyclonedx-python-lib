@@ -50,12 +50,11 @@ from . import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
-    OrganizationalContact,
-    OrganizationalEntity,
     Property,
     XsUri,
     _HashTypeRepositorySerializationHelper,
 )
+from .contact import OrganizationalContact, OrganizationalEntity
 from .bom_ref import BomRef
 from .crypto import CryptoProperties
 from .dependency import Dependable

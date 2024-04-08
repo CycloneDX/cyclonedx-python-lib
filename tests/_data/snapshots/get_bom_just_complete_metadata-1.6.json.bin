@@ -96,6 +96,12 @@
         }
       ],
       "manufacturer": {
+        "address": {
+          "country": "GB",
+          "locality": "Cheshire",
+          "region": "England",
+          "streetAddress": "100 Main Street"
+        },
         "contact": [
           {
             "email": "someone@somewhere.tld",
@@ -325,6 +331,12 @@
       },
       "scope": "required",
       "supplier": {
+        "address": {
+          "country": "GB",
+          "locality": "Cheshire",
+          "region": "England",
+          "streetAddress": "100 Main Street"
+        },
         "contact": [
           {
             "email": "someone@somewhere.tld",
@@ -369,6 +381,12 @@
       }
     ],
     "manufacture": {
+      "address": {
+        "country": "GB",
+        "locality": "Cheshire",
+        "region": "England",
+        "streetAddress": "100 Main Street"
+      },
       "contact": [
         {
           "email": "someone@somewhere.tld",
@@ -397,6 +415,14 @@
       }
     ],
     "supplier": {
+      "address": {
+        "country": "US",
+        "locality": "Austin",
+        "postOfficeBoxNumber": "105a",
+        "postalCode": "12345",
+        "region": "Texas",
+        "streetAddress": "100 Yee-Ha Street"
+      },
       "contact": [
         {
           "email": "someone@somewhere.tld",

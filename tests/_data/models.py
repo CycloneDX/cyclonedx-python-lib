@@ -37,12 +37,11 @@ from cyclonedx.model import (
     HashType,
     Note,
     NoteText,
-    OrganizationalContact,
-    OrganizationalEntity,
     Property,
     Tool,
     XsUri,
 )
+from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
@@ -817,16 +816,26 @@ def get_org_contact_2() -> OrganizationalContact:
     return OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890')
 
 
+def get_postal_address_1() -> PostalAddress:
+    return PostalAddress(country='GB', region='England', locality='Cheshire', street_address='100 Main Street')
+
+
+def get_postal_address_2() -> PostalAddress:
+    return PostalAddress(country='US', region='Texas', locality='Austin', street_address='100 Yee-Ha Street',
+                         postal_code='12345', post_office_box_number='105a')
+
+
 def get_org_entity_1() -> OrganizationalEntity:
     return OrganizationalEntity(
         name='CycloneDX', urls=[XsUri('https://cyclonedx.org'), XsUri('https://cyclonedx.org/docs')],
-        contacts=[get_org_contact_1(), get_org_contact_2()]
+        contacts=[get_org_contact_1(), get_org_contact_2()], address=get_postal_address_1()
     )
 
 
 def get_org_entity_2() -> OrganizationalEntity:
     return OrganizationalEntity(
-        name='Cyclone DX', urls=[XsUri('https://cyclonedx.org/')], contacts=[get_org_contact_2()]
+        name='Cyclone DX', urls=[XsUri('https://cyclonedx.org/')], contacts=[get_org_contact_2()],
+        address=get_postal_address_2()
     )
 
 

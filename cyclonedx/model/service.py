@@ -31,7 +31,8 @@ from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
-from . import DataClassification, ExternalReference, OrganizationalEntity, Property, XsUri
+from . import DataClassification, ExternalReference, Property, XsUri
+from .contact import OrganizationalEntity
 from .bom_ref import BomRef
 from .dependency import Dependable
 from .license import License, LicenseRepository

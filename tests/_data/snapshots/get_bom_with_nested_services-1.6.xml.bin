@@ -44,6 +44,12 @@
     <service bom-ref="my-specific-bom-ref-for-my-first-service">
       <provider>
         <name>CycloneDX</name>
+        <address>
+          <country>GB</country>
+          <region>England</region>
+          <locality>Cheshire</locality>
+          <streetAddress>100 Main Street</streetAddress>
+        </address>
         <url>https://cyclonedx.org</url>
         <url>https://cyclonedx.org/docs</url>
         <contact>
@@ -91,6 +97,12 @@
         <service bom-ref="my-specific-bom-ref-for-second-nested-service">
           <provider>
             <name>CycloneDX</name>
+            <address>
+              <country>GB</country>
+              <region>England</region>
+              <locality>Cheshire</locality>
+              <streetAddress>100 Main Street</streetAddress>
+            </address>
             <url>https://cyclonedx.org</url>
             <url>https://cyclonedx.org/docs</url>
             <contact>
@@ -164,6 +176,12 @@
         <service bom-ref="yet-another-nested-service">
           <provider>
             <name>CycloneDX</name>
+            <address>
+              <country>GB</country>
+              <region>England</region>
+              <locality>Cheshire</locality>
+              <streetAddress>100 Main Street</streetAddress>
+            </address>
             <url>https://cyclonedx.org</url>
             <url>https://cyclonedx.org/docs</url>
             <contact>
