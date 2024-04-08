@@ -86,7 +86,7 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression
+from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression, LicenseExpressionAcknowledgement
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
@@ -946,7 +946,8 @@ def get_bom_with_licenses() -> Bom:
         ),
         components=[
             Component(name='c-with-expression', type=ComponentType.LIBRARY, bom_ref='C1',
-                      licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+                      licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
+                                                  acknowledgement=LicenseExpressionAcknowledgement.CONCLUDED)]),
             Component(name='c-with-SPDX', type=ComponentType.LIBRARY, bom_ref='C2',
                       licenses=[DisjunctiveLicense(id='Apache-2.0')]),
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
@@ -954,7 +955,8 @@ def get_bom_with_licenses() -> Bom:
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
-                    licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+                    licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
+                                                acknowledgement=LicenseExpressionAcknowledgement.DECLARED)]),
             Service(name='s-with-SPDX', bom_ref='S2',
                     licenses=[DisjunctiveLicense(id='Apache-2.0')]),
             Service(name='s-with-name', bom_ref='S3',

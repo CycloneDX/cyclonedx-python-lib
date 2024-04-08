@@ -61,7 +61,7 @@
     <component type="library" bom-ref="C1">
       <name>c-with-expression</name>
       <licenses>
-        <expression>Apache-2.0 OR MIT</expression>
+        <expression acknowledgement="concluded">Apache-2.0 OR MIT</expression>
       </licenses>
     </component>
     <component type="library" bom-ref="C3">
@@ -85,7 +85,7 @@
     <service bom-ref="S1">
       <name>s-with-expression</name>
       <licenses>
-        <expression>Apache-2.0 OR MIT</expression>
+        <expression acknowledgement="declared">Apache-2.0 OR MIT</expression>
       </licenses>
     </service>
     <service bom-ref="S3">
