@@ -1298,6 +1298,8 @@ class Component(Dependable):
 
     @version.setter
     def version(self, version: Optional[str]) -> None:
+        if version and len(version) > 1024:
+            warn('`.component.version`has a maximum length of 1024 from CycloneDX v1.6 onwards.', UserWarning)
         self._version = version
 
     @property
