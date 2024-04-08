@@ -16,6 +16,7 @@
       "bom-ref": "C1",
       "licenses": [
         {
+          "acknowledgement": "concluded",
           "expression": "Apache-2.0 OR MIT"
         }
       ],
@@ -138,6 +139,7 @@
       "bom-ref": "S1",
       "licenses": [
         {
+          "acknowledgement": "declared",
           "expression": "Apache-2.0 OR MIT"
         }
       ],
