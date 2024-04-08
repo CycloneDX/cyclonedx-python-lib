@@ -38,9 +38,9 @@ from ..schema.schema import (
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
 from . import ExternalReference, Property, ThisTool, Tool
-from .contact import OrganizationalContact, OrganizationalEntity
 from .bom_ref import BomRef
 from .component import Component
+from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .service import Service

@@ -14,7 +14,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Optional, Union, Any, Iterable
+from typing import Any, Iterable, Optional, Union
 
 import serializable
 from sortedcontainers import SortedSet
@@ -41,10 +41,8 @@ class PostalAddress:
                  region: Optional[str] = None, locality: Optional[str] = None,
                  post_office_box_number: Optional[str] = None, postal_code: Optional[str] = None,
                  street_address: Optional[str] = None) -> None:
-        if isinstance(bom_ref, BomRef):
-            self._bom_ref = bom_ref
-        else:
-            self._bom_ref = BomRef(value=bom_ref) if bom_ref else None
+        self._bom_ref = bom_ref if isinstance(bom_ref, BomRef) else BomRef(
+            value=bom_ref) if bom_ref else None
         self.country = country
         self.region = region
         self.locality = locality
@@ -57,7 +55,7 @@ class PostalAddress:
     @serializable.type_mapping(BomRefHelper)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
-    def bom_ref(self) -> BomRef:
+    def bom_ref(self) -> Optional[BomRef]:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
