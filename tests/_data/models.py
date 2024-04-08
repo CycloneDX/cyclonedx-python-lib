@@ -41,7 +41,6 @@ from cyclonedx.model import (
     Tool,
     XsUri,
 )
-from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
@@ -58,6 +57,7 @@ from cyclonedx.model.component import (
     Swhid,
     Swid,
 )
+from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
     CertificateProperties,

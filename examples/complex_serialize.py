@@ -23,9 +23,9 @@ from packageurl import PackageURL
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.factory.license import LicenseFactory
 from cyclonedx.model import XsUri
-from cyclonedx.model.contact import OrganizationalEntity
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
+from cyclonedx.model.contact import OrganizationalEntity
 from cyclonedx.output import make_outputter
 from cyclonedx.output.json import JsonV1Dot5
 from cyclonedx.schema import OutputFormat, SchemaVersion

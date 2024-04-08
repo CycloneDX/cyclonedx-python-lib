@@ -54,8 +54,8 @@ from . import (
     XsUri,
     _HashTypeRepositorySerializationHelper,
 )
-from .contact import OrganizationalContact, OrganizationalEntity
 from .bom_ref import BomRef
+from .contact import OrganizationalContact, OrganizationalEntity
 from .crypto import CryptoProperties
 from .dependency import Dependable
 from .issue import IssueType
