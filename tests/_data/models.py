@@ -37,8 +37,6 @@ from cyclonedx.model import (
     HashType,
     Note,
     NoteText,
-    OrganizationalContact,
-    OrganizationalEntity,
     Property,
     Tool,
     XsUri,
@@ -52,10 +50,33 @@ from cyclonedx.model.component import (
     ComponentScope,
     ComponentType,
     Diff,
+    OmniborId,
     Patch,
     PatchClassification,
     Pedigree,
+    Swhid,
     Swid,
+)
+from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
+from cyclonedx.model.crypto import (
+    AlgorithmProperties,
+    CertificateProperties,
+    CryptoAssetType,
+    CryptoCertificationLevel,
+    CryptoExecutionEnvironment,
+    CryptoFunction,
+    CryptoImplementationPlatform,
+    CryptoMode,
+    CryptoPadding,
+    CryptoPrimitive,
+    CryptoProperties,
+    ProtocolProperties,
+    ProtocolPropertiesCipherSuite,
+    ProtocolPropertiesType,
+    RelatedCryptoMaterialProperties,
+    RelatedCryptoMaterialSecuredBy,
+    RelatedCryptoMaterialState,
+    RelatedCryptoMaterialType,
 )
 from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.impact_analysis import (
@@ -65,7 +86,7 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression
+from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression, LicenseExpressionAcknowledgement
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
@@ -123,6 +144,240 @@ def get_bom_with_component_setuptools_with_cpe() -> Bom:
     component = get_component_setuptools_simple()
     component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
     return _make_bom(components=[component])
+
+
+def get_crypto_properties_algorithm() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.ALGORITHM,
+        algorithm_properties=AlgorithmProperties(
+            primitive=CryptoPrimitive.KEM,
+            parameter_set_identifier='a-parameter-set-id',
+            curve='9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj',
+            execution_environment=CryptoExecutionEnvironment.SOFTWARE_PLAIN_RAM,
+            implementation_platform=CryptoImplementationPlatform.GENERIC,
+            certification_levels=[
+                CryptoCertificationLevel.FIPS140_1_L1,
+                CryptoCertificationLevel.FIPS140_2_L3,
+                CryptoCertificationLevel.OTHER
+            ],
+            mode=CryptoMode.ECB,
+            padding=CryptoPadding.PKCS7,
+            crypto_functions=[
+                CryptoFunction.SIGN,
+                CryptoFunction.UNKNOWN
+            ],
+            classical_security_level=2,
+            nist_quantum_security_level=2
+        ),
+        oid='an-oid-here'
+    )
+
+
+def get_crypto_properties_certificate() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.CERTIFICATE,
+        certificate_properties=CertificateProperties(
+            subject_name='cyclonedx.org',
+            issuer_name='Cloudflare Inc ECC CA-3',
+            not_valid_before=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
+                                      tzinfo=timezone.utc),
+            not_valid_after=datetime(year=2024, month=5, day=19, hour=0, minute=59, second=59, microsecond=999999,
+                                     tzinfo=timezone.utc),
+            signature_algorithm_ref=None,
+            subject_public_key_ref=None,
+            certificate_format='pem',
+            certificate_extension='csr'
+        ),
+        oid='an-oid-here'
+    )
+
+
+def get_crypto_properties_protocol() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.PROTOCOL,
+        protocol_properties=ProtocolProperties(
+            type=ProtocolPropertiesType.TLS,
+            version='1.3',
+            cipher_suites=[
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_128_GCM_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_128_GCM_SHA256'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_256_GCM_SHA384',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_256_GCM_SHA384'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_CHACHA20_POLY1305_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_CHACHA20_POLY1305_SHA256'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_128_CCM_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_128_CCM_SHA256'
+                    ]
+                ),
+                ProtocolPropertiesCipherSuite(
+                    name='TLS_AES_128_CCM_8_SHA256',
+                    algorithms=None,
+                    identifiers=[
+                        'TLS_AES_128_CCM_8_SHA256'
+                    ]
+                )
+            ],
+        ),
+        oid='an-oid-here'
+    )
+
+
+def get_crypto_properties_related_material() -> CryptoProperties:
+    return CryptoProperties(
+        asset_type=CryptoAssetType.RELATED_CRYPTO_MATERIAL,
+        related_crypto_material_properties=RelatedCryptoMaterialProperties(
+            type=RelatedCryptoMaterialType.DIGEST,
+            id='some-identifier',
+            state=RelatedCryptoMaterialState.ACTIVE,
+            algorithm_ref=None,
+            creation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
+                                   tzinfo=timezone.utc),
+            activation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
+                                     tzinfo=timezone.utc),
+            update_date=None,
+            expiration_date=datetime(year=2024, month=5, day=19, hour=0, minute=59, second=59, microsecond=999999,
+                                     tzinfo=timezone.utc),
+            value='some-random-value',
+            size=32,
+            format='a-format',
+            secured_by=RelatedCryptoMaterialSecuredBy(
+                mechanism='hard-work',
+                algorithm_ref=None
+            )
+        ),
+        oid='an-oid-here'
+    )
+
+
+def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
+    component = get_component_setuptools_simple()
+    component.manufacturer = get_org_entity_1()
+    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.omnibor_ids = [OmniborId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
+    component.swhids = [
+        Swhid('swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2'),
+        Swhid('swh:1:rel:22ece559cc7cc2364edc5e5593d63ae8bd229f9f'),
+        Swhid('swh:1:cnt:4d99d2d18326621ccdd70f5ea66c2e2ac236ad8b;'
+              'origin=https://gitorious.org/ocamlp3l/ocamlp3l_cvs.git;'
+              'visit=swh:1:snp:d7f1b9eb7ccb596c2622c4780febaa02549830f9;'
+              'anchor=swh:1:rev:2db189928c94d62a3b4757b3eec68f0a4d4113f0;'
+              'path=/Examples/SimpleFarm/simplefarm.ml;lines=9-15'),
+        Swhid('swh:1:cnt:f10371aa7b8ccabca8479196d6cd640676fd4a04;origin=https://github.com/web-platform-tests/wpt;'
+              'visit=swh:1:snp:b37d435721bbd450624165f334724e3585346499;'
+              'anchor=swh:1:rev:259d0612af038d14f2cd889a14a3adb6c9e96d96;'
+              'path=/html/semantics/document-metadata/the-meta-element/pragma-directives/attr-meta-http-equiv-refresh/'
+              'support/x%3Burl=foo/')
+    ]
+    return _make_bom(components=[component])
+
+
+def get_bom_with_component_setuptools_with_v16_fields_omnibor_id_invalid() -> Bom:
+    component = get_component_setuptools_simple()
+    component.manufacturer = get_org_entity_1()
+    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.omnibor_ids = [OmniborId('gitoid:stuff:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
+    return _make_bom(components=[component])
+
+
+def get_bom_with_component_setuptools_with_v16_fields_swhid_invalid() -> Bom:
+    component = get_component_setuptools_simple()
+    component.manufacturer = get_org_entity_1()
+    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.omnibor_ids = [OmniborId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
+    component.swhids = [
+        Swhid('swh:1:cntp:94a9ed024d3859793618152ea559a168bbcbb5e2'),
+    ]
+    return _make_bom(components=[component])
+
+
+def get_component_crypto_asset_algorithm(
+    bom_ref: Optional[str] = '8182921e-0588-472e-b8f9-9c527c68f067'
+) -> Component:
+    return Component(
+        name='My Algorithm', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_algorithm(),
+        tags=['algorithm']
+    )
+
+
+def get_component_crypto_asset_certificate(
+    bom_ref: Optional[str] = '1f4ed1e4-582a-4fa0-8c38-1b4facc16972'
+) -> Component:
+    return Component(
+        name='My Certificate', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_certificate(),
+        tags=['certificate']
+    )
+
+
+def get_component_crypto_asset_protocol_tls_v13(
+    bom_ref: Optional[str] = '26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec'
+) -> Component:
+    return Component(
+        name='TLS', version='v1.3', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_protocol(),
+        tags=['protocl', 'tls']
+    )
+
+
+def get_component_crypto_asset_related_material(
+    bom_ref: Optional[str] = '332b3cee-078c-4789-ab15-887565b6fac5'
+) -> Component:
+    return Component(
+        name='My Encrypted Thing', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        bom_ref=bom_ref,
+        crypto_properties=get_crypto_properties_related_material(),
+        tags=['encrypted', 'data']
+    )
+
+
+def get_bom_v1_6_with_crypto_algorithm() -> Bom:
+    c = get_component_crypto_asset_algorithm()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
+
+
+def get_bom_v1_6_with_crypto_certificate() -> Bom:
+    c = get_component_crypto_asset_certificate()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
+
+
+def get_bom_v1_6_with_crypto_protocol() -> Bom:
+    c = get_component_crypto_asset_protocol_tls_v13()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
+
+
+def get_bom_v1_6_with_crypto_related_material() -> Bom:
+    c = get_component_crypto_asset_related_material()
+    b = _make_bom(components=[c])
+    b.register_dependency(c)
+    return b
 
 
 def get_bom_with_component_setuptools_no_component_version() -> Bom:
@@ -266,7 +521,8 @@ def get_bom_just_complete_metadata() -> Bom:
     bom = _make_bom()
     bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
     bom.metadata.component = get_component_setuptools_complete()
-    bom.metadata.manufacture = get_org_entity_1()
+    bom.metadata.component.manufacturer = get_org_entity_1()
+    bom.metadata.manufacture = get_org_entity_1()  # Deprecated from v1.6 onwards
     bom.metadata.supplier = get_org_entity_2()
     bom.metadata.licenses = [DisjunctiveLicense(
         id='Apache-2.0',
@@ -560,15 +816,26 @@ def get_org_contact_2() -> OrganizationalContact:
     return OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890')
 
 
+def get_postal_address_1() -> PostalAddress:
+    return PostalAddress(country='GB', region='England', locality='Cheshire', street_address='100 Main Street')
+
+
+def get_postal_address_2() -> PostalAddress:
+    return PostalAddress(country='US', region='Texas', locality='Austin', street_address='100 Yee-Ha Street',
+                         postal_code='12345', post_office_box_number='105a')
+
+
 def get_org_entity_1() -> OrganizationalEntity:
     return OrganizationalEntity(
-        name='CycloneDX', urls=[XsUri('https://cyclonedx.org')], contacts=[get_org_contact_1(), get_org_contact_2()]
+        name='CycloneDX', urls=[XsUri('https://cyclonedx.org'), XsUri('https://cyclonedx.org/docs')],
+        contacts=[get_org_contact_1(), get_org_contact_2()], address=get_postal_address_1()
     )
 
 
 def get_org_entity_2() -> OrganizationalEntity:
     return OrganizationalEntity(
-        name='Cyclone DX', urls=[XsUri('https://cyclonedx.org/')], contacts=[get_org_contact_2()]
+        name='Cyclone DX', urls=[XsUri('https://cyclonedx.org/')], contacts=[get_org_contact_2()],
+        address=get_postal_address_2()
     )
 
 
@@ -679,7 +946,8 @@ def get_bom_with_licenses() -> Bom:
         ),
         components=[
             Component(name='c-with-expression', type=ComponentType.LIBRARY, bom_ref='C1',
-                      licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+                      licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
+                                                  acknowledgement=LicenseExpressionAcknowledgement.CONCLUDED)]),
             Component(name='c-with-SPDX', type=ComponentType.LIBRARY, bom_ref='C2',
                       licenses=[DisjunctiveLicense(id='Apache-2.0')]),
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
@@ -687,7 +955,8 @@ def get_bom_with_licenses() -> Bom:
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
-                    licenses=[LicenseExpression(value='Apache-2.0 OR MIT')]),
+                    licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
+                                                acknowledgement=LicenseExpressionAcknowledgement.DECLARED)]),
             Service(name='s-with-SPDX', bom_ref='S2',
                     licenses=[DisjunctiveLicense(id='Apache-2.0')]),
             Service(name='s-with-name', bom_ref='S3',
@@ -837,4 +1106,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_licenses,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
+    get_bom_with_component_setuptools_with_v16_fields,
 }

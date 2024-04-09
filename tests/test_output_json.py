@@ -25,13 +25,18 @@ from warnings import warn
 from ddt import data, ddt, idata, named_data, unpack
 
 from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
-from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from cyclonedx.exception.model import (
+    InvalidOmniBorIdException,
+    InvalidSwhidException,
+    LicenseExpressionAlongWithOthersException,
+    UnknownComponentDependencyException,
+)
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
-from tests import SnapshotMixin, mksname
+from tests import SnapshotMixin, is_valid_for_schema_version, mksname
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
 UNSUPPORTED_SV = frozenset((SchemaVersion.V1_1, SchemaVersion.V1_0,))
@@ -48,10 +53,13 @@ class TestOutputJson(TestCase, SnapshotMixin):
         with self.assertRaises(FormatNotSupportedException):
             outputter.output_as_string()
 
-    @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
-                  for n, gb in all_get_bom_funct_valid
-                  for sv in SchemaVersion
-                  if sv not in UNSUPPORTED_SV))
+    @named_data(*(
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_valid
+        for sv in SchemaVersion
+        if sv not in UNSUPPORTED_SV
+        and is_valid_for_schema_version(gb, sv)
+    ))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
@@ -64,21 +72,26 @@ class TestOutputJson(TestCase, SnapshotMixin):
             warn('!!! skipped schema validation',
                  category=UserWarning, stacklevel=0)
         else:
-            self.assertIsNone(errors)
+            self.assertIsNone(errors, json)
         self.assertEqualSnapshot(json, snapshot_name)
 
-    @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
-                  for n, gb in all_get_bom_funct_invalid
-                  for sv in SchemaVersion
-                  if sv not in UNSUPPORTED_SV))
+    @named_data(*(
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_invalid
+        for sv in SchemaVersion
+        if sv not in UNSUPPORTED_SV
+        and is_valid_for_schema_version(gb, sv)
+    ))
     @unpack
     def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion) -> None:
-        bom = get_bom()
-        outputter = BY_SCHEMA_VERSION[sv](bom)
         with self.assertRaises(CycloneDxException) as error:
+            bom = get_bom()
+            outputter = BY_SCHEMA_VERSION[sv](bom)
             outputter.output_as_string()
         if isinstance(error.exception, (
             LicenseExpressionAlongWithOthersException,
+            InvalidOmniBorIdException,
+            InvalidSwhidException,
             UnknownComponentDependencyException,
         )):
             return None  # expected

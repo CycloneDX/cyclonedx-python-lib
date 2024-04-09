@@ -9,7 +9,7 @@ TEMP_DIR="$(mktemp -d)"
 LOCAL_PACKAGE="$TEMP_DIR/source_package.zip"
 
 wget -O "$LOCAL_PACKAGE" "$SOURCE_PACKAGE"
-for SCHEMA_VERSION in '1.5' '1.4' '1.3' '1.2' '1.1' '1.0'
+for SCHEMA_VERSION in '1.6' '1.5' '1.4' '1.3' '1.2' '1.1' '1.0'
 do
   unzip -d "$TEMP_DIR" "$LOCAL_PACKAGE" "$SOURCE_DIR/$SCHEMA_VERSION/*"
   rm -rf "${THIS_DIR:?}/$SCHEMA_VERSION"

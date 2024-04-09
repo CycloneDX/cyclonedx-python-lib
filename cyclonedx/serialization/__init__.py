@@ -104,7 +104,7 @@ class LicenseRepositoryHelper(BaseHelper):
             # mixed license expression and license? this is an invalid constellation according to schema!
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
-            return [{'expression': str(expression.value)}]
+            return [json_loads(expression.as_json(view_=view))]  # type:ignore[attr-defined]
         return [
             {'license': json_loads(
                 li.as_json(  # type:ignore[attr-defined]
@@ -123,7 +123,9 @@ class LicenseRepositoryHelper(BaseHelper):
                 repo.add(DisjunctiveLicense.from_json(  # type:ignore[attr-defined]
                     li['license']))
             elif 'expression' in li:
-                repo.add(LicenseExpression(li['expression']))
+                repo.add(LicenseExpression.from_json(  # type:ignore[attr-defined]
+                    li
+                ))
             else:
                 raise CycloneDxDeserializationException(f'unexpected: {li!r}')
         return repo

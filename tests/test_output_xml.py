@@ -24,12 +24,17 @@ from warnings import warn
 from ddt import ddt, idata, named_data, unpack
 
 from cyclonedx.exception import CycloneDxException, MissingOptionalDependencyException
-from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from cyclonedx.exception.model import (
+    InvalidOmniBorIdException,
+    InvalidSwhidException,
+    LicenseExpressionAlongWithOthersException,
+    UnknownComponentDependencyException,
+)
 from cyclonedx.model.bom import Bom
 from cyclonedx.output.xml import BY_SCHEMA_VERSION, Xml
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SnapshotMixin, mksname
+from tests import SnapshotMixin, is_valid_for_schema_version, mksname
 from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_valid, bom_all_same_bomref
 
 
@@ -37,12 +42,17 @@ from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_vali
 class TestOutputXml(TestCase, SnapshotMixin):
 
     @named_data(*(
-        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_valid for sv in SchemaVersion
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_valid
+        for sv in SchemaVersion
+        if is_valid_for_schema_version(gb, sv)
     ))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
         snapshot_name = mksname(get_bom, sv, OutputFormat.XML)
+        if snapshot_name is None:
+            return
         bom = get_bom()
         xml = BY_SCHEMA_VERSION[sv](bom).output_as_string(indent=2)
         try:
@@ -51,20 +61,25 @@ class TestOutputXml(TestCase, SnapshotMixin):
             warn('!!! skipped schema validation',
                  category=UserWarning, stacklevel=0)
         else:
-            self.assertIsNone(errors)
+            self.assertIsNone(errors, xml)
         self.assertEqualSnapshot(xml, snapshot_name)
 
     @named_data(*(
-        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_invalid
+        for sv in SchemaVersion
+        if is_valid_for_schema_version(gb, sv)
     ))
     @unpack
     def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion) -> None:
-        bom = get_bom()
-        outputter = BY_SCHEMA_VERSION[sv](bom)
         with self.assertRaises(CycloneDxException) as error:
+            bom = get_bom()
+            outputter = BY_SCHEMA_VERSION[sv](bom)
             outputter.output_as_string()
         if isinstance(error.exception, (
             LicenseExpressionAlongWithOthersException,
+            InvalidOmniBorIdException,
+            InvalidSwhidException,
             UnknownComponentDependencyException,
         )):
             return None  # expected

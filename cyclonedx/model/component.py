@@ -14,11 +14,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
-
+import re
 from enum import Enum
 from os.path import exists
 from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
+from warnings import warn
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
@@ -27,8 +27,12 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
-from ..exception.model import NoPropertiesProvidedException
-from ..exception.serialization import SerializationOfUnsupportedComponentTypeException
+from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, NoPropertiesProvidedException
+from ..exception.serialization import (
+    CycloneDxDeserializationException,
+    SerializationOfUnexpectedValueException,
+    SerializationOfUnsupportedComponentTypeException,
+)
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -36,6 +40,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
 )
 from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
 from . import (
@@ -45,12 +50,13 @@ from . import (
     HashAlgorithm,
     HashType,
     IdentifiableAction,
-    OrganizationalEntity,
     Property,
     XsUri,
     _HashTypeRepositorySerializationHelper,
 )
 from .bom_ref import BomRef
+from .contact import OrganizationalContact, OrganizationalEntity
+from .crypto import CryptoProperties
 from .dependency import Dependable
 from .issue import IssueType
 from .license import License, LicenseRepository
@@ -304,6 +310,7 @@ class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
 
     @classmethod
     def __normalize(cls, cs: ComponentScope, view: Type[serializable.ViewType]) -> Optional[str]:
@@ -341,6 +348,7 @@ class ComponentType(str, Enum):
     # see `_ComponentTypeSerializationHelper.__CASES` for view/case map
     APPLICATION = 'application'
     CONTAINER = 'container'  # Only supported in >= 1.2
+    CRYPTOGRAPHIC_ASSET = 'cryptographic-asset'  # Only supported in >= 1.6
     DATA = 'data'  # Only supported in >= 1.5
     DEVICE = 'device'
     DEVICE_DRIVER = 'device-driver'  # Only supported in >= 1.5
@@ -378,6 +386,9 @@ class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
         ComponentType.DEVICE_DRIVER,
         ComponentType.MACHINE_LEARNING_MODEL,
         ComponentType.PLATFORM,
+    }
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5] | {
+        ComponentType.CRYPTOGRAPHIC_ASSET,
     }
 
     @classmethod
@@ -680,6 +691,7 @@ class Pedigree:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     @serializable.xml_sequence(5)
     def patches(self) -> 'SortedSet[Patch]':
@@ -862,6 +874,124 @@ class Swid:
 
 
 @serializable.serializable_class
+class OmniborId(serializable.helpers.BaseHelper):
+    """
+    Helper class that allows us to perform validation on data strings that must conform to
+    https://www.iana.org/assignments/uri-schemes/prov/gitoid.
+
+    """
+
+    _VALID_OMNIBOR_ID_REGEX = re.compile(r'^gitoid:(blob|tree|commit|tag):sha(1|256):([a-z0-9]+)$')
+
+    def __init__(self, id: str) -> None:
+        if OmniborId._VALID_OMNIBOR_ID_REGEX.match(id) is None:
+            raise InvalidOmniBorIdException(
+                f'Supplied value "{id} does not meet format specification.'
+            )
+        self._id = id
+
+    @property
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
+    def id(self) -> str:
+        return self._id
+
+    @classmethod
+    def serialize(cls, o: Any) -> str:
+        if isinstance(o, OmniborId):
+            return str(o)
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-OmniBorId: {o!r}')
+
+    @classmethod
+    def deserialize(cls, o: Any) -> 'OmniborId':
+        try:
+            return OmniborId(id=str(o))
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'OmniBorId string supplied does not parse: {o!r}'
+            ) from err
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, OmniborId):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, OmniborId):
+            return self._id < other._id
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._id)
+
+    def __repr__(self) -> str:
+        return f'<OmniBorId {self._id}>'
+
+    def __str__(self) -> str:
+        return self._id
+
+
+@serializable.serializable_class
+class Swhid(serializable.helpers.BaseHelper):
+    """
+    Helper class that allows us to perform validation on data strings that must conform to
+    https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html.
+
+    """
+
+    _VALID_SWHID_REGEX = re.compile(r'^swh:1:(cnp|rel|rev|dir|cnt):([0-9a-z]{40})(.*)?$')
+
+    def __init__(self, id: str) -> None:
+        if Swhid._VALID_SWHID_REGEX.match(id) is None:
+            raise InvalidSwhidException(
+                f'Supplied value "{id} does not meet format specification.'
+            )
+        self._id = id
+
+    @property
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
+    def id(self) -> str:
+        return self._id
+
+    @classmethod
+    def serialize(cls, o: Any) -> str:
+        if isinstance(o, Swhid):
+            return str(o)
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-Swhid: {o!r}')
+
+    @classmethod
+    def deserialize(cls, o: Any) -> 'Swhid':
+        try:
+            return Swhid(id=str(o))
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'Swhid string supplied does not parse: {o!r}'
+            ) from err
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, Swhid):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Swhid):
+            return self._id < other._id
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._id)
+
+    def __repr__(self) -> str:
+        return f'<Swhid {self._id}>'
+
+    def __str__(self) -> str:
+        return self._id
+
+
+@serializable.serializable_class
 class Component(Dependable):
     """
     This is our internal representation of a Component within a Bom.
@@ -903,7 +1033,7 @@ class Component(Dependable):
     def __init__(self, *,
                  name: str, type: ComponentType = ComponentType.LIBRARY,
                  mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
-                 supplier: Optional[OrganizationalEntity] = None, author: Optional[str] = None,
+                 supplier: Optional[OrganizationalEntity] = None,
                  publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
                  description: Optional[str] = None, scope: Optional[ComponentScope] = None,
                  hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[License]] = None,
@@ -912,7 +1042,12 @@ class Component(Dependable):
                  properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
                  cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
                  components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
-                 modified: bool = False
+                 modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
+                 authors: Optional[Iterable[OrganizationalContact]] = None,
+                 omnibor_ids: Optional[Iterable[OmniborId]] = None, swhids: Optional[Iterable[Swhid]] = None,
+                 crypto_properties: Optional[CryptoProperties] = None, tags: Optional[Iterable[str]] = None,
+                 # Deprecated in v1.6
+                 author: Optional[str] = None,
                  ) -> None:
         self.type = type
         self.mime_type = mime_type
@@ -921,6 +1056,8 @@ class Component(Dependable):
         else:
             self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
         self.supplier = supplier
+        self.manufacturer = manufacturer
+        self.authors = authors or []  # type:ignore[assignment]
         self.author = author
         self.publisher = publisher
         self.group = group
@@ -933,6 +1070,8 @@ class Component(Dependable):
         self.copyright = copyright
         self.cpe = cpe
         self.purl = purl
+        self.omnibor_ids = omnibor_ids or []  # type:ignore[assignment]
+        self.swhids = swhids or []  # type:ignore[assignment]
         self.swid = swid
         self.modified = modified
         self.pedigree = pedigree
@@ -941,6 +1080,15 @@ class Component(Dependable):
         self.components = components or []  # type:ignore[assignment]
         self.evidence = evidence
         self.release_notes = release_notes
+        self.crypto_properties = crypto_properties
+        self.tags = tags or []  # type:ignore[assignment]
+
+        if modified:
+            warn('`.component.modified` is deprecated from CycloneDX v1.3 onwards. '
+                 'Please use `@.pedigree` instead.', DeprecationWarning)
+        if author:
+            warn('`.component.author` is deprecated from CycloneDX v1.6 onwards. '
+                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
 
     @property
     @serializable.type_mapping(_ComponentTypeSerializationHelper)
@@ -984,6 +1132,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -1003,6 +1152,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(1)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
@@ -1019,11 +1169,49 @@ class Component(Dependable):
         self._supplier = supplier
 
     @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(2)
+    def manufacturer(self) -> Optional[OrganizationalEntity]:
+        """
+        The organization that created the component.
+        Manufacturer is common in components created through automated processes.
+        Components created through manual means may have `@.authors` instead.
+
+        Returns:
+            `OrganizationalEntity` if set else `None`
+        """
+        return self._manufacturer
+
+    @manufacturer.setter
+    def manufacturer(self, manufacturer: Optional[OrganizationalEntity]) -> None:
+        self._manufacturer = manufacturer
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
+    @serializable.xml_sequence(3)
+    def authors(self) -> 'SortedSet[OrganizationalContact]':
+        """
+        The person(s) who created the component.
+        Authors are common in components created through manual processes.
+        Components created through automated means may have `@.manufacturer` instead.
+
+        Returns:
+            `Iterable[OrganizationalContact]` if set else `None`
+        """
+        return self._authors
+
+    @authors.setter
+    def authors(self, authors: Iterable[OrganizationalContact]) -> None:
+        self._authors = SortedSet(authors)
+
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(2)
+    @serializable.view(SchemaVersion1Dot6)  # todo: this is deprecated in v1.6?
+    @serializable.xml_sequence(4)
     def author(self) -> Optional[str]:
         """
         The person(s) or organization(s) that authored the component.
@@ -1038,7 +1226,7 @@ class Component(Dependable):
         self._author = author
 
     @property
-    @serializable.xml_sequence(3)
+    @serializable.xml_sequence(5)
     def publisher(self) -> Optional[str]:
         """
         The person(s) or organization(s) that published the component
@@ -1053,7 +1241,7 @@ class Component(Dependable):
         self._publisher = publisher
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.xml_sequence(6)
     def group(self) -> Optional[str]:
         """
         The grouping name or identifier. This will often be a shortened, single name of the company or project that
@@ -1072,7 +1260,7 @@ class Component(Dependable):
         self._group = group
 
     @property
-    @serializable.xml_sequence(5)
+    @serializable.xml_sequence(7)
     def name(self) -> str:
         """
         The name of the component.
@@ -1095,7 +1283,7 @@ class Component(Dependable):
     @serializable.include_none(SchemaVersion1Dot1, '')
     @serializable.include_none(SchemaVersion1Dot2, '')
     @serializable.include_none(SchemaVersion1Dot3, '')
-    @serializable.xml_sequence(6)
+    @serializable.xml_sequence(8)
     def version(self) -> Optional[str]:
         """
         The component version. The version should ideally comply with semantic versioning but is not enforced.
@@ -1110,10 +1298,12 @@ class Component(Dependable):
 
     @version.setter
     def version(self, version: Optional[str]) -> None:
+        if version and len(version) > 1024:
+            warn('`.component.version`has a maximum length of 1024 from CycloneDX v1.6 onwards.', UserWarning)
         self._version = version
 
     @property
-    @serializable.xml_sequence(7)
+    @serializable.xml_sequence(9)
     def description(self) -> Optional[str]:
         """
         Get the description of this Component.
@@ -1129,7 +1319,7 @@ class Component(Dependable):
 
     @property
     @serializable.type_mapping(_ComponentScopeSerializationHelper)
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(10)
     def scope(self) -> Optional[ComponentScope]:
         """
         Specifies the scope of the component.
@@ -1147,7 +1337,7 @@ class Component(Dependable):
 
     @property
     @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
-    @serializable.xml_sequence(9)
+    @serializable.xml_sequence(11)
     def hashes(self) -> 'SortedSet[HashType]':
         """
         Optional list of hashes that help specify the integrity of this Component.
@@ -1167,8 +1357,9 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.type_mapping(LicenseRepositoryHelper)
-    @serializable.xml_sequence(10)
+    @serializable.xml_sequence(12)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this Component is licensed.
@@ -1183,7 +1374,7 @@ class Component(Dependable):
         self._licenses = LicenseRepository(licenses)
 
     @property
-    @serializable.xml_sequence(11)
+    @serializable.xml_sequence(13)
     def copyright(self) -> Optional[str]:
         """
         An optional copyright notice informing users of the underlying claims to copyright ownership in a published
@@ -1199,7 +1390,7 @@ class Component(Dependable):
         self._copyright = copyright
 
     @property
-    @serializable.xml_sequence(12)
+    @serializable.xml_sequence(14)
     def cpe(self) -> Optional[str]:
         """
         Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification.
@@ -1216,7 +1407,7 @@ class Component(Dependable):
 
     @property
     @serializable.type_mapping(PackageUrl)
-    @serializable.xml_sequence(13)
+    @serializable.xml_sequence(15)
     def purl(self) -> Optional[PackageURL]:
         """
         Specifies the package-url (PURL).
@@ -1234,11 +1425,52 @@ class Component(Dependable):
         self._purl = purl
 
     @property
+    @serializable.json_name('omniborId')
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='omniborId')
+    @serializable.xml_sequence(16)
+    def omnibor_ids(self) -> 'SortedSet[OmniborId]':
+        """
+        Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification
+        defined at: https://www.iana.org/assignments/uri-schemes/prov/gitoid
+
+        Returns:
+            `Iterable[str]` or `None`
+        """
+
+        return self._omnibor_ids
+
+    @omnibor_ids.setter
+    def omnibor_ids(self, omnibor_ids: Iterable[OmniborId]) -> None:
+        self._omnibor_ids = SortedSet(omnibor_ids)
+
+    @property
+    @serializable.json_name('swhid')
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='swhid')
+    @serializable.xml_sequence(17)
+    def swhids(self) -> 'SortedSet[Swhid]':
+        """
+        Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and
+        conform to the specification defined at:
+        https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html
+
+        Returns:
+            `Iterable[Swhid]` if set else `None`
+        """
+        return self._swhids
+
+    @swhids.setter
+    def swhids(self, swhids: Iterable[Swhid]) -> None:
+        self._swhids = SortedSet(swhids)
+
+    @property
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(14)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(18)
     def swid(self) -> Optional[Swid]:
         """
         Specifies metadata and content for ISO-IEC 19770-2 Software Identification (SWID) Tags.
@@ -1253,8 +1485,8 @@ class Component(Dependable):
         self._swid = swid
 
     @property
-    @serializable.view(SchemaVersion1Dot0)
-    @serializable.xml_sequence(18)
+    @serializable.view(SchemaVersion1Dot0)  # todo: Deprecated in v1.3
+    @serializable.xml_sequence(19)
     def modified(self) -> bool:
         return self._modified
 
@@ -1268,7 +1500,8 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(16)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(20)
     def pedigree(self) -> Optional[Pedigree]:
         """
         Component pedigree is a way to document complex supply chain scenarios where components are created,
@@ -1289,8 +1522,9 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(17)
+    @serializable.xml_sequence(21)
     def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the component or to the project the component
@@ -1309,8 +1543,9 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(18)
+    @serializable.xml_sequence(22)
     def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -1327,7 +1562,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
-    @serializable.xml_sequence(19)
+    @serializable.xml_sequence(23)
     def components(self) -> "SortedSet['Component']":
         """
         A list of software and hardware components included in the parent component. This is not a dependency tree. It
@@ -1347,7 +1582,8 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(20)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(24)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
         Provides the ability to document evidence collected through various forms of extraction or analysis.
@@ -1364,7 +1600,8 @@ class Component(Dependable):
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.xml_sequence(21)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(25)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
         Specifies optional release notes.
@@ -1399,6 +1636,44 @@ class Component(Dependable):
     # @data.setter
     # def data(self, ...) -> None:
     #     ...  # TODO since CDX1.5
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(30)
+    def crypto_properties(self) -> Optional[CryptoProperties]:
+        """
+        Cryptographic assets have properties that uniquely define them and that make them actionable for further
+        reasoning. As an example, it makes a difference if one knows the algorithm family (e.g. AES) or the specific
+        variant or instantiation (e.g. AES-128-GCM). This is because the security level and the algorithm primitive
+        (authenticated encryption) is only defined by the definition of the algorithm variant. The presence of a weak
+        cryptographic algorithm like SHA1 vs. HMAC-SHA1 also makes a difference.
+
+        Returns:
+            `CryptoProperties` or `None`
+        """
+        return self._crypto_properties
+
+    @crypto_properties.setter
+    def crypto_properties(self, crypto_properties: Optional[CryptoProperties]) -> None:
+        self._crypto_properties = crypto_properties
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
+    @serializable.xml_sequence(31)
+    def tags(self) -> 'SortedSet[str]':
+        """
+        Textual strings that aid in discovery, search, and retrieval of the associated object.
+        Tags often serve as a way to group or categorize similar or related objects by various attributes.
+
+        Returns:
+            `Iterable[str]`
+        """
+        return self._tags
+
+    @tags.setter
+    def tags(self, tags: Iterable[str]) -> None:
+        self._tags = SortedSet(tags)
 
     def get_all_nested_components(self, include_self: bool = False) -> Set['Component']:
         components = set()
@@ -1435,7 +1710,8 @@ class Component(Dependable):
             self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
             self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
             self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
-            tuple(self.components), self.evidence, self.release_notes, self.modified
+            tuple(self.components), self.evidence, self.release_notes, self.modified, tuple(self.authors),
+            tuple(self.omnibor_ids),
         ))
 
     def __repr__(self) -> str:

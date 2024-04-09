@@ -34,11 +34,13 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, OrganizationalContact, OrganizationalEntity, Property, ThisTool, Tool
+from . import ExternalReference, Property, ThisTool, Tool
 from .bom_ref import BomRef
 from .component import Component
+from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .service import Service
@@ -59,19 +61,28 @@ class BomMetaData:
 
     def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
-                 manufacture: Optional[OrganizationalEntity] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[License]] = None,
                  properties: Optional[Iterable[Property]] = None,
-                 timestamp: Optional[datetime] = None) -> None:
+                 timestamp: Optional[datetime] = None,
+                 manufacturer: Optional[OrganizationalEntity] = None,
+                 # Deprecated as of v1.6
+                 manufacture: Optional[OrganizationalEntity] = None) -> None:
         self.timestamp = timestamp or _get_now_utc()
         self.tools = tools or []  # type:ignore[assignment]
         self.authors = authors or []  # type:ignore[assignment]
         self.component = component
-        self.manufacture = manufacture
         self.supplier = supplier
         self.licenses = licenses or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
+        self.manufacturer = manufacturer
+
+        self.manufacture = manufacture
+        if manufacture:
+            warn(
+                '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
+                'Please use `bom.metadata.component.manufacturer` instead.',
+                DeprecationWarning)
 
         if not tools:
             self.tools.add(ThisTool)
@@ -167,6 +178,11 @@ class BomMetaData:
         self._component = component
 
     @property
+    @serializable.view(SchemaVersion1Dot2)
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(6)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
@@ -179,10 +195,32 @@ class BomMetaData:
 
     @manufacture.setter
     def manufacture(self, manufacture: Optional[OrganizationalEntity]) -> None:
+        """
+        @todo Based on https://github.com/CycloneDX/specification/issues/346,
+              we should set this data on `.component.manufacturer`.
+        """
         self._manufacture = manufacture
 
     @property
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(7)
+    def manufacturer(self) -> Optional[OrganizationalEntity]:
+        """
+        The organization that created the BOM.
+        Manufacturer is common in BOMs created through automated processes. BOMs created through manual means may have
+        `@.authors` instead.
+
+        Returns:
+            `OrganizationalEntity` if set else `None`
+        """
+        return self._manufacturer
+
+    @manufacturer.setter
+    def manufacturer(self, manufacturer: Optional[OrganizationalEntity]) -> None:
+        self._manufacturer = manufacturer
+
+    @property
+    @serializable.xml_sequence(8)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
         The organization that supplied the component that the BOM describes.
@@ -202,8 +240,9 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.type_mapping(LicenseRepositoryHelper)
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(9)
     def licenses(self) -> LicenseRepository:
         """
         A optional list of statements about how this BOM is licensed.
@@ -221,8 +260,9 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(9)
+    @serializable.xml_sequence(10)
     def properties(self) -> 'SortedSet[Property]':
         """
         Provides the ability to document properties in a key/value store. This provides flexibility to include data not
@@ -248,7 +288,7 @@ class BomMetaData:
     def __hash__(self) -> int:
         return hash((
             tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
-            self.supplier, self.timestamp, tuple(self.tools)
+            self.supplier, self.timestamp, tuple(self.tools), self.manufacturer,
         ))
 
     def __repr__(self) -> str:
@@ -293,6 +333,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_attribute()
     def serial_number(self) -> UUID:
         """
@@ -322,6 +363,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(1)
     def metadata(self) -> BomMetaData:
         """
@@ -362,6 +404,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     @serializable.xml_sequence(3)
     def services(self) -> 'SortedSet[Service]':
@@ -383,6 +426,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(4)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -403,6 +447,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
     @serializable.xml_sequence(5)
     def dependencies(self) -> 'SortedSet[Dependency]':
@@ -441,6 +486,7 @@ class Bom:
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
     @serializable.xml_sequence(8)
     def vulnerabilities(self) -> 'SortedSet[Vulnerability]':

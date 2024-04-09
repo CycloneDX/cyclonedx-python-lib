@@ -20,7 +20,7 @@
 License related things
 """
 
-
+from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional, Union
 from warnings import warn
 
@@ -29,6 +29,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
+from ..schema.schema import SchemaVersion1Dot6
 from . import AttachedText, XsUri
 
 
@@ -159,6 +160,24 @@ class DisjunctiveLicense:
         return f'<License id={self._id!r}, name={self._name!r}>'
 
 
+@serializable.serializable_enum
+class LicenseExpressionAcknowledgement(str, Enum):
+    """
+    This is our internal representation of the `type_licenseAcknowledgementEnumerationType` ENUM type
+    within the CycloneDX standard.
+
+    .. note::
+        Introduced in CycloneDX v1.6
+
+    .. note::
+        See the CycloneDX Schema for hashType:
+        https://cyclonedx.org/docs/1.6/#type_licenseAcknowledgementEnumerationType
+    """
+
+    CONCLUDED = 'concluded'
+    DECLARED = 'declared'
+
+
 @serializable.serializable_class(name='expression')
 class LicenseExpression:
     """
@@ -170,8 +189,35 @@ class LicenseExpression:
         https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_expression
     """
 
-    def __init__(self, value: str) -> None:
+    def __init__(self, value: str,
+                 acknowledgement: Optional[LicenseExpressionAcknowledgement] = None) -> None:
         self._value = value
+        self.acknowledgement = acknowledgement
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_attribute()
+    def acknowledgement(self) -> Optional[LicenseExpressionAcknowledgement]:
+        """
+        Declared licenses and concluded licenses represent two different stages in the licensing process within
+        software development.
+
+        Declared licenses refer to the initial intention of the software authors regarding the
+        licensing terms under which their code is released. On the other hand, concluded licenses are the result of a
+        comprehensive analysis of the project's codebase to identify and confirm the actual licenses of the components
+        used, which may differ from the initially declared licenses. While declared licenses provide an upfront
+        indication of the licensing intentions, concluded licenses offer a more thorough understanding of the actual
+        licensing within a project, facilitating proper compliance and risk management. Observed licenses are defined
+        in evidence.licenses. Observed licenses form the evidence necessary to substantiate a concluded license.
+
+        Returns:
+            `LicenseExpressionAcknowledgement` or `None`
+        """
+        return self._acknowledgement
+
+    @acknowledgement.setter
+    def acknowledgement(self, acknowledgement: Optional[LicenseExpressionAcknowledgement]) -> None:
+        self._acknowledgement = acknowledgement
 
     @property
     @serializable.xml_name('.')

@@ -48,6 +48,7 @@ from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
 )
 
 
@@ -287,6 +288,7 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2]
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
 
     @classmethod
     def __prep(cls, hts: Iterable['HashType'], view: Type[serializable.ViewType]) -> Generator['HashType', None, None]:
@@ -508,10 +510,12 @@ class ExternalReferenceType(str, Enum):
     CODIFIED_INFRASTRUCTURE = 'codified-infrastructure'  # Only supported in >= 1.5
     COMPONENT_ANALYSIS_REPORT = 'component-analysis-report'  # Only supported in >= 1.5
     CONFIGURATION = 'configuration'  # Only supported in >= 1.5
+    DIGITAL_SIGNATURE = 'digital-signature'  # Only supported in >= 1.6
     DISTRIBUTION = 'distribution'
     DISTRIBUTION_INTAKE = 'distribution-intake'  # Only supported in >= 1.5
     DOCUMENTATION = 'documentation'
     DYNAMIC_ANALYSIS_REPORT = 'dynamic-analysis-report'  # Only supported in >= 1.5
+    ELECTRONIC_SIGNATURE = 'electronic-signature'  # Only supported in >= 1.6
     EVIDENCE = 'evidence'  # Only supported in >= 1.5
     EXPLOITABILITY_STATEMENT = 'exploitability-statement'  # Only supported in >= 1.5
     FORMULATION = 'formulation'  # Only supported in >= 1.5
@@ -525,11 +529,13 @@ class ExternalReferenceType(str, Enum):
     POAM = 'poam'  # Only supported in >= 1.5
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
     RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
+    RFC_9166 = 'rfc-9116'  # Only supported in >= 1.6
     RISK_ASSESSMENT = 'risk-assessment'  # Only supported in >= 1.5
     RUNTIME_ANALYSIS_REPORT = 'runtime-analysis-report'  # Only supported in >= 1.5
     SECURITY_CONTACT = 'security-contact'  # Only supported in >= 1.5
     STATIC_ANALYSIS_REPORT = 'static-analysis-report'  # Only supported in >= 1.5
     SOCIAL = 'social'
+    SOURCE_DISTRIBUTION = 'source-distribution'  # Only supported in >= 1.6
     SCM = 'vcs'
     SUPPORT = 'support'
     THREAT_MODEL = 'threat-model'  # Only supported in >= 1.5
@@ -590,6 +596,12 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
         ExternalReferenceType.QUALITY_METRICS,
         ExternalReferenceType.CODIFIED_INFRASTRUCTURE,
         ExternalReferenceType.POAM,
+    }
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5] | {
+        ExternalReferenceType.SOURCE_DISTRIBUTION,
+        ExternalReferenceType.ELECTRONIC_SIGNATURE,
+        ExternalReferenceType.DIGITAL_SIGNATURE,
+        ExternalReferenceType.RFC_9166,
     }
 
     @classmethod
@@ -782,6 +794,7 @@ class ExternalReference:
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     def hashes(self) -> 'SortedSet[HashType]':
         """
@@ -1057,177 +1070,6 @@ class Note:
 
 
 @serializable.serializable_class
-class OrganizationalContact:
-    """
-    This is our internal representation of the `organizationalContact` complex type that can be used in multiple places
-    within a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalContact
-    """
-
-    def __init__(self, *, name: Optional[str] = None, phone: Optional[str] = None, email: Optional[str] = None) -> None:
-        if not name and not phone and not email:
-            raise NoPropertiesProvidedException(
-                'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
-            )
-        self.name = name
-        self.email = email
-        self.phone = phone
-
-    @property
-    @serializable.xml_sequence(1)
-    def name(self) -> Optional[str]:
-        """
-        Get the name of the contact.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    @serializable.xml_sequence(2)
-    def email(self) -> Optional[str]:
-        """
-        Get the email of the contact.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._email
-
-    @email.setter
-    def email(self, email: Optional[str]) -> None:
-        self._email = email
-
-    @property
-    @serializable.xml_sequence(3)
-    def phone(self) -> Optional[str]:
-        """
-        Get the phone of the contact.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._phone
-
-    @phone.setter
-    def phone(self, phone: Optional[str]) -> None:
-        self._phone = phone
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, OrganizationalContact):
-            return hash(other) == hash(self)
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, OrganizationalContact):
-            return _ComparableTuple((
-                self.name, self.email, self.phone
-            )) < _ComparableTuple((
-                other.name, other.email, other.phone
-            ))
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash((self.name, self.phone, self.email))
-
-    def __repr__(self) -> str:
-        return f'<OrganizationalContact name={self.name}, email={self.email}, phone={self.phone}>'
-
-
-@serializable.serializable_class
-class OrganizationalEntity:
-    """
-    This is our internal representation of the `organizationalEntity` complex type that can be used in multiple places
-    within a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
-    """
-
-    def __init__(self, *, name: Optional[str] = None, urls: Optional[Iterable[XsUri]] = None,
-                 contacts: Optional[Iterable[OrganizationalContact]] = None) -> None:
-        if not name and not urls and not contacts:
-            raise NoPropertiesProvidedException(
-                'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
-            )
-        self.name = name
-        self.urls = urls or []  # type:ignore[assignment]
-        self.contacts = contacts or []  # type:ignore[assignment]
-
-    @property
-    @serializable.xml_sequence(1)
-    def name(self) -> Optional[str]:
-        """
-        Get the name of the organization.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    @serializable.json_name('url')
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'url')
-    @serializable.xml_sequence(2)
-    def urls(self) -> 'SortedSet[XsUri]':
-        """
-        Get a list of URLs of the organization. Multiple URLs are allowed.
-
-        Returns:
-            Set of `XsUri`
-        """
-        return self._urls
-
-    @urls.setter
-    def urls(self, urls: Iterable[XsUri]) -> None:
-        self._urls = SortedSet(urls)
-
-    @property
-    @serializable.json_name('contact')
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'contact')
-    @serializable.xml_sequence(3)
-    def contacts(self) -> 'SortedSet[OrganizationalContact]':
-        """
-        Get a list of contact person at the organization. Multiple contacts are allowed.
-
-        Returns:
-            Set of `OrganizationalContact`
-        """
-        return self._contacts
-
-    @contacts.setter
-    def contacts(self, contacts: Iterable[OrganizationalContact]) -> None:
-        self._contacts = SortedSet(contacts)
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, OrganizationalEntity):
-            return hash(other) == hash(self)
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, OrganizationalEntity):
-            return hash(self) < hash(other)
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash((self.name, tuple(self.urls), tuple(self.contacts)))
-
-    def __repr__(self) -> str:
-        return f'<OrganizationalEntity name={self.name}>'
-
-
-@serializable.serializable_class
 class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
@@ -1314,11 +1156,12 @@ class Tool:
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
     def external_references(self) -> 'SortedSet[ExternalReference]':
         """
-        External References provide a way to document systems, sites, and information that may be relevant but which
+        External References provides a way to document systems, sites, and information that may be relevant but which
         are not included with the BOM.
 
         Returns:

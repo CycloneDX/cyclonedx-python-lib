@@ -21,12 +21,15 @@ from ddt import ddt, idata, unpack
 
 from cyclonedx.schema import SchemaVersion
 
-SORTED_SV = (SchemaVersion.V1_5,
-             SchemaVersion.V1_4,
-             SchemaVersion.V1_3,
-             SchemaVersion.V1_2,
-             SchemaVersion.V1_1,
-             SchemaVersion.V1_0)
+SORTED_SV = (
+    SchemaVersion.V1_6,
+    SchemaVersion.V1_5,
+    SchemaVersion.V1_4,
+    SchemaVersion.V1_3,
+    SchemaVersion.V1_2,
+    SchemaVersion.V1_1,
+    SchemaVersion.V1_0
+)
 
 # do not use any value-comparisons or implicit hash-functions here !
 # just work with the position in tuple SORTED_SCHEMA_VERSIONS

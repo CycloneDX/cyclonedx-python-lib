@@ -41,6 +41,7 @@
       <supplier>
         <name>CycloneDX</name>
         <url>https://cyclonedx.org</url>
+        <url>https://cyclonedx.org/docs</url>
         <contact>
           <name>A N Other</name>
           <email>someone@somewhere.tld</email>

@@ -35,7 +35,7 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
-        snapshot_name = mksname(get_bom, SchemaVersion.V1_5, OutputFormat.XML)
+        snapshot_name = mksname(get_bom, SchemaVersion.V1_6, OutputFormat.XML)
         expected = get_bom()
         with open(self.getSnapshotFile(snapshot_name), 'r') as s:
             bom = Bom.from_xml(s)

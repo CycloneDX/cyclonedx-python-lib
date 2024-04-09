@@ -72,7 +72,8 @@
         ],
         "name": "CycloneDX",
         "url": [
-          "https://cyclonedx.org"
+          "https://cyclonedx.org",
+          "https://cyclonedx.org/docs"
         ]
       },
       "version": "1.2.3",

@@ -48,6 +48,10 @@
           "url": "tests/CONFIGURATION"
         },
         {
+          "type": "other",
+          "url": "tests/DIGITAL_SIGNATURE"
+        },
+        {
           "type": "distribution",
           "url": "tests/DISTRIBUTION"
         },
@@ -62,6 +66,10 @@
         {
           "type": "other",
           "url": "tests/DYNAMIC_ANALYSIS_REPORT"
+        },
+        {
+          "type": "other",
+          "url": "tests/ELECTRONIC_SIGNATURE"
         },
         {
           "type": "other",
@@ -121,6 +129,10 @@
         },
         {
           "type": "other",
+          "url": "tests/RFC_9166"
+        },
+        {
+          "type": "other",
           "url": "tests/RISK_ASSESSMENT"
         },
         {
@@ -134,6 +146,10 @@
         {
           "type": "social",
           "url": "tests/SOCIAL"
+        },
+        {
+          "type": "other",
+          "url": "tests/SOURCE_DISTRIBUTION"
         },
         {
           "type": "other",
