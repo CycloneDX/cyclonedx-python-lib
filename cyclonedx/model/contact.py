@@ -19,12 +19,12 @@ from typing import Any, Iterable, Optional, Union
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx._internal.compare import ComparableTuple as _ComparableTuple
-from cyclonedx.exception.model import NoPropertiesProvidedException
-from cyclonedx.model import XsUri
-from cyclonedx.model.bom_ref import BomRef
-from cyclonedx.schema.schema import SchemaVersion1Dot6
-from cyclonedx.serialization import BomRefHelper
+from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.model import NoPropertiesProvidedException
+from ..schema.schema import SchemaVersion1Dot6
+from ..serialization import BomRefHelper
+from . import XsUri
+from .bom_ref import BomRef
 
 
 @serializable.serializable_class
