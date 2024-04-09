@@ -2,6 +2,177 @@
 
 
 
+## v7.0.0-alpha.1 (2024-04-09)
+
+### Chore
+
+* chore(deps): bump `py-serializable` to &gt;=1.0.3 to resolve issues with deserialization to XML
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`0398051`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/039805174f76f2b228e4436e01752ec7893df30f))
+
+* chore(deps-dev): update autopep8 requirement from 2.0.4 to 2.1.0 (#573)
+
+Updates the requirements on [autopep8](https://github.com/hhatto/autopep8) to permit the latest version.
+- [Release notes](https://github.com/hhatto/autopep8/releases)
+- [Commits](https://github.com/hhatto/autopep8/compare/v2.0.4...v2.1.0)
+
+---
+updated-dependencies:
+- dependency-name: autopep8
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`35749c6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/35749c6cd18ebb8911b7cefac8a381d2ee57177a))
+
+* chore(deps-dev): update tox requirement from 4.14.1 to 4.14.2 (#574)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to permit the latest version.
+- [Release notes](https://github.com/tox-dev/tox/releases)
+- [Changelog](https://github.com/tox-dev/tox/blob/main/docs/changelog.rst)
+- [Commits](https://github.com/tox-dev/tox/compare/4.14.1...4.14.2)
+
+---
+updated-dependencies:
+- dependency-name: tox
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`d60f457`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d60f4570621246ce3d68e7f2e7f1aa831fb818f0))
+
+### Unknown
+
+* docs
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`42c6f25`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/42c6f253f0ee4a26230d7c119d622154f34d9795))
+
+* refactor
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b4a133a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b4a133ab916ce66a2a955ff1c9bc8596234a8b30))
+
+* style
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0843234`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/084323425fed612331c8f519e0a9ea7dfc4db636))
+
+* refactor
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`62c1d9a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/62c1d9a18c0e0a2efb8f215e68a46057177733a0))
+
+* reformat
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e10ffee`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e10ffee9c8cd4a2fcfe9f06fce5a1e5d4c8157fe))
+
+* reformat
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e0184cc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e0184cc4f098634076d11234b3cb949c5fba5bd9))
+
+* fetch test data for CDX 1.6
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`618a292`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/618a29258d576e96163be51511710232de16fe53))
+
+* fetch schema 1.6 JSON
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`289e81a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/289e81a7e65e39d3960a9e57e9e75079966f2db1))
+
+* update schema to published versions
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`0449de2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0449de2e87b6907e8712a504d1fb7a5ebf14fbc2))
+
+* more proper way to filter test cases
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`0a2ca2c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0a2ca2cfe42fd7306b69ea7c5df3d603bca5c43d))
+
+* add `acknowledgement` to `LicenseExpression` (#582)
+
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`ddd7847`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ddd7847c9a70faa353000e0cfeeb710d8df5bb93))
+
+* coding standards and typing
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`5c97c2d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5c97c2d22595479ae4b464baf04da9113c40a549))
+
+* raise `UserWarning` in `.component.version` has length &gt; 1024
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`abebd4f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/abebd4f63d23d95b1a126c710dabf924689a8695))
+
+* Added `address` to `organizationalEntity`
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`1327558`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1327558454b5f30f478783ae6cbbe4de73f1e011))
+
+* Added `address` to `organizationalEntity`
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`318d723`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/318d7238cab1805a3524413b6d10314065284cb7))
+
+* coding standards
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`d294620`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d294620e44d8498025fa98e99e65f3366eb66fc2))
+
+* corrected CryptoMode enum
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`71e4bc6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/71e4bc6fdc70c75187baf51a0e45fb21afe62d79))
+
+* additional tests to increase code coverage
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`f504daa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f504daadbb633a1e46ab474f97f76717c3358f0b))
+
+* coding standards
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`a3e09d1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a3e09d1bf0fde331e4e7e4685db4ed391c16d765))
+
+* test filtering
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`14f699f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/14f699fe3d9ea282c47e5a6947d783a6ca0304c5))
+
+* coding standards
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`b23df1f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b23df1fcbe9af2657e47a436d00409e75bfd6b18))
+
+* typing and bandit ignores
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`96a6dc9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/96a6dc9d5684589951dd3541b5cfa24160689b41))
+
+* add `.component.cryptoProperties` - with test failures for SchemaVersion &lt; 1.6
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`1e71dc3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1e71dc3da931500e1c332034cb244bf8230a7360))
+
+* properly added `.component.swhid`
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`ee80ea3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ee80ea32a91941349e0a81c1b4345a9fa73d6943))
+
+* imports tidied
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`875a338`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/875a338337a77fca3f51f41f65136dc5ec1ccdb9))
+
+* work to get deserialization tests passing
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`fdece59`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fdece595c5ffec1f47b0fe5f1fc57aad06677107))
+
+* work to add `.component.omniborid` - but tests deserialisation tests fail due to schema differences (`.component.author` not in 1.6)
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`af7b92b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/af7b92b0b4736610806504f73784333920592a45))
+
+* Deprecated `.component.author`. Added `.component.authors` and `.component.manufacturer`
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`6227c08`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6227c08af50c4c612baaedc64976652cd53e3a1b))
+
+* work on `bom.metadata` for v1.6
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`6192ed8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6192ed886faec9b51f080db628659d4246ebae70))
+
+* note `bom.metadata.manufacture` as deprecated
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`240dfaa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/240dfaa00a74c66e71d8d65864bf492b67d5310a))
+
+* re-generated test snapshots for v1.6
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`8132c3e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8132c3ec59084e84156eb815e9da9277541e2afd))
+
+* added draft v1.6 schemas and boilerplate for v1.6
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`41ca1e0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/41ca1e007c73692d5ada6af6318b0c5ff42fa11d))
+
+
 ## v6.4.4 (2024-03-18)
 
 ### Chore
