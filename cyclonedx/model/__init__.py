@@ -52,7 +52,7 @@ from ..schema.schema import (
 )
 
 # historically, contact-related classes were exposed in this module - se lets keep the API as is
-from .contact import OrganizationalContact, OrganizationalEntity
+from .contact import OrganizationalContact, OrganizationalEntity  # noqa: F401
 
 
 @serializable.serializable_enum
