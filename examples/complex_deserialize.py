@@ -33,9 +33,9 @@ if TYPE_CHECKING:
 # region JSON
 
 json_data = """{
-  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.5",
+  "specVersion": "1.6",
   "serialNumber": "urn:uuid:88fabcfa-7529-4ba2-8256-29bec0c03900",
   "version": 1,
   "metadata": {
@@ -145,7 +145,7 @@ json_data = """{
     }
   ]
 }"""
-my_json_validator = JsonStrictValidator(SchemaVersion.V1_5)
+my_json_validator = JsonStrictValidator(SchemaVersion.V1_6)
 try:
     validation_errors = my_json_validator.validate_str(json_data)
     if validation_errors:
@@ -165,7 +165,7 @@ print('', '=' * 30, '', sep='\n')
 # endregion XML
 
 xml_data = """<?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.5"
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6"
   serialNumber="urn:uuid:88fabcfa-7529-4ba2-8256-29bec0c03900"
   version="1"
 >
@@ -246,7 +246,7 @@ xml_data = """<?xml version="1.0" ?>
     </dependency>
   </dependencies>
 </bom>"""
-my_xml_validator: 'XmlValidator' = make_schemabased_validator(OutputFormat.XML, SchemaVersion.V1_5)
+my_xml_validator: 'XmlValidator' = make_schemabased_validator(OutputFormat.XML, SchemaVersion.V1_6)
 try:
     validation_errors = my_xml_validator.validate_str(xml_data)
     if validation_errors:
