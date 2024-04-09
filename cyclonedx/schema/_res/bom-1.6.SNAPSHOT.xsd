@@ -6176,7 +6176,7 @@ limitations under the License.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="assetType" minOccurs="0" maxOccurs="1">
+            <xs:element name="assetType" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
                         Cryptographic assets occur in several forms. Algorithms and protocols are most commonly
@@ -7177,7 +7177,7 @@ limitations under the License.
                                 </xs:restriction>
                             </xs:simpleType>
                         </xs:element>
-                        <xs:element name="version" minOccurs="0" maxOccurs="1">
+                        <xs:element name="version" type="xs:string" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
                                 <xs:documentation>
                                     The version of the protocol. Examples include 1.0, 1.2, and 1.99.
@@ -7281,7 +7281,7 @@ limitations under the License.
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:element>
-                                    <xs:element name="esn" type="xs:boolean" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="esn" type="xs:boolean" minOccurs="0" maxOccurs="1">
                                         <xs:annotation>
                                             <xs:documentation>
                                                 Specifies if an Extended Sequence Number (ESN) is used.
