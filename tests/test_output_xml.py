@@ -41,9 +41,12 @@ from tests._data.models import all_get_bom_funct_invalid, all_get_bom_funct_vali
 @ddt
 class TestOutputXml(TestCase, SnapshotMixin):
 
-    @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
-                  for n, gb in all_get_bom_funct_valid
-                  for sv in SchemaVersion if is_valid_for_schema_version(gb, sv)))
+    @named_data(*(
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_valid
+        for sv in SchemaVersion
+        if is_valid_for_schema_version(gb, sv)
+    ))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
@@ -62,7 +65,10 @@ class TestOutputXml(TestCase, SnapshotMixin):
         self.assertEqualSnapshot(xml, snapshot_name)
 
     @named_data(*(
-        (f'{n}-{sv.to_version()}', gb, sv) for n, gb in all_get_bom_funct_invalid for sv in SchemaVersion
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_invalid
+        for sv in SchemaVersion
+        if is_valid_for_schema_version(gb, sv)
     ))
     @unpack
     def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion) -> None:

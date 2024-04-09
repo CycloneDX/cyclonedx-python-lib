@@ -53,10 +53,13 @@ class TestOutputJson(TestCase, SnapshotMixin):
         with self.assertRaises(FormatNotSupportedException):
             outputter.output_as_string()
 
-    @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
-                  for n, gb in all_get_bom_funct_valid
-                  for sv in SchemaVersion
-                  if sv not in UNSUPPORTED_SV and is_valid_for_schema_version(gb, sv)))
+    @named_data(*(
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_valid
+        for sv in SchemaVersion
+        if sv not in UNSUPPORTED_SV
+        and is_valid_for_schema_version(gb, sv)
+    ))
     @unpack
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
@@ -72,10 +75,13 @@ class TestOutputJson(TestCase, SnapshotMixin):
             self.assertIsNone(errors, json)
         self.assertEqualSnapshot(json, snapshot_name)
 
-    @named_data(*((f'{n}-{sv.to_version()}', gb, sv)
-                  for n, gb in all_get_bom_funct_invalid
-                  for sv in SchemaVersion
-                  if sv not in UNSUPPORTED_SV))
+    @named_data(*(
+        (f'{n}-{sv.to_version()}', gb, sv)
+        for n, gb in all_get_bom_funct_invalid
+        for sv in SchemaVersion
+        if sv not in UNSUPPORTED_SV
+        and is_valid_for_schema_version(gb, sv)
+    ))
     @unpack
     def test_invalid(self, get_bom: Callable[[], Bom], sv: SchemaVersion) -> None:
         with self.assertRaises(CycloneDxException) as error:
