@@ -51,6 +51,9 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 
+# historically, contact-related classes were exposed in this module - se lets keep the API as is
+from .contact import OrganizationalContact, OrganizationalEntity
+
 
 @serializable.serializable_enum
 class DataFlow(str, Enum):
