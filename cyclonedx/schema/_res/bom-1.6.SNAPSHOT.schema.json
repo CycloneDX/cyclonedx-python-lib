@@ -72,7 +72,7 @@
       "items": {"$ref": "#/definitions/dependency"},
       "uniqueItems": true,
       "title": "Dependencies",
-      "description": "Provides the ability to document dependency relationships."
+      "description": "Provides the ability to document dependency relationships including provided & implemented components."
     },
     "compositions": {
       "type": "array",
@@ -966,19 +966,19 @@
         "cpe": {
           "type": "string",
           "title": "Common Platform Enumeration (CPE)",
-          "description": "Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. See [https://nvd.nist.gov/products/cpe](https://nvd.nist.gov/products/cpe)",
+          "description": "Asserts the identity of the component using CPE. The CPE must conform to the CPE 2.2 or 2.3 specification. See [https://nvd.nist.gov/products/cpe](https://nvd.nist.gov/products/cpe). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "examples": ["cpe:2.3:a:acme:component_framework:-:*:*:*:*:*:*:*"]
         },
         "purl": {
           "type": "string",
           "title": "Package URL (purl)",
-          "description": "Specifies the package-url (purl). The purl, if specified, MUST be valid and conform to the specification defined at: [https://github.com/package-url/purl-spec](https://github.com/package-url/purl-spec)",
+          "description": "Asserts the identity of the component using package-url (purl). The purl, if specified, MUST be valid and conform to the specification defined at: [https://github.com/package-url/purl-spec](https://github.com/package-url/purl-spec). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "examples": ["pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar"]
         },
         "omniborId": {
           "type": "array",
           "title": "OmniBOR Artifact Identifier (gitoid)",
-          "description": "Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification defined at: [https://www.iana.org/assignments/uri-schemes/prov/gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid)",
+          "description": "Asserts the identity of the component using the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification defined at: [https://www.iana.org/assignments/uri-schemes/prov/gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "items": { "type": "string" },
           "examples": [
             "gitoid:blob:sha1:a94a8fe5ccb19ba61c4c0873d391e987982fbbd3",
@@ -988,14 +988,14 @@
         "swhid": {
           "type": "array",
           "title": "SoftWare Heritage Identifier",
-          "description": "Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and conform to the specification defined at: [https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html](https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html)",
+          "description": "Asserts the identity of the component using the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and conform to the specification defined at: [https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html](https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "items": { "type": "string" },
           "examples": ["swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2"]
         },
         "swid": {
           "$ref": "#/definitions/swid",
           "title": "SWID Tag",
-          "description": "Specifies metadata and content for [ISO-IEC 19770-2 Software Identification (SWID) Tags](https://www.iso.org/standard/65666.html)."
+          "description": "Asserts the identity of the component using [ISO-IEC 19770-2 Software Identification (SWID) Tags](https://www.iso.org/standard/65666.html). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity."
         },
         "modified": {
           "type": "boolean",
@@ -1245,7 +1245,7 @@
           "description": "An optional identifier which can be used to reference the license elsewhere in the BOM. Every bom-ref MUST be unique within the BOM.\nValue SHOULD not start with the BOM-Link intro 'urn:cdx:' to avoid conflicts with BOM-Links."
         },
         "id": {
-          "$ref": "spdx.schema.json",
+          "$ref": "spdx.SNAPSHOT.schema.json",
           "title": "License ID (SPDX)",
           "description": "A valid SPDX license ID",
           "examples": ["Apache-2.0"]
@@ -1828,7 +1828,7 @@
     "dependency": {
       "type": "object",
       "title": "Dependency",
-      "description": "Defines the direct dependencies of a component or service. Components or services that do not have their own dependencies MUST be declared as empty elements within the graph. Components or services that are not represented in the dependency graph MAY have unknown dependencies. It is RECOMMENDED that implementations assume this to be opaque and not an indicator of an object being dependency-free. It is RECOMMENDED to leverage compositions to indicate unknown dependency graphs.",
+      "description": "Defines the direct dependencies of a component, service, or the components provided/implemented by a given component. Components or services that do not have their own dependencies MUST be declared as empty elements within the graph. Components or services that are not represented in the dependency graph MAY have unknown dependencies. It is RECOMMENDED that implementations assume this to be opaque and not an indicator of an object being dependency-free. It is RECOMMENDED to leverage compositions to indicate unknown dependency graphs.",
       "required": [
         "ref"
       ],
@@ -5011,7 +5011,7 @@
       }
     },
     "signature": {
-      "$ref": "jsf-0.82.schema.json#/definitions/signature",
+      "$ref": "jsf-0.82.SNAPSHOT.schema.json#/definitions/signature",
       "title": "Signature",
       "description": "Enveloped signature in [JSON Signature Format (JSF)](https://cyberphone.github.io/doc/security/jsf.html)."
     },
@@ -5020,6 +5020,9 @@
       "title": "Cryptographic Properties",
       "description": "Cryptographic assets have properties that uniquely define them and that make them actionable for further reasoning. As an example, it makes a difference if one knows the algorithm family (e.g. AES) or the specific variant or instantiation (e.g. AES-128-GCM). This is because the security level and the algorithm primitive (authenticated encryption) are only defined by the definition of the algorithm variant. The presence of a weak cryptographic algorithm like SHA1 vs. HMAC-SHA1 also makes a difference.",
       "additionalProperties": false,
+      "required": [
+        "assetType"
+      ],
       "properties": {
         "assetType": {
           "type": "string",

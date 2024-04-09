@@ -59,7 +59,7 @@ _DEFAULTS_WITH_PATTERN_RE = re.compile(r'\s+"default": "",(?![^}]*?"pattern": "\
 _DEFAULTS_WITH_PATERN_REPL = r''
 
 BOM_JSON_LAX = {
-    'versions': ['1.5', '1.4', '1.3', '1.2'],
+    'versions': ['1.6', '1.5', '1.4', '1.3', '1.2'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.schema.json',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.schema.json'),
     'replace': [
