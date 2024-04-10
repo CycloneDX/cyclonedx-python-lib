@@ -310,7 +310,8 @@ class Bom:
                  serial_number: Optional[UUID] = None, version: int = 1,
                  metadata: Optional[BomMetaData] = None,
                  dependencies: Optional[Iterable[Dependency]] = None,
-                 vulnerabilities: Optional[Iterable[Vulnerability]] = None) -> None:
+                 vulnerabilities: Optional[Iterable[Vulnerability]] = None,
+                 properties: Optional[Iterable[Property]] = None) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 
@@ -325,6 +326,7 @@ class Bom:
         self.external_references = external_references or []  # type:ignore[assignment]
         self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
         self.dependencies = dependencies or []  # type:ignore[assignment]
+        self.properties = properties or []  # type:ignore[assignment]
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -364,7 +366,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.xml_sequence(1)
+    @serializable.xml_sequence(10)
     def metadata(self) -> BomMetaData:
         """
         Get our internal metadata object for this Bom.
@@ -385,7 +387,7 @@ class Bom:
     @serializable.include_none(SchemaVersion1Dot0)
     @serializable.include_none(SchemaVersion1Dot1)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'component')
-    @serializable.xml_sequence(2)
+    @serializable.xml_sequence(20)
     def components(self) -> 'SortedSet[Component]':
         """
         Get all the Components currently in this Bom.
@@ -406,7 +408,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
-    @serializable.xml_sequence(3)
+    @serializable.xml_sequence(30)
     def services(self) -> 'SortedSet[Service]':
         """
         Get all the Services currently in this Bom.
@@ -428,7 +430,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(4)
+    @serializable.xml_sequence(40)
     def external_references(self) -> 'SortedSet[ExternalReference]':
         """
         Provides the ability to document external references related to the BOM or to the project the BOM describes.
@@ -449,7 +451,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
-    @serializable.xml_sequence(5)
+    @serializable.xml_sequence(50)
     def dependencies(self) -> 'SortedSet[Dependency]':
         return self._dependencies
 
@@ -470,25 +472,35 @@ class Bom:
     # def compositions(self, ...) -> None:
     #     ...  # TODO Since CDX 1.3
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot3)
-    # @serializable.view(SchemaVersion1Dot4)
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(7)
-    # def properties(self) -> ...:
-    #     ... # TODO Since CDX 1.3
-    #
-    # @properties.setter
-    # def properties(self, ...) -> None:
-    #     ...  # TODO Since CDX 1.3
+    @property
+    # @serializable.view(SchemaVersion1Dot3) @todo: Update py-serializable to support view by OutputFormat filtering
+    # @serializable.view(SchemaVersion1Dot4) @todo: Update py-serializable to support view by OutputFormat filtering
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(70)
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a name/value store. This provides flexibility to include data
+        not officially supported in the standard without having to use additional namespaces or create extensions.
+        Property names of interest to the general public are encouraged to be registered in the CycloneDX Property
+        Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy. Formal registration is OPTIONAL.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
 
     @property
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(80)
     def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
         """
         Get all the Vulnerabilities in this BOM.
@@ -682,7 +694,8 @@ class Bom:
     def __hash__(self) -> int:
         return hash((
             self.serial_number, self.version, self.metadata, tuple(self.components), tuple(self.services),
-            tuple(self.external_references), tuple(self.vulnerabilities), tuple(self.dependencies)
+            tuple(self.external_references), tuple(self.dependencies), tuple(self.properties),
+            tuple(self.vulnerabilities),
         ))
 
     def __repr__(self) -> str:

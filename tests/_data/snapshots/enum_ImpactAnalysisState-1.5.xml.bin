@@ -36,6 +36,10 @@
       </tool>
     </tools>
   </metadata>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
   <vulnerabilities>
     <vulnerability bom-ref="vuln-wit-state-EXPLOITABLE">
       <id>vuln-wit-state-EXPLOITABLE</id>

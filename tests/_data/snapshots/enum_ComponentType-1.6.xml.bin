@@ -92,4 +92,8 @@
     <dependency ref="typed-OPERATING_SYSTEM"/>
     <dependency ref="typed-PLATFORM"/>
   </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
 </bom>
