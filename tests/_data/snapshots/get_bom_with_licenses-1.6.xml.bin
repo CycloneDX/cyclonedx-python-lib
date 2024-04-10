@@ -106,4 +106,8 @@
     <dependency ref="S3"/>
     <dependency ref="my-app"/>
   </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
 </bom>

@@ -70,4 +70,8 @@
       <dependency ref="component-A"/>
     </dependency>
   </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
 </bom>

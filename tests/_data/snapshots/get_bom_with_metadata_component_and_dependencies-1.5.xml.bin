@@ -72,4 +72,8 @@
     </dependency>
     <dependency ref="pkg:pypi/toml@0.10.2?extension=tar.gz"/>
   </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
 </bom>

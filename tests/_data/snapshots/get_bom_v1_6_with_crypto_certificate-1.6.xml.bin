@@ -60,4 +60,8 @@
   <dependencies>
     <dependency ref="1f4ed1e4-582a-4fa0-8c38-1b4facc16972"/>
   </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
 </bom>

@@ -133,6 +133,7 @@ def _make_bom(**kwargs: Any) -> Bom:
     bom = Bom(**kwargs)
     bom.serial_number = BOM_SERIAL_NUMBER
     bom.metadata.timestamp = BOM_TIMESTAMP
+    bom.properties = get_properties_1()
     return bom
 
 

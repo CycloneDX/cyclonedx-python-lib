@@ -209,4 +209,8 @@
     <dependency ref="my-specific-bom-ref-for-my-first-service"/>
     <dependency ref="my-specific-bom-ref-for-my-second-service"/>
   </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
 </bom>
