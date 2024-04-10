@@ -2,6 +2,21 @@
 
 
 
+## v7.1.0 (2024-04-10)
+
+### Documentation
+
+* docs: missing schema support table &amp; update schema support to reflect version 7.0.0 (#584)
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`d230e67`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d230e67188661a5fb94730e52bf59c11c965c8d7))
+
+### Feature
+
+* feat: support `bom.properties` for CycloneDX v1.5+ (#585)
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`1d1c45a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1d1c45ac82c7927acc388489228a9b5990f68aa7))
+
+
 ## v7.0.0 (2024-04-09)
 
 ### Breaking
