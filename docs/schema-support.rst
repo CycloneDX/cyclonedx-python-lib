@@ -43,7 +43,7 @@ supported in prior versions of the CycloneDX schema.
 | ``bom.properties``         | No            | See `schema specification bug 130`_                                                               |
 +----------------------------+---------------+---------------------------------------------------------------------------------------------------+
 | ``bom.vulnerabilities``    | Yes           | Note: Prior to CycloneDX 1.4, these were present under ``bom.components`` via a schema extension. |
-|                            |               | Note: As of ``cyclonedx-python-lib`` ``>3.0.0``, Vulnerability are modelled differently                 |
+|                            |               | Note: As of ``cyclonedx-python-lib`` ``>3.0.0``, Vulnerability are modelled differently           |
 +----------------------------+---------------+---------------------------------------------------------------------------------------------------+
 | ``bom.signature``          | No            |                                                                                                   |
 +----------------------------+---------------+---------------------------------------------------------------------------------------------------+
