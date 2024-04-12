@@ -1699,9 +1699,19 @@ class Component(Dependable):
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
             return _ComparableTuple((
-                self.type, self.group, self.name, self.version
+                self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
+                self.version, self.description, self.scope, _ComparableTuple(self.hashes),
+                _ComparableTuple(self.licenses), self.copyright, self.cpe, self.purl, self.swid, self.pedigree,
+                _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
+                _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
+                _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids),
             )) < _ComparableTuple((
-                other.type, other.group, other.name, other.version
+                other.type, other.mime_type, other.supplier, other.author, other.publisher, other.group, other.name,
+                other.version, other.description, other.scope, _ComparableTuple(other.hashes),
+                _ComparableTuple(other.licenses), other.copyright, other.cpe, other.purl, other.swid, other.pedigree,
+                _ComparableTuple(other.external_references), _ComparableTuple(other.properties),
+                _ComparableTuple(other.components), other.evidence, other.release_notes, other.modified,
+                _ComparableTuple(other.authors), _ComparableTuple(other.omnibor_ids),
             ))
         return NotImplemented
 
