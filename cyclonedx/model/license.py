@@ -33,6 +33,24 @@ from ..schema.schema import SchemaVersion1Dot6
 from . import AttachedText, XsUri
 
 
+@serializable.serializable_enum
+class LicenseExpressionAcknowledgement(str, Enum):
+    """
+    This is our internal representation of the `type_licenseAcknowledgementEnumerationType` ENUM type
+    within the CycloneDX standard.
+
+    .. note::
+        Introduced in CycloneDX v1.6
+
+    .. note::
+        See the CycloneDX Schema for hashType:
+        https://cyclonedx.org/docs/1.6/#type_licenseAcknowledgementEnumerationType
+    """
+
+    CONCLUDED = 'concluded'
+    DECLARED = 'declared'
+
+
 @serializable.serializable_class(name='license')
 class DisjunctiveLicense:
     """
@@ -43,8 +61,12 @@ class DisjunctiveLicense:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/json/#components_items_licenses
     """
 
-    def __init__(self, *, id: Optional[str] = None, name: Optional[str] = None,
-                 text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(
+        self, *,
+        id: Optional[str] = None, name: Optional[str] = None,
+        text: Optional[AttachedText] = None, url: Optional[XsUri] = None,
+        acknowledgement: Optional[LicenseExpressionAcknowledgement] = None
+    ) -> None:
         if not id and not name:
             raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
         if id and name:
@@ -56,6 +78,7 @@ class DisjunctiveLicense:
         self._name = name if not id else None
         self._text = text
         self._url = url
+        self._acknowledgement = acknowledgement
 
     @property
     @serializable.xml_sequence(1)
@@ -129,7 +152,8 @@ class DisjunctiveLicense:
     # @property
     # ...
     # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(4)
+    # @serializable.view(SchemaVersion1Dot6)
+    # @serializable.xml_sequence(5)
     # def licensing(self) -> ...:
     #     ...  # TODO since CDX1.5
     #
@@ -137,62 +161,27 @@ class DisjunctiveLicense:
     # def licensing(self, ...) -> None:
     #     ...  # TODO since CDX1.5
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, DisjunctiveLicense):
-            return hash(other) == hash(self)
-        return False
+    # @property
+    # ...
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.view(SchemaVersion1Dot6)
+    # @serializable.xml_sequence(6)
+    # def properties(self) -> ...:
+    #     ...  # TODO since CDX1.5
+    #
+    # @licensing.setter
+    # def properties(self, ...) -> None:
+    #     ...  # TODO since CDX1.5
 
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, DisjunctiveLicense):
-            return _ComparableTuple((
-                self._id, self._name
-            )) < _ComparableTuple((
-                other._id, other._name
-            ))
-        if isinstance(other, LicenseExpression):
-            return False  # self after any LicenseExpression
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash((self._id, self._name, self._text, self._url))
-
-    def __repr__(self) -> str:
-        return f'<License id={self._id!r}, name={self._name!r}>'
-
-
-@serializable.serializable_enum
-class LicenseExpressionAcknowledgement(str, Enum):
-    """
-    This is our internal representation of the `type_licenseAcknowledgementEnumerationType` ENUM type
-    within the CycloneDX standard.
-
-    .. note::
-        Introduced in CycloneDX v1.6
-
-    .. note::
-        See the CycloneDX Schema for hashType:
-        https://cyclonedx.org/docs/1.6/#type_licenseAcknowledgementEnumerationType
-    """
-
-    CONCLUDED = 'concluded'
-    DECLARED = 'declared'
-
-
-@serializable.serializable_class(name='expression')
-class LicenseExpression:
-    """
-    This is our internal representation of `licenseType`'s  expression type that can be used in multiple places within
-    a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_expression
-    """
-
-    def __init__(self, value: str,
-                 acknowledgement: Optional[LicenseExpressionAcknowledgement] = None) -> None:
-        self._value = value
-        self.acknowledgement = acknowledgement
+    # @property
+    # @serializable.json_name('bom-ref')
+    # @serializable.type_mapping(BomRefHelper)
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.view(SchemaVersion1Dot6)
+    # @serializable.xml_attribute()
+    # @serializable.xml_name('bom-ref')
+    # def bom_ref(self) -> BomRef:
+    #     ...  # TODO since CDX1.5
 
     @property
     @serializable.view(SchemaVersion1Dot6)
@@ -219,6 +208,47 @@ class LicenseExpression:
     def acknowledgement(self, acknowledgement: Optional[LicenseExpressionAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, DisjunctiveLicense):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, DisjunctiveLicense):
+            return _ComparableTuple((
+                self._id, self._name
+            )) < _ComparableTuple((
+                other._id, other._name
+            ))
+        if isinstance(other, LicenseExpression):
+            return False  # self after any LicenseExpression
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash((self._id, self._name, self._text, self._url, self._acknowledgement))
+
+    def __repr__(self) -> str:
+        return f'<License id={self._id!r}, name={self._name!r}>'
+
+
+@serializable.serializable_class(name='expression')
+class LicenseExpression:
+    """
+    This is our internal representation of `licenseType`'s  expression type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_expression
+    """
+
+    def __init__(
+        self, value: str,
+        acknowledgement: Optional[LicenseExpressionAcknowledgement] = None
+    ) -> None:
+        self._value = value
+        self._acknowledgement = acknowledgement
+
     @property
     @serializable.xml_name('.')
     @serializable.json_name('expression')
@@ -235,12 +265,47 @@ class LicenseExpression:
     def value(self, value: str) -> None:
         self._value = value
 
+    # @property
+    # @serializable.json_name('bom-ref')
+    # @serializable.type_mapping(BomRefHelper)
+    # @serializable.view(SchemaVersion1Dot5)
+    # @serializable.view(SchemaVersion1Dot6)
+    # @serializable.xml_attribute()
+    # @serializable.xml_name('bom-ref')
+    # def bom_ref(self) -> BomRef:
+    #     ...  # TODO since CDX1.5
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_attribute()
+    def acknowledgement(self) -> Optional[LicenseExpressionAcknowledgement]:
+        """
+        Declared licenses and concluded licenses represent two different stages in the licensing process within
+        software development.
+
+        Declared licenses refer to the initial intention of the software authors regarding the
+        licensing terms under which their code is released. On the other hand, concluded licenses are the result of a
+        comprehensive analysis of the project's codebase to identify and confirm the actual licenses of the components
+        used, which may differ from the initially declared licenses. While declared licenses provide an upfront
+        indication of the licensing intentions, concluded licenses offer a more thorough understanding of the actual
+        licensing within a project, facilitating proper compliance and risk management. Observed licenses are defined
+        in evidence.licenses. Observed licenses form the evidence necessary to substantiate a concluded license.
+
+        Returns:
+            `LicenseExpressionAcknowledgement` or `None`
+        """
+        return self._acknowledgement
+
+    @acknowledgement.setter
+    def acknowledgement(self, acknowledgement: Optional[LicenseExpressionAcknowledgement]) -> None:
+        self._acknowledgement = acknowledgement
+
     def __hash__(self) -> int:
-        return hash(self._value)
+        return hash((self._value, self._acknowledgement))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, LicenseExpression):
-            return self._value == other._value
+            return hash(other) == hash(self)
         return False
 
     def __lt__(self, other: Any) -> bool:

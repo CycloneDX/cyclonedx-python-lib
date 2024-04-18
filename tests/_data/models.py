@@ -950,18 +950,24 @@ def get_bom_with_licenses() -> Bom:
                       licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
                                                   acknowledgement=LicenseExpressionAcknowledgement.CONCLUDED)]),
             Component(name='c-with-SPDX', type=ComponentType.LIBRARY, bom_ref='C2',
-                      licenses=[DisjunctiveLicense(id='Apache-2.0')]),
+                      licenses=[DisjunctiveLicense(id='Apache-2.0',
+                                                   url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
+                                                   acknowledgement=LicenseExpressionAcknowledgement.CONCLUDED)]),
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
-                      licenses=[DisjunctiveLicense(name='(c) ACME Inc.')]),
+                      licenses=[DisjunctiveLicense(name='some commercial license',
+                                                   text=AttachedText(content='this is a license text'))]),
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
                     licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
                                                 acknowledgement=LicenseExpressionAcknowledgement.DECLARED)]),
             Service(name='s-with-SPDX', bom_ref='S2',
-                    licenses=[DisjunctiveLicense(id='Apache-2.0')]),
+                    licenses=[DisjunctiveLicense(id='Apache-2.0',
+                                                 url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
+                                                 acknowledgement=LicenseExpressionAcknowledgement.DECLARED)]),
             Service(name='s-with-name', bom_ref='S3',
-                    licenses=[DisjunctiveLicense(name='(c) ACME Inc.')]),
+                    licenses=[DisjunctiveLicense(name='some commercial license',
+                                                 text=AttachedText(content='this is a license text'))]),
         ])
 
 
