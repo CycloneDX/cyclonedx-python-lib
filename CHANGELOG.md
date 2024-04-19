@@ -2,6 +2,60 @@
 
 
 
+## v7.2.0 (2024-04-19)
+
+### Feature
+
+* feat: disjunctive license acknowledgement (#591)
+
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`9bf1839`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9bf1839859a244e790e91c3e1edd82d333598d60))
+
+### Unknown
+
+* tests: add meaningful names to validation tests (#588)
+
+When packaging cyclonedx-python-lib for a Linux distribution, it’s
+pretty common that some JSON validation tests fail. [1]
+
+Due to the large number of combinations and the fact that these tests
+are consecutively numbered, it has been tedious to figure out which
+tests are exactly failing and why. This in turn makes it difficult to
+decide which tests to disable or report upstream.
+
+Append meaningful names to validation tests so that instead of e.g.:
+
+    […]::TestJsonValidator::test_validate_no_none_001
+    […]::TestJsonValidator::test_validate_no_none_002
+    […]::TestJsonValidator::test_validate_no_none_003
+    […]::TestJsonValidator::test_validate_no_none_004
+    […]::TestJsonValidator::test_validate_no_none_005
+    […]::TestJsonValidator::test_validate_no_none_006
+    […]::TestJsonValidator::test_validate_no_none_007
+    […]::TestJsonValidator::test_validate_no_none_008
+
+the tests are named:
+
+    […]::TestJsonValidator::test_validate_no_none_001_valid_component_swid_1_6
+    […]::TestJsonValidator::test_validate_no_none_002_valid_machine_learning_considerations_env_1_6
+    […]::TestJsonValidator::test_validate_no_none_003_valid_metadata_tool_1_6
+    […]::TestJsonValidator::test_validate_no_none_004_valid_patch_1_6
+    […]::TestJsonValidator::test_validate_no_none_005_valid_empty_components_1_6
+    […]::TestJsonValidator::test_validate_no_none_006_valid_properties_1_6
+    […]::TestJsonValidator::test_validate_no_none_007_valid_service_1_6
+    […]::TestJsonValidator::test_validate_no_none_008_valid_metadata_author_1_6
+
+[1]: https://aur.archlinux.org/cgit/aur.git/diff/PKGBUILD?h=python-cyclonedx-lib&amp;id=9c6ae556874a633a521407a77a9a85bb31da2047
+
+Signed-off-by: Claudia &lt;claui@users.noreply.github.com&gt; ([`ae3f79c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ae3f79cbaeecda94948bff6a64ab797c5ddd934a))
+
+* doc: poor merge resolved
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`a498faa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a498faaab248d0512bad9e66afbd8fb1d6c42a66))
+
+
 ## v7.1.0 (2024-04-10)
 
 ### Documentation
