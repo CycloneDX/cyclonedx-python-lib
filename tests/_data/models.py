@@ -86,7 +86,7 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression, LicenseExpressionAcknowledgement
+from cyclonedx.model.license import DisjunctiveLicense, License, LicenseExpression, LicenseAcknowledgement
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
@@ -948,11 +948,11 @@ def get_bom_with_licenses() -> Bom:
         components=[
             Component(name='c-with-expression', type=ComponentType.LIBRARY, bom_ref='C1',
                       licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
-                                                  acknowledgement=LicenseExpressionAcknowledgement.CONCLUDED)]),
+                                                  acknowledgement=LicenseAcknowledgement.CONCLUDED)]),
             Component(name='c-with-SPDX', type=ComponentType.LIBRARY, bom_ref='C2',
                       licenses=[DisjunctiveLicense(id='Apache-2.0',
                                                    url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
-                                                   acknowledgement=LicenseExpressionAcknowledgement.CONCLUDED)]),
+                                                   acknowledgement=LicenseAcknowledgement.CONCLUDED)]),
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
                       licenses=[DisjunctiveLicense(name='some commercial license',
                                                    text=AttachedText(content='this is a license text'))]),
@@ -960,11 +960,11 @@ def get_bom_with_licenses() -> Bom:
         services=[
             Service(name='s-with-expression', bom_ref='S1',
                     licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
-                                                acknowledgement=LicenseExpressionAcknowledgement.DECLARED)]),
+                                                acknowledgement=LicenseAcknowledgement.DECLARED)]),
             Service(name='s-with-SPDX', bom_ref='S2',
                     licenses=[DisjunctiveLicense(id='Apache-2.0',
                                                  url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
-                                                 acknowledgement=LicenseExpressionAcknowledgement.DECLARED)]),
+                                                 acknowledgement=LicenseAcknowledgement.DECLARED)]),
             Service(name='s-with-name', bom_ref='S3',
                     licenses=[DisjunctiveLicense(name='some commercial license',
                                                  text=AttachedText(content='this is a license text'))]),
