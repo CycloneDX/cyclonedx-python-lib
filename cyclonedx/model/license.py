@@ -34,7 +34,7 @@ from . import AttachedText, XsUri
 
 
 @serializable.serializable_enum
-class LicenseExpressionAcknowledgement(str, Enum):
+class LicenseAcknowledgement(str, Enum):
     """
     This is our internal representation of the `type_licenseAcknowledgementEnumerationType` ENUM type
     within the CycloneDX standard.
@@ -51,6 +51,12 @@ class LicenseExpressionAcknowledgement(str, Enum):
     DECLARED = 'declared'
 
 
+# In an error, the name of the enum was `LicenseExpressionAcknowledgement`.
+# Even though this was changed, there might be some downstream usage of this symbol, so we keep it around ...
+LicenseExpressionAcknowledgement = LicenseAcknowledgement
+"""Deprecated alias for :class:`LicenseAcknowledgement`"""
+
+
 @serializable.serializable_class(name='license')
 class DisjunctiveLicense:
     """
@@ -65,7 +71,7 @@ class DisjunctiveLicense:
         self, *,
         id: Optional[str] = None, name: Optional[str] = None,
         text: Optional[AttachedText] = None, url: Optional[XsUri] = None,
-        acknowledgement: Optional[LicenseExpressionAcknowledgement] = None
+        acknowledgement: Optional[LicenseAcknowledgement] = None
     ) -> None:
         if not id and not name:
             raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
@@ -186,7 +192,7 @@ class DisjunctiveLicense:
     @property
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_attribute()
-    def acknowledgement(self) -> Optional[LicenseExpressionAcknowledgement]:
+    def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
         """
         Declared licenses and concluded licenses represent two different stages in the licensing process within
         software development.
@@ -200,12 +206,12 @@ class DisjunctiveLicense:
         in evidence.licenses. Observed licenses form the evidence necessary to substantiate a concluded license.
 
         Returns:
-            `LicenseExpressionAcknowledgement` or `None`
+            `LicenseAcknowledgement` or `None`
         """
         return self._acknowledgement
 
     @acknowledgement.setter
-    def acknowledgement(self, acknowledgement: Optional[LicenseExpressionAcknowledgement]) -> None:
+    def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
     def __eq__(self, other: object) -> bool:
@@ -244,7 +250,7 @@ class LicenseExpression:
 
     def __init__(
         self, value: str,
-        acknowledgement: Optional[LicenseExpressionAcknowledgement] = None
+        acknowledgement: Optional[LicenseAcknowledgement] = None
     ) -> None:
         self._value = value
         self._acknowledgement = acknowledgement
@@ -278,7 +284,7 @@ class LicenseExpression:
     @property
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_attribute()
-    def acknowledgement(self) -> Optional[LicenseExpressionAcknowledgement]:
+    def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
         """
         Declared licenses and concluded licenses represent two different stages in the licensing process within
         software development.
@@ -292,12 +298,12 @@ class LicenseExpression:
         in evidence.licenses. Observed licenses form the evidence necessary to substantiate a concluded license.
 
         Returns:
-            `LicenseExpressionAcknowledgement` or `None`
+            `LicenseAcknowledgement` or `None`
         """
         return self._acknowledgement
 
     @acknowledgement.setter
-    def acknowledgement(self, acknowledgement: Optional[LicenseExpressionAcknowledgement]) -> None:
+    def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
     def __hash__(self) -> int:
