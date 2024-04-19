@@ -21,7 +21,7 @@ from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_com
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model import AttachedText, XsUri
-    from ..model.license import License
+    from ..model.license import License, LicenseAcknowledgement
 
 
 class LicenseFactory:
@@ -29,19 +29,30 @@ class LicenseFactory:
 
     def make_from_string(self, value: str, *,
                          license_text: Optional['AttachedText'] = None,
-                         license_url: Optional['XsUri'] = None) -> 'License':
+                         license_url: Optional['XsUri'] = None,
+                         license_acknowledgement: Optional['LicenseAcknowledgement'] = None
+                         ) -> 'License':
         """Make a :class:`cyclonedx.model.license.License` from a string."""
         try:
-            return self.make_with_id(value, text=license_text, url=license_url)
+            return self.make_with_id(value,
+                                     text=license_text,
+                                     url=license_url,
+                                     acknowledgement=license_acknowledgement)
         except InvalidSpdxLicenseException:
             pass
         try:
-            return self.make_with_expression(value)
+            return self.make_with_expression(value,
+                                             acknowledgement=license_acknowledgement)
         except InvalidLicenseExpressionException:
             pass
-        return self.make_with_name(value, text=license_text, url=license_url)
+        return self.make_with_name(value,
+                                   text=license_text,
+                                   url=license_url,
+                                   acknowledgement=license_acknowledgement)
 
-    def make_with_expression(self, expression: str) -> LicenseExpression:
+    def make_with_expression(self, expression: str, *,
+                             acknowledgement: Optional['LicenseAcknowledgement'] = None
+                             ) -> LicenseExpression:
         """Make a :class:`cyclonedx.model.license.LicenseExpression` with a compound expression.
 
         Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
@@ -49,12 +60,14 @@ class LicenseFactory:
         :raises InvalidLicenseExpressionException: if param `value` is not known/supported license expression
         """
         if is_spdx_compound_expression(expression):
-            return LicenseExpression(expression)
+            return LicenseExpression(expression, acknowledgement=acknowledgement)
         raise InvalidLicenseExpressionException(expression)
 
     def make_with_id(self, spdx_id: str, *,
                      text: Optional['AttachedText'] = None,
-                     url: Optional['XsUri'] = None) -> DisjunctiveLicense:
+                     url: Optional['XsUri'] = None,
+                     acknowledgement: Optional['LicenseAcknowledgement'] = None
+                     ) -> DisjunctiveLicense:
         """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` from an SPDX-ID.
 
         :raises InvalidSpdxLicenseException: if param `spdx_id` was not known/supported SPDX-ID
@@ -62,10 +75,12 @@ class LicenseFactory:
         spdx_license_id = spdx_fixup(spdx_id)
         if spdx_license_id is None:
             raise InvalidSpdxLicenseException(spdx_id)
-        return DisjunctiveLicense(id=spdx_license_id, text=text, url=url)
+        return DisjunctiveLicense(id=spdx_license_id, text=text, url=url, acknowledgement=acknowledgement)
 
     def make_with_name(self, name: str, *,
                        text: Optional['AttachedText'] = None,
-                       url: Optional['XsUri'] = None) -> DisjunctiveLicense:
+                       url: Optional['XsUri'] = None,
+                       acknowledgement: Optional['LicenseAcknowledgement'] = None
+                       ) -> DisjunctiveLicense:
         """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` with a name."""
-        return DisjunctiveLicense(name=name, text=text, url=url)
+        return DisjunctiveLicense(name=name, text=text, url=url, acknowledgement=acknowledgement)

@@ -250,6 +250,7 @@ class LicenseExpression:
 
     def __init__(
         self, value: str,
+        # *,  # all optional args are intended to be keyword-args
         acknowledgement: Optional[LicenseAcknowledgement] = None
     ) -> None:
         self._value = value
