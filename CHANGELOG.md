@@ -2,6 +2,17 @@
 
 
 
+## v7.3.0 (2024-04-19)
+
+### Feature
+
+* feat: license factory set `acknowledgement` (#593)
+
+add a parameter to `LicenseFactory.make_*()` methods, to set the `LicenseAcknowledgement`.
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7ca2455`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7ca2455018d0e191afaaa2fd136a7e4d5b325ec6))
+
+
 ## v7.2.0 (2024-04-19)
 
 ### Feature
