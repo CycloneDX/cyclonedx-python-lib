@@ -31,6 +31,7 @@
       <licenses>
         <license>
           <id>Apache-2.0</id>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
       </licenses>
     </component>
@@ -46,7 +47,8 @@
       <version/>
       <licenses>
         <license>
-          <name>(c) ACME Inc.</name>
+          <name>some commercial license</name>
+          <text content-type="text/plain">this is a license text</text>
         </license>
       </licenses>
     </component>
@@ -57,6 +59,7 @@
       <licenses>
         <license>
           <id>Apache-2.0</id>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
       </licenses>
     </service>
@@ -70,7 +73,8 @@
       <name>s-with-name</name>
       <licenses>
         <license>
-          <name>(c) ACME Inc.</name>
+          <name>some commercial license</name>
+          <text content-type="text/plain">this is a license text</text>
         </license>
       </licenses>
     </service>

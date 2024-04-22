@@ -21,7 +21,7 @@ import unittest.mock
 from cyclonedx.exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
 from cyclonedx.factory.license import LicenseFactory
 from cyclonedx.model import AttachedText, XsUri
-from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression
+from cyclonedx.model.license import DisjunctiveLicense, LicenseAcknowledgement, LicenseExpression
 
 
 class TestFactoryLicense(unittest.TestCase):
@@ -29,41 +29,52 @@ class TestFactoryLicense(unittest.TestCase):
     def test_make_from_string_with_id(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = DisjunctiveLicense(id='bar', text=text, url=url)
+        acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
+        expected = DisjunctiveLicense(id='bar', text=text, url=url, acknowledgement=acknowledgement)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'), \
                 unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
-            actual = LicenseFactory().make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory().make_from_string('foo',
+                                                       license_text=text,
+                                                       license_url=url,
+                                                       license_acknowledgement=acknowledgement)
 
         self.assertEqual(expected, actual)
 
     def test_make_from_string_with_name(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = DisjunctiveLicense(name='foo', text=text, url=url)
+        acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
+        expected = DisjunctiveLicense(name='foo', text=text, url=url, acknowledgement=acknowledgement)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None), \
                 unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=False):
-            actual = LicenseFactory().make_from_string('foo', license_text=text, license_url=url)
+            actual = LicenseFactory().make_from_string('foo',
+                                                       license_text=text,
+                                                       license_url=url,
+                                                       license_acknowledgement=acknowledgement)
 
         self.assertEqual(expected, actual)
 
     def test_make_from_string_with_expression(self) -> None:
-        expected = LicenseExpression('foo')
+        acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
+        expected = LicenseExpression('foo', acknowledgement=acknowledgement)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None), \
                 unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
-            actual = LicenseFactory().make_from_string('foo')
+            actual = LicenseFactory().make_from_string('foo',
+                                                       license_acknowledgement=acknowledgement)
 
         self.assertEqual(expected, actual)
 
     def test_make_with_id(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = DisjunctiveLicense(id='bar', text=text, url=url)
+        acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
+        expected = DisjunctiveLicense(id='bar', text=text, url=url, acknowledgement=acknowledgement)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
-            actual = LicenseFactory().make_with_id(spdx_id='foo', text=text, url=url)
+            actual = LicenseFactory().make_with_id(spdx_id='foo', text=text, url=url, acknowledgement=acknowledgement)
 
         self.assertEqual(expected, actual)
 
@@ -75,14 +86,16 @@ class TestFactoryLicense(unittest.TestCase):
     def test_make_with_name(self) -> None:
         text = unittest.mock.NonCallableMock(spec=AttachedText)
         url = unittest.mock.NonCallableMock(spec=XsUri)
-        expected = DisjunctiveLicense(name='foo', text=text, url=url)
-        actual = LicenseFactory().make_with_name(name='foo', text=text, url=url)
+        acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
+        expected = DisjunctiveLicense(name='foo', text=text, url=url, acknowledgement=acknowledgement)
+        actual = LicenseFactory().make_with_name(name='foo', text=text, url=url, acknowledgement=acknowledgement)
         self.assertEqual(expected, actual)
 
     def test_make_with_expression(self) -> None:
-        expected = LicenseExpression('foo')
+        acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
+        expected = LicenseExpression('foo', acknowledgement=acknowledgement)
         with unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
-            actual = LicenseFactory().make_with_expression(expression='foo')
+            actual = LicenseFactory().make_with_expression(expression='foo', acknowledgement=acknowledgement)
         self.assertEqual(expected, actual)
 
     def test_make_with_expression_raises(self) -> None:

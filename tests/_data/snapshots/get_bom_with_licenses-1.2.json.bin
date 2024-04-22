@@ -5,7 +5,8 @@
       "licenses": [
         {
           "license": {
-            "id": "Apache-2.0"
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
           }
         }
       ],
@@ -29,7 +30,11 @@
       "licenses": [
         {
           "license": {
-            "name": "(c) ACME Inc."
+            "name": "some commercial license",
+            "text": {
+              "content": "this is a license text",
+              "contentType": "text/plain"
+            }
           }
         }
       ],
@@ -91,7 +96,8 @@
       "licenses": [
         {
           "license": {
-            "id": "Apache-2.0"
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
           }
         }
       ],
@@ -111,7 +117,11 @@
       "licenses": [
         {
           "license": {
-            "name": "(c) ACME Inc."
+            "name": "some commercial license",
+            "text": {
+              "content": "this is a license text",
+              "contentType": "text/plain"
+            }
           }
         }
       ],
