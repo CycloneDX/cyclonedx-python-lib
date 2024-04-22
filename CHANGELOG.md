@@ -2,6 +2,23 @@
 
 
 
+## v7.3.1 (2024-04-22)
+
+### Chore
+
+* chore: semantic-release git commit/sign valid email address
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`d437c40`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d437c40caa70071f0fcfe4e3c970370ee32d4aba))
+
+### Fix
+
+* fix: include all fields of `Component` in `__lt__` function for #586 (#587)
+
+Fixes #586.
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`d784685`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d7846850d1ad33184d1d58b59fdf41a778d05900))
+
+
 ## v7.3.0 (2024-04-19)
 
 ### Feature
