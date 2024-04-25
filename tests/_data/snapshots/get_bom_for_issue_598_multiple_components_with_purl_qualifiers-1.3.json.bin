@@ -1,16 +1,16 @@
 {
   "components": [
     {
-      "bom-ref": "dummy-a",
+      "bom-ref": "dummy-b",
       "name": "dummy",
-      "purl": "pkg:pypi/pathlib2@2.3.5",
+      "purl": "pkg:pypi/pathlib2@2.3.5?vcs_url=git%2Bhttps://github.com/jazzband/pathlib2.git%405a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6",
       "type": "library",
       "version": "2.3.5"
     },
     {
-      "bom-ref": "dummy-b",
+      "bom-ref": "dummy-a",
       "name": "dummy",
-      "purl": "pkg:pypi/pathlib2@2.3.5?vcs_url=git%2Bhttps://github.com/jazzband/pathlib2.git%405a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6",
+      "purl": "pkg:pypi/pathlib2@2.3.5",
       "type": "library",
       "version": "2.3.5"
     }

@@ -56,7 +56,7 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
         return False
 
 
-class ComparableDict(dict):
+class ComparableDict:
     """
     Allows comparison of dictionaries, allowing for missing/None values.
     """
