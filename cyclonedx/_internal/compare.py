@@ -66,14 +66,14 @@ class ComparableDict(dict):
 
     def __lt__(self, other: Any) -> bool:
         if not isinstance(other, ComparableDict):
-            return NotImplemented
+            return True
         keys = sorted(self._dict.keys() | other._dict.keys())
         return ComparableTuple(self._dict.get(k) for k in keys) \
             < ComparableTuple(other._dict.get(k) for k in keys)
 
     def __gt__(self, other: Any) -> bool:
         if not isinstance(other, ComparableDict):
-            return NotImplemented
+            return False
         keys = sorted(self._dict.keys() | other._dict.keys())
         return ComparableTuple(self._dict.get(k) for k in keys) \
             > ComparableTuple(other._dict.get(k) for k in keys)
