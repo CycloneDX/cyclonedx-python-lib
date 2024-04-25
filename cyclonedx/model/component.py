@@ -14,6 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import re
 from enum import Enum
 from os.path import exists
@@ -25,7 +26,7 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
-from .._internal.compare import ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple, ComparablePackageURL as _ComparablePackageURL
 from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, NoPropertiesProvidedException
 from ..exception.serialization import (
@@ -42,7 +43,7 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
-from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl
+from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
     Copyright,
@@ -1406,7 +1407,7 @@ class Component(Dependable):
         self._cpe = cpe
 
     @property
-    @serializable.type_mapping(PackageUrl)
+    @serializable.type_mapping(PackageUrlSH)
     @serializable.xml_sequence(15)
     def purl(self) -> Optional[PackageURL]:
         """
@@ -1699,19 +1700,26 @@ class Component(Dependable):
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
             return _ComparableTuple((
-                self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
-                self.version, self.description, self.scope, _ComparableTuple(self.hashes),
-                _ComparableTuple(self.licenses), self.copyright, self.cpe, self.purl, self.swid, self.pedigree,
-                _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
-                _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
-                _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids),
+                self.type, self.group, self.name, self.version,
+
+                self.mime_type, self.supplier, self.author, self.publisher,
+                self.description, self.scope, self.hashes,
+                self.licenses, self.copyright, self.cpe,
+                None if self.purl is None else _ComparablePackageURL(self.purl),
+                self.swid, self.pedigree,
+                self.external_references, self.properties,
+                self.components, self.evidence, self.release_notes, self.modified,
+                self.authors, self.omnibor_ids,
             )) < _ComparableTuple((
-                other.type, other.mime_type, other.supplier, other.author, other.publisher, other.group, other.name,
-                other.version, other.description, other.scope, _ComparableTuple(other.hashes),
-                _ComparableTuple(other.licenses), other.copyright, other.cpe, other.purl, other.swid, other.pedigree,
-                _ComparableTuple(other.external_references), _ComparableTuple(other.properties),
-                _ComparableTuple(other.components), other.evidence, other.release_notes, other.modified,
-                _ComparableTuple(other.authors), _ComparableTuple(other.omnibor_ids),
+                other.type, other.group, other.name, other.version,
+                other.mime_type, other.supplier, other.author, other.publisher,
+                other.description, other.scope, other.hashes,
+                other.licenses, other.copyright, other.cpe,
+                None if other.purl is None else _ComparablePackageURL(other.purl),
+                other.swid, other.pedigree,
+                other.external_references, other.properties,
+                other.components, other.evidence, other.release_notes, other.modified,
+                other.authors, other.omnibor_ids,
             ))
         return NotImplemented
 

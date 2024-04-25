@@ -19,9 +19,11 @@
 Everything might change without any notice.
 """
 
-
 from itertools import zip_longest
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Dict, TYPE_CHECKING, Self
+
+if TYPE_CHECKING:  # pragma: no cover
+    from packageurl import PackageURL
 
 
 class ComparableTuple(Tuple[Optional[Any], ...]):
@@ -52,3 +54,34 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
                 return False
             return True if s > o else False
         return False
+
+
+class ComparableDict:
+    def __init__(self, dict_: Dict) -> None:
+        self._dict = dict_
+
+    def __lt__(self, other: Any) -> bool:
+        if not isinstance(other, dict):
+            return True
+        keys = sorted(self._dict.keys() | other.keys())
+        return ComparableTuple(self._dict.get(k) for k in keys) \
+            < ComparableTuple(other.get(k) for k in keys)
+
+    def __gt__(self, other: Any) -> bool:
+        if not isinstance(other, dict):
+            return True
+        keys = sorted(self._dict.keys() | other.keys())
+        return ComparableTuple(self._dict.get(k) for k in keys) \
+            > ComparableTuple(other.get(k) for k in keys)
+
+
+class ComparablePackageURL(ComparableTuple):
+    def __new__(cls, purl: 'PackageURL') -> Self:
+        return super().__new__(
+            cls, (
+                purl.type,
+                purl.namespace,
+                purl.version,
+                None if purl.qualifiers is None else ComparableDict(purl.qualifiers),
+                purl.subpath
+            ))
