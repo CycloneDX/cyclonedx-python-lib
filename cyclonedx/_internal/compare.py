@@ -61,7 +61,7 @@ class ComparableDict:
     Allows comparison of dictionaries, allowing for missing/None values.
     """
 
-    def __init__(self, dict_: Dict) -> None:
+    def __init__(self, dict_: Dict[Any, Any]) -> None:
         self._dict = dict_
 
     def __lt__(self, other: Any) -> bool:
@@ -90,6 +90,6 @@ class ComparablePackageURL(ComparableTuple):
                 purl.type,
                 purl.namespace,
                 purl.version,
-                None if purl.qualifiers is None else ComparableDict(purl.qualifiers),
+                ComparableDict(purl.qualifiers) if isinstance(purl.qualifiers, dict) else purl.qualifiers,
                 purl.subpath
             ))
