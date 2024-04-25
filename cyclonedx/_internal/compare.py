@@ -56,7 +56,7 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
         return False
 
 
-class ComparableDict:
+class ComparableDict(dict):
     """
     Allows comparison of dictionaries, allowing for missing/None values.
     """
@@ -65,18 +65,18 @@ class ComparableDict:
         self._dict = dict_
 
     def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, dict):
+        if not isinstance(other, ComparableDict):
             return True
-        keys = sorted(self._dict.keys() | other.keys())
+        keys = sorted(self._dict.keys() | other._dict.keys())
         return ComparableTuple(self._dict.get(k) for k in keys) \
-            < ComparableTuple(other.get(k) for k in keys)
+            < ComparableTuple(other._dict.get(k) for k in keys)
 
     def __gt__(self, other: Any) -> bool:
-        if not isinstance(other, dict):
+        if not isinstance(other, ComparableDict):
             return False
-        keys = sorted(self._dict.keys() | other.keys())
+        keys = sorted(self._dict.keys() | other._dict.keys())
         return ComparableTuple(self._dict.get(k) for k in keys) \
-            > ComparableTuple(other.get(k) for k in keys)
+            > ComparableTuple(other._dict.get(k) for k in keys)
 
 
 class ComparablePackageURL(ComparableTuple):
