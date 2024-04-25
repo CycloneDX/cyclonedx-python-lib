@@ -20,7 +20,7 @@ Everything might change without any notice.
 """
 
 from itertools import zip_longest
-from typing import Any, Optional, Tuple, Dict, TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, Any, Dict, Optional, Self, Tuple
 
 if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL

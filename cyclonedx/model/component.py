@@ -26,7 +26,7 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
-from .._internal.compare import ComparableTuple as _ComparableTuple, ComparablePackageURL as _ComparablePackageURL
+from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, NoPropertiesProvidedException
 from ..exception.serialization import (
