@@ -57,6 +57,10 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
 
 
 class ComparableDict:
+    """
+    Allows comparison of dictionaries, allowing for missing/None values.
+    """
+
     def __init__(self, dict_: Dict) -> None:
         self._dict = dict_
 
@@ -76,6 +80,10 @@ class ComparableDict:
 
 
 class ComparablePackageURL(ComparableTuple):
+    """
+    Allows comparison of PackageURL, allowing for qualifiers.
+    """
+
     def __new__(cls, purl: 'PackageURL') -> Self:
         return super().__new__(
             cls, (
