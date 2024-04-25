@@ -1701,35 +1701,41 @@ class Component(Dependable):
         if isinstance(other, Component):
             return _ComparableTuple((
                 self.type, self.group, self.name, self.version,
-
                 self.mime_type, self.supplier, self.author, self.publisher,
-                self.description, self.scope, self.hashes,
-                self.licenses, self.copyright, self.cpe,
+                self.description, self.scope, _ComparableTuple(self.hashes),
+                _ComparableTuple(self.licenses), self.copyright, self.cpe,
                 None if self.purl is None else _ComparablePackageURL(self.purl),
                 self.swid, self.pedigree,
-                self.external_references, self.properties,
-                self.components, self.evidence, self.release_notes, self.modified,
-                self.authors, self.omnibor_ids,
+                _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
+                _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
+                _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
+                _ComparableTuple(self.swhids), self.crypto_properties, _ComparableTuple(self.tags)
             )) < _ComparableTuple((
                 other.type, other.group, other.name, other.version,
                 other.mime_type, other.supplier, other.author, other.publisher,
-                other.description, other.scope, other.hashes,
-                other.licenses, other.copyright, other.cpe,
+                other.description, other.scope, _ComparableTuple(other.hashes),
+                _ComparableTuple(other.licenses), other.copyright, other.cpe,
                 None if other.purl is None else _ComparablePackageURL(other.purl),
                 other.swid, other.pedigree,
-                other.external_references, other.properties,
-                other.components, other.evidence, other.release_notes, other.modified,
-                other.authors, other.omnibor_ids,
+                _ComparableTuple(other.external_references), _ComparableTuple(other.properties),
+                _ComparableTuple(other.components), other.evidence, other.release_notes, other.modified,
+                _ComparableTuple(other.authors), _ComparableTuple(other.omnibor_ids), other.manufacturer,
+                _ComparableTuple(other.swhids), other.crypto_properties, _ComparableTuple(other.tags)
             ))
         return NotImplemented
 
     def __hash__(self) -> int:
         return hash((
-            self.type, self.mime_type, self.supplier, self.author, self.publisher, self.group, self.name,
-            self.version, self.description, self.scope, tuple(self.hashes), tuple(self.licenses), self.copyright,
-            self.cpe, self.purl, self.swid, self.pedigree, tuple(self.external_references), tuple(self.properties),
-            tuple(self.components), self.evidence, self.release_notes, self.modified, tuple(self.authors),
-            tuple(self.omnibor_ids),
+            self.type, self.group, self.name, self.version,
+            self.mime_type, self.supplier, self.author, self.publisher,
+            self.description, self.scope, tuple(self.hashes),
+            tuple(self.licenses), self.copyright, self.cpe,
+            self.purl,
+            self.swid, self.pedigree,
+            tuple(self.external_references), tuple(self.properties),
+            tuple(self.components), self.evidence, self.release_notes, self.modified,
+            tuple(self.authors), tuple(self.omnibor_ids), self.manufacturer,
+            tuple(self.swhids), self.crypto_properties, tuple(self.tags)
         ))
 
     def __repr__(self) -> str:
