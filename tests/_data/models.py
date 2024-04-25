@@ -1064,7 +1064,7 @@ def get_bom_for_issue_497_urls() -> Bom:
     ])
 
 
-def get_bom_for_issue_497_multiple_components_with_purl_qualifiers() -> Bom:
+def get_bom_for_issue_598_multiple_components_with_purl_qualifiers() -> Bom:
     """regression test for issue #598
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/598
     """
@@ -1137,5 +1137,6 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_licenses,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
+    get_bom_for_issue_598_multiple_components_with_purl_qualifiers,
     get_bom_with_component_setuptools_with_v16_fields,
 }
