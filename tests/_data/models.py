@@ -1064,6 +1064,30 @@ def get_bom_for_issue_497_urls() -> Bom:
     ])
 
 
+def get_bom_for_issue_497_multiple_components_with_purl_qualifiers() -> Bom:
+    """regression test for issue #598
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/598
+    """
+    return _make_bom(components=[
+        Component(
+            name='dummy', version='2.3.5', bom_ref='dummy-a',
+            purl=PackageURL(
+                type='pypi', namespace=None, name='pathlib2', version='2.3.5', subpath=None,
+                qualifiers={}
+            )
+        ),
+        Component(
+            name='dummy', version='2.3.5', bom_ref='dummy-b',
+            purl=PackageURL(
+                type='pypi', namespace=None, name='pathlib2', version='2.3.5', subpath=None,
+                qualifiers={
+                    'vcs_url': 'git+https://github.com/jazzband/pathlib2.git@5a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6'
+                }
+            )
+        )
+    ])
+
+
 def bom_all_same_bomref() -> Tuple[Bom, int]:
     bom = Bom()
     bom.metadata.component = Component(name='root', bom_ref='foo', components=[
