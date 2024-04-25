@@ -73,7 +73,7 @@ class ComparableDict:
 
     def __gt__(self, other: Any) -> bool:
         if not isinstance(other, dict):
-            return True
+            return False
         keys = sorted(self._dict.keys() | other.keys())
         return ComparableTuple(self._dict.get(k) for k in keys) \
             > ComparableTuple(other.get(k) for k in keys)
