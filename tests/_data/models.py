@@ -954,8 +954,12 @@ def get_bom_with_licenses() -> Bom:
                                                    url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
                                                    acknowledgement=LicenseAcknowledgement.CONCLUDED)]),
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
-                      licenses=[DisjunctiveLicense(name='some commercial license',
-                                                   text=AttachedText(content='this is a license text'))]),
+                      licenses=[
+                          DisjunctiveLicense(name='some commercial license',
+                                                   text=AttachedText(content='this is a license text')),
+                          DisjunctiveLicense(name='some additional',
+                                             text=AttachedText(content='this is additional license text')),
+                      ]),
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
@@ -965,9 +969,13 @@ def get_bom_with_licenses() -> Bom:
                     licenses=[DisjunctiveLicense(id='Apache-2.0',
                                                  url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
                                                  acknowledgement=LicenseAcknowledgement.DECLARED)]),
-            Service(name='s-with-name', bom_ref='S3',
-                    licenses=[DisjunctiveLicense(name='some commercial license',
-                                                 text=AttachedText(content='this is a license text'))]),
+            Service(name='s-with-name', bom_ref='S3',f
+                    licenses=[
+                        DisjunctiveLicense(name='some commercial license',
+                                                 text=AttachedText(content='this is a license text')),
+                        DisjunctiveLicense(name='some additional',
+                                           text=AttachedText(content='this is additional license text')),
+                    ]),
         ])
 
 
