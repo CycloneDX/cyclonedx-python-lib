@@ -969,7 +969,7 @@ def get_bom_with_licenses() -> Bom:
                     licenses=[DisjunctiveLicense(id='Apache-2.0',
                                                  url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
                                                  acknowledgement=LicenseAcknowledgement.DECLARED)]),
-            Service(name='s-with-name', bom_ref='S3', f
+            Service(name='s-with-name', bom_ref='S3',
                     licenses=[
                         DisjunctiveLicense(name='some commercial license',
                                            text=AttachedText(content='this is a license text')),
