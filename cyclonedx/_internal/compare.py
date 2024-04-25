@@ -20,10 +20,12 @@ Everything might change without any notice.
 """
 
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, Dict, Optional, Self, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Type, TypeVar
 
 if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
+
+_T = TypeVar('_T')
 
 
 class ComparableTuple(Tuple[Optional[Any], ...]):
@@ -84,9 +86,9 @@ class ComparablePackageURL(ComparableTuple):
     Allows comparison of PackageURL, allowing for qualifiers.
     """
 
-    def __new__(cls, purl: 'PackageURL') -> Self:
+    def __new__(cls, purl: 'PackageURL') -> 'ComparablePackageURL':
         return super().__new__(
-            cls, (
+            ComparablePackageURL, (
                 purl.type,
                 purl.namespace,
                 purl.version,
