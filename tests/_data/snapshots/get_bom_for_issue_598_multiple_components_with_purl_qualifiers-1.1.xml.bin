@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <components>
+    <component type="library" bom-ref="dummy-b">
+      <name>dummy</name>
+      <version>2.3.5</version>
+      <purl>pkg:pypi/pathlib2@2.3.5?vcs_url=git%2Bhttps://github.com/jazzband/pathlib2.git%405a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6</purl>
+    </component>
+    <component type="library" bom-ref="dummy-a">
+      <name>dummy</name>
+      <version>2.3.5</version>
+      <purl>pkg:pypi/pathlib2@2.3.5</purl>
+    </component>
+  </components>
+</bom>
