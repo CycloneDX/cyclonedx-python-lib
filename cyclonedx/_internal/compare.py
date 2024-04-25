@@ -20,12 +20,10 @@ Everything might change without any notice.
 """
 
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Type, TypeVar
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
 
 if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
-
-_T = TypeVar('_T')
 
 
 class ComparableTuple(Tuple[Optional[Any], ...]):
