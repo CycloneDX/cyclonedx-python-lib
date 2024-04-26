@@ -2,6 +2,23 @@
 
 
 
+## v7.3.2 (2024-04-26)
+
+### Fix
+
+* fix: properly sort components based on all properties (#599)
+
+reverts #587 - as this one introduced errors
+fixes #598
+fixes #586
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt;
+Co-authored-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`8df488c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8df488cb422a6363421fee39714df4e8e8e7a593))
+
+
 ## v7.3.1 (2024-04-22)
 
 ### Chore
