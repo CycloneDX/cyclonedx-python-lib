@@ -23,6 +23,10 @@
       <version/>
       <licenses>
         <license>
+          <name>some additional</name>
+          <text content-type="text/plain">this is additional license text</text>
+        </license>
+        <license>
           <name>some commercial license</name>
           <text content-type="text/plain">this is a license text</text>
         </license>

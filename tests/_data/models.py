@@ -954,8 +954,12 @@ def get_bom_with_licenses() -> Bom:
                                                    url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
                                                    acknowledgement=LicenseAcknowledgement.CONCLUDED)]),
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
-                      licenses=[DisjunctiveLicense(name='some commercial license',
-                                                   text=AttachedText(content='this is a license text'))]),
+                      licenses=[
+                          DisjunctiveLicense(name='some commercial license',
+                                             text=AttachedText(content='this is a license text')),
+                          DisjunctiveLicense(name='some additional',
+                                             text=AttachedText(content='this is additional license text')),
+                      ]),
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
@@ -966,8 +970,12 @@ def get_bom_with_licenses() -> Bom:
                                                  url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
                                                  acknowledgement=LicenseAcknowledgement.DECLARED)]),
             Service(name='s-with-name', bom_ref='S3',
-                    licenses=[DisjunctiveLicense(name='some commercial license',
-                                                 text=AttachedText(content='this is a license text'))]),
+                    licenses=[
+                        DisjunctiveLicense(name='some commercial license',
+                                           text=AttachedText(content='this is a license text')),
+                        DisjunctiveLicense(name='some additional',
+                                           text=AttachedText(content='this is additional license text')),
+                    ]),
         ])
 
 
@@ -1064,6 +1072,30 @@ def get_bom_for_issue_497_urls() -> Bom:
     ])
 
 
+def get_bom_for_issue_598_multiple_components_with_purl_qualifiers() -> Bom:
+    """regression test for issue #598
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/598
+    """
+    return _make_bom(components=[
+        Component(
+            name='dummy', version='2.3.5', bom_ref='dummy-a',
+            purl=PackageURL(
+                type='pypi', namespace=None, name='pathlib2', version='2.3.5', subpath=None,
+                qualifiers={}
+            )
+        ),
+        Component(
+            name='dummy', version='2.3.5', bom_ref='dummy-b',
+            purl=PackageURL(
+                type='pypi', namespace=None, name='pathlib2', version='2.3.5', subpath=None,
+                qualifiers={
+                    'vcs_url': 'git+https://github.com/jazzband/pathlib2.git@5a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6'
+                }
+            )
+        )
+    ])
+
+
 def bom_all_same_bomref() -> Tuple[Bom, int]:
     bom = Bom()
     bom.metadata.component = Component(name='root', bom_ref='foo', components=[
@@ -1113,5 +1145,6 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_licenses,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
+    get_bom_for_issue_598_multiple_components_with_purl_qualifiers,
     get_bom_with_component_setuptools_with_v16_fields,
 }

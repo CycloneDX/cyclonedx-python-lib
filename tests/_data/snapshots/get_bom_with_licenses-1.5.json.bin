@@ -28,6 +28,15 @@
       "licenses": [
         {
           "license": {
+            "name": "some additional",
+            "text": {
+              "content": "this is additional license text",
+              "contentType": "text/plain"
+            }
+          }
+        },
+        {
+          "license": {
             "name": "some commercial license",
             "text": {
               "content": "this is a license text",
@@ -162,6 +171,15 @@
     {
       "bom-ref": "S3",
       "licenses": [
+        {
+          "license": {
+            "name": "some additional",
+            "text": {
+              "content": "this is additional license text",
+              "contentType": "text/plain"
+            }
+          }
+        },
         {
           "license": {
             "name": "some commercial license",

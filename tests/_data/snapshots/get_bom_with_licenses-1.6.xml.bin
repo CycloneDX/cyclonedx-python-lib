@@ -69,6 +69,10 @@
       <name>c-with-name</name>
       <licenses>
         <license>
+          <name>some additional</name>
+          <text content-type="text/plain">this is additional license text</text>
+        </license>
+        <license>
           <name>some commercial license</name>
           <text content-type="text/plain">this is a license text</text>
         </license>
@@ -94,6 +98,10 @@
     <service bom-ref="S3">
       <name>s-with-name</name>
       <licenses>
+        <license>
+          <name>some additional</name>
+          <text content-type="text/plain">this is additional license text</text>
+        </license>
         <license>
           <name>some commercial license</name>
           <text content-type="text/plain">this is a license text</text>
