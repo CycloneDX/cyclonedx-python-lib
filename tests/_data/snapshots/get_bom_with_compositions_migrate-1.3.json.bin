@@ -42,6 +42,17 @@
       "version": "0.10.2"
     }
   ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "assemblies": [
+        "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+      ],
+      "dependencies": [
+        "pkg:pypi/toml@0.10.2?extension=tar.gz"
+      ]
+    }
+  ],
   "dependencies": [
     {
       "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"

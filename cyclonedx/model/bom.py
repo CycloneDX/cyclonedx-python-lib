@@ -469,6 +469,7 @@ class Bom:
         self._dependencies = SortedSet(dependencies)
 
     @property
+    @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
