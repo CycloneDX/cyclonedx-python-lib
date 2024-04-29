@@ -16,8 +16,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import re
 from os import getenv, path
-from os.path import join
-from typing import TYPE_CHECKING, Any, Generator, Iterable, List, Optional, TypeVar, Union
+from os.path import basename, join, splitext
+from typing import TYPE_CHECKING, Any, Generator, Iterable, List, Optional, Tuple, TypeVar, Union
 from unittest import TestCase
 from uuid import UUID
 
@@ -183,3 +183,10 @@ def is_valid_for_schema_version(purpose: Union[Any], sv: SchemaVersion) -> bool:
 
 def mksname(purpose: Union[Any], sv: SchemaVersion, f: OutputFormat) -> str:
     return f'{_get_purpose_as_str(purpose)}-{sv.to_version()}.{_SNAME_EXT[f]}'
+
+
+class DpTuple(Tuple[SchemaVersion, str]):
+    @property
+    def __name__(self) -> str:
+        schema_version, test_data_file = self
+        return f'{schema_version.to_version()}-{splitext(basename(test_data_file))[0]}'

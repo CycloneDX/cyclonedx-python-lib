@@ -115,7 +115,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        os: ['ubuntu-latest', 'windows-latest', 'macos-13']
         python-version:
           - "3.12" # highest supported
           - "3.11"
@@ -167,9 +167,9 @@ jobs:
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.TESTS_REPORTS_ARTIFACT }}
+          name: ${{ env.TESTS_REPORTS_ARTIFACT }}-${{ matrix.os }}-py${{ matrix.python-version }}${{ matrix.toxenv-factors }}
           path: ${{ env.REPORTS_DIR }}
           if-no-files-found: error
 
@@ -181,10 +181,11 @@ jobs:
     steps:
       - name: fetch test artifacts
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: ${{ env.TESTS_REPORTS_ARTIFACT }}
           path: ${{ env.REPORTS_DIR }}
+          pattern: ${{ env.TESTS_REPORTS_ARTIFACT }}-*
+          merge-multiple: true
       - name: Run codacy-coverage-reporter
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}

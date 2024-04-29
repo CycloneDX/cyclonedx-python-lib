@@ -53,8 +53,9 @@
     <component type="library" bom-ref="C2">
       <name>c-with-SPDX</name>
       <licenses>
-        <license>
+        <license acknowledgement="concluded">
           <id>Apache-2.0</id>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
       </licenses>
     </component>
@@ -68,7 +69,12 @@
       <name>c-with-name</name>
       <licenses>
         <license>
-          <name>(c) ACME Inc.</name>
+          <name>some additional</name>
+          <text content-type="text/plain">this is additional license text</text>
+        </license>
+        <license>
+          <name>some commercial license</name>
+          <text content-type="text/plain">this is a license text</text>
         </license>
       </licenses>
     </component>
@@ -77,8 +83,9 @@
     <service bom-ref="S2">
       <name>s-with-SPDX</name>
       <licenses>
-        <license>
+        <license acknowledgement="declared">
           <id>Apache-2.0</id>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
       </licenses>
     </service>
@@ -92,7 +99,12 @@
       <name>s-with-name</name>
       <licenses>
         <license>
-          <name>(c) ACME Inc.</name>
+          <name>some additional</name>
+          <text content-type="text/plain">this is additional license text</text>
+        </license>
+        <license>
+          <name>some commercial license</name>
+          <text content-type="text/plain">this is a license text</text>
         </license>
       </licenses>
     </service>

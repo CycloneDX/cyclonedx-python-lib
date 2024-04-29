@@ -25,14 +25,14 @@ from ddt import ddt, idata, unpack
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SCHEMA_TESTDATA_DIRECTORY
+from tests import SCHEMA_TESTDATA_DIRECTORY, DpTuple
 
 UNSUPPORTED_SCHEMA_VERSIONS = set()
 
 
 def _dp(prefix: str) -> Generator:
     return (
-        (sv, tf) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
+        DpTuple((sv, tf)) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
         for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.xml'))
     )
 

@@ -19,9 +19,11 @@
 Everything might change without any notice.
 """
 
-
 from itertools import zip_longest
-from typing import Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
+
+if TYPE_CHECKING:  # pragma: no cover
+    from packageurl import PackageURL
 
 
 class ComparableTuple(Tuple[Optional[Any], ...]):
@@ -52,3 +54,42 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
                 return False
             return True if s > o else False
         return False
+
+
+class ComparableDict:
+    """
+    Allows comparison of dictionaries, allowing for missing/None values.
+    """
+
+    def __init__(self, dict_: Dict[Any, Any]) -> None:
+        self._dict = dict_
+
+    def __lt__(self, other: Any) -> bool:
+        if not isinstance(other, ComparableDict):
+            return True
+        keys = sorted(self._dict.keys() | other._dict.keys())
+        return ComparableTuple(self._dict.get(k) for k in keys) \
+            < ComparableTuple(other._dict.get(k) for k in keys)
+
+    def __gt__(self, other: Any) -> bool:
+        if not isinstance(other, ComparableDict):
+            return False
+        keys = sorted(self._dict.keys() | other._dict.keys())
+        return ComparableTuple(self._dict.get(k) for k in keys) \
+            > ComparableTuple(other._dict.get(k) for k in keys)
+
+
+class ComparablePackageURL(ComparableTuple):
+    """
+    Allows comparison of PackageURL, allowing for qualifiers.
+    """
+
+    def __new__(cls, purl: 'PackageURL') -> 'ComparablePackageURL':
+        return super().__new__(
+            ComparablePackageURL, (
+                purl.type,
+                purl.namespace,
+                purl.version,
+                ComparableDict(purl.qualifiers) if isinstance(purl.qualifiers, dict) else purl.qualifiers,
+                purl.subpath
+            ))
