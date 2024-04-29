@@ -215,7 +215,8 @@ class Composition:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.4/xml/#type_compositionType
     """
 
-    def __init__(self, *, aggregate: AggregateType, assemblies: Optional[Iterable[CompositionReference]] = None,
+    def __init__(self, *, aggregate: AggregateType = AggregateType.NOT_SPECIFIED,
+                 assemblies: Optional[Iterable[CompositionReference]] = None,
                  dependencies: Optional[Iterable[CompositionReference]] = None) -> None:
         self.aggregate = aggregate
         self.assemblies = assemblies or []  # type:ignore[assignment]
