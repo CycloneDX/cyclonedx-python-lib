@@ -57,7 +57,7 @@ from cyclonedx.model.component import (
     Swhid,
     Swid,
 )
-from cyclonedx.model.composition import Composition, AggregateType, CompositionReference
+from cyclonedx.model.composition import AggregateType, Composition, CompositionReference
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
@@ -392,7 +392,7 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
     return _make_bom(components=[component])
 
 
-def get_bom_with_compositions() -> Bom:
+def get_bom_with_compositions_migrate() -> Bom:
     c1 = get_component_setuptools_simple()
     c2 = get_component_toml_with_hashes_with_references()
     bom = _make_bom(components=[c1, c2])

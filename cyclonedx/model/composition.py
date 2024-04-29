@@ -13,14 +13,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from enum import Enum
-from typing import Optional, Union, Iterable, Any
+from typing import Any, Iterable, Optional
 
 import serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from .bom_ref import BomRef
 from ..serialization import BomRefHelper
+from .bom_ref import BomRef
 
 
 @serializable.serializable_enum
