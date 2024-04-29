@@ -13,12 +13,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 from enum import Enum
-from typing import Any, Iterable, Optional
+from typing import Any, Dict, FrozenSet, Iterable, Optional, Type
 
 import serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.serialization import SerializationOfUnsupportedAggregateTypeException
+from ..schema.schema import (
+    SchemaVersion1Dot0,
+    SchemaVersion1Dot1,
+    SchemaVersion1Dot2,
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+    SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
+)
 from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 
@@ -34,6 +44,8 @@ class AggregateType(str, Enum):
     .. note::
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.4/xml/#type_aggregateType
     """
+
+    # See `_AggregateTypeSerializationHelper.__CASES` for view/case map
 
     """
     The relationship is complete. No further relationships including constituent components, services, or dependencies
@@ -93,6 +105,56 @@ class AggregateType(str, Enum):
     The relationship completeness is not specified.
     """
     NOT_SPECIFIED = 'not_specified'
+
+
+class _AggregateTypeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: Dict[Type[serializable.ViewType], FrozenSet[AggregateType]] = dict()
+    __CASES[SchemaVersion1Dot0] = frozenset({})
+    __CASES[SchemaVersion1Dot1] = __CASES[SchemaVersion1Dot0]
+    __CASES[SchemaVersion1Dot2] = __CASES[SchemaVersion1Dot1]
+    __CASES[SchemaVersion1Dot3] = __CASES[SchemaVersion1Dot2] | {
+        AggregateType.COMPLETE,
+        AggregateType.INCOMPLETE,
+        AggregateType.INCOMPLETE_FIRST_PARTY_ONLY,
+        AggregateType.INCOMPLETE_THIRD_PARTY_ONLY,
+        AggregateType.UNKNOWN,
+        AggregateType.NOT_SPECIFIED
+    }
+    __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
+    __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4] | {
+        AggregateType.INCOMPLETE_FIRST_PARTY_PROPRIETARY_ONLY,
+        AggregateType.INCOMPLETE_FIRST_PARTY_OPENSOURCE_ONLY,
+        AggregateType.INCOMPLETE_THIRD_PARTY_PROPRIETARY_ONLY,
+        AggregateType.INCOMPLETE_THIRD_PARTY_OPENSOURCE_ONLY
+    }
+    __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
+
+    @classmethod
+    def __normalize(cls, at: AggregateType, view: Type[serializable.ViewType]) -> Optional[str]:
+        print(f'Normalising {at!r} for {view!r}')
+        if at in cls.__CASES.get(view, ()):
+            return at.value
+        raise SerializationOfUnsupportedAggregateTypeException(f'unsupported {at!r} for view {view!r}')
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[Type[serializable.ViewType]],
+                      **__: Any) -> Optional[str]:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> AggregateType:
+        return AggregateType(o)
 
 
 @serializable.serializable_class
@@ -160,6 +222,7 @@ class Composition:
         self.dependencies = dependencies or []  # type:ignore[assignment]
 
     @property
+    @serializable.type_mapping(_AggregateTypeSerializationHelper)
     @serializable.xml_sequence(10)
     def aggregate(self) -> AggregateType:
         """
