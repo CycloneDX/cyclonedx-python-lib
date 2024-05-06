@@ -13,12 +13,7 @@
       "name": "app",
       "type": "application",
       "version": "1.2"
-    },
-    "licenses": [
-      {"license": {"name": "foo license"}},
-      {"license": {"id": "MIT"}},
-      {"expression": "MIT OR Apache-2.0"}
-    ]
+    }
   },
   "components": [
     {
