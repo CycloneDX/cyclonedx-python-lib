@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from glob import iglob
+from itertools import chain
 from os.path import join
 from typing import Generator
 from unittest import TestCase
@@ -25,15 +26,22 @@ from ddt import ddt, idata, unpack
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.xml import XmlValidator
-from tests import SCHEMA_TESTDATA_DIRECTORY, DpTuple
+from tests import OWN_DATA_DIRECTORY, SCHEMA_TESTDATA_DIRECTORY, DpTuple
 
 UNSUPPORTED_SCHEMA_VERSIONS = set()
 
 
-def _dp(prefix: str) -> Generator:
+def _dp_sv_tf(prefix: str) -> Generator:
     return (
         DpTuple((sv, tf)) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
         for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.xml'))
+    )
+
+
+def _dp_sv_own() -> Generator:
+    return (
+        DpTuple((sv, tf)) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
+        for tf in iglob(join(OWN_DATA_DIRECTORY, 'xml', sv.to_version(), '*.xml'))
     )
 
 
@@ -51,7 +59,10 @@ class TestXmlValidator(TestCase):
         with self.assertRaisesRegex(ValueError, f'unsupported schema_version: {schema_version}'):
             XmlValidator(schema_version)
 
-    @idata(_dp('valid'))
+    @idata(chain(
+        _dp_sv_tf('valid'),
+        _dp_sv_own()
+    ))
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = XmlValidator(schema_version)
@@ -63,7 +74,7 @@ class TestXmlValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNone(validation_error)
 
-    @idata(_dp('invalid'))
+    @idata(_dp_sv_tf('invalid'))
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = XmlValidator(schema_version)

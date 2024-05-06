@@ -1,7 +1,7 @@
 {
-  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.2.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.4",
+  "specVersion": "1.2",
   "metadata": {
     "component": {
       "description": "before CDX 1.5 it was allowed to mix `expression` and `license`",
@@ -11,13 +11,9 @@
         {"license": {"name": "foo license"}}
       ],
       "name": "app",
-      "type": "application"
-    },
-    "licenses": [
-      {"license": {"name": "foo license"}},
-      {"license": {"id": "MIT"}},
-      {"expression": "MIT OR Apache-2.0"}
-    ]
+      "type": "application",
+      "version": "1.2"
+    }
   },
   "components": [
     {
@@ -28,7 +24,8 @@
         {"expression": "MIT OR Apache-2.0"}
       ],
       "name": "comp",
-      "type": "library"
+      "type": "library",
+      "version": "1337"
     }
   ],
   "services": [

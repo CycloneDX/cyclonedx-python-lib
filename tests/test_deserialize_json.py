@@ -67,7 +67,8 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         with open(json_file) as f:
             json = json_loads(f.read())
         bom: Bom = Bom.from_json(json)
-        test(bom.metadata.licenses)
+        if sv is not SchemaVersion.V1_2:
+            test(bom.metadata.licenses)
         test(bom.metadata.component.licenses)
         test(list(bom.components)[0].licenses)
         test(list(bom.services)[0].licenses)
