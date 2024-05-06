@@ -55,7 +55,6 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         bom = Bom.from_json(json)
         self.assertIsInstance(bom, Bom)
 
-
     @data(SchemaVersion.V1_4, SchemaVersion.V1_3, SchemaVersion.V1_2)
     def test_mixed_licenses_before15(self, sv: SchemaVersion) -> None:
         # before CDX 1.5 it was allowed to mix `expression` and `license`
