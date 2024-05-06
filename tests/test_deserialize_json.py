@@ -52,7 +52,9 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         json_file = join(OWN_DATA_DIRECTORY, 'json', '1.4', 'empty_supplier.json')
         with open(json_file) as f:
             json = json_loads(f.read())
-        Bom = Bom.from_json(json)
+        bom = Bom.from_json(json)
+        self.assertIs(bom, Bom)
+
 
     @data(SchemaVersion.V1_4, SchemaVersion.V1_3, SchemaVersion.V1_2)
     def test_mixed_licenses_before15(self, sv: SchemaVersion) -> None:
