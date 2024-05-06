@@ -45,6 +45,15 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
 
+    def test_empty_supplier(self) -> None:
+        """Regression for issue #600
+        See: https://github.com/CycloneDX/cyclonedx-python-lib/issues/600
+        """
+        json_file = join(OWN_DATA_DIRECTORY, 'json', '1.4', 'empty_supplier.json')
+        with open(json_file) as f:
+            json = json_loads(f.read())
+        Bom = Bom.from_json(json)
+
     @data(SchemaVersion.V1_4, SchemaVersion.V1_3, SchemaVersion.V1_2)
     def test_mixed_licenses_before15(self, sv: SchemaVersion) -> None:
         # before CDX 1.5 it was allowed to mix `expression` and `license`
