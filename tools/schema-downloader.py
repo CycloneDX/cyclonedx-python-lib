@@ -29,13 +29,14 @@ BOM_XSD = {
     ]
 }
 
-# "version" is not required but optional with a default value!
-#   this is wrong in schema<1.5
+# "$schema" is not required but optional.
+#  that enum constraint value there is complicated -> remove it.
+#  See https://github.com/CycloneDX/specification/issues/402
+#  See https://github.com/CycloneDX/specification/pull/403
 _BOM_SCHEMA_ENUM_RE = re.compile(
-    r'("\$id": "(http://cyclonedx\.org/schema/bom.+?\.schema\.json)".*"enum": \[\s+")'
-    r'http://cyclonedx\.org/schema/bom.+?\.schema\.json"',
+    r',?\s*"enum":\s*\[\s*"http://cyclonedx\.org/schema/.+?\.schema\.json"\s*\]',
     re.DOTALL)
-_BOM_SCHEMA_ENUM_REPL = r'\1\2"'
+_BOM_SCHEMA_ENUM_REPL = r''
 
 
 # "version" is not required but optional with a default value!
