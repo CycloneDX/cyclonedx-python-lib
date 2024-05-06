@@ -279,7 +279,7 @@ class OrganizationalEntity:
     def __init__(self, *, name: Optional[str] = None, urls: Optional[Iterable[XsUri]] = None,
                  contacts: Optional[Iterable[OrganizationalContact]] = None,
                  address: Optional[PostalAddress] = None) -> None:
-        if not name and not urls and not contacts:
+        if name is None and not urls and not contacts:
             raise NoPropertiesProvidedException(
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
             )
