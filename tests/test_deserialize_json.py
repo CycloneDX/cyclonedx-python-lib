@@ -53,7 +53,7 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         with open(json_file) as f:
             json = json_loads(f.read())
         bom = Bom.from_json(json)
-        self.assertIs(bom, Bom)
+        self.assertIsInstance(bom, Bom)
 
 
     @data(SchemaVersion.V1_4, SchemaVersion.V1_3, SchemaVersion.V1_2)
