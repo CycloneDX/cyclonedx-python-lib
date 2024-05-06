@@ -2,6 +2,19 @@
 
 
 
+## v7.3.4 (2024-05-06)
+
+### Fix
+
+* fix: allow suppliers with empty-string names (#611)
+
+fixes #600
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b331aeb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b331aeb4b7261c7b1359c592b2dcda27bd35e369))
+
+
 ## v7.3.3 (2024-05-06)
 
 ### Chore
