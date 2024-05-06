@@ -2,6 +2,891 @@
 
 
 
+## v7.3.3 (2024-05-06)
+
+### Chore
+
+* chore: shield_ossf-best-practices subbary
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0d00496`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0d00496ca2191394276d0410cc8e81e5630d674d))
+
+* chore(deps-dev): update coverage requirement from 7.5.0 to 7.5.1 (#608)
+
+Updates the requirements on
+[coverage](https://github.com/nedbat/coveragepy) to permit the latest
+version.
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst&#34;&gt;coverage&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;Version 7.5.1 — 2024-05-04&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Fix: a pragma comment on the continuation lines of a multi-line
+statement
+now excludes the statement and its body, the same as if the pragma is
+on the first line. This closes &lt;code&gt;issue 754&lt;/code&gt;&lt;em&gt;. The fix was
+contributed by
+&lt;code&gt;Daniel Diniz &amp;lt;pull 1773_&amp;gt;&lt;/code&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Fix: very complex source files like &lt;code&gt;this one
+&amp;lt;resolvent_lookup_&amp;gt;&lt;/code&gt;_ could
+cause a maximum recursion error when creating an HTML report. This is
+now
+fixed, closing &lt;code&gt;issue 1774&lt;/code&gt;_.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;HTML report improvements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Support files (JavaScript and CSS) referenced by the HTML report now
+have
+hashes added to their names to ensure updated files are used instead of
+stale cached copies.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Missing branch coverage explanations that said &amp;quot;the condition
+was never
+false&amp;quot; now read &amp;quot;the condition was always true&amp;quot; because
+it&#39;s easier to
+understand.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Column sort order is remembered better as you move between the index
+pages,
+fixing &lt;code&gt;issue 1766&lt;/code&gt;&lt;em&gt;. Thanks, &lt;code&gt;Daniel Diniz &amp;lt;pull
+1768_&amp;gt;&lt;/code&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;.. _resolvent_lookup: &lt;a
+href=&#34;https://github.com/sympy/sympy/blob/130950f3e6b3f97fcc17f4599ac08f70fdd2e9d4/sympy/polys/numberfields/resolvent_lookup.py&#34;&gt;https://github.com/sympy/sympy/blob/130950f3e6b3f97fcc17f4599ac08f70fdd2e9d4/sympy/polys/numberfields/resolvent_lookup.py&lt;/a&gt;
+.. _issue 754: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/754&#34;&gt;nedbat/coveragepy#754&lt;/a&gt;
+.. _issue 1766: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1766&#34;&gt;nedbat/coveragepy#1766&lt;/a&gt;
+.. _pull 1768: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/pull/1768&#34;&gt;nedbat/coveragepy#1768&lt;/a&gt;
+.. _pull 1773: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/pull/1773&#34;&gt;nedbat/coveragepy#1773&lt;/a&gt;
+.. _issue 1774: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1774&#34;&gt;nedbat/coveragepy#1774&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;.. _changes_7-5-0:&lt;/p&gt;
+&lt;h2&gt;Version 7.5.0 — 2024-04-23&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Added initial support for function and class reporting in the HTML
+report.
+There are now three index pages which link to each other: files,
+functions,
+and classes. Other reports don&#39;t yet have this information, but it will
+be
+added in the future where it makes sense.  Feedback gladly accepted!
+Finishes &lt;code&gt;issue 780&lt;/code&gt;_.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Other HTML report improvements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;There is now a &amp;quot;hide covered&amp;quot; checkbox to filter out 100%
+files, finishing
+&lt;code&gt;issue 1384&lt;/code&gt;_.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;... (truncated)&lt;/p&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/be938eaa195a52dd89f3a13aa68bb80de3425b11&#34;&gt;&lt;code&gt;be938ea&lt;/code&gt;&lt;/a&gt;
+docs: sample HTML for 7.5.1&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/02c66d76912259c8a03282d153007a569f05f495&#34;&gt;&lt;code&gt;02c66d7&lt;/code&gt;&lt;/a&gt;
+docs: prep for 7.5.1&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/5fa9f67853a7112e08185ed416de7907b8e524da&#34;&gt;&lt;code&gt;5fa9f67&lt;/code&gt;&lt;/a&gt;
+fix: avoid max recursion errors in ast code. &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1774&#34;&gt;#1774&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/34af01dfc877e7f35b49f5ec402c39437ae7c1f1&#34;&gt;&lt;code&gt;34af01d&lt;/code&gt;&lt;/a&gt;
+build: easier to run metasmoke on desired python version&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/6b0cac5843d0cbfb68391f36397e6759e13e297d&#34;&gt;&lt;code&gt;6b0cac5&lt;/code&gt;&lt;/a&gt;
+perf: cache _human_key to speed html report by about 10%&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/fdc0ee896825334bfa13735d94b2da78da72f76b&#34;&gt;&lt;code&gt;fdc0ee8&lt;/code&gt;&lt;/a&gt;
+docs: oops, typo&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/60e6cb4267c1f25690e37198e1e55130ae94b4e1&#34;&gt;&lt;code&gt;60e6cb4&lt;/code&gt;&lt;/a&gt;
+docs: changelog for &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/754&#34;&gt;#754&lt;/a&gt;
+and &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1773&#34;&gt;#1773&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/277c8c43c9ee59c941ec8fd7da8ea2a49049d1e0&#34;&gt;&lt;code&gt;277c8c4&lt;/code&gt;&lt;/a&gt;
+fix: &#39;# pragma: no branch&#39; in multiline if statements. &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/754&#34;&gt;#754&lt;/a&gt;
+(&lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1773&#34;&gt;#1773&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/34d3eb76b7833268019ac25e5265c2c1b192abcb&#34;&gt;&lt;code&gt;34d3eb7&lt;/code&gt;&lt;/a&gt;
+docs: update changelog for &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1786&#34;&gt;#1786&lt;/a&gt;.
+Thanks, Daniel Diniz&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/2bb5ef22787185fd90a525e8e26bbe360a3492f1&#34;&gt;&lt;code&gt;2bb5ef2&lt;/code&gt;&lt;/a&gt;
+fix(html): make HTML column sorting consistent across index pages (fix
+&lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1766&#34;&gt;#1766&lt;/a&gt;)...&lt;/li&gt;
+&lt;li&gt;Additional commits viewable in &lt;a
+href=&#34;https://github.com/nedbat/coveragepy/compare/7.5.0...7.5.1&#34;&gt;compare
+view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`4f9174b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4f9174b52fd7e9c940d447b8149559b624b1539e))
+
+* chore(ci): update GH action versions (#606)
+
+
+Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`6d1bc5b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6d1bc5b5e3c6cecc8681b7a197d07632819dc994))
+
+* chore(deps-dev): update tox requirement from 4.14.2 to 4.15.0 (#603)
+
+Updates the requirements on [tox](https://github.com/tox-dev/tox) to
+permit the latest version.
+&lt;details&gt;
+&lt;summary&gt;Release notes&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/tox-dev/tox/releases&#34;&gt;tox&#39;s
+releases&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;4.15.0&lt;/h2&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;h2&gt;What&#39;s Changed&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Remove duplicated and misleading configuration section by &lt;a
+href=&#34;https://github.com/jugmac00&#34;&gt;&lt;code&gt;@​jugmac00&lt;/code&gt;&lt;/a&gt; in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3251&#34;&gt;tox-dev/tox#3251&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Fix dropped leading characters &lt;code&gt;c&lt;/code&gt; from constraints&#39;
+packages by &lt;a
+href=&#34;https://github.com/jugmac00&#34;&gt;&lt;code&gt;@​jugmac00&lt;/code&gt;&lt;/a&gt; in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3250&#34;&gt;tox-dev/tox#3250&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Fix type-checking by &lt;a
+href=&#34;https://github.com/stefanor&#34;&gt;&lt;code&gt;@​stefanor&lt;/code&gt;&lt;/a&gt; in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3260&#34;&gt;tox-dev/tox#3260&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Update installation.rst by &lt;a
+href=&#34;https://github.com/shenxianpeng&#34;&gt;&lt;code&gt;@​shenxianpeng&lt;/code&gt;&lt;/a&gt;
+in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3257&#34;&gt;tox-dev/tox#3257&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Allow appending to deps with the command line by &lt;a
+href=&#34;https://github.com/stefanor&#34;&gt;&lt;code&gt;@​stefanor&lt;/code&gt;&lt;/a&gt; in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3259&#34;&gt;tox-dev/tox#3259&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Support multiple override appends by &lt;a
+href=&#34;https://github.com/amitschang&#34;&gt;&lt;code&gt;@​amitschang&lt;/code&gt;&lt;/a&gt; in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3261&#34;&gt;tox-dev/tox#3261&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Add bang to invert exit code by &lt;a
+href=&#34;https://github.com/sillydan1&#34;&gt;&lt;code&gt;@​sillydan1&lt;/code&gt;&lt;/a&gt; in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3271&#34;&gt;tox-dev/tox#3271&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;fix(parser): Fix --discover parsed incorrectly from env by &lt;a
+href=&#34;https://github.com/mimre25&#34;&gt;&lt;code&gt;@​mimre25&lt;/code&gt;&lt;/a&gt; in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3274&#34;&gt;tox-dev/tox#3274&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;New Contributors&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/shenxianpeng&#34;&gt;&lt;code&gt;@​shenxianpeng&lt;/code&gt;&lt;/a&gt;
+made their first contribution in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3257&#34;&gt;tox-dev/tox#3257&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/amitschang&#34;&gt;&lt;code&gt;@​amitschang&lt;/code&gt;&lt;/a&gt; made
+their first contribution in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3261&#34;&gt;tox-dev/tox#3261&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/sillydan1&#34;&gt;&lt;code&gt;@​sillydan1&lt;/code&gt;&lt;/a&gt;
+made their first contribution in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3271&#34;&gt;tox-dev/tox#3271&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mimre25&#34;&gt;&lt;code&gt;@​mimre25&lt;/code&gt;&lt;/a&gt; made
+their first contribution in &lt;a
+href=&#34;https://redirect.github.com/tox-dev/tox/pull/3274&#34;&gt;tox-dev/tox#3274&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Full Changelog&lt;/strong&gt;: &lt;a
+href=&#34;https://github.com/tox-dev/tox/compare/4.14.2...4.15.0&#34;&gt;https://github.com/tox-dev/tox/compare/4.14.2...4.15.0&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/tox-dev/tox/blob/main/docs/changelog.rst&#34;&gt;tox&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;v4.15.0 (2024-04-26)&lt;/h2&gt;
+&lt;p&gt;Features - 4.15.0&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;- Add support for multiple appending override options (-x,
+--override) on command line - by :user:`amitschang`. (:issue:`3261`)
+- Add support for inverting exit code success criteria using bang (!)
+(:issue:`3271`)
+&lt;p&gt;Bugfixes - 4.15.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fix issue that the leading character &lt;code&gt;c&lt;/code&gt; was dropped from
+packages in constraints files - by :user:&lt;code&gt;jugmac00&lt;/code&gt;.
+(:issue:&lt;code&gt;3247&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Allow appending to &lt;code&gt;deps&lt;/code&gt; with &lt;code&gt;--override
+testenv.deps+=foo&lt;/code&gt; - by :user:&lt;code&gt;stefanor&lt;/code&gt;.
+(:issue:&lt;code&gt;3256&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Fix non-existing branch &lt;code&gt;rewrite&lt;/code&gt; in the documentation to
+&lt;code&gt;main&lt;/code&gt;. (:issue:&lt;code&gt;3257&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Update test typing for build 1.2.0, which has an explicit
+&lt;code&gt;Distribution&lt;/code&gt; type - by :user:&lt;code&gt;stefanor&lt;/code&gt;.
+(:issue:&lt;code&gt;3260&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Fix broken input parsing for &lt;code&gt;--discover&lt;/code&gt; flag. - by
+:user:&lt;code&gt;mimre25&lt;/code&gt; (:issue:&lt;code&gt;3272&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Improved Documentation - 4.15.0&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;- Rephrase ``--discover`` flag&#39;s description to avoid
+confusion between paths and executables. - by :user:`mimre25`
+(:issue:`3274`)
+&lt;h2&gt;v4.14.2 (2024-03-22)&lt;/h2&gt;
+&lt;p&gt;Bugfixes - 4.14.2&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;- Add provision arguments to ToxParser to fix crash when
+provisioning new tox environment without list-dependencies by
+:user:`seyidaniels` (:issue:`3190`)
+
+Improved Documentation - 4.14.2
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;Removed unused line from the &#39;fresh_subprocess&#39; documentation.
+(:issue:&amp;lt;code&amp;gt;3241&amp;lt;/code&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;h2&amp;gt;v4.14.1 (2024-03-06)&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;Bugfixes - 4.14.1&amp;lt;/p&amp;gt;
+&amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;- Fix crash with fresh subprocess, if the build
+backend is setuptools automatically enable fresh subprocesses for
+  build backend calls - by :user:`gaborbernat`. (:issue:`3235`)
+
+v4.14.0 (2024-03-05)
+--------------------
+
+Features - 4.14.0
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;Support enabling fresh subprocess for packaging build backends
+via :ref:&amp;lt;code&amp;gt;fresh_subprocess&amp;lt;/code&amp;gt; - by
+:user:&amp;lt;code&amp;gt;gaborbernat&amp;lt;/code&amp;gt;.
+(:issue:&amp;lt;code&amp;gt;3227&amp;lt;/code&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;Allow plugins attaching additional information to
+&amp;lt;code&amp;gt;--version&amp;lt;/code&amp;gt; via
+&amp;lt;code&amp;gt;tox_append_version_info&amp;lt;/code&amp;gt; method in the plugin
+module - by :user:&amp;lt;code&amp;gt;gaborbernat&amp;lt;/code&amp;gt;.
+(:issue:&amp;lt;code&amp;gt;3234&amp;lt;/code&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;h2&amp;gt;v4.13.0 (2024-02-16)&amp;lt;/h2&amp;gt;
+&amp;lt;!-- raw HTML omitted --&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;p&amp;gt;... (truncated)&amp;lt;/p&amp;gt;
+&amp;lt;/details&amp;gt;
+&amp;lt;details&amp;gt;
+&amp;lt;summary&amp;gt;Commits&amp;lt;/summary&amp;gt;
+
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/261b4ca55686059489b1314c440f0e2fca21aca5&amp;quot;&amp;gt;&amp;lt;code&amp;gt;261b4ca&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+release 4.15.0&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/c54dfbd9ad4aad9f0ef5503b7dff2558cdf64208&amp;quot;&amp;gt;&amp;lt;code&amp;gt;c54dfbd&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+fix(parser): Fix --discover parsed incorrectly from env (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3274&amp;quot;&amp;gt;#3274&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/809e10f9871e75cf7b07063f47393f9c10861174&amp;quot;&amp;gt;&amp;lt;code&amp;gt;809e10f&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+Add bang to invert exit code (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3271&amp;quot;&amp;gt;#3271&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/822c9d07699aa090fb8d37cb94247ea0d085125b&amp;quot;&amp;gt;&amp;lt;code&amp;gt;822c9d0&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+[pre-commit.ci] pre-commit autoupdate (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3267&amp;quot;&amp;gt;#3267&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/0e5a3dbb9a1c7eb1df56421cc4bca5e187626ccd&amp;quot;&amp;gt;&amp;lt;code&amp;gt;0e5a3db&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+[pre-commit.ci] pre-commit autoupdate (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3265&amp;quot;&amp;gt;#3265&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/f5850c0d3a893cbb6d9de192fe8e6e857573499b&amp;quot;&amp;gt;&amp;lt;code&amp;gt;f5850c0&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+Support multiple override appends (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3261&amp;quot;&amp;gt;#3261&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/c2be62972e7f7b3e79260e5c96e4fe5bf76f5929&amp;quot;&amp;gt;&amp;lt;code&amp;gt;c2be629&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+Allow appending to deps with the command line (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3259&amp;quot;&amp;gt;#3259&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/d28a9ee0ea28b2356b24a0d0e0ed70c0141d41cc&amp;quot;&amp;gt;&amp;lt;code&amp;gt;d28a9ee&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+Update installation.rst (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3257&amp;quot;&amp;gt;#3257&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/a19a9467cfae5a0fc2c1b6faf1845d412898c693&amp;quot;&amp;gt;&amp;lt;code&amp;gt;a19a946&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+[pre-commit.ci] pre-commit autoupdate (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3258&amp;quot;&amp;gt;#3258&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/commit/a22fe8ffce73acdfc2aefd70228ede0337aac19b&amp;quot;&amp;gt;&amp;lt;code&amp;gt;a22fe8f&amp;lt;/code&amp;gt;&amp;lt;/a&amp;gt;
+Fix type-checking (&amp;lt;a
+href=&amp;quot;https://redirect.github.com/tox-dev/tox/issues/3260&amp;quot;&amp;gt;#3260&amp;lt;/a&amp;gt;)&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;Additional commits viewable in &amp;lt;a
+href=&amp;quot;https://github.com/tox-dev/tox/compare/4.14.2...4.15.0&amp;quot;&amp;gt;compare
+view&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/details&amp;gt;
+
+&amp;lt;br /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`f566c82`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f566c82ff2e31f9be50966c76e17e6657853ae81))
+
+* chore(deps-dev): update coverage requirement from 7.4.4 to 7.5.0 (#605)
+
+Updates the requirements on
+[coverage](https://github.com/nedbat/coveragepy) to permit the latest
+version.
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/nedbat/coveragepy/blob/master/CHANGES.rst&#34;&gt;coverage&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;Version 7.5.0 — 2024-04-23&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Added initial support for function and class reporting in the HTML
+report.
+There are now three index pages which link to each other: files,
+functions,
+and classes. Other reports don&#39;t yet have this information, but it will
+be
+added in the future where it makes sense.  Feedback gladly accepted!
+Finishes &lt;code&gt;issue 780&lt;/code&gt;_.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Other HTML report improvements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;There is now a &amp;quot;hide covered&amp;quot; checkbox to filter out 100%
+files, finishing
+&lt;code&gt;issue 1384&lt;/code&gt;_.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The index page is always sorted by one of its columns, with clearer
+indications of the sorting.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &amp;quot;previous file&amp;quot; shortcut key didn&#39;t work on the index
+page, but now it
+does, fixing &lt;code&gt;issue 1765&lt;/code&gt;_.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The debug output showing which configuration files were tried now
+shows
+absolute paths to help diagnose problems where settings aren&#39;t taking
+effect,
+and is renamed from &amp;quot;attempted_config_files&amp;quot; to the more
+logical
+&amp;quot;config_files_attempted.&amp;quot;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Python 3.13.0a6 is supported.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;.. _issue 780: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/780&#34;&gt;nedbat/coveragepy#780&lt;/a&gt;
+.. _issue 1384: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1384&#34;&gt;nedbat/coveragepy#1384&lt;/a&gt;
+.. _issue 1765: &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1765&#34;&gt;nedbat/coveragepy#1765&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;.. _changes_7-4-4:&lt;/p&gt;
+&lt;h2&gt;Version 7.4.4 — 2024-03-14&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Fix: in some cases, even with &lt;code&gt;[run] relative_files=True&lt;/code&gt;,
+a data file
+could be created with absolute path names. When combined with other
+relative
+data files, it was random whether the absolute file names would be made
+relative or not. If they weren&#39;t, then a file would be listed twice in
+reports, as detailed in &lt;code&gt;issue 1752&lt;/code&gt;_. This is now fixed:
+absolute file
+names are always made relative when combining. Thanks to Bruno Rodrigues
+dos
+Santos for support.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Fix: the last case of a match/case statement had an incorrect message
+if the
+branch was missed.  It said the pattern never matched, when actually the
+branch is missed if the last case always matched.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Fix: clicking a line number in the HTML report now positions more
+accurately.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;... (truncated)&lt;/p&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/5f4e0348da6b51bcc6171685081062f9565ec1cc&#34;&gt;&lt;code&gt;5f4e034&lt;/code&gt;&lt;/a&gt;
+docs: sample HTML for 7.5.0&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/ed97cfb375dc9a7ecb6b2f9c5e513f29b9286646&#34;&gt;&lt;code&gt;ed97cfb&lt;/code&gt;&lt;/a&gt;
+docs: prep for 7.5.0&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/41e01d3ef0f98ec256173fd1864488cc72ab6f73&#34;&gt;&lt;code&gt;41e01d3&lt;/code&gt;&lt;/a&gt;
+build: use macos 13 for 3.8 and 3.9 while GitHub rolls out macos 14&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/583f0c0deb0c0f232019521ad574ce24a61d66dc&#34;&gt;&lt;code&gt;583f0c0&lt;/code&gt;&lt;/a&gt;
+test: add a test for skipping covered functions&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/b115ed34fcf65bdf444e4d79fc15a9a987aad24d&#34;&gt;&lt;code&gt;b115ed3&lt;/code&gt;&lt;/a&gt;
+refactor: keep Analysis private&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/40a052e2fa31496e52347d880657a552ce2d642c&#34;&gt;&lt;code&gt;40a052e&lt;/code&gt;&lt;/a&gt;
+docs: document CodeRegion and its plugin methods&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/2ff9933ee74a8d8048968fef9cdec68ba372b4dc&#34;&gt;&lt;code&gt;2ff9933&lt;/code&gt;&lt;/a&gt;
+docs: remove comment that now explains nothing.&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/a6ba1c8ea6f780d8d351a237d47aff9d396ccb48&#34;&gt;&lt;code&gt;a6ba1c8&lt;/code&gt;&lt;/a&gt;
+fix: html report pages fully validate&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/74c87a821b8db7f0dc131e42756d58f3a7abc784&#34;&gt;&lt;code&gt;74c87a8&lt;/code&gt;&lt;/a&gt;
+fix: previous page shortcut works in index page. &lt;a
+href=&#34;https://redirect.github.com/nedbat/coveragepy/issues/1765&#34;&gt;#1765&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/nedbat/coveragepy/commit/e016967ca656414f8372f3de6cab648a2b0778ae&#34;&gt;&lt;code&gt;e016967&lt;/code&gt;&lt;/a&gt;
+feat: main index page links to other index pages&lt;/li&gt;
+&lt;li&gt;Additional commits viewable in &lt;a
+href=&#34;https://github.com/nedbat/coveragepy/compare/7.4.4...7.5.0&#34;&gt;compare
+view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`1257861`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1257861f0b1df2cd9057c6ffe2d50427fc13b9fa))
+
+* chore(deps-dev): update flake8-bugbear requirement from 24.2.6 to 24.4.26 (#604)
+
+Updates the requirements on
+[flake8-bugbear](https://github.com/PyCQA/flake8-bugbear) to permit the
+latest version.
+&lt;details&gt;
+&lt;summary&gt;Release notes&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/releases&#34;&gt;flake8-bugbear&#39;s
+releases&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;24.4.6&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;B909: Fix false positive affecting containers of mutables (&lt;a
+href=&#34;https://redirect.github.com/PyCQA/flake8-bugbear/issues/469&#34;&gt;#469&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/8d524af8739b042e813976e88e75b7106ccfd4c3&#34;&gt;&lt;code&gt;8d524af&lt;/code&gt;&lt;/a&gt;
+Update CHANGES + move to version 24.4.26 to release&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/b4986aafd409f9a3cd0e9c9c9ec1dea86a67f703&#34;&gt;&lt;code&gt;b4986aa&lt;/code&gt;&lt;/a&gt;
+fix(b909): Fix false positive affecting containers of mutables (&lt;a
+href=&#34;https://redirect.github.com/PyCQA/flake8-bugbear/issues/469&#34;&gt;#469&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/b9f9dce9258a2440f203d87a529ea2f3b174c884&#34;&gt;&lt;code&gt;b9f9dce&lt;/code&gt;&lt;/a&gt;
+Update CHANGES + move to version 24.4.21 to release&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/54ecfbcfd98e9dc78e22c2478b805a85c3a4a271&#34;&gt;&lt;code&gt;54ecfbc&lt;/code&gt;&lt;/a&gt;
+[pre-commit.ci] pre-commit autoupdate (&lt;a
+href=&#34;https://redirect.github.com/PyCQA/flake8-bugbear/issues/466&#34;&gt;#466&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/1855fae573137def68ec1c751b726a0fbb1a1c90&#34;&gt;&lt;code&gt;1855fae&lt;/code&gt;&lt;/a&gt;
+[pre-commit.ci] pre-commit autoupdate (&lt;a
+href=&#34;https://redirect.github.com/PyCQA/flake8-bugbear/issues/464&#34;&gt;#464&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/fa48bc1efe6a75d3949434c343539c57b6a015f3&#34;&gt;&lt;code&gt;fa48bc1&lt;/code&gt;&lt;/a&gt;
+Add pragma comment to line length ignores (&lt;a
+href=&#34;https://redirect.github.com/PyCQA/flake8-bugbear/issues/463&#34;&gt;#463&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/6bf907ced61739dcb298ffc1abf3d3e9a112e41a&#34;&gt;&lt;code&gt;6bf907c&lt;/code&gt;&lt;/a&gt;
+B909 improvements (&lt;a
+href=&#34;https://redirect.github.com/PyCQA/flake8-bugbear/issues/460&#34;&gt;#460&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/28fe268a6607ea82095a4b0f144b5b1bc4e0a767&#34;&gt;&lt;code&gt;28fe268&lt;/code&gt;&lt;/a&gt;
+[pre-commit.ci] pre-commit autoupdate (&lt;a
+href=&#34;https://redirect.github.com/PyCQA/flake8-bugbear/issues/461&#34;&gt;#461&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/76a71f4aa517b0b475c36c34cabbc84845ad6b5f&#34;&gt;&lt;code&gt;76a71f4&lt;/code&gt;&lt;/a&gt;
+Revert &amp;quot;Remove debug print seems was left&amp;quot;&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/commit/23cf46dfa3f9b6e7e2013260b70fd29ca6b727ed&#34;&gt;&lt;code&gt;23cf46d&lt;/code&gt;&lt;/a&gt;
+Remove debug print seems was left&lt;/li&gt;
+&lt;li&gt;See full diff in &lt;a
+href=&#34;https://github.com/PyCQA/flake8-bugbear/compare/24.2.6...24.4.26&#34;&gt;compare
+view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`e64258d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e64258dd1bfde3230c9b1b59680f1d09416b764d))
+
+* chore(deps-dev): update mypy requirement from 1.9.0 to 1.10.0 (#602)
+
+Updates the requirements on [mypy](https://github.com/python/mypy) to
+permit the latest version.
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/python/mypy/blob/master/CHANGELOG.md&#34;&gt;mypy&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h1&gt;Mypy Release Notes&lt;/h1&gt;
+&lt;h2&gt;Next release&lt;/h2&gt;
+&lt;h2&gt;Mypy 1.10&lt;/h2&gt;
+&lt;p&gt;We’ve just uploaded mypy 1.10 to the Python Package Index (&lt;a
+href=&#34;https://pypi.org/project/mypy/&#34;&gt;PyPI&lt;/a&gt;). Mypy is a static type
+checker for Python. This release includes new features, performance
+improvements and bug fixes. You can install it as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;python3 -m pip install -U mypy
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can read the full documentation for this release on &lt;a
+href=&#34;http://mypy.readthedocs.io&#34;&gt;Read the Docs&lt;/a&gt;.&lt;/p&gt;
+&lt;h4&gt;Support TypeIs (PEP 742)&lt;/h4&gt;
+&lt;p&gt;Mypy now supports &lt;code&gt;TypeIs&lt;/code&gt; (&lt;a
+href=&#34;https://peps.python.org/pep-0742/&#34;&gt;PEP 742&lt;/a&gt;), which allows
+functions to narrow the type of a value, similar to
+&lt;code&gt;isinstance()&lt;/code&gt;. Unlike &lt;code&gt;TypeGuard&lt;/code&gt;,
+&lt;code&gt;TypeIs&lt;/code&gt; can narrow in both the &lt;code&gt;if&lt;/code&gt; and
+&lt;code&gt;else&lt;/code&gt; branches of an if statement:&lt;/p&gt;
+&lt;pre lang=&#34;python&#34;&gt;&lt;code&gt;from typing_extensions import TypeIs
+&lt;p&gt;def is_str(s: object) -&amp;gt; TypeIs[str]:
+return isinstance(s, str)&lt;/p&gt;
+&lt;p&gt;def f(o: str | int) -&amp;gt; None:
+if is_str(o):
+# Type of o is &#39;str&#39;
+...
+else:
+# Type of o is &#39;int&#39;
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;TypeIs&lt;/code&gt; will be added to the &lt;code&gt;typing&lt;/code&gt; module
+in Python 3.13, but it
+can be used on earlier Python versions by importing it from
+&lt;code&gt;typing_extensions&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This feature was contributed by Jelle Zijlstra (PR &lt;a
+href=&#34;https://redirect.github.com/python/mypy/pull/16898&#34;&gt;16898&lt;/a&gt;).&lt;/p&gt;
+&lt;h4&gt;Support TypeVar Defaults (PEP 696)&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://peps.python.org/pep-0696/&#34;&gt;PEP 696&lt;/a&gt; adds support
+for type parameter defaults.
+Example:&lt;/p&gt;
+&lt;pre lang=&#34;python&#34;&gt;&lt;code&gt;from typing import Generic
+from typing_extensions import TypeVar
+&lt;p&gt;&amp;lt;/tr&amp;gt;&amp;lt;/table&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;... (truncated)&lt;/p&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/3faf0fc4798ec3ee6b1cd123965193dc0a753fb0&#34;&gt;&lt;code&gt;3faf0fc&lt;/code&gt;&lt;/a&gt;
+Remove +dev for version for release 1.10&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/a5998d20402515f0c0bf05c7fe1029e93aa9bfa8&#34;&gt;&lt;code&gt;a5998d2&lt;/code&gt;&lt;/a&gt;
+Update CHANGELOG.md (&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/17159&#34;&gt;#17159&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/62ea5b01f0c0c99e7db93326cb8d219eecfb3cb6&#34;&gt;&lt;code&gt;62ea5b0&lt;/code&gt;&lt;/a&gt;
+Various updates to changelog for 1.10 (&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/17158&#34;&gt;#17158&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/2f0864c4e55a74700d8ce2d97ab2d3ca2b288513&#34;&gt;&lt;code&gt;2f0864c&lt;/code&gt;&lt;/a&gt;
+Update CHANGELOG.md with draft for release 1.10 (&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/17150&#34;&gt;#17150&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/e1443bbade91118794055449cc8b4b4f7fd08b7d&#34;&gt;&lt;code&gt;e1443bb&lt;/code&gt;&lt;/a&gt;
+fix: incorrect returned type of access descriptors on unions of types
+(&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/16604&#34;&gt;#16604&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/5161ac2e5b73dc7597536eb4444219868317e5d9&#34;&gt;&lt;code&gt;5161ac2&lt;/code&gt;&lt;/a&gt;
+Sync typeshed (&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/17124&#34;&gt;#17124&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/e2fc1f28935806ca04b18fab277217f583b51594&#34;&gt;&lt;code&gt;e2fc1f2&lt;/code&gt;&lt;/a&gt;
+Fix crash when expanding invalid Unpack in a &lt;code&gt;Callable&lt;/code&gt; alias
+(&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/17028&#34;&gt;#17028&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/3ff6e47c57a67e807e0b4579a816b4f66ab16824&#34;&gt;&lt;code&gt;3ff6e47&lt;/code&gt;&lt;/a&gt;
+Docs: docstrings in checker.py, ast_helpers.py (&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/16908&#34;&gt;#16908&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/732d98ecb2a98e4eaea14aba1ed8ac9c1f5ccdb6&#34;&gt;&lt;code&gt;732d98e&lt;/code&gt;&lt;/a&gt;
+Fix string formatting for string enums (&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/16555&#34;&gt;#16555&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/python/mypy/commit/80190101f68b52e960c22572ed6cc814de078b9c&#34;&gt;&lt;code&gt;8019010&lt;/code&gt;&lt;/a&gt;
+Narrow individual items when matching a tuple to a sequence pattern (&lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/16905&#34;&gt;#16905&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Additional commits viewable in &lt;a
+href=&#34;https://github.com/python/mypy/compare/1.9.0...v1.10.0&#34;&gt;compare
+view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+&lt;details&gt;
+&lt;summary&gt;Most Recent Ignore Conditions Applied to This Pull
+Request&lt;/summary&gt;
+
+| Dependency Name | Ignore Conditions |
+| --- | --- |
+| mypy | [&gt;= 0.971.a, &lt; 0.972] |
+&lt;/details&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`40aa0cd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/40aa0cdf8852e09794bdacf085db2f157505df83))
+
+### Fix
+
+* fix: json validation allow arbitrary `$schema`  value (#613)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/612
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`08b7c60`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/08b7c607360b65215d9d29d42ae86e60c6efe49b))
+
+
 ## v7.3.2 (2024-04-26)
 
 ### Fix
