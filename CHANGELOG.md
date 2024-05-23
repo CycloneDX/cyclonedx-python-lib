@@ -2,6 +2,741 @@
 
 
 
+## v7.4.0 (2024-05-23)
+
+### Chore
+
+* chore(deps-dev): update xmldiff requirement from 2.6.3 to 2.7.0 (#620)
+
+Updates the requirements on [xmldiff](https://github.com/Shoobx/xmldiff)
+to permit the latest version.
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/Shoobx/xmldiff/blob/master/CHANGES.rst&#34;&gt;xmldiff&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;2.7.0 (2024-05-13)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Changed the comparison to make accurate and standard more accurate,
+although fast gets less accurate as a result.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Changed usage of deprecated &lt;code&gt;pkg_resources&lt;/code&gt; package to
+&lt;code&gt;importlib.metadata&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A &lt;code&gt;use_replace&lt;/code&gt; flag was added to the
+&lt;code&gt;XMLFormatter&lt;/code&gt; by Thomas Pfitzinger.
+It changes text replacement from delete and insert tags to a replace
+tag.
+It&#39;s not currently accessaible thtough the CLI, the question is it is
+better
+to add a new formatter name, or an option to pass in formatter
+flags.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Added option to XMLFormatter to use replace tags&lt;/li&gt;
+&lt;li&gt;in _make_diff_tags after diffing, neighboring delete/insert diffs
+are joined to a replace tag&lt;/li&gt;
+&lt;li&gt;the deleted text is added as an attribute
+(&amp;quot;old-text&amp;quot;)&lt;/li&gt;
+&lt;li&gt;the inserted text is the element&#39;s text&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2.6.3 (2023-05-21)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;And there was a namespace bug in the patch as well. &lt;a
+href=&#34;https://redirect.github.com/Shoobx/xmldiff/issues/118&#34;&gt;#118&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2.6.2 (2023-05-21)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Solved an error in the xmlformatter when using default namespaces.
+&lt;a
+href=&#34;https://redirect.github.com/Shoobx/xmldiff/issues/89&#34;&gt;#89&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2.6.1 (2023-04-05)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/Shoobx/xmldiff/issues/108&#34;&gt;#108&lt;/a&gt;:
+Fixed an error that happens if using namespaces like ns0 or ns1.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2.6 (2023-04-03)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Added &lt;code&gt;InsertNamespace&lt;/code&gt; and &lt;code&gt;DeleteNamespace&lt;/code&gt;
+actions for better handling
+of changing namespaces. Should improve any &amp;quot;Unknown namespace
+prefix&amp;quot;
+errors. Changing the URI of a a namespace prefix is not supported, and
+will
+raise an error.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2.6b1 (2023-01-12)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Used geometric mean for the node_ratio, for better handling of simple
+nodes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Added an experimental --best-match method that is slower, but
+generate&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;... (truncated)&lt;/p&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;See full diff in &lt;a
+href=&#34;https://github.com/Shoobx/xmldiff/commits&#34;&gt;compare view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`c3e17cf`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c3e17cfe9e4b7389a5be7768d201ad51932f7934))
+
+* chore(deps-dev): update pep8-naming requirement from 0.13.3 to 0.14.1 (#619)
+
+Updates the requirements on
+[pep8-naming](https://github.com/PyCQA/pep8-naming) to permit the latest
+version.
+&lt;details&gt;
+&lt;summary&gt;Release notes&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/releases&#34;&gt;pep8-naming&#39;s
+releases&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;0.14.1&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Require Python 3.8 or later.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/blob/main/CHANGELOG.rst&#34;&gt;pep8-naming&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;0.14.1 - 2024-05-17&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Require Python 3.8 or later.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;0.14.0 - 2024-05-16&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Drop support for Python 3.7.&lt;/li&gt;
+&lt;li&gt;Add support for Python 3.12.&lt;/li&gt;
+&lt;li&gt;Ignore methods decorated by &lt;code&gt;@typing.override&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Perform case-sensitive &lt;code&gt;ignore-names&lt;/code&gt; globbing on all
+platforms.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;0.13.3 - 2022-12-19&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Formally require flake8 5.0.0 or later.&lt;/li&gt;
+&lt;li&gt;Add support for Python 3.11.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;0.13.2 - 2022-08-19&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Formally require Python 3.7 or later using
+&lt;code&gt;python_requires&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;0.13.1 - 2022-07-15&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Fix warnings related to deprecated options syntax.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;0.13.0 - 2022-06-22&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Python 3.7 or later is now required.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;setUpModule&lt;/code&gt; and &lt;code&gt;tearDownModule&lt;/code&gt; are now
+exempted by default.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;0.12.1 - 2021-08-06&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Fix potential stack exhaustion in the N818 check.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;0.12.0 - 2021-07-06&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;flake8 3.9.1 or later is now required.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;N818 checks exception class names for an &amp;quot;Error&amp;quot; suffix
+(disabled by default).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;asyncSetUp&lt;/code&gt; and &lt;code&gt;asyncTearDown&lt;/code&gt; are now
+exempted by default.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;... (truncated)&lt;/p&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/f0edf20bd88cbd0950240ebeeea4fe6f4d90a094&#34;&gt;&lt;code&gt;f0edf20&lt;/code&gt;&lt;/a&gt;
+Prepare the 0.14.1 release&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/b652e8f72b1352d4915a69e1d45a308da05e8dba&#34;&gt;&lt;code&gt;b652e8f&lt;/code&gt;&lt;/a&gt;
+Merge pull request &lt;a
+href=&#34;https://redirect.github.com/PyCQA/pep8-naming/issues/231&#34;&gt;#231&lt;/a&gt;
+from PyCQA/sigmavirus24-patch-1&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/a960999da40e598c0bd6b5de099fcad2f5c0d5ac&#34;&gt;&lt;code&gt;a960999&lt;/code&gt;&lt;/a&gt;
+Fix python_version&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/94517379f5993e1f0f8e79c379ebcc66c9cdf753&#34;&gt;&lt;code&gt;9451737&lt;/code&gt;&lt;/a&gt;
+Update setup.py&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/c0bcb7f7c80abcbc4f157226f43536da672dcf6d&#34;&gt;&lt;code&gt;c0bcb7f&lt;/code&gt;&lt;/a&gt;
+Prepare the 0.14.0 release&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/975beede1be69afa9c39622825d80fb5827a6570&#34;&gt;&lt;code&gt;975beed&lt;/code&gt;&lt;/a&gt;
+Refactor FunctionArgNamesCheck (N803,N804,N805)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/01df3f37b933c71a986a31865b9339bf4b69714a&#34;&gt;&lt;code&gt;01df3f3&lt;/code&gt;&lt;/a&gt;
+Pass &#39;parents&#39; as a parameter when walking the tree&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/de0963ca5b2d1e7ad8c0e6133ca6010262f82e4c&#34;&gt;&lt;code&gt;de0963c&lt;/code&gt;&lt;/a&gt;
+Merge Python 3.8+ tests into main test modules&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/0ddfceaf2be9ccf39f9c0882011c0dd42d338280&#34;&gt;&lt;code&gt;0ddfcea&lt;/code&gt;&lt;/a&gt;
+Remove Python 3.7 compatibility code&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/commit/0e8f745949700a99c87e42846de13a01836f5a8b&#34;&gt;&lt;code&gt;0e8f745&lt;/code&gt;&lt;/a&gt;
+Drop support for Python 3.7&lt;/li&gt;
+&lt;li&gt;Additional commits viewable in &lt;a
+href=&#34;https://github.com/PyCQA/pep8-naming/compare/0.13.3...0.14.1&#34;&gt;compare
+view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`c036912`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c036912e4d4a15c8928094bed6ddf43cae65400c))
+
+* chore(deps-dev): update flake8-annotations requirement from 3.1.0 to 3.1.1 (#618)
+
+Updates the requirements on
+[flake8-annotations](https://github.com/sco1/flake8-annotations) to
+permit the latest version.
+&lt;details&gt;
+&lt;summary&gt;Release notes&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/releases&#34;&gt;flake8-annotations&#39;s
+releases&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;Release v3.1.1&lt;/h2&gt;
+&lt;h2&gt;[v3.1.1]&lt;/h2&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/167&#34;&gt;#167&lt;/a&gt;
+Add module-level support for the &lt;code&gt;--respect-type-ignore&lt;/code&gt;
+flag&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/blob/main/CHANGELOG.md&#34;&gt;flake8-annotations&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;[v3.1.1]&lt;/h2&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/167&#34;&gt;#167&lt;/a&gt;
+Add module-level support for the &lt;code&gt;--respect-type-ignore&lt;/code&gt;
+flag&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v3.1.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/164&#34;&gt;#164&lt;/a&gt;
+Add &lt;code&gt;--respect-type-ignore&lt;/code&gt; to support suppression of errors
+for functions annotated with &lt;code&gt;type: ignore&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v3.0.1]&lt;/h2&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/155&#34;&gt;#155&lt;/a&gt;
+Remove upper bound on Python constraint&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v3.0.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Add &lt;code&gt;ANN402&lt;/code&gt; for the presence of type comments&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Python 3.8.1 is now the minimum supported version&lt;/li&gt;
+&lt;li&gt;Flake8 v5.0 is now the minimum supported version&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Removed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Remove support for &lt;a
+href=&#34;https://www.python.org/dev/peps/pep-0484/#type-comments&#34;&gt;PEP
+484-style&lt;/a&gt; type comments
+&lt;ul&gt;
+&lt;li&gt;See: &lt;a
+href=&#34;https://mail.python.org/archives/list/typing-sig@python.org/thread/66JDHQ2I3U3CPUIYA43W7SPEJLLPUETG/&#34;&gt;https://mail.python.org/archives/list/typing-sig@python.org/thread/66JDHQ2I3U3CPUIYA43W7SPEJLLPUETG/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;See: &lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/12947&#34;&gt;python/mypy#12947&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Remove &lt;code&gt;ANN301&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.9.1]&lt;/h2&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/144&#34;&gt;#144&lt;/a&gt;
+Unpin the version ceiling for &lt;code&gt;attrs&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Fixed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;(Internal) Fix unit tests for opinionated warning codes in
+&lt;code&gt;flake8 &amp;gt;= 5.0&lt;/code&gt; (See: &lt;a
+href=&#34;https://redirect.github.com/pycqa/flake8/issues/284&#34;&gt;pycqa/flake8#284&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.9.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/135&#34;&gt;#135&lt;/a&gt;
+Add &lt;code&gt;--allow-star-arg-any&lt;/code&gt; to support suppression of
+&lt;code&gt;ANN401&lt;/code&gt; for &lt;code&gt;*args&lt;/code&gt; and
+&lt;code&gt;**kwargs&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.8.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/131&#34;&gt;#131&lt;/a&gt;
+Add the &lt;code&gt;ANN4xx&lt;/code&gt; error level for opinionated warnings that
+are disabled by default.&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/131&#34;&gt;#131&lt;/a&gt;
+Add &lt;code&gt;ANN401&lt;/code&gt; for use of &lt;code&gt;typing.Any&lt;/code&gt; as an
+argument annotation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Python 3.7 is now the minimum supported version&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.7.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/122&#34;&gt;#122&lt;/a&gt;
+Add support for Flake8 v4.x&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Fixed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/117&#34;&gt;#117&lt;/a&gt;
+Stop including &lt;code&gt;CHANGELOG.md&lt;/code&gt; when building wheels.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;... (truncated)&lt;/p&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/d27be86996bb75bf0867eb24fe710cdb39ec5188&#34;&gt;&lt;code&gt;d27be86&lt;/code&gt;&lt;/a&gt;
+Release v3.1.1&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/30976acb5519994266ee59e464162ac36c5bd0da&#34;&gt;&lt;code&gt;30976ac&lt;/code&gt;&lt;/a&gt;
+Add test for linting empty source&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/3faf64747fba3b347a857ddf6d5c71372f676d4c&#34;&gt;&lt;code&gt;3faf647&lt;/code&gt;&lt;/a&gt;
+Bump ver&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/62d013ee6e8c13b9fd085fcddb90ce6bf9f8a4ec&#34;&gt;&lt;code&gt;62d013e&lt;/code&gt;&lt;/a&gt;
+Add support for module-level type ignore&lt;/li&gt;
+&lt;li&gt;See full diff in &lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/compare/v3.1.0...v3.1.1&#34;&gt;compare
+view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9ee5a97`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9ee5a9799e04e9522278e4d17cb7e1a3e9972ecc))
+
+* chore(deps-dev): update flake8-annotations requirement from 3.0.1 to 3.1.0 (#615)
+
+Updates the requirements on
+[flake8-annotations](https://github.com/sco1/flake8-annotations) to
+permit the latest version.
+&lt;details&gt;
+&lt;summary&gt;Release notes&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/releases&#34;&gt;flake8-annotations&#39;s
+releases&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;Release v3.1.0&lt;/h2&gt;
+&lt;h2&gt;[v3.1.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/164&#34;&gt;#164&lt;/a&gt;
+Add &lt;code&gt;--respect-type-ignore&lt;/code&gt; to support suppression of errors
+for functions annotated with &lt;code&gt;type: ignore&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Changelog&lt;/summary&gt;
+&lt;p&gt;&lt;em&gt;Sourced from &lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/blob/main/CHANGELOG.md&#34;&gt;flake8-annotations&#39;s
+changelog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;[v3.1.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/164&#34;&gt;#164&lt;/a&gt;
+Add &lt;code&gt;--respect-type-ignore&lt;/code&gt; to support suppression of errors
+for functions annotated with &lt;code&gt;type: ignore&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v3.0.1]&lt;/h2&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/155&#34;&gt;#155&lt;/a&gt;
+Remove upper bound on Python constraint&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v3.0.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Add &lt;code&gt;ANN402&lt;/code&gt; for the presence of type comments&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Python 3.8.1 is now the minimum supported version&lt;/li&gt;
+&lt;li&gt;Flake8 v5.0 is now the minimum supported version&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Removed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Remove support for &lt;a
+href=&#34;https://www.python.org/dev/peps/pep-0484/#type-comments&#34;&gt;PEP
+484-style&lt;/a&gt; type comments
+&lt;ul&gt;
+&lt;li&gt;See: &lt;a
+href=&#34;https://mail.python.org/archives/list/typing-sig@python.org/thread/66JDHQ2I3U3CPUIYA43W7SPEJLLPUETG/&#34;&gt;https://mail.python.org/archives/list/typing-sig@python.org/thread/66JDHQ2I3U3CPUIYA43W7SPEJLLPUETG/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;See: &lt;a
+href=&#34;https://redirect.github.com/python/mypy/issues/12947&#34;&gt;python/mypy#12947&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Remove &lt;code&gt;ANN301&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.9.1]&lt;/h2&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/144&#34;&gt;#144&lt;/a&gt;
+Unpin the version ceiling for &lt;code&gt;attrs&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Fixed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;(Internal) Fix unit tests for opinionated warning codes in
+&lt;code&gt;flake8 &amp;gt;= 5.0&lt;/code&gt; (See: &lt;a
+href=&#34;https://redirect.github.com/pycqa/flake8/issues/284&#34;&gt;pycqa/flake8#284&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.9.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/135&#34;&gt;#135&lt;/a&gt;
+Add &lt;code&gt;--allow-star-arg-any&lt;/code&gt; to support suppression of
+&lt;code&gt;ANN401&lt;/code&gt; for &lt;code&gt;*args&lt;/code&gt; and
+&lt;code&gt;**kwargs&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.8.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/131&#34;&gt;#131&lt;/a&gt;
+Add the &lt;code&gt;ANN4xx&lt;/code&gt; error level for opinionated warnings that
+are disabled by default.&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/131&#34;&gt;#131&lt;/a&gt;
+Add &lt;code&gt;ANN401&lt;/code&gt; for use of &lt;code&gt;typing.Any&lt;/code&gt; as an
+argument annotation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Changed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Python 3.7 is now the minimum supported version&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.7.0]&lt;/h2&gt;
+&lt;h3&gt;Added&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/122&#34;&gt;#122&lt;/a&gt;
+Add support for Flake8 v4.x&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Fixed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/117&#34;&gt;#117&lt;/a&gt;
+Stop including &lt;code&gt;CHANGELOG.md&lt;/code&gt; when building wheels.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;[v2.6.2]&lt;/h2&gt;
+&lt;h3&gt;Fixed&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/107&#34;&gt;#107&lt;/a&gt;,
+&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/108&#34;&gt;#108&lt;/a&gt;
+Change incorrect column index yielded for return annotation errors.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;... (truncated)&lt;/p&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;Commits&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/ec8b88b35613b5274148a87decf2dfbecec1df31&#34;&gt;&lt;code&gt;ec8b88b&lt;/code&gt;&lt;/a&gt;
+Merge pull request &lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/165&#34;&gt;#165&lt;/a&gt;
+from sco1/type-ignore-opt&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/e698866920a8afbad9f2511399688ce4954d9bfb&#34;&gt;&lt;code&gt;e698866&lt;/code&gt;&lt;/a&gt;
+Bump ver&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/2ce2fa5b64d258e8ccbf3c4b26e8ab047713d504&#34;&gt;&lt;code&gt;2ce2fa5&lt;/code&gt;&lt;/a&gt;
+Add &lt;code&gt;--respect-type-ignore&lt;/code&gt; flag&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/ef0cfc0e4f4622c3072d1721fe74bbf00287e4c7&#34;&gt;&lt;code&gt;ef0cfc0&lt;/code&gt;&lt;/a&gt;
+Bump black from 24.2.0 to 24.3.0 (&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/163&#34;&gt;#163&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/483cdd3ce0261cb290ce7235a16b5580e67c8a80&#34;&gt;&lt;code&gt;483cdd3&lt;/code&gt;&lt;/a&gt;
+Swap some to Ruff&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/26b6ba5ca9517d16760196d9c8b2ab0859a070c8&#34;&gt;&lt;code&gt;26b6ba5&lt;/code&gt;&lt;/a&gt;
+[pre-commit.ci] pre-commit autoupdate (&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/161&#34;&gt;#161&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/897648efc24715fc5c762cf89352a4dfd5e4ee03&#34;&gt;&lt;code&gt;897648e&lt;/code&gt;&lt;/a&gt;
+[pre-commit.ci] pre-commit autoupdate (&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/160&#34;&gt;#160&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/01c330874dcdee8231e733a2c336a9ff27829528&#34;&gt;&lt;code&gt;01c3308&lt;/code&gt;&lt;/a&gt;
+Automatically publish wheel to GitHub release&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/c9a5d30b5edda312a1374a2a4ad1cb65bd944385&#34;&gt;&lt;code&gt;c9a5d30&lt;/code&gt;&lt;/a&gt;
+Remove &lt;code&gt;ast.NameConstant&lt;/code&gt; references&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/commit/50ad178c8aa02cb05110a04f3806003b6d0d16bf&#34;&gt;&lt;code&gt;50ad178&lt;/code&gt;&lt;/a&gt;
+[pre-commit.ci] pre-commit autoupdate (&lt;a
+href=&#34;https://redirect.github.com/sco1/flake8-annotations/issues/158&#34;&gt;#158&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Additional commits viewable in &lt;a
+href=&#34;https://github.com/sco1/flake8-annotations/compare/v3.0.1...v3.1.0&#34;&gt;compare
+view&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;br /&gt;
+
+
+Dependabot will resolve any conflicts with this PR as long as you don&#39;t
+alter it yourself. You can also trigger a rebase manually by commenting
+`@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+&lt;details&gt;
+&lt;summary&gt;Dependabot commands and options&lt;/summary&gt;
+&lt;br /&gt;
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits
+that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after
+your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge
+and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating
+it. You can achieve the same result by closing it manually
+- `@dependabot show &lt;dependency name&gt; ignore conditions` will show all
+of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop
+Dependabot creating any more for this major version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop
+Dependabot creating any more for this minor version (unless you reopen
+the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop
+Dependabot creating any more for this dependency (unless you reopen the
+PR or upgrade to it yourself)
+
+
+&lt;/details&gt;
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`22474d8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/22474d895a4382cd50e77799c148eec1ae1a426a))
+
+### Documentation
+
+* docs: OSSP best practice percentage
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`75f58dc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/75f58dcd41c1495737bff69d354beeeff7660c15))
+
+### Feature
+
+* feat:  updated SPDX license list to `v3.24.0` (#622)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3f9770a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3f9770a95fbe48dfc0cb911a6526690017c2fb37))
+
+
 ## v7.3.4 (2024-05-06)
 
 ### Fix
