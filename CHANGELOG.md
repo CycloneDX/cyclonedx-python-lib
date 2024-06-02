@@ -1,18 +1,6 @@
 # CHANGELOG
 
 
-## Unreleased
-
-### Documentation
-
-* docs: exclude dep bumps from changelog
-
-fixes #616
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`863b25b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/863b25b2ec8c76795ebb89c6d647b040f157d90f))
-
-
-
 ## v7.4.0 (2024-05-23)
 
 ### Documentation
