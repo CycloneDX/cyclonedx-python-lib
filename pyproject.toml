@@ -117,10 +117,12 @@ upload_to_vcs_release = true
 changelog_file = "CHANGELOG.md"
 exclude_commit_patterns = [
   "chore\\(release\\):",
+  "chore\\(deps\\):",
+  "chore\\(deps-dev\\):",
 ]
 
 [tool.semantic_release.branches.main]
-match = "(main|master)"
+match = "(main|master|jkowalleck)"
 prerelease = false
 
 [tool.semantic_release.branches."step"]
