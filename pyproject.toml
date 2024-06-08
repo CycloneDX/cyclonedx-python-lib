@@ -93,7 +93,7 @@ pep8-naming = "0.14.1"
 isort = "5.13.2"
 autopep8 = "2.2.0"
 mypy = "1.10.0"
-tox = "4.15.0"
+tox = "4.15.1"
 xmldiff = "2.7.0"
 bandit = "1.7.8"
 
