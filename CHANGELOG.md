@@ -1,6 +1,42 @@
 # CHANGELOG
 
 
+
+## v7.4.1 (2024-06-12)
+
+### Chore
+
+* chore: rollback py sem release matcher
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c33a130`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c33a130378b351ce6f67a563d0a2a70e699e6725))
+
+### Documentation
+
+* docs: exclude dep bumps from changelog (#627)
+
+fixes #616
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`60361f7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/60361f781a1b356f24a553e133e0f58a2ad37a7d))
+
+### Fix
+
+* fix: `cyclonedx.model.Property.value` value is optional (#631)
+
+`cyclonedx.model.Property.value` value is optional, in accordance with
+the spec.
+
+fixes #630
+
+---------
+
+Signed-off-by: Michael Schlenker &lt;michael.schlenker@contact-software.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: Michael Schlenker &lt;michael.schlenker@contact-software.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ad0f98b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ad0f98b433fd85ba14db6b6288f33d98bc79ee51))
+
+
 ## v7.4.0 (2024-05-23)
 
 ### Documentation
