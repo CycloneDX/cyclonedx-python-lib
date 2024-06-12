@@ -845,7 +845,7 @@ class Property:
     Specifies an individual property with a name and value.
     """
 
-    def __init__(self, *, name: str, value: str) -> None:
+    def __init__(self, *, name: str, value: Optional[str] = None) -> None:
         self.name = name
         self.value = value
 
@@ -868,7 +868,7 @@ class Property:
 
     @property
     @serializable.xml_name('.')
-    def value(self) -> str:
+    def value(self) -> Optional[str]:
         """
         Value of this Property.
 
@@ -878,7 +878,7 @@ class Property:
         return self._value
 
     @value.setter
-    def value(self, value: str) -> None:
+    def value(self, value: Optional[str]) -> None:
         self._value = value
 
     def __eq__(self, other: object) -> bool:
