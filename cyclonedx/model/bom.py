@@ -40,6 +40,7 @@ from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
 from . import ExternalReference, Property, ThisTool, Tool
 from .bom_ref import BomRef
 from .component import Component
+from .composition import Composition
 from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
@@ -310,6 +311,7 @@ class Bom:
                  serial_number: Optional[UUID] = None, version: int = 1,
                  metadata: Optional[BomMetaData] = None,
                  dependencies: Optional[Iterable[Dependency]] = None,
+                 compositions: Optional[Iterable[Composition]] = None,
                  vulnerabilities: Optional[Iterable[Vulnerability]] = None,
                  properties: Optional[Iterable[Property]] = None) -> None:
         """
@@ -324,8 +326,9 @@ class Bom:
         self.components = components or []  # type:ignore[assignment]
         self.services = services or []  # type:ignore[assignment]
         self.external_references = external_references or []  # type:ignore[assignment]
-        self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
+        self.compositions = compositions or []  # type:ignore[assignment]
         self.dependencies = dependencies or []  # type:ignore[assignment]
+        self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
 
     @property
@@ -453,24 +456,38 @@ class Bom:
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
     @serializable.xml_sequence(50)
     def dependencies(self) -> 'SortedSet[Dependency]':
+        """
+        Provides the ability to document dependency relationships.
+
+        Returns:
+            Set of `Dependency`
+        """
         return self._dependencies
 
     @dependencies.setter
     def dependencies(self, dependencies: Iterable[Dependency]) -> None:
         self._dependencies = SortedSet(dependencies)
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot3)
-    # @serializable.view(SchemaVersion1Dot4)
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(6)
-    # def compositions(self) -> ...:
-    #     ...  # TODO Since CDX 1.3
-    #
-    # @compositions.setter
-    # def compositions(self, ...) -> None:
-    #     ...  # TODO Since CDX 1.3
+    @property
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'composition')
+    @serializable.xml_sequence(60)
+    def compositions(self) -> 'SortedSet[Composition]':
+        """
+        Compositions describe constituent parts (including components, services, and dependency relationships) and
+        their completeness.
+
+        Returns:
+            `SortedSet[Composition]`
+        """
+        return self._compositions
+
+    @compositions.setter
+    def compositions(self, compositions: Optional[Iterable[Composition]]) -> None:
+        self._compositions = SortedSet(compositions)
 
     @property
     # @serializable.view(SchemaVersion1Dot3) @todo: Update py-serializable to support view by OutputFormat filtering
@@ -694,7 +711,7 @@ class Bom:
     def __hash__(self) -> int:
         return hash((
             self.serial_number, self.version, self.metadata, tuple(self.components), tuple(self.services),
-            tuple(self.external_references), tuple(self.dependencies), tuple(self.properties),
+            tuple(self.external_references), tuple(self.dependencies), tuple(self.compositions), tuple(self.properties),
             tuple(self.vulnerabilities),
         ))
 
