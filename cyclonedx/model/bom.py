@@ -26,7 +26,11 @@ import serializable
 from sortedcontainers import SortedSet
 
 from .._internal.time import get_now_utc as _get_now_utc
-from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from ..exception.model import (
+    LicenseExpressionAlongWithOthersException,
+    MutuallyExclusivePropertiesException,
+    UnknownComponentDependencyException,
+)
 from ..model.tool import Tool, ToolRepository, ToolRepositoryHelper
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -119,17 +123,20 @@ class BomMetaData:
     @serializable.type_mapping(ToolRepositoryHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(3)
-    def tools(self) -> ToolRepository:
+    def tools(self) -> Union[Iterable[Tool], ToolRepository]:
         """
         Tools used to create this BOM.
 
         Returns:
             `Set` of `Tool` objects.
         """
-        return self._tools  # type: ignore
+        if self._tools._tools:  # pylint: disable=protected-access
+            return self._tools._tools  # pylint: disable=protected-access
+
+        return self._tools
 
     @tools.setter
-    def tools(self, tools: Union[ToolRepository, Iterable[Tool]]) -> None:
+    def tools(self, tools: Union[Iterable[Tool], ToolRepository]) -> None:
         if isinstance(tools, ToolRepository):
             self._tools = tools
         else:
@@ -137,9 +144,14 @@ class BomMetaData:
             warn(
                 '`bom.metadata.tools` as a list of Tool objects is deprecated from CycloneDX v1.5 '
                 'onwards. Please use lists of `Component` and `Service` objects as `tools.components` '
-                'and `tools.services`, respecitvely'
+                'and `tools.services`, respectively.'
             )
-            self._tools = ToolRepository(tools=tools)  # type:ignore
+            if self._tools._components or self._tools._services:
+                raise MutuallyExclusivePropertiesException(
+                    'Cannot serialize both old (CycloneDX <= 1.4) and new '
+                    '(CycloneDX >= 1.5) format for tools.'
+                )
+            self._tools = ToolRepository(tools=tools)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')

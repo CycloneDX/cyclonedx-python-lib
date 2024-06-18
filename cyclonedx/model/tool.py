@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterable, List, Optional, Type, Union
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Type, Union
 from xml.etree.ElementTree import Element  # nosec B405
 
 import serializable
@@ -7,7 +7,8 @@ from serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
+from ..exception.model import MutuallyExclusivePropertiesException
+from ..exception.serialization import CycloneDxDeserializationException
 from ..model import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
 from ..model.component import Component
 from ..model.service import Service
@@ -152,15 +153,57 @@ class ToolRepository:
         # Must use components/services or tools. Cannot use both
         self._tools = tools or SortedSet()
 
-    def __getattr__(self, name: str) -> Any:
-        if name == 'components':
-            return self._components
-        if name == 'services':
-            return self._services
+    @property
+    def components(self) -> Iterable[Component]:
+        """
+        Returns:
+            A SortedSet of Components
+        """
+        return self._components
 
+    @components.setter
+    def components(self, components: Iterable[Component]) -> None:
+        if self._tools:
+            raise MutuallyExclusivePropertiesException(
+                'Cannot serialize both old (CycloneDX <= 1.4) and new '
+                '(CycloneDX >= 1.5) format for tools.'
+            )
+
+        self._components = components
+
+    @property
+    def services(self) -> Iterable[Service]:
+        """
+        Returns:
+            A SortedSet of Services
+        """
+        return self._services
+
+    @services.setter
+    def services(self, services: Iterable[Service]) -> None:
+        if self._tools:
+            raise MutuallyExclusivePropertiesException(
+                'Cannot serialize both old (CycloneDX <= 1.4) and new '
+                '(CycloneDX >= 1.5) format for tools: {o!r}'
+            )
+        self._services = services
+
+    def __getattr__(self, name: str) -> Any:
+        """
+        Enables us to behave as list of tools to maintain
+        backward compatibility.
+
+        Returns:
+            An attribute of SortedSet
+        """
         return getattr(self._tools, name)
 
-    def __iter__(self) -> Tool:
+    def __iter__(self) -> Iterator[Tool]:
+        """
+        Also part of acting as a list of tools
+
+        Returns Iterator[Tool]
+        """
         for t in self._tools:
             yield t
 
@@ -172,12 +215,6 @@ class ToolRepositoryHelper(BaseHelper):
                        **__: Any) -> Any:
         if not any([o._tools, o._components, o._services]):  # pylint: disable=protected-access
             return None
-
-        if o._tools and any([o._components, o._services]):  # pylint: disable=protected-access
-            raise SerializationOfUnexpectedValueException(
-                'Cannot serialize both old (CycloneDX <= 1.4) and new '
-                '(CycloneDX >= 1.5) format for tools: {o!r}'
-            )
 
         if o._tools:  # pylint: disable=protected-access
             return [Tool.as_json(t) for t in o._tools]  # pylint: disable=protected-access
