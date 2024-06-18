@@ -18,7 +18,7 @@
 
 from datetime import datetime
 from itertools import chain
-from typing import TYPE_CHECKING, Generator, Iterable, Optional, Union
+from typing import TYPE_CHECKING, Any, AnyStr, Dict, Generator, Iterable, Optional, Union
 from uuid import UUID, uuid4
 from warnings import warn
 
@@ -27,6 +27,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from ..model.tool import Tool, ToolRepository, ToolRepositoryHelper
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -37,7 +38,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property, ThisTool, Tool
+from . import ExternalReference, Property, ThisTool
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -59,7 +60,7 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.5/#type_metadata
     """
 
-    def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
+    def __init__(self, *, tools: Optional[Union[Iterable[Tool], Dict[AnyStr, Any]]] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[License]] = None,
@@ -115,22 +116,30 @@ class BomMetaData:
     #    ... # TODO since CDX1.5
 
     @property
+    @serializable.type_mapping(ToolRepositoryHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(3)
-    def tools(self) -> 'SortedSet[Tool]':
+    def tools(self) -> ToolRepository:
         """
         Tools used to create this BOM.
 
         Returns:
             `Set` of `Tool` objects.
         """
-        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
-        return self._tools
+        return self._tools  # type: ignore
 
     @tools.setter
-    def tools(self, tools: Iterable[Tool]) -> None:
-        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
-        self._tools = SortedSet(tools)
+    def tools(self, tools: Union[ToolRepository, Iterable[Tool]]) -> None:
+        if isinstance(tools, ToolRepository):
+            self._tools = tools
+        else:
+            # This allows the old behavior of assigning the list of tools directly to bom.metadata.tools
+            warn(
+                '`bom.metadata.tools` as a list of Tool objects is deprecated from CycloneDX v1.5 '
+                'onwards. Please use lists of `Component` and `Service` objects as `tools.components` '
+                'and `tools.services`, respecitvely'
+            )
+            self._tools = ToolRepository(tools=tools)  # type:ignore
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
