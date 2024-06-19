@@ -51,6 +51,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 
+
 @serializable.serializable_enum
 class DataFlow(str, Enum):
     """
@@ -1197,6 +1198,7 @@ class Copyright:
 
 # Importing here to avoid a circular import
 from .tool import Tool  # pylint: disable=wrong-import-position
+
 ThisTool = Tool(
     vendor='CycloneDX',
     name='cyclonedx-python-lib',
@@ -1234,4 +1236,5 @@ ThisTool = Tool(
             type=ExternalReferenceType.WEBSITE,
             url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/#readme')
         )
-    ])
+    ]
+)

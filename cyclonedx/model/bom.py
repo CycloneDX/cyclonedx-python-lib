@@ -137,17 +137,6 @@ class BomMetaData:
         if isinstance(tools, ToolsRepository):
             self._tools = tools
         else:
-            # This allows the old behavior of assigning the list of tools directly to bom.metadata.tools
-            warn(
-                '`bom.metadata.tools` as a list of Tool objects is deprecated from CycloneDX v1.5 '
-                'onwards. Please use lists of `Component` and `Service` objects as `tools.components` '
-                'and `tools.services`, respectively.'
-            )
-            if hasattr(self, '_tools') and (self._tools._components or self._tools._services):  # pylint: disable=protected-access
-                raise MutuallyExclusivePropertiesException(
-                    'Cannot serialize both old (CycloneDX <= 1.4) and new '
-                    '(CycloneDX >= 1.5) format for tools.'
-                )
             self._tools = ToolsRepository(tools=tools)
 
     @property
