@@ -169,6 +169,9 @@ class ToolRepository:
     def __len__(self) -> int:
         return len(self._tools)
 
+    def __bool__(self) -> bool:
+        return any([self._tools, self._components, self._services])
+
     @property
     def components(self) -> Iterable[Component]:
         """
