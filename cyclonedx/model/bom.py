@@ -74,7 +74,7 @@ class BomMetaData:
                  # Deprecated as of v1.6
                  manufacture: Optional[OrganizationalEntity] = None) -> None:
         self.timestamp = timestamp or _get_now_utc()
-        self.tools = tools or []  # type:ignore[assignment]
+        self.tools = tools or ToolRepository()  # type:ignore[assignment]
         self.authors = authors or []  # type:ignore[assignment]
         self.component = component
         self.supplier = supplier
@@ -90,7 +90,7 @@ class BomMetaData:
                 DeprecationWarning)
 
         if not tools:
-            self.tools.add(ThisTool)
+            self.tools.add(ThisTool)   # type: ignore[attr-defined]
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
@@ -123,16 +123,13 @@ class BomMetaData:
     @serializable.type_mapping(ToolRepositoryHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(3)
-    def tools(self) -> Union[Iterable[Tool], ToolRepository]:
+    def tools(self) -> ToolRepository:
         """
         Tools used to create this BOM.
 
         Returns:
-            `Set` of `Tool` objects.
+            `ToolRepository` objects.
         """
-        if self._tools._tools:  # pylint: disable=protected-access
-            return self._tools._tools  # pylint: disable=protected-access
-
         return self._tools
 
     @tools.setter
@@ -146,7 +143,7 @@ class BomMetaData:
                 'onwards. Please use lists of `Component` and `Service` objects as `tools.components` '
                 'and `tools.services`, respectively.'
             )
-            if self._tools._components or self._tools._services:
+            if hasattr(self, '_tools') and (self._tools._components or self._tools._services):  # pylint: disable=protected-access
                 raise MutuallyExclusivePropertiesException(
                     'Cannot serialize both old (CycloneDX <= 1.4) and new '
                     '(CycloneDX >= 1.5) format for tools.'

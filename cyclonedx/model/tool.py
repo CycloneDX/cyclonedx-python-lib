@@ -22,7 +22,7 @@ class Tool:
 
     Tool(s) are the things used in the creation of the CycloneDX document.
 
-    Tool might be deprecated since CycloneDX 1.5, but it is not deprecated in this library.
+    `Tool` is deprecated since CycloneDX 1.5, but it is not deprecated in this library.
     In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
@@ -142,16 +142,31 @@ class Tool:
 
 class ToolRepository:
     """
-    The repo of tool formats
+    The repository of tool formats
+
+    This is done so we can maintain backward-compatibility with CycloneDX <= 1.4
+    If using a SortedSet of tools, the object will behave like a sorted set of
+    tools. Otherwise, it will behave like an object with `components`
+    and `services` attributes (which are SortedSets of their respective types).
     """
 
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
                  tools: Optional[Iterable[Tool]] = None) -> None:
-        self._components = components or SortedSet()
-        self._services = services or SortedSet()
-        # Must use components/services or tools. Cannot use both
-        self._tools = tools or SortedSet()
+
+        if tools and (components or services):
+            # Must use components/services or tools. Cannot use both
+            raise MutuallyExclusivePropertiesException(
+                'Cannot define both old (CycloneDX <= 1.4) and new '
+                '(CycloneDX >= 1.5) format for tools.'
+            )
+
+        self._components = SortedSet(components) or SortedSet()
+        self._services = SortedSet(services) or SortedSet()
+        self._tools = SortedSet(tools) or SortedSet()
+
+    def __len__(self) -> int:
+        return len(self._tools)
 
     @property
     def components(self) -> Iterable[Component]:
@@ -165,11 +180,11 @@ class ToolRepository:
     def components(self, components: Iterable[Component]) -> None:
         if self._tools:
             raise MutuallyExclusivePropertiesException(
-                'Cannot serialize both old (CycloneDX <= 1.4) and new '
+                'Cannot define both old (CycloneDX <= 1.4) and new '
                 '(CycloneDX >= 1.5) format for tools.'
             )
 
-        self._components = components
+        self._components = SortedSet(components)
 
     @property
     def services(self) -> Iterable[Service]:
@@ -183,10 +198,10 @@ class ToolRepository:
     def services(self, services: Iterable[Service]) -> None:
         if self._tools:
             raise MutuallyExclusivePropertiesException(
-                'Cannot serialize both old (CycloneDX <= 1.4) and new '
-                '(CycloneDX >= 1.5) format for tools: {o!r}'
+                'Cannot define both old (CycloneDX <= 1.4) and new '
+                '(CycloneDX >= 1.5) format for tools.'
             )
-        self._services = services
+        self._services = SortedSet(services)
 
     def __getattr__(self, name: str) -> Any:
         """
@@ -213,19 +228,19 @@ class ToolRepositoryHelper(BaseHelper):
     def json_normalize(cls, o: ToolRepository, *,
                        view: Optional[Type[ViewType]],
                        **__: Any) -> Any:
-        if not any([o._tools, o._components, o._services]):  # pylint: disable=protected-access
+        if not any([o._tools, o.components, o.services]):  # pylint: disable=protected-access
             return None
 
         if o._tools:  # pylint: disable=protected-access
-            return [Tool.as_json(t) for t in o._tools]  # pylint: disable=protected-access
+            return [Tool.as_json(t) for t in o]  # type: ignore[attr-defined]
 
         result = {}
 
-        if o._components:  # pylint: disable=protected-access
-            result['components'] = [Component.as_json(c) for c in o._components]  # pylint: disable=protected-access
+        if o.components:
+            result['components'] = [Component.as_json(c) for c in o.components]  # type: ignore[attr-defined]
 
-        if o._services:  # pylint: disable=protected-access
-            result['services'] = [Service.as_json(s) for s in o._services]  # pylint: disable=protected-access
+        if o.services:
+            result['services'] = [Service.as_json(s) for s in o.services]  # type: ignore[attr-defined]
 
         return result
 
@@ -240,15 +255,15 @@ class ToolRepositoryHelper(BaseHelper):
         if isinstance(o, Dict):
             if 'components' in o:
                 for c in o['components']:
-                    components.append(Component.from_json(c))
+                    components.append(Component.from_json(c))  # type: ignore[attr-defined]
 
             if 'services' in o:
                 for s in o['services']:
-                    services.append(Service.from_json(s))
+                    services.append(Service.from_json(s))  # type: ignore[attr-defined]
 
         elif isinstance(o, Iterable):
             for t in o:
-                tools.append(Tool.from_json(t))
+                tools.append(Tool.from_json(t))  # type: ignore[attr-defined]
         else:
             raise CycloneDxDeserializationException('unexpected: {o!r}')
 
@@ -260,7 +275,37 @@ class ToolRepositoryHelper(BaseHelper):
                       view: Optional[Type[ViewType]],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
-        pass
+        if not any([o._tools, o.components, o.services]):  # pylint: disable=protected-access
+            return None
+
+        elem = Element(element_name)
+
+        if o._tools:  # pylint: disable=protected-access
+            elem.extend(
+                t.as_xml(  # type: ignore[attr-defined]
+                    view_=view, as_string=False, element_name='tool', xmlns=xmlns)
+                for t in o
+            )
+
+        if o.components:
+            c_elem = Element('components')
+
+            c_elem.extend(
+                c.as_xml(  # type: ignore[attr-defined]
+                    view_=view, as_string=False, element_name='component', xmlns=xmlns)
+                for c in o.components
+            )
+
+        if o.services:
+            s_elem = Element('services')
+
+            s_elem.extend(
+                s.as_xml(  # type: ignore[attr-defined]
+                    view_=view, as_string=False, element_name='services', xmlns=xmlns)
+                for s in o.services
+            )
+
+        return elem
 
     @classmethod
     def xml_denormalize(cls, o: Element,
