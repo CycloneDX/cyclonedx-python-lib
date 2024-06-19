@@ -4,7 +4,7 @@ from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
 import serializable
-from serializable import ViewType
+from serializable import ObjectMetadataLibrary, ViewType
 from serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
@@ -15,6 +15,7 @@ from ..model import ExternalReference, HashType, _HashTypeRepositorySerializatio
 from ..model.component import Component
 from ..model.service import Service
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
+
 
 
 @serializable.serializable_class
@@ -327,7 +328,24 @@ class ToolsRepositoryHelper(BaseHelper):
         return elem
 
     @classmethod
-    def xml_denormalize(cls, o: Element,
+    def xml_denormalize(cls, o: Element, *,
                         default_ns: Optional[str],
-                        **__: Any) -> ToolsRepository:
-        return ToolsRepository()
+                        prop_info: ObjectMetadataLibrary.SerializableProperty,
+                        ctx: Type[Any],
+                        **kwargs: Any) -> ToolsRepository:
+        tools: list[Tool] = []
+        components: list[Component] = []
+        services: list[Service] = []
+
+        for e in o:
+            tag = e.tag if default_ns is None else e.tag.replace(f'{{{default_ns}}}', '')
+            if tag == 'tool':
+                tools.append(Tool.from_xml(e))
+            if tag == 'components':
+                for c in e:
+                    components.append(Component.from_xml(c))
+            if tag == 'services':
+                for s in e:
+                    services.append(Service.from_xml(s))
+
+        return ToolsRepository(tools=tools, components=components, services=services)
