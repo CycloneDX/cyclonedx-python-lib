@@ -50,7 +50,7 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
-
+from .tool import Tool
 
 @serializable.serializable_enum
 class DataFlow(str, Enum):
@@ -1195,7 +1195,6 @@ class Copyright:
 
     def __repr__(self) -> str:
         return f'<Copyright text={self.text}>'
-
 
 ThisTool = Tool(
     vendor='CycloneDX',

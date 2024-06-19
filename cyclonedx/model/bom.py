@@ -31,7 +31,7 @@ from ..exception.model import (
     MutuallyExclusivePropertiesException,
     UnknownComponentDependencyException,
 )
-from ..model.tool import Tool, ToolRepository, ToolRepositoryHelper
+from ..model.tool import Tool, ToolsRepository, ToolsRepositoryHelper
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -74,7 +74,7 @@ class BomMetaData:
                  # Deprecated as of v1.6
                  manufacture: Optional[OrganizationalEntity] = None) -> None:
         self.timestamp = timestamp or _get_now_utc()
-        self.tools = tools or ToolRepository()  # type:ignore[assignment]
+        self.tools = tools or ToolsRepository()  # type:ignore[assignment]
         self.authors = authors or []  # type:ignore[assignment]
         self.component = component
         self.supplier = supplier
@@ -120,21 +120,21 @@ class BomMetaData:
     #    ... # TODO since CDX1.5
 
     @property
-    @serializable.type_mapping(ToolRepositoryHelper)
+    @serializable.type_mapping(ToolsRepositoryHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(3)
-    def tools(self) -> ToolRepository:
+    def tools(self) -> ToolsRepository:
         """
         Tools used to create this BOM.
 
         Returns:
-            `ToolRepository` objects.
+            `ToolsRepository` objects.
         """
         return self._tools
 
     @tools.setter
-    def tools(self, tools: Union[Iterable[Tool], ToolRepository]) -> None:
-        if isinstance(tools, ToolRepository):
+    def tools(self, tools: Union[Iterable[Tool], ToolsRepository]) -> None:
+        if isinstance(tools, ToolsRepository):
             self._tools = tools
         else:
             # This allows the old behavior of assigning the list of tools directly to bom.metadata.tools
@@ -148,7 +148,7 @@ class BomMetaData:
                     'Cannot serialize both old (CycloneDX <= 1.4) and new '
                     '(CycloneDX >= 1.5) format for tools.'
                 )
-            self._tools = ToolRepository(tools=tools)
+            self._tools = ToolsRepository(tools=tools)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')

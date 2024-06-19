@@ -1,5 +1,6 @@
 from json import loads as json_loads
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Type, Union
+from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
 import serializable
@@ -141,7 +142,7 @@ class Tool:
         return f'<Tool name={self.name}, version={self.version}, vendor={self.vendor}>'
 
 
-class ToolRepository:
+class ToolsRepository:
     """
     The repository of tool formats
 
@@ -151,8 +152,18 @@ class ToolRepository:
     and `services` attributes (which are SortedSets of their respective types).
     """
 
+    tools: SortedSet[Tool]
+    """DEPRECATED tools"""
+
+    components: SortedSet[Component]
+    """An array of components used to creatd this SBOM"""
+
+    services: SortedSet[Service]
+    """An array of services used to create this SBOM"""
+
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
+                 # Deprecated in v1.5
                  tools: Optional[Iterable[Tool]] = None) -> None:
 
         if tools and (components or services):
@@ -162,9 +173,13 @@ class ToolRepository:
                 '(CycloneDX >= 1.5) format for tools.'
             )
 
-        self._components = SortedSet(components) or SortedSet()
-        self._services = SortedSet(services) or SortedSet()
-        self._tools = SortedSet(tools) or SortedSet()
+        if tools:
+            warn('Using Tool is deprecated as of CycloneDX v1.5. Components and Services should be used now. '
+                 'See https://cyclonedx.org/docs/1.5/', DeprecationWarning)
+
+        self._components = SortedSet(components or ())
+        self._services = SortedSet(services or ())
+        self._tools = SortedSet(tools or ())
 
     def __len__(self) -> int:
         return len(self._tools)
@@ -227,9 +242,9 @@ class ToolRepository:
             yield t
 
 
-class ToolRepositoryHelper(BaseHelper):
+class ToolsRepositoryHelper(BaseHelper):
     @classmethod
-    def json_normalize(cls, o: ToolRepository, *,
+    def json_normalize(cls, o: ToolsRepository, *,
                        view: Optional[Type[ViewType]],
                        **__: Any) -> Any:
         if not any([o._tools, o.components, o.services]):  # pylint: disable=protected-access
@@ -250,7 +265,7 @@ class ToolRepositoryHelper(BaseHelper):
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
-                         **__: Any) -> ToolRepository:
+                         **__: Any) -> ToolsRepository:
 
         components = []
         services = []
@@ -271,10 +286,10 @@ class ToolRepositoryHelper(BaseHelper):
         else:
             raise CycloneDxDeserializationException('unexpected: {o!r}')
 
-        return ToolRepository(components=components, services=services, tools=tools)
+        return ToolsRepository(components=components, services=services, tools=tools)
 
     @classmethod
-    def xml_normalize(cls, o: ToolRepository, *,
+    def xml_normalize(cls, o: ToolsRepository, *,
                       element_name: str,
                       view: Optional[Type[ViewType]],
                       xmlns: Optional[str],
@@ -314,5 +329,5 @@ class ToolRepositoryHelper(BaseHelper):
     @classmethod
     def xml_denormalize(cls, o: Element,
                         default_ns: Optional[str],
-                        **__: Any) -> ToolRepository:
-        return ToolRepository()
+                        **__: Any) -> ToolsRepository:
+        return ToolsRepository()
