@@ -1,3 +1,4 @@
+from json import loads as json_loads
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Type, Union
 from xml.etree.ElementTree import Element  # nosec B405
 
@@ -232,15 +233,15 @@ class ToolRepositoryHelper(BaseHelper):
             return None
 
         if o._tools:  # pylint: disable=protected-access
-            return [Tool.as_json(t) for t in o]  # type: ignore[attr-defined]
+            return [json_loads(Tool.as_json(t)) for t in o]  # type: ignore[attr-defined]
 
         result = {}
 
         if o.components:
-            result['components'] = [Component.as_json(c) for c in o.components]  # type: ignore[attr-defined]
+            result['components'] = [json_loads(Component.as_json(c)) for c in o.components]  # type: ignore[attr-defined]
 
         if o.services:
-            result['services'] = [Service.as_json(s) for s in o.services]  # type: ignore[attr-defined]
+            result['services'] = [json_loads(Service.as_json(s)) for s in o.services]  # type: ignore[attr-defined]
 
         return result
 
