@@ -28,7 +28,6 @@ from sortedcontainers import SortedSet
 from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import (
     LicenseExpressionAlongWithOthersException,
-    MutuallyExclusivePropertiesException,
     UnknownComponentDependencyException,
 )
 from ..model.tool import Tool, ToolsRepository, ToolsRepositoryHelper

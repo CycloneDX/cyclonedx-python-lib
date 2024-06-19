@@ -17,7 +17,6 @@ from ..model.service import Service
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
 
 
-
 @serializable.serializable_class
 class Tool:
     """
@@ -152,16 +151,6 @@ class ToolsRepository:
     tools. Otherwise, it will behave like an object with `components`
     and `services` attributes (which are SortedSets of their respective types).
     """
-
-    tools: SortedSet[Tool]
-    """DEPRECATED tools"""
-
-    components: SortedSet[Component]
-    """An array of components used to creatd this SBOM"""
-
-    services: SortedSet[Service]
-    """An array of services used to create this SBOM"""
-
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
                  # Deprecated in v1.5
@@ -257,7 +246,8 @@ class ToolsRepositoryHelper(BaseHelper):
         result = {}
 
         if o.components:
-            result['components'] = [json_loads(Component.as_json(c)) for c in o.components]  # type: ignore[attr-defined]
+            result['components'] = [json_loads(Component.as_json(c))
+                                    for c in o.components]  # type: ignore[attr-defined]
 
         if o.services:
             result['services'] = [json_loads(Service.as_json(s)) for s in o.services]  # type: ignore[attr-defined]
