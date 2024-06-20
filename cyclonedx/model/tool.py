@@ -178,7 +178,7 @@ class ToolsRepository:
         return any([self._tools, self._components, self._services])
 
     @property
-    def components(self) -> Iterable[Component]:
+    def components(self) -> SortedSet[Component]:
         """
         Returns:
             A SortedSet of Components
@@ -196,7 +196,7 @@ class ToolsRepository:
         self._components = SortedSet(components)
 
     @property
-    def services(self) -> Iterable[Service]:
+    def services(self) -> SortedSet[Service]:
         """
         Returns:
             A SortedSet of Services
@@ -240,9 +240,6 @@ class ToolsRepositoryHelper(BaseHelper):
         if not any([o._tools, o.components, o.services]):  # pylint: disable=protected-access
             return None
 
-        if o._tools:  # pylint: disable=protected-access
-            return [json_loads(Tool.as_json(t, view_=view)) for t in o]  # type: ignore[attr-defined]
-
         result = {}
 
         if o.components:
@@ -253,7 +250,10 @@ class ToolsRepositoryHelper(BaseHelper):
             result['services'] = [json_loads(Service.as_json(s, view_=view))  # type: ignore[attr-defined]
                                   for s in o.services]
 
-        return result
+        if result:
+            return result
+
+        return [json_loads(Tool.as_json(t, view_=view)) for t in o]  # type: ignore[attr-defined]
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
@@ -291,15 +291,8 @@ class ToolsRepositoryHelper(BaseHelper):
 
         elem = Element(element_name)
 
-        if o._tools:  # pylint: disable=protected-access
-            elem.extend(
-                t.as_xml(  # type: ignore[attr-defined]
-                    view_=view, as_string=False, element_name='tool', xmlns=xmlns)
-                for t in o
-            )
-
         if o.components:
-            c_elem = Element('components')
+            c_elem = Element('{' + xmlns + '}' + 'components')  # type: ignore[operator]
 
             c_elem.extend(
                 c.as_xml(  # type: ignore[attr-defined]
@@ -307,14 +300,27 @@ class ToolsRepositoryHelper(BaseHelper):
                 for c in o.components
             )
 
+            elem.append(c_elem)
+
         if o.services:
-            s_elem = Element('services')
+            s_elem = Element('{' + xmlns + '}' + 'services')  # type: ignore[operator]
 
             s_elem.extend(
                 s.as_xml(  # type: ignore[attr-defined]
-                    view_=view, as_string=False, element_name='services', xmlns=xmlns)
+                    view_=view, as_string=False, element_name='service', xmlns=xmlns)
                 for s in o.services
             )
+
+            elem.append(s_elem)
+
+        if len(elem) > 0:
+            return elem
+
+        elem.extend(
+            t.as_xml(  # type: ignore[attr-defined]
+                view_=view, as_string=False, element_name='tool', xmlns=xmlns)
+            for t in o
+        )
 
         return elem
 

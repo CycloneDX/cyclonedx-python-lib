@@ -18,7 +18,7 @@
 
 from datetime import datetime
 from itertools import chain
-from typing import TYPE_CHECKING, Any, AnyStr, Dict, Generator, Iterable, Optional, Union
+from typing import TYPE_CHECKING, Generator, Iterable, Optional, Union
 from uuid import UUID, uuid4
 from warnings import warn
 
@@ -27,7 +27,6 @@ from sortedcontainers import SortedSet
 
 from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
-from .tool import Tool, ToolsRepository, ToolsRepositoryHelper
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -45,6 +44,7 @@ from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .service import Service
+from .tool import Tool, ToolsRepository, ToolsRepositoryHelper
 from .vulnerability import Vulnerability
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -60,7 +60,7 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.5/#type_metadata
     """
 
-    def __init__(self, *, tools: Optional[Union[Iterable[Tool], Dict[AnyStr, Any]]] = None,
+    def __init__(self, *, tools: Optional[Union[Iterable[Tool], ToolsRepository]] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[License]] = None,
