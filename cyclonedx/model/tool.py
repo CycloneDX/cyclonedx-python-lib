@@ -241,16 +241,17 @@ class ToolsRepositoryHelper(BaseHelper):
             return None
 
         if o._tools:  # pylint: disable=protected-access
-            return [json_loads(Tool.as_json(t)) for t in o]  # type: ignore[attr-defined]
+            return [json_loads(Tool.as_json(t, view_=view)) for t in o]  # type: ignore[attr-defined]
 
         result = {}
 
         if o.components:
-            result['components'] = [json_loads(Component.as_json(c))
-                                    for c in o.components]  # type: ignore[attr-defined]
+            result['components'] = [json_loads(Component.as_json(c, view_=view))  # type: ignore[attr-defined]
+                                    for c in o.components]
 
         if o.services:
-            result['services'] = [json_loads(Service.as_json(s)) for s in o.services]  # type: ignore[attr-defined]
+            result['services'] = [json_loads(Service.as_json(s, view_=view))  # type: ignore[attr-defined]
+                                  for s in o.services]
 
         return result
 
@@ -323,19 +324,19 @@ class ToolsRepositoryHelper(BaseHelper):
                         prop_info: ObjectMetadataLibrary.SerializableProperty,
                         ctx: Type[Any],
                         **kwargs: Any) -> ToolsRepository:
-        tools: list[Tool] = []
-        components: list[Component] = []
-        services: list[Service] = []
+        tools: List[Tool] = []
+        components: List[Component] = []
+        services: List[Service] = []
 
         for e in o:
             tag = e.tag if default_ns is None else e.tag.replace(f'{{{default_ns}}}', '')
             if tag == 'tool':
-                tools.append(Tool.from_xml(e))
+                tools.append(Tool.from_xml(e))  # type: ignore[attr-defined]
             if tag == 'components':
                 for c in e:
-                    components.append(Component.from_xml(c))
+                    components.append(Component.from_xml(c))  # type: ignore[attr-defined]
             if tag == 'services':
                 for s in e:
-                    services.append(Service.from_xml(s))
+                    services.append(Service.from_xml(s))  # type: ignore[attr-defined]
 
         return ToolsRepository(tools=tools, components=components, services=services)

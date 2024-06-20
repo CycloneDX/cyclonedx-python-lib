@@ -1196,8 +1196,9 @@ class Copyright:
     def __repr__(self) -> str:
         return f'<Copyright text={self.text}>'
 
+
 # Importing here to avoid a circular import
-from .tool import Tool  # pylint: disable=wrong-import-position
+from .tool import Tool  # pylint: disable=wrong-import-position # noqa: E402
 
 ThisTool = Tool(
     vendor='CycloneDX',

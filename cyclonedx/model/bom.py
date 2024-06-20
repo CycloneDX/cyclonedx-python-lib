@@ -26,11 +26,8 @@ import serializable
 from sortedcontainers import SortedSet
 
 from .._internal.time import get_now_utc as _get_now_utc
-from ..exception.model import (
-    LicenseExpressionAlongWithOthersException,
-    UnknownComponentDependencyException,
-)
-from ..model.tool import Tool, ToolsRepository, ToolsRepositoryHelper
+from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from .tool import Tool, ToolsRepository, ToolsRepositoryHelper
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -89,7 +86,7 @@ class BomMetaData:
                 DeprecationWarning)
 
         if not tools:
-            self.tools.add(ThisTool)   # type: ignore[attr-defined]
+            self.tools.add(ThisTool)
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
