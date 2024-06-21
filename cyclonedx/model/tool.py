@@ -248,7 +248,7 @@ class ToolsRepositoryHelper(BaseHelper):
 
             if o.services:
                 result['services'] = [json_loads(Service.as_json(s, view_=view))  # type: ignore[attr-defined]
-                                    for s in o.services]
+                                      for s in o.services]
 
             if result:
                 return result
