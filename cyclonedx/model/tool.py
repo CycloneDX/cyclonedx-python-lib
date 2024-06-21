@@ -241,16 +241,17 @@ class ToolsRepositoryHelper(BaseHelper):
 
         result = {}
 
-        if o.components:
-            result['components'] = [json_loads(Component.as_json(c, view_=view))  # type: ignore[attr-defined]
-                                    for c in o.components]
+        if view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+            if o.components:
+                result['components'] = [json_loads(Component.as_json(c, view_=view))  # type: ignore[attr-defined]
+                                        for c in o.components]
 
-        if o.services:
-            result['services'] = [json_loads(Service.as_json(s, view_=view))  # type: ignore[attr-defined]
-                                  for s in o.services]
+            if o.services:
+                result['services'] = [json_loads(Service.as_json(s, view_=view))  # type: ignore[attr-defined]
+                                    for s in o.services]
 
-        if result:
-            return result
+            if result:
+                return result
 
         return [json_loads(Tool.as_json(t, view_=view)) for t in o]  # type: ignore[attr-defined]
 
@@ -288,30 +289,31 @@ class ToolsRepositoryHelper(BaseHelper):
 
         elem = Element(element_name)
 
-        if o.components:
-            c_elem = Element('{' + xmlns + '}' + 'components')  # type: ignore[operator]
+        if view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+            if o.components:
+                c_elem = Element('{' + xmlns + '}' + 'components')  # type: ignore[operator]
 
-            c_elem.extend(
-                c.as_xml(  # type: ignore[attr-defined]
-                    view_=view, as_string=False, element_name='component', xmlns=xmlns)
-                for c in o.components
-            )
+                c_elem.extend(
+                    c.as_xml(  # type: ignore[attr-defined]
+                        view_=view, as_string=False, element_name='component', xmlns=xmlns)
+                    for c in o.components
+                )
 
-            elem.append(c_elem)
+                elem.append(c_elem)
 
-        if o.services:
-            s_elem = Element('{' + xmlns + '}' + 'services')  # type: ignore[operator]
+            if o.services:
+                s_elem = Element('{' + xmlns + '}' + 'services')  # type: ignore[operator]
 
-            s_elem.extend(
-                s.as_xml(  # type: ignore[attr-defined]
-                    view_=view, as_string=False, element_name='service', xmlns=xmlns)
-                for s in o.services
-            )
+                s_elem.extend(
+                    s.as_xml(  # type: ignore[attr-defined]
+                        view_=view, as_string=False, element_name='service', xmlns=xmlns)
+                    for s in o.services
+                )
 
-            elem.append(s_elem)
+                elem.append(s_elem)
 
-        if len(elem) > 0:
-            return elem
+            if len(elem) > 0:
+                return elem
 
         elem.extend(
             t.as_xml(  # type: ignore[attr-defined]
