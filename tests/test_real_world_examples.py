@@ -27,8 +27,12 @@ from tests import OWN_DATA_DIRECTORY
 
 @patch('cyclonedx.model.ThisTool._version', 'TESTING')
 @patch('cyclonedx.model.bom._get_now_utc', return_value=datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00'))
-class TestDeserializeeRealWorldExamples(unittest.TestCase):
+class TestDeserializeRealWorldExamples(unittest.TestCase):
 
     def test_webgoat_6_1(self, *_: Any, **__: Any) -> None:
         with open(join(OWN_DATA_DIRECTORY, 'xml', '1.4', 'webgoat-6.1.xml')) as input_xml:
+            Bom.from_xml(input_xml)
+
+    def test_regression_issue_630(self, *_: Any, **__: Any) -> None:
+        with open(join(OWN_DATA_DIRECTORY, 'xml', '1.6', 'regression_issue630.xml')) as input_xml:
             Bom.from_xml(input_xml)

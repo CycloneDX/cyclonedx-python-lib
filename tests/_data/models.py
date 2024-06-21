@@ -1108,6 +1108,20 @@ def bom_all_same_bomref() -> Tuple[Bom, int]:
     return bom, nr_bomrefs
 
 
+def get_bom_for_issue_630_empty_property() -> Bom:
+    """regression test for issue #630
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/630
+    """
+    return _make_bom(components={
+        Component(
+            bom_ref='example@15.8.0',
+            type=ComponentType.LIBRARY,
+            name='example',
+            version='15.8.0',
+            properties=[Property(name='cdx:npm:package:path')]
+        )
+    })
+
 # ---
 
 
@@ -1147,4 +1161,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_for_issue_497_urls,
     get_bom_for_issue_598_multiple_components_with_purl_qualifiers,
     get_bom_with_component_setuptools_with_v16_fields,
+    get_bom_for_issue_630_empty_property,
 }
