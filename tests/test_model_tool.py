@@ -2,10 +2,13 @@ import io
 from json import loads as json_loads
 from unittest import TestCase
 
+from sortedcontainers import SortedSet
+
+from cyclonedx.exception.model import MutuallyExclusivePropertiesException
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.service import Service
-from cyclonedx.model.tool import Tool
+from cyclonedx.model.tool import Tool, ToolsRepository
 from cyclonedx.output.json import JsonV1Dot5
 from cyclonedx.output.xml import XmlV1Dot5
 from tests import reorder
@@ -121,3 +124,43 @@ class TestModelTool(TestCase):
         </service>
       </services>
     </tools>""", out)
+
+    def test_assign_component(self) -> None:
+        t = ToolsRepository()
+        t.components = SortedSet([Component(name='test-component')])
+        s = t.components.pop()
+        self.assertEqual('test-component', s.name)
+
+    def test_assign_service(self) -> None:
+        t = ToolsRepository()
+        t.services = SortedSet([Service(name='test-service')])
+        s = t.services.pop()
+        self.assertEqual('test-service', s.name)
+
+    def test_non_equal_tool_and_invalid(self) -> None:
+        t = Tool(vendor='VendorA')
+        self.assertFalse(t == 'INVALID')
+
+    def test_invalid_tool_compare(self) -> None:
+        t = Tool(vendor='VendorA')
+        with self.assertRaises(TypeError):
+            r = t < 'INVALID'  # pylint: disable=unused-variable # noqa: disable=E841
+
+    def test_tool_repr(self) -> None:
+        t = Tool(name='test-tool', version='1.2.3', vendor='test-vendor')
+        self.assertEqual(repr(t), '<Tool name=test-tool, version=1.2.3, vendor=test-vendor>')
+
+    def test_invalid_tool_repo_properties(self) -> None:
+        with self.assertRaises(MutuallyExclusivePropertiesException):
+            tr = ToolsRepository(components=[Component(name='test-component')],  # pylint: disable=unused-variable # noqa: disable=E841
+                                 services=[Service(name='test-service')], tools=[Tool()])
+
+    def test_assign_component_with_existing_tool(self) -> None:
+        tr = ToolsRepository(tools=[Tool()])
+        with self.assertRaises(MutuallyExclusivePropertiesException):
+            tr.components = SortedSet([Component(name='test-component')])
+
+    def test_assign_service_with_existing_tool(self) -> None:
+        tr = ToolsRepository(tools=[Tool()])
+        with self.assertRaises(MutuallyExclusivePropertiesException):
+            tr.services = SortedSet([Service(name='test-service')])

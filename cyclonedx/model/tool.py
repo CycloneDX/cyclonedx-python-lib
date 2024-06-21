@@ -10,7 +10,6 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
-from ..exception.serialization import CycloneDxDeserializationException
 from ..model import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
 from ..model.component import Component
 from ..model.service import Service
@@ -275,8 +274,6 @@ class ToolsRepositoryHelper(BaseHelper):
         elif isinstance(o, Iterable):
             for t in o:
                 tools.append(Tool.from_json(t))  # type: ignore[attr-defined]
-        else:
-            raise CycloneDxDeserializationException('unexpected: {o!r}')
 
         return ToolsRepository(components=components, services=services, tools=tools)
 
