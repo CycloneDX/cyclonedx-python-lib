@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6">
+    <components>
+        <component type="library" bom-ref="example@15.8.0">
+            <name>example</name>
+            <version>15.8.0</version>
+            <properties>
+                <property name="cdx:npm:package:path" />
+            </properties>
+        </component>
+    </components>
+</bom>

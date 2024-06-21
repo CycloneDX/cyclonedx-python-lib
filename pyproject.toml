@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
-version = "7.4.0"
+version = "7.4.1"
 description = "Python library for CycloneDX"
 authors = [
   "Paul Horton <phorton@sonatype.com>",
@@ -93,9 +93,9 @@ pep8-naming = "0.14.1"
 isort = "5.13.2"
 autopep8 = "2.2.0"
 mypy = "1.10.0"
-tox = "4.15.0"
+tox = "4.15.1"
 xmldiff = "2.7.0"
-bandit = "1.7.8"
+bandit = "1.7.9"
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html
