@@ -177,7 +177,7 @@ class ToolsRepository:
         return any([self._tools, self._components, self._services])
 
     @property
-    def components(self) -> SortedSet[Component]:
+    def components(self) -> 'SortedSet[Component]':
         """
         Returns:
             A SortedSet of Components
@@ -195,7 +195,7 @@ class ToolsRepository:
         self._components = SortedSet(components)
 
     @property
-    def services(self) -> SortedSet[Service]:
+    def services(self) -> 'SortedSet[Service]':
         """
         Returns:
             A SortedSet of Services
