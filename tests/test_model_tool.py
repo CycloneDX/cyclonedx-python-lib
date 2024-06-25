@@ -1,17 +1,18 @@
-import io
 from json import loads as json_loads
+from os.path import join
 from unittest import TestCase
 
 from sortedcontainers import SortedSet
 
 from cyclonedx.exception.model import MutuallyExclusivePropertiesException
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component, ComponentType
+from cyclonedx.model.component import Component
 from cyclonedx.model.service import Service
 from cyclonedx.model.tool import Tool, ToolsRepository
 from cyclonedx.output.json import JsonV1Dot5
 from cyclonedx.output.xml import XmlV1Dot5
-from tests import reorder
+from tests import OWN_DATA_DIRECTORY, reorder
+from tests._data.models import get_bom_with_tools_with_component_and_service
 
 
 class TestModelTool(TestCase):
@@ -33,97 +34,36 @@ class TestModelTool(TestCase):
         self.assertListEqual(sorted_tools, expected_tools)
 
     def test_tool_with_component_and_service_load_json(self) -> None:
-        bom_json = """
-            {
-                "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
-                "bomFormat": "CycloneDX",
-                "specVersion": "1.5",
-                "serialNumber": "urn:uuid:60bd7113-edac-4277-a518-88d84aef2399",
-                "version": 1337,
-                "metadata": {
-                    "tools": {
-                        "components": [
-                            {
-                                "type": "application",
-                                "author": "anchore",
-                                "name": "syft",
-                                "version": "1.4.1"
-                            }
-                        ],
-                        "services": [
-                            {
-                                "name": "testing-service"
-                            }
-                        ]
-                    },
-                    "component": {
-                        "type": "file",
-                        "name": "Testing tools with components and services"
-                    }
-                }
-            }
-        """
-        bom = Bom.from_json(json_loads(bom_json))   # type: ignore[attr-defined]
-        self.assertEqual(bom.metadata.tools.components[0].type, 'application')
-        self.assertEqual(bom.metadata.tools.components[0].name, 'syft')
-        self.assertEqual(bom.metadata.tools.services[0].name, 'testing-service')
+        test_file = join(OWN_DATA_DIRECTORY, 'json', '1.5',
+                         'bom_with_tool_with_component_and_service.json')
+        with open(test_file, encoding='UTF-8') as f:
+            bom_json = json_loads(f.read())
+        bom = Bom.from_json(bom_json)   # type: ignore[attr-defined]
+        good_bom = get_bom_with_tools_with_component_and_service()
+        self.assertTrue(bom == good_bom)
 
     def test_tool_with_component_and_service_render_json(self) -> None:
-        bom = Bom()
-        bom.metadata.tools.components.add(Component(type=ComponentType.APPLICATION, author='adobe',
-                                                    name='test-component', version='1.2.3'))
-        bom.metadata.tools.services.add(Service(name='test-service'))
-        out = json_loads(JsonV1Dot5(bom).output_as_string())
-        self.assertEqual(out['metadata']['tools']['components'][0]['name'], 'test-component')
-        self.assertEqual(out['metadata']['tools']['services'][0]['name'], 'test-service')
+        bom = get_bom_with_tools_with_component_and_service()
+        test_file = join(OWN_DATA_DIRECTORY, 'json', '1.5',
+                         'bom_with_tool_with_component_and_service.json')
+        with open(test_file, encoding='utf-8') as f:
+            self.assertEqual(JsonV1Dot5(bom).output_as_string(indent=2), f.read())
 
     def test_tool_with_component_and_service_load_xml(self) -> None:
-        bom_xml = io.StringIO("""<?xml version="1.0" ?>
-                    <bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:f9dbe3d0-53ee-485d-96ae-1d4dce7deea2" version="1">
-                        <metadata>
-                            <timestamp>2024-06-20T22:49:51.530453+00:00</timestamp>
-                            <tools>
-                                <components>
-                                    <component type="application" bom-ref="None">
-                                    <author>adobe</author>
-                                    <name>test-component</name>
-                                    <version>1.2.3</version>
-                                    </component>
-                                </components>
-                                <services>
-                                    <service bom-ref="None">
-                                    <name>test-service</name>
-                                    </service>
-                                </services>
-                            </tools>
-                        </metadata>
-                    </bom>
-        """)  # noqa: E501
-        bom = Bom.from_xml(bom_xml)   # type: ignore[attr-defined]
+        test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.5',
+                         'bom_with_tool_with_component_and_service.xml')
+        with open(test_file, encoding='utf-8') as s:
+            bom = Bom.from_xml(s)  # type: ignore[attr-defined]
         self.assertEqual(bom.metadata.tools.components[0].type, 'application')
         self.assertEqual(bom.metadata.tools.components[0].name, 'test-component')
         self.assertEqual(bom.metadata.tools.services[0].name, 'test-service')
 
     def test_tool_with_componet_and_service_render_xml(self) -> None:
-        bom = Bom()
-        bom.metadata.tools.components.add(Component(type=ComponentType.APPLICATION, author='adobe',
-                                                    name='test-component', version='1.2.3'))
-        bom.metadata.tools.services.add(Service(name='test-service'))
-        out = XmlV1Dot5(bom).output_as_string(indent=2)
-        self.assertIn("""   <tools>
-      <components>
-        <component type="application" bom-ref="None">
-          <author>adobe</author>
-          <name>test-component</name>
-          <version>1.2.3</version>
-        </component>
-      </components>
-      <services>
-        <service bom-ref="None">
-          <name>test-service</name>
-        </service>
-      </services>
-    </tools>""", out)
+        bom = get_bom_with_tools_with_component_and_service()
+        test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.5',
+                         'bom_with_tool_with_component_and_service.xml')
+        with open(test_file, encoding='UTF-8') as f:
+            self.assertEqual(XmlV1Dot5(bom).output_as_string(indent=2), f.read())
 
     def test_assign_component(self) -> None:
         t = ToolsRepository()
@@ -164,3 +104,7 @@ class TestModelTool(TestCase):
         tr = ToolsRepository(tools=[Tool()])
         with self.assertRaises(MutuallyExclusivePropertiesException):
             tr.services = SortedSet([Service(name='test-service')])
+
+    def test_equal_other_objectd(self) -> None:
+        tr = ToolsRepository()
+        self.assertFalse(tr == 'other')

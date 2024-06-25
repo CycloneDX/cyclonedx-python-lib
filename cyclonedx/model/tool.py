@@ -170,12 +170,6 @@ class ToolsRepository:
         self._services = SortedSet(services or ())
         self._tools = SortedSet(tools or ())
 
-    def __len__(self) -> int:
-        return len(self._tools)
-
-    def __bool__(self) -> bool:
-        return any([self._tools, self._components, self._services])
-
     @property
     def components(self) -> 'SortedSet[Component]':
         """
@@ -229,6 +223,22 @@ class ToolsRepository:
         """
         for t in self._tools:
             yield t
+
+    def __len__(self) -> int:
+        return len(self._tools)
+
+    def __bool__(self) -> bool:
+        return any([self._tools, self._components, self._services])
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ToolsRepository):
+            return False
+
+        return (all([
+            self._tools == other._tools,
+            self._components == other._components,
+            self._services == other._services,
+        ]))
 
 
 class ToolsRepositoryHelper(BaseHelper):
