@@ -40,7 +40,6 @@ from cyclonedx.model import (
     Note,
     NoteText,
     Property,
-    Tool,
     XsUri,
 )
 from cyclonedx.model.contact import OrganizationalContact
@@ -546,22 +545,3 @@ class TestModelProperty(TestCase):
         sorted_props = sorted(props)
         expected_props = reorder(props, expected_order)
         self.assertListEqual(sorted_props, expected_props)
-
-
-class TestModelTool(TestCase):
-
-    def test_sort(self) -> None:
-        # expected sort order: (vendor, name, version)
-        expected_order = [0, 1, 2, 3, 4, 5, 6]
-        tools = [
-            Tool(vendor='a', name='a', version='1.0.0'),
-            Tool(vendor='a', name='a', version='2.0.0'),
-            Tool(vendor='a', name='b', version='1.0.0'),
-            Tool(vendor='a', name='b'),
-            Tool(vendor='b', name='a'),
-            Tool(vendor='b', name='b', version='1.0.0'),
-            Tool(name='b'),
-        ]
-        sorted_tools = sorted(tools)
-        expected_tools = reorder(tools, expected_order)
-        self.assertListEqual(sorted_tools, expected_tools)

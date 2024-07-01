@@ -89,6 +89,7 @@ from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSourc
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
+from cyclonedx.model.tool import ToolsRepository
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
@@ -1044,6 +1045,18 @@ def get_bom_with_multiple_licenses() -> Bom:
                               licenses=multi_licenses)],
         services=[Service(name='serv', bom_ref='my-serv',
                           licenses=multi_licenses)]
+    )
+
+
+def get_bom_with_tools_with_component_and_service() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            tools=ToolsRepository(
+                components=[Component(type=ComponentType.APPLICATION, author='adobe',
+                                      name='test-component', version='1.2.3', bom_ref='my-component')],
+                services=[Service(name='test-service', bom_ref='my-service')]
+            )
+        )
     )
 
 

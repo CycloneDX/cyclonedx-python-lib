@@ -37,13 +37,14 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property, ThisTool, Tool
+from . import ExternalReference, Property, ThisTool
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .service import Service
+from .tool import Tool, ToolsRepository, ToolsRepositoryHelper
 from .vulnerability import Vulnerability
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -59,7 +60,7 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.5/#type_metadata
     """
 
-    def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
+    def __init__(self, *, tools: Optional[Union[Iterable[Tool], ToolsRepository]] = None,
                  authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
                  supplier: Optional[OrganizationalEntity] = None,
                  licenses: Optional[Iterable[License]] = None,
@@ -69,7 +70,7 @@ class BomMetaData:
                  # Deprecated as of v1.6
                  manufacture: Optional[OrganizationalEntity] = None) -> None:
         self.timestamp = timestamp or _get_now_utc()
-        self.tools = tools or []  # type:ignore[assignment]
+        self.tools = tools or ToolsRepository()  # type:ignore[assignment]
         self.authors = authors or []  # type:ignore[assignment]
         self.component = component
         self.supplier = supplier
@@ -115,22 +116,24 @@ class BomMetaData:
     #    ... # TODO since CDX1.5
 
     @property
+    @serializable.type_mapping(ToolsRepositoryHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(3)
-    def tools(self) -> 'SortedSet[Tool]':
+    def tools(self) -> ToolsRepository:
         """
         Tools used to create this BOM.
 
         Returns:
-            `Set` of `Tool` objects.
+            `ToolsRepository` objects.
         """
-        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
         return self._tools
 
     @tools.setter
-    def tools(self, tools: Iterable[Tool]) -> None:
-        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
-        self._tools = SortedSet(tools)
+    def tools(self, tools: Union[Iterable[Tool], ToolsRepository]) -> None:
+        if isinstance(tools, ToolsRepository):
+            self._tools = tools
+        else:
+            self._tools = ToolsRepository(tools=tools)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
