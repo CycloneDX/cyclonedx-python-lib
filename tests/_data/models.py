@@ -477,7 +477,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             )
         ],
         cwes=[22, 33], description='A description here', detail='Some detail here',
-        recommendation='Upgrade',
+        recommendation='Upgrade', workaround='Describe the workarounds here',
         advisories=[
             VulnerabilityAdvisory(url=XsUri('https://nvd.nist.gov/vuln/detail/CVE-2018-7489')),
             VulnerabilityAdvisory(url=XsUri('http://www.securitytracker.com/id/1040693'))
