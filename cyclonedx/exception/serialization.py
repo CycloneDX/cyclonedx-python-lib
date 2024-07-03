@@ -35,6 +35,15 @@ class CycloneDxDeserializationException(CycloneDxException):
     pass
 
 
+class SerializationOfUnsupportedAggregateTypeException(CycloneDxSerializationException):
+    """
+    Raised when attempting serializing/normalizing a :py:class:`cyclonedx.model.bom.Bom`
+    to a :py:class:`cyclonedx.schema.schema.BaseSchemaVersion`
+    which does not support that :py:class:`cyclonedx.model.composition.AggregateType`
+    .
+    """
+
+
 class SerializationOfUnsupportedComponentTypeException(CycloneDxSerializationException):
     """
     Raised when attempting serializing/normalizing a :py:class:`cyclonedx.model.component.Component`

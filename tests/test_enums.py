@@ -23,13 +23,17 @@ from unittest.mock import patch
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
-from ddt import ddt, idata, named_data
+from ddt import ddt, idata, named_data, unpack
 
 from cyclonedx.exception import MissingOptionalDependencyException
-from cyclonedx.exception.serialization import SerializationOfUnsupportedComponentTypeException
+from cyclonedx.exception.serialization import (
+    SerializationOfUnsupportedAggregateTypeException,
+    SerializationOfUnsupportedComponentTypeException,
+)
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, Patch, Pedigree
+from cyclonedx.model.composition import AggregateType, Composition
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.service import DataClassification, Service
@@ -111,17 +115,44 @@ def dp_cases_from_json_schemas(*jsonpointer: str) -> Generator[str, None, None]:
         yield from dp_cases_from_json_schema(sf, jsonpointer)
 
 
-UNSUPPORTED_OF_SV = frozenset([
+_OF_SV_JSON_SUPPORT_EXCLUSIONS = frozenset([
     (OutputFormat.JSON, SchemaVersion.V1_1),
     (OutputFormat.JSON, SchemaVersion.V1_0),
 ])
 
-NAMED_OF_SV = tuple(
+_OF_SV_DOES_NOT_SUPPORT_COMPOSITIONS = frozenset([
+    (OutputFormat.JSON, SchemaVersion.V1_2),
+    (OutputFormat.JSON, SchemaVersion.V1_1),
+    (OutputFormat.JSON, SchemaVersion.V1_0),
+    (OutputFormat.XML, SchemaVersion.V1_2),
+    (OutputFormat.XML, SchemaVersion.V1_1),
+    (OutputFormat.XML, SchemaVersion.V1_0),
+])
+
+NAMED_OF_SV_1_2_ONWARDS = tuple(
     (f'{of.name}-{sv.to_version()}', of, sv)
     for of in OutputFormat
     for sv in SchemaVersion
-    if (of, sv) not in UNSUPPORTED_OF_SV
+    if (of, sv) not in _OF_SV_JSON_SUPPORT_EXCLUSIONS
 )
+
+
+def _get_named_of_sv_supported(
+    exclusions: Iterable[Tuple[OutputFormat, SchemaVersion]]
+) -> Generator[str, OutputFormat, SchemaVersion]:
+    for of in OutputFormat:
+        for sv in SchemaVersion:
+            if (of, sv) not in exclusions:
+                yield f'{of.name}-{sv.to_version()}', of, sv
+
+
+def _get_named_of_sv_unsupported(
+    unsupported: Iterable[Tuple[OutputFormat, SchemaVersion]]
+) -> Generator[Tuple[str, OutputFormat, SchemaVersion], None, None]:
+    for of in OutputFormat:
+        for sv in SchemaVersion:
+            if (of, sv) in unsupported:
+                yield (f'{of.name}-{sv.to_version()}', of, sv), None, None
 
 
 class _EnumTestCase(TestCase, SnapshotMixin):
@@ -162,7 +193,7 @@ class TestEnumDataFlow(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(DataFlow, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(services=[Service(name='dummy', bom_ref='dummy', data=(
@@ -182,7 +213,7 @@ class TestEnumEncoding(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(Encoding, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=(
@@ -203,7 +234,7 @@ class TestEnumExternalReferenceType(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ExternalReferenceType, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
@@ -225,7 +256,7 @@ class TestEnumHashAlgorithm(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(HashAlgorithm, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', hashes=(
@@ -245,7 +276,7 @@ class TestEnumComponentScope(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ComponentScope, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=(
@@ -262,7 +293,7 @@ class _DP_ComponentType():  # noqa: N801
 
     @classmethod
     def unsupported_cases(cls) -> Generator[Tuple[str, OutputFormat, SchemaVersion, ComponentType], None, None]:
-        for name, of, sv in NAMED_OF_SV:
+        for name, of, sv in NAMED_OF_SV_1_2_ONWARDS:
             if OutputFormat.XML is of:
                 schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], cls.XML_SCHEMA_XPATH))
             elif OutputFormat.JSON is of:
@@ -284,7 +315,7 @@ class TestEnumComponentType(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ComponentType, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         if OutputFormat.XML is of:
@@ -321,7 +352,7 @@ class TestEnumPatchClassification(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(PatchClassification, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
@@ -343,7 +374,7 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ImpactAnalysisAffectedStatus, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(
@@ -365,7 +396,7 @@ class TestEnumImpactAnalysisJustification(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ImpactAnalysisJustification, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=(
@@ -388,7 +419,7 @@ class TestEnumImpactAnalysisResponse(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ImpactAnalysisResponse, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(
@@ -410,7 +441,7 @@ class TestEnumImpactAnalysisState(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ImpactAnalysisState, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=(
@@ -432,7 +463,7 @@ class TestEnumIssueClassification(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(IssueClassification, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[
@@ -456,7 +487,7 @@ class TestEnumVulnerabilityScoreSource(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(VulnerabilityScoreSource, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', id='dummy', ratings=(
@@ -476,7 +507,7 @@ class TestEnumVulnerabilitySeverity(_EnumTestCase):
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(VulnerabilitySeverity, value)
 
-    @named_data(*NAMED_OF_SV)
+    @named_data(*NAMED_OF_SV_1_2_ONWARDS)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(vulnerabilities=[Vulnerability(bom_ref='dummy', id='dummy', ratings=(
@@ -484,3 +515,55 @@ class TestEnumVulnerabilitySeverity(_EnumTestCase):
             for vs in VulnerabilitySeverity
         ))])
         super()._test_cases_render(bom, of, sv)
+
+
+class _DP_AggregateType():  # noqa: N801
+    XML_SCHEMA_XPATH = f"./{SCHEMA_NS}simpleType[@name='aggregateType']"
+    JSON_SCHEMA_POINTER = ('definitions', 'aggregateType')
+
+    @classmethod
+    def unsupported_cases(cls) -> Generator[Tuple[str, OutputFormat, SchemaVersion, AggregateType], None, None]:
+        for (name, of, sv), _a, _b in _get_named_of_sv_unsupported(
+            unsupported=_OF_SV_DOES_NOT_SUPPORT_COMPOSITIONS
+        ):
+            if sv > SchemaVersion.V1_2:
+                for at in AggregateType:
+                    yield f'{name}-{at.name}', of, sv, at
+
+
+@ddt
+class TestAggregateType(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(_DP_AggregateType.XML_SCHEMA_XPATH),
+        dp_cases_from_json_schemas(*_DP_AggregateType.JSON_SCHEMA_POINTER),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(AggregateType, value)
+
+    @idata(_get_named_of_sv_supported(_OF_SV_DOES_NOT_SUPPORT_COMPOSITIONS))
+    @unpack
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    def test_cases_render_valid(self, n: str, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        if OutputFormat.XML is of:
+            schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], _DP_AggregateType.XML_SCHEMA_XPATH))
+        elif OutputFormat.JSON is of:
+            schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], _DP_AggregateType.JSON_SCHEMA_POINTER))
+        else:
+            raise ValueError(f'unexpected of: {of!r}')
+        bom = _make_bom(compositions=(
+            Composition(aggregate=at)
+            for at in AggregateType
+            if at.value in schema_cases
+        ))
+        super()._test_cases_render(bom, of, sv)
+
+    @idata(_DP_AggregateType.unsupported_cases())
+    @unpack
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    def test_cases_render_raises_on_unsupported(self, name: str, of: OutputFormat, sv: SchemaVersion,
+                                                at: AggregateType,
+                                                *_: Any, **__: Any) -> None:
+        bom = _make_bom(compositions=[Composition(aggregate=at)])
+        with self.assertRaises(SerializationOfUnsupportedAggregateTypeException):
+            super()._test_cases_render(bom, of, sv)
