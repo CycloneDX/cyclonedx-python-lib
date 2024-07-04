@@ -71,7 +71,7 @@ class DisjunctiveLicense:
         self, *,
         id: Optional[str] = None, name: Optional[str] = None,
         text: Optional[AttachedText] = None, url: Optional[XsUri] = None,
-        acknowledgement: Optional[LicenseAcknowledgement] = None
+        acknowledgement: Optional[LicenseAcknowledgement] = None,
     ) -> None:
         if not id and not name:
             raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
@@ -249,9 +249,8 @@ class LicenseExpression:
     """
 
     def __init__(
-        self, value: str,
-        # *,  # all optional args are intended to be keyword-args
-        acknowledgement: Optional[LicenseAcknowledgement] = None
+        self, value: str,  # *,  # all optional args are intended to be keyword-args
+        acknowledgement: Optional[LicenseAcknowledgement] = None,
     ) -> None:
         self._value = value
         self._acknowledgement = acknowledgement

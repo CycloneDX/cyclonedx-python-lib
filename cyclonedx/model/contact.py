@@ -37,10 +37,16 @@ class PostalAddress:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_postalAddressType
     """
 
-    def __init__(self, *, bom_ref: Optional[Union[str, BomRef]] = None, country: Optional[str] = None,
-                 region: Optional[str] = None, locality: Optional[str] = None,
-                 post_office_box_number: Optional[str] = None, postal_code: Optional[str] = None,
-                 street_address: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        country: Optional[str] = None,
+        region: Optional[str] = None,
+        locality: Optional[str] = None,
+        post_office_box_number: Optional[str] = None,
+        postal_code: Optional[str] = None,
+        street_address: Optional[str] = None,
+    ) -> None:
         self._bom_ref = bom_ref if isinstance(bom_ref, BomRef) else BomRef(
             value=bom_ref) if bom_ref else None
         self.country = country
@@ -191,7 +197,12 @@ class OrganizationalContact:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalContact
     """
 
-    def __init__(self, *, name: Optional[str] = None, phone: Optional[str] = None, email: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        name: Optional[str] = None,
+        phone: Optional[str] = None,
+        email: Optional[str] = None,
+    ) -> None:
         if not name and not phone and not email:
             raise NoPropertiesProvidedException(
                 'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
@@ -276,9 +287,13 @@ class OrganizationalEntity:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
     """
 
-    def __init__(self, *, name: Optional[str] = None, urls: Optional[Iterable[XsUri]] = None,
-                 contacts: Optional[Iterable[OrganizationalContact]] = None,
-                 address: Optional[PostalAddress] = None) -> None:
+    def __init__(
+        self, *,
+        name: Optional[str] = None,
+        urls: Optional[Iterable[XsUri]] = None,
+        contacts: Optional[Iterable[OrganizationalContact]] = None,
+        address: Optional[PostalAddress] = None,
+    ) -> None:
         if name is None and not urls and not contacts:
             raise NoPropertiesProvidedException(
                 'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
