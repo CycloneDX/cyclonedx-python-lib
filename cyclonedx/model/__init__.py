@@ -79,7 +79,11 @@ class DataClassification:
         https://cyclonedx.org/docs/1.4/xml/#type_dataClassificationType
     """
 
-    def __init__(self, *, flow: DataFlow, classification: str) -> None:
+    def __init__(
+        self, *,
+        flow: DataFlow,
+        classification: str,
+    ) -> None:
         self.flow = flow
         self.classification = classification
 
@@ -165,8 +169,12 @@ class AttachedText:
 
     DEFAULT_CONTENT_TYPE = 'text/plain'
 
-    def __init__(self, *, content: str, content_type: str = DEFAULT_CONTENT_TYPE,
-                 encoding: Optional[Encoding] = None) -> None:
+    def __init__(
+        self, *,
+        content: str,
+        content_type: str = DEFAULT_CONTENT_TYPE,
+        encoding: Optional[Encoding] = None,
+    ) -> None:
         self.content_type = content_type
         self.encoding = encoding
         self.content = content
@@ -435,7 +443,11 @@ class HashType:
 
         raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
 
-    def __init__(self, *, alg: HashAlgorithm, content: str) -> None:
+    def __init__(
+        self, *,
+        alg: HashAlgorithm,
+        content: str,
+    ) -> None:
         self.alg = alg
         self.content = content
 
@@ -735,8 +747,13 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, *, type: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
-                 hashes: Optional[Iterable[HashType]] = None) -> None:
+    def __init__(
+        self, *,
+        type: ExternalReferenceType,
+        url: XsUri,
+        comment: Optional[str] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+    ) -> None:
         self.url = url
         self.comment = comment
         self.type = type
@@ -845,7 +862,11 @@ class Property:
     Specifies an individual property with a name and value.
     """
 
-    def __init__(self, *, name: str, value: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        name: str,
+        value: Optional[str] = None,
+    ) -> None:
         self.name = name
         self.value = value
 
@@ -914,8 +935,12 @@ class NoteText:
 
     DEFAULT_CONTENT_TYPE: str = 'text/plain'
 
-    def __init__(self, *, content: str, content_type: Optional[str] = None,
-                 encoding: Optional[Encoding] = None) -> None:
+    def __init__(
+        self, *,
+        content: str,
+        content_type: Optional[str] = None,
+        encoding: Optional[Encoding] = None,
+    ) -> None:
         self.content = content
         self.content_type = content_type or NoteText.DEFAULT_CONTENT_TYPE
         self.encoding = encoding
@@ -1003,7 +1028,11 @@ class Note:
 
     _LOCALE_TYPE_REGEX = re.compile(r'^[a-z]{2}(?:\-[A-Z]{2})?$')
 
-    def __init__(self, *, text: NoteText, locale: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        text: NoteText,
+        locale: Optional[str] = None,
+    ) -> None:
         self.text = text
         self.locale = locale
 
@@ -1083,9 +1112,14 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, *, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
-                 hashes: Optional[Iterable[HashType]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+    def __init__(
+        self, *,
+        vendor: Optional[str] = None,
+        name: Optional[str] = None,
+        version: Optional[str] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+    ) -> None:
         self.vendor = vendor
         self.name = name
         self.version = version
@@ -1203,8 +1237,12 @@ class IdentifiableAction:
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_identifiableActionType
     """
 
-    def __init__(self, *, timestamp: Optional[datetime] = None, name: Optional[str] = None,
-                 email: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        timestamp: Optional[datetime] = None,
+        name: Optional[str] = None,
+        email: Optional[str] = None,
+    ) -> None:
         if not timestamp and not name and not email:
             raise NoPropertiesProvidedException(
                 'At least one of `timestamp`, `name` or `email` must be provided for an `IdentifiableAction`.'
@@ -1287,7 +1325,10 @@ class Copyright:
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_copyrightsType
     """
 
-    def __init__(self, *, text: str) -> None:
+    def __init__(
+        self, *,
+        text: str,
+    ) -> None:
         self.text = text
 
     @property

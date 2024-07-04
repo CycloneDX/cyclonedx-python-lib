@@ -59,15 +59,19 @@ class BomMetaData:
         See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.5/#type_metadata
     """
 
-    def __init__(self, *, tools: Optional[Iterable[Tool]] = None,
-                 authors: Optional[Iterable[OrganizationalContact]] = None, component: Optional[Component] = None,
-                 supplier: Optional[OrganizationalEntity] = None,
-                 licenses: Optional[Iterable[License]] = None,
-                 properties: Optional[Iterable[Property]] = None,
-                 timestamp: Optional[datetime] = None,
-                 manufacturer: Optional[OrganizationalEntity] = None,
-                 # Deprecated as of v1.6
-                 manufacture: Optional[OrganizationalEntity] = None) -> None:
+    def __init__(
+        self, *,
+        tools: Optional[Iterable[Tool]] = None,
+        authors: Optional[Iterable[OrganizationalContact]] = None,
+        component: Optional[Component] = None,
+        supplier: Optional[OrganizationalEntity] = None,
+        licenses: Optional[Iterable[License]] = None,
+        properties: Optional[Iterable[Property]] = None,
+        timestamp: Optional[datetime] = None,
+        manufacturer: Optional[OrganizationalEntity] = None,
+        # Deprecated as of v1.6
+        manufacture: Optional[OrganizationalEntity] = None,
+    ) -> None:
         self.timestamp = timestamp or _get_now_utc()
         self.tools = tools or []  # type:ignore[assignment]
         self.authors = authors or []  # type:ignore[assignment]
@@ -304,14 +308,18 @@ class Bom:
     `cyclonedx.output.BaseOutput` to produce a CycloneDX document according to a specific schema version and format.
     """
 
-    def __init__(self, *, components: Optional[Iterable[Component]] = None,
-                 services: Optional[Iterable[Service]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None,
-                 serial_number: Optional[UUID] = None, version: int = 1,
-                 metadata: Optional[BomMetaData] = None,
-                 dependencies: Optional[Iterable[Dependency]] = None,
-                 vulnerabilities: Optional[Iterable[Vulnerability]] = None,
-                 properties: Optional[Iterable[Property]] = None) -> None:
+    def __init__(
+        self, *,
+        components: Optional[Iterable[Component]] = None,
+        services: Optional[Iterable[Service]] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+        serial_number: Optional[UUID] = None,
+        version: int = 1,
+        metadata: Optional[BomMetaData] = None,
+        dependencies: Optional[Iterable[Dependency]] = None,
+        vulnerabilities: Optional[Iterable[Vulnerability]] = None,
+        properties: Optional[Iterable[Property]] = None,
+    ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
 

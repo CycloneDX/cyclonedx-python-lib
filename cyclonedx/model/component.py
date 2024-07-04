@@ -73,9 +73,14 @@ class Commit:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_commitType
     """
 
-    def __init__(self, *, uid: Optional[str] = None, url: Optional[XsUri] = None,
-                 author: Optional[IdentifiableAction] = None, committer: Optional[IdentifiableAction] = None,
-                 message: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        uid: Optional[str] = None,
+        url: Optional[XsUri] = None,
+        author: Optional[IdentifiableAction] = None,
+        committer: Optional[IdentifiableAction] = None,
+        message: Optional[str] = None,
+    ) -> None:
         if not uid and not url and not author and not committer and not message:
             raise NoPropertiesProvidedException(
                 'At least one of `uid`, `url`, `author`, `committer` or `message` must be provided for a `Commit`.'
@@ -195,8 +200,11 @@ class ComponentEvidence:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
     """
 
-    def __init__(self, *, licenses: Optional[Iterable[License]] = None,
-                 copyright: Optional[Iterable[Copyright]] = None) -> None:
+    def __init__(
+        self, *,
+        licenses: Optional[Iterable[License]] = None,
+        copyright: Optional[Iterable[Copyright]] = None,
+    ) -> None:
         if not licenses and not copyright:
             raise NoPropertiesProvidedException(
                 'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
@@ -426,7 +434,11 @@ class Diff:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_diffType
     """
 
-    def __init__(self, *, text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(
+        self, *,
+        text: Optional[AttachedText] = None,
+        url: Optional[XsUri] = None,
+    ) -> None:
         if not text and not url:
             raise NoPropertiesProvidedException(
                 'At least one of `text` or `url` must be provided for a `Diff`.'
@@ -507,8 +519,12 @@ class Patch:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_patchType
     """
 
-    def __init__(self, *, type: PatchClassification, diff: Optional[Diff] = None,
-                 resolves: Optional[Iterable[IssueType]] = None) -> None:
+    def __init__(
+        self, *,
+        type: PatchClassification,
+        diff: Optional[Diff] = None,
+        resolves: Optional[Iterable[IssueType]] = None,
+    ) -> None:
         self.type = type
         self.diff = diff
         self.resolves = resolves or []  # type:ignore[assignment]
@@ -596,10 +612,15 @@ class Pedigree:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_pedigreeType
     """
 
-    def __init__(self, *, ancestors: Optional[Iterable['Component']] = None,
-                 descendants: Optional[Iterable['Component']] = None, variants: Optional[Iterable['Component']] = None,
-                 commits: Optional[Iterable[Commit]] = None, patches: Optional[Iterable[Patch]] = None,
-                 notes: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        ancestors: Optional[Iterable['Component']] = None,
+        descendants: Optional[Iterable['Component']] = None,
+        variants: Optional[Iterable['Component']] = None,
+        commits: Optional[Iterable[Commit]] = None,
+        patches: Optional[Iterable[Patch]] = None,
+        notes: Optional[str] = None,
+    ) -> None:
         if not ancestors and not descendants and not variants and not commits and not patches and not notes:
             raise NoPropertiesProvidedException(
                 'At least one of `ancestors`, `descendants`, `variants`, `commits`, `patches` or `notes` must be '
@@ -748,9 +769,16 @@ class Swid:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_swidType
     """
 
-    def __init__(self, *, tag_id: str, name: str, version: Optional[str] = None,
-                 tag_version: Optional[int] = None, patch: Optional[bool] = None,
-                 text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(
+        self, *,
+        tag_id: str,
+        name: str,
+        version: Optional[str] = None,
+        tag_version: Optional[int] = None,
+        patch: Optional[bool] = None,
+        text: Optional[AttachedText] = None,
+        url: Optional[XsUri] = None,
+    ) -> None:
         self.tag_id = tag_id
         self.name = name
         self.version = version
@@ -1031,25 +1059,40 @@ class Component(Dependable):
             )
         )
 
-    def __init__(self, *,
-                 name: str, type: ComponentType = ComponentType.LIBRARY,
-                 mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
-                 supplier: Optional[OrganizationalEntity] = None,
-                 publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
-                 description: Optional[str] = None, scope: Optional[ComponentScope] = None,
-                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[License]] = None,
-                 copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None,
-                 properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
-                 cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
-                 components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
-                 modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
-                 authors: Optional[Iterable[OrganizationalContact]] = None,
-                 omnibor_ids: Optional[Iterable[OmniborId]] = None, swhids: Optional[Iterable[Swhid]] = None,
-                 crypto_properties: Optional[CryptoProperties] = None, tags: Optional[Iterable[str]] = None,
-                 # Deprecated in v1.6
-                 author: Optional[str] = None,
-                 ) -> None:
+    def __init__(
+        self, *,
+        name: str,
+        type: ComponentType = ComponentType.LIBRARY,
+        mime_type: Optional[str] = None,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        supplier: Optional[OrganizationalEntity] = None,
+        publisher: Optional[str] = None,
+        group: Optional[str] = None,
+        version: Optional[str] = None,
+        description: Optional[str] = None,
+        scope: Optional[ComponentScope] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+        licenses: Optional[Iterable[License]] = None,
+        copyright: Optional[str] = None,
+        purl: Optional[PackageURL] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+        properties: Optional[Iterable[Property]] = None,
+        release_notes: Optional[ReleaseNotes] = None,
+        cpe: Optional[str] = None,
+        swid: Optional[Swid] = None,
+        pedigree: Optional[Pedigree] = None,
+        components: Optional[Iterable['Component']] = None,
+        evidence: Optional[ComponentEvidence] = None,
+        modified: bool = False,
+        manufacturer: Optional[OrganizationalEntity] = None,
+        authors: Optional[Iterable[OrganizationalContact]] = None,
+        omnibor_ids: Optional[Iterable[OmniborId]] = None,
+        swhids: Optional[Iterable[Swhid]] = None,
+        crypto_properties: Optional[CryptoProperties] = None,
+        tags: Optional[Iterable[str]] = None,
+        # Deprecated in v1.6
+        author: Optional[str] = None,
+    ) -> None:
         self.type = type
         self.mime_type = mime_type
         if isinstance(bom_ref, BomRef):
