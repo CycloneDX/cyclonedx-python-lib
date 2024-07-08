@@ -108,3 +108,7 @@ class TestModelTool(TestCase):
     def test_equal_other_objectd(self) -> None:
         tr = ToolsRepository()
         self.assertFalse(tr == 'other')
+
+    def test_equal_object(self) -> None:
+        tr = ToolsRepository()
+        self.assertTrue(tr == tr)
