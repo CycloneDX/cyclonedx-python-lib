@@ -61,6 +61,7 @@ class ReleaseNotes:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def type(self) -> str:
         """
         The software versioning type.
@@ -148,6 +149,7 @@ class ReleaseNotes:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'alias')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_sequence(7)
     def aliases(self) -> 'SortedSet[str]':
         """
@@ -165,6 +167,7 @@ class ReleaseNotes:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_sequence(8)
     def tags(self) -> 'SortedSet[str]':
         """

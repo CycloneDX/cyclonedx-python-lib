@@ -60,6 +60,7 @@ class IssueTypeSource:
         self.url = url
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the source. For example "National Vulnerability Database", "NVD", and "Apache".
@@ -151,6 +152,7 @@ class IssueType:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def id(self) -> Optional[str]:
         """
         The identifier of the issue assigned by the source of the issue.
@@ -166,6 +168,7 @@ class IssueType:
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the issue.
@@ -181,6 +184,7 @@ class IssueType:
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
         """
         A description of the issue.

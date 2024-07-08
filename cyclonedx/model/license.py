@@ -109,6 +109,7 @@ class DisjunctiveLicense:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         If SPDX does not define the license used, this field may be used to provide the license name.
@@ -257,6 +258,7 @@ class LicenseExpression:
 
     @property
     @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.json_name('expression')
     def value(self) -> str:
         """

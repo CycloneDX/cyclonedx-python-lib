@@ -113,6 +113,7 @@ class DataClassification:
 
     @property
     @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def classification(self) -> str:
         """
         Data classification tags data according to its type, sensitivity, and value if altered, stolen, or destroyed.
@@ -182,6 +183,7 @@ class AttachedText:
     @property
     @serializable.xml_attribute()
     @serializable.xml_name('content-type')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def content_type(self) -> str:
         """
         Specifies the content type of the text. Defaults to text/plain if not specified.
@@ -890,6 +892,7 @@ class Property:
 
     @property
     @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def value(self) -> Optional[str]:
         """
         Value of this Property.
@@ -1129,6 +1132,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def vendor(self) -> Optional[str]:
         """
         The name of the vendor who created the tool.
@@ -1144,6 +1148,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the tool.
@@ -1270,6 +1275,7 @@ class IdentifiableAction:
         self._timestamp = timestamp
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the individual who performed the action.
@@ -1284,6 +1290,7 @@ class IdentifiableAction:
         self._name = name
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def email(self) -> Optional[str]:
         """
         The email address of the individual who performed the action.
