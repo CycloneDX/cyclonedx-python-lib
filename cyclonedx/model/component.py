@@ -1151,6 +1151,7 @@ class Component(Dependable):
         self._type = type
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.TOKEN)
     def mime_type(self) -> Optional[str]:
         """
         Get any declared mime-type for this Component.
