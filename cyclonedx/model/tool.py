@@ -23,16 +23,21 @@ class Tool:
 
     Tool(s) are the things used in the creation of the CycloneDX document.
 
-    `Tool` is deprecated since CycloneDX 1.5, but it is not deprecated in this library.
+    Tool might be deprecated since CycloneDX 1.5, but it is not deprecated in this library.
     In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, *, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
-                 hashes: Optional[Iterable[HashType]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+    def __init__(
+        self, *,
+        vendor: Optional[str] = None,
+        name: Optional[str] = None,
+        version: Optional[str] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+    ) -> None:
         self.vendor = vendor
         self.name = name
         self.version = version
@@ -41,6 +46,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def vendor(self) -> Optional[str]:
         """
         The name of the vendor who created the tool.
@@ -56,6 +62,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the tool.
@@ -71,6 +78,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The version of the tool.

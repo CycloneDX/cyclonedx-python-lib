@@ -2,6 +2,46 @@
 
 
 
+## v7.5.1 (2024-07-08)
+
+### Fix
+
+* fix: XML serialize `normalizedString` and `token` properly (#646)
+
+fixes #638
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b40f739`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b40f739206a44f7dbd94042fb5e1a37c047ea024))
+
+
+## v7.5.0 (2024-07-04)
+
+### Feature
+
+* feat: add workaround property for v1.5 and v1.6 (#642)
+
+Property `workaround` was missing from the vulnerability model. It was
+added in spec v1.5 and was marked as TODO before.
+
+This is my first contribution on this project so if I done something
+wrong, just say me :smiley:
+
+Signed-off-by: Louis Maillard &lt;louis.maillard@savoirfairelinux.com&gt;
+Signed-off-by: Louis Maillard &lt;louis.maillard@protonmail.com&gt;
+Co-authored-by: Louis Maillard &lt;louis.maillard@savoirfairelinux.com&gt; ([`b5ebcf8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b5ebcf8104faf57030cbc5d8190c78524ab86431))
+
+### Style
+
+* style: model args - one per line (#643)
+
+this should make future PR reviews easier, since adding new args in the
+middle will not cause complete code blocks to change, but is just a new
+line ...
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`5b74b0f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5b74b0f3f29e6f1a14e1e97294fcc8a0a05f3245))
+
+
 ## v7.4.1 (2024-06-12)
 
 ### Chore

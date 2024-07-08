@@ -47,7 +47,11 @@ class IssueTypeSource:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, *, name: Optional[str] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(
+        self, *,
+        name: Optional[str] = None,
+        url: Optional[XsUri] = None,
+    ) -> None:
         if not name and not url:
             raise NoPropertiesProvidedException(
                 'Neither `name` nor `url` were provided - at least one must be provided.'
@@ -56,6 +60,7 @@ class IssueTypeSource:
         self.url = url
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the source. For example "National Vulnerability Database", "NVD", and "Apache".
@@ -114,9 +119,15 @@ class IssueType:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
     """
 
-    def __init__(self, *, type: IssueClassification, id: Optional[str] = None, name: Optional[str] = None,
-                 description: Optional[str] = None, source: Optional[IssueTypeSource] = None,
-                 references: Optional[Iterable[XsUri]] = None) -> None:
+    def __init__(
+        self, *,
+        type: IssueClassification,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        source: Optional[IssueTypeSource] = None,
+        references: Optional[Iterable[XsUri]] = None,
+    ) -> None:
         self.type = type
         self.id = id
         self.name = name
@@ -141,6 +152,7 @@ class IssueType:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def id(self) -> Optional[str]:
         """
         The identifier of the issue assigned by the source of the issue.
@@ -156,6 +168,7 @@ class IssueType:
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the issue.
@@ -171,6 +184,7 @@ class IssueType:
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
         """
         A description of the issue.

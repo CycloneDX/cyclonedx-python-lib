@@ -276,15 +276,20 @@ class AlgorithmProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, primitive: Optional[CryptoPrimitive] = None,
-                 parameter_set_identifier: Optional[str] = None, curve: Optional[str] = None,
-                 execution_environment: Optional[CryptoExecutionEnvironment] = None,
-                 implementation_platform: Optional[CryptoImplementationPlatform] = None,
-                 certification_levels: Optional[Iterable[CryptoCertificationLevel]] = None,
-                 mode: Optional[CryptoMode] = None, padding: Optional[CryptoPadding] = None,
-                 crypto_functions: Optional[Iterable[CryptoFunction]] = None,
-                 classical_security_level: Optional[int] = None,
-                 nist_quantum_security_level: Optional[int] = None) -> None:
+    def __init__(
+        self, *,
+        primitive: Optional[CryptoPrimitive] = None,
+        parameter_set_identifier: Optional[str] = None,
+        curve: Optional[str] = None,
+        execution_environment: Optional[CryptoExecutionEnvironment] = None,
+        implementation_platform: Optional[CryptoImplementationPlatform] = None,
+        certification_levels: Optional[Iterable[CryptoCertificationLevel]] = None,
+        mode: Optional[CryptoMode] = None,
+        padding: Optional[CryptoPadding] = None,
+        crypto_functions: Optional[Iterable[CryptoFunction]] = None,
+        classical_security_level: Optional[int] = None,
+        nist_quantum_security_level: Optional[int] = None,
+    ) -> None:
         self.primitive = primitive
         self.parameter_set_identifier = parameter_set_identifier
         self.curve = curve
@@ -516,10 +521,17 @@ class CertificateProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, subject_name: Optional[str] = None, issuer_name: Optional[str] = None,
-                 not_valid_before: Optional[datetime] = None, not_valid_after: Optional[datetime] = None,
-                 signature_algorithm_ref: Optional[BomRef] = None, subject_public_key_ref: Optional[BomRef] = None,
-                 certificate_format: Optional[str] = None, certificate_extension: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        subject_name: Optional[str] = None,
+        issuer_name: Optional[str] = None,
+        not_valid_before: Optional[datetime] = None,
+        not_valid_after: Optional[datetime] = None,
+        signature_algorithm_ref: Optional[BomRef] = None,
+        subject_public_key_ref: Optional[BomRef] = None,
+        certificate_format: Optional[str] = None,
+        certificate_extension: Optional[str] = None,
+    ) -> None:
         self.subject_name = subject_name
         self.issuer_name = issuer_name
         self.not_valid_before = not_valid_before
@@ -736,7 +748,11 @@ class RelatedCryptoMaterialSecuredBy:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, mechanism: Optional[str] = None, algorithm_ref: Optional[BomRef] = None) -> None:
+    def __init__(
+        self, *,
+        mechanism: Optional[str] = None,
+        algorithm_ref: Optional[BomRef] = None,
+    ) -> None:
         self.mechanism = mechanism
         self.algorithm_ref = algorithm_ref
 
@@ -798,12 +814,21 @@ class RelatedCryptoMaterialProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, type: Optional[RelatedCryptoMaterialType] = None, id: Optional[str] = None,
-                 state: Optional[RelatedCryptoMaterialState] = None, algorithm_ref: Optional[BomRef] = None,
-                 creation_date: Optional[datetime] = None, activation_date: Optional[datetime] = None,
-                 update_date: Optional[datetime] = None, expiration_date: Optional[datetime] = None,
-                 value: Optional[str] = None, size: Optional[int] = None, format: Optional[str] = None,
-                 secured_by: Optional[RelatedCryptoMaterialSecuredBy] = None) -> None:
+    def __init__(
+        self, *,
+        type: Optional[RelatedCryptoMaterialType] = None,
+        id: Optional[str] = None,
+        state: Optional[RelatedCryptoMaterialState] = None,
+        algorithm_ref: Optional[BomRef] = None,
+        creation_date: Optional[datetime] = None,
+        activation_date: Optional[datetime] = None,
+        update_date: Optional[datetime] = None,
+        expiration_date: Optional[datetime] = None,
+        value: Optional[str] = None,
+        size: Optional[int] = None,
+        format: Optional[str] = None,
+        secured_by: Optional[RelatedCryptoMaterialSecuredBy] = None,
+    ) -> None:
         self.type = type
         self.id = id
         self.state = state
@@ -1053,8 +1078,12 @@ class ProtocolPropertiesCipherSuite:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, name: Optional[str] = None, algorithms: Optional[Iterable[BomRef]] = None,
-                 identifiers: Optional[Iterable[str]] = None) -> None:
+    def __init__(
+        self, *,
+        name: Optional[str] = None,
+        algorithms: Optional[Iterable[BomRef]] = None,
+        identifiers: Optional[Iterable[str]] = None,
+    ) -> None:
         self.name = name
         self.algorithms = algorithms or []  # type:ignore[assignment]
         self.identifiers = identifiers or []  # type:ignore[assignment]
@@ -1141,9 +1170,15 @@ class Ikev2TransformTypes:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, encr: Optional[Iterable[BomRef]] = None, prf: Optional[Iterable[BomRef]] = None,
-                 integ: Optional[Iterable[BomRef]] = None, ke: Optional[Iterable[BomRef]] = None,
-                 esn: Optional[bool] = None, auth: Optional[Iterable[BomRef]] = None) -> None:
+    def __init__(
+        self, *,
+        encr: Optional[Iterable[BomRef]] = None,
+        prf: Optional[Iterable[BomRef]] = None,
+        integ: Optional[Iterable[BomRef]] = None,
+        ke: Optional[Iterable[BomRef]] = None,
+        esn: Optional[bool] = None,
+        auth: Optional[Iterable[BomRef]] = None,
+    ) -> None:
         self.encr = encr or []  # type:ignore[assignment]
         self.prf = prf or []  # type:ignore[assignment]
         self.integ = integ or []  # type:ignore[assignment]
@@ -1267,9 +1302,13 @@ class ProtocolProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, type: Optional[ProtocolPropertiesType] = None, version: Optional[str] = None,
-                 cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
-                 ikev2_transform_types: Optional[Ikev2TransformTypes] = None) -> None:
+    def __init__(
+        self, *,
+        type: Optional[ProtocolPropertiesType] = None,
+        version: Optional[str] = None,
+        cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
+        ikev2_transform_types: Optional[Ikev2TransformTypes] = None,
+    ) -> None:
         self.type = type
         self.version = version
         self.cipher_suites = cipher_suites or []  # type:ignore[assignment]
@@ -1361,11 +1400,15 @@ class CryptoProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, asset_type: Optional[CryptoAssetType] = None,
-                 algorithm_properties: Optional[AlgorithmProperties] = None,
-                 certificate_properties: Optional[CertificateProperties] = None,
-                 related_crypto_material_properties: Optional[RelatedCryptoMaterialProperties] = None,
-                 protocol_properties: Optional[ProtocolProperties] = None, oid: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        asset_type: Optional[CryptoAssetType] = None,
+        algorithm_properties: Optional[AlgorithmProperties] = None,
+        certificate_properties: Optional[CertificateProperties] = None,
+        related_crypto_material_properties: Optional[RelatedCryptoMaterialProperties] = None,
+        protocol_properties: Optional[ProtocolProperties] = None,
+        oid: Optional[str] = None,
+    ) -> None:
         self.asset_type = asset_type
         self.algorithm_properties = algorithm_properties
         self.certificate_properties = certificate_properties

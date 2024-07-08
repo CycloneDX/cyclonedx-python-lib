@@ -34,11 +34,19 @@ class ReleaseNotes:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_releaseNotesType
     """
 
-    def __init__(self, *, type: str, title: Optional[str] = None, featured_image: Optional[XsUri] = None,
-                 social_image: Optional[XsUri] = None, description: Optional[str] = None,
-                 timestamp: Optional[datetime] = None, aliases: Optional[Iterable[str]] = None,
-                 tags: Optional[Iterable[str]] = None, resolves: Optional[Iterable[IssueType]] = None,
-                 notes: Optional[Iterable[Note]] = None, properties: Optional[Iterable[Property]] = None) -> None:
+    def __init__(
+        self, *,
+        type: str, title: Optional[str] = None,
+        featured_image: Optional[XsUri] = None,
+        social_image: Optional[XsUri] = None,
+        description: Optional[str] = None,
+        timestamp: Optional[datetime] = None,
+        aliases: Optional[Iterable[str]] = None,
+        tags: Optional[Iterable[str]] = None,
+        resolves: Optional[Iterable[IssueType]] = None,
+        notes: Optional[Iterable[Note]] = None,
+        properties: Optional[Iterable[Property]] = None,
+    ) -> None:
         self.type = type
         self.title = title
         self.featured_image = featured_image
@@ -53,6 +61,7 @@ class ReleaseNotes:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def type(self) -> str:
         """
         The software versioning type.
@@ -140,6 +149,7 @@ class ReleaseNotes:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'alias')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_sequence(7)
     def aliases(self) -> 'SortedSet[str]':
         """
@@ -157,6 +167,7 @@ class ReleaseNotes:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_sequence(8)
     def tags(self) -> 'SortedSet[str]':
         """
