@@ -119,6 +119,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def group(self) -> Optional[str]:
         """
         The grouping name, namespace, or identifier. This will often be a shortened, single name of the company or
@@ -135,6 +136,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> str:
         """
         The name of the service. This will often be a shortened, single name of the service.
@@ -150,6 +152,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(4)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The service version.
@@ -165,6 +168,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(5)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
         """
         Specifies a description for the service.

@@ -213,6 +213,7 @@ class OrganizationalContact:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         Get the name of the contact.
@@ -228,6 +229,7 @@ class OrganizationalContact:
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def email(self) -> Optional[str]:
         """
         Get the email of the contact.
@@ -243,6 +245,7 @@ class OrganizationalContact:
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def phone(self) -> Optional[str]:
         """
         Get the phone of the contact.
@@ -305,6 +308,7 @@ class OrganizationalEntity:
 
     @property
     @serializable.xml_sequence(10)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         Get the name of the organization.

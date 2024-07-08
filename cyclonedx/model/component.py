@@ -94,6 +94,7 @@ class Commit:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def uid(self) -> Optional[str]:
         """
         A unique identifier of the commit. This may be version control specific. For example, Subversion uses revision
@@ -155,6 +156,7 @@ class Commit:
 
     @property
     @serializable.xml_sequence(5)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def message(self) -> Optional[str]:
         """
         The text description of the contents of the commit.
@@ -1151,6 +1153,7 @@ class Component(Dependable):
         self._type = type
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.TOKEN)
     def mime_type(self) -> Optional[str]:
         """
         Get any declared mime-type for this Component.
@@ -1256,6 +1259,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)  # todo: this is deprecated in v1.6?
     @serializable.xml_sequence(4)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def author(self) -> Optional[str]:
         """
         The person(s) or organization(s) that authored the component.
@@ -1271,6 +1275,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(5)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def publisher(self) -> Optional[str]:
         """
         The person(s) or organization(s) that published the component
@@ -1286,6 +1291,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(6)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def group(self) -> Optional[str]:
         """
         The grouping name or identifier. This will often be a shortened, single name of the company or project that
@@ -1305,6 +1311,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(7)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> str:
         """
         The name of the component.
@@ -1328,6 +1335,7 @@ class Component(Dependable):
     @serializable.include_none(SchemaVersion1Dot2, '')
     @serializable.include_none(SchemaVersion1Dot3, '')
     @serializable.xml_sequence(8)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The component version. The version should ideally comply with semantic versioning but is not enforced.
@@ -1348,6 +1356,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(9)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
         """
         Get the description of this Component.
@@ -1419,6 +1428,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(13)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def copyright(self) -> Optional[str]:
         """
         An optional copyright notice informing users of the underlying claims to copyright ownership in a published
