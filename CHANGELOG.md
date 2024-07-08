@@ -2,6 +2,19 @@
 
 
 
+## v7.5.1 (2024-07-08)
+
+### Fix
+
+* fix: XML serialize `normalizedString` and `token` properly (#646)
+
+fixes #638
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b40f739`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b40f739206a44f7dbd94042fb5e1a37c047ea024))
+
+
 ## v7.5.0 (2024-07-04)
 
 ### Feature
