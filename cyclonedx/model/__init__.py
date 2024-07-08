@@ -468,6 +468,7 @@ class HashType:
 
     @property
     @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.TOKEN)
     def content(self) -> str:
         """
         Hash value content.
