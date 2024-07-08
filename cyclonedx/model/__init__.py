@@ -1159,6 +1159,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The version of the tool.

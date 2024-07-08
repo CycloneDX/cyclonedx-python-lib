@@ -1329,6 +1329,7 @@ class Component(Dependable):
     @serializable.include_none(SchemaVersion1Dot2, '')
     @serializable.include_none(SchemaVersion1Dot3, '')
     @serializable.xml_sequence(8)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The component version. The version should ideally comply with semantic versioning but is not enforced.
