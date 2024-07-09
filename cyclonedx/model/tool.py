@@ -1,5 +1,5 @@
 from json import loads as json_loads
-from typing import Any, Dict, Iterable, Iterator, List, Optional, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Type, Union
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
@@ -213,27 +213,25 @@ class ToolsRepository:
             )
         self._services = SortedSet(services)
 
-    def __getattr__(self, name: str) -> Any:
+    @property
+    def tools(self) -> 'SortedSet[Tool]':
         """
-        Enables us to behave as list of tools to maintain
-        backward compatibility.
-
         Returns:
-            An attribute of SortedSet
+            A SortedSet of Tools
         """
-        return getattr(self._tools, name)
+        return self._tools
 
-    def __iter__(self) -> Iterator[Tool]:
-        """
-        Also part of acting as a list of tools
-
-        Returns Iterator[Tool]
-        """
-        for t in self._tools:
-            yield t
+    @tools.setter
+    def tools(self, tools: Iterable[Tool]) -> None:
+        if (self._components or self._tools):
+            raise MutuallyExclusivePropertiesException(
+                'Cannot define both old (CycloneDX <= 1.4) and new '
+                '(CycloneDX >= 1.5) format for tools.'
+            )
+        self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
-        return len(self._tools)
+        return len(self._tools) + len(self._components) + len(self._services)
 
     def __bool__(self) -> bool:
         return any([self._tools, self._components, self._services])
@@ -271,7 +269,7 @@ class ToolsRepositoryHelper(BaseHelper):
             if result:
                 return result
 
-        return [json_loads(Tool.as_json(t, view_=view)) for t in o]  # type: ignore[attr-defined]
+        return [json_loads(Tool.as_json(t, view_=view)) for t in o.tools]  # type: ignore[attr-defined]
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
@@ -336,7 +334,7 @@ class ToolsRepositoryHelper(BaseHelper):
         elem.extend(
             t.as_xml(  # type: ignore[attr-defined]
                 view_=view, as_string=False, element_name='tool', xmlns=xmlns)
-            for t in o
+            for t in o.tools
         )
 
         return elem

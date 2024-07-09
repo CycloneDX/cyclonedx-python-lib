@@ -90,7 +90,7 @@ class BomMetaData:
                 DeprecationWarning)
 
         if not tools:
-            self.tools.add(ThisTool)
+            self.tools.tools.add(ThisTool)
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
@@ -295,7 +295,8 @@ class BomMetaData:
     def __hash__(self) -> int:
         return hash((
             tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
-            self.supplier, self.timestamp, tuple(self.tools), self.manufacturer,
+            self.supplier, self.timestamp, tuple(self.tools.tools), tuple(self.tools.components),
+            tuple(self.tools.services), self.manufacturer,
         ))
 
     def __repr__(self) -> str:
