@@ -267,13 +267,13 @@ class ToolsRepositoryHelper(BaseHelper):
             else:
                 vendor = None
             tools_to_render.add(Tool(  # type: ignore[attr-defined]
+                name=s.name,
                 vendor=vendor,
                 version=s.version,
                 external_references=s.external_references,
             ))
 
         return tools_to_render
-
 
     @classmethod
     def json_normalize(cls, o: ToolsRepository, *,
@@ -296,12 +296,12 @@ class ToolsRepositoryHelper(BaseHelper):
             if result:
                 return result
 
-        if (o.components or o.services) and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+        if ((o.components or o.services)
+                and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum):  # type: ignore[union-attr, misc] # noqa: disable=E501
             # We "down-convert" Components and Services to Tools so we can render to older schemas
             tools_to_render = cls.convert_new_to_old(o.components, o.services)
         else:
             tools_to_render = o.tools
-
 
         return [json_loads(Tool.as_json(t, view_=view)) for t in tools_to_render]  # type: ignore[attr-defined]
 
@@ -365,7 +365,8 @@ class ToolsRepositoryHelper(BaseHelper):
             if len(elem) > 0:
                 return elem
 
-        if (o.components or o.services) and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+        if ((o.components or o.services)
+                and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum):  # type: ignore[union-attr, misc] # noqa: disable=E501
             # We "down-convert" Components and Services to Tools so we can render to older schemas
             tools_to_render = cls.convert_new_to_old(o.components, o.services)
         else:

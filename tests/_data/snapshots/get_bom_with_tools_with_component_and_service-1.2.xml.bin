@@ -7,7 +7,9 @@
         <name>test-component</name>
         <version>1.2.3</version>
       </tool>
-      <tool/>
+      <tool>
+        <name>test-service</name>
+      </tool>
     </tools>
   </metadata>
 </bom>
