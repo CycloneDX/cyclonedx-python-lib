@@ -269,7 +269,35 @@ class ToolsRepositoryHelper(BaseHelper):
             if result:
                 return result
 
-        return [json_loads(Tool.as_json(t, view_=view)) for t in o.tools]  # type: ignore[attr-defined]
+        if (o.components or o.services) and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+            # We "down-convert" Components and Services to Tools so we can render to older schemas
+            tools_to_render: SortedSet[Tool] = SortedSet()
+
+            for c in o.components:
+                tools_to_render.add(Tool(
+                    name=c.name,
+                    vendor=c.group,
+                    version=c.version,
+                    hashes=c.hashes,
+                    external_references=c.external_references,
+                ))
+
+            for s in o.services:
+                if s.provider:
+                    vendor = s.provider.name
+                else:
+                    vendor = None
+                tools_to_render.add(Tool(
+                    vendor=vendor,
+                    version=s.version,
+                    external_references=s.external_references,
+                ))
+
+        else:
+            tools_to_render = o.tools
+
+
+        return [json_loads(Tool.as_json(t, view_=view)) for t in tools_to_render]  # type: ignore[attr-defined]
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
