@@ -7,8 +7,9 @@ from sortedcontainers import SortedSet
 from cyclonedx.exception.model import MutuallyExclusivePropertiesException
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from cyclonedx.model.contact import OrganizationalEntity
 from cyclonedx.model.service import Service
-from cyclonedx.model.tool import Tool, ToolsRepository
+from cyclonedx.model.tool import Tool, ToolsRepository, ToolsRepositoryHelper
 from cyclonedx.output.json import JsonV1Dot5
 from cyclonedx.output.xml import XmlV1Dot5
 from tests import OWN_DATA_DIRECTORY, reorder
@@ -112,3 +113,28 @@ class TestModelTool(TestCase):
     def test_equal_object(self) -> None:
         tr = ToolsRepository()
         self.assertTrue(tr == tr)
+
+    def test_assign_tool_with_existing_component(self) -> None:
+        tr = ToolsRepository(components=SortedSet([Component(name='test-component')]))
+        with self.assertRaises(MutuallyExclusivePropertiesException):
+            tr.tools = SortedSet([Tool()])
+
+    def test_assign_tool(self) -> None:
+        tr = ToolsRepository()
+        tr.tools = SortedSet([Tool(name='test-tool')])
+        t = tr.tools.pop()
+        self.assertEqual('test-tool', t.name)
+
+    def test_proper_service_provider_conversion(self) -> None:
+        o = OrganizationalEntity(name='test-org')
+        s = Service(name='test-service', provider=o)
+
+        tools_to_render = ToolsRepositoryHelper.convert_new_to_old(components=[], services=[s])
+
+        t = tools_to_render.pop()  # type: ignore[attr-defined]
+
+        self.assertEqual('test-org', t.vendor)
+
+    def test_tool_equals(self) -> None:
+        t = Tool()
+        self.assertEqual(t, t)
