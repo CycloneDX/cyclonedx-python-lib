@@ -152,11 +152,6 @@ class Tool:
 class ToolsRepository:
     """
     The repository of tool formats
-
-    This is done so we can maintain backward-compatibility with CycloneDX <= 1.4
-    If using a SortedSet of tools, the object will behave like a sorted set of
-    tools. Otherwise, it will behave like an object with `components`
-    and `services` attributes (which are SortedSets of their respective types).
     """
     def __init__(self, *, components: Optional[Iterable[Component]] = None,
                  services: Optional[Iterable[Service]] = None,
@@ -174,9 +169,9 @@ class ToolsRepository:
             warn('Using Tool is deprecated as of CycloneDX v1.5. Components and Services should be used now. '
                  'See https://cyclonedx.org/docs/1.5/', DeprecationWarning)
 
-        self._components = SortedSet(components or ())
-        self._services = SortedSet(services or ())
-        self._tools = SortedSet(tools or ())
+        self._components = SortedSet(components or SortedSet())
+        self._services = SortedSet(services or SortedSet())
+        self._tools = SortedSet(tools or SortedSet())
 
     @property
     def components(self) -> 'SortedSet[Component]':
@@ -248,12 +243,23 @@ class ToolsRepository:
 
 
 class ToolsRepositoryHelper(BaseHelper):
+    """
+    Helps with serializing and deserializing ToolsRepository objects.
+    """
+
     @classmethod
-    def convert_new_to_old(cls, components: Iterable[Component], services: Iterable[Service]) -> Iterable[Tool]:
-        tools_to_render: Iterable[Tool] = SortedSet()
+    def convert_new_to_old(cls, components: Iterable[Component], services: Iterable[Service]) -> 'SortedSet[Tool]':
+        """
+        "Down converts" Component and Service objects to Tools so they can be rendered by
+        the library for schemas less than version 1.5.
+
+        Returns:
+            A sorted set of Tools
+        """
+        tools_to_render: 'SortedSet[Tool]' = SortedSet()
 
         for c in components:
-            tools_to_render.add(Tool(  # type: ignore[attr-defined]
+            tools_to_render.add(Tool(
                 name=c.name,
                 vendor=c.group,
                 version=c.version,
@@ -266,7 +272,7 @@ class ToolsRepositoryHelper(BaseHelper):
                 vendor = s.provider.name
             else:
                 vendor = None
-            tools_to_render.add(Tool(  # type: ignore[attr-defined]
+            tools_to_render.add(Tool(
                 name=s.name,
                 vendor=vendor,
                 version=s.version,
@@ -279,7 +285,7 @@ class ToolsRepositoryHelper(BaseHelper):
     def json_normalize(cls, o: ToolsRepository, *,
                        view: Optional[Type[ViewType]],
                        **__: Any) -> Any:
-        if not any([o._tools, o.components, o.services]):  # pylint: disable=protected-access
+        if not any([o.tools, o.components, o.services]):
             return None
 
         result = {}
@@ -334,7 +340,7 @@ class ToolsRepositoryHelper(BaseHelper):
                       view: Optional[Type[ViewType]],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
-        if not any([o._tools, o.components, o.services]):  # pylint: disable=protected-access
+        if not any([o.tools, o.components, o.services]):  # pylint: disable=protected-access
             return None
 
         elem = Element(element_name)
