@@ -249,6 +249,33 @@ class ToolsRepository:
 
 class ToolsRepositoryHelper(BaseHelper):
     @classmethod
+    def convert_new_to_old(cls, components: Iterable[Component], services: Iterable[Service]) -> Iterable[Tool]:
+        tools_to_render: Iterable[Tool] = SortedSet()
+
+        for c in components:
+            tools_to_render.add(Tool(  # type: ignore[attr-defined]
+                name=c.name,
+                vendor=c.group,
+                version=c.version,
+                hashes=c.hashes,
+                external_references=c.external_references,
+            ))
+
+        for s in services:
+            if s.provider:
+                vendor = s.provider.name
+            else:
+                vendor = None
+            tools_to_render.add(Tool(  # type: ignore[attr-defined]
+                vendor=vendor,
+                version=s.version,
+                external_references=s.external_references,
+            ))
+
+        return tools_to_render
+
+
+    @classmethod
     def json_normalize(cls, o: ToolsRepository, *,
                        view: Optional[Type[ViewType]],
                        **__: Any) -> Any:
@@ -271,28 +298,7 @@ class ToolsRepositoryHelper(BaseHelper):
 
         if (o.components or o.services) and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
             # We "down-convert" Components and Services to Tools so we can render to older schemas
-            tools_to_render: SortedSet[Tool] = SortedSet()
-
-            for c in o.components:
-                tools_to_render.add(Tool(
-                    name=c.name,
-                    vendor=c.group,
-                    version=c.version,
-                    hashes=c.hashes,
-                    external_references=c.external_references,
-                ))
-
-            for s in o.services:
-                if s.provider:
-                    vendor = s.provider.name
-                else:
-                    vendor = None
-                tools_to_render.add(Tool(
-                    vendor=vendor,
-                    version=s.version,
-                    external_references=s.external_references,
-                ))
-
+            tools_to_render = cls.convert_new_to_old(o.components, o.services)
         else:
             tools_to_render = o.tools
 
@@ -359,10 +365,16 @@ class ToolsRepositoryHelper(BaseHelper):
             if len(elem) > 0:
                 return elem
 
+        if (o.components or o.services) and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+            # We "down-convert" Components and Services to Tools so we can render to older schemas
+            tools_to_render = cls.convert_new_to_old(o.components, o.services)
+        else:
+            tools_to_render = o.tools
+
         elem.extend(
             t.as_xml(  # type: ignore[attr-defined]
                 view_=view, as_string=False, element_name='tool', xmlns=xmlns)
-            for t in o.tools
+            for t in tools_to_render
         )
 
         return elem
