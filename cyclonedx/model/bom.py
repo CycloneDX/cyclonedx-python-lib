@@ -37,7 +37,8 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property, ThisTool, Tool
+from . import ExternalReference, Property, Tool
+from ..builder.this import this_tool
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -89,7 +90,7 @@ class BomMetaData:
                 DeprecationWarning)
 
         if not tools:
-            self.tools.add(ThisTool)
+            self.tools.add(this_tool())
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
