@@ -235,7 +235,7 @@ class ToolsRepository:
 
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
-        if (self._components or self._services):
+        if self._components or self._services:
             raise MutuallyExclusivePropertiesException(
                 'Cannot define both old (CycloneDX <= 1.4) and new '
                 '(CycloneDX >= 1.5) format for tools.'
