@@ -133,10 +133,9 @@ class BomMetaData:
 
     @tools.setter
     def tools(self, tools: Union[Iterable[Tool], ToolsRepository]) -> None:
-        if isinstance(tools, ToolsRepository):
-            self._tools = tools
-        else:
-            self._tools = ToolsRepository(tools=tools)
+        self._tools = tools \
+            if isinstance(tools, ToolsRepository) \
+            else ToolsRepository(tools=tools)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
