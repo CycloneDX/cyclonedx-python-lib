@@ -170,11 +170,13 @@ class ToolsRepository:
     The repository of tool formats
     """
 
-    def __init__(self, *, components: Optional[Iterable[Component]] = None,
-                 services: Optional[Iterable[Service]] = None,
-                 # Deprecated in v1.5
-                 tools: Optional[Iterable[Tool]] = None) -> None:
-
+    def __init__(
+        self, *,
+        components: Optional[Iterable[Component]] = None,
+        services: Optional[Iterable[Service]] = None,
+        # Deprecated in v1.5
+        tools: Optional[Iterable[Tool]] = None
+    ) -> None:
         if tools and (components or services):
             # Must use components/services or tools. Cannot use both
             raise MutuallyExclusivePropertiesException(
@@ -243,20 +245,20 @@ class ToolsRepository:
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
-        return len(self._tools) + len(self._components) + len(self._services)
+        return len(self._tools) \
+            + len(self._components) \
+            + len(self._services)
 
     def __bool__(self) -> bool:
-        return any([self._tools, self._components, self._services])
+        return any((self._tools, self._components, self._services))
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, ToolsRepository):
             return False
 
-        return (all([
-            self._tools == other._tools,
-            self._components == other._components,
-            self._services == other._services,
-        ]))
+        return self._tools == other._tools \
+            and self._components == other._components \
+            and self._services == other._services
 
 
 class ToolsRepositoryHelper(BaseHelper):
