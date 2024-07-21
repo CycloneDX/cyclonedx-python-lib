@@ -121,7 +121,6 @@ class BomMetaData:
 
     @property
     @serializable.type_mapping(ToolsRepositoryHelper)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
     @serializable.xml_sequence(3)
     def tools(self) -> ToolsRepository:
         """
