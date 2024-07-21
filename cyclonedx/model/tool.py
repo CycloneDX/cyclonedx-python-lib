@@ -260,7 +260,7 @@ class ToolsRepository:
             and self._components == other._components \
             and self._services == other._services
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((tuple(self._tools), tuple(self._components), tuple(self._services)))
 
 
