@@ -188,9 +188,9 @@ class ToolsRepository:
             warn('Using Tool is deprecated as of CycloneDX v1.5. Components and Services should be used now. '
                  'See https://cyclonedx.org/docs/1.5/', DeprecationWarning)
 
-        self._components = SortedSet(components or SortedSet())
-        self._services = SortedSet(services or SortedSet())
-        self._tools = SortedSet(tools or SortedSet())
+        self._components = SortedSet(components or [])
+        self._services = SortedSet(services or [])
+        self._tools = SortedSet(tools or [])
 
     @property
     def components(self) -> 'SortedSet[Component]':
