@@ -74,7 +74,7 @@ class BomMetaData:
         manufacture: Optional[OrganizationalEntity] = None,
     ) -> None:
         self.timestamp = timestamp or _get_now_utc()
-        self.tools = tools or ToolsRepository()  # type:ignore[assignment]
+        self.tools = tools or []  # type:ignore[assignment]
         self.authors = authors or []  # type:ignore[assignment]
         self.component = component
         self.supplier = supplier
