@@ -1048,7 +1048,7 @@ def get_bom_with_multiple_licenses() -> Bom:
     )
 
 
-def get_bom_with_tools_with_component_and_service() -> Bom:
+def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=ToolsRepository(
