@@ -54,6 +54,13 @@ class InvalidNistQuantumSecurityLevelException(CycloneDxModelException):
     pass
 
 
+class InvalidEvidenceConfidenceScore(CycloneDxModelException):
+    """
+    Raised when an invalid value is provided for a confidence score for Component Evidence.
+    """
+    pass
+
+
 class InvalidOmniBorIdException(CycloneDxModelException):
     """
     Raised when a supplied value for an OmniBOR ID does not meet the format requirements

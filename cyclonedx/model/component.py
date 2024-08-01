@@ -59,6 +59,7 @@ from .bom_ref import BomRef
 from .contact import OrganizationalContact, OrganizationalEntity
 from .crypto import CryptoProperties
 from .dependency import Dependable
+from .evidence import EvidenceIdentity
 from .issue import IssueType
 from .license import License, LicenseRepository
 from .release_note import ReleaseNotes
@@ -204,6 +205,7 @@ class ComponentEvidence:
 
     def __init__(
         self, *,
+        identity: Optional[EvidenceIdentity] = None,
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[Iterable[Copyright]] = None,
     ) -> None:
@@ -212,19 +214,26 @@ class ComponentEvidence:
                 'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
             )
 
+        self.identity = identity
         self.licenses = licenses or []  # type:ignore[assignment]
         self.copyright = copyright or []  # type:ignore[assignment]
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(1)
-    # def identity(self) -> ...:
-    #    ... # TODO since CDX1.5
-    #
-    # @identity.setter
-    # def identity(self, ...) -> None:
-    #    ... # TODO since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.xml_sequence(1)
+    def identity(self) -> Optional[EvidenceIdentity]:
+        """
+        Optional list of evidence that substantiates the identity of a component.
+
+        Returns:
+            `EvidenceIdentity` or `None`
+        """
+
+        return self._identity
+
+    @identity.setter
+    def identity(self, identity: Optional[EvidenceIdentity]) -> None:
+        self._identity = identity
 
     # @property
     # ...
