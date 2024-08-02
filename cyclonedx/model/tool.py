@@ -312,7 +312,8 @@ class ToolsRepositoryHelper(BaseHelper):
 
         result = {}
 
-        if view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+        if (view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum  # type: ignore[union-attr, misc]
+                and not o.tools):
             if o.components:
                 result['components'] = [json_loads(Component.as_json(c, view_=view))  # type: ignore[attr-defined]
                                         for c in o.components]
@@ -324,12 +325,10 @@ class ToolsRepositoryHelper(BaseHelper):
             if result:
                 return result
 
-        if ((o.components or o.services)
-                and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum):  # type: ignore[union-attr, misc] # noqa: disable=E501
-            # We "down-convert" Components and Services to Tools so we can render to older schemas
-            tools_to_render = cls.convert_new_to_old(o.components, o.services)
-        else:
-            tools_to_render = o.tools
+        tools_to_render: 'SortedSet[Tool]' = SortedSet(o.tools)
+        # We "down-convert" Components and Services to Tools so we can render to older schemas
+        # or when there are existing Tool objects
+        tools_to_render.update(cls.convert_new_to_old(o.components, o.services))
 
         return [json_loads(Tool.as_json(t, view_=view)) for t in tools_to_render]  # type: ignore[attr-defined]
 
@@ -367,7 +366,8 @@ class ToolsRepositoryHelper(BaseHelper):
 
         elem = Element(element_name)
 
-        if view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum:  # type: ignore[union-attr, misc]
+        if (view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum  # type: ignore[union-attr, misc]
+                and not o.tools):
             if o.components:
                 c_elem = Element('{' + xmlns + '}' + 'components')  # type: ignore[operator]
 
@@ -393,12 +393,10 @@ class ToolsRepositoryHelper(BaseHelper):
             if len(elem) > 0:
                 return elem
 
-        if ((o.components or o.services)
-                and view().schema_version_enum < SchemaVersion1Dot5().schema_version_enum):  # type: ignore[union-attr, misc] # noqa: disable=E501
-            # We "down-convert" Components and Services to Tools so we can render to older schemas
-            tools_to_render = cls.convert_new_to_old(o.components, o.services)
-        else:
-            tools_to_render = o.tools
+        tools_to_render: 'SortedSet[Tool]' = SortedSet(o.tools)
+        # We "down-convert" Components and Services to Tools so we can render to older schemas
+        # or when there are existing Tool objects
+        tools_to_render.update(cls.convert_new_to_old(o.components, o.services))
 
         elem.extend(
             t.as_xml(  # type: ignore[attr-defined]
