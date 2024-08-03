@@ -79,6 +79,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialType,
 )
 from cyclonedx.model.dependency import Dependency
+from cyclonedx.model.evidence import EvidenceIdentity, EvidenceIdentityField, EvidenceMethod, EvidenceTechnique
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
     ImpactAnalysisJustification,
@@ -927,6 +928,15 @@ def get_swid_2() -> Swid:
     return Swid(
         tag_id='swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1', name='Test Application',
         version='3.4.5', url=XsUri('https://cyclonedx.org')
+    )
+
+
+def get_evidence_identity() -> EvidenceIdentity:
+    return EvidenceIdentity(
+        field=EvidenceIdentityField.NAME, confidence=0.5, methods=[
+            EvidenceMethod(technique=EvidenceTechnique.FILENAME, confidence=0.5)
+        ],
+        tools=['cyclonedx-python-lib']
     )
 
 

@@ -209,7 +209,7 @@ class ComponentEvidence:
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[Iterable[Copyright]] = None,
     ) -> None:
-        if not licenses and not copyright:
+        if not licenses and not copyright and not identity:
             raise NoPropertiesProvidedException(
                 'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
             )
@@ -220,6 +220,7 @@ class ComponentEvidence:
 
     @property
     @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(1)
     def identity(self) -> Optional[EvidenceIdentity]:
         """
@@ -295,7 +296,7 @@ class ComponentEvidence:
         return False
 
     def __hash__(self) -> int:
-        return hash((tuple(self.licenses), tuple(self.copyright)))
+        return hash((self.identity, tuple(self.licenses), tuple(self.copyright)))
 
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
