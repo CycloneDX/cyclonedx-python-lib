@@ -34,13 +34,16 @@ from cyclonedx.model.component import (
     Commit,
     Component,
     ComponentEvidence,
+    ComponentIdentityEvidence,
+    ComponentIdentityEvidenceField,
+    ComponentIdentityEvidenceMethod,
+    ComponentIdentityEvidenceMethodTechnique,
     ComponentType,
     Diff,
     Patch,
     PatchClassification,
     Pedigree,
 )
-from cyclonedx.model.evidence import EvidenceIdentity, EvidenceIdentityField, EvidenceMethod, EvidenceTechnique
 from cyclonedx.model.issue import IssueClassification, IssueType
 from tests import reorder
 from tests._data.models import (
@@ -305,17 +308,27 @@ class TestModelComponentEvidence(TestCase):
 
     def test_same_3(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.NAME,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.NAME,
                 confidence=0.5,
-                methods=[EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5)]
+                methods=[
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    )
+                ]
             )
         )
         ce_2 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.NAME,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.NAME,
                 confidence=0.5,
-                methods=[EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5)]
+                methods=[
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    )
+                ]
             )
         )
         self.assertEqual(hash(ce_1), hash(ce_2))
@@ -323,22 +336,34 @@ class TestModelComponentEvidence(TestCase):
 
     def test_same_4(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.NAME,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.NAME,
                 confidence=0.5,
                 methods=[
-                    EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5),
-                    EvidenceMethod(technique=EvidenceTechnique.FILENAME, confidence=0.2)
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    ),
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.FILENAME,
+                        confidence=0.2
+                    )
                 ]
             )
         )
         ce_2 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.NAME,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.NAME,
                 confidence=0.5,
                 methods=[
-                    EvidenceMethod(technique=EvidenceTechnique.FILENAME, confidence=0.2),
-                    EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5)
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.FILENAME,
+                        confidence=0.2
+                    ),
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    )
                 ]
             )
         )
@@ -353,22 +378,34 @@ class TestModelComponentEvidence(TestCase):
 
     def test_not_same_2(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.NAME,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.NAME,
                 confidence=0.5,
                 methods=[
-                    EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5),
-                    EvidenceMethod(technique=EvidenceTechnique.BINARY_ANALYSIS, confidence=0.7)
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    ),
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                        confidence=0.7
+                    )
                 ]
             )
         )
         ce_2 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.NAME,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.NAME,
                 confidence=0.5,
                 methods=[
-                    EvidenceMethod(technique=EvidenceTechnique.BINARY_ANALYSIS, confidence=0.5),
-                    EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5)
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                        confidence=0.5
+                    ),
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    )
                 ]
             )
         )
@@ -376,22 +413,34 @@ class TestModelComponentEvidence(TestCase):
 
     def test_not_same_3(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.NAME,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.NAME,
                 confidence=0.5,
                 methods=[
-                    EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5),
-                    EvidenceMethod(technique=EvidenceTechnique.BINARY_ANALYSIS, confidence=0.7)
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    ),
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                        confidence=0.7
+                    )
                 ]
             )
         )
         ce_2 = ComponentEvidence(
-            identity=EvidenceIdentity(
-                field=EvidenceIdentityField.HASH,
+            identity=ComponentIdentityEvidence(
+                field=ComponentIdentityEvidenceField.HASH,
                 confidence=0.5,
                 methods=[
-                    EvidenceMethod(technique=EvidenceTechnique.BINARY_ANALYSIS, confidence=0.7),
-                    EvidenceMethod(technique=EvidenceTechnique.HASH_COMPARISON, confidence=0.5)
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                        confidence=0.7
+                    ),
+                    ComponentIdentityEvidenceMethod(
+                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                        confidence=0.5
+                    )
                 ]
             )
         )
