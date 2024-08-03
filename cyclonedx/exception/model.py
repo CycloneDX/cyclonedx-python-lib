@@ -54,9 +54,16 @@ class InvalidNistQuantumSecurityLevelException(CycloneDxModelException):
     pass
 
 
-class InvalidEvidenceConfidenceScore(CycloneDxModelException):
+class InvalidComponentIdentityEvidenceConfidenceScore(CycloneDxModelException):
     """
     Raised when an invalid value is provided for a confidence score for Component Evidence.
+    """
+    pass
+
+
+class InvalidComponentIdentityEvidenceMethodConfidenceScore(CycloneDxModelException):
+    """
+    Raised when an invalid value is provided for a confidence score for Component Evidence Method.
     """
     pass
 

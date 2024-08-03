@@ -47,6 +47,10 @@ from cyclonedx.model.component import (
     Commit,
     Component,
     ComponentEvidence,
+    ComponentIdentityEvidence,
+    ComponentIdentityEvidenceField,
+    ComponentIdentityEvidenceMethod,
+    ComponentIdentityEvidenceMethodTechnique,
     ComponentScope,
     ComponentType,
     Diff,
@@ -79,7 +83,6 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialType,
 )
 from cyclonedx.model.dependency import Dependency
-from cyclonedx.model.evidence import EvidenceIdentity, EvidenceIdentityField, EvidenceMethod, EvidenceTechnique
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
     ImpactAnalysisJustification,
@@ -931,10 +934,10 @@ def get_swid_2() -> Swid:
     )
 
 
-def get_evidence_identity() -> EvidenceIdentity:
-    return EvidenceIdentity(
-        field=EvidenceIdentityField.NAME, confidence=0.5, methods=[
-            EvidenceMethod(technique=EvidenceTechnique.FILENAME, confidence=0.5)
+def get_evidence_identity() -> ComponentIdentityEvidence:
+    return ComponentIdentityEvidence(
+        field=ComponentIdentityEvidenceField.NAME, confidence=0.5, methods=[
+            ComponentIdentityEvidenceMethod(technique=ComponentIdentityEvidenceMethodTechnique.FILENAME, confidence=0.5)
         ],
         tools=['cyclonedx-python-lib']
     )
