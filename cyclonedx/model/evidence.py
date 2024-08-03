@@ -19,7 +19,9 @@ from enum import Enum
 from typing import Any, Dict, FrozenSet, Iterable, Optional, Type
 
 import serializable
+from sortedcontainers import SortedSet
 
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidEvidenceConfidenceScore
 from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6
 
@@ -158,7 +160,7 @@ class EvidenceMethod:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
     """
 
-    def __init__(self, *, technique: EvidenceTechnique, confidence: int, value: Optional[str] = None) -> None:
+    def __init__(self, *, technique: EvidenceTechnique, confidence: float, value: Optional[str] = None) -> None:
         self.technique = technique
         self.confidence = confidence
         self.value = value
@@ -179,19 +181,19 @@ class EvidenceMethod:
         self._technique = technique
 
     @property
-    def confidence(self) -> int:
+    def confidence(self) -> float:
         """
         The overall confidence of the evidence from 0 - 1, where 1 is 100% confidence.
 
         Confidence is specific to the technique used. Each technique of analysis can have independent confidence.
 
         Returns:
-            `int`
+            `float`
         """
         return self._confidence
 
     @confidence.setter
-    def confidence(self, confidence: int) -> None:
+    def confidence(self, confidence: float) -> None:
         if confidence < 0 or confidence > 1:
             raise InvalidEvidenceConfidenceScore(
                 'Evidence confidence score must be (0 <= value <= 1)'
@@ -213,6 +215,26 @@ class EvidenceMethod:
     def value(self, value: Optional[str]) -> None:
         self._value = value
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, EvidenceMethod):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, EvidenceMethod):
+            return _ComparableTuple((
+                self.technique, self.confidence, self.value
+            )) < _ComparableTuple((
+                other.technique, other.confidence, other.value
+            ))
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash((self.technique, self.confidence, self.value))
+
+    def __repr__(self) -> str:
+        return f'<EvidenceMethod technique={self.technique}, confidence={self.confidence} id={id(self)}>'
+
 
 @serializable.serializable_class
 class EvidenceIdentity:
@@ -229,14 +251,14 @@ class EvidenceIdentity:
     def __init__(
             self, *,
             field: EvidenceIdentityField,
-            confidence: Optional[int] = None,
+            confidence: Optional[float] = None,
             methods: Optional[Iterable[EvidenceMethod]] = None,
-            tools: Optional[Iterable[str]]
+            tools: Optional[Iterable[str]] = None,
     ) -> None:
         self.field = field
         self.confidence = confidence or None
-        self.methods = methods or None
-        self.tools = tools or None
+        self.methods = methods or []  # type:ignore[assignment]
+        self.tools = tools or []  # type:ignore[assignment]
 
     @property
     @serializable.type_mapping(_EvidenceIdentityFieldSerializationHelper)
@@ -254,17 +276,17 @@ class EvidenceIdentity:
         self._field = field
 
     @property
-    def confidence(self) -> Optional[int]:
+    def confidence(self) -> Optional[float]:
         """
         The overall confidence of the evidence from 0 - 1, where 1 is 100% confidence.
 
         Returns:
-            `int` or `None`
+            `float` or `None`
         """
         return self._confidence
 
     @confidence.setter
-    def confidence(self, confidence: Optional[int]) -> None:
+    def confidence(self, confidence: Optional[float]) -> None:
         if confidence is not None and (confidence < 0 or confidence > 1):
             raise InvalidEvidenceConfidenceScore(
                 'Evidence confidence score must be (0 <= value <= 1)'
@@ -274,29 +296,49 @@ class EvidenceIdentity:
 
     @property
     @serializable.type_mapping(EvidenceMethod)
-    def methods(self) -> Optional[Iterable[EvidenceMethod]]:
+    def methods(self) -> 'SortedSet[EvidenceMethod]':
         """
         Optional list of methods used to extract and/or analyze the evidence.
 
         Returns:
-            `Iterable[EvidenceMethod]` or `None`
+            `SortedSet[EvidenceMethod]`
         """
         return self._methods
 
     @methods.setter
-    def methods(self, methods: Optional[Iterable[EvidenceMethod]]) -> None:
-        self._methods = methods
+    def methods(self, methods: Iterable[EvidenceMethod]) -> None:
+        self._methods = SortedSet(methods)
 
     @property
-    def tools(self) -> Optional[Iterable[str]]:
+    def tools(self) -> 'SortedSet[str]':
         """
         Optional list of tools used to extract and/or analyze the evidence.
 
         Returns:
-            `Iterable[str]` or `None`
+            `SortedSet[str]`
         """
         return self._tools
 
     @tools.setter
-    def tools(self, tools: Optional[Iterable[str]]) -> None:
-        self._tools = tools
+    def tools(self, tools: Iterable[str]) -> None:
+        self._tools = SortedSet(tools)
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, EvidenceIdentity):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, EvidenceIdentity):
+            return _ComparableTuple((
+                self.field, self.confidence, self.methods, self.tools
+            )) < _ComparableTuple((
+                other.field, other.confidence, other.methods, other.tools
+            ))
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash((self.field, self.confidence, tuple(self.methods), tuple(self.tools)))
+
+    def __repr__(self) -> str:
+        return f'<EvidenceIdentity field={self.field}, confidence={self.confidence} id={id(self)}>'
