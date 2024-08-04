@@ -47,10 +47,6 @@ from cyclonedx.model.component import (
     Commit,
     Component,
     ComponentEvidence,
-    ComponentIdentityEvidence,
-    ComponentIdentityEvidenceField,
-    ComponentIdentityEvidenceMethod,
-    ComponentIdentityEvidenceMethodTechnique,
     ComponentScope,
     ComponentType,
     Diff,
@@ -931,15 +927,6 @@ def get_swid_2() -> Swid:
     return Swid(
         tag_id='swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1', name='Test Application',
         version='3.4.5', url=XsUri('https://cyclonedx.org')
-    )
-
-
-def get_evidence_identity() -> ComponentIdentityEvidence:
-    return ComponentIdentityEvidence(
-        field=ComponentIdentityEvidenceField.NAME, confidence=0.5, methods=[
-            ComponentIdentityEvidenceMethod(technique=ComponentIdentityEvidenceMethodTechnique.FILENAME, confidence=0.5)
-        ],
-        tools=['cyclonedx-python-lib']
     )
 
 

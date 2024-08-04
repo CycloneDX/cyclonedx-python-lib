@@ -308,64 +308,72 @@ class TestModelComponentEvidence(TestCase):
 
     def test_same_3(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.NAME,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.NAME,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        )
+                    ]
+                )
+            ]
         )
         ce_2 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.NAME,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.NAME,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        )
+                    ]
+                )
+            ]
         )
         self.assertEqual(hash(ce_1), hash(ce_2))
         self.assertTrue(ce_1 == ce_2)
 
     def test_same_4(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.NAME,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    ),
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.FILENAME,
-                        confidence=0.2
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.NAME,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        ),
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.FILENAME,
+                            confidence=0.2
+                        )
+                    ]
+                )
+            ]
         )
         ce_2 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.NAME,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.FILENAME,
-                        confidence=0.2
-                    ),
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.NAME,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.FILENAME,
+                            confidence=0.2
+                        ),
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        )
+                    ]
+                )
+            ]
         )
         self.assertEqual(hash(ce_1), hash(ce_2))
         self.assertTrue(ce_1 == ce_2)
@@ -378,71 +386,79 @@ class TestModelComponentEvidence(TestCase):
 
     def test_not_same_2(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.NAME,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    ),
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
-                        confidence=0.7
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.NAME,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        ),
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                            confidence=0.7
+                        )
+                    ]
+                )
+            ]
         )
         ce_2 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.NAME,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
-                        confidence=0.5
-                    ),
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.NAME,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                            confidence=0.5
+                        ),
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        )
+                    ]
+                )
+            ]
         )
         self.assertNotEqual(hash(ce_1), hash(ce_2))
 
     def test_not_same_3(self) -> None:
         ce_1 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.NAME,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    ),
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
-                        confidence=0.7
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.NAME,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        ),
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                            confidence=0.7
+                        )
+                    ]
+                )
+            ]
         )
         ce_2 = ComponentEvidence(
-            identity=ComponentIdentityEvidence(
-                field=ComponentIdentityEvidenceField.HASH,
-                confidence=0.5,
-                methods=[
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
-                        confidence=0.7
-                    ),
-                    ComponentIdentityEvidenceMethod(
-                        technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
-                        confidence=0.5
-                    )
-                ]
-            )
+            identity=[
+                ComponentIdentityEvidence(
+                    field=ComponentIdentityEvidenceField.HASH,
+                    confidence=0.5,
+                    methods=[
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.BINARY_ANALYSIS,
+                            confidence=0.7
+                        ),
+                        ComponentIdentityEvidenceMethod(
+                            technique=ComponentIdentityEvidenceMethodTechnique.HASH_COMPARISON,
+                            confidence=0.5
+                        )
+                    ]
+                )
+            ]
         )
         self.assertNotEqual(hash(ce_1), hash(ce_2))
         self.assertFalse(ce_1 == ce_2)
