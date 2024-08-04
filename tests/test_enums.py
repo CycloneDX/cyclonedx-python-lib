@@ -29,7 +29,16 @@ from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.exception.serialization import SerializationOfUnsupportedComponentTypeException
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component, Patch, Pedigree
+from cyclonedx.model.component import (
+    Component,
+    ComponentEvidence,
+    ComponentIdentityEvidence,
+    ComponentIdentityEvidenceField,
+    ComponentIdentityEvidenceMethod,
+    ComponentIdentityEvidenceMethodTechnique,
+    Patch,
+    Pedigree,
+)
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.service import DataClassification, Service
@@ -352,6 +361,37 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
                 for iaas in ImpactAnalysisAffectedStatus
             ))]
         )])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumComponentIdentityEvidenceField(_EnumTestCase):
+
+    @idata(set(chain(
+        # dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='componentIdentityEvidence']"),
+        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties', 'field'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ComponentIdentityEvidenceField, value)
+
+    @named_data(*NAMED_OF_SV)
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[
+            Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', evidence=ComponentEvidence(
+                identity=[
+                    ComponentIdentityEvidence(
+                        field=cief,
+                        confidence=0.5,
+                        methods=[
+                            ComponentIdentityEvidenceMethod(technique=ciemt, confidence=0.5)
+                            for ciemt in ComponentIdentityEvidenceMethodTechnique
+                        ]
+                    )
+                ]
+            ))
+            for cief in ComponentIdentityEvidenceField
+        ])
         super()._test_cases_render(bom, of, sv)
 
 

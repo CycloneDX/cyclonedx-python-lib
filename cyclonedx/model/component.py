@@ -212,8 +212,8 @@ class ComponentIdentityEvidenceField(str, Enum):
     VERSION = 'version'
     PURL = 'purl'
     CPE = 'cpe'
-    OMNIBOR_ID = 'omniborId'
-    SWHID = 'swhid'
+    OMNIBOR_ID = 'omniborId'  # Only supported in >= 1.6
+    SWHID = 'swhid'  # Only supported in >= 1.6
     SWID = 'swid'
     HASH = 'hash'
 
@@ -307,9 +307,11 @@ class _ComponentIdentityEvidenceMethodTechniqueSerializationHelper(serializable.
         cs: ComponentIdentityEvidenceMethodTechnique,
         view: Type[serializable.ViewType]
     ) -> Optional[str]:
-        return cs.value \
-            if cs in cls.__CASES.get(view, ()) \
-            else None
+        return (
+            cs
+            if cs in cls.__CASES.get(view, ())
+            else ComponentIdentityEvidenceMethodTechnique.OTHER
+        ).value
 
     @classmethod
     def json_normalize(cls, o: Any, *,
@@ -354,6 +356,7 @@ class ComponentIdentityEvidenceMethod:
 
     @property
     @serializable.type_mapping(_ComponentIdentityEvidenceMethodTechniqueSerializationHelper)
+    @serializable.xml_sequence(1)
     def technique(self) -> Optional[ComponentIdentityEvidenceMethodTechnique]:
         """
         The evidence technique used by the method of the component which the evidence describes.
@@ -368,6 +371,7 @@ class ComponentIdentityEvidenceMethod:
         self._technique = technique
 
     @property
+    @serializable.xml_sequence(2)
     def confidence(self) -> float:
         """
         The overall confidence of the evidence from 0 - 1, where 1 is 100% confidence.
@@ -389,6 +393,7 @@ class ComponentIdentityEvidenceMethod:
         self._confidence = confidence
 
     @property
+    @serializable.xml_sequence(3)
     def value(self) -> Optional[str]:
         """
         The value or contents of the evidence.
@@ -452,6 +457,7 @@ class ComponentIdentityEvidence:
 
     @property
     @serializable.type_mapping(_ComponentIdentityEvidenceFieldSerializationHelper)
+    @serializable.xml_sequence(1)
     def field(self) -> Optional[ComponentIdentityEvidenceField]:
         """
         The identity field of the component which the evidence describes.
@@ -466,6 +472,7 @@ class ComponentIdentityEvidence:
         self._field = field
 
     @property
+    @serializable.xml_sequence(2)
     def confidence(self) -> Optional[float]:
         """
         The overall confidence of the evidence from 0 - 1, where 1 is 100% confidence.
@@ -486,6 +493,7 @@ class ComponentIdentityEvidence:
 
     @property
     @serializable.type_mapping(ComponentIdentityEvidenceMethod)
+    @serializable.xml_sequence(3)
     def methods(self) -> 'SortedSet[ComponentIdentityEvidenceMethod]':
         """
         Optional list of methods used to extract and/or analyze the evidence.
@@ -500,6 +508,7 @@ class ComponentIdentityEvidence:
         self._methods = SortedSet(methods)
 
     @property
+    @serializable.xml_sequence(4)
     def tools(self) -> 'SortedSet[str]':
         """
         Optional list of tools used to extract and/or analyze the evidence.
@@ -547,36 +556,36 @@ class ComponentEvidence:
 
     def __init__(
         self, *,
-        identity: Optional[ComponentIdentityEvidence] = None,
+        identity: Optional[Iterable[ComponentIdentityEvidence]] = None,
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[Iterable[Copyright]] = None,
     ) -> None:
         if not licenses and not copyright and not identity:
             raise NoPropertiesProvidedException(
-                'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
+                'At least one of `licenses`, `copyright` or `identity` must be supplied for a `ComponentEvidence`.'
             )
 
-        self.identity = identity
+        self.identity = identity or []  # type:ignore[assignment]
         self.licenses = licenses or []  # type:ignore[assignment]
         self.copyright = copyright or []  # type:ignore[assignment]
 
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'identity')
     @serializable.xml_sequence(1)
-    def identity(self) -> Optional[ComponentIdentityEvidence]:
+    def identity(self) -> 'SortedSet[ComponentIdentityEvidence]':
         """
         Optional list of evidence that substantiates the identity of a component.
 
         Returns:
-            `ComponentIdentityEvidence` or `None`
+            Set of `ComponentIdentityEvidence`
         """
-
         return self._identity
 
     @identity.setter
-    def identity(self, identity: Optional[ComponentIdentityEvidence]) -> None:
-        self._identity = identity
+    def identity(self, identity: Iterable[ComponentIdentityEvidence]) -> None:
+        self._identity = SortedSet(identity)
 
     # @property
     # ...
@@ -647,7 +656,7 @@ class ComponentEvidence:
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.identity, tuple(self.licenses), tuple(self.copyright)))
+        return hash((tuple(self.identity), tuple(self.licenses), tuple(self.copyright)))
 
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
