@@ -420,7 +420,7 @@ class HashType:
 
                 Valid case insensitive prefixes are:
                 `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `blake2b256`, `blake2b384`, `blake2b512`,
-                `sha3-256`, `sha3-384`, `sha3-512`,
+                `blake2256`, `blake2384`, `blake2512`, `sha3-256`, `sha3-384`, `sha3-512`,
                 `blake3`.
 
         Raises:
@@ -456,6 +456,11 @@ class HashType:
         elif algorithm_prefix[0:7] == 'blake2b':
             return HashType(
                 alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[7:]}'),
+                content=parts[1].lower()
+            )
+        elif algorithm_prefix[0:6] == 'blake2':
+            return HashType(
+                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[6:]}'),
                 content=parts[1].lower()
             )
         elif algorithm_prefix[0:6] == 'blake3':

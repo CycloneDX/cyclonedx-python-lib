@@ -273,6 +273,12 @@ class TestModelHashType(TestCase):
          HashAlgorithm.BLAKE2B_512,
          '6d518ac5c7a022e954ecb21b8bf68d7f5c52e3c3579cd96f3bde4f76daaaa69a'
          '96a5eee268fb8fa2745930c37f0672424136b538878474bc4f586a63e13ae23f'),
+        ('blake2512',
+         'blake2512:6d518ac5c7a022e954ecb21b8bf68d7f5c52e3c3579cd96f3bde4'
+         'f76daaaa69a96a5eee268fb8fa2745930c37f0672424136b538878474bc4f586a63e13ae23f',
+         HashAlgorithm.BLAKE2B_512,
+         '6d518ac5c7a022e954ecb21b8bf68d7f5c52e3c3579cd96f3bde4f76daaaa69a'
+         '96a5eee268fb8fa2745930c37f0672424136b538878474bc4f586a63e13ae23f'),
     )
     def test_hash_type_from_composite_str(self, composite: str, e_alg: HashAlgorithm, e_content: str) -> None:
         h = HashType.from_composite_str(composite)
