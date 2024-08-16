@@ -36,22 +36,37 @@ from tests._data.models import get_bom_with_tools_with_component_and_service_mig
 
 class TestModelToolRepository(TestCase):
     def test_tool_with_component_and_service_load_json(self) -> None:
+        expected = get_bom_with_tools_with_component_and_service_migrate()
         test_file = join(OWN_DATA_DIRECTORY, 'json', '1.5',
                          'bom_with_tool_with_component_and_service.json')
         with open(test_file, encoding='UTF-8') as f:
             bom_json = json_loads(f.read())
         bom = Bom.from_json(bom_json)   # type: ignore[attr-defined]
-        good_bom = get_bom_with_tools_with_component_and_service_migrate()
-        self.assertTrue(bom == good_bom)
+        self.assertTupleEqual(
+            tuple(bom.metadata.tools.components),
+            tuple(expected.metadata.tools.components), 'components')
+        self.assertTupleEqual(
+            tuple(bom.metadata.tools.services),
+            tuple(expected.metadata.tools.services), 'services')
+        self.assertTupleEqual(
+            tuple(bom.metadata.tools.tools),
+            tuple(expected.metadata.tools.tools), 'tools')
 
     def test_tool_with_component_and_service_load_xml(self) -> None:
+        expected = get_bom_with_tools_with_component_and_service_migrate()
         test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.5',
                          'bom_with_tool_with_component_and_service.xml')
-        with open(test_file, encoding='utf-8') as s:
-            bom = Bom.from_xml(s)  # type: ignore[attr-defined]
-        self.assertEqual(bom.metadata.tools.components[0].type, 'application')
-        self.assertEqual(bom.metadata.tools.components[0].name, 'test-component')
-        self.assertEqual(bom.metadata.tools.services[0].name, 'test-service')
+        with open(test_file, encoding='utf-8') as bom_xml:
+            bom = Bom.from_xml(bom_xml)  # type: ignore[attr-defined]
+        self.assertTupleEqual(
+            tuple(bom.metadata.tools.components),
+            tuple(expected.metadata.tools.components), 'components')
+        self.assertTupleEqual(
+            tuple(bom.metadata.tools.services),
+            tuple(expected.metadata.tools.services), 'services')
+        self.assertTupleEqual(
+            tuple(bom.metadata.tools.tools),
+            tuple(expected.metadata.tools.tools), 'tools')
 
     def test_assign_component(self) -> None:
         t = ToolsRepository()
