@@ -41,7 +41,7 @@ class TestModelToolRepository(TestCase):
                          'bom_with_tool_with_component_and_service.json')
         with open(test_file, encoding='UTF-8') as f:
             bom_json = json_loads(f.read())
-        bom = Bom.from_json(bom_json)   # type: ignore[attr-defined]
+        bom = Bom.from_json(bom_json)  # type: ignore[attr-defined]
         self.assertTupleEqual(
             tuple(bom.metadata.tools.components),
             tuple(expected.metadata.tools.components), 'components')
@@ -68,23 +68,14 @@ class TestModelToolRepository(TestCase):
             tuple(bom.metadata.tools.tools),
             tuple(expected.metadata.tools.tools), 'tools')
 
-    def test_invalid_tool_repo_properties(self) -> None:
-        with self.assertRaises(MutuallyExclusivePropertiesException):
-            ToolsRepository(
-                components=[Component(name='test-component')],
-                services=[Service(name='test-service')],
-                tools=[Tool(name='test-tool')]
-            )
-
-    def test_assign_component_with_existing_tool(self) -> None:
-        tr = ToolsRepository(tools=[Tool()])
-        with self.assertRaises(MutuallyExclusivePropertiesException):
-            tr.components = SortedSet([Component(name='test-component')])
-
-    def test_assign_service_with_existing_tool(self) -> None:
-        tr = ToolsRepository(tools=[Tool()])
-        with self.assertRaises(MutuallyExclusivePropertiesException):
-            tr.services = SortedSet([Service(name='test-service')])
+    def test_init(self) -> None:
+        cs = (Component(name='test-component'),)
+        ss = (Service(name='test-service'),)
+        ts = (Tool(name='test-tool'),)
+        tr = ToolsRepository(components=cs, services=ss, tools=ts)
+        self.assertTupleEqual(cs, tuple(tr.components))
+        self.assertTupleEqual(ss, tuple(tr.services))
+        self.assertTupleEqual(ts, tuple(tr.tools))
 
     def test_unequal_different_type(self) -> None:
         tr = ToolsRepository()
@@ -116,11 +107,6 @@ class TestModelToolRepository(TestCase):
         tr2.services.add(s)
         tr2.tools.add(t)
         self.assertTrue(tr1 == tr2)
-
-    def test_assign_tool_with_existing_component(self) -> None:
-        tr = ToolsRepository(components=SortedSet([Component(name='test-component')]))
-        with self.assertRaises(MutuallyExclusivePropertiesException):
-            tr.tools = SortedSet([Tool()])
 
     def test_proper_service_provider_conversion(self) -> None:
         o = OrganizationalEntity(name='test-org')

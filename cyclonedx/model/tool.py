@@ -174,16 +174,9 @@ class ToolsRepository:
         self, *,
         components: Optional[Iterable[Component]] = None,
         services: Optional[Iterable[Service]] = None,
-        # Deprecated in v1.5
+        # Deprecated since v1.5
         tools: Optional[Iterable[Tool]] = None
     ) -> None:
-        if tools and (components or services):
-            # Must use components/services or tools. Cannot use both
-            raise MutuallyExclusivePropertiesException(
-                'Cannot define both old (CycloneDX <= 1.4) and new '
-                '(CycloneDX >= 1.5) format for tools.'
-            )
-
         if tools:
             warn('Using Tool is deprecated as of CycloneDX v1.5. Components and Services should be used now. '
                  'See https://cyclonedx.org/docs/1.5/', DeprecationWarning)
@@ -202,12 +195,6 @@ class ToolsRepository:
 
     @components.setter
     def components(self, components: Iterable[Component]) -> None:
-        if self._tools:
-            raise MutuallyExclusivePropertiesException(
-                'Cannot define both old (CycloneDX <= 1.4) and new '
-                '(CycloneDX >= 1.5) format for tools.'
-            )
-
         self._components = SortedSet(components)
 
     @property
@@ -220,28 +207,14 @@ class ToolsRepository:
 
     @services.setter
     def services(self, services: Iterable[Service]) -> None:
-        if self._tools:
-            raise MutuallyExclusivePropertiesException(
-                'Cannot define both old (CycloneDX <= 1.4) and new '
-                '(CycloneDX >= 1.5) format for tools.'
-            )
         self._services = SortedSet(services)
 
     @property
     def tools(self) -> 'SortedSet[Tool]':
-        """
-        Returns:
-            A SortedSet of Tools
-        """
         return self._tools
 
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
-        if self._components or self._services:
-            raise MutuallyExclusivePropertiesException(
-                'Cannot define both old (CycloneDX <= 1.4) and new '
-                '(CycloneDX >= 1.5) format for tools.'
-            )
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
