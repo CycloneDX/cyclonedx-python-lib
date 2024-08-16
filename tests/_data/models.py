@@ -1046,12 +1046,14 @@ def get_bom_with_multiple_licenses() -> Bom:
                           licenses=multi_licenses)]
     )
 
+
 def get_bom_with_tools() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=[Tool(name='test-tool', version='1.33.7')]
         )
     )
+
 
 def get_bom_with_tools_with_component_migrate() -> Bom:
     return _make_bom(
@@ -1063,6 +1065,7 @@ def get_bom_with_tools_with_component_migrate() -> Bom:
         )
     )
 
+
 def get_bom_with_tools_with_service_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
@@ -1071,6 +1074,7 @@ def get_bom_with_tools_with_service_migrate() -> Bom:
             )
         )
     )
+
 
 def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
     return _make_bom(

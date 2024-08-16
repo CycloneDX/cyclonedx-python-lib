@@ -282,7 +282,7 @@ class _ToolsRepositoryHelper(BaseHelper):
                        **__: Any) -> Any:
         if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
             return cls.__all_as_tools(o) or None
-        elem = {}
+        elem: Dict[str, Any] = {}
         if o.components:
             elem['components'] = tuple(o.components)
         if o.services:
