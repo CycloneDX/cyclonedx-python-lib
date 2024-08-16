@@ -281,12 +281,12 @@ class ToolsRepositoryHelper(BaseHelper):
                        **__: Any) -> Any:
         if not o:
             return None
-        return cls.__all_as_tools(o) \
-            if len(o.tools) > 0 or not cls.__supports_components_and_services(view) \
-            else {
-                'components': tuple(o.components) if len(o.components) > 0 else None,
-                'services': tuple(o.services) if len(o.services) > 0 else None,
-            }
+        if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
+            return cls.__all_as_tools(o)
+        return {
+            'components': tuple(o.components) if len(o.components) > 0 else None,
+            'services': tuple(o.services) if len(o.services) > 0 else None,
+        }
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
