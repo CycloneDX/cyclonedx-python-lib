@@ -280,14 +280,14 @@ class _ToolsRepositoryHelper(BaseHelper):
     def json_normalize(cls, o: ToolsRepository, *,
                        view: Optional[Type['ViewType']],
                        **__: Any) -> Any:
-        if not o:
-            return None
         if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
-            return cls.__all_as_tools(o)
-        return {
-            'components': tuple(o.components) if len(o.components) > 0 else None,
-            'services': tuple(o.services) if len(o.services) > 0 else None,
-        }
+            return cls.__all_as_tools(o) or None
+        elem = {}
+        if o.components:
+            elem['components'] = tuple(o.components)
+        if o.services:
+            elem['services'] = tuple(o.services)
+        return elem or None
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
@@ -310,8 +310,6 @@ class _ToolsRepositoryHelper(BaseHelper):
                       view: Optional[Type['ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
-        if not o:
-            return None
         elem = Element(element_name)
         if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
             elem.extend(
@@ -334,7 +332,9 @@ class _ToolsRepositoryHelper(BaseHelper):
                         view_=view, as_string=False, element_name='service', xmlns=xmlns)
                     for si in o.services)
                 elem.append(elem_s)
-        return elem
+        return elem \
+            if len(elem) > 0 \
+            else None
 
     @classmethod
     def xml_denormalize(cls, o: Element, *,
