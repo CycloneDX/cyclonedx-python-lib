@@ -14,17 +14,24 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Any, Iterable, Optional, Type
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 from warnings import warn
+from xml.etree.ElementTree import Element  # nosec B405
 
 import serializable
+from serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.serialization import CycloneDxDeserializationException
+from ..schema import SchemaVersion
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
 from .component import Component
 from .service import Service
+
+if TYPE_CHECKING:  # pragma: no cover
+    from serializable import ObjectMetadataLibrary, ViewType
 
 
 @serializable.serializable_class
@@ -250,3 +257,108 @@ class ToolsRepository:
 
     def __hash__(self) -> int:
         return hash((tuple(self._tools), tuple(self._components), tuple(self._services)))
+
+
+class _ToolsRepositoryHelper(BaseHelper):
+
+    @staticmethod
+    def __all_as_tools(o: ToolsRepository) -> Tuple[Tool, ...]:
+        return (
+            *o.tools,
+            *map(Tool.from_component, o.components),
+            *map(Tool.from_service, o.services),
+        )
+
+    @staticmethod
+    def __supports_components_and_services(view: Any) -> bool:
+        try:
+            return view is not None and view().schema_version_enum >= SchemaVersion.V1_5
+        except Exception:
+            return False
+
+    @classmethod
+    def json_normalize(cls, o: ToolsRepository, *,
+                       view: Optional[Type['ViewType']],
+                       **__: Any) -> Any:
+        if not o:
+            return None
+        if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
+            return cls.__all_as_tools(o)
+        return {
+            'components': tuple(o.components) if len(o.components) > 0 else None,
+            'services': tuple(o.services) if len(o.services) > 0 else None,
+        }
+
+    @classmethod
+    def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
+                         **__: Any) -> ToolsRepository:
+        tools = None
+        components = None
+        services = None
+        if isinstance(o, Dict):
+            components = map(lambda c: Component.from_json(  # type:ignore[attr-defined]
+                c), o.get('components', ()))
+            services = map(lambda s: Service.from_json(  # type:ignore[attr-defined]
+                s), o.get('services', ()))
+        elif isinstance(o, Iterable):
+            tools = map(lambda t: Tool.from_json(t), o)  # type:ignore[attr-defined]
+        return ToolsRepository(components=components, services=services, tools=tools)
+
+    @classmethod
+    def xml_normalize(cls, o: ToolsRepository, *,
+                      element_name: str,
+                      view: Optional[Type['ViewType']],
+                      xmlns: Optional[str],
+                      **__: Any) -> Optional[Element]:
+        if not o:
+            return None
+        elem = Element(element_name)
+        if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
+            elem.extend(
+                ti.as_xml(  # type:ignore[attr-defined]
+                    view_=view, as_string=False, element_name='tool', xmlns=xmlns)
+                for ti in cls.__all_as_tools(o)
+            )
+        else:
+            if o.components:
+                elem_c = Element(f'{{{xmlns}}}components' if xmlns else 'components')
+                elem_c.extend(
+                    ci.as_xml(  # type:ignore[attr-defined]
+                        view_=view, as_string=False, element_name='component', xmlns=xmlns)
+                    for ci in o.components)
+                elem.append(elem_c)
+            if o.services:
+                elem_s = Element(f'{{{xmlns}}}services' if xmlns else 'services')
+                elem_s.extend(
+                    si.as_xml(  # type:ignore[attr-defined]
+                        view_=view, as_string=False, element_name='service', xmlns=xmlns)
+                    for si in o.services)
+                elem.append(elem_s)
+        return elem
+
+    @classmethod
+    def xml_denormalize(cls, o: Element, *,
+                        default_ns: Optional[str],
+                        prop_info: 'ObjectMetadataLibrary.SerializableProperty',
+                        ctx: Type[Any],
+                        **kwargs: Any) -> ToolsRepository:
+        tools = []
+        components = None
+        services = None
+        for e in o:
+            tag = e.tag if default_ns is None else e.tag.replace(f'{{{default_ns}}}', '')
+            if tag == 'tool':
+                tools.append(Tool.from_xml(  # type:ignore[attr-defined]
+                    e, default_ns))
+            elif tag == 'components':
+                components = map(lambda s: Component.from_xml(  # type:ignore[attr-defined]
+                    s, default_ns), e)
+            elif tag == 'services':
+                services = map(lambda s: Service.from_xml(  # type:ignore[attr-defined]
+                    s, default_ns), e)
+            else:
+                raise CycloneDxDeserializationException(f'unexpected: {e!r}')
+        return ToolsRepository(
+            tools=tools,
+            components=components,
+            services=services)

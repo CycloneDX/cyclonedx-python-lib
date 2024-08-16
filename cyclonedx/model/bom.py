@@ -36,7 +36,7 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
-from ..serialization import LicenseRepositoryHelper, ToolsRepositoryHelper, UrnUuidHelper
+from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
 from . import ExternalReference, Property, ThisTool
 from .bom_ref import BomRef
 from .component import Component
@@ -44,7 +44,7 @@ from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .service import Service
-from .tool import Tool, ToolsRepository
+from .tool import Tool, ToolsRepository, _ToolsRepositoryHelper
 from .vulnerability import Vulnerability
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -120,7 +120,7 @@ class BomMetaData:
     #    ... # TODO since CDX1.5
 
     @property
-    @serializable.type_mapping(ToolsRepositoryHelper)
+    @serializable.type_mapping(_ToolsRepositoryHelper)
     @serializable.xml_sequence(3)
     def tools(self) -> ToolsRepository:
         """
