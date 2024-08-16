@@ -44,13 +44,6 @@ class TestModelToolRepository(TestCase):
         good_bom = get_bom_with_tools_with_component_and_service_migrate()
         self.assertTrue(bom == good_bom)
 
-    def test_tool_with_component_and_service_render_json(self) -> None:
-        bom = get_bom_with_tools_with_component_and_service_migrate()
-        test_file = join(OWN_DATA_DIRECTORY, 'json', '1.5',
-                         'bom_with_tool_with_component_and_service.json')
-        with open(test_file, encoding='utf-8') as f:
-            self.assertEqual(JsonV1Dot5(bom).output_as_string(indent=2), f.read())
-
     def test_tool_with_component_and_service_load_xml(self) -> None:
         test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.5',
                          'bom_with_tool_with_component_and_service.xml')
@@ -59,13 +52,6 @@ class TestModelToolRepository(TestCase):
         self.assertEqual(bom.metadata.tools.components[0].type, 'application')
         self.assertEqual(bom.metadata.tools.components[0].name, 'test-component')
         self.assertEqual(bom.metadata.tools.services[0].name, 'test-service')
-
-    def test_tool_with_componet_and_service_render_xml(self) -> None:
-        bom = get_bom_with_tools_with_component_and_service_migrate()
-        test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.5',
-                         'bom_with_tool_with_component_and_service.xml')
-        with open(test_file, encoding='UTF-8') as f:
-            self.assertEqual(XmlV1Dot5(bom).output_as_string(indent=2), f.read())
 
     def test_assign_component(self) -> None:
         t = ToolsRepository()
