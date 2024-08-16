@@ -23,6 +23,7 @@ from serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.serialization import CycloneDxDeserializationException
 from ..schema import SchemaVersion
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
@@ -291,23 +292,16 @@ class ToolsRepositoryHelper(BaseHelper):
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
                          **__: Any) -> ToolsRepository:
-        components = []
-        services = []
-        tools = []
-
+        tools = None
+        components = None
+        services = None
         if isinstance(o, Dict):
-            if 'components' in o:
-                for c in o['components']:
-                    components.append(Component.from_json(c))  # type: ignore[attr-defined]
-
-            if 'services' in o:
-                for s in o['services']:
-                    services.append(Service.from_json(s))  # type: ignore[attr-defined]
-
+            components = map(lambda c: Component.from_json(  # type:ignore[attr-defined]
+                c), o.get('components', ()))
+            services = map(lambda s: Service.from_json(  # type:ignore[attr-defined]
+                s), o.get('services', ()))
         elif isinstance(o, Iterable):
-            for t in o:
-                tools.append(Tool.from_json(t))  # type: ignore[attr-defined]
-
+            tools = map(lambda t: Tool.from_json(t), o)  # type:ignore[attr-defined]
         return ToolsRepository(components=components, services=services, tools=tools)
 
     @classmethod
@@ -348,19 +342,23 @@ class ToolsRepositoryHelper(BaseHelper):
                         prop_info: 'ObjectMetadataLibrary.SerializableProperty',
                         ctx: Type[Any],
                         **kwargs: Any) -> ToolsRepository:
-        tools: List[Tool] = []
-        components: List[Component] = []
-        services: List[Service] = []
-
+        tools = []
+        components = None
+        services = None
         for e in o:
             tag = e.tag if default_ns is None else e.tag.replace(f'{{{default_ns}}}', '')
             if tag == 'tool':
-                tools.append(Tool.from_xml(e))  # type: ignore[attr-defined]
-            if tag == 'components':
-                for c in e:
-                    components.append(Component.from_xml(c))  # type: ignore[attr-defined]
-            if tag == 'services':
-                for s in e:
-                    services.append(Service.from_xml(s))  # type: ignore[attr-defined]
-
-        return ToolsRepository(tools=tools, components=components, services=services)
+                tools.append(Tool.from_xml(  # type:ignore[attr-defined]
+                    e, default_ns))
+            elif tag == 'components':
+                components = map(lambda s: Component.from_xml(  # type:ignore[attr-defined]
+                    s, default_ns), e)
+            elif tag == 'services':
+                services = map(lambda s: Service.from_xml(  # type:ignore[attr-defined]
+                    s, default_ns), e)
+            else:
+                raise CycloneDxDeserializationException(f'unexpected: {e!r}')
+        return ToolsRepository(
+            tools=tools,
+            components=components,
+            services=services)
