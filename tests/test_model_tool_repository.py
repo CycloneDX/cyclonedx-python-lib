@@ -82,8 +82,9 @@ class TestModelToolRepository(TestCase):
 
     def test_invalid_tool_repo_properties(self) -> None:
         with self.assertRaises(MutuallyExclusivePropertiesException):
-            tr = ToolsRepository(components=[Component(name='test-component')],  # pylint: disable=unused-variable # noqa: disable=E841
-                                 services=[Service(name='test-service')], tools=[Tool()])
+            ToolsRepository(
+                components=[Component(name='test-component')],
+                services=[Service(name='test-service')], tools=[Tool()])
 
     def test_assign_component_with_existing_tool(self) -> None:
         tr = ToolsRepository(tools=[Tool()])
