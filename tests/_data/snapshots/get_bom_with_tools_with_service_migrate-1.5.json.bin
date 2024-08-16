@@ -4,7 +4,11 @@
     "tools": {
       "services": [
         {
-          "bom-ref": "my-service",
+          "bom-ref": "other-service",
+          "name": "other-service"
+        },
+        {
+          "bom-ref": "test-service",
           "name": "test-service"
         }
       ]

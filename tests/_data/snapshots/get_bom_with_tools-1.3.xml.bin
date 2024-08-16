@@ -4,7 +4,11 @@
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
       <tool>
-        <name>test-tool</name>
+        <name>test-tool-a</name>
+        <version>23.42</version>
+      </tool>
+      <tool>
+        <name>test-tool-b</name>
         <version>1.33.7</version>
       </tool>
     </tools>

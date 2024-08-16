@@ -4,8 +4,14 @@
     "tools": {
       "components": [
         {
-          "author": "adobe",
-          "bom-ref": "my-component",
+          "bom-ref": "other-component",
+          "group": "acme",
+          "name": "other-component",
+          "type": "application"
+        },
+        {
+          "bom-ref": "test-component",
+          "group": "adobe",
           "name": "test-component",
           "type": "application",
           "version": "1.2.3"

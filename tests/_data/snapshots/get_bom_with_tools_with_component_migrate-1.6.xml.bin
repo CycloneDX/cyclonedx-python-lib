@@ -4,8 +4,12 @@
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
       <components>
-        <component type="application" bom-ref="my-component">
-          <author>adobe</author>
+        <component type="application" bom-ref="other-component">
+          <group>acme</group>
+          <name>other-component</name>
+        </component>
+        <component type="application" bom-ref="test-component">
+          <group>adobe</group>
           <name>test-component</name>
           <version>1.2.3</version>
         </component>

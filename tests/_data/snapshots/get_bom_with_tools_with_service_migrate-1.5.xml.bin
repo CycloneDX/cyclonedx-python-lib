@@ -4,7 +4,10 @@
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
       <services>
-        <service bom-ref="my-service">
+        <service bom-ref="other-service">
+          <name>other-service</name>
+        </service>
+        <service bom-ref="test-service">
           <name>test-service</name>
         </service>
       </services>

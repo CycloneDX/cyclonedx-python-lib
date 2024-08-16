@@ -3,7 +3,11 @@
     "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
-        "name": "test-tool",
+        "name": "test-tool-a",
+        "version": "23.42"
+      },
+      {
+        "name": "test-tool-b",
         "version": "1.33.7"
       }
     ]

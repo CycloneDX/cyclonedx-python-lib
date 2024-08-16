@@ -24,15 +24,15 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.model.service import Service
 from cyclonedx.model.tool import Tool, ToolsRepository
-from tests import OWN_DATA_DIRECTORY
+from tests import SNAPSHOTS_DIRECTORY
 from tests._data.models import get_bom_with_tools_with_component_and_service_migrate
 
 
 class TestModelToolRepository(TestCase):
     def test_tool_with_component_and_service_load_json(self) -> None:
         expected = get_bom_with_tools_with_component_and_service_migrate()
-        test_file = join(OWN_DATA_DIRECTORY, 'json', '1.5',
-                         'bom_with_tool_with_component_and_service.json')
+        test_file = join(SNAPSHOTS_DIRECTORY,
+                         'get_bom_with_tools_with_component_and_service_migrate-1.5.json.bin')
         with open(test_file, encoding='UTF-8') as f:
             bom_json = json_loads(f.read())
         bom = Bom.from_json(bom_json)  # type: ignore[attr-defined]
@@ -48,8 +48,8 @@ class TestModelToolRepository(TestCase):
 
     def test_tool_with_component_and_service_load_xml(self) -> None:
         expected = get_bom_with_tools_with_component_and_service_migrate()
-        test_file = join(OWN_DATA_DIRECTORY, 'xml', '1.5',
-                         'bom_with_tool_with_component_and_service.xml')
+        test_file = join(SNAPSHOTS_DIRECTORY,
+                         'get_bom_with_tools_with_component_and_service_migrate-1.5.xml.bin')
         with open(test_file, encoding='utf-8') as bom_xml:
             bom = Bom.from_xml(bom_xml)  # type: ignore[attr-defined]
         self.assertTupleEqual(

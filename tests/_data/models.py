@@ -1050,7 +1050,10 @@ def get_bom_with_multiple_licenses() -> Bom:
 def get_bom_with_tools() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
-            tools=[Tool(name='test-tool', version='1.33.7')]
+            tools=(
+                Tool(name='test-tool-b', version='1.33.7'),
+                Tool(name='test-tool-a', version='23.42'),
+            )
         )
     )
 
@@ -1059,8 +1062,12 @@ def get_bom_with_tools_with_component_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=ToolsRepository(
-                components=[Component(type=ComponentType.APPLICATION, author='adobe',
-                                      name='test-component', version='1.2.3', bom_ref='my-component')]
+                components=(
+                    Component(type=ComponentType.APPLICATION, group='adobe',
+                              name='test-component', version='1.2.3', bom_ref='test-component'),
+                    Component(type=ComponentType.APPLICATION, group='acme',
+                              name='other-component', bom_ref='other-component'),
+                )
             )
         )
     )
@@ -1070,7 +1077,10 @@ def get_bom_with_tools_with_service_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=ToolsRepository(
-                services=[Service(name='test-service', bom_ref='my-service')]
+                services=(
+                    Service(name='test-service', bom_ref='test-service'),
+                    Service(name='other-service', bom_ref='other-service'),
+                )
             )
         )
     )
@@ -1080,9 +1090,16 @@ def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=ToolsRepository(
-                components=[Component(type=ComponentType.APPLICATION, author='adobe',
-                                      name='test-component', version='1.2.3', bom_ref='my-component')],
-                services=[Service(name='test-service', bom_ref='my-service')]
+                components=(
+                    Component(type=ComponentType.APPLICATION, group='adobe',
+                              name='test-component', version='1.2.3', bom_ref='test-component'),
+                    Component(type=ComponentType.APPLICATION, group='acme',
+                              name='other-component', bom_ref='other-component'),
+                ),
+                services=(
+                    Service(name='test-service', bom_ref='test-service'),
+                    Service(name='other-service', bom_ref='other-service'),
+                )
             )
         )
     )
@@ -1173,6 +1190,7 @@ def get_bom_for_issue_630_empty_property() -> Bom:
             properties=[Property(name='cdx:npm:package:path')]
         )
     })
+
 
 # ---
 
