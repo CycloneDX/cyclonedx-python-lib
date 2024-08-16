@@ -14,22 +14,23 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from json import loads as json_loads
-from typing import Any, Dict, Iterable, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
 import serializable
-from serializable import ObjectMetadataLibrary, ViewType
 from serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import MutuallyExclusivePropertiesException
-from ..model import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
-from ..model.component import Component
-from ..model.service import Service
+from ..schema import SchemaVersion
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
+from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
+from .component import Component
+from .service import Service
+
+if TYPE_CHECKING:  # pragma: no cover
+    from serializable import ObjectMetadataLibrary, ViewType
 
 
 @serializable.serializable_class
@@ -164,6 +165,25 @@ class Tool:
     def __repr__(self) -> str:
         return f'<Tool name={self.name}, version={self.version}, vendor={self.vendor}>'
 
+    @classmethod
+    def from_component(cls: Type['Tool'], component: 'Component') -> 'Tool':
+        return cls(
+            vendor=component.group,
+            name=component.name,
+            version=component.version,
+            hashes=component.hashes,
+            external_references=component.external_references,
+        )
+
+    @classmethod
+    def from_service(cls: Type['Tool'], service: 'Service') -> 'Tool':
+        return cls(
+            vendor=service.group,
+            name=service.name,
+            version=service.version,
+            external_references=service.external_references,
+        )
+
 
 class ToolsRepository:
     """
@@ -180,7 +200,6 @@ class ToolsRepository:
         if tools:
             warn('Using Tool is deprecated as of CycloneDX v1.5. Components and Services should be used now. '
                  'See https://cyclonedx.org/docs/1.5/', DeprecationWarning)
-
         self._components = SortedSet(components or [])
         self._services = SortedSet(services or [])
         self._tools = SortedSet(tools or [])
@@ -223,7 +242,9 @@ class ToolsRepository:
             + len(self._services)
 
     def __bool__(self) -> bool:
-        return any((self._tools, self._components, self._services))
+        return len(self._tools) > 0 \
+            or len(self._components) > 0 \
+            or len(self._services) > 0
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, ToolsRepository):
@@ -238,77 +259,38 @@ class ToolsRepository:
 
 
 class ToolsRepositoryHelper(BaseHelper):
-    """
-    Helps with serializing and deserializing ToolsRepository objects.
-    """
 
-    @classmethod
-    def convert_new_to_old(cls, components: Iterable[Component], services: Iterable[Service]) -> 'SortedSet[Tool]':
-        """
-        "Down converts" Component and Service objects to Tools so they can be rendered by
-        the library for schemas less than version 1.5.
+    @staticmethod
+    def __all_as_tools(o: ToolsRepository) -> Tuple[Tool, ...]:
+        return (
+            *o.tools,
+            *map(Tool.from_component, o.components),
+            *map(Tool.from_service, o.services),
+        )
 
-        Returns:
-            A sorted set of Tools
-        """
-        tools_to_render: 'SortedSet[Tool]' = SortedSet()
-
-        for c in components:
-            tools_to_render.add(Tool(
-                name=c.name,
-                vendor=c.group,
-                version=c.version,
-                hashes=c.hashes,
-                external_references=c.external_references,
-            ))
-
-        for s in services:
-            if s.provider:
-                vendor = s.provider.name
-            else:
-                vendor = None
-            tools_to_render.add(Tool(
-                name=s.name,
-                vendor=vendor,
-                version=s.version,
-                external_references=s.external_references,
-            ))
-
-        return tools_to_render
+    @staticmethod
+    def __supports_components_and_services(view: Any) -> bool:
+        try:
+            return view is not None and view().schema_version_enum >= SchemaVersion.V1_5
+        except Exception:
+            return False
 
     @classmethod
     def json_normalize(cls, o: ToolsRepository, *,
-                       view: Optional[Type[ViewType]],
+                       view: Optional[Type['ViewType']],
                        **__: Any) -> Any:
-        if not any([o.tools, o.components, o.services]):
+        if not o:
             return None
-
-        result = {}
-
-        if (view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum  # type: ignore[union-attr, misc]
-                and not o.tools):
-            if o.components:
-                result['components'] = [json_loads(Component.as_json(c, view_=view))  # type: ignore[attr-defined]
-                                        for c in o.components]
-
-            if o.services:
-                result['services'] = [json_loads(Service.as_json(s, view_=view))  # type: ignore[attr-defined]
-                                      for s in o.services]
-
-            if result:
-                return result
-
-        tools_to_render: 'SortedSet[Tool]' = SortedSet(o.tools)
-        # We "down-convert" Components and Services to Tools so we can render to older schemas
-        # or when there are existing Tool objects
-        tools_to_render.update(cls.convert_new_to_old(o.components, o.services))
-
-        return [json_loads(Tool.as_json(t, view_=view)) for t in tools_to_render]  # type: ignore[attr-defined]
+        return cls.__all_as_tools(o) \
+            if len(o.tools) > 0 or not cls.__supports_components_and_services(view) \
+            else {
+                'components': tuple(o.components) if len(o.components) > 0 else None,
+                'services': tuple(o.services) if len(o.services) > 0 else None,
+            }
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
                          **__: Any) -> ToolsRepository:
-
         components = []
         services = []
         tools = []
@@ -331,58 +313,39 @@ class ToolsRepositoryHelper(BaseHelper):
     @classmethod
     def xml_normalize(cls, o: ToolsRepository, *,
                       element_name: str,
-                      view: Optional[Type[ViewType]],
+                      view: Optional[Type['ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
-        if not any([o.tools, o.components, o.services]):  # pylint: disable=protected-access
+        if not o:
             return None
-
         elem = Element(element_name)
-
-        if (view().schema_version_enum >= SchemaVersion1Dot5().schema_version_enum  # type: ignore[union-attr, misc]
-                and not o.tools):
+        if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
+            elem.extend(
+                ti.as_xml(  # type:ignore[attr-defined]
+                    view_=view, as_string=False, element_name='tool', xmlns=xmlns)
+                for ti in cls.__all_as_tools(o)
+            )
+        else:
             if o.components:
-                c_elem = Element('{' + xmlns + '}' + 'components')  # type: ignore[operator]
-
-                c_elem.extend(
-                    c.as_xml(  # type: ignore[attr-defined]
+                elem_c = Element(f'{{{xmlns}}}components' if xmlns else 'components')
+                elem_c.extend(
+                    ci.as_xml(  # type:ignore[attr-defined]
                         view_=view, as_string=False, element_name='component', xmlns=xmlns)
-                    for c in o.components
-                )
-
-                elem.append(c_elem)
-
+                    for ci in o.components)
+                elem.append(elem_c)
             if o.services:
-                s_elem = Element('{' + xmlns + '}' + 'services')  # type: ignore[operator]
-
-                s_elem.extend(
-                    s.as_xml(  # type: ignore[attr-defined]
+                elem_s = Element(f'{{{xmlns}}}services' if xmlns else 'services')
+                elem_s.extend(
+                    si.as_xml(  # type:ignore[attr-defined]
                         view_=view, as_string=False, element_name='service', xmlns=xmlns)
-                    for s in o.services
-                )
-
-                elem.append(s_elem)
-
-            if len(elem) > 0:
-                return elem
-
-        tools_to_render: 'SortedSet[Tool]' = SortedSet(o.tools)
-        # We "down-convert" Components and Services to Tools so we can render to older schemas
-        # or when there are existing Tool objects
-        tools_to_render.update(cls.convert_new_to_old(o.components, o.services))
-
-        elem.extend(
-            t.as_xml(  # type: ignore[attr-defined]
-                view_=view, as_string=False, element_name='tool', xmlns=xmlns)
-            for t in tools_to_render
-        )
-
+                    for si in o.services)
+                elem.append(elem_s)
         return elem
 
     @classmethod
     def xml_denormalize(cls, o: Element, *,
                         default_ns: Optional[str],
-                        prop_info: ObjectMetadataLibrary.SerializableProperty,
+                        prop_info: 'ObjectMetadataLibrary.SerializableProperty',
                         ctx: Type[Any],
                         **kwargs: Any) -> ToolsRepository:
         tools: List[Tool] = []

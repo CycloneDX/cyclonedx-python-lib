@@ -20,16 +20,10 @@ from json import loads as json_loads
 from os.path import join
 from unittest import TestCase
 
-from sortedcontainers import SortedSet
-
-from cyclonedx.exception.model import MutuallyExclusivePropertiesException
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
-from cyclonedx.model.contact import OrganizationalEntity
 from cyclonedx.model.service import Service
-from cyclonedx.model.tool import Tool, ToolsRepository, ToolsRepositoryHelper
-from cyclonedx.output.json import JsonV1Dot5
-from cyclonedx.output.xml import XmlV1Dot5
+from cyclonedx.model.tool import Tool, ToolsRepository
 from tests import OWN_DATA_DIRECTORY
 from tests._data.models import get_bom_with_tools_with_component_and_service_migrate
 
@@ -107,13 +101,3 @@ class TestModelToolRepository(TestCase):
         tr2.services.add(s)
         tr2.tools.add(t)
         self.assertTrue(tr1 == tr2)
-
-    def test_proper_service_provider_conversion(self) -> None:
-        o = OrganizationalEntity(name='test-org')
-        s = Service(name='test-service', provider=o)
-
-        tools_to_render = ToolsRepositoryHelper.convert_new_to_old(components=[], services=[s])
-
-        t = tools_to_render.pop()  # type: ignore[attr-defined]
-
-        self.assertEqual('test-org', t.vendor)
