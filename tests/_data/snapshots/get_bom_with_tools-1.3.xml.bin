@@ -4,12 +4,15 @@
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
       <tool>
+        <vendor>example</vendor>
         <name>test-tool-a</name>
-        <version>23.42</version>
+        <version>1.33.7</version>
+        <hashes>
+          <hash alg="SHA-256">adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6</hash>
+        </hashes>
       </tool>
       <tool>
         <name>test-tool-b</name>
-        <version>1.33.7</version>
       </tool>
     </tools>
   </metadata>

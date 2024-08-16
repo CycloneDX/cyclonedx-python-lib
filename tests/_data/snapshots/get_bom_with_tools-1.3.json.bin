@@ -3,12 +3,18 @@
     "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
+        "hashes": [
+          {
+            "alg": "SHA-256",
+            "content": "adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6"
+          }
+        ],
         "name": "test-tool-a",
-        "version": "23.42"
+        "vendor": "example",
+        "version": "1.33.7"
       },
       {
-        "name": "test-tool-b",
-        "version": "1.33.7"
+        "name": "test-tool-b"
       }
     ]
   },

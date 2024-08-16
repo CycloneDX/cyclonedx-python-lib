@@ -5,6 +5,20 @@
       "services": [
         {
           "bom-ref": "other-service",
+          "externalReferences": [
+            {
+              "comment": "No comment",
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+                }
+              ],
+              "type": "distribution",
+              "url": "https://cyclonedx.org"
+            }
+          ],
+          "group": "acme",
           "name": "other-service"
         },
         {

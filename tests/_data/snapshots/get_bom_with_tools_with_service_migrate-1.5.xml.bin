@@ -5,7 +5,17 @@
     <tools>
       <services>
         <service bom-ref="other-service">
+          <group>acme</group>
           <name>other-service</name>
+          <externalReferences>
+            <reference type="distribution">
+              <url>https://cyclonedx.org</url>
+              <comment>No comment</comment>
+              <hashes>
+                <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+              </hashes>
+            </reference>
+          </externalReferences>
         </service>
         <service bom-ref="test-service">
           <name>test-service</name>

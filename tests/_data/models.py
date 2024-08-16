@@ -1051,8 +1051,14 @@ def get_bom_with_tools() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=(
-                Tool(name='test-tool-b', version='1.33.7'),
-                Tool(name='test-tool-a', version='23.42'),
+                Tool(name='test-tool-b'),
+                Tool(vendor='example',
+                     name='test-tool-a',
+                     version='1.33.7',
+                     hashes=[HashType.from_composite_str(
+                         'sha256:adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6')],
+                     external_references=[get_external_reference_1()],
+                     ),
             )
         )
     )
@@ -1063,10 +1069,15 @@ def get_bom_with_tools_with_component_migrate() -> Bom:
         metadata=BomMetaData(
             tools=ToolsRepository(
                 components=(
-                    Component(type=ComponentType.APPLICATION, group='adobe',
-                              name='test-component', version='1.2.3', bom_ref='test-component'),
-                    Component(type=ComponentType.APPLICATION, group='acme',
-                              name='other-component', bom_ref='other-component'),
+                    Component(name='test-component', bom_ref='test-component'),
+                    Component(type=ComponentType.APPLICATION,
+                              bom_ref='other-component',
+                              group='acme',
+                              name='other-component',
+                              hashes=[HashType.from_composite_str(
+                                  'sha256:49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca')],
+                              external_references=[get_external_reference_1()],
+                              ),
                 )
             )
         )
@@ -1079,7 +1090,11 @@ def get_bom_with_tools_with_service_migrate() -> Bom:
             tools=ToolsRepository(
                 services=(
                     Service(name='test-service', bom_ref='test-service'),
-                    Service(name='other-service', bom_ref='other-service'),
+                    Service(group='acme',
+                            name='other-service',
+                            bom_ref='other-service',
+                            external_references=[get_external_reference_1()],
+                            ),
                 )
             )
         )
@@ -1091,14 +1106,23 @@ def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
         metadata=BomMetaData(
             tools=ToolsRepository(
                 components=(
-                    Component(type=ComponentType.APPLICATION, group='adobe',
-                              name='test-component', version='1.2.3', bom_ref='test-component'),
-                    Component(type=ComponentType.APPLICATION, group='acme',
-                              name='other-component', bom_ref='other-component'),
+                    Component(name='test-component', bom_ref='test-component'),
+                    Component(type=ComponentType.APPLICATION,
+                              bom_ref='other-component',
+                              group='acme',
+                              name='other-component',
+                              hashes=[HashType.from_composite_str(
+                                  'sha256:49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca')],
+                              external_references=[get_external_reference_1()],
+                              ),
                 ),
                 services=(
                     Service(name='test-service', bom_ref='test-service'),
-                    Service(name='other-service', bom_ref='other-service'),
+                    Service(group='acme',
+                            name='other-service',
+                            bom_ref='other-service',
+                            external_references=[get_external_reference_1()],
+                            ),
                 )
             )
         )
@@ -1110,9 +1134,35 @@ def get_bom_with_tools_with_component_and_service_and_tools_migrate() -> Bom:
     tcomp = tools.components
     tserv = tools.services
     ttools = tools.tools
-    tcomp.add(Component(type=ComponentType.APPLICATION, name='test-component', version='1.2.3'))
-    tserv.add(Service(name='test-service', bom_ref='my-service'))
-    ttools.add(Tool(name='test-tool', version='1.33.7'))
+    tcomp.update((
+        Component(name='test-component', bom_ref='test-component'),
+        Component(type=ComponentType.APPLICATION,
+                  bom_ref='other-component',
+                  group='acme',
+                  name='other-component',
+                  hashes=[HashType.from_composite_str(
+                          'sha256:49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca')],
+                  external_references=[get_external_reference_1()],
+                  ),
+    ))
+    tserv.update((
+        Service(name='test-service', bom_ref='test-service'),
+        Service(group='acme',
+                name='other-service',
+                bom_ref='other-service',
+                external_references=[get_external_reference_1()],
+                ),
+    ))
+    ttools.update((
+        Tool(name='test-tool-b'),
+        Tool(vendor='example',
+             name='test-tool-a',
+             version='1.33.7',
+             hashes=[HashType.from_composite_str(
+                 'sha256:adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6')],
+             external_references=[get_external_reference_1()],
+             ),
+    ))
     return _make_bom(metadata=BomMetaData(tools=tools))
 
 
