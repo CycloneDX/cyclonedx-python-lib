@@ -38,6 +38,7 @@ from cyclonedx.model import (
     Note,
     NoteText,
     Property,
+    ThisTool,
     XsUri,
 )
 from cyclonedx.model.bom import Bom, BomMetaData
@@ -494,9 +495,9 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             ],
             individuals=[get_org_contact_2()]
         ),
-        tools=[
-            Tool(vendor='CycloneDX', name='cyclonedx-python-lib')
-        ],
+        tools=ToolsRepository(tools=(
+            Tool(vendor='CycloneDX', name='cyclonedx-python-lib'),
+        )),
         analysis=VulnerabilityAnalysis(
             state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
             responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
@@ -1051,6 +1052,7 @@ def get_bom_with_tools() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=(
+                ThisTool,
                 Tool(name='test-tool-b'),
                 Tool(vendor='example',
                      name='test-tool-a',
@@ -1154,6 +1156,7 @@ def get_bom_with_tools_with_component_and_service_and_tools_migrate() -> Bom:
                 ),
     ))
     ttools.update((
+        ThisTool,
         Tool(name='test-tool-b'),
         Tool(vendor='example',
              name='test-tool-a',
@@ -1253,6 +1256,11 @@ all_get_bom_funct_valid = tuple(
 all_get_bom_funct_valid_immut = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid') and not n.endswith('_migrate')
+)
+
+all_get_bom_funct_valid_migrate = tuple(
+    (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
+    if n.endswith('_migrate')
 )
 
 all_get_bom_funct_invalid = tuple(
