@@ -26,13 +26,17 @@ from cyclonedx.model.tool import Tool, ToolsRepository
 class TestModelToolRepository(TestCase):
 
     def test_init(self) -> None:
-        cs = (Component(name='test-component'),)
-        ss = (Service(name='test-service'),)
-        ts = (Tool(name='test-tool'),)
-        tr = ToolsRepository(components=cs, services=ss, tools=ts)
-        self.assertTupleEqual(cs, tuple(tr.components))
-        self.assertTupleEqual(ss, tuple(tr.services))
-        self.assertTupleEqual(ts, tuple(tr.tools))
+        c = Component(name='test-component')
+        s = Service(name='test-service')
+        t = Tool(name='test-tool')
+        tr = ToolsRepository(
+            components=(c,),
+            services=(s,),
+            tools=(t,)
+        )
+        self.assertIs(c, tuple(tr.components)[0])
+        self.assertIs(s, tuple(tr.services)[0])
+        self.assertIs(t, tuple(tr.tools)[0])
 
     def test_unequal_different_type(self) -> None:
         tr = ToolsRepository()
