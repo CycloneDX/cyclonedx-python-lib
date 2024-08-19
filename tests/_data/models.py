@@ -1131,7 +1131,7 @@ def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
     )
 
 
-def get_bom_with_tools_with_component_and_service_and_tools_migrate() -> Bom:
+def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate() -> Bom:
     tools = ToolsRepository()
     tcomp = tools.components
     tserv = tools.services
@@ -1258,9 +1258,9 @@ all_get_bom_funct_valid_immut = tuple(
     if n.startswith('get_bom_') and not n.endswith('_invalid') and not n.endswith('_migrate')
 )
 
-all_get_bom_funct_valid_migrate = tuple(
+all_get_bom_funct_valid_reversible_migrate = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
-    if n.endswith('_migrate')
+    if n.startswith('get_bom_') and n.endswith('_migrate') and not n.endswith('_irreversible_migrate')
 )
 
 all_get_bom_funct_invalid = tuple(

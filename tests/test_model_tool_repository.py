@@ -16,51 +16,14 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from json import loads as json_loads
-from os.path import join
 from unittest import TestCase
 
-from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
 from cyclonedx.model.service import Service
 from cyclonedx.model.tool import Tool, ToolsRepository
-from tests import SNAPSHOTS_DIRECTORY
-from tests._data.models import get_bom_with_tools_with_component_and_service_migrate
 
 
 class TestModelToolRepository(TestCase):
-    def test_tool_with_component_and_service_load_json(self) -> None:
-        expected = get_bom_with_tools_with_component_and_service_migrate()
-        test_file = join(SNAPSHOTS_DIRECTORY,
-                         'get_bom_with_tools_with_component_and_service_migrate-1.5.json.bin')
-        with open(test_file, encoding='UTF-8') as f:
-            bom_json = json_loads(f.read())
-        bom = Bom.from_json(bom_json)  # type: ignore[attr-defined]
-        self.assertTupleEqual(
-            tuple(bom.metadata.tools.components),
-            tuple(expected.metadata.tools.components), 'components')
-        self.assertTupleEqual(
-            tuple(bom.metadata.tools.services),
-            tuple(expected.metadata.tools.services), 'services')
-        self.assertTupleEqual(
-            tuple(bom.metadata.tools.tools),
-            tuple(expected.metadata.tools.tools), 'tools')
-
-    def test_tool_with_component_and_service_load_xml(self) -> None:
-        expected = get_bom_with_tools_with_component_and_service_migrate()
-        test_file = join(SNAPSHOTS_DIRECTORY,
-                         'get_bom_with_tools_with_component_and_service_migrate-1.5.xml.bin')
-        with open(test_file, encoding='utf-8') as bom_xml:
-            bom = Bom.from_xml(bom_xml)  # type: ignore[attr-defined]
-        self.assertTupleEqual(
-            tuple(bom.metadata.tools.components),
-            tuple(expected.metadata.tools.components), 'components')
-        self.assertTupleEqual(
-            tuple(bom.metadata.tools.services),
-            tuple(expected.metadata.tools.services), 'services')
-        self.assertTupleEqual(
-            tuple(bom.metadata.tools.tools),
-            tuple(expected.metadata.tools.tools), 'tools')
 
     def test_init(self) -> None:
         cs = (Component(name='test-component'),)
