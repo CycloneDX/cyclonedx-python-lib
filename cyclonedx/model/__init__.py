@@ -418,6 +418,11 @@ class HashType:
                 Composite Hash string of the format `HASH_ALGORITHM`:`HASH_VALUE`.
                 Example: `sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b`.
 
+                Valid case insensitive prefixes are:
+                `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `blake2b256`, `blake2b384`, `blake2b512`,
+                `blake2256`, `blake2384`, `blake2512`, `sha3-256`, `sha3-384`, `sha3-512`,
+                `blake3`.
+
         Raises:
             `UnknownHashTypeException` if the type of hash cannot be determined.
 
@@ -432,17 +437,37 @@ class HashType:
                 alg=HashAlgorithm.MD5,
                 content=parts[1].lower()
             )
+        elif algorithm_prefix[0:4] == 'sha3':
+            return HashType(
+                alg=getattr(HashAlgorithm, f'SHA3_{algorithm_prefix[5:]}'),
+                content=parts[1].lower()
+            )
+        elif algorithm_prefix == 'sha1':
+            return HashType(
+                alg=HashAlgorithm.SHA_1,
+                content=parts[1].lower()
+            )
         elif algorithm_prefix[0:3] == 'sha':
+            # This is actually SHA2...
             return HashType(
                 alg=getattr(HashAlgorithm, f'SHA_{algorithm_prefix[3:]}'),
                 content=parts[1].lower()
             )
-        elif algorithm_prefix[0:6] == 'blake2':
+        elif algorithm_prefix[0:7] == 'blake2b':
             return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2b_{algorithm_prefix[6:]}'),
+                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[7:]}'),
                 content=parts[1].lower()
             )
-
+        elif algorithm_prefix[0:6] == 'blake2':
+            return HashType(
+                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[6:]}'),
+                content=parts[1].lower()
+            )
+        elif algorithm_prefix[0:6] == 'blake3':
+            return HashType(
+                alg=HashAlgorithm.BLAKE3,
+                content=parts[1].lower()
+            )
         raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
 
     def __init__(

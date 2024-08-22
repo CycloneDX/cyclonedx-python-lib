@@ -2,6 +2,25 @@
 
 
 
+## v7.6.0 (2024-08-14)
+
+### Feature
+
+* feat: `HashType.from_composite_str` for Blake2b, SHA3, Blake3 (#663)
+
+The code mistreated hashes for Blake2b and SHA3.
+Code for explicitly handling SHA1 &amp; BLAKE3 was added, as those have no
+variants defined in the CycloneDX specification.
+
+fixes #652
+
+---------
+
+Signed-off-by: Michael Schlenker &lt;michael.schlenker@contact-software.com&gt;
+Co-authored-by: Michael Schlenker &lt;michael.schlenker@contact-software.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c59036e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c59036e06ddc97284f82efbbc168dc2d89d090d1))
+
+
 ## v7.5.1 (2024-07-08)
 
 ### Fix
