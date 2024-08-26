@@ -44,6 +44,15 @@ class SerializationOfUnsupportedComponentTypeException(CycloneDxSerializationExc
     """
 
 
+class SerializationOfUnsupportedComponentIdentityEvidenceFieldException(CycloneDxSerializationException):
+    """
+    Raised when attempting serializing/normalizing a :py:class:`cyclonedx.model.component.Component`
+    to a :py:class:`cyclonedx.schema.schema.BaseSchemaVersion`
+    which does not support that :py:class:`cyclonedx.model.component.ComponentIdentityEvidenceField`
+    .
+    """
+
+
 class SerializationOfUnexpectedValueException(CycloneDxSerializationException, ValueError):
     """
     Raised when attempting serializing/normalizing a type that is not expected there.

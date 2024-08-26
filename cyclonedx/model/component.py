@@ -38,6 +38,7 @@ from ..exception.model import (
 from ..exception.serialization import (
     CycloneDxDeserializationException,
     SerializationOfUnexpectedValueException,
+    SerializationOfUnsupportedComponentIdentityEvidenceFieldException,
     SerializationOfUnsupportedComponentTypeException,
 )
 from ..schema.schema import (
@@ -237,10 +238,11 @@ class _ComponentIdentityEvidenceFieldSerializationHelper(serializable.helpers.Ba
     }
 
     @classmethod
-    def __normalize(cls, cs: ComponentIdentityEvidenceField, view: Type[serializable.ViewType]) -> Optional[str]:
-        return cs.value \
-            if cs in cls.__CASES.get(view, ()) \
-            else None
+    def __normalize(cls, cief: ComponentIdentityEvidenceField, view: Type[serializable.ViewType]) -> Optional[str]:
+        if cief in cls.__CASES.get(view, ()):
+            return cief.value
+        raise SerializationOfUnsupportedComponentIdentityEvidenceFieldException(
+            f'unsupported {cief!r} for view {view!r}')
 
     @classmethod
     def json_normalize(cls, o: Any, *,
@@ -492,7 +494,7 @@ class ComponentIdentityEvidence:
         self._confidence = confidence
 
     @property
-    @serializable.type_mapping(ComponentIdentityEvidenceMethod)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'method')
     @serializable.xml_sequence(3)
     def methods(self) -> 'SortedSet[ComponentIdentityEvidenceMethod]':
         """
@@ -572,7 +574,7 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'identity')
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     @serializable.xml_sequence(1)
     def identity(self) -> 'SortedSet[ComponentIdentityEvidence]':
         """

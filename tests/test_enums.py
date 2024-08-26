@@ -26,7 +26,10 @@ from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 from ddt import ddt, idata, named_data
 
 from cyclonedx.exception import MissingOptionalDependencyException
-from cyclonedx.exception.serialization import SerializationOfUnsupportedComponentTypeException
+from cyclonedx.exception.serialization import (
+    SerializationOfUnsupportedComponentIdentityEvidenceFieldException,
+    SerializationOfUnsupportedComponentTypeException,
+)
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import (
@@ -34,8 +37,7 @@ from cyclonedx.model.component import (
     ComponentEvidence,
     ComponentIdentityEvidence,
     ComponentIdentityEvidenceField,
-    ComponentIdentityEvidenceMethod,
-    ComponentIdentityEvidenceMethodTechnique,
+    Copyright,
     Patch,
     Pedigree,
 )
@@ -364,12 +366,32 @@ class TestEnumImpactAnalysisAffectedStatus(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
+class _DP_ComponentIdentityEvidenceField():  # noqa: N801
+    XML_SCHEMA_XPATH = f"./{SCHEMA_NS}simpleType[@name='identityFieldType']"
+    JSON_SCHEMA_POINTER = ('definitions', 'componentIdentityEvidence', 'properties', 'field')
+
+    @classmethod
+    def unsupported_cases(cls) -> Generator[
+        Tuple[str, OutputFormat, SchemaVersion, ComponentIdentityEvidenceField], None, None
+    ]:
+        for name, of, sv in NAMED_OF_SV:
+            if OutputFormat.XML is of:
+                schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], cls.XML_SCHEMA_XPATH))
+            elif OutputFormat.JSON is of:
+                schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], cls.JSON_SCHEMA_POINTER))
+            else:
+                raise ValueError(f'unexpected of: {of!r}')
+            for cief in ComponentIdentityEvidenceField:
+                if cief.value not in schema_cases:
+                    yield f'{name}-{cief.name}', of, sv, cief
+
+
 @ddt
 class TestEnumComponentIdentityEvidenceField(_EnumTestCase):
 
     @idata(set(chain(
-        # dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='componentIdentityEvidence']"),
-        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties', 'field'),
+        dp_cases_from_xml_schemas(_DP_ComponentIdentityEvidenceField.XML_SCHEMA_XPATH),
+        dp_cases_from_json_schemas(*_DP_ComponentIdentityEvidenceField.JSON_SCHEMA_POINTER),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ComponentIdentityEvidenceField, value)
@@ -377,22 +399,52 @@ class TestEnumComponentIdentityEvidenceField(_EnumTestCase):
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        if OutputFormat.XML is of:
+            schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], _DP_ComponentIdentityEvidenceField.XML_SCHEMA_XPATH))
+        elif OutputFormat.JSON is of:
+            schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], _DP_ComponentIdentityEvidenceField.JSON_SCHEMA_POINTER))
+        else:
+            raise ValueError(f'unexpected of: {of!r}')
+        
         bom = _make_bom(components=[
-            Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', evidence=ComponentEvidence(
+            Component(bom_ref='dummy', name='dummy', evidence=ComponentEvidence(
+                copyright=[
+                    Copyright(text="Dummy")
+                ],
+                identity=[
+                    ComponentIdentityEvidence(
+                        field=ComponentIdentityEvidenceField(cief),
+                    )
+                    for cief in schema_cases
+                    if cief in schema_cases
+                ]
+            ))
+        ])
+        super()._test_cases_render(bom, of, sv)
+
+    @named_data(*_DP_ComponentIdentityEvidenceField.unsupported_cases())
+    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    def test_cases_render_raises_on_unsupported(self, of: OutputFormat, sv: SchemaVersion,
+                                                cief: ComponentIdentityEvidenceField,
+                                                *_: Any, **__: Any) -> None:
+        # componentIdentityEvidence type was not added until 1.5
+        if sv.value < (1, 5):
+            return True
+        
+        bom = _make_bom(components=[
+            Component(bom_ref='dummy', name='dummy', evidence=ComponentEvidence(
+                copyright=[
+                    Copyright(text="Dummy")
+                ],
                 identity=[
                     ComponentIdentityEvidence(
                         field=cief,
-                        confidence=0.5,
-                        methods=[
-                            ComponentIdentityEvidenceMethod(technique=ciemt, confidence=0.5)
-                            for ciemt in ComponentIdentityEvidenceMethodTechnique
-                        ]
                     )
                 ]
             ))
-            for cief in ComponentIdentityEvidenceField
         ])
-        super()._test_cases_render(bom, of, sv)
+        with self.assertRaises(SerializationOfUnsupportedComponentIdentityEvidenceFieldException):
+            super()._test_cases_render(bom, of, sv)
 
 
 @ddt

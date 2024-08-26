@@ -10,4 +10,18 @@
       </tool>
     </tools>
   </metadata>
+  <components>
+    <component type="library" bom-ref="dummy">
+      <name>dummy</name>
+      <version/>
+      <evidence>
+        <copyright>
+          <text>Dummy</text>
+        </copyright>
+      </evidence>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy"/>
+  </dependencies>
 </bom>

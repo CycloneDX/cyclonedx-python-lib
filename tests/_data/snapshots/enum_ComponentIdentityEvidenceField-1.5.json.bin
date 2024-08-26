@@ -2,13 +2,20 @@
   "components": [
     {
       "bom-ref": "dummy",
-      "name": "dummy",
-      "type": "application",
       "evidence": {
-        "identity": {
-          "field": "group"
-        }
-      }
+        "copyright": [
+          {
+            "text": "Dummy"
+          }
+        ]
+      },
+      "name": "dummy",
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
     }
   ],
   "metadata": {

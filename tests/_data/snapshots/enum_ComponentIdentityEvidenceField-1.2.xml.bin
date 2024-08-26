@@ -10,4 +10,13 @@
       </tool>
     </tools>
   </metadata>
+  <components>
+    <component type="library" bom-ref="dummy">
+      <name>dummy</name>
+      <version/>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy"/>
+  </dependencies>
 </bom>

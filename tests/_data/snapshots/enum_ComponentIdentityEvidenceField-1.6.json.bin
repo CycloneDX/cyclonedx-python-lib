@@ -2,27 +2,30 @@
   "components": [
     {
       "bom-ref": "dummy",
-      "name": "dummy",
-      "type": "application",
       "evidence": {
+        "copyright": [
+          {
+            "text": "Dummy"
+          }
+        ],
         "identity": [
           {
+            "field": "cpe"
+          },
+          {
             "field": "group"
+          },
+          {
+            "field": "hash"
           },
           {
             "field": "name"
           },
           {
-            "field": "version"
+            "field": "omniborId"
           },
           {
             "field": "purl"
-          },
-          {
-            "field": "cpe"
-          },
-          {
-            "field": "omniborId"
           },
           {
             "field": "swhid"
@@ -31,10 +34,17 @@
             "field": "swid"
           },
           {
-            "field": "hash"
+            "field": "version"
           }
         ]
-      }
+      },
+      "name": "dummy",
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
     }
   ],
   "metadata": {

@@ -37,15 +37,45 @@
     </tools>
   </metadata>
   <components>
-    <component type="application" bom-ref="scoped">
+    <component type="library" bom-ref="dummy">
       <name>dummy</name>
       <evidence>
         <identity>
+          <field>cpe</field>
+        </identity>
+        <identity>
           <field>group</field>
         </identity>
+        <identity>
+          <field>hash</field>
+        </identity>
+        <identity>
+          <field>name</field>
+        </identity>
+        <identity>
+          <field>omniborId</field>
+        </identity>
+        <identity>
+          <field>purl</field>
+        </identity>
+        <identity>
+          <field>swhid</field>
+        </identity>
+        <identity>
+          <field>swid</field>
+        </identity>
+        <identity>
+          <field>version</field>
+        </identity>
+        <copyright>
+          <text>Dummy</text>
+        </copyright>
       </evidence>
     </component>
   </components>
+  <dependencies>
+    <dependency ref="dummy"/>
+  </dependencies>
   <properties>
     <property name="key1">val1</property>
     <property name="key2">val2</property>

@@ -1,4 +1,17 @@
 {
+  "components": [
+    {
+      "bom-ref": "dummy",
+      "name": "dummy",
+      "type": "library",
+      "version": ""
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
+    }
+  ],
   "metadata": {
     "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
