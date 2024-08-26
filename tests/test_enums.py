@@ -400,16 +400,18 @@ class TestEnumComponentIdentityEvidenceField(_EnumTestCase):
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         if OutputFormat.XML is of:
-            schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], _DP_ComponentIdentityEvidenceField.XML_SCHEMA_XPATH))
+            schema_cases = set(dp_cases_from_xml_schema(
+                SCHEMA_XML[sv], _DP_ComponentIdentityEvidenceField.XML_SCHEMA_XPATH))
         elif OutputFormat.JSON is of:
-            schema_cases = set(dp_cases_from_json_schema(SCHEMA_JSON[sv], _DP_ComponentIdentityEvidenceField.JSON_SCHEMA_POINTER))
+            schema_cases = set(dp_cases_from_json_schema(
+                SCHEMA_JSON[sv], _DP_ComponentIdentityEvidenceField.JSON_SCHEMA_POINTER))
         else:
             raise ValueError(f'unexpected of: {of!r}')
-        
+
         bom = _make_bom(components=[
             Component(bom_ref='dummy', name='dummy', evidence=ComponentEvidence(
                 copyright=[
-                    Copyright(text="Dummy")
+                    Copyright(text='Dummy')
                 ],
                 identity=[
                     ComponentIdentityEvidence(
@@ -430,11 +432,11 @@ class TestEnumComponentIdentityEvidenceField(_EnumTestCase):
         # componentIdentityEvidence type was not added until 1.5
         if sv.value < (1, 5):
             return True
-        
+
         bom = _make_bom(components=[
             Component(bom_ref='dummy', name='dummy', evidence=ComponentEvidence(
                 copyright=[
-                    Copyright(text="Dummy")
+                    Copyright(text='Dummy')
                 ],
                 identity=[
                     ComponentIdentityEvidence(
