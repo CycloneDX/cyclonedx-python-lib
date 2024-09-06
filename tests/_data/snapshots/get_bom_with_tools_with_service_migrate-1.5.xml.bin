@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <services>
+        <service bom-ref="other-service">
+          <group>acme</group>
+          <name>other-service</name>
+          <externalReferences>
+            <reference type="distribution">
+              <url>https://cyclonedx.org</url>
+              <comment>No comment</comment>
+              <hashes>
+                <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+              </hashes>
+            </reference>
+          </externalReferences>
+        </service>
+        <service bom-ref="test-service">
+          <name>test-service</name>
+        </service>
+      </services>
+    </tools>
+  </metadata>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

@@ -38,7 +38,7 @@ from cyclonedx.model import (
     Note,
     NoteText,
     Property,
-    Tool,
+    ThisTool,
     XsUri,
 )
 from cyclonedx.model.bom import Bom, BomMetaData
@@ -89,6 +89,7 @@ from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSourc
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
+from cyclonedx.model.tool import Tool, ToolsRepository
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
@@ -494,9 +495,9 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             ],
             individuals=[get_org_contact_2()]
         ),
-        tools=[
-            Tool(vendor='CycloneDX', name='cyclonedx-python-lib')
-        ],
+        tools=ToolsRepository(tools=(
+            Tool(vendor='CycloneDX', name='cyclonedx-python-lib'),
+        )),
         analysis=VulnerabilityAnalysis(
             state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
             responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
@@ -1047,6 +1048,127 @@ def get_bom_with_multiple_licenses() -> Bom:
     )
 
 
+def get_bom_with_tools() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            tools=(
+                ThisTool,
+                Tool(name='test-tool-b'),
+                Tool(vendor='example',
+                     name='test-tool-a',
+                     version='1.33.7',
+                     hashes=[HashType.from_composite_str(
+                         'sha256:adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6')],
+                     external_references=[get_external_reference_1()],
+                     ),
+            )
+        )
+    )
+
+
+def get_bom_with_tools_with_component_migrate() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            tools=ToolsRepository(
+                components=(
+                    Component(name='test-component', bom_ref='test-component'),
+                    Component(type=ComponentType.APPLICATION,
+                              bom_ref='other-component',
+                              group='acme',
+                              name='other-component',
+                              hashes=[HashType.from_composite_str(
+                                  'sha256:49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca')],
+                              external_references=[get_external_reference_1()],
+                              ),
+                )
+            )
+        )
+    )
+
+
+def get_bom_with_tools_with_service_migrate() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            tools=ToolsRepository(
+                services=(
+                    Service(name='test-service', bom_ref='test-service'),
+                    Service(group='acme',
+                            name='other-service',
+                            bom_ref='other-service',
+                            external_references=[get_external_reference_1()],
+                            ),
+                )
+            )
+        )
+    )
+
+
+def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            tools=ToolsRepository(
+                components=(
+                    Component(name='test-component', bom_ref='test-component'),
+                    Component(type=ComponentType.APPLICATION,
+                              bom_ref='other-component',
+                              group='acme',
+                              name='other-component',
+                              hashes=[HashType.from_composite_str(
+                                  'sha256:49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca')],
+                              external_references=[get_external_reference_1()],
+                              ),
+                ),
+                services=(
+                    Service(name='test-service', bom_ref='test-service'),
+                    Service(group='acme',
+                            name='other-service',
+                            bom_ref='other-service',
+                            external_references=[get_external_reference_1()],
+                            ),
+                )
+            )
+        )
+    )
+
+
+def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate() -> Bom:
+    tools = ToolsRepository()
+    tcomp = tools.components
+    tserv = tools.services
+    ttools = tools.tools
+    tcomp.update((
+        Component(name='test-component', bom_ref='test-component'),
+        Component(type=ComponentType.APPLICATION,
+                  bom_ref='other-component',
+                  group='acme',
+                  name='other-component',
+                  hashes=[HashType.from_composite_str(
+                          'sha256:49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca')],
+                  external_references=[get_external_reference_1()],
+                  ),
+    ))
+    tserv.update((
+        Service(name='test-service', bom_ref='test-service'),
+        Service(group='acme',
+                name='other-service',
+                bom_ref='other-service',
+                external_references=[get_external_reference_1()],
+                ),
+    ))
+    ttools.update((
+        ThisTool,
+        Tool(name='test-tool-b'),
+        Tool(vendor='example',
+             name='test-tool-a',
+             version='1.33.7',
+             hashes=[HashType.from_composite_str(
+                 'sha256:adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6')],
+             external_references=[get_external_reference_1()],
+             ),
+    ))
+    return _make_bom(metadata=BomMetaData(tools=tools))
+
+
 def get_bom_for_issue_497_urls() -> Bom:
     """regression test for issue #497
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/497
@@ -1122,6 +1244,7 @@ def get_bom_for_issue_630_empty_property() -> Bom:
         )
     })
 
+
 # ---
 
 
@@ -1133,6 +1256,11 @@ all_get_bom_funct_valid = tuple(
 all_get_bom_funct_valid_immut = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid') and not n.endswith('_migrate')
+)
+
+all_get_bom_funct_valid_reversible_migrate = tuple(
+    (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
+    if n.startswith('get_bom_') and n.endswith('_migrate') and not n.endswith('_irreversible_migrate')
 )
 
 all_get_bom_funct_invalid = tuple(

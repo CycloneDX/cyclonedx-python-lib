@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      },
+      {
+        "hashes": [
+          {
+            "alg": "SHA-256",
+            "content": "adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6"
+          }
+        ],
+        "name": "test-tool-a",
+        "vendor": "example",
+        "version": "1.33.7"
+      },
+      {
+        "name": "test-tool-b"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2"
+}
