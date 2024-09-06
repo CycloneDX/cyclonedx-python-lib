@@ -199,8 +199,9 @@ class ToolsRepository:
         tools: Optional[Iterable[Tool]] = None
     ) -> None:
         if tools:
-            warn('Using Tool is deprecated as of CycloneDX v1.5. Components and Services should be used now. '
-                 'See https://cyclonedx.org/docs/1.5/', DeprecationWarning)
+            warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
+                 'Please use `@.components` and `@.services` instead.',
+                 DeprecationWarning)
         self.components = components or ()  # type:ignore[assignment]
         self.services = services or ()  # type:ignore[assignment]
         self.tools = tools or ()  # type:ignore[assignment]
