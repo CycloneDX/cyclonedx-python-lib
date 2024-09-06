@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5">
+    <metadata>
+        <tools>
+            <foo />
+        </tools>
+    </metadata>
+</bom>
