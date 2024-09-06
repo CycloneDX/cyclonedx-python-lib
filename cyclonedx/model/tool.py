@@ -274,7 +274,7 @@ class _ToolsRepositoryHelper(BaseHelper):
     def __supports_components_and_services(view: Any) -> bool:
         try:
             return view is not None and view().schema_version_enum >= SchemaVersion.V1_5
-        except Exception:
+        except Exception:  # pragma: no cover
             return False
 
     @classmethod
