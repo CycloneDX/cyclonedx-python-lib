@@ -50,5 +50,5 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
     def test_unexpected_toolsrepository_item(self) -> None:
         with open(join(OWN_DATA_DIRECTORY, 'xml', '1.5', 'invalid-tool.xml')) as input_xml:
             with self.assertRaisesRegex(CycloneDxDeserializationException,
-                                        r"^unexpected: <Element '{.+?}foo' at 0x[0-9a-f]+>$"):
+                                        r"^unexpected: <Element '{.+?}foo' at 0x[0-9a-fA-F]+>$"):
                 Bom.from_xml(input_xml)
