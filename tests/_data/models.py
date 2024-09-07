@@ -38,9 +38,9 @@ from cyclonedx.model import (
     Note,
     NoteText,
     Property,
-    ThisTool,
     XsUri,
 )
+from cyclonedx.builder.this import this_tool, this_component
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
@@ -130,10 +130,14 @@ BOM_SERIAL_NUMBER = UUID('1441d33a-e0fc-45b5-af3b-61ee52a88bac')
 BOM_TIMESTAMP = datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00')
 
 
-def _make_bom(**kwargs: Any) -> Bom:
+def _make_bom(
+    clear_tools=True,
+    **kwargs: Any) -> Bom:
     bom = Bom(**kwargs)
     bom.serial_number = BOM_SERIAL_NUMBER
     bom.metadata.timestamp = BOM_TIMESTAMP
+    if clear_tools:
+        bom.metadata.tools = ToolsRepository()
     bom.properties = get_properties_1()
     return bom
 
@@ -1050,9 +1054,10 @@ def get_bom_with_multiple_licenses() -> Bom:
 
 def get_bom_with_tools() -> Bom:
     return _make_bom(
+        clear_tools=False,
         metadata=BomMetaData(
             tools=(
-                ThisTool,
+                this_tool(),
                 Tool(name='test-tool-b'),
                 Tool(vendor='example',
                      name='test-tool-a',
@@ -1068,9 +1073,11 @@ def get_bom_with_tools() -> Bom:
 
 def get_bom_with_tools_with_component_migrate() -> Bom:
     return _make_bom(
+        clear_tools=False,
         metadata=BomMetaData(
             tools=ToolsRepository(
                 components=(
+                    this_component(),
                     Component(name='test-component', bom_ref='test-component'),
                     Component(type=ComponentType.APPLICATION,
                               bom_ref='other-component',
@@ -1088,6 +1095,7 @@ def get_bom_with_tools_with_component_migrate() -> Bom:
 
 def get_bom_with_tools_with_service_migrate() -> Bom:
     return _make_bom(
+        clear_tools=False,
         metadata=BomMetaData(
             tools=ToolsRepository(
                 services=(
@@ -1105,9 +1113,11 @@ def get_bom_with_tools_with_service_migrate() -> Bom:
 
 def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
     return _make_bom(
+        clear_tools=False,
         metadata=BomMetaData(
             tools=ToolsRepository(
                 components=(
+                    this_component(),
                     Component(name='test-component', bom_ref='test-component'),
                     Component(type=ComponentType.APPLICATION,
                               bom_ref='other-component',
@@ -1137,6 +1147,7 @@ def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate
     tserv = tools.services
     ttools = tools.tools
     tcomp.update((
+        this_component(),
         Component(name='test-component', bom_ref='test-component'),
         Component(type=ComponentType.APPLICATION,
                   bom_ref='other-component',
@@ -1156,7 +1167,7 @@ def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate
                 ),
     ))
     ttools.update((
-        ThisTool,
+        this_tool(),
         Tool(name='test-tool-b'),
         Tool(vendor='example',
              name='test-tool-a',
@@ -1166,8 +1177,10 @@ def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate
              external_references=[get_external_reference_1()],
              ),
     ))
-    return _make_bom(metadata=BomMetaData(tools=tools))
+    return _make_bom(clear_tools=False, metadata=BomMetaData(tools=tools))
 
+def get_bom_with_tools_default_migrate() -> Bom:
+    return _make_bom(clear_tools=False)
 
 def get_bom_for_issue_497_urls() -> Bom:
     """regression test for issue #497

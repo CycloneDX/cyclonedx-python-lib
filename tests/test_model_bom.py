@@ -23,7 +23,8 @@ from uuid import uuid4
 from ddt import ddt, named_data
 
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException
-from cyclonedx.model import Property, ThisTool, Tool
+from cyclonedx.model import Property
+from cyclonedx.model.tool import Tool
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
@@ -54,8 +55,7 @@ class TestBomMetaData(TestCase):
         self.assertIsNone(metadata.supplier)
         self.assertIsNotNone(metadata.licenses)
         self.assertIsNotNone(metadata.properties)
-        self.assertIsNotNone(metadata.tools)
-        self.assertTrue(ThisTool in metadata.tools.tools)
+        self.assertTrue(metadata.tools)
 
     def test_basic_bom_metadata(self) -> None:
         tools = [
@@ -94,18 +94,13 @@ class TestBomMetaData(TestCase):
         self.assertTrue(properties[0] in metadata.properties)
         self.assertTrue(properties[1] in metadata.properties)
         self.assertIsNotNone(metadata.tools)
-        self.assertTrue(ThisTool not in metadata.tools.tools)
+        self.assertEqual(2, len(metadata.tools.tools))
         self.assertTrue(tools[0] in metadata.tools.tools)
         self.assertTrue(tools[1] in metadata.tools.tools)
 
 
 @ddt
 class TestBom(TestCase):
-
-    def test_bom_metadata_tool_this_tool(self) -> None:
-        self.assertEqual(ThisTool.vendor, 'CycloneDX')
-        self.assertEqual(ThisTool.name, 'cyclonedx-python-lib')
-        self.assertNotEqual(ThisTool.version, 'UNKNOWN')
 
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()

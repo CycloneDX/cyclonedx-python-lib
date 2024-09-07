@@ -11,6 +11,11 @@
         </hashes>
       </tool>
       <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+      </tool>
+      <tool>
         <name>test-component</name>
       </tool>
       <tool>
