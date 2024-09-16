@@ -37,7 +37,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property, ThisTool
+from . import ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -88,9 +88,6 @@ class BomMetaData:
                 '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
                 'Please use `bom.metadata.component.manufacturer` instead.',
                 DeprecationWarning)
-
-        if not tools:
-            self.tools.tools.add(ThisTool)
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)

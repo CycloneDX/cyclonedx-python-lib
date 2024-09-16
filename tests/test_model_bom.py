@@ -48,14 +48,13 @@ class TestBomMetaData(TestCase):
     def test_empty_bom_metadata(self) -> None:
         metadata = BomMetaData()
         self.assertIsNotNone(metadata.timestamp)
-        self.assertIsNotNone(metadata.authors)
+        self.assertEqual(0, len(metadata.authors))
         self.assertIsNone(metadata.component)
         self.assertIsNone(metadata.manufacture)
         self.assertIsNone(metadata.supplier)
-        self.assertIsNotNone(metadata.licenses)
-        self.assertIsNotNone(metadata.properties)
-        self.assertIsNotNone(metadata.tools)
-        self.assertTrue(ThisTool in metadata.tools.tools)
+        self.assertEqual(0, len(metadata.licenses))
+        self.assertEqual(0, len(metadata.properties))
+        self.assertEqual(0, len(metadata.tools))
 
     def test_basic_bom_metadata(self) -> None:
         tools = [
@@ -109,11 +108,13 @@ class TestBom(TestCase):
 
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()
-        self.assertEqual(len(bom.metadata.tools), 1)
+        self.assertEqual(len(bom.metadata.tools), 0)
         bom.metadata.tools.tools.add(
             Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
         )
-        self.assertEqual(bom.version, 1)
+        bom.metadata.tools.tools.add(
+            Tool(vendor='TestVendor', name='TestTool-2', version='1.33.7')
+        )
         self.assertEqual(len(bom.metadata.tools), 2)
 
     def test_metadata_component(self) -> None:
