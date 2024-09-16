@@ -13,6 +13,11 @@
         "vendor": "acme"
       },
       {
+        "name": "cyclonedx-python-lib",
+        "vendor": "CycloneDX",
+        "version": "TESTING"
+      },
+      {
         "name": "test-component"
       }
     ]

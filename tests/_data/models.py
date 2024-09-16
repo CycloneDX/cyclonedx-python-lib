@@ -26,6 +26,7 @@ from uuid import UUID
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 
+from cyclonedx.builder.this import this_component, this_tool
 from cyclonedx.model import (
     AttachedText,
     Copyright,
@@ -38,7 +39,6 @@ from cyclonedx.model import (
     Note,
     NoteText,
     Property,
-    ThisTool,
     XsUri,
 )
 from cyclonedx.model.bom import Bom, BomMetaData
@@ -1052,7 +1052,7 @@ def get_bom_with_tools() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             tools=(
-                ThisTool,
+                this_tool(),
                 Tool(name='test-tool-b'),
                 Tool(vendor='example',
                      name='test-tool-a',
@@ -1071,6 +1071,7 @@ def get_bom_with_tools_with_component_migrate() -> Bom:
         metadata=BomMetaData(
             tools=ToolsRepository(
                 components=(
+                    this_component(),
                     Component(name='test-component', bom_ref='test-component'),
                     Component(type=ComponentType.APPLICATION,
                               bom_ref='other-component',
@@ -1108,6 +1109,7 @@ def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
         metadata=BomMetaData(
             tools=ToolsRepository(
                 components=(
+                    this_component(),
                     Component(name='test-component', bom_ref='test-component'),
                     Component(type=ComponentType.APPLICATION,
                               bom_ref='other-component',
@@ -1137,6 +1139,7 @@ def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate
     tserv = tools.services
     ttools = tools.tools
     tcomp.update((
+        this_component(),
         Component(name='test-component', bom_ref='test-component'),
         Component(type=ComponentType.APPLICATION,
                   bom_ref='other-component',
@@ -1156,7 +1159,7 @@ def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate
                 ),
     ))
     ttools.update((
-        ThisTool,
+        this_tool(),
         Tool(name='test-tool-b'),
         Tool(vendor='example',
              name='test-tool-a',

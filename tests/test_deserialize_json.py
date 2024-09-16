@@ -40,7 +40,7 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
 
     @named_data(*all_get_bom_funct_valid_immut,
                 *all_get_bom_funct_valid_reversible_migrate)
-    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @patch('cyclonedx.builder.this.__ThisVersion', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
         snapshot_name = mksname(get_bom, SchemaVersion.V1_6, OutputFormat.JSON)
