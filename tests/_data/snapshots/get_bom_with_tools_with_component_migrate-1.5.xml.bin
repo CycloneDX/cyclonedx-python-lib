@@ -20,7 +20,7 @@
             </reference>
           </externalReferences>
         </component>
-        <component type="library" bom-ref="None">
+        <component type="library">
           <group>CycloneDX</group>
           <name>cyclonedx-python-lib</name>
           <version>TESTING</version>

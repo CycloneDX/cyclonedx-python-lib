@@ -4,7 +4,7 @@
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
       <components>
-        <component type="library" bom-ref="None">
+        <component type="library">
           <group>CycloneDX</group>
           <name>cyclonedx-python-lib</name>
           <version>TESTING</version>
