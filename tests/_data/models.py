@@ -26,6 +26,7 @@ from uuid import UUID
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 
+from cyclonedx.builder.this import this_component, this_tool
 from cyclonedx.model import (
     AttachedText,
     Copyright,
@@ -40,7 +41,6 @@ from cyclonedx.model import (
     Property,
     XsUri,
 )
-from cyclonedx.builder.this import this_tool, this_component
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
@@ -1170,6 +1170,7 @@ def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate
              ),
     ))
     return _make_bom(metadata=BomMetaData(tools=tools))
+
 
 def get_bom_for_issue_497_urls() -> Bom:
     """regression test for issue #497

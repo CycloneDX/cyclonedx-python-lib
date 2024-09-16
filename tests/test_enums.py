@@ -19,7 +19,6 @@ from itertools import chain
 from json import load as json_load
 from typing import Any, Generator, Iterable, Tuple, Type
 from unittest import TestCase
-from unittest.mock import patch
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
