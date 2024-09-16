@@ -26,7 +26,6 @@ import serializable
 from sortedcontainers import SortedSet
 
 from .._internal.time import get_now_utc as _get_now_utc
-from ..builder.this import this_component
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -89,9 +88,6 @@ class BomMetaData:
                 '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
                 'Please use `bom.metadata.component.manufacturer` instead.',
                 DeprecationWarning)
-
-        if not tools:
-            self.tools.components.add(this_component())
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
