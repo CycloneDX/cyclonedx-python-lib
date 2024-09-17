@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Dict, Iterable, Tuple
+from typing import Any, Dict, Iterable, Tuple, Union
 from unittest import TestCase
 
 from cyclonedx.builder.this import this_component, this_tool
@@ -25,22 +25,27 @@ from cyclonedx.model.license import License, LicenseAcknowledgement
 from tests import load_pyproject
 
 
-class TestThisBase(TestCase):
+class ExtRefsTestMixin:
 
     @staticmethod
     def __first_ers_uri(t: ExternalReferenceType, ers: Iterable[ExternalReference]) -> str:
         return next(filter(lambda r: r.type is t, ers)).url.uri
 
-    def assertExtRefs(self, p: Dict[str, Any], ers: Iterable[ExternalReference]) -> None:  # noqa:N802
+    def assertExtRefs(  # noqa:N802
+        self: Union[TestCase, 'ExtRefsTestMixin'],
+        p: Dict[str, Any], ers: Iterable[ExternalReference]
+    ) -> None:
         self.assertEqual(p['tool']['poetry']['homepage'], self.__first_ers_uri(
             ExternalReferenceType.WEBSITE, ers))
         self.assertEqual(p['tool']['poetry']['repository'], self.__first_ers_uri(
             ExternalReferenceType.VCS, ers))
         self.assertEqual(p['tool']['poetry']['documentation'], self.__first_ers_uri(
             ExternalReferenceType.DOCUMENTATION, ers))
+        self.assertEqual(p['tool']['poetry']['urls']['Bug Tracker'], self.__first_ers_uri(
+            ExternalReferenceType.ISSUE_TRACKER, ers))
 
 
-class TestThisComponent(TestThisBase):
+class TestThisComponent(TestCase, ExtRefsTestMixin):
     def test_basics(self) -> None:
         p = load_pyproject()
         c = this_component()
@@ -65,7 +70,7 @@ class TestThisComponent(TestThisBase):
         self.assertExtRefs(p, ers)
 
 
-class TestThisTool(TestThisBase):
+class TestThisTool(TestCase, ExtRefsTestMixin):
     def test_basics(self) -> None:
         p = load_pyproject()
         t = this_tool()
