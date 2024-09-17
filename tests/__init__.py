@@ -22,11 +22,6 @@ from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, List, Optional
 from unittest import TestCase
 from uuid import UUID
 
-if sys.version_info >= (3, 11):
-    from tomllib import load as toml_load
-else:
-    from toml import load as toml_load
-
 from sortedcontainers import SortedSet
 
 from cyclonedx.output import BomRefDiscriminator as _BomRefDiscriminator
@@ -199,5 +194,11 @@ class DpTuple(Tuple[SchemaVersion, str]):
 
 
 def load_pyproject() -> Dict[str, Any]:
-    with open(path.join(path.dirname(__file__), '..', 'pyproject.toml'), 'rb') as f:
-        return toml_load(f)
+    if sys.version_info >= (3, 11):
+        from tomllib import load as toml_load
+        with open(path.join(path.dirname(__file__), '..', 'pyproject.toml'), 'rb') as f:
+            return toml_load(f)
+    else:
+        from toml import load as toml_load
+        with open(path.join(path.dirname(__file__), '..', 'pyproject.toml'), 'rt') as f:
+            return toml_load(f)
