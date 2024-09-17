@@ -14,12 +14,18 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import re
+import sys
 from os import getenv, path
-from os.path import basename, join, splitext
-from typing import TYPE_CHECKING, Any, Generator, Iterable, List, Optional, Tuple, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, List, Optional, Tuple, TypeVar, Union
 from unittest import TestCase
 from uuid import UUID
+
+if sys.version_info >= (3, 11):
+    from tomllib import load as toml_load
+else:
+    from toml import load as toml_load
 
 from sortedcontainers import SortedSet
 
@@ -47,7 +53,7 @@ class SnapshotMixin:
 
     @staticmethod
     def getSnapshotFile(snapshot_name: str) -> str:  # noqa: N802
-        return join(SNAPSHOTS_DIRECTORY, f'{snapshot_name}.bin')
+        return path.join(SNAPSHOTS_DIRECTORY, f'{snapshot_name}.bin')
 
     @classmethod
     def writeSnapshot(cls, snapshot_name: str, data: str) -> None:  # noqa: N802
@@ -189,4 +195,9 @@ class DpTuple(Tuple[SchemaVersion, str]):
     @property
     def __name__(self) -> str:
         schema_version, test_data_file = self
-        return f'{schema_version.to_version()}-{splitext(basename(test_data_file))[0]}'
+        return f'{schema_version.to_version()}-{path.splitext(path.basename(test_data_file))[0]}'
+
+
+def load_pyproject() -> Dict[str, Any]:
+    with open(path.join(path.dirname(__file__), '..', 'pyproject.toml'), 'rb') as f:
+        return toml_load(f)

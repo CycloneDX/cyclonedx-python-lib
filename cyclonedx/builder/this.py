@@ -37,17 +37,22 @@ def this_component() -> Component:
         licenses=(DisjunctiveLicense(id='Apache-2.0',
                                      acknowledgement=LicenseAcknowledgement.DECLARED),),
         external_references=(
+            # let's assume this is not a fork
             ExternalReference(
-                type=ExternalReferenceType.BUILD_SYSTEM,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.DISTRIBUTION,
-                url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
+                type=ExternalReferenceType.WEBSITE,
+                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/#readme')
             ),
             ExternalReference(
                 type=ExternalReferenceType.DOCUMENTATION,
                 url=XsUri('https://cyclonedx-python-library.readthedocs.io/')
+            ),
+            ExternalReference(
+                type=ExternalReferenceType.VCS,
+                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
+            ),
+            ExternalReference(
+                type=ExternalReferenceType.BUILD_SYSTEM,
+                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
             ),
             ExternalReference(
                 type=ExternalReferenceType.ISSUE_TRACKER,
@@ -61,13 +66,10 @@ def this_component() -> Component:
                 type=ExternalReferenceType.RELEASE_NOTES,
                 url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
             ),
+            # we cannot assert where the lib was fetched from, but we can give a hint
             ExternalReference(
-                type=ExternalReferenceType.VCS,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.WEBSITE,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/#readme')
+                type=ExternalReferenceType.DISTRIBUTION,
+                url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
             ),
         ),
         # to be extended...
