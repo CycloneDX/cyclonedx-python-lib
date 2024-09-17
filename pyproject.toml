@@ -3,7 +3,6 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-# keep in sync with `cyclonedx/builder/this.py`
 name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
 version = "7.6.0"
@@ -64,7 +63,6 @@ keywords = [
 ]
 
 [tool.poetry.urls]
-# keep in sync with `cyclonedx/builder/this.py`
 "Bug Tracker" = "https://github.com/CycloneDX/cyclonedx-python-lib/issues"
 "Funding" = "https://owasp.org/donate/?reponame=www-project-cyclonedx&title=OWASP+CycloneDX"
 
@@ -95,6 +93,7 @@ pep8-naming = "0.14.1"
 isort = "5.13.2"
 autopep8 = "2.3.1"
 mypy = "1.11.2"
+toml = { version="0.10.2", python="<3.11"}
 tox = "4.18.0"
 xmldiff = "2.7.0"
 bandit = "1.7.9"
