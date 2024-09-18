@@ -1,3 +1,5 @@
+# This file is part of CycloneDX Python Library
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,6 +13,7 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import re
 from os.path import dirname, join
