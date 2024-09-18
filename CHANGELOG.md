@@ -2,6 +2,19 @@
 
 
 
+## v7.6.1 (2024-09-18)
+
+### Fix
+
+* fix: file copyright headers (#676)
+
+utilizes flake8 plugin
+&lt;https://pypi.org/project/flake8-copyright-validator/&gt; to assert the
+correct headers
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`35e00b4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/35e00b4ee5a9306b9e97b011025409bcbfcef309))
+
+
 ## v7.6.0 (2024-08-14)
 
 ### Feature
