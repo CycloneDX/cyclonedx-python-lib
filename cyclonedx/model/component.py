@@ -1783,7 +1783,7 @@ class Component(Dependable):
             self.mime_type, self.supplier, self.author, self.publisher,
             self.description, self.scope, tuple(self.hashes),
             tuple(self.licenses), self.copyright, self.cpe,
-            self.purl,
+            self.purl, self.bom_ref.value,
             self.swid, self.pedigree,
             tuple(self.external_references), tuple(self.properties),
             tuple(self.components), self.evidence, self.release_notes, self.modified,
