@@ -33,7 +33,9 @@ from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
-from . import DataClassification, ExternalReference, Property, XsUri
+from . import DataFlow, ExternalReference, Property, XsUri
+
+# DataClassification,
 from .bom_ref import BomRef
 from .contact import OrganizationalEntity
 from .dependency import Dependable
@@ -61,7 +63,7 @@ class Service(Dependable):
         endpoints: Optional[Iterable[XsUri]] = None,
         authenticated: Optional[bool] = None,
         x_trust_boundary: Optional[bool] = None,
-        data: Optional[Iterable[DataClassification]] = None,
+        data: Optional[Iterable['Data']] = None,
         licenses: Optional[Iterable[License]] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
         properties: Optional[Iterable[Property]] = None,
@@ -252,18 +254,18 @@ class Service(Dependable):
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
     @serializable.xml_sequence(10)
-    def data(self) -> 'SortedSet[DataClassification]':
+    def data(self) -> 'SortedSet[Data]':
         """
         Specifies the data classification.
 
         Returns:
-            Set of `DataClassification`
+            Set of `Data`
         """
         # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._data
 
     @data.setter
-    def data(self, data: Iterable[DataClassification]) -> None:
+    def data(self, data: Iterable['Data']) -> None:
         self._data = SortedSet(data)
 
     @property
@@ -381,3 +383,266 @@ class Service(Dependable):
 
     def __repr__(self) -> str:
         return f'<Service bom-ref={self.bom_ref}, group={self.group}, name={self.name}, version={self.version}>'
+
+
+@serializable.serializable_class
+class OrganizationOrIndividualType:
+    """
+    This is our internal representation of the organizationOrIndividualType complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_organizationOrIndividualType
+    """
+
+    def __init__(
+        self, *,
+        organization: Optional[OrganizationalEntity] = None,
+        individual: Optional[OrganizationalEntity] = None,
+    ) -> None:
+        self.organization = organization
+        self.individual = individual
+
+        # Property for organization
+    @property
+    @serializable.xml_sequence(1)
+    @serializable.xml_name('organization')
+    def organization(self) -> Optional[OrganizationalEntity]:
+        return self._organization
+
+    @organization.setter
+    def organization(self, organization: Optional[OrganizationalEntity]) -> None:
+        self._organization = organization
+
+    # Property for individual
+    @property
+    @serializable.xml_sequence(2)
+    @serializable.xml_name('individual')
+    def individual(self) -> Optional[OrganizationalEntity]:
+        return self._individual
+
+    @individual.setter
+    def individual(self, individual: Optional[OrganizationalEntity]) -> None:
+        self._individual = individual
+
+
+@serializable.serializable_class
+class DataGovernance:
+    """
+    This is our internal representation of the dataGovernance complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_dataGovernance
+    """
+
+    def __init__(
+        self, *,
+        custodian: Optional[OrganizationOrIndividualType] = None,
+        steward: Optional[OrganizationOrIndividualType] = None,
+        owner: Optional[OrganizationOrIndividualType] = None,
+    ) -> None:
+        self.custodian = custodian
+        self.steward = steward
+        self.owner = owner
+
+    # Property for custodian
+    @property
+    @serializable.xml_sequence(1)
+    @serializable.xml_name('custodian')
+    def custodian(self) -> Optional[OrganizationOrIndividualType]:
+        return self._custodian
+
+    @custodian.setter
+    def custodian(self, custodian: Optional[OrganizationOrIndividualType]) -> None:
+        self._custodian = custodian
+
+    # Property for steward
+    @property
+    @serializable.xml_sequence(2)
+    @serializable.xml_name('steward')
+    def steward(self) -> Optional[OrganizationOrIndividualType]:
+        return self._steward
+
+    @steward.setter
+    def steward(self, steward: Optional[OrganizationOrIndividualType]) -> None:
+        self._steward = steward
+
+    # Property for owner
+    @property
+    @serializable.xml_sequence(3)
+    @serializable.xml_name('owner')
+    def owner(self) -> Optional[OrganizationOrIndividualType]:
+        return self._owner
+
+    @owner.setter
+    def owner(self, owner: Optional[OrganizationOrIndividualType]) -> None:
+        self._owner = owner
+
+
+@serializable.serializable_class
+class Data:
+    """
+    This is our internal representation of the service.data complex type within the CycloneDX standard.
+
+    .. note::
+    See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_service
+    """
+    #  @serializable.xml_string(serializable.XmlStringSerializationType.STRING)
+
+    def __init__(
+        self, *,
+        flow: DataFlow,
+        classification: str,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        governance: Optional[DataGovernance] = None,
+        source: Optional[Iterable[Union[BomRef, XsUri]]] = None,
+        destination: Optional[Iterable[Union[BomRef, XsUri]]] = None
+    ) -> None:
+        self.flow = flow
+        self.classification = classification
+        self.name = name
+        self.description = description
+        self.governance = governance
+        self.source = source
+        self.destination = destination
+
+    @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def name(self) -> Optional[str]:
+        """
+        The name of the service data.
+
+        Returns:
+            `str` if provided else None
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    @serializable.xml_attribute()
+    def flow(self) -> DataFlow:
+        """
+        Specifies the flow direction of the data.
+
+        Valid values are: inbound, outbound, bi-directional, and unknown.
+
+        Direction is relative to the service.
+
+        - Inbound flow states that data enters the service
+        - Outbound flow states that data leaves the service
+        - Bi-directional states that data flows both ways
+        - Unknown states that the direction is not known
+
+        Returns:
+            `DataFlow`
+        """
+        return self._flow
+
+    @flow.setter
+    def flow(self, flow: DataFlow) -> None:
+        self._flow = flow
+
+    @property
+    @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def classification(self) -> str:
+        """
+        Data classification tags data according to its type, sensitivity, and value if altered, stolen, or destroyed.
+
+        Returns:
+            `str`
+        """
+        return self._classification
+
+    @classification.setter
+    def classification(self, classification: str) -> None:
+        self._classification = classification
+
+        # description property
+
+    @property
+    @serializable.xml_sequence(2)  # Assuming order after name
+    @serializable.xml_string(serializable.XmlStringSerializationType.STRING)
+    def description(self) -> Optional[str]:
+        """
+        The description of the service data.
+
+        Returns:
+            `str` if provided else None
+        """
+        return self._description
+
+    @description.setter
+    def description(self, description: Optional[str]) -> None:
+        self._description = description
+
+    # governance property
+    @property
+    @serializable.xml_sequence(3)  # Assuming order after description
+    def governance(self) -> Optional[DataGovernance]:
+        """
+        Governance information for the service data.
+
+        Returns:
+            `DataGovernance` if provided else None
+        """
+        return self._governance
+
+    @governance.setter
+    def governance(self, governance: Optional[DataGovernance]) -> None:
+        self._governance = governance
+
+    # source property
+    @property
+    @serializable.xml_sequence(4)  # Assuming order after governance
+    def source(self) -> Optional[Iterable[Union[BomRef, XsUri]]]:
+        """
+        The source(s) of the service data.
+
+        Returns:
+            Iterable of `BomRef` or `XsUri` if provided else None
+        """
+        return self._source
+
+    @source.setter
+    def source(self, source: Optional[Iterable[Union[BomRef, XsUri]]]) -> None:
+        self._source = source
+
+    # destination property
+    @property
+    @serializable.xml_sequence(5)  # Assuming order after source
+    def destination(self) -> Optional[Iterable[Union[BomRef, XsUri]]]:
+        """
+        The destination(s) of the service data.
+
+        Returns:
+            Iterable of `BomRef` or `XsUri` if provided else None
+        """
+        return self._destination
+
+    @destination.setter
+    def destination(self, destination: Optional[Iterable[Union[BomRef, XsUri]]]) -> None:
+        self._destination = destination
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Data):
+            return hash(other) == hash(self)
+        return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Data):
+            return _ComparableTuple((
+                self.flow, self.classification
+            )) < _ComparableTuple((
+                other.flow, other.classification
+            ))
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash((self.flow, self.classification))
+
+    def __repr__(self) -> str:
+        return f'<Data flow={self.flow}>'

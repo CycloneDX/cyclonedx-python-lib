@@ -60,7 +60,7 @@ class DataFlow(str, Enum):
     This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/xml/#type_dataFlowType
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_dataFlowType
     """
     INBOUND = 'inbound'
     OUTBOUND = 'outbound'
