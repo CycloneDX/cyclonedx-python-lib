@@ -6,11 +6,54 @@ This document covers all breaking changes and should give guidance how to migrat
 
 This document is not a full :doc:`change log <changelog>`, but a migration path.
 
-____
+Add this library to Metadata Tools
+----------------------------------
 
-Downstream users SHOULD add the following to their BOM build processes, to keep track of used libraries for potential troubleshooting:
+This library no longer adds itself to the metadata.
 
-```py
+Downstream users SHOULD add the following to their BOM build processes,
+to keep track of used libraries during the build process.
 
+.. code-block:: python
 
-```
+    from cyclonedx.builder.this import this_component as cdx_lib_component
+    from cyclonedx.model.bom import Bom
+
+    bom = Bom()
+    bom.metadata.tools.components.add(cdx_lib_component())
+
+Import model `Tool`
+-------------------
+
+Class `cyclonedx.model.Tool` was moved to :class:`cyclonedx.model.tool.Tool`.
+Therefore, the imports need to be altered:
+
+Old: ``from cyclonedx.model import Tool``
+
+New: ``from cyclonedx.model.tool import Tool``
+
+Altering Metadata Tools
+-----------------------
+
+:prop:`cyclonedx.mode.bom.BomMetaData.tool` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
+Therefore, the process of adding new tools was changed.
+
+Old: ``my_bom.metadata.tools.add(my_tool)``
+
+New: ``my_bom.metadata.tools.tools.add(my_tool)``
+
+Altering Metadata Tools
+-----------------------
+
+:prop:`cyclonedx.mode.vulnerability.Vulnerability.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
+Therefore, the process of adding new tools was changed.
+
+Old: ``my_vulnerability.tools.add(my_tool)``
+
+New: ``my_vulnerability.tools.tools.add(my_tool)``
+
+:class:`cyclonedx.model.license.LicenseExpression()` no longer accepts optional arguments in a positional way, but in a key-word way.
+
+Old: ``LicenseExpression(my_exp, my_acknowledgement)``
+
+New: ``LicenseExpression(my_exp, acknowledgement=my_acknowledgement)``
