@@ -33,7 +33,9 @@ from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
-from . import DataClassification, DataFlow, ExternalReference, Property, XsUri
+from . import DataFlow, ExternalReference, Property, XsUri
+
+# DataClassification,
 from .bom_ref import BomRef
 from .contact import OrganizationalEntity
 from .dependency import Dependable
@@ -252,18 +254,18 @@ class Service(Dependable):
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
     @serializable.xml_sequence(10)
-    def data(self) -> 'SortedSet[DataClassification]':
+    def data(self) -> 'SortedSet[Data]':
         """
         Specifies the data classification.
 
         Returns:
-            Set of `DataClassification`
+            Set of `Data`
         """
         # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._data
 
     @data.setter
-    def data(self, data: Iterable[DataClassification]) -> None:
+    def data(self, data: Iterable['Data']) -> None:
         self._data = SortedSet(data)
 
     @property
@@ -643,4 +645,4 @@ class Data:
         return hash((self.flow, self.classification))
 
     def __repr__(self) -> str:
-        return f'<DataClassification flow={self.flow}>'
+        return f'<Data flow={self.flow}>'
