@@ -32,8 +32,8 @@ Old: ``from cyclonedx.model import Tool``
 
 New: ``from cyclonedx.model.tool import Tool``
 
-Altering Metadata Tools
------------------------
+Alter Metadata Tools
+--------------------
 
 Property :attr:`cyclonedx.model.bom.BomMetaData.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
 Therefore, the process of adding new tools was changed.
@@ -42,8 +42,8 @@ Old: ``my_bom.metadata.tools.add(my_tool)``
 
 New: ``my_bom.metadata.tools.tools.add(my_tool)``
 
-Altering Vulnerability Tools
-----------------------------
+Alter Vulnerability Tools
+-------------------------
 
 Property :attr:`cyclonedx.model.vulnerability.Vulnerability.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
 Therefore, the process of adding new tools was changed.
@@ -52,8 +52,8 @@ Old: ``my_vulnerability.tools.add(my_tool)``
 
 New: ``my_vulnerability.tools.tools.add(my_tool)``
 
-Setting LicenseExpression Acknowledgement
------------------------------------------
+Set LicenseExpression Acknowledgement
+-------------------------------------
 
 :class:`cyclonedx.model.license.LicenseExpression()` no longer accepts optional arguments in a positional way, but in a key-word way.
 
