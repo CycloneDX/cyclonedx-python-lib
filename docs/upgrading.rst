@@ -22,8 +22,8 @@ to keep track of used libraries during the build process.
     bom = Bom()
     bom.metadata.tools.components.add(cdx_lib_component())
 
-Import model `Tool`
--------------------
+Import model Tool
+-----------------
 
 Class `cyclonedx.model.Tool` was moved to :class:`cyclonedx.model.tool.Tool`.
 Therefore, the imports need to be altered:
@@ -35,7 +35,7 @@ New: ``from cyclonedx.model.tool import Tool``
 Altering Metadata Tools
 -----------------------
 
-:prop:`cyclonedx.mode.bom.BomMetaData.tool` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
+Property :attr:`cyclonedx.model.bom.BomMetaData.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
 Therefore, the process of adding new tools was changed.
 
 Old: ``my_bom.metadata.tools.add(my_tool)``
@@ -45,12 +45,15 @@ New: ``my_bom.metadata.tools.tools.add(my_tool)``
 Altering Metadata Tools
 -----------------------
 
-:prop:`cyclonedx.mode.vulnerability.Vulnerability.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
+Property :attr:`cyclonedx.model.vulnerability.Vulnerability.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
 Therefore, the process of adding new tools was changed.
 
 Old: ``my_vulnerability.tools.add(my_tool)``
 
 New: ``my_vulnerability.tools.tools.add(my_tool)``
+
+Setting LicenseExpression Acknowledgement
+-----------------------------------------
 
 :class:`cyclonedx.model.license.LicenseExpression()` no longer accepts optional arguments in a positional way, but in a key-word way.
 
