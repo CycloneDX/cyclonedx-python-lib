@@ -557,6 +557,7 @@ def get_bom_with_services_simple() -> Bom:
 
 def get_bom_with_services_complex() -> Bom:
     bom = _make_bom(services=[
+        # TODO: Add source and destination
         Service(
             name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service',
             provider=get_org_entity_1(), group='a-group', version='1.2.3',
