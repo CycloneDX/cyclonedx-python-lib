@@ -61,7 +61,7 @@ class Service(Dependable):
         endpoints: Optional[Iterable[XsUri]] = None,
         authenticated: Optional[bool] = None,
         x_trust_boundary: Optional[bool] = None,
-        data: Optional[Iterable[DataClassification]] = None,
+        data: Optional[Iterable['Data']] = None,
         licenses: Optional[Iterable[License]] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
         properties: Optional[Iterable[Property]] = None,
@@ -626,12 +626,12 @@ class Data:
         self._destination = destination
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, DataClassification):
+        if isinstance(other, Data):
             return hash(other) == hash(self)
         return False
 
     def __lt__(self, other: object) -> bool:
-        if isinstance(other, DataClassification):
+        if isinstance(other, Data):
             return _ComparableTuple((
                 self.flow, self.classification
             )) < _ComparableTuple((
