@@ -20,6 +20,7 @@ from typing import TYPE_CHECKING
 
 from packageurl import PackageURL
 
+from cyclonedx.builder.this import this_component as cdx_lib_component
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.factory.license import LicenseFactory
 from cyclonedx.model import XsUri
@@ -43,6 +44,8 @@ lc_factory = LicenseFactory()
 # region build the BOM
 
 bom = Bom()
+bom.metadata.tools.components.add(cdx_lib_component())
+
 bom.metadata.component = root_component = Component(
     name='myApp',
     type=ComponentType.APPLICATION,
