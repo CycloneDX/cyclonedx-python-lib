@@ -2,13 +2,29 @@
 
 
 
-## v8.0.0-alpha.1 (2024-09-23)
+## v8.0.0-rc.1 (2024-09-25)
 
 ### Chore
 
-* chore: trusted publishing
+* chore(dev-deps): use `tomli` (#685)
 
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ce23b0f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ce23b0f73f65a868b74de47a50d1e383a6f705d6))
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`733ba0e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/733ba0ebefc7d913290ce32d999620332551e50a))
+
+* chore: trusted publishing (#682)
+
+fixes #681
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: semantic-release &lt;semantic-release@bot.local&gt;
+Co-authored-by: semantic-release &lt;semantic-release@bot.local&gt; ([`96386cc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/96386cc88a65f85c7040400dd739aecde7f4d184))
+
+### Documentation
+
+* docs: migrate to v8.0.0 (#684)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0ac84d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ac84d76f2e526f329937ab004480405492e7417))
 
 ### Fix
 
