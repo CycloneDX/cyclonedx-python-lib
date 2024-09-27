@@ -11,8 +11,7 @@ Add this library to Metadata Tools
 
 This library no longer adds itself to the metadata.
 
-Downstream users SHOULD add the following to their BOM build processes,
-to keep track of used libraries during the build process.
+Downstream users SHOULD add the following to their BOM build processes, to keep track of the used library.
 
 .. code-block:: python
 
