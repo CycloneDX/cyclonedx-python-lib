@@ -4,6 +4,11 @@
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
     <tools>
       <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+      </tool>
+      <tool>
         <vendor>acme</vendor>
         <name>other-component</name>
         <hashes>
@@ -11,16 +16,11 @@
         </hashes>
       </tool>
       <tool>
-        <vendor>CycloneDX</vendor>
-        <name>cyclonedx-python-lib</name>
-        <version>TESTING</version>
+        <vendor>acme</vendor>
+        <name>other-service</name>
       </tool>
       <tool>
         <name>test-component</name>
-      </tool>
-      <tool>
-        <vendor>acme</vendor>
-        <name>other-service</name>
       </tool>
       <tool>
         <name>test-service</name>

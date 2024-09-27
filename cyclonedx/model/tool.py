@@ -16,7 +16,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Tuple, Type, Union
+from itertools import chain
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Type, Union
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
@@ -265,12 +266,14 @@ class ToolRepository:
 class _ToolRepositoryHelper(BaseHelper):
 
     @staticmethod
-    def __all_as_tools(o: ToolRepository) -> Tuple[Tool, ...]:
-        return (
-            *o.tools,
-            *map(Tool.from_component, o.components),
-            *map(Tool.from_service, o.services),
-        )
+    def __all_as_tools(o: ToolRepository) -> 'SortedSet[Tool]':
+        # use a set here, so the collection gets deduplicated.
+        # use SortedSet set here, so the order stays reproducible.
+        return SortedSet(chain(
+            o.tools,
+            map(Tool.from_component, o.components),
+            map(Tool.from_service, o.services),
+        ))
 
     @staticmethod
     def __supports_components_and_services(view: Any) -> bool:
@@ -284,7 +287,8 @@ class _ToolRepositoryHelper(BaseHelper):
                        view: Optional[Type['ViewType']],
                        **__: Any) -> Any:
         if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
-            return cls.__all_as_tools(o) or None
+            ts = cls.__all_as_tools(o)
+            return tuple(ts) if ts else None
         elem: Dict[str, Any] = {}
         if o.components:
             elem['components'] = tuple(o.components)
