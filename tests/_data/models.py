@@ -1172,6 +1172,31 @@ def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate
     return _make_bom(metadata=BomMetaData(tools=tools))
 
 
+def get_bom_with_tools_with_component_and_service_and_duplicated_tools_irreversible_migrate() -> Bom:
+    """on serialization, it is expected that only tools are emitted, and that they are deduplicated"""
+    tools = ToolRepository()
+    tcomp = tools.components
+    tserv = tools.services
+    ttools = tools.tools
+    tcomp.update((
+        this_component(),
+        Component(name='test-component'),
+        Component(type=ComponentType.APPLICATION,
+                  group='acme',
+                  name='other-component'),
+    ))
+    tserv.update((
+        Service(name='test-service'),
+        Service(group='acme',
+                name='other-service'),
+    ))
+    ttools.clear()
+    # duplicate components and services as tools
+    ttools.update(map(Tool.from_component, tcomp))
+    ttools.update(map(Tool.from_service, tserv))
+    return _make_bom(metadata=BomMetaData(tools=tools))
+
+
 def get_bom_for_issue_497_urls() -> Bom:
     """regression test for issue #497
     see https://github.com/CycloneDX/cyclonedx-python-lib/issues/497
