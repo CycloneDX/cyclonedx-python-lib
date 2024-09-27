@@ -2,6 +2,27 @@
 
 
 
+## v8.0.0-rc.2 (2024-09-27)
+
+### Fix
+
+* fix: ToolRepository serialize migrated tools deduplicated (#686)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`35ccdd1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/35ccdd1bfec9757457763308d16e1dbf5d9e28e9))
+
+### Unknown
+
+* docs
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`2e16408`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2e16408098a3c649b80fb407d4f43aaa34aee39f))
+
+* rename `ToolsRepository` -&gt; `ToolRepository` (#687)
+
+Item class of repository is to be called in singular(`Tool`).
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e00af17`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e00af1739fa6d3933315e96266d96d9b290012ee))
+
+
 ## v8.0.0-rc.1 (2024-09-25)
 
 ### Chore
