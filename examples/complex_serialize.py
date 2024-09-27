@@ -45,6 +45,10 @@ lc_factory = LicenseFactory()
 
 bom = Bom()
 bom.metadata.tools.components.add(cdx_lib_component())
+bom.metadata.tools.components.add(Component(
+    name='my-own-SBOM-generator',
+    type=ComponentType.APPLICATION,
+))
 
 bom.metadata.component = root_component = Component(
     name='myApp',
