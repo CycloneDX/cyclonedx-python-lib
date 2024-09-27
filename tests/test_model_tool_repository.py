@@ -20,16 +20,16 @@ from unittest import TestCase
 
 from cyclonedx.model.component import Component
 from cyclonedx.model.service import Service
-from cyclonedx.model.tool import Tool, ToolsRepository
+from cyclonedx.model.tool import Tool, ToolRepository
 
 
 class TestModelToolRepository(TestCase):
 
-    def test_init(self) -> ToolsRepository:
+    def test_init(self) -> ToolRepository:
         c = Component(name='test-component')
         s = Service(name='test-service')
         t = Tool(name='test-tool')
-        tr = ToolsRepository(
+        tr = ToolRepository(
             components=(c,),
             services=(s,),
             tools=(t,)
@@ -45,36 +45,36 @@ class TestModelToolRepository(TestCase):
         self.assertTrue(tr)
 
     def test_empty(self) -> None:
-        tr = ToolsRepository()
+        tr = ToolRepository()
         self.assertEqual(0, len(tr))
         self.assertFalse(tr)
 
     def test_unequal_different_type(self) -> None:
-        tr = ToolsRepository()
+        tr = ToolRepository()
         self.assertFalse(tr == 'other')
 
     def test_equal_self(self) -> None:
-        tr = ToolsRepository()
+        tr = ToolRepository()
         tr.tools.add(Tool(name='my-tool'))
         self.assertTrue(tr == tr)
 
     def test_unequal(self) -> None:
-        tr1 = ToolsRepository()
+        tr1 = ToolRepository()
         tr1.components.add(Component(name='my-component'))
         tr1.services.add(Service(name='my-service'))
         tr1.tools.add(Tool(name='my-tool'))
-        tr2 = ToolsRepository()
+        tr2 = ToolRepository()
         self.assertFalse(tr1 == tr2)
 
     def test_equal(self) -> None:
         c = Component(name='my-component')
         s = Service(name='my-service')
         t = Tool(name='my-tool')
-        tr1 = ToolsRepository()
+        tr1 = ToolRepository()
         tr1.components.add(c)
         tr1.services.add(s)
         tr1.tools.add(t)
-        tr2 = ToolsRepository()
+        tr2 = ToolRepository()
         tr2.components.add(c)
         tr2.services.add(s)
         tr2.tools.add(t)

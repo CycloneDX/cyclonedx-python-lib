@@ -89,7 +89,7 @@ from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSourc
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
-from cyclonedx.model.tool import Tool, ToolsRepository
+from cyclonedx.model.tool import Tool, ToolRepository
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
@@ -495,7 +495,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
             ],
             individuals=[get_org_contact_2()]
         ),
-        tools=ToolsRepository(tools=(
+        tools=ToolRepository(tools=(
             Tool(vendor='CycloneDX', name='cyclonedx-python-lib'),
         )),
         analysis=VulnerabilityAnalysis(
@@ -1069,7 +1069,7 @@ def get_bom_with_tools() -> Bom:
 def get_bom_with_tools_with_component_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
-            tools=ToolsRepository(
+            tools=ToolRepository(
                 components=(
                     this_component(),
                     Component(name='test-component', bom_ref='test-component'),
@@ -1090,7 +1090,7 @@ def get_bom_with_tools_with_component_migrate() -> Bom:
 def get_bom_with_tools_with_service_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
-            tools=ToolsRepository(
+            tools=ToolRepository(
                 services=(
                     Service(name='test-service', bom_ref='test-service'),
                     Service(group='acme',
@@ -1107,7 +1107,7 @@ def get_bom_with_tools_with_service_migrate() -> Bom:
 def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
-            tools=ToolsRepository(
+            tools=ToolRepository(
                 components=(
                     this_component(),
                     Component(name='test-component', bom_ref='test-component'),
@@ -1134,7 +1134,7 @@ def get_bom_with_tools_with_component_and_service_migrate() -> Bom:
 
 
 def get_bom_with_tools_with_component_and_service_and_tools_irreversible_migrate() -> Bom:
-    tools = ToolsRepository()
+    tools = ToolRepository()
     tcomp = tools.components
     tserv = tools.services
     ttools = tools.tools

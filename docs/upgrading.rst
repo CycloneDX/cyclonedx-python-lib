@@ -35,7 +35,7 @@ New: ``from cyclonedx.model.tool import Tool``
 Alter Metadata Tools
 --------------------
 
-Property :attr:`cyclonedx.model.bom.BomMetaData.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
+Property :attr:`cyclonedx.model.bom.BomMetaData.tools` is an instance of :class:`cyclonedx.model.tool.ToolRepository`, now.
 Therefore, the process of adding new tools needs to be migrated changed.
 
 Old: ``my_bom.metadata.tools.add(my_tool)``
@@ -45,7 +45,7 @@ New: ``my_bom.metadata.tools.tools.add(my_tool)``
 Alter Vulnerability Tools
 -------------------------
 
-Property :attr:`cyclonedx.model.vulnerability.Vulnerability.tools` is an instance of :class:`cyclonedx.model.tool.ToolsRepository`, now.
+Property :attr:`cyclonedx.model.vulnerability.Vulnerability.tools` is an instance of :class:`cyclonedx.model.tool.ToolRepository`, now.
 Therefore, the process of adding new tools needs to be migrated changed.
 
 Old: ``my_vulnerability.tools.add(my_tool)``

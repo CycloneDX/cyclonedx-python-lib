@@ -188,7 +188,7 @@ class Tool:
         )
 
 
-class ToolsRepository:
+class ToolRepository:
     """
     The repository of tool formats
     """
@@ -251,7 +251,7 @@ class ToolsRepository:
             or len(self._services) > 0
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ToolsRepository):
+        if not isinstance(other, ToolRepository):
             return False
 
         return self._tools == other._tools \
@@ -262,10 +262,10 @@ class ToolsRepository:
         return hash((tuple(self._tools), tuple(self._components), tuple(self._services)))
 
 
-class _ToolsRepositoryHelper(BaseHelper):
+class _ToolRepositoryHelper(BaseHelper):
 
     @staticmethod
-    def __all_as_tools(o: ToolsRepository) -> Tuple[Tool, ...]:
+    def __all_as_tools(o: ToolRepository) -> Tuple[Tool, ...]:
         return (
             *o.tools,
             *map(Tool.from_component, o.components),
@@ -280,7 +280,7 @@ class _ToolsRepositoryHelper(BaseHelper):
             return False
 
     @classmethod
-    def json_normalize(cls, o: ToolsRepository, *,
+    def json_normalize(cls, o: ToolRepository, *,
                        view: Optional[Type['ViewType']],
                        **__: Any) -> Any:
         if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
@@ -294,7 +294,7 @@ class _ToolsRepositoryHelper(BaseHelper):
 
     @classmethod
     def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
-                         **__: Any) -> ToolsRepository:
+                         **__: Any) -> ToolRepository:
         tools = None
         components = None
         services = None
@@ -305,10 +305,10 @@ class _ToolsRepositoryHelper(BaseHelper):
                 s), o.get('services', ()))
         elif isinstance(o, Iterable):
             tools = map(lambda t: Tool.from_json(t), o)  # type:ignore[attr-defined]
-        return ToolsRepository(components=components, services=services, tools=tools)
+        return ToolRepository(components=components, services=services, tools=tools)
 
     @classmethod
-    def xml_normalize(cls, o: ToolsRepository, *,
+    def xml_normalize(cls, o: ToolRepository, *,
                       element_name: str,
                       view: Optional[Type['ViewType']],
                       xmlns: Optional[str],
@@ -344,7 +344,7 @@ class _ToolsRepositoryHelper(BaseHelper):
                         default_ns: Optional[str],
                         prop_info: 'ObjectMetadataLibrary.SerializableProperty',
                         ctx: Type[Any],
-                        **kwargs: Any) -> ToolsRepository:
+                        **kwargs: Any) -> ToolRepository:
         tools = []
         components = None
         services = None
@@ -361,7 +361,7 @@ class _ToolsRepositoryHelper(BaseHelper):
                     s, default_ns), e)
             else:
                 raise CycloneDxDeserializationException(f'unexpected: {e!r}')
-        return ToolsRepository(
+        return ToolRepository(
             tools=tools,
             components=components,
             services=services)
