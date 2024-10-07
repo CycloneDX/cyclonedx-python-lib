@@ -95,9 +95,9 @@ isort = "5.13.2"
 autopep8 = "2.3.1"
 mypy = "1.11.2"
 tomli = { version = "2.0.1", python = "<3.11" }
-tox = "4.20.0"
+tox = "4.21.2"
 xmldiff = "2.7.0"
-bandit = "1.7.9"
+bandit = "1.7.10"
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html

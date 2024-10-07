@@ -87,3 +87,16 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         test(bom.metadata.component.licenses)
         test(list(bom.components)[0].licenses)
         test(list(bom.services)[0].licenses)
+
+    def test_regression_issue690(self) -> None:
+        """
+        regressio test for issue#690.
+        see https://github.com/CycloneDX/cyclonedx-python-lib/issues/690
+        """
+        json_file = join(OWN_DATA_DIRECTORY, 'json',
+                         SchemaVersion.V1_6.to_version(),
+                         'issue690.json')
+        with open(json_file) as f:
+            json = json_loads(f.read())
+        bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
+        self.assertIsNotNone(bom)
