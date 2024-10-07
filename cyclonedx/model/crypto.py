@@ -1519,6 +1519,25 @@ class CryptoProperties:
             return hash(other) == hash(self)
         return False
 
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, CryptoProperties):
+            return _ComparableTuple((
+                self.asset_type,
+                self.algorithm_properties,
+                self.certificate_properties,
+                self.related_crypto_material_properties,
+                self.protocol_properties,
+                self.oid,
+            )) < _ComparableTuple((
+                other.asset_type,
+                other.algorithm_properties,
+                other.certificate_properties,
+                other.related_crypto_material_properties,
+                other.protocol_properties,
+                other.oid,
+            ))
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.asset_type, self.algorithm_properties, self.certificate_properties,
                      self.related_crypto_material_properties, self.protocol_properties, self.oid))
