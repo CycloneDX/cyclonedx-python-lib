@@ -95,4 +95,3 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
             json = json_loads(f.read())
         bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
         self.assertIsNotNone(bom)
-
