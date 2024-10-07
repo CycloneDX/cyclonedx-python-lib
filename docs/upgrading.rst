@@ -25,7 +25,7 @@ Import model Tool
 -----------------
 
 Class `cyclonedx.model.Tool` was moved to :class:`cyclonedx.model.tool.Tool`.
-Therefore, the imports need to be migrated:
+Therefore, the imports need to be migrated.
 
 Old: ``from cyclonedx.model import Tool``
 
@@ -35,7 +35,7 @@ Alter Metadata Tools
 --------------------
 
 Property :attr:`cyclonedx.model.bom.BomMetaData.tools` is an instance of :class:`cyclonedx.model.tool.ToolRepository`, now.
-Therefore, the process of adding new tools needs to be migrated changed.
+Therefore, the process of adding new tools needs to be migrated.
 
 Old: ``my_bom.metadata.tools.add(my_tool)``
 
@@ -45,7 +45,7 @@ Alter Vulnerability Tools
 -------------------------
 
 Property :attr:`cyclonedx.model.vulnerability.Vulnerability.tools` is an instance of :class:`cyclonedx.model.tool.ToolRepository`, now.
-Therefore, the process of adding new tools needs to be migrated changed.
+Therefore, the process of adding new tools needs to be migrated.
 
 Old: ``my_vulnerability.tools.add(my_tool)``
 
