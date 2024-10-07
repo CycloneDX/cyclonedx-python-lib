@@ -2,6 +2,33 @@
 
 
 
+## v7.6.2 (2024-10-07)
+
+### Chore
+
+* chore: trusted publishing (#695)
+
+fixes #681
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`cc09c42`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cc09c4260b3bb9dbdf583a9c459bee268ee52617))
+
+### Documentation
+
+* docs: fix some doc strings
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`4fa8fc1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4fa8fc1b6703ecf6788b72f2d53c6a17e2146cf7))
+
+### Fix
+
+* fix: behavior of and typing for crypto setters with optional values (#694)
+
+fixes #690
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`d8b20bd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d8b20bdc5224ea30cf767f6f3f1a6f8ff2754973))
+
+
 ## v7.6.1 (2024-09-18)
 
 ### Fix
