@@ -350,6 +350,11 @@
         }
       }
     ],
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
     "manufacture": {
       "contact": [
         {
