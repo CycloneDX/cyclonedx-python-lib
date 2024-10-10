@@ -86,7 +86,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     @abstractmethod
     def _get_schema_uri(self) -> Optional[str]:
-        pass
+        ...  # pragma: no cover
 
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):

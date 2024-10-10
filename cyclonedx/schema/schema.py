@@ -28,7 +28,7 @@ class BaseSchemaVersion(ABC, ViewType):
     @property
     @abstractmethod
     def schema_version_enum(self) -> SchemaVersion:
-        ...
+        ...  # pragma: no cover
 
     def get_schema_version(self) -> str:
         return self.schema_version_enum.to_version()
