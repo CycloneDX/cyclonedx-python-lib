@@ -34,7 +34,7 @@ from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
-from cyclonedx.model.lifecycle import Phase, PredefinedPhase
+from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
 from cyclonedx.model.service import DataClassification, Service
 from cyclonedx.model.vulnerability import (
     BomTarget,
@@ -497,12 +497,12 @@ class TestEnumLifecyclePhase(_EnumTestCase):
         dp_cases_from_json_schemas('definitions', 'metadata', 'properties', 'lifecycles', 'items', 'phase'),
     )))
     def test_knows_value(self, value: str) -> None:
-        super()._test_knows_value(Phase, value)
+        super()._test_knows_value(LifecyclePhase, value)
 
     @named_data(*NAMED_OF_SV)
     @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(metadata=BomMetaData(
-            lifecycles=[PredefinedPhase(phase=phase) for phase in Phase]
+            lifecycles=[PredefinedLifecycle(phase=phase) for phase in LifecyclePhase]
         ))
         super()._test_cases_render(bom, of, sv)

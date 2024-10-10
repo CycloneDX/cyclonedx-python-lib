@@ -19,34 +19,34 @@
 from random import shuffle
 from unittest import TestCase
 
-from cyclonedx.model.lifecycle import CustomPhase, Phase, PredefinedPhase
+from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from tests import reorder
 
 
-class TestModelPredefinedPhase(TestCase):
+class TestModelPredefinedLifecycle(TestCase):
     def test_create(self) -> None:
-        lifecycle = PredefinedPhase(phase=Phase.BUILD)
-        self.assertIs(Phase.BUILD, lifecycle.phase)
+        lifecycle = PredefinedLifecycle(phase=LifecyclePhase.BUILD)
+        self.assertIs(LifecyclePhase.BUILD, lifecycle.phase)
 
     def test_update(self) -> None:
-        lifecycle = PredefinedPhase(phase=Phase.DESIGN)
-        lifecycle.phase = Phase.DISCOVERY
-        self.assertIs(Phase.DISCOVERY, lifecycle.phase)
+        lifecycle = PredefinedLifecycle(phase=LifecyclePhase.DESIGN)
+        lifecycle.phase = LifecyclePhase.DISCOVERY
+        self.assertIs(LifecyclePhase.DISCOVERY, lifecycle.phase)
 
     def test_equal(self) -> None:
-        a = PredefinedPhase(phase=Phase.BUILD)
-        b = PredefinedPhase(phase=Phase.BUILD)
-        c = PredefinedPhase(phase=Phase.DESIGN)
+        a = PredefinedLifecycle(phase=LifecyclePhase.BUILD)
+        b = PredefinedLifecycle(phase=LifecyclePhase.BUILD)
+        c = PredefinedLifecycle(phase=LifecyclePhase.DESIGN)
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
 
     def test_sort(self) -> None:
         expected_order = [3, 0, 2, 1]
         lifecycles = [
-            CustomPhase(name='foo', description='baz'),
-            CustomPhase(name='foo'),
-            CustomPhase(name='foo', description='qux'),
-            CustomPhase(name='bar'),
+            NamedLifecycle(name='foo', description='baz'),
+            NamedLifecycle(name='foo'),
+            NamedLifecycle(name='foo', description='qux'),
+            NamedLifecycle(name='bar'),
         ]
         expected_lifecycles = reorder(lifecycles, expected_order)
         shuffle(lifecycles)
@@ -54,26 +54,26 @@ class TestModelPredefinedPhase(TestCase):
         self.assertListEqual(sorted_lifecycles, expected_lifecycles)
 
 
-class TestModelCustomPhase(TestCase):
+class TestModelNamedLifecycle(TestCase):
     def test_create(self) -> None:
-        lifecycle = CustomPhase(name='foo')
+        lifecycle = NamedLifecycle(name='foo')
         self.assertEqual('foo', lifecycle.name)
         self.assertIsNone(lifecycle.description)
 
-        lifecycle = CustomPhase(name='foo2n', description='foo2d')
+        lifecycle = NamedLifecycle(name='foo2n', description='foo2d')
         self.assertEqual('foo2n', lifecycle.name)
         self.assertEqual('foo2d', lifecycle.description)
 
     def test_update(self) -> None:
-        lifecycle = CustomPhase(name='foo')
+        lifecycle = NamedLifecycle(name='foo')
         self.assertEqual('foo', lifecycle.name)
         lifecycle.name = 'bar'
         self.assertEqual('bar', lifecycle.name)
 
     def test_equal(self) -> None:
-        a = CustomPhase('foo')
-        b = CustomPhase('foo')
-        c = CustomPhase('bar')
+        a = NamedLifecycle('foo')
+        b = NamedLifecycle('foo')
+        c = NamedLifecycle('bar')
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
         self.assertNotEqual(a, 'foo')
@@ -81,10 +81,10 @@ class TestModelCustomPhase(TestCase):
     def test_sort(self) -> None:
         expected_order = [3, 0, 2, 1]
         lifecycles = [
-            CustomPhase(name='foo', description='baz'),
-            CustomPhase(name='foo'),
-            CustomPhase(name='foo', description='qux'),
-            CustomPhase(name='bar'),
+            NamedLifecycle(name='foo', description='baz'),
+            NamedLifecycle(name='foo'),
+            NamedLifecycle(name='foo', description='qux'),
+            NamedLifecycle(name='bar'),
         ]
         expected_lifecycles = reorder(lifecycles, expected_order)
         shuffle(lifecycles)
@@ -96,10 +96,10 @@ class TestModelLifecycle(TestCase):
     def test_sort_mixed(self) -> None:
         expected_order = [3, 0, 2, 1]
         lifecycles = [
-            PredefinedPhase(phase=Phase.DESIGN),
-            CustomPhase(name='Example2'),
-            CustomPhase(name='Example'),
-            PredefinedPhase(phase=Phase.BUILD),
+            PredefinedLifecycle(phase=LifecyclePhase.DESIGN),
+            NamedLifecycle(name='Example2'),
+            NamedLifecycle(name='Example'),
+            PredefinedLifecycle(phase=LifecyclePhase.BUILD),
         ]
         expected_lifecycles = reorder(lifecycles, expected_order)
         shuffle(lifecycles)

@@ -42,7 +42,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 @serializable.serializable_enum
-class Phase(str, Enum):
+class LifecyclePhase(str, Enum):
     DESIGN = 'design'
     PREBUILD = 'pre-build'
     BUILD = 'build'
@@ -53,7 +53,7 @@ class Phase(str, Enum):
 
 
 @serializable.serializable_class
-class PredefinedPhase:
+class PredefinedLifecycle:
     """
     Object that defines pre-defined phases in the product lifecycle.
 
@@ -61,38 +61,38 @@ class PredefinedPhase:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.5/#metadata_lifecycles
     """
 
-    def __init__(self, phase: Phase) -> None:
+    def __init__(self, phase: LifecyclePhase) -> None:
         self._phase = phase
 
     @property
-    def phase(self) -> Phase:
+    def phase(self) -> LifecyclePhase:
         return self._phase
 
     @phase.setter
-    def phase(self, phase: Phase) -> None:
+    def phase(self, phase: LifecyclePhase) -> None:
         self._phase = phase
 
     def __hash__(self) -> int:
         return hash(self._phase)
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, PredefinedPhase):
+        if isinstance(other, PredefinedLifecycle):
             return hash(other) == hash(self)
         return False
 
     def __lt__(self, other: Any) -> bool:
-        if isinstance(other, PredefinedPhase):
+        if isinstance(other, PredefinedLifecycle):
             return self._phase < other._phase
-        if isinstance(other, CustomPhase):
-            return True  # put PredefinedPhase before any CustomPhase
+        if isinstance(other, NamedLifecycle):
+            return True  # put PredefinedLifecycle before any NamedLifecycle
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'<PredefinedPhase name={self._phase}>'
+        return f'<PredefinedLifecycle name={self._phase}>'
 
 
 @serializable.serializable_class
-class CustomPhase:
+class NamedLifecycle:
     def __init__(self, name: str, *, description: Optional[str] = None) -> None:
         self._name = name
         self._description = description
@@ -133,28 +133,28 @@ class CustomPhase:
         return hash((self._name, self._description))
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, CustomPhase):
+        if isinstance(other, NamedLifecycle):
             return hash(other) == hash(self)
         return False
 
     def __lt__(self, other: Any) -> bool:
-        if isinstance(other, CustomPhase):
+        if isinstance(other, NamedLifecycle):
             return _ComparableTuple((self._name, self._description)) < _ComparableTuple(
                 (other._name, other._description)
             )
-        if isinstance(other, PredefinedPhase):
-            return False  # put CustomPhase after any PredefinedPhase
+        if isinstance(other, PredefinedLifecycle):
+            return False  # put NamedLifecycle after any PredefinedLifecycle
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'<CustomPhase name={self._name}>'
+        return f'<NamedLifecycle name={self._name}>'
 
 
-Lifecycle = Union[PredefinedPhase, CustomPhase]
+Lifecycle = Union[PredefinedLifecycle, NamedLifecycle]
 """TypeAlias for a union of supported lifecycle models.
 
-- :class:`PredefinedPhase`
-- :class:`CustomPhase`
+- :class:`PredefinedLifecycle`
+- :class:`NamedLifecycle`
 """
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -192,9 +192,9 @@ class _LifecycleRepositoryHelper(BaseHelper):
         repo = LifecycleRepository()
         for li in o:
             if 'phase' in li:
-                repo.add(PredefinedPhase.from_json(li))  # type:ignore[attr-defined]
+                repo.add(PredefinedLifecycle.from_json(li))  # type:ignore[attr-defined]
             elif 'name' in li:
-                repo.add(CustomPhase.from_json(li))  # type:ignore[attr-defined]
+                repo.add(NamedLifecycle.from_json(li))  # type:ignore[attr-defined]
             else:
                 raise CycloneDxDeserializationException(f'unexpected: {li!r}')
 
@@ -228,12 +228,12 @@ class _LifecycleRepositoryHelper(BaseHelper):
             if tag == 'lifecycle':
                 stages = list(li)
 
-                predefined_phase = next((el for el in stages if 'phase' in el.tag), None)
-                custom_phase = next((el for el in stages if 'name' in el.tag), None)
-                if predefined_phase is not None:
-                    repo.add(PredefinedPhase.from_xml(li, default_ns))  # type:ignore[attr-defined]
-                elif custom_phase is not None:
-                    repo.add(CustomPhase.from_xml(li, default_ns))  # type:ignore[attr-defined]
+                predefined_lifecycle = next((el for el in stages if 'phase' in el.tag), None)
+                named_lifecycle = next((el for el in stages if 'name' in el.tag), None)
+                if predefined_lifecycle is not None:
+                    repo.add(PredefinedLifecycle.from_xml(li, default_ns))  # type:ignore[attr-defined]
+                elif named_lifecycle is not None:
+                    repo.add(NamedLifecycle.from_xml(li, default_ns))  # type:ignore[attr-defined]
             else:
                 raise CycloneDxDeserializationException(f'unexpected: {li!r}')
 

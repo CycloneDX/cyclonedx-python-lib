@@ -29,7 +29,7 @@ from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.license import DisjunctiveLicense
-from cyclonedx.model.lifecycle import CustomPhase, Phase, PredefinedPhase
+from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from tests._data.models import (
     get_bom_component_licenses_invalid,
     get_bom_component_nested_licenses_invalid,
@@ -76,8 +76,8 @@ class TestBomMetaData(TestCase):
             DisjunctiveLicense(id='Apache-2.0'),
         ]
         lifecycles = [
-            PredefinedPhase(phase=Phase.BUILD),
-            CustomPhase(name='custom_phase', description='test'),
+            PredefinedLifecycle(phase=LifecyclePhase.BUILD),
+            NamedLifecycle(name='named_lifecycle', description='test'),
         ]
         properties = [
             Property(name='property_1', value='value_1'),

@@ -87,7 +87,7 @@ from cyclonedx.model.impact_analysis import (
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
-from cyclonedx.model.lifecycle import CustomPhase, Phase, PredefinedPhase
+from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.vulnerability import (
@@ -534,7 +534,7 @@ def get_bom_just_complete_metadata() -> Bom:
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE='
         )
     )]
-    bom.metadata.lifecycles = [PredefinedPhase(Phase.BUILD)]
+    bom.metadata.lifecycles = [PredefinedLifecycle(LifecyclePhase.BUILD)]
     bom.metadata.properties = get_properties_1()
     return bom
 
@@ -1129,10 +1129,10 @@ def get_bom_with_lifecycles() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             lifecycles=[
-                PredefinedPhase(Phase.BUILD),
-                PredefinedPhase(Phase.POSTBUILD),
-                CustomPhase(name='platform-integration-testing',
-                            description='Integration testing specific to the runtime platform'),
+                PredefinedLifecycle(LifecyclePhase.BUILD),
+                PredefinedLifecycle(LifecyclePhase.POSTBUILD),
+                NamedLifecycle(name='platform-integration-testing',
+                               description='Integration testing specific to the runtime platform'),
             ],
             component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app'),
         ),
