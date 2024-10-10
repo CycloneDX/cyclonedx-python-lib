@@ -56,7 +56,7 @@ class SchemabasedValidator(Protocol):
         :retval None: if ``data`` is valid
         :retval ValidationError:  if ``data`` is invalid
         """
-        ...
+        ...  # pragma: no cover
 
 
 class BaseSchemabasedValidator(ABC, SchemabasedValidator):
@@ -76,31 +76,31 @@ class BaseSchemabasedValidator(ABC, SchemabasedValidator):
     @abstractmethod
     def output_format(self) -> OutputFormat:
         """Get the format."""
-        ...
+        ...  # pragma: no cover
 
     @property
     @abstractmethod
     def _schema_file(self) -> Optional[str]:
         """Get the schema file according to schema version."""
-        ...
+        ...  # pragma: no cover
 
 
 @overload
 def make_schemabased_validator(output_format: Literal[OutputFormat.JSON], schema_version: 'SchemaVersion'
                                ) -> 'JsonValidator':
-    ...
+    ...  # pragma: no cover
 
 
 @overload
 def make_schemabased_validator(output_format: Literal[OutputFormat.XML], schema_version: 'SchemaVersion'
                                ) -> 'XmlValidator':
-    ...
+    ...  # pragma: no cover
 
 
 @overload
 def make_schemabased_validator(output_format: OutputFormat, schema_version: 'SchemaVersion'
                                ) -> Union['JsonValidator', 'XmlValidator']:
-    ...
+    ...  # pragma: no cover
 
 
 def make_schemabased_validator(output_format: OutputFormat, schema_version: 'SchemaVersion'
