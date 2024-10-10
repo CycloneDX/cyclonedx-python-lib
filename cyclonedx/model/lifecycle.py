@@ -88,7 +88,7 @@ class PredefinedLifecycle:
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'<PredefinedLifecycle name={self._phase}>'
+        return f'<PredefinedLifecycle phase={self._phase}>'
 
 
 @serializable.serializable_class
