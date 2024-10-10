@@ -43,13 +43,19 @@ if TYPE_CHECKING:  # pragma: no cover
 
 @serializable.serializable_enum
 class LifecyclePhase(str, Enum):
+    """
+    Enum object that defines the permissible 'phase' for a Lifecycle according to the CycloneDX schema.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_classification
+    """
     DESIGN = 'design'
-    PREBUILD = 'pre-build'
+    PRE_BUILD = 'pre-build'
     BUILD = 'build'
-    POSTBUILD = 'post-build'
+    POST_BUILD = 'post-build'
     OPERATIONS = 'operations'
     DISCOVERY = 'discovery'
-    DECOMISSION = 'decommission'
+    DECOMMISSION = 'decommission'
 
 
 @serializable.serializable_class
@@ -93,6 +99,13 @@ class PredefinedLifecycle:
 
 @serializable.serializable_class
 class NamedLifecycle:
+    """
+    Object that defines custom state in the product lifecycle.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.5/#metadata_lifecycles
+    """
+
     def __init__(self, name: str, *, description: Optional[str] = None) -> None:
         self._name = name
         self._description = description
