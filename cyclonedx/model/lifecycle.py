@@ -182,7 +182,6 @@ class _LifecycleRepositoryHelper(BaseHelper):
                        **__: Any) -> Any:
         if len(o) == 0:
             return None
-
         return [json_loads(li.as_json(  # type:ignore[union-attr]
             view_=view)) for li in o]
 
@@ -192,12 +191,13 @@ class _LifecycleRepositoryHelper(BaseHelper):
         repo = LifecycleRepository()
         for li in o:
             if 'phase' in li:
-                repo.add(PredefinedLifecycle.from_json(li))  # type:ignore[attr-defined]
+                repo.add(PredefinedLifecycle.from_json(  # type:ignore[attr-defined]
+                    li))
             elif 'name' in li:
-                repo.add(NamedLifecycle.from_json(li))  # type:ignore[attr-defined]
+                repo.add(NamedLifecycle.from_json(  # type:ignore[attr-defined]
+                    li))
             else:
                 raise CycloneDxDeserializationException(f'unexpected: {li!r}')
-
         return repo
 
     @classmethod
@@ -208,12 +208,10 @@ class _LifecycleRepositoryHelper(BaseHelper):
                       **__: Any) -> Optional[Element]:
         if len(o) == 0:
             return None
-
         elem = Element(element_name)
         for li in o:
             elem.append(li.as_xml(  # type:ignore[union-attr]
                 view_=view, as_string=False, element_name='lifecycle', xmlns=xmlns))
-
         return elem
 
     @classmethod
@@ -221,20 +219,16 @@ class _LifecycleRepositoryHelper(BaseHelper):
                         default_ns: Optional[str],
                         **__: Any) -> LifecycleRepository:
         repo = LifecycleRepository()
-
-        for li in o:
-            tag = li.tag if default_ns is None else li.tag.replace(f'{{{default_ns}}}', '')
-
-            if tag == 'lifecycle':
-                stages = list(li)
-
-                predefined_lifecycle = next((el for el in stages if 'phase' in el.tag), None)
-                named_lifecycle = next((el for el in stages if 'name' in el.tag), None)
-                if predefined_lifecycle is not None:
-                    repo.add(PredefinedLifecycle.from_xml(li, default_ns))  # type:ignore[attr-defined]
-                elif named_lifecycle is not None:
-                    repo.add(NamedLifecycle.from_xml(li, default_ns))  # type:ignore[attr-defined]
+        ns_map = {'bom': default_ns or ''}
+        # Do not iterate over `o` and do not check for expected `.tag` of items.
+        # This check could have been done by schema validators before even deserializing.
+        for li in o.iterfind('bom:lifecycle', ns_map):
+            if li.find('bom:phase', ns_map) is not None:
+                repo.add(PredefinedLifecycle.from_xml(  # type:ignore[attr-defined]
+                    li, default_ns))
+            elif li.find('bom:name', ns_map) is not None:
+                repo.add(NamedLifecycle.from_xml(  # type:ignore[attr-defined]
+                    li, default_ns))
             else:
-                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
-
+                raise CycloneDxDeserializationException(f'unexpected content: {li!r}')
         return repo
