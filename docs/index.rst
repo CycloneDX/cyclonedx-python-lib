@@ -47,3 +47,4 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
    contributing
    support
    changelog
+   upgrading

@@ -31,17 +31,20 @@ from tests import OWN_DATA_DIRECTORY, SCHEMA_TESTDATA_DIRECTORY, DpTuple
 UNSUPPORTED_SCHEMA_VERSIONS = {SchemaVersion.V1_0, SchemaVersion.V1_1, }
 
 
-def _dp_sv_tf(prefix: str) -> Generator:
+def _dp_sv_tf(valid: bool) -> Generator:
+    prefix = 'valid-' if valid else 'invalid-'
     return (
-        DpTuple((sv, tf)) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}-*.json'))
+        DpTuple((sv, tf))
+        for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
+        for tf in iglob(join(SCHEMA_TESTDATA_DIRECTORY, sv.to_version(), f'{prefix}*.json'))
     )
 
 
-def _dp_sv_own() -> Generator:
+def _dp_sv_own(valid: bool) -> Generator:
     return (
-        DpTuple((sv, tf)) for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
-        for tf in iglob(join(OWN_DATA_DIRECTORY, 'json', sv.to_version(), '*.json'))
+        DpTuple((sv, tf))
+        for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS
+        for tf in iglob(join(OWN_DATA_DIRECTORY, 'json', sv.to_version(), '*.json')) if ('invalid-' in tf) != valid
     )
 
 
@@ -60,8 +63,8 @@ class TestJsonValidator(TestCase):
             JsonValidator(schema_version)
 
     @idata(chain(
-        _dp_sv_tf('valid'),
-        _dp_sv_own()
+        _dp_sv_tf(True),
+        _dp_sv_own(True)
     ))
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
@@ -74,7 +77,10 @@ class TestJsonValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNone(validation_error)
 
-    @idata(_dp_sv_tf('invalid'))
+    @idata(chain(
+        _dp_sv_tf(False),
+        _dp_sv_own(False)
+    ))
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
@@ -97,8 +103,8 @@ class TestJsonStrictValidator(TestCase):
             JsonStrictValidator(schema_version)
 
     @idata(chain(
-        _dp_sv_tf('valid'),
-        _dp_sv_own()
+        _dp_sv_tf(True),
+        _dp_sv_own(True)
     ))
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
@@ -111,7 +117,10 @@ class TestJsonStrictValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNone(validation_error)
 
-    @idata(_dp_sv_tf('invalid'))
+    @idata(chain(
+        _dp_sv_tf(False),
+        _dp_sv_own(False)
+    ))
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonStrictValidator(schema_version)

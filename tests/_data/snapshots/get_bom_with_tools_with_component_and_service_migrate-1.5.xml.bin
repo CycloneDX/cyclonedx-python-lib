@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <components>
+        <component type="application" bom-ref="other-component">
+          <group>acme</group>
+          <name>other-component</name>
+          <hashes>
+            <hash alg="SHA-256">49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca</hash>
+          </hashes>
+          <externalReferences>
+            <reference type="distribution">
+              <url>https://cyclonedx.org</url>
+              <comment>No comment</comment>
+              <hashes>
+                <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+              </hashes>
+            </reference>
+          </externalReferences>
+        </component>
+        <component type="library">
+          <group>CycloneDX</group>
+          <name>cyclonedx-python-lib</name>
+          <version>TESTING</version>
+          <description>Python library for CycloneDX</description>
+          <licenses>
+            <license>
+              <id>Apache-2.0</id>
+            </license>
+          </licenses>
+          <externalReferences>
+            <reference type="build-system">
+              <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+            </reference>
+            <reference type="distribution">
+              <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+            </reference>
+            <reference type="documentation">
+              <url>https://cyclonedx-python-library.readthedocs.io/</url>
+            </reference>
+            <reference type="issue-tracker">
+              <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+            </reference>
+            <reference type="license">
+              <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+            </reference>
+            <reference type="release-notes">
+              <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+            </reference>
+            <reference type="vcs">
+              <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+            </reference>
+            <reference type="website">
+              <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+            </reference>
+          </externalReferences>
+        </component>
+        <component type="library" bom-ref="test-component">
+          <name>test-component</name>
+        </component>
+      </components>
+      <services>
+        <service bom-ref="other-service">
+          <group>acme</group>
+          <name>other-service</name>
+          <externalReferences>
+            <reference type="distribution">
+              <url>https://cyclonedx.org</url>
+              <comment>No comment</comment>
+              <hashes>
+                <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+              </hashes>
+            </reference>
+          </externalReferences>
+        </service>
+        <service bom-ref="test-service">
+          <name>test-service</name>
+        </service>
+      </services>
+    </tools>
+  </metadata>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+        <externalReferences>
+          <reference type="build-system">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/actions</url>
+          </reference>
+          <reference type="distribution">
+            <url>https://pypi.org/project/cyclonedx-python-lib/</url>
+          </reference>
+          <reference type="documentation">
+            <url>https://cyclonedx-python-library.readthedocs.io/</url>
+          </reference>
+          <reference type="issue-tracker">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/issues</url>
+          </reference>
+          <reference type="license">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE</url>
+          </reference>
+          <reference type="release-notes">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md</url>
+          </reference>
+          <reference type="vcs">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib</url>
+          </reference>
+          <reference type="website">
+            <url>https://github.com/CycloneDX/cyclonedx-python-lib/#readme</url>
+          </reference>
+        </externalReferences>
+      </tool>
+      <tool>
+        <vendor>example</vendor>
+        <name>test-tool-a</name>
+        <version>1.33.7</version>
+        <hashes>
+          <hash alg="SHA-256">adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6</hash>
+        </hashes>
+        <externalReferences>
+          <reference type="distribution">
+            <url>https://cyclonedx.org</url>
+            <comment>No comment</comment>
+            <hashes>
+              <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+            </hashes>
+          </reference>
+        </externalReferences>
+      </tool>
+      <tool>
+        <name>test-tool-b</name>
+      </tool>
+    </tools>
+  </metadata>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

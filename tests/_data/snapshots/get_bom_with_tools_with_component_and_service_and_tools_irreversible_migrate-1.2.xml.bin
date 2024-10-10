@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>cyclonedx-python-lib</name>
+        <version>TESTING</version>
+      </tool>
+      <tool>
+        <vendor>acme</vendor>
+        <name>other-component</name>
+        <hashes>
+          <hash alg="SHA-256">49b420bd8d8182542a76d4422e0c7890dcc88a3d8ddad04da06366d8c40ac8ca</hash>
+        </hashes>
+      </tool>
+      <tool>
+        <vendor>acme</vendor>
+        <name>other-service</name>
+      </tool>
+      <tool>
+        <vendor>example</vendor>
+        <name>test-tool-a</name>
+        <version>1.33.7</version>
+        <hashes>
+          <hash alg="SHA-256">adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6</hash>
+        </hashes>
+      </tool>
+      <tool>
+        <name>test-component</name>
+      </tool>
+      <tool>
+        <name>test-service</name>
+      </tool>
+      <tool>
+        <name>test-tool-b</name>
+      </tool>
+    </tools>
+  </metadata>
+</bom>
