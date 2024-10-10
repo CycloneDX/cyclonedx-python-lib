@@ -17,6 +17,7 @@
 
 import unittest
 from datetime import datetime
+from json import loads as json_loads
 from os.path import join
 from typing import Any
 from unittest.mock import patch
@@ -36,3 +37,11 @@ class TestDeserializeRealWorldExamples(unittest.TestCase):
     def test_regression_issue_630(self, *_: Any, **__: Any) -> None:
         with open(join(OWN_DATA_DIRECTORY, 'xml', '1.6', 'regression_issue630.xml')) as input_xml:
             Bom.from_xml(input_xml)
+
+    def test_merged_bom_duplicate_component(self, *_: Any, **__: Any) -> None:
+        with open(join(OWN_DATA_DIRECTORY, 'json', '1.5', 'duplicate_components.json')) as input_json:
+            json = json_loads(input_json.read())
+
+        bom = Bom.from_json(json)
+        self.assertEqual(4, len(bom.components))  # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/540
+        bom.validate()  # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/677
