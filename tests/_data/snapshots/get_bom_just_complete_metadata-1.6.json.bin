@@ -380,6 +380,11 @@
         }
       }
     ],
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
     "manufacture": {
       "address": {
         "country": "GB",
