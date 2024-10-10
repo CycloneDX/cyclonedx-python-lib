@@ -26,12 +26,12 @@ from tests import reorder
 class TestModelPredefinedPhase(TestCase):
     def test_create(self) -> None:
         lifecycle = PredefinedPhase(phase=Phase.BUILD)
-        self.assertEqual('build', lifecycle.phase)
+        self.assertIs(Phase.BUILD, lifecycle.phase)
 
     def test_update(self) -> None:
         lifecycle = PredefinedPhase(phase=Phase.DESIGN)
         lifecycle.phase = Phase.DISCOVERY
-        self.assertEqual('discovery', lifecycle.phase)
+        self.assertIs(Phase.DISCOVERY, lifecycle.phase)
 
     def test_equal(self) -> None:
         a = PredefinedPhase(phase=Phase.BUILD)

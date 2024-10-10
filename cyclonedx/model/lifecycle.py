@@ -93,7 +93,7 @@ class PredefinedPhase:
 
 @serializable.serializable_class
 class CustomPhase:
-    def __init__(self, name: str, description: Optional[str] = None) -> None:
+    def __init__(self, name: str, *, description: Optional[str] = None) -> None:
         self._name = name
         self._description = description
 
