@@ -26,10 +26,9 @@ from uuid import UUID
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
 
-from cyclonedx.model import (
+from cyclonedx.model import (  # DataClassification,
     AttachedText,
     Copyright,
-    DataClassification,
     DataFlow,
     Encoding,
     ExternalReference,
@@ -88,7 +87,7 @@ from cyclonedx.model.impact_analysis import (
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
 from cyclonedx.model.release_note import ReleaseNotes
-from cyclonedx.model.service import Service
+from cyclonedx.model.service import Data, Service
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
@@ -558,6 +557,7 @@ def get_bom_with_services_simple() -> Bom:
 
 def get_bom_with_services_complex() -> Bom:
     bom = _make_bom(services=[
+        # TODO: Add source and destination
         Service(
             name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service',
             provider=get_org_entity_1(), group='a-group', version='1.2.3',
@@ -566,7 +566,7 @@ def get_bom_with_services_complex() -> Bom:
                 XsUri('/api/thing/2')
             ],
             authenticated=False, x_trust_boundary=True, data=[
-                DataClassification(flow=DataFlow.OUTBOUND, classification='public')
+                Data(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[
@@ -594,7 +594,7 @@ def get_bom_with_nested_services() -> Bom:
                 XsUri('/api/thing/2')
             ],
             authenticated=False, x_trust_boundary=True, data=[
-                DataClassification(flow=DataFlow.OUTBOUND, classification='public')
+                Data(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[
