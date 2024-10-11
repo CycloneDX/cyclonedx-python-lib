@@ -178,9 +178,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
         This is a `set`, not a `list`.  Order MUST NOT matter here.
         """
-
 else:
-
     class LifecycleRepository(SortedSet):
         """Collection of :class:`Lifecycle`.
 
