@@ -125,7 +125,7 @@ class BomMetaData:
         return self._lifecycles
 
     @lifecycles.setter
-    def lifecycles(self, lifecycles: Optional[Iterable[Lifecycle]]) -> None:
+    def lifecycles(self, lifecycles: Iterable[Lifecycle]) -> None:
         self._lifecycles = LifecycleRepository(lifecycles)
 
     @property
