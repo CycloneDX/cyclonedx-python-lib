@@ -26,7 +26,6 @@ from serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.serialization import CycloneDxDeserializationException
 from ..schema import SchemaVersion
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
@@ -308,7 +307,8 @@ class _ToolRepositoryHelper(BaseHelper):
             services = map(lambda s: Service.from_json(  # type:ignore[attr-defined]
                 s), o.get('services', ()))
         elif isinstance(o, Iterable):
-            tools = map(lambda t: Tool.from_json(t), o)  # type:ignore[attr-defined]
+            tools = map(lambda t: Tool.from_json(  # type:ignore[attr-defined]
+                t), o)
         return ToolRepository(components=components, services=services, tools=tools)
 
     @classmethod
@@ -349,23 +349,19 @@ class _ToolRepositoryHelper(BaseHelper):
                         prop_info: 'ObjectMetadataLibrary.SerializableProperty',
                         ctx: Type[Any],
                         **kwargs: Any) -> ToolRepository:
-        tools = []
+        ns_map = {'bom': default_ns or ''}
+        # Do not iterate over `o` and do not check for expected `.tag` of items.
+        # This check could have been done by schema validators before even deserializing.
+        tools = None
         components = None
         services = None
-        for e in o:
-            tag = e.tag if default_ns is None else e.tag.replace(f'{{{default_ns}}}', '')
-            if tag == 'tool':
-                tools.append(Tool.from_xml(  # type:ignore[attr-defined]
-                    e, default_ns))
-            elif tag == 'components':
-                components = map(lambda s: Component.from_xml(  # type:ignore[attr-defined]
-                    s, default_ns), e)
-            elif tag == 'services':
-                services = map(lambda s: Service.from_xml(  # type:ignore[attr-defined]
-                    s, default_ns), e)
-            else:
-                raise CycloneDxDeserializationException(f'unexpected: {e!r}')
-        return ToolRepository(
-            tools=tools,
-            components=components,
-            services=services)
+        ts = o.findall('bom:tool', ns_map)
+        if len(ts) > 0:
+            tools = map(lambda t: Tool.from_xml(  # type:ignore[attr-defined]
+                t, default_ns), ts)
+        else:
+            components = map(lambda c: Component.from_xml(  # type:ignore[attr-defined]
+                c, default_ns), o.iterfind('./bom:components/bom:component', ns_map))
+            services = map(lambda s: Service.from_xml(  # type:ignore[attr-defined]
+                s, default_ns), o.iterfind('./bom:services/bom:service', ns_map))
+        return ToolRepository(components=components, services=services, tools=tools)

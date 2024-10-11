@@ -14,17 +14,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-from os.path import join
+
 from typing import Any, Callable
 from unittest import TestCase
 from unittest.mock import patch
 
 from ddt import ddt, named_data
 
-from cyclonedx.exception.serialization import CycloneDxDeserializationException
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
+from tests import DeepCompareMixin, SnapshotMixin, mksname
 from tests._data.models import (
     all_get_bom_funct_valid_immut,
     all_get_bom_funct_valid_reversible_migrate,
@@ -46,9 +45,3 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
             bom = Bom.from_xml(s)
         self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
-
-    def test_unexpected_toolrepository_item(self) -> None:
-        with open(join(OWN_DATA_DIRECTORY, 'xml', '1.5', 'invalid-tool.xml')) as input_xml:
-            with self.assertRaisesRegex(CycloneDxDeserializationException,
-                                        r"^unexpected: <Element '{.+?}foo' at 0x[0-9a-fA-F]+>$"):
-                Bom.from_xml(input_xml)
