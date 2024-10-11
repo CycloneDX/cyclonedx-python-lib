@@ -1130,7 +1130,7 @@ def get_bom_with_lifecycles() -> Bom:
         metadata=BomMetaData(
             lifecycles=[
                 PredefinedLifecycle(LifecyclePhase.BUILD),
-                PredefinedLifecycle(LifecyclePhase.POSTBUILD),
+                PredefinedLifecycle(LifecyclePhase.POST_BUILD),
                 NamedLifecycle(name='platform-integration-testing',
                                description='Integration testing specific to the runtime platform'),
             ],
