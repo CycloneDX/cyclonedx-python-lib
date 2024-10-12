@@ -113,4 +113,4 @@ class Dependable(ABC):
     @property
     @abstractmethod
     def bom_ref(self) -> BomRef:
-        ...
+        ...  # pragma: no cover

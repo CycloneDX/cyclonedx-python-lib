@@ -46,12 +46,12 @@ class BaseOutput(ABC):
     @property
     @abstractmethod
     def schema_version(self) -> SchemaVersion:
-        ...
+        ...  # pragma: no cover
 
     @property
     @abstractmethod
     def output_format(self) -> OutputFormat:
-        ...
+        ...  # pragma: no cover
 
     @property
     def generated(self) -> bool:
@@ -69,13 +69,13 @@ class BaseOutput(ABC):
 
     @abstractmethod
     def generate(self, force_regeneration: bool = False) -> None:
-        ...
+        ...  # pragma: no cover
 
     @abstractmethod
     def output_as_string(self, *,
                          indent: Optional[Union[int, str]] = None,
                          **kwargs: Any) -> str:
-        ...
+        ...  # pragma: no cover
 
     def output_to_file(self, filename: str, allow_overwrite: bool = False, *,
                        indent: Optional[Union[int, str]] = None,
@@ -94,19 +94,19 @@ class BaseOutput(ABC):
 @overload
 def make_outputter(bom: 'Bom', output_format: Literal[OutputFormat.JSON],
                    schema_version: SchemaVersion) -> 'JsonOutputter':
-    ...
+    ...  # pragma: no cover
 
 
 @overload
 def make_outputter(bom: 'Bom', output_format: Literal[OutputFormat.XML],
                    schema_version: SchemaVersion) -> 'XmlOutputter':
-    ...
+    ...  # pragma: no cover
 
 
 @overload
 def make_outputter(bom: 'Bom', output_format: OutputFormat,
                    schema_version: SchemaVersion) -> Union['XmlOutputter', 'JsonOutputter']:
-    ...
+    ...  # pragma: no cover
 
 
 def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: SchemaVersion) -> BaseOutput:
