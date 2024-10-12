@@ -1,6 +1,54 @@
 # CHANGELOG
 
 
+## Unreleased
+
+### Documentation
+
+* docs(chaneglog): omit chore/ci/refactor/style/test/build (#703)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a210809`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a210809efb34c2dc895fc0c6d96a3412a9097625))
+
+* docs: rephrase migration paths
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b0260a7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b0260a7d45bc3e099b979001049a8c5a67b97634))
+
+### Unknown
+
+* Merge remote-tracking branch &#39;origin/main&#39; into 8.0.0-dev ([`b9a33e6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b9a33e614a84ba4a6546a1907b70a0cbfee8cd6f))
+
+* rework tools xml deserializer (#700)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1a24ee6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1a24ee6a0853e535465f85c6380971948281ad6e))
+
+* Merge remote-tracking branch &#39;origin/main&#39; into 8.0.0-dev ([`4c57fa1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4c57fa156516de07cdd4acd3f3057c0b20d108d7))
+
+
+
+## v7.6.2 (2024-10-07)
+
+### Documentation
+
+* docs: fix some doc strings
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`4fa8fc1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4fa8fc1b6703ecf6788b72f2d53c6a17e2146cf7))
+
+### Fix
+
+* fix: behavior of and typing for crypto setters with optional values (#694)
+
+fixes #690
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`d8b20bd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d8b20bdc5224ea30cf767f6f3f1a6f8ff2754973))
+
+### Unknown
+
+* docs
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`68c681d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/68c681d46c85230a97c4058de97400f3d93119f5))
+
 
 ## v8.0.0-rc.2 (2024-09-27)
 
@@ -24,22 +72,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e00af17`](https:
 
 
 ## v8.0.0-rc.1 (2024-09-25)
-
-### Chore
-
-* chore(dev-deps): use `tomli` (#685)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`733ba0e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/733ba0ebefc7d913290ce32d999620332551e50a))
-
-* chore: trusted publishing (#682)
-
-fixes #681
-
----------
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-Signed-off-by: semantic-release &lt;semantic-release@bot.local&gt;
-Co-authored-by: semantic-release &lt;semantic-release@bot.local&gt; ([`96386cc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/96386cc88a65f85c7040400dd739aecde7f4d184))
 
 ### Documentation
 
@@ -141,12 +173,6 @@ correct headers
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`35e00b4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/35e00b4ee5a9306b9e97b011025409bcbfcef309))
 
-### Refactor
-
-* refactor: simplify `.builder.this.this_tool`
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`9940cf9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9940cf95e619d67a2a15ff7e6784513059e6ab5e))
-
 ### Unknown
 
 * Merge branch &#39;main&#39; into 8.0.0-dev ([`3d1548a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3d1548abf5db45764a22fcca96493574f96ff693))
@@ -154,14 +180,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`9940cf9`](https:
 * Merge branch &#39;main&#39; into 8.0.0-dev
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`735c800`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/735c8003ce88b0c6efa802ccd806f17d22b4df89))
-
-* tests: test builder this (#675)
-
-QA for https://github.com/CycloneDX/cyclonedx-python-lib/pull/649
-
----------
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e4ad3bc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e4ad3bce1f97f77d7c3468765e47dd15929cbbcd))
 
 * Merge branch &#39;main&#39; into 8.0.0-dev ([`0ec785d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ec785d29abcc215a5a0f6feec9bf16b0994cc92))
 
@@ -214,24 +232,8 @@ Signed-off-by: Louis Maillard &lt;louis.maillard@savoirfairelinux.com&gt;
 Signed-off-by: Louis Maillard &lt;louis.maillard@protonmail.com&gt;
 Co-authored-by: Louis Maillard &lt;louis.maillard@savoirfairelinux.com&gt; ([`b5ebcf8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b5ebcf8104faf57030cbc5d8190c78524ab86431))
 
-### Style
-
-* style: model args - one per line (#643)
-
-this should make future PR reviews easier, since adding new args in the
-middle will not cause complete code blocks to change, but is just a new
-line ...
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`5b74b0f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5b74b0f3f29e6f1a14e1e97294fcc8a0a05f3245))
-
 
 ## v7.4.1 (2024-06-12)
-
-### Chore
-
-* chore: rollback py sem release matcher
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c33a130`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c33a130378b351ce6f67a563d0a2a70e699e6725))
 
 ### Documentation
 
@@ -290,17 +292,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b331aeb`](https:
 
 ## v7.3.3 (2024-05-06)
 
-### Chore
-
-* chore: shield_ossf-best-practices subbary
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0d00496`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0d00496ca2191394276d0410cc8e81e5630d674d))
-
-* chore(ci): update GH action versions (#606)
-
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`6d1bc5b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6d1bc5b5e3c6cecc8681b7a197d07632819dc994))
-
 ### Fix
 
 * fix: json validation allow arbitrary `$schema`  value (#613)
@@ -330,12 +321,6 @@ Co-authored-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`8df488c`](https://g
 
 
 ## v7.3.1 (2024-04-22)
-
-### Chore
-
-* chore: semantic-release git commit/sign valid email address
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`d437c40`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d437c40caa70071f0fcfe4e3c970370ee32d4aba))
 
 ### Fix
 
@@ -369,42 +354,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7ca2455`](https:
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`9bf1839`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9bf1839859a244e790e91c3e1edd82d333598d60))
 
 ### Unknown
-
-* tests: add meaningful names to validation tests (#588)
-
-When packaging cyclonedx-python-lib for a Linux distribution, it’s
-pretty common that some JSON validation tests fail. [1]
-
-Due to the large number of combinations and the fact that these tests
-are consecutively numbered, it has been tedious to figure out which
-tests are exactly failing and why. This in turn makes it difficult to
-decide which tests to disable or report upstream.
-
-Append meaningful names to validation tests so that instead of e.g.:
-
-    […]::TestJsonValidator::test_validate_no_none_001
-    […]::TestJsonValidator::test_validate_no_none_002
-    […]::TestJsonValidator::test_validate_no_none_003
-    […]::TestJsonValidator::test_validate_no_none_004
-    […]::TestJsonValidator::test_validate_no_none_005
-    […]::TestJsonValidator::test_validate_no_none_006
-    […]::TestJsonValidator::test_validate_no_none_007
-    […]::TestJsonValidator::test_validate_no_none_008
-
-the tests are named:
-
-    […]::TestJsonValidator::test_validate_no_none_001_valid_component_swid_1_6
-    […]::TestJsonValidator::test_validate_no_none_002_valid_machine_learning_considerations_env_1_6
-    […]::TestJsonValidator::test_validate_no_none_003_valid_metadata_tool_1_6
-    […]::TestJsonValidator::test_validate_no_none_004_valid_patch_1_6
-    […]::TestJsonValidator::test_validate_no_none_005_valid_empty_components_1_6
-    […]::TestJsonValidator::test_validate_no_none_006_valid_properties_1_6
-    […]::TestJsonValidator::test_validate_no_none_007_valid_service_1_6
-    […]::TestJsonValidator::test_validate_no_none_008_valid_metadata_author_1_6
-
-[1]: https://aur.archlinux.org/cgit/aur.git/diff/PKGBUILD?h=python-cyclonedx-lib&amp;id=9c6ae556874a633a521407a77a9a85bb31da2047
-
-Signed-off-by: Claudia &lt;claui@users.noreply.github.com&gt; ([`ae3f79c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ae3f79cbaeecda94948bff6a64ab797c5ddd934a))
 
 * doc: poor merge resolved
 
@@ -652,20 +601,8 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c1776b7`](https:
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1fd7fee`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1fd7fee9dec888c10087921f2e5a7a60062fb419))
 
-### Unknown
-
-* tests: fetched schema 1.5 test data from spec (#536)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`394cc87`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/394cc87b3247b6f57af4073f5548f1c5eada2b9b))
-
 
 ## v6.4.0 (2024-01-22)
-
-### Chore
-
-* chore: doc flake8 config
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`bd4c078`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bd4c0781139bc93e28438390650ef1c7484597bb))
 
 ### Documentation
 
@@ -747,12 +684,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7dcd166`](https:
 
 
 ## v6.1.0 (2023-12-22)
-
-### Chore
-
-* chore: update maintainers
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`87c72d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/87c72d7f589faea67c5f90f041531468f8ae480c))
 
 ### Feature
 
@@ -862,14 +793,6 @@ Co-authored-by: semantic-release &lt;semantic-release&gt; ([`74865f8`](https://g
 
 ## v5.2.0 (2023-12-02)
 
-### Chore
-
-* chore: mograte dev-dependencies to new poetry layout (#482)
-
-see https://python-poetry.org/docs/managing-dependencies/#dependency-groups
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a85585c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a85585cf5e445ba5e67a027b4d1161911df6467d))
-
 ### Documentation
 
 * docs: keywaords &amp; funding (#486)
@@ -914,12 +837,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a648775`](https:
 
 
 ## v5.0.1 (2023-10-24)
-
-### Chore
-
-* chore: make `pyproject` parsable by dependabot (#477)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`c4eaaa5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c4eaaa54d98da43d0cdbb19b5f61e06a21f1cc58))
 
 ### Documentation
 
@@ -1067,18 +984,6 @@ Co-authored-by: semantic-release &lt;semantic-release&gt; ([`26b151c`](https://g
 
 ## v4.2.3 (2023-10-16)
 
-### Chore
-
-* chore: Update CONTRIBUTING.md
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@owasp.org&gt; ([`0ebaa21`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ebaa216d43a1389362dbdb33f9b49f43a21ab66))
-
-### Ci
-
-* ci: publish coverage report to codacy (#439)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0012a82`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0012a82382f9f33831a80aa0e26c0cbb7fd8984b))
-
 ### Fix
 
 * fix: SPDX-expression-validation internal crashes are cought and handled (#471)
@@ -1087,14 +992,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`5fa66a0`](https:
 
 
 ## v4.2.2 (2023-09-14)
-
-### Chore
-
-* chore: dont lock poetry (#431)
-
-fixes #430
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`49b144b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/49b144be519705b03adc510ddcc6b9e4504b7a40))
 
 ### Documentation
 
@@ -1133,44 +1030,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e06f9fd`](https:
 
 ## v4.1.0 (2023-08-27)
 
-### Chore
-
-* chore: migrate to python-semantic-release8 (#421)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`14c501c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/14c501c1133c747e1a7dad6df8cad01a03f71a20))
-
-* chore: migrate to python-semantic-release8 (#420)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0e35d88`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0e35d88b329bebe05f19748a23a31abf6295c933))
-
-* chore: migrate to python-semantic-release8 (#419)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`adf5a36`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/adf5a3668c7c9aa3e0478fd1eabf3b3163fae691))
-
-### Ci
-
-* ci: streamline concurrency for deploy (#406)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6a7ddfa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6a7ddfa635995f5dbb849ba5141dcb19a70db0ea))
-
-* ci: run examples on prod-deps only (#402)
-
-* ci: run examples on prod-deps only
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* ci: simplify ci
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
----------
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`cf40048`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cf40048f00d4d9a70306ee414ebf5a1f970c6a70))
-
-* ci: run examples (#401)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`058f386`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/058f38609453ec738d9cdaa01cbed1b22066cc77))
-
 ### Documentation
 
 * docs(examples): showcase shorthand dependency management (#403)
@@ -1187,59 +1046,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3585ea9`](https:
 
 
 ## v4.0.1 (2023-06-28)
-
-### Chore
-
-* chore: CI/QA/Build meintenance (#358)
-
-* build: streamlined ci and builds
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* chore: upgrade lockfile with poetry1.4
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* removed extra brace
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt;
-
-* fixed long line
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt;
-
----------
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt;
-Co-authored-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`9779af0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9779af02f5f3cd99fe3e1a088f5547f4991b05b7))
-
-* chore: followup of #340 (#360)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`723ae8e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/723ae8e4ddbffc4851c10f64692e7265973ef730))
-
-* chore: prevent dev-lowest-lockfile from dependency bumps (#359)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`16870f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/16870f4119865b549172cc76588ca1aa7ce00357))
-
-* chore: manually craft more accurate CHANGELOG for `4.0.0`
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`32ce3a2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/32ce3a2ca018b8afcfcb101cad8fac80c547ddc5))
-
-### Ci
-
-* ci: cannot use variables in `uses`
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`2371a1b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2371a1bdc39c85ee65e43ac8bb22cae1b199385e))
-
-* ci: cannot use variables in `uses`
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`aa0eab1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/aa0eab134c85e7501134f8a417c34e430abc7101))
-
-* ci: add concurrency rules (#361)
-
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f65d646`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f65d64699a48bd6fe540c7503491ce29b1ce38d1))
 
 ### Documentation
 
@@ -1397,14 +1203,6 @@ Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
 Co-authored-by: Hakan Dilek &lt;hakandilek@gmail.com&gt;
 Co-authored-by: Hakan Dilek &lt;hakandilek@users.noreply.github.com&gt; ([`8fb1b14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8fb1b14f5e04e85f21e654c44fa6b9b774867757))
 
-### Chore
-
-* chore: package manifest fix link to homepage and documentation (#291)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f2350b4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f2350b4e2b0fb7668ca987e523c53acb6ac6fefb))
-
 ### Unknown
 
 * 4.0.0
@@ -1413,14 +1211,6 @@ Automatically generated by python-semantic-release ([`40fbfda`](https://github.c
 
 
 ## v3.1.5 (2023-01-12)
-
-### Chore
-
-* chore: do not ship exra LICENSE file (#339)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b7f1028`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b7f1028156de8d1e14a391d84d24aa697814902a))
 
 ### Fix
 
@@ -1439,12 +1229,6 @@ Automatically generated by python-semantic-release ([`ba603cf`](https://github.c
 
 ## v3.1.4 (2023-01-11)
 
-### Chore
-
-* chore: add Jan Kowalleck as a maintainer
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7aae26d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7aae26d09c8c0d6976f10d94c2bfbd4cb8f11a0b))
-
 ### Fix
 
 * fix(tests): include tests in `sdist` builds (#337)
@@ -1453,14 +1237,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7aae26d`](https:
 * delete unexpected `DS_Store` file
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`936ad7d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/936ad7d0c26d8f98040203d3234ca8f1afbd73ab))
-
-### Test
-
-* test: mock `ThisTool.version` for constisten results (#335)
-
-
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`57a9e5e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/57a9e5e4f5b1eb785984be9d5a35aac60315232d))
 
 ### Unknown
 
@@ -1480,16 +1256,6 @@ Automatically generated by python-semantic-release ([`0b19294`](https://github.c
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`fb3f835`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb3f8351881783281f8b7e796098a4c145b35927))
 
-### Test
-
-* test: tidy up test beds (#333)
-
-* test: consolidate imports
-* test: recreate all fixtures
-* test: docs
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ab862e7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ab862e79b72b808693e2ec7f6fe1fa3e99cae011))
-
 ### Unknown
 
 * 3.1.3
@@ -1498,19 +1264,6 @@ Automatically generated by python-semantic-release ([`11a420c`](https://github.c
 
 
 ## v3.1.2 (2023-01-06)
-
-### Chore
-
-* chore: editorconfig
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`8c75b1b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8c75b1ba63c10929c005ea27ebb6f63afa8b9719))
-
-### Ci
-
-* ci: fix py36 (#320)
-
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`cf9f790`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cf9f790e30f5b430ea1ece8916b54323e1cdb5ee))
 
 ### Documentation
 
@@ -1537,14 +1290,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`f08a656`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f08a65649aee750397edc061eb3b8325a69bb4b4))
 
-### Style
-
-* style: split joined path segments (#331)
-
-
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`493104c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/493104c1bccc669ee55b89a2c360268d36f3f1b7))
-
 ### Unknown
 
 * 3.1.2
@@ -1558,12 +1303,6 @@ Signed-off-by: Roland Weber &lt;rolweber@de.ibm.com&gt; ([`007fb96`](https://git
 
 
 ## v3.1.1 (2022-11-28)
-
-### Chore
-
-* chore: CHANGELOG typos ([`6c0c174`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6c0c1742d2ea19dfc0284785cf9597b43ef05979))
-
-* chore: update CHANGELOG to explain jump from `2.7.1` to `3.1.0`. ([`1b8cd12`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1b8cd12b03adb03451ed8ee4562161bd82a18972))
 
 ### Fix
 
@@ -1593,14 +1332,6 @@ Signed-off-by: gruebel &lt;anton.gruebel@gmail.com&gt; ([`735c05e`](https://gith
 
 ## v3.1.0 (2022-09-15)
 
-### Chore
-
-* chore: fix release workflow ([`5863622`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/586362272af3f5fd7a11c1c65502bca31d8813eb))
-
-* chore: fix poetry in tox
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7f8c668`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7f8c668cf152af554dbc5183f275723cd3d472b2))
-
 ### Feature
 
 * feat: out-factor SPDX compund detection
@@ -1615,12 +1346,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`2b69925`](https:
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`033bad2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/033bad2a50fd2236c712d4621caa57b04fcc2043))
 
-### Test
-
-* test: license factories
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`baf83f9`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/baf83f9aebe4cdf38341c2432bf8a97e74db5105))
-
 ### Unknown
 
 * 3.1.0
@@ -1630,14 +1355,6 @@ Automatically generated by python-semantic-release ([`e52c174`](https://github.c
 * Merge pull request #305 from CycloneDX/license-factories
 
 feat: add license factories to more easily support creation of `License` or `LicenseChoice` from SPDX license strings #304 ([`5ff4494`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5ff4494b0e0d76d04cf8a4245ce0426f0abbd8f9))
-
-* tests: refactor tests
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`3644f13`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3644f1357ae6b0e1f84e442cd6d9a045fc26fbce))
-
-* tests: rebase/fixup poetry lock
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`26817c0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/26817c0089bfd4083ecfb5ce85039c8d75b84606))
 
 * Merge pull request #301 from CycloneDX/fix-poetry-in-tox
 
@@ -1653,27 +1370,6 @@ Automatically generated by python-semantic-release ([`69582ff`](https://github.c
 
 
 ## v2.7.1 (2022-08-01)
-
-### Chore
-
-* chore: manual fix release publication `2.7.1`
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`b569548`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b56954840ada89c0ba63b4be16e099cd74cc001d))
-
-* chore: resolve hang issue with running isort as pre-commit hook
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`fb25b70`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb25b70c0a3b5a5855332e1c5371219b97beb181))
-
-* chore: re-added `isort` to pre-commit hooks
-ran isort
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`051e543`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/051e5436fc5d317286d0d25c8987cf236d20af08))
-
-### Ci
-
-* ci: change pinned version of python-semantic-release as preventing automated releases
-
-Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`6e12be7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6e12be70fb2a71de60428155b4d0ae82fa43ef2d))
 
 ### Fix
 
@@ -1801,16 +1497,6 @@ Move `types-setuptools` and `types-toml` to dev-dependencies (#226)
 
 Signed-off-by: Adam Johnson &lt;me@adamj.eu&gt; ([`0e2376b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0e2376baade068ae0490b05550837d104e9abfa4))
 
-### Ci
-
-* ci: fix run with lowest compat dependencies (#240)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a4596c8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a4596c8023553a15e33b45e84142e4ef27591b6a))
-
-* ci: pin GH-action `semantic-release` to v7.28.1 (#234)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`91e1297`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/91e12971bf90fffb5b440b2acc74a3f8614932bd))
-
 ### Documentation
 
 * docs: fix typo  &#34;This is out&#34; -&gt; &#34;This is our&#34;
@@ -1824,14 +1510,6 @@ Signed-off-by: Rodney Richardson &lt;rodney.richardson@cambridgeconsultants.com&
 * feat: use `SortedSet` in model to improve reproducibility - this will provide predictable ordering of various items in generated CycloneDX documents - thanks to @RodneyRichardson
 
 Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`8a1c404`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8a1c4043f502292b32c4ab36a8618cf3f67ac8df))
-
-### Test
-
-* test: tests calculate versions if needed 
-
-Don&#39;t hardcode component version in test (#229)
-
-Signed-off-by: Rodney Richardson &lt;rodney.richardson@cambridgeconsultants.com&gt; ([`7b3ce65`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7b3ce65f92ff6009a1e29d4938eac5ea664b2538))
 
 ### Unknown
 
@@ -2013,12 +1691,6 @@ Signed-off-by: Paul Horton &lt;paul.horton@owasp.org&gt; ([`f487c4a`](https://gi
 
 ## v2.2.0 (2022-04-12)
 
-### Ci
-
-* ci: introduce `timeout-minutes` and drop `dependabot` branches for CI #206
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`e5b426f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e5b426f0287e75f8c9c2b0937cebaab13dc069a5))
-
 ### Feature
 
 * feat: Bump XML schemas to latest fix version for 1.2-1.4 - see:
@@ -2054,10 +1726,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a9c3e77`](https:
 
 ## v2.1.1 (2022-04-05)
 
-### Chore
-
-* chore: shield icons in README ([`87c490e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/87c490e883f1c68a96233ca6d83e641481fb83a4))
-
 ### Fix
 
 * fix: prevent error if `version` not set
@@ -2077,151 +1745,6 @@ fix: `version` being optional in JSON output can raise error ([`6f7e09a`](https:
 
 ## v2.1.0 (2022-03-28)
 
-### Chore
-
-* chore: added autopep8 to pre-commit and clarified command in CONTRIBUTING for performance
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`5dafb1c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5dafb1c88208caccaf82fc5abea41df0d295d5a4))
-
-* chore: first pass pre-commit config
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`fd6ab7a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fd6ab7ab2136c4afd8169fc97e0ee6ecbbef56a7))
-
-* chore: added documentation to CONTRIBUTING guidelines
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`67cefe1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/67cefe1e5f9eb3bdb1d07c29e1ea351937c15bc0))
-
-* chore: dependabot prefix `chore`, not eco-system ([`c96cea4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c96cea47f855add5edf2707305ef7b671da7db39))
-
-* chore: make isort and flake8-isort available
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b211de5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b211de50b92393e653b9a9f907c66a81b016d870))
-
-* chore: poetry(deps): bump pyparsing from 3.0.6 to 3.0.7 (#140)
-
-Bumps [pyparsing](https://github.com/pyparsing/pyparsing) from 3.0.6 to 3.0.7.
-- [Release notes](https://github.com/pyparsing/pyparsing/releases)
-- [Changelog](https://github.com/pyparsing/pyparsing/blob/master/CHANGES)
-- [Commits](https://github.com/pyparsing/pyparsing/compare/pyparsing_3.0.6...pyparsing_3.0.7)
-
----
-updated-dependencies:
-- dependency-name: pyparsing
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`1bdb798`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1bdb7987a86af967d5a883626346f217a243bfda))
-
-* chore: poetry(deps): bump types-setuptools from 57.4.7 to 57.4.9 (#168)
-
-Bumps [types-setuptools](https://github.com/python/typeshed) from 57.4.7 to 57.4.9.
-- [Release notes](https://github.com/python/typeshed/releases)
-- [Commits](https://github.com/python/typeshed/commits)
-
----
-updated-dependencies:
-- dependency-name: types-setuptools
-  dependency-type: direct:production
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`48c3f99`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/48c3f997abf2560b648d85b907c001879e063551))
-
-* chore: poetry(deps): bump filelock from 3.4.0 to 3.4.1 (#116)
-
-Bumps [filelock](https://github.com/tox-dev/py-filelock) from 3.4.0 to 3.4.1.
-- [Release notes](https://github.com/tox-dev/py-filelock/releases)
-- [Changelog](https://github.com/tox-dev/py-filelock/blob/main/docs/changelog.rst)
-- [Commits](https://github.com/tox-dev/py-filelock/compare/3.4.0...3.4.1)
-
----
-updated-dependencies:
-- dependency-name: filelock
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`17f1a5f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/17f1a5f8555675913ea09318848dd28ce96d1c3c))
-
-* chore: poetry(deps): bump attrs from 21.2.0 to 21.4.0 (#113)
-
-Bumps [attrs](https://github.com/python-attrs/attrs) from 21.2.0 to 21.4.0.
-- [Release notes](https://github.com/python-attrs/attrs/releases)
-- [Changelog](https://github.com/python-attrs/attrs/blob/main/CHANGELOG.rst)
-- [Commits](https://github.com/python-attrs/attrs/compare/21.2.0...21.4.0)
-
----
-updated-dependencies:
-- dependency-name: attrs
-  dependency-type: indirect
-  update-type: version-update:semver-minor
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`3c39ae5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3c39ae5f7435b4e0240e674e47283ac3beb9f2b8))
-
-* chore: poetry(deps): bump typed-ast from 1.5.1 to 1.5.2 (#144)
-
-Bumps [typed-ast](https://github.com/python/typed_ast) from 1.5.1 to 1.5.2.
-- [Release notes](https://github.com/python/typed_ast/releases)
-- [Changelog](https://github.com/python/typed_ast/blob/master/release_process.md)
-- [Commits](https://github.com/python/typed_ast/compare/1.5.1...1.5.2)
-
----
-updated-dependencies:
-- dependency-name: typed-ast
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`ac5809e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ac5809e93a3a5c54b04c75bd959216a4b21095ff))
-
-* chore: poetry(deps): bump packageurl-python from 0.9.6 to 0.9.9 (#177)
-
-Bumps [packageurl-python](https://github.com/package-url/packageurl-python) from 0.9.6 to 0.9.9.
-- [Release notes](https://github.com/package-url/packageurl-python/releases)
-- [Changelog](https://github.com/package-url/packageurl-python/blob/main/CHANGELOG.rst)
-- [Commits](https://github.com/package-url/packageurl-python/compare/v0.9.6...v0.9.9)
-
----
-updated-dependencies:
-- dependency-name: packageurl-python
-  dependency-type: direct:production
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`4bfba14`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4bfba14bfacca773fd2e949e327f94b794fdef0b))
-
-* chore: poetry(deps): bump virtualenv from 20.13.1 to 20.13.2 (#181)
-
-Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.13.1 to 20.13.2.
-- [Release notes](https://github.com/pypa/virtualenv/releases)
-- [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
-- [Commits](https://github.com/pypa/virtualenv/compare/20.13.1...20.13.2)
-
----
-updated-dependencies:
-- dependency-name: virtualenv
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`20e3368`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/20e3368f35e28187f41ac0652384ea2104d45e35))
-
 ### Feature
 
 * feat: output errors are verbose
@@ -2233,12 +1756,6 @@ Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`bfe8fb1`](https:
 * fix: `version` being optional in JSON output can raise error
 
 Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`ba0c82f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ba0c82fbde7ba47502c45caf4fa89e9e4381f482))
-
-### Style
-
-* style: sorted all imports
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`4780a84`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4780a84979d213d6ce6d9527945d532cbd6a8ceb))
 
 ### Unknown
 
@@ -2279,47 +1796,6 @@ BREAKING CHANGE: Remove concept of DEFAULT schema version - replaced with LATEST
 BREAKING CHANGE: Added `BomRef` data type
 
 Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`da3f0ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/da3f0ca3e8b90b37301c03f889eb089bca649b09))
-
-### Chore
-
-* chore: poetry(deps): bump virtualenv from 20.13.0 to 20.13.1 (#167)
-
-Bumps [virtualenv](https://github.com/pypa/virtualenv) from 20.13.0 to 20.13.1.
-- [Release notes](https://github.com/pypa/virtualenv/releases)
-- [Changelog](https://github.com/pypa/virtualenv/blob/main/docs/changelog.rst)
-- [Commits](https://github.com/pypa/virtualenv/compare/20.13.0...20.13.1)
-
----
-updated-dependencies:
-- dependency-name: virtualenv
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9e80258`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9e802582bd9b9bdd0e1e91a0af551d3f2190fb5e))
-
-* chore:  poetry(deps): bump types-toml from 0.10.3 to 0.10.4 (#166)
-
-Bumps [types-toml](https://github.com/python/typeshed) from 0.10.3 to 0.10.4.
-- [Release notes](https://github.com/python/typeshed/releases)
-- [Commits](https://github.com/python/typeshed/commits)
-
----
-updated-dependencies:
-- dependency-name: types-toml
-  dependency-type: direct:production
-  update-type: version-update:semver-patch
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`02449f6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/02449f6102e49f9e2425ab4e5b050f38832e6ba9))
-
-* chore: bump dependencies
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`6c280e7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6c280e7794466ad9b6f1ce5eb985035bea21eaaa))
 
 ### Feature
 
@@ -2382,16 +1858,6 @@ Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`70d25c8`](https://git
 * fix: `expression` not supported in Component Licsnes for version 1.0
 
 Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`15b081b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/15b081bd1891566dbe00e18a8b21d3be87154f72))
-
-### Test
-
-* test: refactor to work on PY &lt; 3.10
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`0ce5de6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ce5de6a223e10161a8b864d0115e95d849d5e87))
-
-* test: refactored fixtures for tests which has uncovered #150, #151 and #152
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`df43a9b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/df43a9bff4b8360234bf50058ded82e44e2df082))
 
 ### Unknown
 
@@ -2683,57 +2149,6 @@ Automatically generated by python-semantic-release ([`d4007bd`](https://github.c
 
 ## v1.0.0 (2022-01-13)
 
-### Chore
-
-* chore: attempt to produce manual GitHub action to release a RC version
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`3058afc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3058afc42fa632be6a0efb9ef509612d8833e07b))
-
-* chore: attempt to produce manual GitHub action to release a RC version
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`6799e63`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6799e632d2eb1d3cee0042c2350477a74bcdce83))
-
-* chore: disable poetry-cache in gh-workflow (#112)
-
-closes #91
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`42f7952`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/42f7952fad512c84fd0a4d08c564af43d8bc5c87))
-
-* chore: removed pdoc3 from main dev dependencies as now covered in docs/requirements.txt
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`89d8382`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/89d8382dc0e8bedb129ca0bbbd95922ea104f95c))
-
-* chore: isolate dependencies for building documentation (#107)
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`f2403f6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f2403f66c21e55de552b10c473332a1ea72b25bf))
-
-* chore: bump `flake8` to v4 and add `autopep8` (#93)
-
-* chore: bump `flake8` to v4 and add `autopep8`
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* chore: make pep8 known in the contrib docs
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6553dbf`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6553dbfefcf6865b28b72771a9a08f1387dbdf11))
-
-* chore: poetry(deps-dev): bump mypy from 0.910 to 0.920 (#103)
-
-Bumps [mypy](https://github.com/python/mypy) from 0.910 to 0.920.
-- [Release notes](https://github.com/python/mypy/releases)
-- [Commits](https://github.com/python/mypy/compare/v0.910...v0.920)
-
----
-updated-dependencies:
-- dependency-name: mypy
-  dependency-type: direct:development
-  update-type: version-update:semver-minor
-...
-
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`fdd20ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fdd20ca4be71be78b578f756f46b44d829a76212))
-
 ### Unknown
 
 * Manually generated release ([`3509fb6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3509fb643af12cc4393309a006c6bbe63b1bd674))
@@ -2802,16 +2217,6 @@ Automatically generated by python-semantic-release ([`54b9f74`](https://github.c
 
 ## v0.12.1 (2021-12-09)
 
-### Chore
-
-* chore: reordered deps &amp; updated poetry lock
-
-Merge pull request #90 from CycloneDX/update-poetry-lock ([`d8c7ee2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d8c7ee2915c23d22bc49c9d562a052783ea7ea87))
-
-* chore: updated poetry lock
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`91b97be`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/91b97bedfa0a22598e9f4e8731bcf7293bc7d57d))
-
 ### Fix
 
 * fix: further loosened dependency definitions
@@ -2830,64 +2235,6 @@ Automatically generated by python-semantic-release ([`43fc36e`](https://github.c
 
 
 ## v0.12.0 (2021-12-09)
-
-### Ci
-
-* ci: update to run tox for both our favoured versions of dependencies and lowest supported versions
-
-* add tox env for minimal required dependencies
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* try to fix `TypedDict` typing
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* fix: typing definitions to be PY 3.6 compatible
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt;
-
-* fix: typing definitions to be PY 3.6 compatible
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt;
-
-* straigtened up `sys.version_info` constraints/code-branches
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* removed unused type ignores
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* try to fix type variants
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* try to fix type variants
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* typing for py3.6
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt;
-
-* fixed invalid unittest
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt;
-
-* typing for py3.6
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* mypy silence `warn_unused_ignores`
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-* mypy in tox for lowest version is pinned
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-
-Co-authored-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`07ebedc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/07ebedcbab1554970496780bb8bf167f6fe4ad5c))
 
 ### Feature
 
@@ -3419,16 +2766,6 @@ Automatically generated by python-semantic-release ([`79538e9`](https://github.c
 
 ## v0.10.1 (2021-10-21)
 
-### Ci
-
-* ci: disable git automatic line ending conversions
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`350c097`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/350c097d1dcad367913f65d1026288777e5e4ba4))
-
-* ci: update to run on OSX and Windows
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`6588c4c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6588c4cc37351ac006eded165284f793f9f98bc2))
-
 ### Fix
 
 * fix: ensure output to file is UTF-8
@@ -3644,12 +2981,6 @@ Automatically generated by python-semantic-release ([`e68fbc2`](https://github.c
 
 ## v0.6.1 (2021-10-11)
 
-### Ci
-
-* ci: update to deploy to pypi.org upon PR merge
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`04e86b5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/04e86b54d71bf801511c728db949d622ae0c6fdc))
-
 ### Fix
 
 * fix: better methods for checking if a Component is already represented in the BOM, and the ability to get the existing instance
@@ -3785,16 +3116,6 @@ Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`0411826`](https://git
 
 Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`7f318cb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7f318cb495ac1754029088cae1ef2574c58da2e5))
 
-### Test
-
-* test: additional tests around issue #8 which confirm level of support currently
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`bc54bed`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bc54bed79cbeb16dbfcb8c6aaea88d906fd8538a))
-
-* test: additional tests added to validate comments in requirements.txt and that hashes within requirements.txt are not currently supported
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`3a27d54`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3a27d546d56d5c5c27f77af716a5545723794294))
-
 ### Unknown
 
 * 0.4.1
@@ -3854,18 +3175,6 @@ Automatically generated by python-semantic-release ([`f441413`](https://github.c
 * feat: adding support for extension schema that descriptions vulnerability disclosures
 
 Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`d496695`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d4966951ab6c0229171cfe97723421bb0302c4fc))
-
-### Refactor
-
-* refactor: moved Vulnerabilities to be nested inside the Component
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`8b4034d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8b4034da82a0c5e861161849ddb32c3806adfa0f))
-
-### Test
-
-* test: added test to confirm no Vulnerabilities are output for Schema Version 1.0 (not supported by schema)
-
-Signed-off-by: Paul Horton &lt;phorton@sonatype.com&gt; ([`d5aabcf`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d5aabcff8d46f635b3b74821d70fc279263c420c))
 
 ### Unknown
 
