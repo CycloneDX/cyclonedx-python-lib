@@ -123,6 +123,7 @@ class TestModelComponent(TestCase):
         self.assertSetEqual(c.external_references, set())
         self.assertFalse(c.properties)
         self.assertIsNone(c.release_notes)
+        self.assertIsNone(c.cpe)
         self.assertEqual(len(c.components), 0)
         self.assertEqual(len(c.get_all_nested_components(include_self=True)), 1)
 
@@ -282,6 +283,16 @@ class TestModelComponent(TestCase):
         self.assertEqual(2, len(comp_b.components))
         self.assertEqual(3, len(comp_b.get_all_nested_components(include_self=True)))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=False)))
+
+    def test_cpe_validation_valid(self) -> None:
+        cpe = 'cpe:2.3:a:microsoft:internet_explorer:11:*:*:*:*:*:*:*'
+        c = Component(name='test-component', cpe=cpe)
+        self.assertEqual(c.cpe, cpe)
+
+    def test_cpe_validation_invalid_format(self) -> None:
+        invalid_cpe = 'invalid-cpe-string'
+        with self.assertRaises(ValueError):
+            Component(name='test-component', cpe=invalid_cpe)
 
 
 class TestModelComponentEvidence(TestCase):

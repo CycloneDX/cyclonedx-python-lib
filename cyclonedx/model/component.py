@@ -63,6 +63,16 @@ from .issue import IssueType
 from .license import License, LicenseRepository
 from .release_note import ReleaseNotes
 
+CPE_REGEX = re.compile(
+    r'([c][pP][eE]:/[AHOaho]?(:[A-Za-z0-9._\-~%]*){0,6})|'
+    r'(cpe:2\.3:[aho*-](:(((\?*|\*?)([a-zA-Z0-9\-._]|'
+    r'(\\[\\\*\?!\"#\$%&\'\(\)\+,/:;<=>@\[\]\^`\{\|\}~]))+(\?*|\*?))|'
+    r'[\*\-])){5}(:(([a-zA-Z]{2,3}(-([a-zA-Z]{2}|[0-9]{3}))?)|'
+    r'[\*\-]))(:(((\?*|\*?)([a-zA-Z0-9\-._]|'
+    r'(\\[\\\*\?!\"#\$%&\'\(\)\+,/:;<=>@\[\]\^`\{\|\}~]))+(\?*|'
+    r'\*?))|[\*\-])){4})'
+)
+
 
 @serializable.serializable_class
 class Commit:
@@ -1457,6 +1467,8 @@ class Component(Dependable):
 
     @cpe.setter
     def cpe(self, cpe: Optional[str]) -> None:
+        if cpe and not CPE_REGEX.fullmatch(cpe):
+            raise ValueError(f'Invalid CPE format: {cpe}')
         self._cpe = cpe
 
     @property
