@@ -1,3 +1,5 @@
+# This file is part of CycloneDX Python Library
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -51,10 +53,10 @@ class SchemabasedValidator(Protocol):
 
         :param data: the data string to validate
         :return: validation error
-        :retval None: if `data` is valid
-        :retval ValidationError:  if `data` is invalid
+        :retval None: if ``data`` is valid
+        :retval ValidationError:  if ``data`` is invalid
         """
-        ...
+        ...  # pragma: no cover
 
 
 class BaseSchemabasedValidator(ABC, SchemabasedValidator):
@@ -67,43 +69,43 @@ class BaseSchemabasedValidator(ABC, SchemabasedValidator):
 
     @property
     def schema_version(self) -> 'SchemaVersion':
-        """get the schema version."""
+        """Get the schema version."""
         return self.__schema_version
 
     @property
     @abstractmethod
     def output_format(self) -> OutputFormat:
-        """get the format."""
-        ...
+        """Get the format."""
+        ...  # pragma: no cover
 
     @property
     @abstractmethod
     def _schema_file(self) -> Optional[str]:
-        """get the schema file according to schema version."""
-        ...
+        """Get the schema file according to schema version."""
+        ...  # pragma: no cover
 
 
 @overload
 def make_schemabased_validator(output_format: Literal[OutputFormat.JSON], schema_version: 'SchemaVersion'
                                ) -> 'JsonValidator':
-    ...
+    ...  # pragma: no cover
 
 
 @overload
 def make_schemabased_validator(output_format: Literal[OutputFormat.XML], schema_version: 'SchemaVersion'
                                ) -> 'XmlValidator':
-    ...
+    ...  # pragma: no cover
 
 
 @overload
 def make_schemabased_validator(output_format: OutputFormat, schema_version: 'SchemaVersion'
                                ) -> Union['JsonValidator', 'XmlValidator']:
-    ...
+    ...  # pragma: no cover
 
 
 def make_schemabased_validator(output_format: OutputFormat, schema_version: 'SchemaVersion'
                                ) -> 'BaseSchemabasedValidator':
-    """get the default Schema-based Validator for a certain :class:``OutputFormat``.
+    """Get the default Schema-based Validator for a certain :class:`OutputFormat`.
 
     Raises error when no instance could be made.
     """

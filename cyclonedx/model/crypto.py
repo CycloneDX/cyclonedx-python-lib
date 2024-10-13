@@ -1,4 +1,4 @@
-# This file is part of CycloneDX Python Lib
+# This file is part of CycloneDX Python Library
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -276,15 +276,20 @@ class AlgorithmProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, primitive: Optional[CryptoPrimitive] = None,
-                 parameter_set_identifier: Optional[str] = None, curve: Optional[str] = None,
-                 execution_environment: Optional[CryptoExecutionEnvironment] = None,
-                 implementation_platform: Optional[CryptoImplementationPlatform] = None,
-                 certification_levels: Optional[Iterable[CryptoCertificationLevel]] = None,
-                 mode: Optional[CryptoMode] = None, padding: Optional[CryptoPadding] = None,
-                 crypto_functions: Optional[Iterable[CryptoFunction]] = None,
-                 classical_security_level: Optional[int] = None,
-                 nist_quantum_security_level: Optional[int] = None) -> None:
+    def __init__(
+        self, *,
+        primitive: Optional[CryptoPrimitive] = None,
+        parameter_set_identifier: Optional[str] = None,
+        curve: Optional[str] = None,
+        execution_environment: Optional[CryptoExecutionEnvironment] = None,
+        implementation_platform: Optional[CryptoImplementationPlatform] = None,
+        certification_levels: Optional[Iterable[CryptoCertificationLevel]] = None,
+        mode: Optional[CryptoMode] = None,
+        padding: Optional[CryptoPadding] = None,
+        crypto_functions: Optional[Iterable[CryptoFunction]] = None,
+        classical_security_level: Optional[int] = None,
+        nist_quantum_security_level: Optional[int] = None,
+    ) -> None:
         self.primitive = primitive
         self.parameter_set_identifier = parameter_set_identifier
         self.curve = curve
@@ -317,7 +322,7 @@ class AlgorithmProperties:
         return self._primitive
 
     @primitive.setter
-    def primitive(self, primitive: CryptoPrimitive) -> None:
+    def primitive(self, primitive: Optional[CryptoPrimitive]) -> None:
         self._primitive = primitive
 
     @property
@@ -334,7 +339,7 @@ class AlgorithmProperties:
         return self._parameter_set_identifier
 
     @parameter_set_identifier.setter
-    def parameter_set_identifier(self, parameter_set_identifier: str) -> None:
+    def parameter_set_identifier(self, parameter_set_identifier: Optional[str]) -> None:
         self._parameter_set_identifier = parameter_set_identifier
 
     @property
@@ -352,7 +357,7 @@ class AlgorithmProperties:
         return self._curve
 
     @curve.setter
-    def curve(self, curve: str) -> None:
+    def curve(self, curve: Optional[str]) -> None:
         self._curve = curve
 
     @property
@@ -367,7 +372,7 @@ class AlgorithmProperties:
         return self._execution_environment
 
     @execution_environment.setter
-    def execution_environment(self, execution_environment: CryptoExecutionEnvironment) -> None:
+    def execution_environment(self, execution_environment: Optional[CryptoExecutionEnvironment]) -> None:
         self._execution_environment = execution_environment
 
     @property
@@ -383,7 +388,7 @@ class AlgorithmProperties:
         return self._implementation_platform
 
     @implementation_platform.setter
-    def implementation_platform(self, implementation_platform: CryptoImplementationPlatform) -> None:
+    def implementation_platform(self, implementation_platform: Optional[CryptoImplementationPlatform]) -> None:
         self._implementation_platform = implementation_platform
 
     @property
@@ -417,7 +422,7 @@ class AlgorithmProperties:
         return self._mode
 
     @mode.setter
-    def mode(self, mode: CryptoMode) -> None:
+    def mode(self, mode: Optional[CryptoMode]) -> None:
         self._mode = mode
 
     @property
@@ -432,7 +437,7 @@ class AlgorithmProperties:
         return self._padding
 
     @padding.setter
-    def padding(self, padding: CryptoPadding) -> None:
+    def padding(self, padding: Optional[CryptoPadding]) -> None:
         self._padding = padding
 
     @property
@@ -463,7 +468,7 @@ class AlgorithmProperties:
         return self._classical_security_level
 
     @classical_security_level.setter
-    def classical_security_level(self, classical_security_level: int) -> None:
+    def classical_security_level(self, classical_security_level: Optional[int]) -> None:
         self._classical_security_level = classical_security_level
 
     @property
@@ -480,12 +485,14 @@ class AlgorithmProperties:
         return self._nist_quantum_security_level
 
     @nist_quantum_security_level.setter
-    def nist_quantum_security_level(self, nist_quantum_security_level: int) -> None:
-        if nist_quantum_security_level < 0 or nist_quantum_security_level > 6:
+    def nist_quantum_security_level(self, nist_quantum_security_level: Optional[int]) -> None:
+        if nist_quantum_security_level is not None and (
+            nist_quantum_security_level < 0
+            or nist_quantum_security_level > 6
+        ):
             raise InvalidNistQuantumSecurityLevelException(
                 'NIST Quantum Security Level must be (0 <= value <= 6)'
             )
-
         self._nist_quantum_security_level = nist_quantum_security_level
 
     def __eq__(self, other: object) -> bool:
@@ -516,10 +523,17 @@ class CertificateProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, subject_name: Optional[str] = None, issuer_name: Optional[str] = None,
-                 not_valid_before: Optional[datetime] = None, not_valid_after: Optional[datetime] = None,
-                 signature_algorithm_ref: Optional[BomRef] = None, subject_public_key_ref: Optional[BomRef] = None,
-                 certificate_format: Optional[str] = None, certificate_extension: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        subject_name: Optional[str] = None,
+        issuer_name: Optional[str] = None,
+        not_valid_before: Optional[datetime] = None,
+        not_valid_after: Optional[datetime] = None,
+        signature_algorithm_ref: Optional[BomRef] = None,
+        subject_public_key_ref: Optional[BomRef] = None,
+        certificate_format: Optional[str] = None,
+        certificate_extension: Optional[str] = None,
+    ) -> None:
         self.subject_name = subject_name
         self.issuer_name = issuer_name
         self.not_valid_before = not_valid_before
@@ -541,7 +555,7 @@ class CertificateProperties:
         return self._subject_name
 
     @subject_name.setter
-    def subject_name(self, subject_name: str) -> None:
+    def subject_name(self, subject_name: Optional[str]) -> None:
         self._subject_name = subject_name
 
     @property
@@ -572,7 +586,7 @@ class CertificateProperties:
         return self._not_valid_before
 
     @not_valid_before.setter
-    def not_valid_before(self, not_valid_before: datetime) -> None:
+    def not_valid_before(self, not_valid_before: Optional[datetime]) -> None:
         self._not_valid_before = not_valid_before
 
     @property
@@ -588,7 +602,7 @@ class CertificateProperties:
         return self._not_valid_after
 
     @not_valid_after.setter
-    def not_valid_after(self, not_valid_after: datetime) -> None:
+    def not_valid_after(self, not_valid_after: Optional[datetime]) -> None:
         self._not_valid_after = not_valid_after
 
     @property
@@ -604,7 +618,7 @@ class CertificateProperties:
         return self._signature_algorithm_ref
 
     @signature_algorithm_ref.setter
-    def signature_algorithm_ref(self, signature_algorithm_ref: BomRef) -> None:
+    def signature_algorithm_ref(self, signature_algorithm_ref: Optional[BomRef]) -> None:
         self._signature_algorithm_ref = signature_algorithm_ref
 
     @property
@@ -620,7 +634,7 @@ class CertificateProperties:
         return self._subject_public_key_ref
 
     @subject_public_key_ref.setter
-    def subject_public_key_ref(self, subject_public_key_ref: BomRef) -> None:
+    def subject_public_key_ref(self, subject_public_key_ref: Optional[BomRef]) -> None:
         self._subject_public_key_ref = subject_public_key_ref
 
     @property
@@ -635,7 +649,7 @@ class CertificateProperties:
         return self._certificate_format
 
     @certificate_format.setter
-    def certificate_format(self, certificate_format: str) -> None:
+    def certificate_format(self, certificate_format: Optional[str]) -> None:
         self._certificate_format = certificate_format
 
     @property
@@ -650,7 +664,7 @@ class CertificateProperties:
         return self._certificate_extension
 
     @certificate_extension.setter
-    def certificate_extension(self, certificate_extension: str) -> None:
+    def certificate_extension(self, certificate_extension: Optional[str]) -> None:
         self._certificate_extension = certificate_extension
 
     def __eq__(self, other: object) -> bool:
@@ -736,7 +750,11 @@ class RelatedCryptoMaterialSecuredBy:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, mechanism: Optional[str] = None, algorithm_ref: Optional[BomRef] = None) -> None:
+    def __init__(
+        self, *,
+        mechanism: Optional[str] = None,
+        algorithm_ref: Optional[BomRef] = None,
+    ) -> None:
         self.mechanism = mechanism
         self.algorithm_ref = algorithm_ref
 
@@ -798,12 +816,21 @@ class RelatedCryptoMaterialProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, type: Optional[RelatedCryptoMaterialType] = None, id: Optional[str] = None,
-                 state: Optional[RelatedCryptoMaterialState] = None, algorithm_ref: Optional[BomRef] = None,
-                 creation_date: Optional[datetime] = None, activation_date: Optional[datetime] = None,
-                 update_date: Optional[datetime] = None, expiration_date: Optional[datetime] = None,
-                 value: Optional[str] = None, size: Optional[int] = None, format: Optional[str] = None,
-                 secured_by: Optional[RelatedCryptoMaterialSecuredBy] = None) -> None:
+    def __init__(
+        self, *,
+        type: Optional[RelatedCryptoMaterialType] = None,
+        id: Optional[str] = None,
+        state: Optional[RelatedCryptoMaterialState] = None,
+        algorithm_ref: Optional[BomRef] = None,
+        creation_date: Optional[datetime] = None,
+        activation_date: Optional[datetime] = None,
+        update_date: Optional[datetime] = None,
+        expiration_date: Optional[datetime] = None,
+        value: Optional[str] = None,
+        size: Optional[int] = None,
+        format: Optional[str] = None,
+        secured_by: Optional[RelatedCryptoMaterialSecuredBy] = None,
+    ) -> None:
         self.type = type
         self.id = id
         self.state = state
@@ -873,7 +900,7 @@ class RelatedCryptoMaterialProperties:
         return self._algorithm_ref
 
     @algorithm_ref.setter
-    def algorithm_ref(self, algorithm_ref: BomRef) -> None:
+    def algorithm_ref(self, algorithm_ref: Optional[BomRef]) -> None:
         self._algorithm_ref = algorithm_ref
 
     @property
@@ -1053,8 +1080,12 @@ class ProtocolPropertiesCipherSuite:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, name: Optional[str] = None, algorithms: Optional[Iterable[BomRef]] = None,
-                 identifiers: Optional[Iterable[str]] = None) -> None:
+    def __init__(
+        self, *,
+        name: Optional[str] = None,
+        algorithms: Optional[Iterable[BomRef]] = None,
+        identifiers: Optional[Iterable[str]] = None,
+    ) -> None:
         self.name = name
         self.algorithms = algorithms or []  # type:ignore[assignment]
         self.identifiers = identifiers or []  # type:ignore[assignment]
@@ -1141,9 +1172,15 @@ class Ikev2TransformTypes:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, encr: Optional[Iterable[BomRef]] = None, prf: Optional[Iterable[BomRef]] = None,
-                 integ: Optional[Iterable[BomRef]] = None, ke: Optional[Iterable[BomRef]] = None,
-                 esn: Optional[bool] = None, auth: Optional[Iterable[BomRef]] = None) -> None:
+    def __init__(
+        self, *,
+        encr: Optional[Iterable[BomRef]] = None,
+        prf: Optional[Iterable[BomRef]] = None,
+        integ: Optional[Iterable[BomRef]] = None,
+        ke: Optional[Iterable[BomRef]] = None,
+        esn: Optional[bool] = None,
+        auth: Optional[Iterable[BomRef]] = None,
+    ) -> None:
         self.encr = encr or []  # type:ignore[assignment]
         self.prf = prf or []  # type:ignore[assignment]
         self.integ = integ or []  # type:ignore[assignment]
@@ -1267,9 +1304,13 @@ class ProtocolProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, type: Optional[ProtocolPropertiesType] = None, version: Optional[str] = None,
-                 cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
-                 ikev2_transform_types: Optional[Ikev2TransformTypes] = None) -> None:
+    def __init__(
+        self, *,
+        type: Optional[ProtocolPropertiesType] = None,
+        version: Optional[str] = None,
+        cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
+        ikev2_transform_types: Optional[Ikev2TransformTypes] = None,
+    ) -> None:
         self.type = type
         self.version = version
         self.cipher_suites = cipher_suites or []  # type:ignore[assignment]
@@ -1361,11 +1402,15 @@ class CryptoProperties:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
     """
 
-    def __init__(self, *, asset_type: Optional[CryptoAssetType] = None,
-                 algorithm_properties: Optional[AlgorithmProperties] = None,
-                 certificate_properties: Optional[CertificateProperties] = None,
-                 related_crypto_material_properties: Optional[RelatedCryptoMaterialProperties] = None,
-                 protocol_properties: Optional[ProtocolProperties] = None, oid: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        asset_type: Optional[CryptoAssetType] = None,
+        algorithm_properties: Optional[AlgorithmProperties] = None,
+        certificate_properties: Optional[CertificateProperties] = None,
+        related_crypto_material_properties: Optional[RelatedCryptoMaterialProperties] = None,
+        protocol_properties: Optional[ProtocolProperties] = None,
+        oid: Optional[str] = None,
+    ) -> None:
         self.asset_type = asset_type
         self.algorithm_properties = algorithm_properties
         self.certificate_properties = certificate_properties
@@ -1433,9 +1478,10 @@ class CryptoProperties:
         return self._related_crypto_material_properties
 
     @related_crypto_material_properties.setter
-    def related_crypto_material_properties(self,
-                                           related_crypto_material_properties: Optional[RelatedCryptoMaterialProperties]
-                                           ) -> None:
+    def related_crypto_material_properties(
+        self,
+        related_crypto_material_properties: Optional[RelatedCryptoMaterialProperties]
+    ) -> None:
         self._related_crypto_material_properties = related_crypto_material_properties
 
     @property
@@ -1472,6 +1518,25 @@ class CryptoProperties:
         if isinstance(other, CryptoProperties):
             return hash(other) == hash(self)
         return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, CryptoProperties):
+            return _ComparableTuple((
+                self.asset_type,
+                self.algorithm_properties,
+                self.certificate_properties,
+                self.related_crypto_material_properties,
+                self.protocol_properties,
+                self.oid,
+            )) < _ComparableTuple((
+                other.asset_type,
+                other.algorithm_properties,
+                other.certificate_properties,
+                other.related_crypto_material_properties,
+                other.protocol_properties,
+                other.oid,
+            ))
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash((self.asset_type, self.algorithm_properties, self.certificate_properties,

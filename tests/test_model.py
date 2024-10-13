@@ -1,4 +1,4 @@
-# This file is part of CycloneDX Python Lib
+# This file is part of CycloneDX Python Library
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -262,6 +262,23 @@ class TestModelHashType(TestCase):
          HashAlgorithm.SHA_256, '806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b'),
         ('MD5', 'MD5:dc26cd71b80d6757139f38156a43c545',
          HashAlgorithm.MD5, 'dc26cd71b80d6757139f38156a43c545'),
+        ('sha3-256', 'sha3-256:f43909a5e6420ee26b710718f296c7be85ba393e6b218107811067f49ea80101',
+         HashAlgorithm.SHA3_256, 'f43909a5e6420ee26b710718f296c7be85ba393e6b218107811067f49ea80101'),
+        ('sha1', 'sha1:b82b9f695a3ae28053cb3776d2132ab625798055',
+         HashAlgorithm.SHA_1, 'b82b9f695a3ae28053cb3776d2132ab625798055'),
+        # Name format as used by 'openssl dgst and the Blake2 RFC'
+        ('blake2b512',
+         'blake2b512:6d518ac5c7a022e954ecb21b8bf68d7f5c52e3c3579cd96f3bde4'
+         'f76daaaa69a96a5eee268fb8fa2745930c37f0672424136b538878474bc4f586a63e13ae23f',
+         HashAlgorithm.BLAKE2B_512,
+         '6d518ac5c7a022e954ecb21b8bf68d7f5c52e3c3579cd96f3bde4f76daaaa69a'
+         '96a5eee268fb8fa2745930c37f0672424136b538878474bc4f586a63e13ae23f'),
+        ('blake2512',
+         'blake2512:6d518ac5c7a022e954ecb21b8bf68d7f5c52e3c3579cd96f3bde4'
+         'f76daaaa69a96a5eee268fb8fa2745930c37f0672424136b538878474bc4f586a63e13ae23f',
+         HashAlgorithm.BLAKE2B_512,
+         '6d518ac5c7a022e954ecb21b8bf68d7f5c52e3c3579cd96f3bde4f76daaaa69a'
+         '96a5eee268fb8fa2745930c37f0672424136b538878474bc4f586a63e13ae23f'),
     )
     def test_hash_type_from_composite_str(self, composite: str, e_alg: HashAlgorithm, e_content: str) -> None:
         h = HashType.from_composite_str(composite)

@@ -1,3 +1,5 @@
+# This file is part of CycloneDX Python Library
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -48,17 +50,24 @@ class Service(Dependable):
         See the CycloneDX schema: https://cyclonedx.org/docs/1.4/xml/#type_service
     """
 
-    def __init__(self, *, name: str, bom_ref: Optional[Union[str, BomRef]] = None,
-                 provider: Optional[OrganizationalEntity] = None,
-                 group: Optional[str] = None, version: Optional[str] = None, description: Optional[str] = None,
-                 endpoints: Optional[Iterable[XsUri]] = None, authenticated: Optional[bool] = None,
-                 x_trust_boundary: Optional[bool] = None, data: Optional[Iterable[DataClassification]] = None,
-                 licenses: Optional[Iterable[License]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None,
-                 properties: Optional[Iterable[Property]] = None,
-                 services: Optional[Iterable['Service']] = None,
-                 release_notes: Optional[ReleaseNotes] = None,
-                 ) -> None:
+    def __init__(
+        self, *,
+        name: str,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        provider: Optional[OrganizationalEntity] = None,
+        group: Optional[str] = None,
+        version: Optional[str] = None,
+        description: Optional[str] = None,
+        endpoints: Optional[Iterable[XsUri]] = None,
+        authenticated: Optional[bool] = None,
+        x_trust_boundary: Optional[bool] = None,
+        data: Optional[Iterable[DataClassification]] = None,
+        licenses: Optional[Iterable[License]] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+        properties: Optional[Iterable[Property]] = None,
+        services: Optional[Iterable['Service']] = None,
+        release_notes: Optional[ReleaseNotes] = None,
+    ) -> None:
         if isinstance(bom_ref, BomRef):
             self._bom_ref = bom_ref
         else:
@@ -112,6 +121,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def group(self) -> Optional[str]:
         """
         The grouping name, namespace, or identifier. This will often be a shortened, single name of the company or
@@ -128,6 +138,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> str:
         """
         The name of the service. This will often be a shortened, single name of the service.
@@ -143,6 +154,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(4)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The service version.
@@ -158,6 +170,7 @@ class Service(Dependable):
 
     @property
     @serializable.xml_sequence(5)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
         """
         Specifies a description for the service.

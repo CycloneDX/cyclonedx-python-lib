@@ -1,4 +1,4 @@
-# This file is part of CycloneDX Python Lib
+# This file is part of CycloneDX Python Library
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     @abstractmethod
     def _get_schema_uri(self) -> Optional[str]:
-        pass
+        ...  # pragma: no cover
 
 
 class JsonV1Dot0(Json, SchemaVersion1Dot0):

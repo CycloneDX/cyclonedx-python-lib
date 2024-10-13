@@ -1,4 +1,4 @@
-# This file is part of CycloneDX Python Lib
+# This file is part of CycloneDX Python Library
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -113,4 +113,4 @@ class Dependable(ABC):
     @property
     @abstractmethod
     def bom_ref(self) -> BomRef:
-        ...
+        ...  # pragma: no cover

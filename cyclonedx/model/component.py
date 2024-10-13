@@ -1,4 +1,4 @@
-# This file is part of CycloneDX Python Lib
+# This file is part of CycloneDX Python Library
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -73,9 +73,14 @@ class Commit:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_commitType
     """
 
-    def __init__(self, *, uid: Optional[str] = None, url: Optional[XsUri] = None,
-                 author: Optional[IdentifiableAction] = None, committer: Optional[IdentifiableAction] = None,
-                 message: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        uid: Optional[str] = None,
+        url: Optional[XsUri] = None,
+        author: Optional[IdentifiableAction] = None,
+        committer: Optional[IdentifiableAction] = None,
+        message: Optional[str] = None,
+    ) -> None:
         if not uid and not url and not author and not committer and not message:
             raise NoPropertiesProvidedException(
                 'At least one of `uid`, `url`, `author`, `committer` or `message` must be provided for a `Commit`.'
@@ -89,6 +94,7 @@ class Commit:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def uid(self) -> Optional[str]:
         """
         A unique identifier of the commit. This may be version control specific. For example, Subversion uses revision
@@ -150,6 +156,7 @@ class Commit:
 
     @property
     @serializable.xml_sequence(5)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def message(self) -> Optional[str]:
         """
         The text description of the contents of the commit.
@@ -195,8 +202,11 @@ class ComponentEvidence:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
     """
 
-    def __init__(self, *, licenses: Optional[Iterable[License]] = None,
-                 copyright: Optional[Iterable[Copyright]] = None) -> None:
+    def __init__(
+        self, *,
+        licenses: Optional[Iterable[License]] = None,
+        copyright: Optional[Iterable[Copyright]] = None,
+    ) -> None:
         if not licenses and not copyright:
             raise NoPropertiesProvidedException(
                 'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
@@ -426,7 +436,11 @@ class Diff:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_diffType
     """
 
-    def __init__(self, *, text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(
+        self, *,
+        text: Optional[AttachedText] = None,
+        url: Optional[XsUri] = None,
+    ) -> None:
         if not text and not url:
             raise NoPropertiesProvidedException(
                 'At least one of `text` or `url` must be provided for a `Diff`.'
@@ -507,8 +521,12 @@ class Patch:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_patchType
     """
 
-    def __init__(self, *, type: PatchClassification, diff: Optional[Diff] = None,
-                 resolves: Optional[Iterable[IssueType]] = None) -> None:
+    def __init__(
+        self, *,
+        type: PatchClassification,
+        diff: Optional[Diff] = None,
+        resolves: Optional[Iterable[IssueType]] = None,
+    ) -> None:
         self.type = type
         self.diff = diff
         self.resolves = resolves or []  # type:ignore[assignment]
@@ -596,10 +614,15 @@ class Pedigree:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_pedigreeType
     """
 
-    def __init__(self, *, ancestors: Optional[Iterable['Component']] = None,
-                 descendants: Optional[Iterable['Component']] = None, variants: Optional[Iterable['Component']] = None,
-                 commits: Optional[Iterable[Commit]] = None, patches: Optional[Iterable[Patch]] = None,
-                 notes: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        ancestors: Optional[Iterable['Component']] = None,
+        descendants: Optional[Iterable['Component']] = None,
+        variants: Optional[Iterable['Component']] = None,
+        commits: Optional[Iterable[Commit]] = None,
+        patches: Optional[Iterable[Patch]] = None,
+        notes: Optional[str] = None,
+    ) -> None:
         if not ancestors and not descendants and not variants and not commits and not patches and not notes:
             raise NoPropertiesProvidedException(
                 'At least one of `ancestors`, `descendants`, `variants`, `commits`, `patches` or `notes` must be '
@@ -748,9 +771,16 @@ class Swid:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_swidType
     """
 
-    def __init__(self, *, tag_id: str, name: str, version: Optional[str] = None,
-                 tag_version: Optional[int] = None, patch: Optional[bool] = None,
-                 text: Optional[AttachedText] = None, url: Optional[XsUri] = None) -> None:
+    def __init__(
+        self, *,
+        tag_id: str,
+        name: str,
+        version: Optional[str] = None,
+        tag_version: Optional[int] = None,
+        patch: Optional[bool] = None,
+        text: Optional[AttachedText] = None,
+        url: Optional[XsUri] = None,
+    ) -> None:
         self.tag_id = tag_id
         self.name = name
         self.version = version
@@ -1031,25 +1061,40 @@ class Component(Dependable):
             )
         )
 
-    def __init__(self, *,
-                 name: str, type: ComponentType = ComponentType.LIBRARY,
-                 mime_type: Optional[str] = None, bom_ref: Optional[Union[str, BomRef]] = None,
-                 supplier: Optional[OrganizationalEntity] = None,
-                 publisher: Optional[str] = None, group: Optional[str] = None, version: Optional[str] = None,
-                 description: Optional[str] = None, scope: Optional[ComponentScope] = None,
-                 hashes: Optional[Iterable[HashType]] = None, licenses: Optional[Iterable[License]] = None,
-                 copyright: Optional[str] = None, purl: Optional[PackageURL] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None,
-                 properties: Optional[Iterable[Property]] = None, release_notes: Optional[ReleaseNotes] = None,
-                 cpe: Optional[str] = None, swid: Optional[Swid] = None, pedigree: Optional[Pedigree] = None,
-                 components: Optional[Iterable['Component']] = None, evidence: Optional[ComponentEvidence] = None,
-                 modified: bool = False, manufacturer: Optional[OrganizationalEntity] = None,
-                 authors: Optional[Iterable[OrganizationalContact]] = None,
-                 omnibor_ids: Optional[Iterable[OmniborId]] = None, swhids: Optional[Iterable[Swhid]] = None,
-                 crypto_properties: Optional[CryptoProperties] = None, tags: Optional[Iterable[str]] = None,
-                 # Deprecated in v1.6
-                 author: Optional[str] = None,
-                 ) -> None:
+    def __init__(
+        self, *,
+        name: str,
+        type: ComponentType = ComponentType.LIBRARY,
+        mime_type: Optional[str] = None,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        supplier: Optional[OrganizationalEntity] = None,
+        publisher: Optional[str] = None,
+        group: Optional[str] = None,
+        version: Optional[str] = None,
+        description: Optional[str] = None,
+        scope: Optional[ComponentScope] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+        licenses: Optional[Iterable[License]] = None,
+        copyright: Optional[str] = None,
+        purl: Optional[PackageURL] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+        properties: Optional[Iterable[Property]] = None,
+        release_notes: Optional[ReleaseNotes] = None,
+        cpe: Optional[str] = None,
+        swid: Optional[Swid] = None,
+        pedigree: Optional[Pedigree] = None,
+        components: Optional[Iterable['Component']] = None,
+        evidence: Optional[ComponentEvidence] = None,
+        modified: bool = False,
+        manufacturer: Optional[OrganizationalEntity] = None,
+        authors: Optional[Iterable[OrganizationalContact]] = None,
+        omnibor_ids: Optional[Iterable[OmniborId]] = None,
+        swhids: Optional[Iterable[Swhid]] = None,
+        crypto_properties: Optional[CryptoProperties] = None,
+        tags: Optional[Iterable[str]] = None,
+        # Deprecated in v1.6
+        author: Optional[str] = None,
+    ) -> None:
         self.type = type
         self.mime_type = mime_type
         if isinstance(bom_ref, BomRef):
@@ -1108,6 +1153,7 @@ class Component(Dependable):
         self._type = type
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.TOKEN)
     def mime_type(self) -> Optional[str]:
         """
         Get any declared mime-type for this Component.
@@ -1213,6 +1259,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)  # todo: this is deprecated in v1.6?
     @serializable.xml_sequence(4)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def author(self) -> Optional[str]:
         """
         The person(s) or organization(s) that authored the component.
@@ -1228,6 +1275,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(5)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def publisher(self) -> Optional[str]:
         """
         The person(s) or organization(s) that published the component
@@ -1243,6 +1291,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(6)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def group(self) -> Optional[str]:
         """
         The grouping name or identifier. This will often be a shortened, single name of the company or project that
@@ -1262,6 +1311,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(7)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> str:
         """
         The name of the component.
@@ -1285,6 +1335,7 @@ class Component(Dependable):
     @serializable.include_none(SchemaVersion1Dot2, '')
     @serializable.include_none(SchemaVersion1Dot3, '')
     @serializable.xml_sequence(8)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The component version. The version should ideally comply with semantic versioning but is not enforced.
@@ -1305,6 +1356,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(9)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
         """
         Get the description of this Component.
@@ -1376,6 +1428,7 @@ class Component(Dependable):
 
     @property
     @serializable.xml_sequence(13)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def copyright(self) -> Optional[str]:
         """
         An optional copyright notice informing users of the underlying claims to copyright ownership in a published

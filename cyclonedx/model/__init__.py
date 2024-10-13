@@ -1,3 +1,5 @@
+# This file is part of CycloneDX Python Library
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -79,7 +81,11 @@ class DataClassification:
         https://cyclonedx.org/docs/1.4/xml/#type_dataClassificationType
     """
 
-    def __init__(self, *, flow: DataFlow, classification: str) -> None:
+    def __init__(
+        self, *,
+        flow: DataFlow,
+        classification: str,
+    ) -> None:
         self.flow = flow
         self.classification = classification
 
@@ -109,6 +115,7 @@ class DataClassification:
 
     @property
     @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def classification(self) -> str:
         """
         Data classification tags data according to its type, sensitivity, and value if altered, stolen, or destroyed.
@@ -165,8 +172,12 @@ class AttachedText:
 
     DEFAULT_CONTENT_TYPE = 'text/plain'
 
-    def __init__(self, *, content: str, content_type: str = DEFAULT_CONTENT_TYPE,
-                 encoding: Optional[Encoding] = None) -> None:
+    def __init__(
+        self, *,
+        content: str,
+        content_type: str = DEFAULT_CONTENT_TYPE,
+        encoding: Optional[Encoding] = None,
+    ) -> None:
         self.content_type = content_type
         self.encoding = encoding
         self.content = content
@@ -174,6 +185,7 @@ class AttachedText:
     @property
     @serializable.xml_attribute()
     @serializable.xml_name('content-type')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def content_type(self) -> str:
         """
         Specifies the content type of the text. Defaults to text/plain if not specified.
@@ -408,6 +420,11 @@ class HashType:
                 Composite Hash string of the format `HASH_ALGORITHM`:`HASH_VALUE`.
                 Example: `sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b`.
 
+                Valid case insensitive prefixes are:
+                `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `blake2b256`, `blake2b384`, `blake2b512`,
+                `blake2256`, `blake2384`, `blake2512`, `sha3-256`, `sha3-384`, `sha3-512`,
+                `blake3`.
+
         Raises:
             `UnknownHashTypeException` if the type of hash cannot be determined.
 
@@ -422,20 +439,44 @@ class HashType:
                 alg=HashAlgorithm.MD5,
                 content=parts[1].lower()
             )
+        elif algorithm_prefix[0:4] == 'sha3':
+            return HashType(
+                alg=getattr(HashAlgorithm, f'SHA3_{algorithm_prefix[5:]}'),
+                content=parts[1].lower()
+            )
+        elif algorithm_prefix == 'sha1':
+            return HashType(
+                alg=HashAlgorithm.SHA_1,
+                content=parts[1].lower()
+            )
         elif algorithm_prefix[0:3] == 'sha':
+            # This is actually SHA2...
             return HashType(
                 alg=getattr(HashAlgorithm, f'SHA_{algorithm_prefix[3:]}'),
                 content=parts[1].lower()
             )
-        elif algorithm_prefix[0:6] == 'blake2':
+        elif algorithm_prefix[0:7] == 'blake2b':
             return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2b_{algorithm_prefix[6:]}'),
+                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[7:]}'),
                 content=parts[1].lower()
             )
-
+        elif algorithm_prefix[0:6] == 'blake2':
+            return HashType(
+                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[6:]}'),
+                content=parts[1].lower()
+            )
+        elif algorithm_prefix[0:6] == 'blake3':
+            return HashType(
+                alg=HashAlgorithm.BLAKE3,
+                content=parts[1].lower()
+            )
         raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
 
-    def __init__(self, *, alg: HashAlgorithm, content: str) -> None:
+    def __init__(
+        self, *,
+        alg: HashAlgorithm,
+        content: str,
+    ) -> None:
         self.alg = alg
         self.content = content
 
@@ -456,6 +497,7 @@ class HashType:
 
     @property
     @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.TOKEN)
     def content(self) -> str:
         """
         Hash value content.
@@ -735,8 +777,13 @@ class ExternalReference:
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
     """
 
-    def __init__(self, *, type: ExternalReferenceType, url: XsUri, comment: Optional[str] = None,
-                 hashes: Optional[Iterable[HashType]] = None) -> None:
+    def __init__(
+        self, *,
+        type: ExternalReferenceType,
+        url: XsUri,
+        comment: Optional[str] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+    ) -> None:
         self.url = url
         self.comment = comment
         self.type = type
@@ -845,7 +892,11 @@ class Property:
     Specifies an individual property with a name and value.
     """
 
-    def __init__(self, *, name: str, value: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        name: str,
+        value: Optional[str] = None,
+    ) -> None:
         self.name = name
         self.value = value
 
@@ -868,6 +919,7 @@ class Property:
 
     @property
     @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def value(self) -> Optional[str]:
         """
         Value of this Property.
@@ -914,8 +966,12 @@ class NoteText:
 
     DEFAULT_CONTENT_TYPE: str = 'text/plain'
 
-    def __init__(self, *, content: str, content_type: Optional[str] = None,
-                 encoding: Optional[Encoding] = None) -> None:
+    def __init__(
+        self, *,
+        content: str,
+        content_type: Optional[str] = None,
+        encoding: Optional[Encoding] = None,
+    ) -> None:
         self.content = content
         self.content_type = content_type or NoteText.DEFAULT_CONTENT_TYPE
         self.encoding = encoding
@@ -1003,7 +1059,11 @@ class Note:
 
     _LOCALE_TYPE_REGEX = re.compile(r'^[a-z]{2}(?:\-[A-Z]{2})?$')
 
-    def __init__(self, *, text: NoteText, locale: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        text: NoteText,
+        locale: Optional[str] = None,
+    ) -> None:
         self.text = text
         self.locale = locale
 
@@ -1083,9 +1143,14 @@ class Tool:
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
     """
 
-    def __init__(self, *, vendor: Optional[str] = None, name: Optional[str] = None, version: Optional[str] = None,
-                 hashes: Optional[Iterable[HashType]] = None,
-                 external_references: Optional[Iterable[ExternalReference]] = None) -> None:
+    def __init__(
+        self, *,
+        vendor: Optional[str] = None,
+        name: Optional[str] = None,
+        version: Optional[str] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+    ) -> None:
         self.vendor = vendor
         self.name = name
         self.version = version
@@ -1094,6 +1159,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def vendor(self) -> Optional[str]:
         """
         The name of the vendor who created the tool.
@@ -1109,6 +1175,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the tool.
@@ -1124,6 +1191,7 @@ class Tool:
 
     @property
     @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def version(self) -> Optional[str]:
         """
         The version of the tool.
@@ -1203,8 +1271,12 @@ class IdentifiableAction:
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_identifiableActionType
     """
 
-    def __init__(self, *, timestamp: Optional[datetime] = None, name: Optional[str] = None,
-                 email: Optional[str] = None) -> None:
+    def __init__(
+        self, *,
+        timestamp: Optional[datetime] = None,
+        name: Optional[str] = None,
+        email: Optional[str] = None,
+    ) -> None:
         if not timestamp and not name and not email:
             raise NoPropertiesProvidedException(
                 'At least one of `timestamp`, `name` or `email` must be provided for an `IdentifiableAction`.'
@@ -1230,6 +1302,7 @@ class IdentifiableAction:
         self._timestamp = timestamp
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
         """
         The name of the individual who performed the action.
@@ -1244,6 +1317,7 @@ class IdentifiableAction:
         self._name = name
 
     @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def email(self) -> Optional[str]:
         """
         The email address of the individual who performed the action.
@@ -1287,7 +1361,10 @@ class Copyright:
         See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_copyrightsType
     """
 
-    def __init__(self, *, text: str) -> None:
+    def __init__(
+        self, *,
+        text: str,
+    ) -> None:
         self.text = text
 
     @property

@@ -120,7 +120,7 @@ jobs:
         # see https://github.com/pypa/gh-action-pypi-publish
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          password: ${{ secrets.PYPI_TOKEN }}
+          attestations: true
 
       - name: Publish package distributions to GitHub Releases
         if: steps.release.outputs.released == 'true'
