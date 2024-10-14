@@ -44,9 +44,18 @@ as a ``str``.
 
 .. code-block:: python
 
-    from cyclonedx.output import get_instance, BaseOutput, OutputFormat
+    from cyclonedx.output import make_outputter, BaseOutput, OutputFormat, SchemaVersion
 
-    outputter: BaseOutput = get_instance(bom=bom, output_format=OutputFormat.JSON)
+    outputter: BaseOutput = make_outputter(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_6)
+    bom_json: str = outputter.output_as_string()
+
+Alternatively, if the output format and schema version are constants, you can use the predefined format+schema combined outputs:
+
+.. code-block:: python
+
+    from cyclonedx.output.json import JsonV1Dot6
+
+    outputter = JsonV1Dot6(bom=bom)
     bom_json: str = outputter.output_as_string()
 
 
@@ -58,7 +67,16 @@ written to the supplied filename.
 
 .. code-block:: python
 
-    from cyclonedx.output import get_instance, BaseOutput, SchemaVersion
+    from cyclonedx.output import make_outputter, BaseOutput, OutputFormat, SchemaVersion
 
-    outputter: BaseOutput = get_instance(bom=bom, schema_version=SchemaVersion.V1_2)
+    outputter: BaseOutput = make_outputter(bom=bom, output_format=OutputFormat.XML, schema_version=SchemaVersion.V1_2)
+    outputter.output_to_file(filename='/tmp/sbom-v1.2.xml')
+
+Alternatively, if the output format and schema version are constants, you can use the predefined format+schema combined outputs:
+
+.. code-block:: python
+
+    from cyclonedx.output.xml import XmlV1Dot2
+
+    outputter = XmlV1Dot2(bom=bom)
     outputter.output_to_file(filename='/tmp/sbom-v1.2.xml')
