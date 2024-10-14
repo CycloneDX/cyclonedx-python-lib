@@ -1463,6 +1463,7 @@ class Component(Dependable):
                 CPE(cpe)
             except NotImplementedError:
                 raise ValueError(f'Invalid CPE format: {cpe}')
+        self._cpe = cpe
 
     @property
     @serializable.type_mapping(PackageUrlSH)
