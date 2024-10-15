@@ -485,7 +485,6 @@ class TestEnumLifecyclePhase(_EnumTestCase):
         super()._test_knows_value(LifecyclePhase, value)
 
     @named_data(*NAMED_OF_SV)
-    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(metadata=BomMetaData(
             lifecycles=[PredefinedLifecycle(phase=phase) for phase in LifecyclePhase]
