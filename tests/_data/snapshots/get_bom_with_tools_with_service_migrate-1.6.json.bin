@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": {
+      "services": [
+        {
+          "bom-ref": "other-service",
+          "externalReferences": [
+            {
+              "comment": "No comment",
+              "hashes": [
+                {
+                  "alg": "SHA-256",
+                  "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+                }
+              ],
+              "type": "distribution",
+              "url": "https://cyclonedx.org"
+            }
+          ],
+          "group": "acme",
+          "name": "other-service"
+        },
+        {
+          "bom-ref": "test-service",
+          "name": "test-service"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

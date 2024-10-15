@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
-version = "7.6.2"
+version = "8.0.0"
 description = "Python library for CycloneDX"
 authors = [
   "Paul Horton <phorton@sonatype.com>",
@@ -69,7 +69,7 @@ keywords = [
 [tool.poetry.dependencies]
 python = "^3.8"
 packageurl-python = ">=0.11, <2"
-py-serializable =  "^1.1.0"
+py-serializable =  "^1.1.1"
 sortedcontainers = "^2.4.0"
 license-expression = "^30"
 jsonschema = { version = "^4.18", extras=['format'], optional=true }
@@ -94,6 +94,7 @@ pep8-naming = "0.14.1"
 isort = "5.13.2"
 autopep8 = "2.3.1"
 mypy = "1.11.2"
+tomli = { version = "2.0.1", python = "<3.11" }
 tox = "4.21.2"
 xmldiff = "2.7.0"
 bandit = "1.7.10"
@@ -117,9 +118,12 @@ upload_to_vcs_release = true
 [tool.semantic_release.changelog]
 changelog_file = "CHANGELOG.md"
 exclude_commit_patterns = [
-  "chore\\(release\\):",
-  "chore\\(deps\\):",
-  "chore\\(deps-dev\\):",
+  '''chore(?:\([^)]*?\))?: .+''',
+  '''ci(?:\([^)]*?\))?: .+''',
+  '''refactor(?:\([^)]*?\))?: .+''',
+  '''style(?:\([^)]*?\))?: .+''',
+  '''tests?(?:\([^)]*?\))?: .+''',
+  '''build\((?!deps\): .+)''',
 ]
 
 [tool.semantic_release.branches.main]
@@ -127,7 +131,7 @@ match = "(main|master)"
 prerelease = false
 
 [tool.semantic_release.branches."step"]
-match = "(build|chore|ci|docs|feat|fix|perf|style|refactor|test)"
+match = "(build|chore|ci|docs|feat|fix|perf|style|refactor|tests?)"
 prerelease = true
 prerelease_token = "alpha"
 

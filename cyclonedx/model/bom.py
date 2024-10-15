@@ -37,7 +37,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property, ThisTool, Tool
+from . import ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -45,6 +45,7 @@ from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
+from .tool import Tool, ToolRepository, _ToolRepositoryHelper
 from .vulnerability import Vulnerability
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -62,7 +63,7 @@ class BomMetaData:
 
     def __init__(
         self, *,
-        tools: Optional[Iterable[Tool]] = None,
+        tools: Optional[Union[Iterable[Tool], ToolRepository]] = None,
         authors: Optional[Iterable[OrganizationalContact]] = None,
         component: Optional[Component] = None,
         supplier: Optional[OrganizationalEntity] = None,
@@ -90,9 +91,6 @@ class BomMetaData:
                 '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
                 'Please use `bom.metadata.component.manufacturer` instead.',
                 DeprecationWarning)
-
-        if not tools:
-            self.tools.add(ThisTool)
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
@@ -129,22 +127,22 @@ class BomMetaData:
         self._lifecycles = LifecycleRepository(lifecycles)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tool')
+    @serializable.type_mapping(_ToolRepositoryHelper)
     @serializable.xml_sequence(3)
-    def tools(self) -> 'SortedSet[Tool]':
+    def tools(self) -> ToolRepository:
         """
         Tools used to create this BOM.
 
         Returns:
-            `Set` of `Tool` objects.
+            :class:`ToolRepository` object.
         """
-        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
         return self._tools
 
     @tools.setter
-    def tools(self, tools: Iterable[Tool]) -> None:
-        # TODO since CDX1.5 also supports `Component` and `Services`, not only `Tool`
-        self._tools = SortedSet(tools)
+    def tools(self, tools: Union[Iterable[Tool], ToolRepository]) -> None:
+        self._tools = tools \
+            if isinstance(tools, ToolRepository) \
+            else ToolRepository(tools=tools)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
@@ -302,7 +300,7 @@ class BomMetaData:
     def __hash__(self) -> int:
         return hash((
             tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
-            self.supplier, self.timestamp, tuple(self.tools), tuple(self.lifecycles), self.manufacturer
+            tuple(self.lifecycles), self.supplier, self.timestamp, tuple(self.tools), self.manufacturer
         ))
 
     def __repr__(self) -> str:
