@@ -2,13 +2,6 @@
 <bom xmlns="http://cyclonedx.org/schema/bom/1.3" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
   <metadata>
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
-    <tools>
-      <tool>
-        <vendor>CycloneDX</vendor>
-        <name>cyclonedx-python-lib</name>
-        <version>TESTING</version>
-      </tool>
-    </tools>
     <component type="library" bom-ref="be2c6502-7e9a-47db-9a66-e34f729810a3">
       <name>app</name>
       <version>1.0.0</version>

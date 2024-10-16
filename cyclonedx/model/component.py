@@ -23,6 +23,7 @@ from warnings import warn
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import serializable
+from cpe import CPE  # type:ignore
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
@@ -1467,8 +1468,11 @@ class Component(Dependable):
 
     @cpe.setter
     def cpe(self, cpe: Optional[str]) -> None:
-        if cpe and not CPE_REGEX.fullmatch(cpe):
-            raise ValueError(f'Invalid CPE format: {cpe}')
+        if cpe:
+            try:
+                CPE(cpe)
+            except NotImplementedError:
+                raise ValueError(f'Invalid CPE format: {cpe}')
         self._cpe = cpe
 
     @property

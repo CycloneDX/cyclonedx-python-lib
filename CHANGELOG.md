@@ -2,6 +2,61 @@
 
 
 
+## v8.0.0 (2024-10-14)
+
+### Breaking
+
+* feat!: v8.0.0 (#665)
+
+### BREAKING Changes
+
+* Removed `cyclonedx.mode.ThisTool`, utilize `cyclonedx.builder.this.this_tool()` instead. 
+* Moved `cyclonedx.model.Tool` to `cyclonedx.model.tool.Tool`.
+* Property `cyclonedx.mode.bom.BomMetaData.tools` is of type `cyclonedx.model.tool.ToolRepository` now, was `SortedSet[cyclonedx.model.Tool]`.  
+  The getter will act accordingly; the setter might act in a backwards-compatible way.
+* Property `cyclonedx.mode.vulnerability.Vulnerability.tools` is of type `cyclonedx.model.tool.ToolRepository` now, was `SortedSet[cyclonedx.model.Tool]`.  
+  The getter will act accordingly; the setter might act in a backwards-compatible way.
+* Constructor `cyclonedx.model.license.LicenseExpression()` accepts optional argument `acknowledgement` only as key-word argument, no longer as positional argument.  
+  
+
+### Changes
+
+* Constructor of `cyclonedx.model.bom.BomMetaData` also accepts an instance of `cyclonedx.model.tool.ToolRepository` for argument `tools`.
+* Constructor of `cyclonedx.model.bom.BomMetaData` no longer adds this very library as a tool.  
+  Downstream users SHOULD add it manually, like `my-bom.metadata.tools.components.add(cyclonedx.builder.this.this_component())`. 
+
+### Fixes
+
+* Deserialization of CycloneDX that do not include tools in the metadata are no longer unexpectedly modified/altered.
+
+### Added
+
+Enabled Metadata Tools representation and serialization in accordance with CycloneDX 1.5 
+
+* New class `cyclonedx.model.tool.ToolRepository`.
+* New function `cyclonedx.builder.this.this_component()` -- representation of this very python library as a `Component`.
+* New function `cyclonedx.builder.this.this_tool()` -- representation of this very python library as a `Tool`.
+* New function `cyclonedx.model.tool.Tool.from_component()`.
+
+### Dependencies
+
+* Raised runtime dependency `py-serializable&gt;=1.1.1,&lt;2`, was `&gt;=1.1.0,&lt;2`.
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Joshua Kugler &lt;tek30584@adobe.com&gt;
+Signed-off-by: semantic-release &lt;semantic-release@bot.local&gt;
+Co-authored-by: Joshua Kugler &lt;joshua@azariah.com&gt;
+Co-authored-by: semantic-release &lt;semantic-release@bot.local&gt; ([`002f966`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/002f96630ce8fc6f1766ee6cc92a16b35a821c69))
+
+### Documentation
+
+* docs(chaneglog): omit chore/ci/refactor/style/test/build (#703)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a210809`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a210809efb34c2dc895fc0c6d96a3412a9097625))
+
+
 ## v7.6.2 (2024-10-07)
 
 ### Documentation
