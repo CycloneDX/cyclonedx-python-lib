@@ -28,14 +28,19 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
-from tests._data.models import all_get_bom_funct_valid_immut, all_get_bom_funct_with_incomplete_deps
+from tests._data.models import (
+    all_get_bom_funct_valid_immut,
+    all_get_bom_funct_valid_reversible_migrate,
+    all_get_bom_funct_with_incomplete_deps,
+)
 
 
 @ddt
 class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
 
-    @named_data(*all_get_bom_funct_valid_immut)
-    @patch('cyclonedx.model.ThisTool._version', 'TESTING')
+    @named_data(*all_get_bom_funct_valid_immut,
+                *all_get_bom_funct_valid_reversible_migrate)
+    @patch('cyclonedx.builder.this.__ThisVersion', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
         snapshot_name = mksname(get_bom, SchemaVersion.V1_6, OutputFormat.JSON)

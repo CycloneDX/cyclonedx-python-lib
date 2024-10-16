@@ -284,7 +284,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(3, len(comp_b.get_all_nested_components(include_self=True)))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=False)))
 
-    def test_cpe_validation_valid(self) -> None:
+    def test_cpe_validation_valid_format(self) -> None:
         cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
         c = Component(name='test-component', cpe=cpe)
         self.assertEqual(c.cpe, cpe)

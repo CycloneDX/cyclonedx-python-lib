@@ -23,12 +23,13 @@ from uuid import uuid4
 from ddt import ddt, named_data
 
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException
-from cyclonedx.model import Property, ThisTool, Tool
+from cyclonedx.model import Property
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.license import DisjunctiveLicense
+from cyclonedx.model.tool import Tool
 from tests._data.models import (
     get_bom_component_licenses_invalid,
     get_bom_component_nested_licenses_invalid,
@@ -48,14 +49,13 @@ class TestBomMetaData(TestCase):
     def test_empty_bom_metadata(self) -> None:
         metadata = BomMetaData()
         self.assertIsNotNone(metadata.timestamp)
-        self.assertIsNotNone(metadata.authors)
+        self.assertEqual(0, len(metadata.authors))
         self.assertIsNone(metadata.component)
         self.assertIsNone(metadata.manufacture)
         self.assertIsNone(metadata.supplier)
-        self.assertIsNotNone(metadata.licenses)
-        self.assertIsNotNone(metadata.properties)
-        self.assertIsNotNone(metadata.tools)
-        self.assertTrue(ThisTool in metadata.tools)
+        self.assertEqual(0, len(metadata.licenses))
+        self.assertEqual(0, len(metadata.properties))
+        self.assertEqual(0, len(metadata.tools))
 
     def test_basic_bom_metadata(self) -> None:
         tools = [
@@ -94,26 +94,23 @@ class TestBomMetaData(TestCase):
         self.assertTrue(properties[0] in metadata.properties)
         self.assertTrue(properties[1] in metadata.properties)
         self.assertIsNotNone(metadata.tools)
-        self.assertTrue(ThisTool not in metadata.tools)
-        self.assertTrue(tools[0] in metadata.tools)
-        self.assertTrue(tools[1] in metadata.tools)
+        self.assertEqual(2, len(metadata.tools.tools))
+        self.assertTrue(tools[0] in metadata.tools.tools)
+        self.assertTrue(tools[1] in metadata.tools.tools)
 
 
 @ddt
 class TestBom(TestCase):
 
-    def test_bom_metadata_tool_this_tool(self) -> None:
-        self.assertEqual(ThisTool.vendor, 'CycloneDX')
-        self.assertEqual(ThisTool.name, 'cyclonedx-python-lib')
-        self.assertNotEqual(ThisTool.version, 'UNKNOWN')
-
     def test_bom_metadata_tool_multiple_tools(self) -> None:
         bom = Bom()
-        self.assertEqual(len(bom.metadata.tools), 1)
-        bom.metadata.tools.add(
+        self.assertEqual(len(bom.metadata.tools), 0)
+        bom.metadata.tools.tools.add(
             Tool(vendor='TestVendor', name='TestTool', version='0.0.0')
         )
-        self.assertEqual(bom.version, 1)
+        bom.metadata.tools.tools.add(
+            Tool(vendor='TestVendor', name='TestTool-2', version='1.33.7')
+        )
         self.assertEqual(len(bom.metadata.tools), 2)
 
     def test_metadata_component(self) -> None:
