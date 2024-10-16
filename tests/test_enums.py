@@ -29,10 +29,11 @@ from ddt import ddt, idata, named_data
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.exception.serialization import SerializationOfUnsupportedComponentTypeException
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
-from cyclonedx.model.bom import Bom
+from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
+from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
 from cyclonedx.model.service import DataClassification, Service
 from cyclonedx.model.vulnerability import (
     BomTarget,
@@ -470,4 +471,22 @@ class TestEnumVulnerabilitySeverity(_EnumTestCase):
             VulnerabilityRating(severity=vs)
             for vs in VulnerabilitySeverity
         ))])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumLifecyclePhase(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='lifecyclePhaseType']"),
+        dp_cases_from_json_schemas('definitions', 'metadata', 'properties', 'lifecycles', 'items', 'phase'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(LifecyclePhase, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(metadata=BomMetaData(
+            lifecycles=[PredefinedLifecycle(phase=phase) for phase in LifecyclePhase]
+        ))
         super()._test_cases_render(bom, of, sv)

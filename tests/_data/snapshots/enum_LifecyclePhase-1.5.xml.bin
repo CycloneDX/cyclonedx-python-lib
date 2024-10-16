@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <lifecycles>
+      <lifecycle>
+        <phase>build</phase>
+      </lifecycle>
+      <lifecycle>
+        <phase>decommission</phase>
+      </lifecycle>
+      <lifecycle>
+        <phase>design</phase>
+      </lifecycle>
+      <lifecycle>
+        <phase>discovery</phase>
+      </lifecycle>
+      <lifecycle>
+        <phase>operations</phase>
+      </lifecycle>
+      <lifecycle>
+        <phase>post-build</phase>
+      </lifecycle>
+      <lifecycle>
+        <phase>pre-build</phase>
+      </lifecycle>
+    </lifecycles>
+  </metadata>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

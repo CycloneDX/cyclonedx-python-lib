@@ -43,6 +43,7 @@ from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
+from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
 from .vulnerability import Vulnerability
@@ -70,6 +71,7 @@ class BomMetaData:
         properties: Optional[Iterable[Property]] = None,
         timestamp: Optional[datetime] = None,
         manufacturer: Optional[OrganizationalEntity] = None,
+        lifecycles: Optional[Iterable[Lifecycle]] = None,
         # Deprecated as of v1.6
         manufacture: Optional[OrganizationalEntity] = None,
     ) -> None:
@@ -81,6 +83,7 @@ class BomMetaData:
         self.licenses = licenses or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
         self.manufacturer = manufacturer
+        self.lifecycles = lifecycles or []  # type:ignore[assignment]
 
         self.manufacture = manufacture
         if manufacture:
@@ -105,16 +108,23 @@ class BomMetaData:
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(2)
-    # def lifecycles(self) -> ...:
-    #    ... # TODO since CDX1.5
-    #
-    # @lifecycles.setter
-    # def lifecycles(self, ...) -> None:
-    #    ... # TODO since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.type_mapping(_LifecycleRepositoryHelper)
+    @serializable.xml_sequence(2)
+    def lifecycles(self) -> LifecycleRepository:
+        """
+        An optional list of BOM lifecycle stages.
+
+        Returns:
+            Set of `Lifecycle`
+        """
+        return self._lifecycles
+
+    @lifecycles.setter
+    def lifecycles(self, lifecycles: Iterable[Lifecycle]) -> None:
+        self._lifecycles = LifecycleRepository(lifecycles)
 
     @property
     @serializable.type_mapping(_ToolRepositoryHelper)
@@ -290,7 +300,7 @@ class BomMetaData:
     def __hash__(self) -> int:
         return hash((
             tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
-            self.supplier, self.timestamp, self.tools, self.manufacturer,
+            tuple(self.lifecycles), self.supplier, self.timestamp, self.tools, self.manufacturer
         ))
 
     def __repr__(self) -> str:

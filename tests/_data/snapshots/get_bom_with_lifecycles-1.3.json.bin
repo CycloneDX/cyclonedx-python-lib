@@ -1,0 +1,21 @@
+{
+  "dependencies": [
+    {
+      "ref": "my-app"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "my-app",
+      "name": "app",
+      "type": "application",
+      "version": ""
+    },
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.3"
+}

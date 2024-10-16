@@ -87,6 +87,7 @@ from cyclonedx.model.impact_analysis import (
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
+from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.tool import Tool, ToolRepository
@@ -534,6 +535,7 @@ def get_bom_just_complete_metadata() -> Bom:
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE='
         )
     )]
+    bom.metadata.lifecycles = [PredefinedLifecycle(LifecyclePhase.BUILD)]
     bom.metadata.properties = get_properties_1()
     return bom
 
@@ -1273,6 +1275,20 @@ def get_bom_for_issue_630_empty_property() -> Bom:
     })
 
 
+def get_bom_with_lifecycles() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            lifecycles=[
+                PredefinedLifecycle(LifecyclePhase.BUILD),
+                PredefinedLifecycle(LifecyclePhase.POST_BUILD),
+                NamedLifecycle(name='platform-integration-testing',
+                               description='Integration testing specific to the runtime platform'),
+            ],
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app'),
+        ),
+    )
+
+
 # ---
 
 
@@ -1318,4 +1334,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_for_issue_598_multiple_components_with_purl_qualifiers,
     get_bom_with_component_setuptools_with_v16_fields,
     get_bom_for_issue_630_empty_property,
+    get_bom_with_lifecycles,
 }
