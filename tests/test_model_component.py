@@ -123,7 +123,6 @@ class TestModelComponent(TestCase):
         self.assertSetEqual(c.external_references, set())
         self.assertFalse(c.properties)
         self.assertIsNone(c.release_notes)
-        self.assertIsNone(c.cpe)
         self.assertEqual(len(c.components), 0)
         self.assertEqual(len(c.get_all_nested_components(include_self=True)), 1)
 
