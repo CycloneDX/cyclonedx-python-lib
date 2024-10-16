@@ -300,7 +300,7 @@ class BomMetaData:
     def __hash__(self) -> int:
         return hash((
             tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
-            tuple(self.lifecycles), self.supplier, self.timestamp, tuple(self.tools), self.manufacturer
+            tuple(self.lifecycles), self.supplier, self.timestamp, self.tools, self.manufacturer
         ))
 
     def __repr__(self) -> str:

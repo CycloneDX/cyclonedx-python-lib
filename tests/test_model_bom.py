@@ -55,10 +55,9 @@ class TestBomMetaData(TestCase):
         self.assertIsNone(metadata.manufacture)
         self.assertIsNone(metadata.supplier)
         self.assertEqual(0, len(metadata.licenses))
-        self.assertEqual(0, len(metadata.lifecycles))  
+        self.assertEqual(0, len(metadata.lifecycles))
         self.assertEqual(0, len(metadata.properties))
         self.assertEqual(0, len(metadata.tools))
-
 
     def test_basic_bom_metadata(self) -> None:
         tools = [
