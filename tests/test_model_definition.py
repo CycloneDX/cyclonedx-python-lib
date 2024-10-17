@@ -18,7 +18,7 @@
 
 from unittest import TestCase
 
-from cyclonedx.model.definition import Definitions, Standard
+from cyclonedx.model.definition import CreId, Definitions, InvalidCreIdException, Standard
 
 
 class TestModelDefinitionRepository(TestCase):
@@ -65,3 +65,36 @@ class TestModelDefinitionRepository(TestCase):
         tr2 = Definitions()
         tr2.standards.add(s)
         self.assertTrue(dr1 == tr2)
+
+
+class TestModelCreId(TestCase):
+
+    def test_different(self) -> None:
+        id1 = CreId('CRE:123-456')
+        id2 = CreId('CRE:987-654')
+        self.assertNotEqual(id(id1), id(id2))
+        self.assertNotEqual(hash(id1), hash(id2))
+        self.assertFalse(id1 == id2)
+
+    def test_same(self) -> None:
+        id1 = CreId('CRE:123-456')
+        id2 = CreId('CRE:123-456')
+        self.assertNotEqual(id(id1), id(id2))
+        self.assertEqual(hash(id1), hash(id2))
+        self.assertTrue(id1 == id2)
+
+    def test_invalid_id(self) -> None:
+        with self.assertRaises(TypeError):
+            CreId()
+        with self.assertRaises(InvalidCreIdException):
+            CreId('')
+        with self.assertRaises(InvalidCreIdException):
+            CreId('some string')
+        with self.assertRaises(InvalidCreIdException):
+            CreId('123-456')
+        with self.assertRaises(InvalidCreIdException):
+            CreId('CRE:123-456-789')
+        with self.assertRaises(InvalidCreIdException):
+            CreId('CRE:abc-def')
+        with self.assertRaises(InvalidCreIdException):
+            CreId('CRE:123456')
