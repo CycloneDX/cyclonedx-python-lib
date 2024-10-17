@@ -123,3 +123,11 @@ class LicenseExpressionAlongWithOthersException(CycloneDxModelException):
     See https://github.com/CycloneDX/specification/pull/205
     """
     pass
+
+
+class InvalidCreIdException(CycloneDxModelException):
+    """
+    Raised when a supplied value for an CRE ID does not meet the format requirements
+    as defined at https://opencre.org/
+    """
+    pass
