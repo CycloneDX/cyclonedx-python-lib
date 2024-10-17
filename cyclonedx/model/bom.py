@@ -41,6 +41,7 @@ from . import ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
+from .definition import DefinitionRepository, _DefinitionRepositoryHelper
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .service import Service
@@ -317,6 +318,7 @@ class Bom:
         dependencies: Optional[Iterable[Dependency]] = None,
         vulnerabilities: Optional[Iterable[Vulnerability]] = None,
         properties: Optional[Iterable[Property]] = None,
+        definitions: Optional[DefinitionRepository] = None,
     ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
@@ -333,6 +335,7 @@ class Bom:
         self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
         self.dependencies = dependencies or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
+        self.definitions = definitions or DefinitionRepository()
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -519,6 +522,23 @@ class Bom:
     @vulnerabilities.setter
     def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
         self._vulnerabilities = SortedSet(vulnerabilities)
+
+    @property
+    @serializable.type_mapping(_DefinitionRepositoryHelper)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(90)
+    def definitions(self) -> Optional[DefinitionRepository]:
+        """
+        The repository for definitions
+
+        Returns:
+            `DefinitionRepository`
+        """
+        return self._definitions
+
+    @definitions.setter
+    def definitions(self, definitions: DefinitionRepository) -> None:
+        self._definitions = definitions
 
     # @property
     # ...
