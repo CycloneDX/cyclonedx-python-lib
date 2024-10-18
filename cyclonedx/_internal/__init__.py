@@ -20,3 +20,14 @@
 !!! ALL SYMBOLS IN HERE ARE INTERNAL.
 Everything might change without any notice.
 """
+
+from typing import Optional, Union
+
+from ..model.bom_ref import BomRef
+
+
+def bom_ref_from_str(bom_ref: Optional[Union[str, BomRef]]) -> BomRef:
+    if isinstance(bom_ref, BomRef):
+        return bom_ref
+    else:
+        return BomRef(value=str(bom_ref) if bom_ref else None)
