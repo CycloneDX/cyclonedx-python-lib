@@ -29,6 +29,7 @@ from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.license import DisjunctiveLicense
+from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.tool import Tool
 from tests._data.models import (
     get_bom_component_licenses_invalid,
@@ -54,6 +55,7 @@ class TestBomMetaData(TestCase):
         self.assertIsNone(metadata.manufacture)
         self.assertIsNone(metadata.supplier)
         self.assertEqual(0, len(metadata.licenses))
+        self.assertEqual(0, len(metadata.lifecycles))
         self.assertEqual(0, len(metadata.properties))
         self.assertEqual(0, len(metadata.tools))
 
@@ -73,12 +75,16 @@ class TestBomMetaData(TestCase):
             DisjunctiveLicense(id='MIT'),
             DisjunctiveLicense(id='Apache-2.0'),
         ]
+        lifecycles = [
+            PredefinedLifecycle(phase=LifecyclePhase.BUILD),
+            NamedLifecycle(name='named_lifecycle', description='test'),
+        ]
         properties = [
             Property(name='property_1', value='value_1'),
             Property(name='property_2', value='value_2', )
         ]
 
-        metadata = BomMetaData(tools=tools, authors=authors, component=component,
+        metadata = BomMetaData(tools=tools, authors=authors, component=component, lifecycles=lifecycles,
                                manufacture=manufacturer, supplier=supplier, licenses=licenses, properties=properties)
         self.assertIsNotNone(metadata.timestamp)
         self.assertIsNotNone(metadata.authors)
@@ -90,6 +96,9 @@ class TestBomMetaData(TestCase):
         self.assertIsNotNone(metadata.licenses)
         self.assertTrue(licenses[0] in metadata.licenses)
         self.assertTrue(licenses[1] in metadata.licenses)
+        self.assertIsNotNone(metadata.lifecycles)
+        self.assertTrue(lifecycles[0] in metadata.lifecycles)
+        self.assertTrue(lifecycles[1] in metadata.lifecycles)
         self.assertIsNotNone(metadata.properties)
         self.assertTrue(properties[0] in metadata.properties)
         self.assertTrue(properties[1] in metadata.properties)
