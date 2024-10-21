@@ -2,6 +2,30 @@
 
 
 
+## v8.1.0 (2024-10-21)
+
+### Documentation
+
+* docs: fix code examples regarding outputting (#709)
+
+
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt; ([`c72d5f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c72d5f483d5c1990fe643c4c25e37373d4d3248f))
+
+### Feature
+
+* feat: add support for Lifecycles in BOM metadata (#698)
+
+
+
+---------
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Johannes Feichtner &lt;343448+Churro@users.noreply.github.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6cfeb71`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6cfeb711f11aec8fa4d7be885f6797cc2eaa7e67))
+
+
 ## v8.0.0 (2024-10-14)
 
 ### Breaking
