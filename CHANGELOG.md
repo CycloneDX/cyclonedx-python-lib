@@ -2,6 +2,15 @@
 
 
 
+## v8.2.0 (2024-10-22)
+
+### Feature
+
+* feat: Add Python 3.13 support (#718)
+
+Signed-off-by: gruebel &lt;anton.gruebel@gmail.com&gt; ([`d4be3ba`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d4be3ba6b3ccc65553a7dd10ad559c1eddfbb19b))
+
+
 ## v8.1.0 (2024-10-21)
 
 ### Documentation
