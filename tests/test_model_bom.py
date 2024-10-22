@@ -14,8 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
-
+import warnings
 from typing import Callable, Tuple
 from unittest import TestCase
 from uuid import uuid4
@@ -31,6 +30,7 @@ from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.tool import Tool
+from cyclonedx.output.json import JsonV1Dot6
 from tests._data.models import (
     get_bom_component_licenses_invalid,
     get_bom_component_nested_licenses_invalid,
@@ -138,6 +138,15 @@ class TestBom(TestCase):
         self.assertFalse(bom.components)
         self.assertFalse(bom.services)
         self.assertFalse(bom.external_references)
+
+    def test_root_component_only_bom(self) -> None:
+        with warnings.catch_warnings():
+            warnings.simplefilter('error', UserWarning)  # Turn UserWarnings into errors
+            try:
+                bom = Bom(metadata=BomMetaData(component=Component(name='test', version='1.2')))
+                _ = JsonV1Dot6(bom).output_as_string()
+            except UserWarning as e:
+                self.fail(f"A warning with 'warn' was issued: {e}")
 
     def test_empty_bom_defined_serial(self) -> None:
         serial_number = uuid4()
