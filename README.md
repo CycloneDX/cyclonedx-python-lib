@@ -2,9 +2,9 @@
 
 [![shield_npm-version]][link_npm]
 [![shield_rtfd]][link_rtfd]
-[![shield_gh-workflow-test]][link_gh-workflow-test]
+[![shield_gh-workflow-test]][link_gh_workflow_test]
 [![shield_coverage]][link_codacy]
-[![shield_ossf-best-practices]][link_ossf-best-practices]
+[![shield_ossf-best-practices]][link_ossf_best_practices]
 [![shield_license]][license_file]  
 [![shield_website]][link_website]
 [![shield_slack]][link_slack]
@@ -17,7 +17,7 @@ Core functionality of [_CycloneDX_][link_website] for _JavaScript_ (_Node.js_ or
 
 ## Responsibilities
 
-* Provide a general purpose _JavaScript_-implementation of [_CycloneDX_][link_website] for _Node.js_ and _WebBrowsers_.
+* Provide a general-purpose _JavaScript_-implementation of [_CycloneDX_][link_website] for _Node.js_ and _WebBrowsers_.
 * Provide typing for said implementation, so developers and dev-tools can rely on it.
 * Provide data models to work with _CycloneDX_.
 * Provide JSON- and XML-normalizers that:
@@ -33,20 +33,21 @@ Core functionality of [_CycloneDX_][link_website] for _JavaScript_ (_Node.js_ or
 
 ## Capabilities
 
-* Enums for the following use cases:
+* **Enums** for the following use cases:
   * `AttachmentEncoding`
   * `ComponentScope`
   * `ComponentType`
   * `ExternalReferenceType`
   * `HashAlgorithm`
-  * `Vulnerability` related:  
+  * **Vulnerability** related:  
     * `AffectStatus`
     * `AnalysisJustification`
     * `AnalysisResponse`
     * `AnalysisState`
     * `RatingMethod`
     * `Severity`
-* Data models for the following use cases:
+
+* **Data Models** for the following use cases:
   * `Attachment`
   * `Bom`
   * `BomLink`, `BomLinkDocument`, `BomLinkElement`
@@ -61,39 +62,46 @@ Core functionality of [_CycloneDX_][link_website] for _JavaScript_ (_Node.js_ or
   * `Property`, `PropertyRepository`
   * `SWID`
   * `Tool`, `ToolRepository`
-  * Vulnerability-related:
-    * `Advisory`, `AdvisoryRepository`
-    * `Affect`, `AffectRepository`, 
-      - AffectedSingleVersion, 
-      - AffectedVersionRange, 
-      - AffectedVersionRepository
-    * Analysis
-    * Credits
-    * Rating, RatingRepository
-    * Reference, ReferenceRepository
-    * Source
-    * Vulnerability, VulnerabilityRepository
-* Utilities for the following use cases:
+
+* **Vulnerability** related:
+  - `Advisory`, `AdvisoryRepository`
+  - AffectedSingleVersion, AffectedVersionRange, AffectedVersionRepository
+  - Analysis
+  - Credits
+  - Rating, RatingRepository
+  - Reference, ReferenceRepository
+  - Source
+  - Vulnerability, VulnerabilityRepository
+
+* **Utilities** for the following use cases:
   * Generate valid random SerialNumbers for Bom.serialNumber.
-* Factories for the following use cases:
+
+* **Factories** for the following use cases:
   * Create data models from any license descriptor string.
   * Create PackageURL from Component data models.
   * Specific to _Node.js_: create data models from PackageJson-like data structures and derived data.
-* Builders for the following use cases:
+
+* **Builders** for the following use cases:
   * Specific to _Node.js_: create deep data models Tool or Component from PackageJson-like data structures.
-* Implementation of the [_CycloneDX_ Specification][CycloneDX-spec] for the following versions:
+
+* **Implementation of the [_CycloneDX_ Specification][CycloneDX-spec]** for the following versions:
   * `1.6`
   * `1.5`
   * `1.4`
   * `1.3`
   * `1.2`
-* Normalizers that convert data models to JSON structures.
-* Normalizers that convert data models to XML structures.
-* Universal serializer that converts Bom data models to JSON string.
-* Specific Serializer that converts Bom data models to XML string:
-  - Specific to _WebBrowsers_: implementation utilizes browser-specific document generators and printers.
-  - Specific to _Node.js_: implementation utilizes [optional dependencies](#optional-dependencies) as described below.
-* Formal validators for JSON string and XML string (currently for _Node.js_ only).  
+
+* **Normalizers** that convert data models to JSON structures.
+
+* **Normalizers** that convert data models to XML structures.
+
+* **Universal serializer** that converts Bom data models to JSON string.
+
+* **Specific Serializer** that converts Bom data models to XML string:
+   - Specific to _WebBrowsers_: implementation utilizes browser-specific document generators and printers.
+   - Specific to _Node.js_: implementation utilizes [optional dependencies](#optional-dependencies) as described below.
+
+* **Formal validators** for JSON string and XML string (currently for _Node.js_ only).  
    Requires [optional dependencies](#optional-dependencies) as described below.
 
 ## Installation
