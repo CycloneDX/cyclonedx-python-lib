@@ -1213,7 +1213,7 @@ def get_bom_for_issue_497_urls() -> Bom:
             ExternalReference(
                 type=ExternalReferenceType.OTHER,
                 comment='control characters',
-                url=XsUri('https://acme.org/?foo=sp ace&bar[23]=42&lt=1<2&gt=3>2&cb={lol}')
+                url=XsUri('https://acme.org/?foo=sp ace&bar[23]=42&lt=1<2&gt=3>2&cb={lol}&dq=a"test"')
             ),
             ExternalReference(
                 type=ExternalReferenceType.OTHER,

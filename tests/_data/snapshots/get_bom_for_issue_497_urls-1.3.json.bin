@@ -16,7 +16,7 @@
         {
           "comment": "control characters",
           "type": "other",
-          "url": "https://acme.org/?foo=sp%20ace&bar%5B23%5D=42&lt=1%3C2&gt=3%3E2&cb=%7Blol%7D"
+          "url": "https://acme.org/?foo=sp%20ace&bar%5B23%5D=42&lt=1%3C2&gt=3%3E2&cb=%7Blol%7D&dq=a%22test%22"
         }
       ],
       "name": "dummy",
