@@ -2,6 +2,15 @@
 
 
 
+## v8.2.1 (2024-10-24)
+
+### Fix
+
+* fix: encode quotation mark in URL (#724)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a7c7c97`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a7c7c97c37ee1c7988c028aa779f74893f858c7b))
+
+
 ## v8.2.0 (2024-10-22)
 
 ### Feature
