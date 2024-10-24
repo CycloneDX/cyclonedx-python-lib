@@ -690,6 +690,7 @@ class XsUri(serializable.helpers.BaseHelper):
     __SPEC_REPLACEMENTS = (
         (' ', '%20'),
         ('"', '%22'),
+        ("'", '%27'),
         ('[', '%5B'),
         (']', '%5D'),
         ('<', '%3C'),
