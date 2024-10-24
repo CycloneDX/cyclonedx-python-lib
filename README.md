@@ -6,7 +6,7 @@
 [![shield_gh-workflow-test]][link_gh-workflow-test]
 [![shield_coverage]][link_codacy]
 [![shield_ossf-best-practices]][link_ossf-best-practices]
-[![shield_license]][license_file]
+[![shield_license]][license_file]  
 [![shield_website]][link_website]
 [![shield_slack]][link_slack]
 [![shield_groups]][link_discussion]
@@ -16,67 +16,9 @@
 
 OWASP [CycloneDX][link_website] is a full-stack Bill of Materials (BOM) standard that provides advanced supply chain capabilities for cyber risk reduction.
 
-This Python package provides data models, validators, and tools for creating, rendering, and reading CycloneDX documents.
+This Python package provides data models and tools for working with CycloneDX documents.
 
 > **Note**: This package is a software library not intended for standalone use. For generating Software Bill of Materials (SBOM), check out [CycloneDX Python][cyclonedx-python] or [Jake][jake].
-
-As of version `3.0.0`, the library supports CycloneDX VEX documents production with [official example](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) compatibility for linking VEX to separate CycloneDX documents.
-
-## Python Support
-
-We endeavor to support all functionality for all [current actively supported Python versions](https://www.python.org/downloads/).
-However, some features may not be possible/present in older Python versions due to their lack of support.
-
-## Responsibilities
-
-* Provide a general-purpose *Python*-implementation of [*CycloneDX*][link_website]
-* Provide type hints for said implementation, so developers and dev-tools can rely on it
-* Provide data models to work with *CycloneDX*
-* Provide JSON and XML normalizers that:
-   * Support all shipped data models
-   * Respect any injected [*CycloneDX* Specification][CycloneDX-spec] and generate valid output according to it
-   * Can prepare data structures for JSON and XML serialization
-* Serialization:
-   * Provide a JSON serializer
-   * Provide an XML serializer
-* Validation against *CycloneDX* Specification:
-   * Provide a JSON validator
-   * Provide an XML validator
-* Support *pip*-based installation for downstream usage
-
-## Capabilities
-
-* Enums for the following use cases:
-   * `ComponentType`
-   * `ExternalReferenceType`
-   * `HashAlgorithm`
-   * `LicenseAcknowledgement`
-* Data models for the following use cases:
-   * `Bom`
-   * `BomRef`, `BomRefRepository`
-   * `Component`, `ComponentRepository`, `ComponentEvidence`
-   * `ExternalReference`, `ExternalReferenceRepository`
-   * `LicenseExpression`, `NamedLicense`, `SpdxLicense`, `LicenseRepository`
-   * `Metadata`
-   * `Property`, `PropertyRepository`
-   * `Tool`, `ToolRepository`
-* Utilities for the following use cases:
-   * Generate valid random SerialNumbers for `Bom.serialNumber`
-* Factories for the following use cases:
-   * Create data models from any license descriptor string
-* Implementation of the [*CycloneDX* Specification][CycloneDX-spec] for the following versions:
-   * `1.6`
-   * `1.5`
-   * `1.4`
-   * `1.3`
-   * `1.2`
-   * `1.1`
-* Normalizers that convert data models to JSON structures
-* Normalizers that convert data models to XML structures
-* Serializer that converts `Bom` data models to JSON string
-* Serializer that converts `Bom` data models to XML string
-* Validator that checks JSON against *CycloneDX* Specification
-* Validator that checks XML against *CycloneDX* Specification
 
 ## Installation
 
@@ -90,56 +32,111 @@ pip install cyclonedx-python-lib
 conda install -c conda-forge cyclonedx-python-lib
 ```
 
-## Quick Start
+## Python Support
 
-```python
-from cyclonedx.model.bom import Bom
-from cyclonedx.model.component import Component
-from cyclonedx.model.component_type import ComponentType
+We endeavor to support all functionality for all [current actively supported Python versions](https://www.python.org/downloads/).
+However, some features may not be possible/present in older Python versions due to their lack of support.
 
-# Create a new BOM
-bom = Bom()
+## VEX Support
 
-# Set metadata component
-bom.metadata.component = Component(
-    type=ComponentType.APPLICATION,
-    name="MyProject"
-)
-
-# Add a dependency component
-component_a = Component(
-    type=ComponentType.LIBRARY,
-    name="my-component-a"
-)
-bom.components.add(component_a)
-bom.metadata.component.dependencies.add(component_a.bom_ref)
-```
-
-## Schema Support
-
-### Root Level Elements
-
-| Element                    | Status     | Notes                                    |
-|---------------------------|------------|------------------------------------------|
-| `bom[@version]`           | ✅         |                                          |
-| `bom[@serialNumber]`      | ✅         |                                          |
-| `bom.metadata`            | ✅         | Excluding: `lifecycles`                  |
-| `bom.components`          | ✅         | Excluding: `modified`, `modelCard`, `data`, `signature` |
-| `bom.externalReferences`  | ✅         |                                          |
-| `bom.dependencies`        | ✅         | Added in v2.3.0                         |
-
-### Internal Models
-
-| Model                     | Status     | Notes                                    |
-|--------------------------|------------|------------------------------------------|
-| `ComponentEvidence`      | ✅         | Excluding: `callstack`, `identity`, `occurrences` |
-| `DisjunctiveLicense`     | ✅         | Excluding: `@bom-ref`, `licensing`, `properties` |
+As of version `3.0.0`, the library supports CycloneDX VEX documents production with [official example](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) compatibility for linking VEX to separate CycloneDX documents.
 
 ## Documentation
 
-- IDE-compatible code annotations
-- Complete documentation on [Read the Docs][link_rtfd]
-- Sphinx configuration for local documentation generation
+Complete documentation is available on [Read the Docs][link_rtfd]. This includes:
+- API Reference
+- Usage Examples
+- Integration Guides
+- Best Practices
+
+## Responsibilities
+
+* Provide a general-purpose Python implementation of [CycloneDX][link_website]
+* Provide type hints for implementation support
+* Support JSON/XML document parsing and generation
+* Validate CycloneDX documents against schema specifications
+* Support multiple CycloneDX specification versions
+* Maintain comprehensive data models for BOM manipulation
+* Enable pip-based installation for downstream usage
+
+## Capabilities
+
+### Enums
+* `BomFormat` - BOM format types
+* `ComponentType` - Types of components (e.g., APPLICATION, LIBRARY)
+* `ComponentScope` - Component scope types
+* `DataFlow` - Data flow types
+* `Encoding` - Encoding types
+* `ExternalReferenceType` - Types of external references
+* `HashAlgorithm` - Supported hash algorithms
+* `ImpactAnalysisAffectedStatus` - Impact analysis affected status types
+* `ImpactAnalysisJustification` - Impact analysis justification types
+* `ImpactAnalysisResponse` - Impact analysis response types
+* `ImpactAnalysisState` - Impact analysis state types
+* `IssueClassification` - Issue classification types
+* `LifecyclePhase` - Lifecycle phase types
+* `PatchClassification` - Patch classification types
+* `VulnerabilityScoreSource` - Vulnerability score source types
+* `VulnerabilitySeverity` - Vulnerability severity types
+
+### Data Models
+
+#### Core Models
+* `Bom` - Core BOM model
+* `BomRef` - BOM reference handling
+* `Metadata` - BOM metadata
+
+#### Component & Service Models
+* `Component` - Component representation
+* `ComponentEvidence` - Component evidence data
+* `Service` - Service representation
+
+#### Dependency Models
+* `Dependency` - Dependency information
+* `DependencyGraph` - Dependency relationships
+
+#### License Models
+* `License` - Base license model
+* `LicenseExpression` - License expression handling
+* `NamedLicense` - Named license representation
+* `SpdxLicense` - SPDX license support
+
+#### Analysis Models
+* `ImpactAnalysis` - Impact analysis data
+* `Issue` - Issue tracking
+* `Vulnerability` - Vulnerability information
+
+#### Reference & Organization Models
+* `ExternalReference` - External reference data
+* `Hash` - Hash information
+* `OrganizationalContact` - Contact information
+* `OrganizationalEntity` - Organization information
+
+#### Management Models
+* `Property` - Property handling
+* `Tool` - Tool representation
+
+#### Repository Models
+* `BomRefRepository` - BOM reference management
+* `ComponentRepository` - Component management
+* `ExternalReferenceRepository` - External reference management
+* `LicenseRepository` - License management
+* `PropertyRepository` - Property management
+* `ToolRepository` - Tool management
+
+### Utilities
+* Serial number generation for BOMs
+* Hash calculation helpers
+* License expression parsing
+* XML/JSON serialization helpers
+
+### Specification Support
+* 1.6
+* 1.5
+* 1.4
+* 1.3
+* 1.2
+* 1.1
 
 ## Contributing
 
@@ -157,6 +154,7 @@ See the [LICENSE][license_file] file for the full license.
 
 [license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
 [contributing_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CONTRIBUTING.md
+[changelog_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CHANGELOG.md
 [link_rtfd]: https://cyclonedx-python-library.readthedocs.io/
 [CycloneDX-spec]: https://github.com/CycloneDX/specification/tree/master#readme
 
