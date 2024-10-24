@@ -17,76 +17,54 @@
 Work with [CycloneDX] documents.  
 OWASP CycloneDX is a full-stack Bill of Materials (BOM) standard that provides advanced supply chain capabilities for cyber risk reduction.
 
-## Responsibilities
+## Overview
 
-* Provide a general purpose _Python_-implementation of [_CycloneDX_][CycloneDX].
-* Provide type hints and documentation for all implementations to support developers and development tools.
-* Provide data models to work with _CycloneDX_.
-* Provide JSON and XML normalizers that:
-  * Support all shipped data models
-  * Respect any injected [_CycloneDX_ Specification][CycloneDX-spec] and generate valid output
-  * Can prepare data structures for JSON and XML serialization
-* Serialization:
-  * Provide JSON serialization
-  * Provide XML serialization
-* Validation against _CycloneDX_ Specification:
-  * Provide JSON validation
-  * Provide XML validation
+CycloneDX Python Library provides a comprehensive implementation for working with CycloneDX documents in Python. It supports creating, parsing, and validating Software Bill of Materials (SBOM) in both JSON and XML formats.
 
-## Capabilities
+## Key Features
 
-* Data models for:
-  * `Bom`
-  * Components and Component repositories
-  * Dependencies
-  * External references
-  * License expressions and repositories
-  * Metadata
-  * Properties
-  * Tools
-  * VEX (Vulnerability Exploitability eXchange)
-* Support for multiple BOM types:
-  * SBOM (Software Bill of Materials)
-  * VEX (Vulnerability Exchange)
-  * VDR (Vulnerability Disclosure Report)
-  * OBOM (Operations BOM)
-  * MBOM (Manufacturing BOM)
-  * SaaSBOM (Software as a Service BOM)
-* Implementation of [_CycloneDX_ Specification][CycloneDX-spec] versions:
-  * 1.0 through 1.5
-* Utilities for:
-  * Generating valid BOM serial numbers
-  * Managing BOM references
-  * Handling dependencies
-* Validation capabilities for both JSON and XML formats
+* **Full CycloneDX Support**: Implements [CycloneDX Specification][CycloneDX-spec] versions 1.0 through 1.5
+* **Multiple BOM Types**:
+  - SBOM (Software Bill of Materials)
+  - VEX (Vulnerability Exchange)
+  - VDR (Vulnerability Disclosure Report)
+  - OBOM (Operations BOM)
+  - MBOM (Manufacturing BOM)
+  - SaaSBOM (Software as a Service BOM)
+* **Rich Data Models**:
+  - Components and Component repositories
+  - Dependencies management
+  - License expressions and repositories
+  - External references
+  - VEX (Vulnerability Exploitability eXchange)
+* **Format Support**:
+  - JSON serialization and validation
+  - XML serialization and validation
+* **Developer-Friendly**:
+  - Complete type hints
+  - Comprehensive documentation
+  - IDE integration support
 
 ## Installation
 
-Install via pip:
+Choose your preferred installation method:
+
 ```shell
+# Via pip
 pip install cyclonedx-python-lib
-```
 
-Or via conda:
-```shell
+# Via conda
 conda install -c conda-forge cyclonedx-python-lib
+
+# With validation support
+pip install cyclonedx-python-lib[validation]     # Complete validation
+pip install cyclonedx-python-lib[json-validation] # JSON-only validation
+pip install cyclonedx-python-lib[xml-validation]  # XML-only validation
 ```
 
-Optional validation support:
-```shell
-# For complete validation support
-pip install cyclonedx-python-lib[validation]
+## Quick Start
 
-# For JSON-only validation
-pip install cyclonedx-python-lib[json-validation]
-
-# For XML-only validation
-pip install cyclonedx-python-lib[xml-validation]
-```
-
-## Usage
-
-Basic example of creating a BOM:
+### Basic BOM Creation
 
 ```python
 from cyclonedx.model.bom import Bom
@@ -107,11 +85,59 @@ json_output = outputter.output_json(bom)
 xml_output = outputter.output_xml(bom)
 ```
 
-See the [documentation][link_rtfd] for more detailed examples and API reference.
+### Complex Example: Working with JSON and XML
+
+```python
+from cyclonedx.model.bom import Bom
+from cyclonedx.schema import SchemaVersion
+from cyclonedx.validation import JsonStrictValidator
+from defusedxml import ElementTree as SafeElementTree
+
+# Create and validate JSON BOM
+json_validator = JsonStrictValidator(SchemaVersion.V1_6)
+validation_errors = json_validator.validate_str(json_data)
+if not validation_errors:
+    bom_from_json = Bom.from_json(json_data)
+
+# Create and validate XML BOM
+xml_validator = make_schemabased_validator(OutputFormat.XML, SchemaVersion.V1_6)
+validation_errors = xml_validator.validate_str(xml_data)
+if not validation_errors:
+    bom_from_xml = Bom.from_xml(SafeElementTree.fromstring(xml_data))
+```
+
+## Advanced Usage
+
+### Component with Dependencies
+
+```python
+from cyclonedx.model.bom import Bom
+from cyclonedx.model.component import Component
+
+# Create main component
+app = Component(
+    name="myApp",
+    version="1.0.0",
+    component_type="application"
+)
+
+# Create dependency
+library = Component(
+    name="some-library",
+    version="2.1.0",
+    component_type="library"
+)
+
+# Add to BOM with dependency relationship
+bom = Bom()
+bom.components.add(app)
+bom.components.add(library)
+bom.dependencies.add(app, [library])
+```
 
 ## Python Support
 
-We support all [current actively supported Python versions](https://www.python.org/downloads/):
+Supports all current Python versions:
 * Python 3.8
 * Python 3.9
 * Python 3.10
@@ -119,21 +145,23 @@ We support all [current actively supported Python versions](https://www.python.o
 * Python 3.12
 * Python 3.13
 
-## Documentation
+## Documentation & Resources
 
-* API documentation is available on [Read the Docs][link_rtfd]
-* Type hints are provided for IDE and tool support
-* Examples are included in the repository
+* [Full API Documentation][link_rtfd]
+* [GitHub Repository](https://github.com/CycloneDX/cyclonedx-python-lib)
+* [CycloneDX Specification][CycloneDX-spec]
+* Join the community:
+  * [Slack Channel][link_slack]
+  * [Discussion Group][link_discussion]
+  * [Twitter][link_twitter]
 
 ## Contributing
 
-Feel free to open issues, bug reports, or pull requests.  
-See the [CONTRIBUTING][contributing_file] file for details.
+We welcome contributions! Please see our [CONTRIBUTING][contributing_file] guide for details.
 
 ## License
 
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.  
-See the [LICENSE][license_file] file for the full license.
+Licensed under the Apache License, Version 2.0. See the [LICENSE][license_file] file for details.
 
 [CycloneDX]: https://cyclonedx.org/
 [CycloneDX-spec]: https://github.com/CycloneDX/specification/tree/master#readme
