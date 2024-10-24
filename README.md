@@ -15,23 +15,23 @@
 ----
 
 Core functionality of [_CycloneDX_][link_website] for _Python_,
-with type hints and full specification support.
+written in Python with complete type hints.
 
 **This package is not designed for standalone use. It is a software library.**
 
 As of version `3.0.0`, the internal data model was adjusted to allow CycloneDX VEX documents to be produced as per [official examples](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) linking VEX to a separate CycloneDX document.
 
-If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not check out [CycloneDX Python][cyclonedx-python] or [Jake][jake].
+If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, check out [CycloneDX Python][cyclonedx-python] or [Jake][jake].
 
 ## Responsibilities
 
 * Provide a general-purpose _Python_-implementation of [_CycloneDX_][link_website].
-* Provide typing for said implementation, so developers and dev-tools can rely on it.
+* Provide type hints for said implementation, so developers and dev-tools can rely on it.
 * Provide data models to work with _CycloneDX_.
-* Provide JSON- and XML-normalizers, that...
-  * support all shipped data models.
-  * respect any injected [_CycloneDX_ Specification][CycloneDX-spec] and generate valid output according to it.
-  * can prepare data structures for JSON- and XML-serialization.
+* Provide JSON and XML normalizers that:
+  * Support all shipped data models.
+  * Respect any injected [_CycloneDX_ Specification][CycloneDX-spec] and generate valid output according to it.
+  * Can prepare data structures for JSON and XML serialization.
 * Serialization:
   * Provide a JSON serializer.
   * Provide an XML serializer.
@@ -52,7 +52,6 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
   * `BomRef`, `BomRefRepository`
   * `Component`, `ComponentRepository`, `ComponentEvidence`
   * `ExternalReference`, `ExternalReferenceRepository`
-  * `HashDictionary`
   * `LicenseExpression`, `NamedLicense`, `SpdxLicense`, `LicenseRepository`
   * `Metadata`
   * `Property`, `PropertyRepository`
@@ -72,19 +71,18 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
 * Normalizers that convert data models to XML structures
 * Serializer that converts `Bom` data models to JSON string
 * Serializer that converts `Bom` data models to XML string
-* Formal validators for JSON and XML strings according to specification
+* Validator that checks JSON against _CycloneDX_ Specification
+* Validator that checks XML against _CycloneDX_ Specification
 
 ## Installation
 
-This package is available via pip:
+Install via pip:
 
 ```shell
 pip install cyclonedx-python-lib
 ```
 
 ## Usage
-
-See the following example:
 
 ```python
 from cyclonedx.model.bom import Bom
@@ -107,15 +105,11 @@ component_a = Component(
 )
 bom.components.add(component_a)
 bom.metadata.component.dependencies.add(component_a.bom_ref)
-
-# Serialize to JSON or XML
-json_output = bom.to_json()
-xml_output = bom.to_xml()
 ```
 
 ## API Documentation
 
-We ship type hints and annotations so that your IDE and tools may pick up the documentation when you use this library downstream.
+We ship code annotations so that your IDE and tools may pick up the documentation when you use this library downstream.
 
 There are also pre-rendered documentations hosted on [readthedocs][link_rtfd].
 
@@ -123,7 +117,25 @@ Additionally, there is a prepared config for [_Sphinx_](https://www.sphinx-doc.o
 
 ## Schema Support
 
-For detailed schema support information, see our [documentation][link_rtfd].
+This library has partial support for the CycloneDX specification. Refer to the tables below for detailed support information:
+
+### Root Level Schema Support
+
+| Data Path                  | Supported? | Notes                                             |
+|----------------------------|------------|---------------------------------------------------|
+| `bom[@version]`           | Yes        |                                                   |
+| `bom[@serialNumber]`      | Yes        |                                                   |
+| `bom.metadata`            | Yes        | Not supported: `lifecycles`                       |
+| `bom.components`          | Yes        | Not supported: `modified`, `modelCard`, `data`, `signature` |
+| `bom.externalReferences`  | Yes        |                                                   |
+| `bom.dependencies`        | Yes        | Since version `2.3.0`                            |
+
+### Internal Model Schema Support
+
+| Internal Model             | Supported? | Notes                                             |
+|----------------------------|------------|---------------------------------------------------|
+| `ComponentEvidence`        | Yes        | Not currently supported: `callstack`, `identity`, `occurrences` |
+| `DisjunctiveLicense`      | Yes        | Not currently supported: `@bom-ref`, `licensing`, `properties` |
 
 ## Contributing
 
