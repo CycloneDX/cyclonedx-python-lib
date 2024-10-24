@@ -15,7 +15,7 @@
 ----
 
 Core functionality of [_CycloneDX_][link_website] for _Python_,
-providing a full-stack Bill of Materials (BOM) standard that enables advanced supply chain capabilities for cyber risk reduction.
+with type hints and full specification support.
 
 **This package is not designed for standalone use. It is a software library.**
 
@@ -25,13 +25,13 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
 
 ## Responsibilities
 
-* Provide a general purpose _Python_-implementation of [_CycloneDX_][CycloneDX].
-* Provide typing and comprehensive documentation for developers and dev-tools to rely on.
+* Provide a general-purpose _Python_-implementation of [_CycloneDX_][link_website].
+* Provide typing for said implementation, so developers and dev-tools can rely on it.
 * Provide data models to work with _CycloneDX_.
 * Provide JSON- and XML-normalizers, that...
-  * Support all shipped data models.
-  * Respect any injected [_CycloneDX_ Specification][CycloneDX-spec] and generate valid output according to it.
-  * Can prepare data structures for JSON- and XML-serialization.
+  * support all shipped data models.
+  * respect any injected [_CycloneDX_ Specification][CycloneDX-spec] and generate valid output according to it.
+  * can prepare data structures for JSON- and XML-serialization.
 * Serialization:
   * Provide a JSON serializer.
   * Provide an XML serializer.
@@ -52,6 +52,7 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
   * `BomRef`, `BomRefRepository`
   * `Component`, `ComponentRepository`, `ComponentEvidence`
   * `ExternalReference`, `ExternalReferenceRepository`
+  * `HashDictionary`
   * `LicenseExpression`, `NamedLicense`, `SpdxLicense`, `LicenseRepository`
   * `Metadata`
   * `Property`, `PropertyRepository`
@@ -71,51 +72,50 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
 * Normalizers that convert data models to XML structures
 * Serializer that converts `Bom` data models to JSON string
 * Serializer that converts `Bom` data models to XML string
-* Formal validators for JSON string and XML string according to _CycloneDX_ Specification
+* Formal validators for JSON and XML strings according to specification
 
 ## Installation
 
-Install via pip:
+This package is available via pip:
 
 ```shell
 pip install cyclonedx-python-lib
 ```
 
-The package is also available via conda-forge:
-
-```shell
-conda install -c conda-forge cyclonedx-python-lib
-```
-
 ## Usage
 
-See extended [examples].
+See the following example:
 
 ```python
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component
+from cyclonedx.model.component_type import ComponentType
 
 # Create a new BOM
 bom = Bom()
 
-# Add metadata component
+# Set metadata component
 bom.metadata.component = Component(
-    name="my-application",
-    version="1.0.0"
+    type=ComponentType.APPLICATION,
+    name="MyProject"
 )
 
 # Add a dependency component
 component_a = Component(
-    name="my-component-a",
-    version="1.0.0"
+    type=ComponentType.LIBRARY,
+    name="my-component-a"
 )
 bom.components.add(component_a)
 bom.metadata.component.dependencies.add(component_a.bom_ref)
+
+# Serialize to JSON or XML
+json_output = bom.to_json()
+xml_output = bom.to_xml()
 ```
 
 ## API Documentation
 
-We ship code annotations, so that your IDE and tools may pick up the documentation when you use this library downstream.
+We ship type hints and annotations so that your IDE and tools may pick up the documentation when you use this library downstream.
 
 There are also pre-rendered documentations hosted on [readthedocs][link_rtfd].
 
@@ -123,25 +123,7 @@ Additionally, there is a prepared config for [_Sphinx_](https://www.sphinx-doc.o
 
 ## Schema Support
 
-This library has partial support for the CycloneDX specification. Here's what's currently supported:
-
-### Root Level Schema Support
-
-| Data Path                  | Supported? | Notes                                             |
-|----------------------------|------------|---------------------------------------------------|
-| `bom[@version]`           | Yes        |                                                   |
-| `bom[@serialNumber]`      | Yes        |                                                   |
-| `bom.metadata`            | Yes        | Not supported: `lifecycles`                       |
-| `bom.components`          | Yes        | Not supported: `modified`, `modelCard`, `data`, `signature` |
-| `bom.externalReferences`  | Yes        |                                                   |
-| `bom.dependencies`        | Yes        | Since version `2.3.0`                            |
-
-### Internal Model Schema Support
-
-| Internal Model             | Supported? | Notes                                             |
-|----------------------------|------------|---------------------------------------------------|
-| `ComponentEvidence`        | Yes        | Not currently supported: `callstack`, `identity`, `occurrences` |
-| `DisjunctiveLicense`      | Yes        | Not currently supported: `@bom-ref`, `licensing`, `properties` |
+For detailed schema support information, see our [documentation][link_rtfd].
 
 ## Contributing
 
@@ -160,7 +142,6 @@ See the [LICENSE][license_file] file for the full license.
 
 [license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
 [contributing_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CONTRIBUTING.md
-[examples]: https://github.com/CycloneDX/cyclonedx-python-lib/tree/master/examples
 [link_rtfd]: https://cyclonedx-python-library.readthedocs.io/
 
 [shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=pypi&logoColor=white "PyPI"
