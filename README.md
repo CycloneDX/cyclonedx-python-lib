@@ -15,7 +15,7 @@
 ----
 
 Core functionality of [_CycloneDX_][link_website] for _Python_,
-written in Python with full type hints.
+providing a full-stack Bill of Materials (BOM) standard that enables advanced supply chain capabilities for cyber risk reduction.
 
 **This package is not designed for standalone use. It is a software library.**
 
@@ -25,13 +25,13 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
 
 ## Responsibilities
 
-* Provide a general-purpose _Python_-implementation of [_CycloneDX_][CycloneDX].
-* Provide type hints and comprehensive documentation for developers.
+* Provide a general purpose _Python_-implementation of [_CycloneDX_][CycloneDX].
+* Provide typing and comprehensive documentation for developers and dev-tools to rely on.
 * Provide data models to work with _CycloneDX_.
-* Provide JSON- and XML-normalizers that...
+* Provide JSON- and XML-normalizers, that...
   * Support all shipped data models.
   * Respect any injected [_CycloneDX_ Specification][CycloneDX-spec] and generate valid output according to it.
-  * Can prepare data structures for JSON and XML serialization.
+  * Can prepare data structures for JSON- and XML-serialization.
 * Serialization:
   * Provide a JSON serializer.
   * Provide an XML serializer.
@@ -52,7 +52,6 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
   * `BomRef`, `BomRefRepository`
   * `Component`, `ComponentRepository`, `ComponentEvidence`
   * `ExternalReference`, `ExternalReferenceRepository`
-  * `HashDictionary`
   * `LicenseExpression`, `NamedLicense`, `SpdxLicense`, `LicenseRepository`
   * `Metadata`
   * `Property`, `PropertyRepository`
@@ -72,8 +71,7 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
 * Normalizers that convert data models to XML structures
 * Serializer that converts `Bom` data models to JSON string
 * Serializer that converts `Bom` data models to XML string
-* Validator that checks JSON against _CycloneDX_ Specification
-* Validator that checks XML against _CycloneDX_ Specification
+* Formal validators for JSON string and XML string according to _CycloneDX_ Specification
 
 ## Installation
 
@@ -81,6 +79,12 @@ Install via pip:
 
 ```shell
 pip install cyclonedx-python-lib
+```
+
+The package is also available via conda-forge:
+
+```shell
+conda install -c conda-forge cyclonedx-python-lib
 ```
 
 ## Usage
@@ -94,21 +98,24 @@ from cyclonedx.model.component import Component
 # Create a new BOM
 bom = Bom()
 
-# Add a component
-component = Component(
-    name="my-component",
+# Add metadata component
+bom.metadata.component = Component(
+    name="my-application",
     version="1.0.0"
 )
-bom.components.add(component)
 
-# Serialize to JSON or XML
-json_output = bom.to_json()
-xml_output = bom.to_xml()
+# Add a dependency component
+component_a = Component(
+    name="my-component-a",
+    version="1.0.0"
+)
+bom.components.add(component_a)
+bom.metadata.component.dependencies.add(component_a.bom_ref)
 ```
 
 ## API Documentation
 
-We ship code annotations so that your IDE and tools may pick up the documentation when you use this library downstream.
+We ship code annotations, so that your IDE and tools may pick up the documentation when you use this library downstream.
 
 There are also pre-rendered documentations hosted on [readthedocs][link_rtfd].
 
@@ -116,7 +123,7 @@ Additionally, there is a prepared config for [_Sphinx_](https://www.sphinx-doc.o
 
 ## Schema Support
 
-This library has partial support for the CycloneDX specification. The following tables detail the current support status:
+This library has partial support for the CycloneDX specification. Here's what's currently supported:
 
 ### Root Level Schema Support
 
@@ -136,7 +143,7 @@ This library has partial support for the CycloneDX specification. The following 
 | `ComponentEvidence`        | Yes        | Not currently supported: `callstack`, `identity`, `occurrences` |
 | `DisjunctiveLicense`      | Yes        | Not currently supported: `@bom-ref`, `licensing`, `properties` |
 
-## Development & Contributing
+## Contributing
 
 Feel free to open issues, bug reports, or pull requests.  
 See the [CONTRIBUTING][contributing_file] file for details.
@@ -154,6 +161,7 @@ See the [LICENSE][license_file] file for the full license.
 [license_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/LICENSE
 [contributing_file]: https://github.com/CycloneDX/cyclonedx-python-lib/blob/master/CONTRIBUTING.md
 [examples]: https://github.com/CycloneDX/cyclonedx-python-lib/tree/master/examples
+[link_rtfd]: https://cyclonedx-python-library.readthedocs.io/
 
 [shield_pypi-version]: https://img.shields.io/pypi/v/cyclonedx-python-lib?logo=pypi&logoColor=white "PyPI"
 [shield_conda-forge-version]: https://img.shields.io/conda/vn/conda-forge/cyclonedx-python-lib?logo=anaconda&logoColor=white "conda-forge"
@@ -169,7 +177,6 @@ See the [LICENSE][license_file] file for the full license.
 
 [link_pypi]: https://pypi.org/project/cyclonedx-python-lib/
 [link_conda_forge]: https://anaconda.org/conda-forge/cyclonedx-python-lib
-[link_rtfd]: https://cyclonedx-python-library.readthedocs.io/
 [link_codacy]: https://app.codacy.com/gh/CycloneDX/cyclonedx-python-lib
 [link_ossf_best_practices]: https://www.bestpractices.dev/projects/7956
 [link_website]: https://cyclonedx.org/
