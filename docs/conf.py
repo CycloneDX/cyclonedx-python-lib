@@ -14,13 +14,16 @@
 
 # -- Project information -----------------------------------------------------
 
+
+from datetime import date
+
 project = 'CycloneDX Python Library'
-copyright = '2022, Copyright (c) OWASP Foundation'
+copyright = f'{date.today().strftime("%Y")}, Copyright (c) OWASP Foundation'
 author = 'Paul Horton, Jan Kowalleck, Steve Springett, Patrick Dwyer'
 
 # The full version, including alpha/beta/rc tags
 # !! version is managed by semantic_release
-release = '8.0.0'
+release = '8.3.0'
 
 # -- General configuration ---------------------------------------------------
 

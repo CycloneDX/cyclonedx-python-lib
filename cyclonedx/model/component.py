@@ -27,6 +27,7 @@ from cpe import CPE  # type:ignore
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, NoPropertiesProvidedException
@@ -1098,10 +1099,7 @@ class Component(Dependable):
     ) -> None:
         self.type = type
         self.mime_type = mime_type
-        if isinstance(bom_ref, BomRef):
-            self._bom_ref = bom_ref
-        else:
-            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.supplier = supplier
         self.manufacturer = manufacturer
         self.authors = authors or []  # type:ignore[assignment]

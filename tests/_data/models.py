@@ -78,6 +78,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.model.definition import Definitions, Standard
 from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
@@ -87,6 +88,7 @@ from cyclonedx.model.impact_analysis import (
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
+from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.tool import Tool, ToolRepository
@@ -534,6 +536,7 @@ def get_bom_just_complete_metadata() -> Bom:
             content='VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE='
         )
     )]
+    bom.metadata.lifecycles = [PredefinedLifecycle(LifecyclePhase.BUILD)]
     bom.metadata.properties = get_properties_1()
     return bom
 
@@ -1211,7 +1214,14 @@ def get_bom_for_issue_497_urls() -> Bom:
             ExternalReference(
                 type=ExternalReferenceType.OTHER,
                 comment='control characters',
-                url=XsUri('https://acme.org/?foo=sp ace&bar[23]=42&lt=1<2&gt=3>2&cb={lol}')
+                url=XsUri('https://acme.org/?'
+                          'foo=sp ace&'
+                          'bar[23]=42&'
+                          'lt=1<2&'
+                          'gt=3>2&'
+                          'cb={lol}&'
+                          'quote="test"is\'test\''
+                          )
             ),
             ExternalReference(
                 type=ExternalReferenceType.OTHER,
@@ -1273,6 +1283,33 @@ def get_bom_for_issue_630_empty_property() -> Bom:
     })
 
 
+def get_bom_with_lifecycles() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            lifecycles=[
+                PredefinedLifecycle(LifecyclePhase.BUILD),
+                PredefinedLifecycle(LifecyclePhase.POST_BUILD),
+                NamedLifecycle(name='platform-integration-testing',
+                               description='Integration testing specific to the runtime platform'),
+            ],
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app'),
+        )
+    )
+
+
+def get_bom_with_definitions_standards() -> Bom:
+    """
+    Returns a BOM with definitions and standards only.
+    """
+    return _make_bom(
+        definitions=Definitions(standards=[
+            Standard(name='Some Standard', version='1.2.3', description='Some description', bom_ref='some-standard',
+                     owner='Some Owner', external_references=[get_external_reference_2()]
+                     )
+        ])
+    )
+
+
 # ---
 
 
@@ -1318,4 +1355,6 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_for_issue_598_multiple_components_with_purl_qualifiers,
     get_bom_with_component_setuptools_with_v16_fields,
     get_bom_for_issue_630_empty_property,
+    get_bom_with_lifecycles,
+    get_bom_with_definitions_standards,
 }

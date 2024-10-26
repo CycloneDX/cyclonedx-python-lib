@@ -41,8 +41,10 @@ from . import ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
+from .definition import Definitions
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
+from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
 from .vulnerability import Vulnerability
@@ -70,6 +72,7 @@ class BomMetaData:
         properties: Optional[Iterable[Property]] = None,
         timestamp: Optional[datetime] = None,
         manufacturer: Optional[OrganizationalEntity] = None,
+        lifecycles: Optional[Iterable[Lifecycle]] = None,
         # Deprecated as of v1.6
         manufacture: Optional[OrganizationalEntity] = None,
     ) -> None:
@@ -81,6 +84,7 @@ class BomMetaData:
         self.licenses = licenses or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
         self.manufacturer = manufacturer
+        self.lifecycles = lifecycles or []  # type:ignore[assignment]
 
         self.manufacture = manufacture
         if manufacture:
@@ -105,16 +109,23 @@ class BomMetaData:
     def timestamp(self, timestamp: datetime) -> None:
         self._timestamp = timestamp
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(2)
-    # def lifecycles(self) -> ...:
-    #    ... # TODO since CDX1.5
-    #
-    # @lifecycles.setter
-    # def lifecycles(self, ...) -> None:
-    #    ... # TODO since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.type_mapping(_LifecycleRepositoryHelper)
+    @serializable.xml_sequence(2)
+    def lifecycles(self) -> LifecycleRepository:
+        """
+        An optional list of BOM lifecycle stages.
+
+        Returns:
+            Set of `Lifecycle`
+        """
+        return self._lifecycles
+
+    @lifecycles.setter
+    def lifecycles(self, lifecycles: Iterable[Lifecycle]) -> None:
+        self._lifecycles = LifecycleRepository(lifecycles)
 
     @property
     @serializable.type_mapping(_ToolRepositoryHelper)
@@ -290,7 +301,7 @@ class BomMetaData:
     def __hash__(self) -> int:
         return hash((
             tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
-            self.supplier, self.timestamp, self.tools, self.manufacturer,
+            tuple(self.lifecycles), self.supplier, self.timestamp, self.tools, self.manufacturer
         ))
 
     def __repr__(self) -> str:
@@ -317,6 +328,7 @@ class Bom:
         dependencies: Optional[Iterable[Dependency]] = None,
         vulnerabilities: Optional[Iterable[Vulnerability]] = None,
         properties: Optional[Iterable[Property]] = None,
+        definitions: Optional[Definitions] = None,
     ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
@@ -333,6 +345,7 @@ class Bom:
         self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
         self.dependencies = dependencies or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
+        self.definitions = definitions or Definitions()
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -541,6 +554,22 @@ class Bom:
     # @formulation.setter
     # def formulation(self, ...) -> None:
     #     ...  # TODO Since CDX 1.5
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(110)
+    def definitions(self) -> Optional[Definitions]:
+        """
+        The repository for definitions
+
+        Returns:
+            `DefinitionRepository`
+        """
+        return self._definitions if len(self._definitions.standards) > 0 else None
+
+    @definitions.setter
+    def definitions(self, definitions: Definitions) -> None:
+        self._definitions = definitions
 
     def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
         """
