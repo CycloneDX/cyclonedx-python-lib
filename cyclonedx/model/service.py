@@ -31,6 +31,7 @@ from sortedcontainers import SortedSet
 
 from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
 
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import DataClassification, ExternalReference, Property, XsUri
@@ -68,10 +69,7 @@ class Service(Dependable):
         services: Optional[Iterable['Service']] = None,
         release_notes: Optional[ReleaseNotes] = None,
     ) -> None:
-        if isinstance(bom_ref, BomRef):
-            self._bom_ref = bom_ref
-        else:
-            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.provider = provider
         self.group = group
         self.name = name
