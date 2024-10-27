@@ -678,7 +678,7 @@ class Bom:
         .. note:
             See the CycloneDX Schema for BOM-Link: https://cyclonedx.org/capabilities/bomlink
         """
-        return XsUri(f'{self.urn}#{bom_ref}')
+        return XsUri.make_bom_link(self.serial_number, self.version, bom_ref)
 
     def validate(self) -> bool:
         """
