@@ -27,7 +27,8 @@ from datetime import datetime
 from enum import Enum
 from functools import reduce
 from json import loads as json_loads
-from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type
+from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type, Union
+from uuid import UUID
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -766,6 +767,23 @@ class XsUri(serializable.helpers.BaseHelper):
             raise CycloneDxDeserializationException(
                 f'XsUri string supplied does not parse: {o!r}'
             ) from err
+
+    @classmethod
+    def make_bom_link(cls, serialnumber: Union[UUID, str], version: int = 1, bom_ref: Optional[str] = None) -> 'XsUri':
+        """
+        Generate a BOM-Link URI.
+
+        Args:
+            serialnumber (Union[UUID, str]): Unique identifier for the BOM, either as a UUID or a string.
+            version (int, optional): Version number of the BOM-Link. Defaults to 1.
+            bom_ref (Optional[str], optional): Reference to a specific component in the BOM. Defaults to None.
+
+        Returns:
+            XsUri: Instance of XsUri with the generated BOM-Link URI.
+        """
+        bom_ref_part = f'#{bom_ref}' if bom_ref else ''
+        uri = f'urn:cdx:{serialnumber}/{version}{bom_ref_part}'
+        return cls(uri)
 
 
 @serializable.serializable_class
