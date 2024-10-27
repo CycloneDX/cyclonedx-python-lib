@@ -23,7 +23,7 @@ from uuid import uuid4
 from ddt import ddt, named_data
 
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException
-from cyclonedx.model import Property
+from cyclonedx.model import Property, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
@@ -292,3 +292,11 @@ class TestBom(TestCase):
         self.assertEqual(1, len(d.dependencies))
         self.assertIs(component2.bom_ref, d.dependencies[0].ref)
         # endregion assert component1
+
+    def test_get_bom_link(self) -> None:
+        serial_number = uuid4()
+        version = 1
+        bom_ref = 'componentA'
+        bom = Bom(serial_number=serial_number, version=1)
+        bom_link = bom.get_bom_link(bom_ref=bom_ref)
+        self.assertEqual(bom_link, XsUri(f'urn:cdx:{serial_number}/{version}#{bom_ref}'))

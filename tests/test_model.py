@@ -19,6 +19,7 @@ import base64
 import datetime
 from enum import Enum
 from unittest import TestCase
+from uuid import uuid4
 
 from ddt import ddt, named_data
 
@@ -544,6 +545,19 @@ class TestModelXsUri(TestCase):
         sorted_uris = sorted(uris)
         expected_uris = reorder(uris, expected_order)
         self.assertListEqual(sorted_uris, expected_uris)
+
+    def test_make_bom_link_without_bom_ref(self) -> None:
+        serial_number = uuid4()
+        version = 2
+        bom_link = XsUri.make_bom_link(serial_number, version)
+        self.assertEqual(bom_link, XsUri(f'urn:cdx:{serial_number}/{version}'))
+
+    def test_make_bom_link_with_bom_ref(self) -> None:
+        serial_number = uuid4()
+        version = 2
+        bom_ref = 'componentA'
+        bom_link = XsUri.make_bom_link(serial_number, version, bom_ref)
+        self.assertEqual(bom_link, XsUri(f'urn:cdx:{serial_number}/{version}#{bom_ref}'))
 
 
 class TestModelProperty(TestCase):
