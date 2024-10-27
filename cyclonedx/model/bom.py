@@ -665,7 +665,7 @@ class Bom:
     def urn(self) -> str:
         return f'urn:cdx:{self.serial_number}/{self.version}'
 
-    def get_bom_link(self, bom_ref: Union[str, BomRef]) -> 'XsUri':
+    def get_bom_link(self, bom_ref: Union[str, BomRef]) -> XsUri:
         """
         Generate a BOM-Link URI.
 
