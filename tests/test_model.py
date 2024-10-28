@@ -19,7 +19,7 @@ import base64
 import datetime
 from enum import Enum
 from unittest import TestCase
-from uuid import uuid4
+from uuid import UUID
 
 from ddt import ddt, named_data
 
@@ -43,6 +43,7 @@ from cyclonedx.model import (
     Property,
     XsUri,
 )
+from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.contact import OrganizationalContact
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from tests import reorder
@@ -547,17 +548,13 @@ class TestModelXsUri(TestCase):
         self.assertListEqual(sorted_uris, expected_uris)
 
     def test_make_bom_link_without_bom_ref(self) -> None:
-        serial_number = uuid4()
-        version = 2
-        bom_link = XsUri.make_bom_link(serial_number, version)
-        self.assertEqual(bom_link, XsUri(f'urn:cdx:{serial_number}/{version}'))
+        bom_link = XsUri.make_bom_link(UUID('e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d'), 2)
+        self.assertEqual(bom_link.uri, 'urn:cdx:e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d/2')
 
     def test_make_bom_link_with_bom_ref(self) -> None:
-        serial_number = uuid4()
-        version = 2
-        bom_ref = 'componentA'
-        bom_link = XsUri.make_bom_link(serial_number, version, bom_ref)
-        self.assertEqual(bom_link, XsUri(f'urn:cdx:{serial_number}/{version}#{bom_ref}'))
+        bom_link = XsUri.make_bom_link(UUID('e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d'),
+                                       2, BomRef('componentA#sub-componentB%2'))
+        self.assertEqual(bom_link.uri, 'urn:cdx:e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d/2#componentA#sub-componentB%2')
 
 
 class TestModelProperty(TestCase):
