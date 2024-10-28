@@ -791,6 +791,15 @@ class XsUri(serializable.helpers.BaseHelper):
         bom_ref_part = f'#{url_quote(str(bom_ref))}' if bom_ref else ''
         return cls(f'urn:cdx:{serial_number}/{version}{bom_ref_part}')
 
+    def is_bom_link(self) -> bool:
+        """
+        Check if the URI is a BOM-Link.
+
+        Returns:
+            `bool`
+        """
+        return self._uri.startswith('urn:cdx:')
+
 
 @serializable.serializable_class
 class ExternalReference:

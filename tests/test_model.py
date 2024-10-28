@@ -556,6 +556,10 @@ class TestModelXsUri(TestCase):
                                        2, BomRef('componentA#sub-componentB%2'))
         self.assertEqual(bom_link.uri, 'urn:cdx:e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d/2#componentA%23sub-componentB%252')
 
+    def test_is_bom_link(self) -> None:
+        self.assertTrue(XsUri('urn:cdx:e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d/2').is_bom_link())
+        self.assertFalse(XsUri('http://example.com/resource').is_bom_link())
+
 
 class TestModelProperty(TestCase):
 
