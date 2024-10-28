@@ -37,7 +37,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property, XsUri
+from . import ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -664,21 +664,6 @@ class Bom:
 
     def urn(self) -> str:
         return f'urn:cdx:{self.serial_number}/{self.version}'
-
-    def get_bom_link(self, bom_ref: Union[str, BomRef]) -> XsUri:
-        """
-        Generate a BOM-Link URI.
-
-        Args:
-            bom_ref: The unique identifier of the component, service, or vulnerability within the BOM.
-
-        Returns:
-            XsUri: Instance of XsUri with the generated BOM-Link URI.
-
-        .. note:
-            See the CycloneDX Schema for BOM-Link: https://cyclonedx.org/capabilities/bomlink
-        """
-        return XsUri.make_bom_link(self.serial_number, self.version, bom_ref)
 
     def validate(self) -> bool:
         """
