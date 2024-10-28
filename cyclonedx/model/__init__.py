@@ -28,7 +28,7 @@ from enum import Enum
 from functools import reduce
 from json import loads as json_loads
 from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type, Union
-from urllib.parse import quote
+from urllib.parse import quote as url_quote
 from uuid import UUID
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
@@ -788,9 +788,8 @@ class XsUri(serializable.helpers.BaseHelper):
         Returns:
             XsUri: Instance of XsUri with the generated BOM-Link URI.
         """
-        bom_ref_part = f'#{quote(str(bom_ref))}' if bom_ref else ''
-        uri = f'urn:cdx:{serial_number}/{version}{bom_ref_part}'
-        return cls(uri)
+        bom_ref_part = f'#{url_quote(str(bom_ref))}' if bom_ref else ''
+        return cls(f'urn:cdx:{serial_number}/{version}{bom_ref_part}')
 
 
 @serializable.serializable_class
