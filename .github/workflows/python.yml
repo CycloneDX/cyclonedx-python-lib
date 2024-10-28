@@ -4,14 +4,14 @@ name: Python CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "next"]
+    tags: [ 'v*' ]
   pull_request:
-    branches-ignore: ['dependabot/**']
   workflow_dispatch:
   schedule:
-    # schedule weekly tests, since some dependencies are not intended to be pinned
-    # this means: at 23:42 on Fridays
-    - cron: '42 23 * * 5'
+    # schedule daily tests, since some dependencies are not intended to be pinned
+    # this means: at 23:42 every day
+    - cron: '42 23 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -14,12 +14,3 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
-
-"""
-!!! ALL SYMBOLS IN HERE ARE INTERNAL.
-Everything might change without any notice.
-"""
-
-# THIS FILE IS INTENDED TO BE EMPTY.
-# Put symbols in own modules/packages, not in this file!

@@ -78,6 +78,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.model.definition import Definitions, Standard
 from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
@@ -1213,7 +1214,14 @@ def get_bom_for_issue_497_urls() -> Bom:
             ExternalReference(
                 type=ExternalReferenceType.OTHER,
                 comment='control characters',
-                url=XsUri('https://acme.org/?foo=sp ace&bar[23]=42&lt=1<2&gt=3>2&cb={lol}')
+                url=XsUri('https://acme.org/?'
+                          'foo=sp ace&'
+                          'bar[23]=42&'
+                          'lt=1<2&'
+                          'gt=3>2&'
+                          'cb={lol}&'
+                          'quote="test"is\'test\''
+                          )
             ),
             ExternalReference(
                 type=ExternalReferenceType.OTHER,
@@ -1285,7 +1293,20 @@ def get_bom_with_lifecycles() -> Bom:
                                description='Integration testing specific to the runtime platform'),
             ],
             component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app'),
-        ),
+        )
+    )
+
+
+def get_bom_with_definitions_standards() -> Bom:
+    """
+    Returns a BOM with definitions and standards only.
+    """
+    return _make_bom(
+        definitions=Definitions(standards=[
+            Standard(name='Some Standard', version='1.2.3', description='Some description', bom_ref='some-standard',
+                     owner='Some Owner', external_references=[get_external_reference_2()]
+                     )
+        ])
     )
 
 
@@ -1335,4 +1356,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_component_setuptools_with_v16_fields,
     get_bom_for_issue_630_empty_property,
     get_bom_with_lifecycles,
+    get_bom_with_definitions_standards,
 }

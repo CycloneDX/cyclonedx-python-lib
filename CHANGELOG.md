@@ -2,6 +2,34 @@
 
 
 
+## v8.3.0 (2024-10-26)
+
+### Documentation
+
+* docs: revisit examples readme (#725)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e9020f0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e9020f0b709a5245d1749d2811b8568f892869bb))
+
+### Feature
+
+* feat: add basic support for Definitions  (#701)
+
+
+
+---------
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt; ([`a1573e5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a1573e5af12bb54c7328c73971dc2c2f8d820c0a))
+
+
+## v8.2.1 (2024-10-24)
+
+### Fix
+
+* fix: encode quotation mark in URL (#724)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a7c7c97`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a7c7c97c37ee1c7988c028aa779f74893f858c7b))
+
+
 ## v8.2.0 (2024-10-22)
 
 ### Feature

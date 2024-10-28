@@ -41,6 +41,7 @@ from . import ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
+from .definition import Definitions
 from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository
 from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
@@ -327,6 +328,7 @@ class Bom:
         dependencies: Optional[Iterable[Dependency]] = None,
         vulnerabilities: Optional[Iterable[Vulnerability]] = None,
         properties: Optional[Iterable[Property]] = None,
+        definitions: Optional[Definitions] = None,
     ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
@@ -343,6 +345,7 @@ class Bom:
         self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
         self.dependencies = dependencies or []  # type:ignore[assignment]
         self.properties = properties or []  # type:ignore[assignment]
+        self.definitions = definitions or Definitions()
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -551,6 +554,22 @@ class Bom:
     # @formulation.setter
     # def formulation(self, ...) -> None:
     #     ...  # TODO Since CDX 1.5
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.xml_sequence(110)
+    def definitions(self) -> Optional[Definitions]:
+        """
+        The repository for definitions
+
+        Returns:
+            `Definitions`
+        """
+        return self._definitions if len(self._definitions.standards) > 0 else None
+
+    @definitions.setter
+    def definitions(self, definitions: Definitions) -> None:
+        self._definitions = definitions
 
     def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
         """

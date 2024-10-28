@@ -21,5 +21,31 @@
 Everything might change without any notice.
 """
 
-# THIS FILE IS INTENDED TO BE EMPTY.
-# Put symbols in own modules/packages, not in this file!
+from typing import Literal, Optional, Union, overload
+
+from ..model.bom_ref import BomRef
+
+
+@overload
+def bom_ref_from_str(bom_ref: BomRef, optional: bool = ...) -> BomRef:
+    ...  # pragma: no cover
+
+
+@overload
+def bom_ref_from_str(bom_ref: Optional[str], optional: Literal[False] = False) -> BomRef:
+    ...  # pragma: no cover
+
+
+@overload
+def bom_ref_from_str(bom_ref: Optional[str], optional: Literal[True] = ...) -> Optional[BomRef]:
+    ...  # pragma: no cover
+
+
+def bom_ref_from_str(bom_ref: Optional[Union[str, BomRef]], optional: bool = False) -> Optional[BomRef]:
+    if isinstance(bom_ref, BomRef):
+        return bom_ref
+    if bom_ref:
+        return BomRef(value=str(bom_ref))
+    return None \
+        if optional \
+        else BomRef()

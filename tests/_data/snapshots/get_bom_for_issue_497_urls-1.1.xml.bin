@@ -14,7 +14,7 @@
           <comment>pre-encoded</comment>
         </reference>
         <reference type="other">
-          <url>https://acme.org/?foo=sp%20ace&amp;bar%5B23%5D=42&amp;lt=1%3C2&amp;gt=3%3E2&amp;cb=%7Blol%7D</url>
+          <url>https://acme.org/?foo=sp%20ace&amp;bar%5B23%5D=42&amp;lt=1%3C2&amp;gt=3%3E2&amp;cb=%7Blol%7D&amp;quote=%22test%22is%27test%27</url>
           <comment>control characters</comment>
         </reference>
       </externalReferences>
