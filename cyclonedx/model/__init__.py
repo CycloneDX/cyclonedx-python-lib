@@ -55,6 +55,8 @@ from ..schema.schema import (
 )
 from .bom_ref import BomRef
 
+_BOM_LINK_PREFIX = 'urn:cdx:'
+
 
 @serializable.serializable_enum
 class DataFlow(str, Enum):
@@ -789,7 +791,7 @@ class XsUri(serializable.helpers.BaseHelper):
             XsUri: Instance of XsUri with the generated BOM-Link URI.
         """
         bom_ref_part = f'#{url_quote(str(bom_ref))}' if bom_ref else ''
-        return cls(f'urn:cdx:{serial_number}/{version}{bom_ref_part}')
+        return cls(f'{_BOM_LINK_PREFIX}{serial_number}/{version}{bom_ref_part}')
 
     def is_bom_link(self) -> bool:
         """
@@ -798,7 +800,7 @@ class XsUri(serializable.helpers.BaseHelper):
         Returns:
             `bool`
         """
-        return self._uri.startswith('urn:cdx:')
+        return self._uri.startswith(_BOM_LINK_PREFIX)
 
 
 @serializable.serializable_class

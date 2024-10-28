@@ -37,7 +37,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property
+from . import _BOM_LINK_PREFIX, ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -663,7 +663,7 @@ class Bom:
                 self.register_dependency(target=_d2, depends_on=None)
 
     def urn(self) -> str:
-        return f'urn:cdx:{self.serial_number}/{self.version}'
+        return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
 
     def validate(self) -> bool:
         """
