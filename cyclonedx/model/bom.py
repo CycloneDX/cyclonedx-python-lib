@@ -563,7 +563,7 @@ class Bom:
         The repository for definitions
 
         Returns:
-            `DefinitionRepository`
+            `Definitions`
         """
         return self._definitions if len(self._definitions.standards) > 0 else None
 
