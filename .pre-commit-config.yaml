@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: system
         name: mypy
-        entry: poetry run tox -e mypy-locked
+        entry: poetry run tox -e mypy-current
         pass_filenames: false
         language: system
   - repo: local
