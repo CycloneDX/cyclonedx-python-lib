@@ -21,7 +21,7 @@ from unittest import TestCase
 from cyclonedx.model.definition import Definitions, Standard
 
 
-class TestModelDefinitionRepository(TestCase):
+class TestModelDefinitions(TestCase):
 
     def test_init(self) -> Definitions:
         s = Standard(name='test-standard')
