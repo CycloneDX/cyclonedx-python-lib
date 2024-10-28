@@ -787,7 +787,7 @@ class XsUri(serializable.helpers.BaseHelper):
         Returns:
             XsUri: Instance of XsUri with the generated BOM-Link URI.
         """
-        bom_ref_part = f'#{bom_ref}' if bom_ref else ''
+        bom_ref_part = f'#{str(bom_ref).replace("%", "%25").replace("#", "%23")}' if bom_ref else ''
         uri = f'urn:cdx:{serial_number}/{version}{bom_ref_part}'
         return cls(uri)
 

@@ -554,7 +554,7 @@ class TestModelXsUri(TestCase):
     def test_make_bom_link_with_bom_ref(self) -> None:
         bom_link = XsUri.make_bom_link(UUID('e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d'),
                                        2, BomRef('componentA#sub-componentB%2'))
-        self.assertEqual(bom_link.uri, 'urn:cdx:e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d/2#componentA#sub-componentB%2')
+        self.assertEqual(bom_link.uri, 'urn:cdx:e5a93409-fd7c-4ffa-bf7f-6dc1630b1b9d/2#componentA%23sub-componentB%252')
 
 
 class TestModelProperty(TestCase):
