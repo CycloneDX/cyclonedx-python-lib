@@ -53,12 +53,20 @@ class Dependency:
     Models a Dependency within a BOM.
 
     .. note::
-        See https://cyclonedx.org/docs/1.4/xml/#type_dependencyType
+        See:
+        1. https://cyclonedx.org/docs/1.6/xml/#type_dependencyType
+        2. https://cyclonedx.org/docs/1.6/json/#dependencies
     """
 
-    def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
+    def __init__(
+        self,
+        ref: BomRef,
+        dependencies: Optional[Iterable['Dependency']] = None,
+        provides: Optional[Iterable['Dependency']] = None
+    ) -> None:
         self.ref = ref
         self.dependencies = dependencies or []  # type:ignore[assignment]
+        self.provides = provides or []  # type:ignore[assignment]
 
     @property
     @serializable.type_mapping(BomRefHelper)
@@ -81,8 +89,22 @@ class Dependency:
     def dependencies(self, dependencies: Iterable['Dependency']) -> None:
         self._dependencies = SortedSet(dependencies)
 
+    @property
+    @serializable.json_name('provides')
+    @serializable.type_mapping(_DependencyRepositorySerializationHelper)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'provides')
+    def provides(self) -> 'SortedSet[Dependency]':
+        return self._provides
+
+    @provides.setter
+    def provides(self, provides: Iterable['Dependency']) -> None:
+        self._provides = SortedSet(provides)
+
     def dependencies_as_bom_refs(self) -> Set[BomRef]:
         return set(map(lambda d: d.ref, self.dependencies))
+
+    def provides_as_bom_refs(self) -> Set[BomRef]:
+        return set(map(lambda d: d.ref, self.provides))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Dependency):
@@ -92,17 +114,25 @@ class Dependency:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Dependency):
             return _ComparableTuple((
-                self.ref, _ComparableTuple(self.dependencies)
+                self.ref,
+                _ComparableTuple(self.dependencies),
+                _ComparableTuple(self.provides)
             )) < _ComparableTuple((
-                other.ref, _ComparableTuple(other.dependencies)
+                other.ref,
+                _ComparableTuple(other.dependencies),
+                _ComparableTuple(other.provides)
             ))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.ref, tuple(self.dependencies)))
+        return hash((self.ref, tuple(self.dependencies), tuple(self.provides)))
 
     def __repr__(self) -> str:
-        return f'<Dependency ref={self.ref!r}, targets={len(self.dependencies)}>'
+        return (
+            f'<Dependency ref={self.ref!r}'
+            f', targets={len(self.dependencies)}'
+            f', provides={len(self.provides)}>'
+        )
 
 
 class Dependable(ABC):
