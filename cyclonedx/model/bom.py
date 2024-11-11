@@ -644,23 +644,36 @@ class Bom:
         """
         return bool(self.vulnerabilities)
 
-    def register_dependency(self, target: Dependable, depends_on: Optional[Iterable[Dependable]] = None) -> None:
+    def register_dependency(
+        self,
+        target: Dependable,
+        depends_on: Optional[Iterable[Dependable]] = None,
+        provides: Optional[Iterable[Dependable]] = None,
+    ) -> None:
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
         if _d:
             # Dependency Target already registered - but it might have new dependencies to add
             if depends_on:
                 _d.dependencies.update(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on))
+            if provides:
+                _d.provides.update(map(lambda _p: Dependency(ref=_p.bom_ref), provides))
         else:
             # First time we are seeing this target as a Dependency
-            self._dependencies.add(Dependency(
-                ref=target.bom_ref,
-                dependencies=map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on) if depends_on else []
-            ))
+            self._dependencies.add(
+                Dependency(
+                    ref=target.bom_ref,
+                    dependencies=map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on) if depends_on else [],
+                    provides=map(lambda _prov: Dependency(ref=_prov.bom_ref), provides) if provides else [],
+                )
+            )
 
         if depends_on:
             # Ensure dependents are registered with no further dependents in the DependencyGraph
             for _d2 in depends_on:
                 self.register_dependency(target=_d2, depends_on=None)
+        if provides:
+            for _p2 in provides:
+                self.register_dependency(target=_p2, depends_on=None, provides=None)
 
     def urn(self) -> str:
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
@@ -681,12 +694,14 @@ class Bom:
         for _s in self.services:
             self.register_dependency(target=_s)
 
-        # 1. Make sure dependencies are all in this Bom.
+        # 1. Make sure dependencies and provides are all in this Bom.
         component_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
             map(lambda s: s.bom_ref, self.services))
+
         dependency_bom_refs = set(chain(
             (d.ref for d in self.dependencies),
-            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies)
+            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies),
+            chain.from_iterable(d.provides_as_bom_refs() for d in self.dependencies)  # Include provides refs here
         ))
         dependency_diff = dependency_bom_refs - component_bom_refs
         if len(dependency_diff) > 0:
