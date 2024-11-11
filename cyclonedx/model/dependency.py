@@ -22,6 +22,8 @@ from typing import Any, Iterable, List, Optional, Set
 import serializable
 from sortedcontainers import SortedSet
 
+from cyclonedx.schema.schema import SchemaVersion1Dot6
+
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import SerializationOfUnexpectedValueException
 from ..serialization import BomRefHelper
@@ -90,6 +92,7 @@ class Dependency:
         self._dependencies = SortedSet(dependencies)
 
     @property
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.json_name('provides')
     @serializable.type_mapping(_DependencyRepositorySerializationHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'provides')
