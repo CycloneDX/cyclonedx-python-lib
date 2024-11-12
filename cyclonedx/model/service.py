@@ -95,8 +95,6 @@ class Service(Dependable):
         An optional identifier which can be used to reference the service elsewhere in the BOM. Uniqueness is enforced
         within all elements and children of the root-level bom element.
 
-        If a value was not provided in the constructor, a UUIDv4 will have been assigned.
-
         Returns:
            `BomRef` unique identifier for this Service
         """
