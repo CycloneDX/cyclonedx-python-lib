@@ -27,7 +27,9 @@ from datetime import datetime
 from enum import Enum
 from functools import reduce
 from json import loads as json_loads
-from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type
+from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type, Union
+from urllib.parse import quote as url_quote
+from uuid import UUID
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -51,6 +53,9 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
+from .bom_ref import BomRef
+
+_BOM_LINK_PREFIX = 'urn:cdx:'
 
 
 @serializable.serializable_enum
@@ -766,6 +771,36 @@ class XsUri(serializable.helpers.BaseHelper):
             raise CycloneDxDeserializationException(
                 f'XsUri string supplied does not parse: {o!r}'
             ) from err
+
+    @classmethod
+    def make_bom_link(
+        cls,
+        serial_number: Union[UUID, str],
+        version: int = 1,
+        bom_ref: Optional[Union[str, BomRef]] = None
+    ) -> 'XsUri':
+        """
+        Generate a BOM-Link URI.
+
+        Args:
+            serial_number: The unique serial number of the BOM.
+            version: The version of the BOM. The default version is 1.
+            bom_ref: The unique identifier of the component, service, or vulnerability within the BOM.
+
+        Returns:
+            XsUri: Instance of XsUri with the generated BOM-Link URI.
+        """
+        bom_ref_part = f'#{url_quote(str(bom_ref))}' if bom_ref else ''
+        return cls(f'{_BOM_LINK_PREFIX}{serial_number}/{version}{bom_ref_part}')
+
+    def is_bom_link(self) -> bool:
+        """
+        Check if the URI is a BOM-Link.
+
+        Returns:
+            `bool`
+        """
+        return self._uri.startswith(_BOM_LINK_PREFIX)
 
 
 @serializable.serializable_class
