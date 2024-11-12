@@ -2,6 +2,38 @@
 
 
 
+## v8.4.0 (2024-10-29)
+
+### Feature
+
+* feat: add factory method `XsUri.make_bom_link()` (#728)
+
+
+
+---------
+
+Signed-off-by: Saquib Saifee &lt;saquibsaifee@ibm.com&gt;
+Co-authored-by: Saquib Saifee &lt;saquibsaifee@ibm.com&gt; ([`5ec73d0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5ec73d0668b4f9e087cc11a2e1a0e242ad1b5dd6))
+
+### Fix
+
+* fix: no warning for missing dependencies if no component exists (#720)
+
+
+---------
+
+Signed-off-by: weichslgartner &lt;weichslgartner@gmail.com&gt; ([`d9c3ded`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d9c3ded34f443cd04f1f0041f0dd948db3db40e7))
+
+### Unknown
+
+* doc: fix `Definitions` docstring (#731)
+
+
+---------
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt; ([`5860b67`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5860b67f562fc474903b0fb1a162c70eeca2f3d0))
+
+
 ## v8.3.0 (2024-10-26)
 
 ### Documentation

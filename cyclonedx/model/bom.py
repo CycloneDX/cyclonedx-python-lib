@@ -37,7 +37,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
 )
 from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
-from . import ExternalReference, Property
+from . import _BOM_LINK_PREFIX, ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -663,7 +663,7 @@ class Bom:
                 self.register_dependency(target=_d2, depends_on=None)
 
     def urn(self) -> str:
-        return f'urn:cdx:{self.serial_number}/{self.version}'
+        return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
 
     def validate(self) -> bool:
         """
@@ -694,8 +694,9 @@ class Bom:
                 'One or more Components have Dependency references to Components/Services that are not known in this '
                 f'BOM. They are: {dependency_diff}')
 
-        # 2. if root component is set: dependencies should exist for the Component this BOM is describing
-        if self.metadata.component and not any(map(
+        # 2. if root component is set and there are other components: dependencies should exist for the Component
+        # this BOM is describing
+        if self.metadata.component and len(self.components) > 0 and not any(map(
             lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type: ignore[union-attr]
             self.dependencies
         )):
