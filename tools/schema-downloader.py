@@ -19,7 +19,7 @@ import re
 from os.path import dirname, join
 from urllib.request import urlretrieve
 
-SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/master/schema/'
+SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/tags/1.6.1/schema/'
 TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res')
 
 BOM_XSD = {
