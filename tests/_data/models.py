@@ -1310,7 +1310,7 @@ def get_bom_with_definitions_standards() -> Bom:
     )
 
 
-def get_bom_with_provides_valid() -> Bom:
+def get_bom_v1_6_with_provides() -> Bom:
     c1 = get_component_toml_with_hashes_with_references('crypto-library')
     c2 = get_component_setuptools_simple('some-library')
     c3 = get_component_crypto_asset_algorithm('crypto-algorithm')
