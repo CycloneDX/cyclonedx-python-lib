@@ -2,6 +2,20 @@
 
 
 
+## v8.5.0 (2024-11-18)
+
+### Documentation
+
+* docs: remove invalid docsting note about auto-assigned `bom-ref` values (#733) ([`5aa5787`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5aa5787767c60dc23fd09f6cf14e54e5b0efceb4))
+
+### Feature
+
+* feat: support CycloneDX 1.6.1 (#742)
+
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`55eafed`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/55eafedf50d395911a697bd9c85eeab5820934ff))
+
+
 ## v8.4.0 (2024-10-29)
 
 ### Feature
