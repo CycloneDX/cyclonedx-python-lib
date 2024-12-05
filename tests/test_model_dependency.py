@@ -41,3 +41,26 @@ class TestDependency(TestCase):
         sorted_deps = sorted(deps)
         expected_deps = reorder(deps, expected_order)
         self.assertEqual(sorted_deps, expected_deps)
+
+    def test_dependency_with_provides(self) -> None:
+        # Create test data
+        ref1 = BomRef(value='be2c6502-7e9a-47db-9a66-e34f729810a3')
+        ref2 = BomRef(value='0b049d09-64c0-4490-a0f5-c84d9aacf857')
+        provides_ref1 = BomRef(value='cd3e9c95-9d41-49e7-9924-8cf0465ae789')
+        provides_ref2 = BomRef(value='17e3b199-dc0b-42ef-bfdd-1fa81a1e3eda')
+
+        # Create dependencies with provides
+        dep1 = Dependency(ref=ref1, provides=[Dependency(ref=provides_ref1)])
+        dep2 = Dependency(ref=ref2, provides=[Dependency(ref=provides_ref2)])
+
+        # Verify provides field
+        self.assertEqual(len(dep1.provides), 1)
+        self.assertEqual(len(dep2.provides), 1)
+
+        # Check provides_as_bom_refs
+        self.assertEqual(dep1.provides_as_bom_refs(), {provides_ref1})
+        self.assertEqual(dep2.provides_as_bom_refs(), {provides_ref2})
+
+        # Verify comparison and hashing
+        self.assertNotEqual(hash(dep1), hash(dep2))
+        self.assertNotEqual(dep1, dep2)
