@@ -94,7 +94,7 @@ flake8-use-fstring = "1.4"
 pep8-naming = "0.14.1"
 isort = "5.13.2"
 autopep8 = "2.3.1"
-mypy = "1.13.0"
+mypy = "1.14.0"
 tomli = { version = "2.2.1", python = "<3.11" }
 tox = "4.23.2"
 xmldiff = "2.7.0"
