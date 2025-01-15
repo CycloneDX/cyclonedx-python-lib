@@ -18,6 +18,8 @@
 
 from unittest import TestCase
 
+from ddt import ddt, named_data
+
 from cyclonedx.exception.model import InvalidCreIdException
 from cyclonedx.model.definition import CreId, Definitions, Level, Requirement, Standard
 
@@ -29,13 +31,13 @@ class TestModelDefinitions(TestCase):
         dr = Definitions(
             standards=(s, ),
         )
+        self.assertEqual(1, len(dr.standards))
         self.assertIs(s, tuple(dr.standards)[0])
         return dr
 
     def test_filled(self) -> None:
         dr = self.test_init()
         self.assertIsNotNone(dr.standards)
-        self.assertEqual(1, len(dr.standards))
         self.assertTrue(dr)
 
     def test_empty(self) -> None:
@@ -68,6 +70,7 @@ class TestModelDefinitions(TestCase):
         self.assertTrue(dr1 == tr2)
 
 
+@ddt
 class TestModelCreId(TestCase):
 
     def test_different(self) -> None:
@@ -84,21 +87,21 @@ class TestModelCreId(TestCase):
         self.assertEqual(hash(id1), hash(id2))
         self.assertTrue(id1 == id2)
 
-    def test_invalid_id(self) -> None:
+    def test_invalid_no_id(self) -> None:
         with self.assertRaises(TypeError):
             CreId()
+
+    @named_data(
+        ['empty', ''],
+        ['arbitrary string', 'some string'],
+        ['missing prefix', '123-456'],
+        ['additional part', 'CRE:123-456-789'],
+        ['no numbers', 'CRE:abc-def'],
+        ['no delimiter', 'CRE:123456'],
+    )
+    def test_invalid_id(self, wrong_id) -> None:
         with self.assertRaises(InvalidCreIdException):
-            CreId('')
-        with self.assertRaises(InvalidCreIdException):
-            CreId('some string')
-        with self.assertRaises(InvalidCreIdException):
-            CreId('123-456')
-        with self.assertRaises(InvalidCreIdException):
-            CreId('CRE:123-456-789')
-        with self.assertRaises(InvalidCreIdException):
-            CreId('CRE:abc-def')
-        with self.assertRaises(InvalidCreIdException):
-            CreId('CRE:123456')
+            CreId(wrong_id)
 
 
 class TestModelRequirements(TestCase):
