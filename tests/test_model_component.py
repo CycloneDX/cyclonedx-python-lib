@@ -219,6 +219,16 @@ class TestModelComponent(TestCase):
 
         self.assertNotEqual(c, c2)
 
+    def test_component_equal_4(self) -> None:
+        c = Component(
+            name='test-component', version='1.2.3', bom_ref='ref1'
+        )
+        c2 = Component(
+            name='test-component', version='1.2.3', bom_ref='ref2'
+        )
+
+        self.assertNotEqual(c, c2)
+
     def test_same_1(self) -> None:
         c1 = get_component_setuptools_simple()
         c2 = get_component_setuptools_simple()
