@@ -232,6 +232,7 @@ class DisjunctiveLicense:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self._id, self._name, self._text, self._url, self._acknowledgement))
 
     def __repr__(self) -> str:
@@ -309,6 +310,7 @@ class LicenseExpression:
         self._acknowledgement = acknowledgement
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self._value, self._acknowledgement))
 
     def __eq__(self, other: object) -> bool:

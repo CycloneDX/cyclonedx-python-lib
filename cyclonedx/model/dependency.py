@@ -99,6 +99,7 @@ class Dependency:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.ref, tuple(self.dependencies)))
 
     def __repr__(self) -> str:

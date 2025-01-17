@@ -275,6 +275,7 @@ class OrganizationalContact:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, self.phone, self.email))
 
     def __repr__(self) -> str:
@@ -384,6 +385,7 @@ class OrganizationalEntity:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, tuple(self.urls), tuple(self.contacts)))
 
     def __repr__(self) -> str:

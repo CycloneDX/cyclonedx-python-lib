@@ -501,6 +501,7 @@ class AlgorithmProperties:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
                      self.implementation_platform, tuple(self.certification_levels), self.mode, self.padding,
                      tuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,))
@@ -673,6 +674,7 @@ class CertificateProperties:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
                      self.certificate_format, self.certificate_extension))
 
@@ -796,6 +798,7 @@ class RelatedCryptoMaterialSecuredBy:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.mechanism, self.algorithm_ref))
 
     def __repr__(self) -> str:
@@ -1035,6 +1038,7 @@ class RelatedCryptoMaterialProperties:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.type, self.id, self.state, self.algorithm_ref, self.creation_date, self.activation_date,
                      self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by))
 
@@ -1152,6 +1156,7 @@ class ProtocolPropertiesCipherSuite:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, tuple(self.algorithms), tuple(self.identifiers)))
 
     def __repr__(self) -> str:
@@ -1284,6 +1289,7 @@ class Ikev2TransformTypes:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((tuple(self.encr), tuple(self.prf), tuple(self.integ), tuple(self.ke), self.esn, tuple(self.auth)))
 
     def __repr__(self) -> str:
@@ -1383,6 +1389,7 @@ class ProtocolProperties:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.type, self.version, tuple(self.cipher_suites), self.ikev2_transform_types))
 
     def __repr__(self) -> str:
@@ -1539,6 +1546,7 @@ class CryptoProperties:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.asset_type, self.algorithm_properties, self.certificate_properties,
                      self.related_crypto_material_properties, self.protocol_properties, self.oid))
 

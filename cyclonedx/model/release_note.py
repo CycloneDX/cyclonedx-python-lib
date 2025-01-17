@@ -239,6 +239,7 @@ class ReleaseNotes:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((
             self.type, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
             tuple(self.aliases), tuple(self.tags), tuple(self.resolves), tuple(self.notes), tuple(self.properties)

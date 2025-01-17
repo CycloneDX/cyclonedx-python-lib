@@ -83,7 +83,7 @@ class PredefinedLifecycle:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, PredefinedLifecycle):
-            return hash(other) == hash(self)
+            return self._phase == other._phase
         return False
 
     def __lt__(self, other: Any) -> bool:
@@ -143,6 +143,7 @@ class NamedLifecycle:
         self._description = description
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self._name, self._description))
 
     def __eq__(self, other: object) -> bool:

@@ -148,6 +148,7 @@ class DataClassification:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.flow, self.classification))
 
     def __repr__(self) -> str:
@@ -251,6 +252,7 @@ class AttachedText:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.content, self.content_type, self.encoding))
 
     def __repr__(self) -> str:
@@ -530,6 +532,7 @@ class HashType:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.alg, self.content))
 
     def __repr__(self) -> str:
@@ -733,7 +736,7 @@ class XsUri(serializable.helpers.BaseHelper):
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
-            return hash(other) == hash(self)
+            return self._uri == other._uri
         return False
 
     def __lt__(self, other: Any) -> bool:
@@ -907,6 +910,7 @@ class ExternalReference:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((
             self._type, self._url, self._comment,
             tuple(sorted(self._hashes, key=hash))
@@ -984,6 +988,7 @@ class Property:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, self.value))
 
     def __repr__(self) -> str:
@@ -1075,6 +1080,7 @@ class NoteText:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.content, self.content_type, self.encoding))
 
     def __repr__(self) -> str:
@@ -1159,6 +1165,7 @@ class Note:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.text, self.locale))
 
     def __repr__(self) -> str:
@@ -1249,6 +1256,7 @@ class IdentifiableAction:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.timestamp, self.name, self.email))
 
     def __repr__(self) -> str:
@@ -1287,16 +1295,16 @@ class Copyright:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Copyright):
-            return hash(other) == hash(self)
+            return self._text == other._text
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Copyright):
-            return self.text < other.text
+            return self._text < other._text
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.text)
+        return hash(self._text)
 
     def __repr__(self) -> str:
         return f'<Copyright text={self.text}>'

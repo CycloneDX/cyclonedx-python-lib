@@ -763,6 +763,7 @@ class Pedigree:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((
             tuple(self.ancestors), tuple(self.descendants), tuple(self.variants), tuple(self.commits),
             tuple(self.patches), self.notes
@@ -908,6 +909,7 @@ class Swid:
         return False
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.tag_id, self.name, self.version, self.tag_version, self.patch, self.text, self.url))
 
     def __repr__(self) -> str:
@@ -955,7 +957,7 @@ class OmniborId(serializable.helpers.BaseHelper):
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, OmniborId):
-            return hash(other) == hash(self)
+            return self._id == other._id
         return False
 
     def __lt__(self, other: Any) -> bool:
@@ -1014,7 +1016,7 @@ class Swhid(serializable.helpers.BaseHelper):
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Swhid):
-            return hash(other) == hash(self)
+            return self._id == other._id
         return False
 
     def __lt__(self, other: Any) -> bool:

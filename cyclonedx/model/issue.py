@@ -105,6 +105,7 @@ class IssueTypeSource:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, self.url))
 
     def __repr__(self) -> str:
@@ -246,6 +247,7 @@ class IssueType:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((
             self.type, self.id, self.name, self.description, self.source, tuple(self.references)
         ))
