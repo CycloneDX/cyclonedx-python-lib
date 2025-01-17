@@ -142,8 +142,8 @@ class Requirement:
         ))
 
     def __repr__(self) -> str:
-        return f'<Requirement bom-ref={self._bom_ref}, identifier={self._identifier}, title={self._title}, ' \
-               f'text={self._text}, parent={self._parent}>'
+        return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, title={self.title}, ' \
+               f'text={self.text}, parent={self.parent}>'
 
     @property
     @serializable.json_name('bom-ref')
@@ -609,4 +609,4 @@ class Definitions:
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'<Definitions hash={hash(self)}>'
+        return f'<Definitions standards={self.standards!r} >'
