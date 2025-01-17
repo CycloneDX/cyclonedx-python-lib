@@ -171,22 +171,23 @@ class Commit:
     def message(self, message: Optional[str]) -> None:
         self._message = message
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.uid, self.url, self.author, self.committer, self.message
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Commit):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Commit):
-            return _ComparableTuple((
-                self.uid, self.url, self.author, self.committer, self.message
-            )) < _ComparableTuple((
-                other.uid, other.url, other.author, other.committer, other.message
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.uid, self.url, self.author, self.committer, self.message))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Commit uid={self.uid}, url={self.url}, message={self.message}>'
@@ -281,13 +282,19 @@ class ComponentEvidence:
     def copyright(self, copyright: Iterable[Copyright]) -> None:
         self._copyright = SortedSet(copyright)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            _ComparableTuple(self.licenses),
+            _ComparableTuple(self.copyright),
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ComponentEvidence):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((tuple(self.licenses), tuple(self.copyright)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
@@ -478,22 +485,23 @@ class Diff:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.text, self.url
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Diff):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Diff):
-            return _ComparableTuple((
-                self.url, self.text
-            )) < _ComparableTuple((
-                other.url, other.text
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.text, self.url))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Diff url={self.url}>'
@@ -580,22 +588,23 @@ class Patch:
     def resolves(self, resolves: Iterable[IssueType]) -> None:
         self._resolves = SortedSet(resolves)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.type, self.diff, _ComparableTuple(self.resolves)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Patch):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Patch):
-            return _ComparableTuple((
-                self.type, self.diff, _ComparableTuple(self.resolves)
-            )) < _ComparableTuple((
-                other.type, other.diff, _ComparableTuple(other.resolves)
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.type, self.diff, tuple(self.resolves)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Patch type={self.type}, id={id(self)}>'
@@ -1741,52 +1750,33 @@ class Component(Dependable):
         else:
             return f'https://pypi.org/project/{self.name}'
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.type, self.group, self.name, self.version,
+            self.mime_type, self.supplier, self.author, self.publisher,
+            self.description, self.scope, _ComparableTuple(self.hashes),
+            _ComparableTuple(self.licenses), self.copyright, self.cpe,
+            None if self.purl is None else _ComparablePackageURL(self.purl),
+            self.swid, self.pedigree,
+            _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
+            _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
+            _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
+            _ComparableTuple(self.swhids), self.crypto_properties, _ComparableTuple(self.tags),
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Component):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Component):
-            return _ComparableTuple((
-                self.type, self.group, self.name, self.version,
-                self.mime_type, self.supplier, self.author, self.publisher,
-                self.description, self.scope, _ComparableTuple(self.hashes),
-                _ComparableTuple(self.licenses), self.copyright, self.cpe,
-                None if self.purl is None else _ComparablePackageURL(self.purl),
-                self.swid, self.pedigree,
-                _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
-                _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
-                _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
-                _ComparableTuple(self.swhids), self.crypto_properties, _ComparableTuple(self.tags)
-            )) < _ComparableTuple((
-                other.type, other.group, other.name, other.version,
-                other.mime_type, other.supplier, other.author, other.publisher,
-                other.description, other.scope, _ComparableTuple(other.hashes),
-                _ComparableTuple(other.licenses), other.copyright, other.cpe,
-                None if other.purl is None else _ComparablePackageURL(other.purl),
-                other.swid, other.pedigree,
-                _ComparableTuple(other.external_references), _ComparableTuple(other.properties),
-                _ComparableTuple(other.components), other.evidence, other.release_notes, other.modified,
-                _ComparableTuple(other.authors), _ComparableTuple(other.omnibor_ids), other.manufacturer,
-                _ComparableTuple(other.swhids), other.crypto_properties, _ComparableTuple(other.tags)
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((
-            self.type, self.group, self.name, self.version,
-            self.mime_type, self.supplier, self.author, self.publisher,
-            self.description, self.scope, tuple(self.hashes),
-            tuple(self.licenses), self.copyright, self.cpe,
-            self.purl,
-            self.swid, self.pedigree,
-            tuple(self.external_references), tuple(self.properties),
-            tuple(self.components), self.evidence, self.release_notes, self.modified,
-            tuple(self.authors), tuple(self.omnibor_ids), self.manufacturer,
-            tuple(self.swhids), self.crypto_properties, tuple(self.tags)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Component bom-ref={self.bom_ref!r}, group={self.group}, name={self.name}, ' \
-               f'version={self.version}, type={self.type}>'
+            f'version={self.version}, type={self.type}>'

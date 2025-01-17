@@ -48,6 +48,8 @@ from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelpe
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
 from .vulnerability import Vulnerability
+from .._internal.compare import ComparableTuple as _ComparableTuple
+
 
 if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
@@ -293,16 +295,20 @@ class BomMetaData:
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            _ComparableTuple(self.authors), self.component, _ComparableTuple(self.licenses), self.manufacture,
+            _ComparableTuple(self.properties),
+            _ComparableTuple(self.lifecycles), self.supplier, self.timestamp, self.tools, self.manufacturer
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, BomMetaData):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            tuple(self.authors), self.component, tuple(self.licenses), self.manufacture, tuple(self.properties),
-            tuple(self.lifecycles), self.supplier, self.timestamp, self.tools, self.manufacturer
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
@@ -722,17 +728,20 @@ class Bom:
 
         return True
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.serial_number, self.version, self.metadata, _ComparableTuple(self.components), _ComparableTuple(self.services),
+            _ComparableTuple(self.external_references), _ComparableTuple(self.dependencies), _ComparableTuple(self.properties),
+            _ComparableTuple(self.vulnerabilities),
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Bom):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            self.serial_number, self.version, self.metadata, tuple(self.components), tuple(self.services),
-            tuple(self.external_references), tuple(self.dependencies), tuple(self.properties),
-            tuple(self.vulnerabilities),
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Bom uuid={self.serial_number}, hash={hash(self)}>'

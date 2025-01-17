@@ -53,21 +53,26 @@ class Standard:
         self.owner = owner
         self.external_references = external_references or []  # type:ignore[assignment]
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.bom_ref,
+            self.name, self.version,
+            self.description, self.owner,
+            _ComparableTuple(self.external_references)
+        ))
+
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Standard):
-            return (_ComparableTuple((self.bom_ref, self.name, self.version))
-                    < _ComparableTuple((other.bom_ref, other.name, other.version)))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Standard):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((
-            self.bom_ref, self.name, self.version, self.description, self.owner, tuple(self.external_references)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Standard bom-ref={self.bom_ref}, name={self.name}, version={self.version}, ' \
@@ -212,20 +217,21 @@ class Definitions:
     def __bool__(self) -> bool:
         return len(self._standards) > 0
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(self._standards)
+
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Definitions):
-            return False
-
-        return self._standards == other._standards
-
-    def __hash__(self) -> int:
-        return hash((tuple(self._standards)))
+        if isinstance(other, Definitions):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Definitions):
-            return (_ComparableTuple(self._standards)
-                    < _ComparableTuple(other.standards))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return '<Definitions>'
