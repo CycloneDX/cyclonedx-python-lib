@@ -115,31 +115,28 @@ class Requirement:
         self.properties = properties or ()  # type:ignore[assignment]
         self.external_references = external_references or ()  # type:ignore[assignment]
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        # all properties are optional - so need to compare all, in hope that one is unique
+        return _ComparableTuple((
+            self.bom_ref, self.identifier,
+            self.title, self.text,
+            _ComparableTuple(self.descriptions),
+            _ComparableTuple(self.open_cre), self.parent, _ComparableTuple(self.properties),
+            _ComparableTuple(self.external_references)
+        ))
+
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Requirement):
-            # all properties are optional - so need to compare all, in hope that one is unique
-            return _ComparableTuple((
-                self.bom_ref, self.identifier, self.title, self.text, _ComparableTuple(self.descriptions),
-                _ComparableTuple(self.open_cre), self.parent, _ComparableTuple(self.properties),
-                _ComparableTuple(self.external_references)
-            )) < _ComparableTuple((
-                other.bom_ref, other.identifier, other.title, other.text, _ComparableTuple(other.descriptions),
-                _ComparableTuple(other.open_cre), other.parent, _ComparableTuple(other.properties),
-                _ComparableTuple(other.external_references)
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Requirement):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # all properties are optional - so need to apply all, in hope that one is unique
-        return hash((
-            self.bom_ref, self.identifier, self.title, self.text, tuple(self.descriptions),
-            tuple(self.open_cre), self.parent, tuple(self.properties), tuple(self.external_references)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, title={self.title}, ' \
@@ -246,7 +243,7 @@ class Requirement:
 
     @parent.setter
     def parent(self, parent: Optional[Union[str, BomRef]]) -> None:
-        self._parent = _bom_ref_from_str(parent)
+        self._parent = _bom_ref_from_str(parent, optional=True)
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
@@ -303,26 +300,24 @@ class Level:
         self.description = description
         self.requirements = requirements or ()  # type:ignore[assignment]
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        # all properties are optional - so need to compare all, in hope that one is unique
+        return _ComparableTuple((
+            self.bom_ref, self.identifier, self.title, self.description, _ComparableTuple(self.requirements)
+        ))
+
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Level):
-            # all properties are optional - so need to compare all, in hope that one is unique
-            return _ComparableTuple((
-                self.bom_ref, self.identifier, self.title, self.description, _ComparableTuple(self.requirements)
-            )) < _ComparableTuple((
-                other.bom_ref, other.identifier, other.title, other.description, _ComparableTuple(other.requirements)
-            ))
+            return  self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Level):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # all properties are optional - so need to compare all, in hope that one is unique
-        return hash((
-            self.bom_ref, self.identifier, self.title, self.description, tuple(self.requirements)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Level bom-ref={self.bom_ref}, identifier={self.identifier}, title={self.title}, ' \
@@ -424,31 +419,27 @@ class Standard:
         self.levels = levels or ()  # type:ignore[assignment]
         self.external_references = external_references or ()  # type:ignore[assignment]
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        # all properties are optional - so need to apply all, in hope that one is unique
+        return _ComparableTuple((
+            self.bom_ref,
+            self.name, self.version, self.description, self.owner,
+            _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
+            _ComparableTuple(self.external_references)
+        ))
+
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Standard):
-            # all properties are optional - so need to apply all, in hope that one is unique
-            return _ComparableTuple((
-                self.bom_ref, self.name, self.version, self.description, self.owner,
-                _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
-                _ComparableTuple(self.external_references)
-            )) < _ComparableTuple((
-                self.bom_ref, self.name, self.version, self.description, self.owner,
-                _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
-                _ComparableTuple(self.external_references)
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Standard):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # all properties are optional - so need to apply all, in hope that one is unique
-        return hash((
-            self.bom_ref, self.name, self.version, self.description, self.owner,
-            tuple(self.requirements), tuple(self.levels), tuple(self.external_references)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Standard bom-ref={self.bom_ref}, name={self.name}, version={self.version}, ' \
@@ -593,19 +584,21 @@ class Definitions:
     def __bool__(self) -> bool:
         return len(self._standards) > 0
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        # all properties are optional - so need to apply all, in hope that one is unique
+        return _ComparableTuple(self._standards)
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Definitions):
-            return hash(self) == hash(other)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # all properties are optional - so need to apply all, in hope that one is unique
-        return hash(tuple(self._standards))
+        return hash(self.__comparable_tuple())
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Definitions):
-            # all properties are optional - so need to apply all, in hope that one is unique
-            return _ComparableTuple(self._standards) < _ComparableTuple(other._standards)
+            return  self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __repr__(self) -> str:
