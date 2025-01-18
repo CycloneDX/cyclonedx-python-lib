@@ -29,10 +29,9 @@ from xml.etree.ElementTree import Element  # nosec B405
 import serializable
 from sortedcontainers import SortedSet
 
-from exception.serialization import CycloneDxDeserializationException
-
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
+from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot6
 from . import AttachedText, XsUri
 
