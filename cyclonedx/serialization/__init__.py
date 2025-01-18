@@ -36,8 +36,9 @@ from ..model.license import DisjunctiveLicense, LicenseExpression, LicenseReposi
 if TYPE_CHECKING:  # pragma: no cover
     from serializable import ViewType
 
-#TODO: remove, no longer needed
+
 class BomRefHelper(BaseHelper):
+    # TODO: remove, no longer needed
 
     @classmethod
     def serialize(cls, o: Any) -> Optional[str]:

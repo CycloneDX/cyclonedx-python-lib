@@ -24,9 +24,10 @@ from serializable.helpers import BaseHelper
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 
 if TYPE_CHECKING:  # pragma: no cover
-    from typing import TypeVar, Type
+    from typing import Type, TypeVar
 
     _T = TypeVar('_T', bound='BomRef')
+
 
 @serializable.serializable_class
 class BomRef(BaseHelper):
