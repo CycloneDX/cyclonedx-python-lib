@@ -140,7 +140,7 @@ class Requirement:
 
     def __repr__(self) -> str:
         return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, title={self.title}, ' \
-               f'text={self.text}, parent={self.parent}>'
+            f'text={self.text}, parent={self.parent}>'
 
     @property
     @serializable.json_name('bom-ref')
@@ -308,7 +308,7 @@ class Level:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Level):
-            return  self.__comparable_tuple() < other.__comparable_tuple()
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __eq__(self, other: object) -> bool:
@@ -321,7 +321,7 @@ class Level:
 
     def __repr__(self) -> str:
         return f'<Level bom-ref={self.bom_ref}, identifier={self.identifier}, title={self.title}, ' \
-               f'description={self.description}>'
+            f'description={self.description}>'
 
     @property
     @serializable.json_name('bom-ref')
@@ -443,7 +443,7 @@ class Standard:
 
     def __repr__(self) -> str:
         return f'<Standard bom-ref={self.bom_ref}, name={self.name}, version={self.version}, ' \
-               f'description={self.description}, owner={self.owner}>'
+            f'description={self.description}, owner={self.owner}>'
 
     @property
     @serializable.json_name('bom-ref')
@@ -598,7 +598,7 @@ class Definitions:
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Definitions):
-            return  self.__comparable_tuple() < other.__comparable_tuple()
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __repr__(self) -> str:
