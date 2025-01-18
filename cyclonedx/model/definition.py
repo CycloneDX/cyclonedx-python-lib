@@ -389,7 +389,8 @@ class Level:
 
     @requirements.setter
     def requirements(self, requirements: Iterable[Union[str, BomRef]]) -> None:
-        self._requirements = SortedSet(map(_bom_ref_from_str, requirements))
+        self._requirements = SortedSet(map(_bom_ref_from_str,  # type: ignore[arg-type]
+                                           requirements))
 
 
 @serializable.serializable_class
