@@ -19,18 +19,17 @@
 from typing import TYPE_CHECKING, Any, Optional
 
 import serializable
-from serializable.helpers import BaseHelper
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 
 if TYPE_CHECKING:  # pragma: no cover
     from typing import Type, TypeVar
 
-    _T = TypeVar('_T', bound='BomRef')
+    _T_BR = TypeVar('_T_BR', bound='BomRef')
 
 
 @serializable.serializable_class
-class BomRef(BaseHelper):
+class BomRef(serializable.helpers.BaseHelper):
     """
     An identifier that can be used to reference objects elsewhere in the BOM.
 
@@ -91,7 +90,7 @@ class BomRef(BaseHelper):
             f'Attempt to serialize a non-BomRef: {o!r}')
 
     @classmethod
-    def deserialize(cls: 'Type[_T]', o: Any) -> '_T':
+    def deserialize(cls: 'Type[_T_BR]', o: Any) -> '_T_BR':
         try:
             return cls(value=str(o))
         except ValueError as err:
