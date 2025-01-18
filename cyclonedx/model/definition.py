@@ -111,7 +111,7 @@ class Requirement:
         self.text = text
         self.descriptions = descriptions or ()  # type:ignore[assignment]
         self.open_cre = open_cre or ()  # type:ignore[assignment]
-        self.parent = parent
+        self.parent = parent  # type:ignore[assignment]
         self.properties = properties or ()  # type:ignore[assignment]
         self.external_references = external_references or ()  # type:ignore[assignment]
 

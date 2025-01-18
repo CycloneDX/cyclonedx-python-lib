@@ -99,7 +99,7 @@ class TestModelCreId(TestCase):
         ['no numbers', 'CRE:abc-def'],
         ['no delimiter', 'CRE:123456'],
     )
-    def test_invalid_id(self, wrong_id) -> None:
+    def test_invalid_id(self, wrong_id: str) -> None:
         with self.assertRaises(InvalidCreIdException):
             CreId(wrong_id)
 
