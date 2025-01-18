@@ -22,7 +22,7 @@ License related things
 
 from enum import Enum
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
@@ -354,8 +354,6 @@ if TYPE_CHECKING:  # pragma: no cover
         The normalization/serialization process SHOULD take care of these facts and do what is needed.
         """
 
-    from typing import Type, TypeVar
-
 else:
     class LicenseRepository(SortedSet):
         """Collection of :class:`License`.
@@ -377,7 +375,7 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
 
     @classmethod
     def json_normalize(cls, o: LicenseRepository, *,
-                       view: Optional['Type[serializable.ViewType]'],
+                       view: Optional[Type[serializable.ViewType]],
                        **__: Any) -> Any:
         if len(o) == 0:
             return None
@@ -415,7 +413,7 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def xml_normalize(cls, o: LicenseRepository, *,
                       element_name: str,
-                      view: Optional['Type[serializable.ViewType]'],
+                      view: Optional[Type[serializable.ViewType]],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
         if len(o) == 0:
