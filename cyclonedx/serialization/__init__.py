@@ -30,7 +30,7 @@ from serializable.helpers import BaseHelper
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..model.bom_ref import BomRef
-from ..model.license import LicenseRepository
+from ..model.license import LicenseRepository, _LicenseRepositorySerializationHelper
 
 if TYPE_CHECKING:  # pragma: no cover
     from serializable import ViewType
@@ -93,12 +93,12 @@ class LicenseRepositoryHelper(BaseHelper):
     def json_normalize(cls, o: LicenseRepository, *,
                        view: Optional[Type['ViewType']],
                        **__: Any) -> Any:
-        return LicenseRepository.json_normalize(o, view=view)
+        return _LicenseRepositorySerializationHelper.json_normalize(o, view=view)
 
     @classmethod
     def json_denormalize(cls, o: List[Dict[str, Any]],
                          **__: Any) -> LicenseRepository:
-        return LicenseRepository.json_denormalize(o)
+        return _LicenseRepositorySerializationHelper.json_denormalize(o)
 
     @classmethod
     def xml_normalize(cls, o: LicenseRepository, *,
@@ -106,10 +106,10 @@ class LicenseRepositoryHelper(BaseHelper):
                       view: Optional[Type['ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
-        return LicenseRepository.xml_normalize(o, element_name=element_name, view=view, xmlns=xmlns)
+        return _LicenseRepositorySerializationHelper.xml_normalize(o, element_name=element_name, view=view, xmlns=xmlns)
 
     @classmethod
     def xml_denormalize(cls, o: Element,
                         default_ns: Optional[str],
                         **__: Any) -> LicenseRepository:
-        return LicenseRepository.xml_denormalize(o, default_ns)
+        return _LicenseRepositorySerializationHelper.xml_denormalize(o, default_ns)
