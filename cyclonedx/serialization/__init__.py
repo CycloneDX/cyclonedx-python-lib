@@ -30,10 +30,7 @@ from serializable.helpers import BaseHelper
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..model.bom_ref import BomRef
-from ..model.license import LicenseRepository, _LicenseRepositorySerializationHelper
-
-if TYPE_CHECKING:  # pragma: no cover
-    from serializable import ViewType
+from ..model.license import _LicenseRepositorySerializationHelper
 
 
 class BomRefHelper(BaseHelper):
