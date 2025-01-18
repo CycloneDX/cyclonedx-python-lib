@@ -38,22 +38,15 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class BomRefHelper(BaseHelper):
+    # TODO: remove, no longer needed
 
     @classmethod
     def serialize(cls, o: Any) -> Optional[str]:
-        if isinstance(o, BomRef):
-            return o.value
-        raise SerializationOfUnexpectedValueException(
-            f'Attempt to serialize a non-BomRef: {o!r}')
+        return BomRef.serialize(o)
 
     @classmethod
     def deserialize(cls, o: Any) -> BomRef:
-        try:
-            return BomRef(value=str(o))
-        except ValueError as err:
-            raise CycloneDxDeserializationException(
-                f'BomRef string supplied does not parse: {o!r}'
-            ) from err
+        return BomRef.deserialize(o)
 
 
 class PackageUrl(BaseHelper):
