@@ -15,6 +15,9 @@
             "bom-ref": "lvl-3",
             "description": "Level 3 description",
             "identifier": "LVL-3",
+            "requirements": [
+              "req-3"
+            ],
             "title": "Level 3"
           }
         ],
@@ -71,6 +74,10 @@
             "bom-ref": "lvl-2",
             "description": "Level 2 description",
             "identifier": "LVL-2",
+            "requirements": [
+              "req-1",
+              "req-2"
+            ],
             "title": "Level 2"
           }
         ],

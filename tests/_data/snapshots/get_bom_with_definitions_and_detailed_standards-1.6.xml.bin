@@ -35,6 +35,9 @@
             <identifier>LVL-3</identifier>
             <title>Level 3</title>
             <description>Level 3 description</description>
+            <requirements>
+              <requirement>req-3</requirement>
+            </requirements>
           </level>
         </levels>
         <externalReferences>
@@ -87,6 +90,10 @@
             <identifier>LVL-2</identifier>
             <title>Level 2</title>
             <description>Level 2 description</description>
+            <requirements>
+              <requirement>req-1</requirement>
+              <requirement>req-2</requirement>
+            </requirements>
           </level>
         </levels>
         <externalReferences>

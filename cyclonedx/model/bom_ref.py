@@ -16,10 +16,20 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
+import serializable
+from serializable.helpers import BaseHelper
 
-class BomRef:
+from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
+
+if TYPE_CHECKING:  # pragma: no cover
+    from typing import TypeVar, Type
+
+    _T = TypeVar('_T', bound='BomRef')
+
+@serializable.serializable_class
+class BomRef(BaseHelper):
     """
     An identifier that can be used to reference objects elsewhere in the BOM.
 
@@ -33,6 +43,8 @@ class BomRef:
         self.value = value
 
     @property
+    @serializable.json_name('.')
+    @serializable.xml_name('.')
     def value(self) -> Optional[str]:
         return self._value
 
@@ -67,3 +79,23 @@ class BomRef:
 
     def __bool__(self) -> bool:
         return self._value is not None
+
+    # region impl BaseHelper
+
+    @classmethod
+    def serialize(cls, o: Any) -> Optional[str]:
+        if isinstance(o, cls):
+            return o.value
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-BomRef: {o!r}')
+
+    @classmethod
+    def deserialize(cls: 'Type[_T]', o: Any) -> '_T':
+        try:
+            return cls(value=str(o))
+        except ValueError as err:
+            raise CycloneDxDeserializationException(
+                f'BomRef string supplied does not parse: {o!r}'
+            ) from err
+
+    # endregion impl BaseHelper
