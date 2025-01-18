@@ -20,9 +20,8 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type
+from typing import Any, Optional
 from uuid import UUID
-from xml.etree.ElementTree import Element  # nosec B405
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
