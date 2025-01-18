@@ -1329,7 +1329,7 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                 owner='Some Owner',
                 external_references=[get_external_reference_1()],
                 requirements=[
-                    Requirement(
+                    req1 := Requirement(
                         bom_ref='req-1',
                         identifier='REQ-1',
                         title='Requirement 1',
@@ -1346,7 +1346,7 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                         descriptions=['Requirement 2 described here'],
                         open_cre=[CreId('CRE:1-2'), CreId('CRE:3-4')],
                         properties=[Property(name='key2', value='val2')],
-                        parent='req-1'
+                        parent=req1.bom_ref
                     ),
                 ],
                 levels=[
