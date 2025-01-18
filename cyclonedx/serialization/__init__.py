@@ -86,30 +86,6 @@ class UrnUuidHelper(BaseHelper):
             ) from err
 
 
-class LicenseRepositoryHelper(BaseHelper):
+class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
     # TODO: remove, no longer needed
-
-    @classmethod
-    def json_normalize(cls, o: LicenseRepository, *,
-                       view: Optional[Type['ViewType']],
-                       **__: Any) -> Any:
-        return _LicenseRepositorySerializationHelper.json_normalize(o, view=view)
-
-    @classmethod
-    def json_denormalize(cls, o: List[Dict[str, Any]],
-                         **__: Any) -> LicenseRepository:
-        return _LicenseRepositorySerializationHelper.json_denormalize(o)
-
-    @classmethod
-    def xml_normalize(cls, o: LicenseRepository, *,
-                      element_name: str,
-                      view: Optional[Type['ViewType']],
-                      xmlns: Optional[str],
-                      **__: Any) -> Optional[Element]:
-        return _LicenseRepositorySerializationHelper.xml_normalize(o, element_name=element_name, view=view, xmlns=xmlns)
-
-    @classmethod
-    def xml_denormalize(cls, o: Element,
-                        default_ns: Optional[str],
-                        **__: Any) -> LicenseRepository:
-        return _LicenseRepositorySerializationHelper.xml_denormalize(o, default_ns)
+    pass
