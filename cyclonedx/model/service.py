@@ -20,7 +20,7 @@
 This set of classes represents the data that is possible about known Services.
 
 .. note::
-    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.4/xml/#type_servicesType
+    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.6/xml/#type_servicesType
 """
 
 
@@ -48,7 +48,7 @@ class Service(Dependable):
     Class that models the `service` complex type in the CycloneDX schema.
 
     .. note::
-        See the CycloneDX schema: https://cyclonedx.org/docs/1.4/xml/#type_service
+        See the CycloneDX schema: https://cyclonedx.org/docs/1.6/xml/#type_service
     """
 
     def __init__(

@@ -59,7 +59,7 @@ class BomMetaData:
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.5/#type_metadata
+        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/#type_metadata
     """
 
     def __init__(
@@ -394,7 +394,7 @@ class Bom:
             Metadata object instance for this Bom.
 
         .. note::
-            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
+            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/#type_metadata
         """
         return self._metadata
 

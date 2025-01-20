@@ -194,7 +194,7 @@ class OrganizationalContact:
     within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalContact
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_organizationalContact
     """
 
     def __init__(
@@ -287,7 +287,7 @@ class OrganizationalEntity:
     within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_organizationalEntity
     """
 
     def __init__(

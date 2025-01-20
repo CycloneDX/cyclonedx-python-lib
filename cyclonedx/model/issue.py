@@ -32,7 +32,7 @@ class IssueClassification(str, Enum):
     This is our internal representation of the enum `issueClassification`.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueClassification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueClassification
     """
     DEFECT = 'defect'
     ENHANCEMENT = 'enhancement'
@@ -46,7 +46,7 @@ class IssueTypeSource:
     places within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueType
     """
 
     def __init__(
@@ -118,7 +118,7 @@ class IssueType:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueType
     """
 
     def __init__(
