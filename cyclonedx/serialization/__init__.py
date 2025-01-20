@@ -20,6 +20,7 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
+import sys
 from typing import Any, Optional
 from uuid import UUID
 
@@ -33,6 +34,10 @@ from ..model.license import _LicenseRepositorySerializationHelper
 
 
 class BomRefHelper(BaseHelper):
+    """
+    DEPRECATED. use :class:`BomRef` instead.
+    """
+
     # TODO: remove, no longer needed
 
     @classmethod
@@ -83,5 +88,10 @@ class UrnUuidHelper(BaseHelper):
 
 
 class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
+    """
+    DEPRECATED. No public API planned for replacing this
+    """
+
     # TODO: remove, no longer needed
+
     pass
