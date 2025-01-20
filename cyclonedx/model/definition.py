@@ -29,7 +29,9 @@ from . import ExternalReference, Property
 from .bom_ref import BomRef
 
 if TYPE_CHECKING:  # pragma: no cover
-    pass
+    from typing import Type, TypeVar
+
+    _T_CreId = TypeVar('_T_CreId', bound='CreId')
 
 
 @serializable.serializable_class
@@ -63,7 +65,7 @@ class CreId(serializable.helpers.BaseHelper):
             f'Attempt to serialize a non-CreId: {o!r}')
 
     @classmethod
-    def deserialize(cls, o: Any) -> 'CreId':
+    def deserialize(cls: 'Type[_T_CreId]', o: Any) -> '_T_CreId':
         return cls(id=str(o))
 
     def __eq__(self, other: Any) -> bool:
