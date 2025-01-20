@@ -64,7 +64,7 @@ class DisjunctiveLicense:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/json/#components_items_licenses
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_licenses
     """
 
     def __init__(
@@ -94,7 +94,7 @@ class DisjunctiveLicense:
 
         .. note::
           See the list of expected values:
-          https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_license_id
+          https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_license_id
 
         Returns:
             `str` or `None`
@@ -246,7 +246,7 @@ class LicenseExpression:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_expression
+        https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_expression
     """
 
     def __init__(
