@@ -36,14 +36,14 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
-from ..serialization import LicenseRepositoryHelper, UrnUuidHelper
+from ..serialization import UrnUuidHelper
 from . import _BOM_LINK_PREFIX, ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
 from .definition import Definitions
 from .dependency import Dependable, Dependency
-from .license import License, LicenseExpression, LicenseRepository
+from .license import License, LicenseExpression, LicenseRepository, _LicenseRepositorySerializationHelper
 from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
@@ -59,7 +59,7 @@ class BomMetaData:
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.5/#type_metadata
+        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/#type_metadata
     """
 
     def __init__(
@@ -254,7 +254,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(9)
     def licenses(self) -> LicenseRepository:
         """
@@ -394,7 +394,7 @@ class Bom:
             Metadata object instance for this Bom.
 
         .. note::
-            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.3/#type_metadata
+            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/#type_metadata
         """
         return self._metadata
 

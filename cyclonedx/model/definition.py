@@ -448,7 +448,7 @@ class Standard:
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:

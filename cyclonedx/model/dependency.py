@@ -24,7 +24,6 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import SerializationOfUnexpectedValueException
-from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 
 
@@ -53,7 +52,7 @@ class Dependency:
     Models a Dependency within a BOM.
 
     .. note::
-        See https://cyclonedx.org/docs/1.4/xml/#type_dependencyType
+        See https://cyclonedx.org/docs/1.6/xml/#type_dependencyType
     """
 
     def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
@@ -61,7 +60,7 @@ class Dependency:
         self.dependencies = dependencies or []  # type:ignore[assignment]
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     def ref(self) -> BomRef:
         return self._ref

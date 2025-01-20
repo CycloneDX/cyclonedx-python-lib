@@ -35,7 +35,6 @@ from sortedcontainers import SortedSet
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidNistQuantumSecurityLevelException, InvalidRelatedCryptoMaterialSizeException
 from ..schema.schema import SchemaVersion1Dot6
-from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 
 
@@ -606,7 +605,7 @@ class CertificateProperties:
         self._not_valid_after = not_valid_after
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_sequence(50)
     def signature_algorithm_ref(self) -> Optional[BomRef]:
         """
@@ -622,7 +621,7 @@ class CertificateProperties:
         self._signature_algorithm_ref = signature_algorithm_ref
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_sequence(60)
     def subject_public_key_ref(self) -> Optional[BomRef]:
         """
@@ -775,7 +774,7 @@ class RelatedCryptoMaterialSecuredBy:
         self._mechanism = mechanism
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_sequence(20)
     def algorithm_ref(self) -> Optional[BomRef]:
         """
@@ -888,7 +887,7 @@ class RelatedCryptoMaterialProperties:
         self._state = state
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_sequence(40)
     def algorithm_ref(self) -> Optional[BomRef]:
         """
