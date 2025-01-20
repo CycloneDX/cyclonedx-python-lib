@@ -34,7 +34,7 @@ from ..model.license import _LicenseRepositorySerializationHelper
 
 
 class BomRefHelper(BaseHelper):
-    """**DEPRECATED**
+    """**DEPRECATED** in favour of :class:`BomRef`
     .. deprecated:: 8.6
        Use :class:`BomRef` instead.
     """
@@ -91,7 +91,7 @@ class UrnUuidHelper(BaseHelper):
 class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
     """**DEPRECATED**
     .. deprecated:: 8.6
-       No public API planned for replacing this
+       No public API planned for replacing this,
     """
 
     # TODO: remove, no longer needed
