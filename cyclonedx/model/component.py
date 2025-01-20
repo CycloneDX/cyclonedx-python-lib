@@ -44,7 +44,7 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
-from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl as PackageUrlSH
+from ..serialization import PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
     Copyright,
@@ -61,7 +61,7 @@ from .contact import OrganizationalContact, OrganizationalEntity
 from .crypto import CryptoProperties
 from .dependency import Dependable
 from .issue import IssueType
-from .license import License, LicenseRepository
+from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .release_note import ReleaseNotes
 
 
@@ -250,7 +250,7 @@ class ComponentEvidence:
     #    ... # TODO since CDX1.5
 
     @property
-    @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(4)
     def licenses(self) -> LicenseRepository:
         """
@@ -1171,7 +1171,7 @@ class Component(Dependable):
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
@@ -1407,7 +1407,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(12)
     def licenses(self) -> LicenseRepository:
         """
@@ -1789,4 +1789,4 @@ class Component(Dependable):
 
     def __repr__(self) -> str:
         return f'<Component bom-ref={self.bom_ref!r}, group={self.group}, name={self.name}, ' \
-               f'version={self.version}, type={self.type}>'
+            f'version={self.version}, type={self.type}>'

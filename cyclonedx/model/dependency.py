@@ -24,7 +24,6 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import SerializationOfUnexpectedValueException
-from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 
 
@@ -61,7 +60,7 @@ class Dependency:
         self.dependencies = dependencies or []  # type:ignore[assignment]
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     def ref(self) -> BomRef:
         return self._ref

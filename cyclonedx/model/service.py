@@ -29,8 +29,6 @@ from typing import Any, Iterable, Optional, Union
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
-
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
@@ -38,7 +36,7 @@ from . import DataClassification, ExternalReference, Property, XsUri
 from .bom_ref import BomRef
 from .contact import OrganizationalEntity
 from .dependency import Dependable
-from .license import License, LicenseRepository
+from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .release_note import ReleaseNotes
 
 
@@ -87,7 +85,7 @@ class Service(Dependable):
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -263,7 +261,7 @@ class Service(Dependable):
         self._data = SortedSet(data)
 
     @property
-    @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(11)
     def licenses(self) -> LicenseRepository:
         """

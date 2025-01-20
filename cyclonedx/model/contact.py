@@ -25,7 +25,6 @@ from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import NoPropertiesProvidedException
 from ..schema.schema import SchemaVersion1Dot6
-from ..serialization import BomRefHelper
 from . import XsUri
 from .bom_ref import BomRef
 
@@ -60,7 +59,7 @@ class PostalAddress:
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> Optional[BomRef]:
