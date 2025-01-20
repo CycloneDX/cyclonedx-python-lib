@@ -25,7 +25,6 @@ from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidCreIdException
 from ..exception.serialization import SerializationOfUnexpectedValueException
-from ..serialization import BomRefHelper
 from . import ExternalReference, Property
 from .bom_ref import BomRef
 
@@ -144,7 +143,7 @@ class Requirement:
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -231,7 +230,7 @@ class Requirement:
         self._open_cre = SortedSet(open_cre)
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_sequence(6)
     def parent(self) -> Optional[BomRef]:
         """
@@ -325,7 +324,7 @@ class Level:
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
