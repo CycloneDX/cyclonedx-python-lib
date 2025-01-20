@@ -22,7 +22,6 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..serialization import BomRefHelper
 from . import ExternalReference
 from .bom_ref import BomRef
 
@@ -76,11 +75,11 @@ class Standard:
 
     def __repr__(self) -> str:
         return f'<Standard bom-ref={self.bom_ref}, name={self.name}, version={self.version}, ' \
-               f'description={self.description}, owner={self.owner}>'
+            f'description={self.description}, owner={self.owner}>'
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:

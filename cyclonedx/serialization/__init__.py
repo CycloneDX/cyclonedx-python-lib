@@ -20,10 +20,8 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
-from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type
+from typing import Any, Optional
 from uuid import UUID
-from xml.etree.ElementTree import Element  # nosec B405
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
@@ -31,29 +29,25 @@ from serializable.helpers import BaseHelper
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..model.bom_ref import BomRef
-from ..model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
-
-if TYPE_CHECKING:  # pragma: no cover
-    from serializable import ViewType
+from ..model.license import _LicenseRepositorySerializationHelper
 
 
 class BomRefHelper(BaseHelper):
+    """**DEPRECATED** in favour of :class:`BomRef`.
+
+    .. deprecated:: 8.6
+       Use :class:`BomRef` instead.
+    """
+
+    # TODO: remove, no longer needed
 
     @classmethod
     def serialize(cls, o: Any) -> Optional[str]:
-        if isinstance(o, BomRef):
-            return o.value
-        raise SerializationOfUnexpectedValueException(
-            f'Attempt to serialize a non-BomRef: {o!r}')
+        return BomRef.serialize(o)
 
     @classmethod
     def deserialize(cls, o: Any) -> BomRef:
-        try:
-            return BomRef(value=str(o))
-        except ValueError as err:
-            raise CycloneDxDeserializationException(
-                f'BomRef string supplied does not parse: {o!r}'
-            ) from err
+        return BomRef.deserialize(o)
 
 
 class PackageUrl(BaseHelper):
@@ -94,82 +88,13 @@ class UrnUuidHelper(BaseHelper):
             ) from err
 
 
-class LicenseRepositoryHelper(BaseHelper):
-    @classmethod
-    def json_normalize(cls, o: LicenseRepository, *,
-                       view: Optional[Type['ViewType']],
-                       **__: Any) -> Any:
-        if len(o) == 0:
-            return None
-        expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
-        if expression:
-            # mixed license expression and license? this is an invalid constellation according to schema!
-            # see https://github.com/CycloneDX/specification/pull/205
-            # but models need to allow it for backwards compatibility with JSON CDX < 1.5
-            return [json_loads(expression.as_json(view_=view))]  # type:ignore[attr-defined]
-        return [
-            {'license': json_loads(
-                li.as_json(  # type:ignore[attr-defined]
-                    view_=view)
-            )}
-            for li in o
-            if isinstance(li, DisjunctiveLicense)
-        ]
+class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
+    """**DEPRECATED**
 
-    @classmethod
-    def json_denormalize(cls, o: List[Dict[str, Any]],
-                         **__: Any) -> LicenseRepository:
-        repo = LicenseRepository()
-        for li in o:
-            if 'license' in li:
-                repo.add(DisjunctiveLicense.from_json(  # type:ignore[attr-defined]
-                    li['license']))
-            elif 'expression' in li:
-                repo.add(LicenseExpression.from_json(  # type:ignore[attr-defined]
-                    li
-                ))
-            else:
-                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
-        return repo
+    .. deprecated:: 8.6
+       No public API planned for replacing this,
+    """
 
-    @classmethod
-    def xml_normalize(cls, o: LicenseRepository, *,
-                      element_name: str,
-                      view: Optional[Type['ViewType']],
-                      xmlns: Optional[str],
-                      **__: Any) -> Optional[Element]:
-        if len(o) == 0:
-            return None
-        elem = Element(element_name)
-        expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
-        if expression:
-            # mixed license expression and license? this is an invalid constellation according to schema!
-            # see https://github.com/CycloneDX/specification/pull/205
-            # but models need to allow it for backwards compatibility with JSON CDX < 1.5
-            elem.append(expression.as_xml(  # type:ignore[attr-defined]
-                view_=view, as_string=False, element_name='expression', xmlns=xmlns))
-        else:
-            elem.extend(
-                li.as_xml(  # type:ignore[attr-defined]
-                    view_=view, as_string=False, element_name='license', xmlns=xmlns)
-                for li in o
-                if isinstance(li, DisjunctiveLicense)
-            )
-        return elem
+    # TODO: remove, no longer needed
 
-    @classmethod
-    def xml_denormalize(cls, o: Element,
-                        default_ns: Optional[str],
-                        **__: Any) -> LicenseRepository:
-        repo = LicenseRepository()
-        for li in o:
-            tag = li.tag if default_ns is None else li.tag.replace(f'{{{default_ns}}}', '')
-            if tag == 'license':
-                repo.add(DisjunctiveLicense.from_xml(  # type:ignore[attr-defined]
-                    li, default_ns))
-            elif tag == 'expression':
-                repo.add(LicenseExpression.from_xml(  # type:ignore[attr-defined]
-                    li, default_ns))
-            else:
-                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
-        return repo
+    pass
