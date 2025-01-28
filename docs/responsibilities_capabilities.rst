@@ -21,7 +21,7 @@ Responsibilities
 * Provide data model-validators according to `CycloneDX Specification`_.
 * Provide JSON- and XML-serializers, that...
    * support all shipped data models.
-   * respect any supported `CycloneDX Specification`_ and generates valid output according to it.
+   * respect any supported `CycloneDX Specification`_ and generates valid output accordingly.
    * generate reproducible/deterministic results.
 * Provide formal JSON- and XML-validators according to `CycloneDX Specification`_.
 * Pre-populate `bom-ref`, so linkage is possible. (affects only some data models)
