@@ -26,6 +26,10 @@ Install from `pypi.org`_ as you would any other Python module using your preferr
 .. _pypi.org: https://pypi.org/project/cyclonedx-python-lib/
 .. _conda-forge: https://anaconda.org/conda-forge/cyclonedx-python-lib
 
+Some dependencies might be optional - they are referenced via the *extras*.
+
+.. _install extras:
+
 Extras
 ------
 
