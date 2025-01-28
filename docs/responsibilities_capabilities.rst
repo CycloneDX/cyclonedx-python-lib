@@ -59,8 +59,8 @@ Capabilities
    * ``1.2``
    * ``1.1``
    * ``1.0``
-* Serializer that converts :class:`BOM <cyclonedx.model.bom.Bom>` data models to XML string
-* Serializer that converts :class:`BOM <cyclonedx.model.bom.Bom>` data models to JSON string
+* Serializer that converts :class:`Bom <cyclonedx.model.bom.Bom>` data models to XML string
+* Serializer that converts :class:`Bom <cyclonedx.model.bom.Bom>` data models to JSON string
 * Formal validators for JSON string and XML string.
   Requires optional dependencies as described in :ref:`install instructions <install extras>`
 
