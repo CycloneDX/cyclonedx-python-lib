@@ -30,7 +30,8 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
 
 ## Documentation
 
-View the documentation [here](https://cyclonedx-python-library.readthedocs.io/).
+View the responsibilities, capabilities, install instructions, documentation
+and more in our [online documentation](https://cyclonedx-python-library.readthedocs.io/).
 
 ## Python Support
 
