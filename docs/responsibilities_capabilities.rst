@@ -47,7 +47,7 @@ Capabilities
    * :mod:`Vulnerability and related Analysis <cyclonedx.model.vulnerability>`
    * :mod:`Attachment Copyright, DataFlow, ExternalReference, Hash, Property, and more  <cyclonedx.model>`
 * Factories for the following use cases:
-  * Create data models from any license descriptor string
+   * Create data models from any license descriptor string
 * Builders for the following use cases:
    * Build a :class:`Component <cyclonedx.model.component.Component>` data model that represents this library
    * Build a :class:`Tool <cyclonedx.model.tool.Tool>` data model that represents this library
