@@ -1,0 +1,37 @@
+{
+  "bomFormat" : "CycloneDX",
+  "specVersion" : "1.6",
+  "version" : 1,
+  "metadata" : {
+    "timestamp" : "2025-01-25T19:11:26Z",
+    "tools" : {
+      "components" : [
+        {
+          "type" : "application",
+          "author" : "CycloneDX",
+          "name" : "cyclonedx-gradle-plugin",
+          "version" : "2.0.0"
+        }
+      ],
+      "services" : [ ]
+    },
+    "component" : {
+      "type" : "application",
+      "bom-ref" : "pkg:maven/foo/bar@1.2.3",
+      "name" : "foo-bar",
+      "version" : "1.2.3",
+      "purl" : "pkg:maven/foo/bar@1.2.3",
+      "modified" : false
+    },
+    "manufacture" : { },
+    "licenses" : [ ]
+  },
+  "components" : [
+    {
+      "type" : "library",
+      "name": "some-lib",
+      "manufacturer" : { }
+    }
+  ],
+  "dependencies" : [ ]
+}
