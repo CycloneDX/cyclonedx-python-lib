@@ -29,9 +29,25 @@ Responsibilities
 Capabilities
 ============
 
-* Enums for the following use cases:
-* Data models for the following use cases:
+* Enums and Data models for the following use cases:
+   * :mod:`Bom and Metadata <cyclonedx.model.bom>`
+   * :mod:`BomRef <cyclonedx.model.bom_ref>`
+   * :mod:`Component, Evidence, Patch, Pedigree, and more <cyclonedx.model.component>`
+   * :mod:`Organizational Contact and Entity <cyclonedx.model.contact>`
+   * :mod:`Cryptographic properties and more <cyclonedx.model.crypto>`
+   * :mod:`Definition and Standard <cyclonedx.model.definition>`
+   * :mod:`Dependency <cyclonedx.model.dependency>`
+   * :mod:`Impact and related Analysis <cyclonedx.model.impact_analysis>`
+   * :mod:`Issue <cyclonedx.model.issue>`
+   * :mod:`License Named, SPDX, Expression, and more <cyclonedx.model.license>`
+   * :mod:`Lifecycle <cyclonedx.model.lifecycle>`
+   * :mod:`Release Notes <cyclonedx.model.release_note>`
+   * :mod:`Service <cyclonedx.model.service>`
+   * :mod:`Tool <cyclonedx.model.tool>`
+   * :mod:`Vulnerability and related Analysis <cyclonedx.model.vulnerability>`
+   * :mod:`Attachment Copyright, DataFlow, ExternalReference, Hash, Property, and more  <cyclonedx.model>`
 * Factories for the following use cases:
+  * Create data models from any license descriptor string
 * Builders for the following use cases:
    * Build a :class:`Component <cyclonedx.model.component.Component>` data model that represents this library
    * Build a :class:`Tool <cyclonedx.model.tool.Tool>` data model that represents this library
