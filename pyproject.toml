@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
-version = "8.0.0-rc.2"
+version = "8.5.0"
 description = "Python library for CycloneDX"
 authors = [
   "Paul Horton <phorton@sonatype.com>",
@@ -52,6 +52,7 @@ classifiers = [
   'Programming Language :: Python :: 3.10',
   'Programming Language :: Python :: 3.11',
   'Programming Language :: Python :: 3.12',
+  'Programming Language :: Python :: 3.13',
   'Typing :: Typed',
 ]
 keywords = [
@@ -85,7 +86,7 @@ ddt = "1.7.2"
 coverage = "7.6.1"
 flake8 = { version="7.1.1", python=">=3.8.1" }
 flake8-annotations = { version="3.1.1", python=">=3.8.1" }
-flake8-bugbear = { version="24.8.19", python=">=3.8.1" }
+flake8-bugbear = { version="24.12.12", python=">=3.8.1" }
 flake8-copyright-validator = "0.0.1"
 flake8-isort = "6.1.1"
 flake8-quotes = "3.4.0"
@@ -93,9 +94,9 @@ flake8-use-fstring = "1.4"
 pep8-naming = "0.14.1"
 isort = "5.13.2"
 autopep8 = "2.3.1"
-mypy = "1.11.2"
-tomli = { version = "2.0.1", python = "<3.11" }
-tox = "4.21.2"
+mypy = "1.14.1"
+tomli = { version = "2.2.1", python = "<3.11" }
+tox = "4.24.1"
 xmldiff = "2.7.0"
 bandit = "1.7.10"
 

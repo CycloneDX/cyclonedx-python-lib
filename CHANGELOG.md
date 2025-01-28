@@ -1,28 +1,167 @@
 # CHANGELOG
 
 
-## Unreleased
+
+## v8.5.0 (2024-11-18)
+
+### Documentation
+
+* docs: remove invalid docsting note about auto-assigned `bom-ref` values (#733) ([`5aa5787`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5aa5787767c60dc23fd09f6cf14e54e5b0efceb4))
+
+### Feature
+
+* feat: support CycloneDX 1.6.1 (#742)
+
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`55eafed`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/55eafedf50d395911a697bd9c85eeab5820934ff))
+
+
+## v8.4.0 (2024-10-29)
+
+### Feature
+
+* feat: add factory method `XsUri.make_bom_link()` (#728)
+
+
+
+---------
+
+Signed-off-by: Saquib Saifee &lt;saquibsaifee@ibm.com&gt;
+Co-authored-by: Saquib Saifee &lt;saquibsaifee@ibm.com&gt; ([`5ec73d0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5ec73d0668b4f9e087cc11a2e1a0e242ad1b5dd6))
+
+### Fix
+
+* fix: no warning for missing dependencies if no component exists (#720)
+
+
+---------
+
+Signed-off-by: weichslgartner &lt;weichslgartner@gmail.com&gt; ([`d9c3ded`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d9c3ded34f443cd04f1f0041f0dd948db3db40e7))
+
+### Unknown
+
+* doc: fix `Definitions` docstring (#731)
+
+
+---------
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt; ([`5860b67`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5860b67f562fc474903b0fb1a162c70eeca2f3d0))
+
+
+## v8.3.0 (2024-10-26)
+
+### Documentation
+
+* docs: revisit examples readme (#725)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e9020f0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e9020f0b709a5245d1749d2811b8568f892869bb))
+
+### Feature
+
+* feat: add basic support for Definitions  (#701)
+
+
+
+---------
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt; ([`a1573e5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a1573e5af12bb54c7328c73971dc2c2f8d820c0a))
+
+
+## v8.2.1 (2024-10-24)
+
+### Fix
+
+* fix: encode quotation mark in URL (#724)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a7c7c97`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a7c7c97c37ee1c7988c028aa779f74893f858c7b))
+
+
+## v8.2.0 (2024-10-22)
+
+### Feature
+
+* feat: Add Python 3.13 support (#718)
+
+Signed-off-by: gruebel &lt;anton.gruebel@gmail.com&gt; ([`d4be3ba`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d4be3ba6b3ccc65553a7dd10ad559c1eddfbb19b))
+
+
+## v8.1.0 (2024-10-21)
+
+### Documentation
+
+* docs: fix code examples regarding outputting (#709)
+
+
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt; ([`c72d5f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c72d5f483d5c1990fe643c4c25e37373d4d3248f))
+
+### Feature
+
+* feat: add support for Lifecycles in BOM metadata (#698)
+
+
+
+---------
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Johannes Feichtner &lt;343448+Churro@users.noreply.github.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6cfeb71`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6cfeb711f11aec8fa4d7be885f6797cc2eaa7e67))
+
+
+## v8.0.0 (2024-10-14)
+
+### Breaking
+
+* feat!: v8.0.0 (#665)
+
+### BREAKING Changes
+
+* Removed `cyclonedx.mode.ThisTool`, utilize `cyclonedx.builder.this.this_tool()` instead. 
+* Moved `cyclonedx.model.Tool` to `cyclonedx.model.tool.Tool`.
+* Property `cyclonedx.mode.bom.BomMetaData.tools` is of type `cyclonedx.model.tool.ToolRepository` now, was `SortedSet[cyclonedx.model.Tool]`.  
+  The getter will act accordingly; the setter might act in a backwards-compatible way.
+* Property `cyclonedx.mode.vulnerability.Vulnerability.tools` is of type `cyclonedx.model.tool.ToolRepository` now, was `SortedSet[cyclonedx.model.Tool]`.  
+  The getter will act accordingly; the setter might act in a backwards-compatible way.
+* Constructor `cyclonedx.model.license.LicenseExpression()` accepts optional argument `acknowledgement` only as key-word argument, no longer as positional argument.  
+  
+
+### Changes
+
+* Constructor of `cyclonedx.model.bom.BomMetaData` also accepts an instance of `cyclonedx.model.tool.ToolRepository` for argument `tools`.
+* Constructor of `cyclonedx.model.bom.BomMetaData` no longer adds this very library as a tool.  
+  Downstream users SHOULD add it manually, like `my-bom.metadata.tools.components.add(cyclonedx.builder.this.this_component())`. 
+
+### Fixes
+
+* Deserialization of CycloneDX that do not include tools in the metadata are no longer unexpectedly modified/altered.
+
+### Added
+
+Enabled Metadata Tools representation and serialization in accordance with CycloneDX 1.5 
+
+* New class `cyclonedx.model.tool.ToolRepository`.
+* New function `cyclonedx.builder.this.this_component()` -- representation of this very python library as a `Component`.
+* New function `cyclonedx.builder.this.this_tool()` -- representation of this very python library as a `Tool`.
+* New function `cyclonedx.model.tool.Tool.from_component()`.
+
+### Dependencies
+
+* Raised runtime dependency `py-serializable&gt;=1.1.1,&lt;2`, was `&gt;=1.1.0,&lt;2`.
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: Joshua Kugler &lt;tek30584@adobe.com&gt;
+Signed-off-by: semantic-release &lt;semantic-release@bot.local&gt;
+Co-authored-by: Joshua Kugler &lt;joshua@azariah.com&gt;
+Co-authored-by: semantic-release &lt;semantic-release@bot.local&gt; ([`002f966`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/002f96630ce8fc6f1766ee6cc92a16b35a821c69))
 
 ### Documentation
 
 * docs(chaneglog): omit chore/ci/refactor/style/test/build (#703)
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`a210809`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a210809efb34c2dc895fc0c6d96a3412a9097625))
-
-* docs: rephrase migration paths
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`b0260a7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b0260a7d45bc3e099b979001049a8c5a67b97634))
-
-### Unknown
-
-* Merge remote-tracking branch &#39;origin/main&#39; into 8.0.0-dev ([`b9a33e6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b9a33e614a84ba4a6546a1907b70a0cbfee8cd6f))
-
-* rework tools xml deserializer (#700)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1a24ee6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1a24ee6a0853e535465f85c6380971948281ad6e))
-
-* Merge remote-tracking branch &#39;origin/main&#39; into 8.0.0-dev ([`4c57fa1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4c57fa156516de07cdd4acd3f3057c0b20d108d7))
-
 
 
 ## v7.6.2 (2024-10-07)
@@ -43,125 +182,8 @@ fixes #690
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`d8b20bd`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d8b20bdc5224ea30cf767f6f3f1a6f8ff2754973))
 
-### Unknown
-
-* docs
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`68c681d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/68c681d46c85230a97c4058de97400f3d93119f5))
-
-
-## v8.0.0-rc.2 (2024-09-27)
-
-### Fix
-
-* fix: ToolRepository serialize migrated tools deduplicated (#686)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`35ccdd1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/35ccdd1bfec9757457763308d16e1dbf5d9e28e9))
-
-### Unknown
-
-* docs
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`2e16408`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/2e16408098a3c649b80fb407d4f43aaa34aee39f))
-
-* rename `ToolsRepository` -&gt; `ToolRepository` (#687)
-
-Item class of repository is to be called in singular(`Tool`).
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e00af17`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e00af1739fa6d3933315e96266d96d9b290012ee))
-
-
-## v8.0.0-rc.1 (2024-09-25)
-
-### Documentation
-
-* docs: migrate to v8.0.0 (#684)
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0ac84d7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ac84d76f2e526f329937ab004480405492e7417))
-
-### Fix
-
-* fix: assert copyright headers
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`bef268b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bef268b7abe2c3f343274d7789906c99c80e9df9))
-
-### Unknown
-
-* Merge branch &#39;main&#39; into 8.0.0-dev
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`39514b3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/39514b331eef98fbf5208ead341060831f8acddf))
-
-* Merge branch &#39;main&#39; into 8.0.0-dev ([`c123aff`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/c123aff4bd479ec0f5f1982725ffe8901afb87c9))
-
 
 ## v7.6.1 (2024-09-18)
-
-### Breaking
-
-* feat!: this-builder (#649)
-
-reworked `ThisTool` for #635
-
----------
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`cf5d2c7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/cf5d2c7e43883967c5d5837f465ecac5a8cc034e))
-
-* refactor!: `LicenseExpression()` optional args are named args (#595)
-
-fixes #594
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`0172564`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0172564d5f9529e7ce543da434969b552833de31))
-
-* feat!: Add component and services for tools (#635)
-
-CycloneDX spec 1.5 deprecated an array of tools in bom.metadata and
-instead prefers object with an array of components and an array of
-services.
-
-This PR implements that.
-
-This works de-serializing a Syft SBOM with a tool section like so:
-```
-  &#34;metadata&#34;: {
-    &#34;timestamp&#34;: &#34;2024-06-10T13:06:52-08:00&#34;,
-    &#34;tools&#34;: {
-      &#34;components&#34;: [
-        {
-          &#34;type&#34;: &#34;application&#34;,
-          &#34;author&#34;: &#34;anchore&#34;,
-          &#34;name&#34;: &#34;syft&#34;,
-          &#34;version&#34;: &#34;1.4.1&#34;
-        }
-      ]
-    },
-    &#34;component&#34;: {
-      &#34;bom-ref&#34;: &#34;08329a07b4eb8eac&#34;,
-      &#34;type&#34;: &#34;file&#34;,
-      &#34;name&#34;: &#34;./&#34;
-    }
-  },
-```
-Next up: docs, XML (de)serialization code, and tests.
-
-fixes #561
-
----------
-
-Signed-off-by: Joshua Kugler &lt;tek30584@adobe.com&gt;
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`1f5fd7a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1f5fd7a6be94d93d2260622d39ea01cd74614402))
-
-* feat!: 8.0.0
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`9ba4b8e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9ba4b8e5d255c8dba51df214786328bfa700291c))
-
-### Feature
-
-* feat: don&#39;t add self to `metafata.tools` (#674)
-
-fixes #673
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e0a153f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e0a153fbd553dcf29343d72e361c1cc9122c63b4))
 
 ### Fix
 
@@ -172,16 +194,6 @@ utilizes flake8 plugin
 correct headers
 
 Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`35e00b4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/35e00b4ee5a9306b9e97b011025409bcbfcef309))
-
-### Unknown
-
-* Merge branch &#39;main&#39; into 8.0.0-dev ([`3d1548a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3d1548abf5db45764a22fcca96493574f96ff693))
-
-* Merge branch &#39;main&#39; into 8.0.0-dev
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`735c800`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/735c8003ce88b0c6efa802ccd806f17d22b4df89))
-
-* Merge branch &#39;main&#39; into 8.0.0-dev ([`0ec785d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ec785d29abcc215a5a0f6feec9bf16b0994cc92))
 
 
 ## v7.6.0 (2024-08-14)

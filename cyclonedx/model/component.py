@@ -26,6 +26,7 @@ import serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, NoPropertiesProvidedException
@@ -43,7 +44,7 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
-from ..serialization import BomRefHelper, LicenseRepositoryHelper, PackageUrl as PackageUrlSH
+from ..serialization import PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
     Copyright,
@@ -60,7 +61,7 @@ from .contact import OrganizationalContact, OrganizationalEntity
 from .crypto import CryptoProperties
 from .dependency import Dependable
 from .issue import IssueType
-from .license import License, LicenseRepository
+from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .release_note import ReleaseNotes
 
 
@@ -70,7 +71,7 @@ class Commit:
     Our internal representation of the `commitType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_commitType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_commitType
     """
 
     def __init__(
@@ -199,7 +200,7 @@ class ComponentEvidence:
     Provides the ability to document evidence collected through various forms of extraction or analysis.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_componentEvidenceType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_componentEvidenceType
     """
 
     def __init__(
@@ -249,7 +250,7 @@ class ComponentEvidence:
     #    ... # TODO since CDX1.5
 
     @property
-    @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(4)
     def licenses(self) -> LicenseRepository:
         """
@@ -298,7 +299,7 @@ class ComponentScope(str, Enum):
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_scope
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_scope
     """
     # see `_ComponentScopeSerializationHelper.__CASES` for view/case map
     REQUIRED = 'required'
@@ -354,7 +355,7 @@ class ComponentType(str, Enum):
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_classification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_classification
     """
     # see `_ComponentTypeSerializationHelper.__CASES` for view/case map
     APPLICATION = 'application'
@@ -433,7 +434,7 @@ class Diff:
     Our internal representation of the `diffType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_diffType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_diffType
     """
 
     def __init__(
@@ -504,7 +505,7 @@ class PatchClassification(str, Enum):
     Enum object that defines the permissible `patchClassification`s.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_patchClassification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_patchClassification
     """
     BACKPORT = 'backport'
     CHERRY_PICK = 'cherry-pick'
@@ -518,7 +519,7 @@ class Patch:
     Our internal representation of the `patchType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_patchType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_patchType
     """
 
     def __init__(
@@ -611,7 +612,7 @@ class Pedigree:
     may not be known.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_pedigreeType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_pedigreeType
     """
 
     def __init__(
@@ -768,7 +769,7 @@ class Swid:
     Our internal representation of the `swidType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_swidType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_swidType
     """
 
     def __init__(
@@ -1028,7 +1029,7 @@ class Component(Dependable):
     This is our internal representation of a Component within a Bom.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_component
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_component
     """
 
     @staticmethod
@@ -1097,10 +1098,7 @@ class Component(Dependable):
     ) -> None:
         self.type = type
         self.mime_type = mime_type
-        if isinstance(bom_ref, BomRef):
-            self._bom_ref = bom_ref
-        else:
-            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.supplier = supplier
         self.manufacturer = manufacturer
         self.authors = authors or []  # type:ignore[assignment]
@@ -1173,7 +1171,7 @@ class Component(Dependable):
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.view(SchemaVersion1Dot1)
     @serializable.view(SchemaVersion1Dot2)
     @serializable.view(SchemaVersion1Dot3)
@@ -1186,8 +1184,6 @@ class Component(Dependable):
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
-
-        If a value was not provided in the constructor, a UUIDv4 will have been assigned.
 
         Returns:
             `BomRef`
@@ -1411,7 +1407,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(12)
     def licenses(self) -> LicenseRepository:
         """
@@ -1793,4 +1789,4 @@ class Component(Dependable):
 
     def __repr__(self) -> str:
         return f'<Component bom-ref={self.bom_ref!r}, group={self.group}, name={self.name}, ' \
-               f'version={self.version}, type={self.type}>'
+            f'version={self.version}, type={self.type}>'

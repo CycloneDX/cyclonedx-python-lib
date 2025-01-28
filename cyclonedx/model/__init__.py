@@ -27,7 +27,9 @@ from datetime import datetime
 from enum import Enum
 from functools import reduce
 from json import loads as json_loads
-from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type
+from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type, Union
+from urllib.parse import quote as url_quote
+from uuid import UUID
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -51,6 +53,9 @@ from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
 )
+from .bom_ref import BomRef
+
+_BOM_LINK_PREFIX = 'urn:cdx:'
 
 
 @serializable.serializable_enum
@@ -59,7 +64,7 @@ class DataFlow(str, Enum):
     This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/xml/#type_dataFlowType
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_dataFlowType
     """
     INBOUND = 'inbound'
     OUTBOUND = 'outbound'
@@ -77,7 +82,7 @@ class DataClassification:
 
     .. note::
         See the CycloneDX Schema for dataClassificationType:
-        https://cyclonedx.org/docs/1.4/xml/#type_dataClassificationType
+        https://cyclonedx.org/docs/1.6/xml/#type_dataClassificationType
     """
 
     def __init__(
@@ -155,7 +160,7 @@ class Encoding(str, Enum):
     This is our internal representation of the encoding simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.4/#type_encoding
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/#type_encoding
     """
     BASE_64 = 'base64'
 
@@ -166,7 +171,7 @@ class AttachedText:
     This is our internal representation of the `attachedTextType` complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.3/#type_attachedTextType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_attachedTextType
     """
 
     DEFAULT_CONTENT_TYPE = 'text/plain'
@@ -258,7 +263,7 @@ class HashAlgorithm(str, Enum):
     This is our internal representation of the hashAlg simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.3/#type_hashAlg
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/#type_hashAlg
     """
     # see `_HashTypeRepositorySerializationHelper.__CASES` for view/case map
     BLAKE2B_256 = 'BLAKE2b-256'  # Only supported in >= 1.2
@@ -381,7 +386,7 @@ class HashType:
     This is our internal representation of the hashType complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.3/#type_hashType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_hashType
     """
 
     @staticmethod
@@ -537,7 +542,7 @@ class ExternalReferenceType(str, Enum):
     Enum object that defines the permissible 'types' for an External Reference according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReferenceType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_externalReferenceType
     """
     # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
     ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
@@ -689,6 +694,8 @@ class XsUri(serializable.helpers.BaseHelper):
 
     __SPEC_REPLACEMENTS = (
         (' ', '%20'),
+        ('"', '%22'),
+        ("'", '%27'),
         ('[', '%5B'),
         (']', '%5D'),
         ('<', '%3C'),
@@ -765,6 +772,36 @@ class XsUri(serializable.helpers.BaseHelper):
                 f'XsUri string supplied does not parse: {o!r}'
             ) from err
 
+    @classmethod
+    def make_bom_link(
+        cls,
+        serial_number: Union[UUID, str],
+        version: int = 1,
+        bom_ref: Optional[Union[str, BomRef]] = None
+    ) -> 'XsUri':
+        """
+        Generate a BOM-Link URI.
+
+        Args:
+            serial_number: The unique serial number of the BOM.
+            version: The version of the BOM. The default version is 1.
+            bom_ref: The unique identifier of the component, service, or vulnerability within the BOM.
+
+        Returns:
+            XsUri: Instance of XsUri with the generated BOM-Link URI.
+        """
+        bom_ref_part = f'#{url_quote(str(bom_ref))}' if bom_ref else ''
+        return cls(f'{_BOM_LINK_PREFIX}{serial_number}/{version}{bom_ref_part}')
+
+    def is_bom_link(self) -> bool:
+        """
+        Check if the URI is a BOM-Link.
+
+        Returns:
+            `bool`
+        """
+        return self._uri.startswith(_BOM_LINK_PREFIX)
+
 
 @serializable.serializable_class
 class ExternalReference:
@@ -773,7 +810,7 @@ class ExternalReference:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_externalReference
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_externalReference
     """
 
     def __init__(
@@ -886,7 +923,7 @@ class Property:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_propertyType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_propertyType
 
     Specifies an individual property with a name and value.
     """
@@ -960,7 +997,7 @@ class NoteText:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_releaseNotesType
     """
 
     DEFAULT_CONTENT_TYPE: str = 'text/plain'
@@ -1051,7 +1088,7 @@ class Note:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_releaseNotesType
 
     @todo: Replace ``NoteText`` with ``AttachedText``?
     """
@@ -1134,7 +1171,7 @@ class IdentifiableAction:
     This is our internal representation of the `identifiableActionType` complex type.
 
     .. note::
-        See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_identifiableActionType
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.6/xml/#type_identifiableActionType
     """
 
     def __init__(
@@ -1224,7 +1261,7 @@ class Copyright:
     This is our internal representation of the `copyrightsType` complex type.
 
     .. note::
-        See the CycloneDX specification: https://cyclonedx.org/docs/1.4/xml/#type_copyrightsType
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.6/xml/#type_copyrightsType
     """
 
     def __init__(

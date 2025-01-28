@@ -21,10 +21,10 @@ from typing import Any, Iterable, Optional, Union
 import serializable
 from sortedcontainers import SortedSet
 
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import NoPropertiesProvidedException
 from ..schema.schema import SchemaVersion1Dot6
-from ..serialization import BomRefHelper
 from . import XsUri
 from .bom_ref import BomRef
 
@@ -49,8 +49,7 @@ class PostalAddress:
         postal_code: Optional[str] = None,
         street_address: Optional[str] = None,
     ) -> None:
-        self._bom_ref = bom_ref if isinstance(bom_ref, BomRef) else BomRef(
-            value=bom_ref) if bom_ref else None
+        self._bom_ref = _bom_ref_from_str(bom_ref, optional=True)
         self.country = country
         self.region = region
         self.locality = locality
@@ -60,15 +59,13 @@ class PostalAddress:
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> Optional[BomRef]:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
-
-        If a value was not provided in the constructor, a UUIDv4 will have been assigned.
 
         Returns:
             `BomRef`
@@ -196,7 +193,7 @@ class OrganizationalContact:
     within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalContact
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_organizationalContact
     """
 
     def __init__(
@@ -289,7 +286,7 @@ class OrganizationalEntity:
     within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_organizationalEntity
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_organizationalEntity
     """
 
     def __init__(

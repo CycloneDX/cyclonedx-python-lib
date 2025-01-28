@@ -2,13 +2,15 @@
 
 Releases of
 [_CycloneDX-python-lib_ for Anaconda][CDXlib-conda-forge]
-are managed in a [seperate conda-forge feedstock-repository][CDXlib-conda-forge-feedstock-repo]
-as [anounced][first-conda-forge-release]
+are managed in a [separate conda-forge feedstock-repository][CDXlib-conda-forge-feedstock-repo]
+as [announced][first-conda-forge-release]
 by [@bollwyvl].
 
 ## Current build status
 
-<table><tr><td>All platforms:</td>
+<table>
+  <tr>
+    <td>All platforms:</td>
     <td>
       <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=14348&branchName=master">
         <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/cyclonedx-python-lib-feedstock?branchName=master">
@@ -25,8 +27,8 @@ by [@bollwyvl].
 
 ## Licensing
 
-The [_CycloneDX-python-lib_ conda-forge feedstock repository][CDXlib-conda-forge-feedstock-repo] is or may be licensed under a differrent form than the _CycloneDX-python-lib_ project itself.  
-The License of _CycloneDX-python-lib_ stayes [as stated in it's repository][license_file].
+The [_CycloneDX-python-lib_ conda-forge feedstock repository][CDXlib-conda-forge-feedstock-repo] is or may be licensed under a different form than the _CycloneDX-python-lib_ project itself.  
+The License of _CycloneDX-python-lib_ stays [as stated in it's repository][license_file].
 
 [CDXlib-conda-forge]: https://anaconda.org/conda-forge/cyclonedx-python-lib
 [CDXlib-conda-forge-feedstock-repo]: https://github.com/conda-forge/cyclonedx-python-lib-feedstock

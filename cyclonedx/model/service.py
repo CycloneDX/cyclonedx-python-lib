@@ -20,7 +20,7 @@
 This set of classes represents the data that is possible about known Services.
 
 .. note::
-    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.4/xml/#type_servicesType
+    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.6/xml/#type_servicesType
 """
 
 
@@ -29,15 +29,14 @@ from typing import Any, Iterable, Optional, Union
 import serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.serialization import BomRefHelper, LicenseRepositoryHelper
-
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import DataClassification, ExternalReference, Property, XsUri
 from .bom_ref import BomRef
 from .contact import OrganizationalEntity
 from .dependency import Dependable
-from .license import License, LicenseRepository
+from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .release_note import ReleaseNotes
 
 
@@ -47,7 +46,7 @@ class Service(Dependable):
     Class that models the `service` complex type in the CycloneDX schema.
 
     .. note::
-        See the CycloneDX schema: https://cyclonedx.org/docs/1.4/xml/#type_service
+        See the CycloneDX schema: https://cyclonedx.org/docs/1.6/xml/#type_service
     """
 
     def __init__(
@@ -68,10 +67,7 @@ class Service(Dependable):
         services: Optional[Iterable['Service']] = None,
         release_notes: Optional[ReleaseNotes] = None,
     ) -> None:
-        if isinstance(bom_ref, BomRef):
-            self._bom_ref = bom_ref
-        else:
-            self._bom_ref = BomRef(value=str(bom_ref) if bom_ref else None)
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.provider = provider
         self.group = group
         self.name = name
@@ -89,15 +85,13 @@ class Service(Dependable):
 
     @property
     @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the service elsewhere in the BOM. Uniqueness is enforced
         within all elements and children of the root-level bom element.
-
-        If a value was not provided in the constructor, a UUIDv4 will have been assigned.
 
         Returns:
            `BomRef` unique identifier for this Service
@@ -267,7 +261,7 @@ class Service(Dependable):
         self._data = SortedSet(data)
 
     @property
-    @serializable.type_mapping(LicenseRepositoryHelper)
+    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(11)
     def licenses(self) -> LicenseRepository:
         """

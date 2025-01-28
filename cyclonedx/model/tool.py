@@ -47,7 +47,7 @@ class Tool:
     In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
-        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.3/#type_toolType
+        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.6/#type_toolType
     """
 
     def __init__(
