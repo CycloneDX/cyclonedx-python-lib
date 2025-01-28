@@ -2,6 +2,41 @@
 
 
 
+## v8.5.1 (2025-01-28)
+
+### Documentation
+
+* docs: responsibilities &amp; capabilities (#763)
+
+
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ab4ae45`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ab4ae4578555f010914d7e904133dd478d7c80c1))
+
+* docs: Fix typos in in conda-forge.md and remove unused reference in README (#762)
+
+- Fix few typos in conda-forge.md
+- Removed unused PEP-508 ref in README.md
+
+Signed-off-by: Arthit Suriyawongkul &lt;arthit@gmail.com&gt; ([`66ece7a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/66ece7ae0042740a541ceed3048b89c4f2b24145))
+
+* docs: modernize docstrings for CDX1.6 (#759)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`fb9a42e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb9a42ef9bda6407ddf4c49e75d10aa0fc91e46d))
+
+### Feature
+
+* feat: couple classes and their serializes (#757)
+
+Deprecates `.serialization.BomRefHelper` and
+`.serialization.LicenseRepositoryHelper`
+
+fixes #756
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6003feb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6003febaa032969732ee246deb739d1e13bae581))
+
+
 ## v8.5.0 (2024-11-18)
 
 ### Documentation
