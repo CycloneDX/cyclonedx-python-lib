@@ -17,7 +17,7 @@ Responsibilities
 
 * Provide a general purpose Python-implementation of `CycloneDX`_.
 * Provide type hints for said implementation, so developers and dev-tools can rely on it.
-* Provide data models to work with CycloneDX.
+* Provide data models to work with `CycloneDX`_.
 * Provide data model-validators according to `CycloneDX Specification`_.
 * Provide JSON- and XML-serializers, that...
    * support all shipped data models.
