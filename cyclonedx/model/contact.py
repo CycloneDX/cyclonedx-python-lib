@@ -296,10 +296,6 @@ class OrganizationalEntity:
         contacts: Optional[Iterable[OrganizationalContact]] = None,
         address: Optional[PostalAddress] = None,
     ) -> None:
-        if name is None and not urls and not contacts:
-            raise NoPropertiesProvidedException(
-                'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
-            )
         self.name = name
         self.address = address
         self.urls = urls or []  # type:ignore[assignment]
