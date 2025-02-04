@@ -2,6 +2,26 @@
 
 
 
+## v8.6.0 (2025-02-04)
+
+### Feature
+
+* feat: expand the capabilities of `models.definition.Standard` (#713)
+
+
+---------
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`901dcdc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/901dcdc60a8a46d30878764d7b8bda69c6ba8b80))
+
+* feat: allow empty `OrganizationalEntity` object (#768)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/764
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt; ([`472bded`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/472bded38cd480ba6885d44c798e015b63c89190))
+
+
 ## v8.5.1 (2025-01-28)
 
 ### Documentation
