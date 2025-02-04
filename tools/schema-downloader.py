@@ -103,13 +103,13 @@ for dspec in (BOM_XSD, BOM_JSON_LAX, BOM_JSON_STRICT):
         tempfile, _ = urlretrieve(source)  # nosec B310
         print(source, '->', target)
         with open(tempfile, 'r') as tmpf, \
-            open(target, 'w', newline='\n') as tarf:
-                text = tmpf.read()
-                for search, replace in dspec['replace']:
-                    text = text.replace(search, replace)
-                for search, replace in dspec['replaceRE']:
-                    text = search.sub(replace, text)
-                tarf.write(text)
+                open(target, 'w', newline='\n') as tarf:
+            text = tmpf.read()
+            for search, replace in dspec['replace']:
+                text = text.replace(search, replace)
+            for search, replace in dspec['replaceRE']:
+                text = search.sub(replace, text)
+            tarf.write(text)
 
 for source, target in OTHER_DOWNLOADABLES:
     urlretrieve(source, target)  # nosec B310
