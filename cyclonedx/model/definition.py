@@ -117,10 +117,10 @@ class Requirement:
         self.external_references = external_references or ()  # type:ignore[assignment]
 
     @property
-    @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRef)
-    @serializable.xml_attribute()
+    @serializable.json_name('bom-ref')
     @serializable.xml_name('bom-ref')
+    @serializable.xml_attribute()
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the requirement elsewhere in the BOM.
@@ -277,8 +277,8 @@ class Requirement:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, title={self.title}, ' \
-            f'text={self.text}, parent={self.parent}>'
+        return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, ' \
+            f'title={self.title}, text={self.text}, parent={self.parent}>'
 
 
 @serializable.serializable_class
@@ -302,10 +302,10 @@ class Level:
         self.requirements = requirements or ()  # type:ignore[assignment]
 
     @property
-    @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRef)
-    @serializable.xml_attribute()
+    @serializable.json_name('bom-ref')
     @serializable.xml_name('bom-ref')
+    @serializable.xml_attribute()
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the level elsewhere in the BOM.
@@ -390,8 +390,8 @@ class Level:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<Level bom-ref={self.bom_ref}, identifier={self.identifier}, title={self.title}, ' \
-            f'description={self.description}>'
+        return f'<Level bom-ref={self.bom_ref}, identifier={self.identifier}, ' \
+            f'title={self.title}, description={self.description}>'
 
 
 @serializable.serializable_class
@@ -411,6 +411,7 @@ class Standard:
         requirements: Optional[Iterable[Requirement]] = None,
         levels: Optional[Iterable[Level]] = None,
         external_references: Optional[Iterable['ExternalReference']] = None
+        # TODO: signature
     ) -> None:
         self._bom_ref = _bom_ref_from_str(bom_ref)
         self.name = name
@@ -420,12 +421,13 @@ class Standard:
         self.requirements = requirements or ()  # type:ignore[assignment]
         self.levels = levels or ()  # type:ignore[assignment]
         self.external_references = external_references or ()  # type:ignore[assignment]
+        # TODO: signature
 
     @property
-    @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRef)
-    @serializable.xml_attribute()
+    @serializable.json_name('bom-ref')
     @serializable.xml_name('bom-ref')
+    @serializable.xml_attribute()
     def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the standard elsewhere in the BOM. Every bom-ref MUST be
@@ -530,6 +532,16 @@ class Standard:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    # @property
+    # @serializable.xml_sequence(8)
+    # # MUST NOT RENDER FOR XML -- this is JSON only
+    # def signature(self) -> ...:
+    #     ...
+    #
+    # @signature.setter
+    # def levels(self, signature: ...) -> None:
+    #     ...
+
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to apply all, in hope that one is unique
         return _ComparableTuple((
@@ -553,7 +565,8 @@ class Standard:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<Standard bom-ref={self.bom_ref}, name={self.name}, version={self.version}, ' \
+        return f'<Standard bom-ref={self.bom_ref}, ' \
+            f'name={self.name}, version={self.version}, ' \
             f'description={self.description}, owner={self.owner}>'
 
 
