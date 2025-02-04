@@ -116,33 +116,6 @@ class Requirement:
         self.properties = properties or ()  # type:ignore[assignment]
         self.external_references = external_references or ()  # type:ignore[assignment]
 
-    def __comparable_tuple(self) -> _ComparableTuple:
-        # all properties are optional - so need to compare all, in hope that one is unique
-        return _ComparableTuple((
-            self.bom_ref, self.identifier,
-            self.title, self.text,
-            _ComparableTuple(self.descriptions),
-            _ComparableTuple(self.open_cre), self.parent, _ComparableTuple(self.properties),
-            _ComparableTuple(self.external_references)
-        ))
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, Requirement):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Requirement):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, title={self.title}, ' \
-            f'text={self.text}, parent={self.parent}>'
-
     @property
     @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRef)
@@ -280,6 +253,33 @@ class Requirement:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        # all properties are optional - so need to compare all, in hope that one is unique
+        return _ComparableTuple((
+            self.bom_ref, self.identifier,
+            self.title, self.text,
+            _ComparableTuple(self.descriptions),
+            _ComparableTuple(self.open_cre), self.parent, _ComparableTuple(self.properties),
+            _ComparableTuple(self.external_references)
+        ))
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Requirement):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Requirement):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, title={self.title}, ' \
+            f'text={self.text}, parent={self.parent}>'
+
 
 @serializable.serializable_class
 class Level:
@@ -300,29 +300,6 @@ class Level:
         self.title = title
         self.description = description
         self.requirements = requirements or ()  # type:ignore[assignment]
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        # all properties are optional - so need to compare all, in hope that one is unique
-        return _ComparableTuple((
-            self.bom_ref, self.identifier, self.title, self.description, _ComparableTuple(self.requirements)
-        ))
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, Level):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Level):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Level bom-ref={self.bom_ref}, identifier={self.identifier}, title={self.title}, ' \
-            f'description={self.description}>'
 
     @property
     @serializable.json_name('bom-ref')
@@ -393,6 +370,29 @@ class Level:
         self._requirements = SortedSet(map(_bom_ref_from_str,  # type: ignore[arg-type]
                                            requirements))
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        # all properties are optional - so need to compare all, in hope that one is unique
+        return _ComparableTuple((
+            self.bom_ref, self.identifier, self.title, self.description, _ComparableTuple(self.requirements)
+        ))
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Level):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Level):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<Level bom-ref={self.bom_ref}, identifier={self.identifier}, title={self.title}, ' \
+            f'description={self.description}>'
+
 
 @serializable.serializable_class
 class Standard:
@@ -420,32 +420,6 @@ class Standard:
         self.requirements = requirements or ()  # type:ignore[assignment]
         self.levels = levels or ()  # type:ignore[assignment]
         self.external_references = external_references or ()  # type:ignore[assignment]
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        # all properties are optional - so need to apply all, in hope that one is unique
-        return _ComparableTuple((
-            self.bom_ref,
-            self.name, self.version, self.description, self.owner,
-            _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
-            _ComparableTuple(self.external_references)
-        ))
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, Standard):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Standard):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Standard bom-ref={self.bom_ref}, name={self.name}, version={self.version}, ' \
-            f'description={self.description}, owner={self.owner}>'
 
     @property
     @serializable.json_name('bom-ref')
@@ -555,6 +529,32 @@ class Standard:
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        # all properties are optional - so need to apply all, in hope that one is unique
+        return _ComparableTuple((
+            self.bom_ref,
+            self.name, self.version, self.description, self.owner,
+            _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
+            _ComparableTuple(self.external_references)
+        ))
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Standard):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Standard):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<Standard bom-ref={self.bom_ref}, name={self.name}, version={self.version}, ' \
+            f'description={self.description}, owner={self.owner}>'
 
 
 @serializable.serializable_class(name='definitions')
