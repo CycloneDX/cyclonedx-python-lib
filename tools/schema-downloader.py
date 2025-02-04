@@ -18,11 +18,11 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import re
-from os.path import dirname, join
+from os.path import dirname, join, realpath
 from urllib.request import urlretrieve
 
 SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/tags/1.6.1/schema/'
-TARGET_ROOT = join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res')
+TARGET_ROOT = realpath(join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res'))
 
 BOM_XSD = {
     'versions': ['1.6', '1.5', '1.4', '1.3', '1.2', '1.1', '1.0'],
@@ -101,8 +101,9 @@ for dspec in (BOM_XSD, BOM_JSON_LAX, BOM_JSON_STRICT):
         source = dspec['sourcePattern'].replace('%s', version)
         target = dspec['targetPattern'].replace('%s', version)
         tempfile, _ = urlretrieve(source)  # nosec B310
-        with open(tempfile, 'r') as tmpf:
-            with open(target, 'w', newline='\n') as tarf:
+        print(source, '->', target)
+        with open(tempfile, 'r') as tmpf, \
+            open(target, 'w', newline='\n') as tarf:
                 text = tmpf.read()
                 for search, replace in dspec['replace']:
                     text = text.replace(search, replace)
