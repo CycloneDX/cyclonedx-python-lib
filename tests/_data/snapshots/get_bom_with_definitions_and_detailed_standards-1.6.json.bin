@@ -90,6 +90,12 @@
               "Requirement 1 described here",
               "and here"
             ],
+            "externalReferences": [
+              {
+                "type": "website",
+                "url": "https://cyclonedx.org"
+              }
+            ],
             "identifier": "REQ-1",
             "openCre": [
               "CRE:1-2"
@@ -97,7 +103,11 @@
             "properties": [
               {
                 "name": "key1",
-                "value": "val1"
+                "value": "val1a"
+              },
+              {
+                "name": "key1",
+                "value": "val1b"
               }
             ],
             "text": "some requirement text",

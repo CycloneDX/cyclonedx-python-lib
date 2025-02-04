@@ -62,8 +62,14 @@
             </descriptions>
             <openCre>CRE:1-2</openCre>
             <properties>
-              <property name="key1">val1</property>
+              <property name="key1">val1a</property>
+              <property name="key1">val1b</property>
             </properties>
+            <externalReferences>
+              <reference type="website">
+                <url>https://cyclonedx.org</url>
+              </reference>
+            </externalReferences>
           </requirement>
           <requirement bom-ref="req-2">
             <identifier>REQ-2</identifier>

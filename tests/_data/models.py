@@ -1327,7 +1327,6 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                 version='1.2.3',
                 description='Some description',
                 owner='Some Owner',
-                external_references=[get_external_reference_1()],
                 requirements=[
                     req1 := Requirement(
                         bom_ref='req-1',
@@ -1336,7 +1335,11 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                         text='some requirement text',
                         descriptions=['Requirement 1 described here', 'and here'],
                         open_cre=[CreId('CRE:1-2')],
-                        properties=[Property(name='key1', value='val1')]
+                        properties=[
+                            Property(name='key1', value='val1a'),
+                            Property(name='key1', value='val1b'),
+                        ],
+                        external_references=[get_external_reference_2()],
                     ),
                     req2 := Requirement(
                         bom_ref='req-2',
@@ -1345,8 +1348,8 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                         text='some requirement text',
                         descriptions=['Requirement 2 described here'],
                         open_cre=[CreId('CRE:1-2'), CreId('CRE:3-4')],
+                        parent=req1.bom_ref,
                         properties=[Property(name='key2', value='val2')],
-                        parent=req1.bom_ref
                     ),
                 ],
                 levels=[
@@ -1354,7 +1357,7 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                         bom_ref='lvl-1',
                         identifier='LVL-1',
                         title='Level 1',
-                        description='Level 1 description'
+                        description='Level 1 description',
                         # no requirements!
                     ),
                     Level(
@@ -1362,9 +1365,10 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                         identifier='LVL-2',
                         title='Level 2',
                         description='Level 2 description',
-                        requirements=[req1.bom_ref, req2.bom_ref]
-                    )
-                ]
+                        requirements=[req1.bom_ref, req2.bom_ref],
+                    ),
+                ],
+                external_references=[get_external_reference_1()],
             ),
             Standard(
                 bom_ref='other-standard',
@@ -1372,7 +1376,6 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                 version='1.0.0',
                 description='Other description',
                 owner='Other Owner',
-                external_references=[get_external_reference_2()],
                 requirements=[
                     req3 := Requirement(
                         bom_ref='req-3',
@@ -1382,7 +1385,7 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                         descriptions=['Requirement 3 described here', 'and here'],
                         open_cre=[CreId('CRE:5-6'), CreId('CRE:7-8')],
                         properties=[Property(name='key3', value='val3')]
-                    )
+                    ),
                 ],
                 levels=[
                     Level(
@@ -1391,8 +1394,9 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
                         title='Level 3',
                         description='Level 3 description',
                         requirements=[req3.bom_ref]
-                    )
-                ]
+                    ),
+                ],
+                external_references=[get_external_reference_2()],
             )
         ]))
 
