@@ -718,7 +718,7 @@ def get_bom_for_issue_692_components() -> Bom:
                           name='my application', version='1')
     comp_test = Component(
         name='comp_test',
-        type=ComponentType.CRYPTOGRAPHIC_ASSET,
+        type=ComponentType.APPLICATION,
         bom_ref='crypto/protocol/test',
         crypto_properties=CryptoProperties(
             asset_type=CryptoAssetType.PROTOCOL,
