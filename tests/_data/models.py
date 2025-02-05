@@ -725,7 +725,7 @@ def get_bom_for_issue_692_components() -> Bom:
             protocol_properties=ProtocolProperties(
                 type=ProtocolPropertiesType.TLS,
                 version='1.2',
-                crypto_ref_array=[BomRef(value='for-test')]
+                crypto_refs=[BomRef(value='for-test')]
             ),
             oid='1.3.18.0.2.32.104',
         ))

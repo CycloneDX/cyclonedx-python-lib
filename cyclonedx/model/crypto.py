@@ -1309,13 +1309,13 @@ class ProtocolProperties:
         version: Optional[str] = None,
         cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
         ikev2_transform_types: Optional[Ikev2TransformTypes] = None,
-        crypto_ref_array: Optional[Iterable[BomRef]] = None,
+        crypto_refs: Optional[Iterable[BomRef]] = None,
     ) -> None:
         self.type = type
         self.version = version
         self.cipher_suites = cipher_suites or []  # type:ignore[assignment]
         self.ikev2_transform_types = ikev2_transform_types
-        self.crypto_ref_array = crypto_ref_array or []  # type:ignore[assignment]
+        self.crypto_refs = crypto_refs or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(10)
@@ -1379,20 +1379,20 @@ class ProtocolProperties:
         self._ikev2_transform_types = ikev2_transform_types
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'cryptoRefArray')
-    @serializable.xml_sequence(40)
-    def crypto_ref_array(self) -> 'SortedSet[BomRef]':
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'cryptoRef')
+    @serializable.json_name('cryptoRefArray')
+    def crypto_refs(self) -> 'SortedSet[BomRef]':
         """
         A list of protocol-related cryptographic assets.
 
         Returns:
             `Iterable[BomRef]`
         """
-        return self._crypto_ref_array
+        return self._crypto_refs
 
-    @crypto_ref_array.setter
-    def crypto_ref_array(self, crypto_ref_array: Iterable[BomRef]) -> None:
-        self._crypto_ref_array = SortedSet(crypto_ref_array)
+    @crypto_refs.setter
+    def crypto_refs(self, crypto_refs: Iterable[BomRef]) -> None:
+        self._crypto_refs = SortedSet(crypto_refs)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ProtocolProperties):
@@ -1406,7 +1406,7 @@ class ProtocolProperties:
                 self.version,
                 tuple(self.cipher_suites),
                 self.ikev2_transform_types,
-                tuple(self.crypto_ref_array)
+                tuple(self.crypto_refs)
             )
         )
 
