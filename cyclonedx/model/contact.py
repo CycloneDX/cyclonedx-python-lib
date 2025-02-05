@@ -202,10 +202,6 @@ class OrganizationalContact:
         phone: Optional[str] = None,
         email: Optional[str] = None,
     ) -> None:
-        if not name and not phone and not email:
-            raise NoPropertiesProvidedException(
-                'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
-            )
         self.name = name
         self.email = email
         self.phone = phone
