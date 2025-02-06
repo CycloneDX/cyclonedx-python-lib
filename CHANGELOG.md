@@ -2,6 +2,20 @@
 
 
 
+## v8.7.0 (2025-02-06)
+
+### Feature
+
+* feat: allow empty `OrganizationalContact` object (#772)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/771
+
+---------
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Johannes Feichtner &lt;johannes.feichtner@dynatrace.com&gt; ([`03b35f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/03b35f4293ab3b4c402c7bb8ff458831e492cb8b))
+
+
 ## v8.6.0 (2025-02-04)
 
 ### Feature
