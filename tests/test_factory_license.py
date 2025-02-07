@@ -32,8 +32,8 @@ class TestFactoryLicense(unittest.TestCase):
         acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
         expected = DisjunctiveLicense(id='bar', text=text, url=url, acknowledgement=acknowledgement)
 
-        with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'), \
-                unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
+        with unittest.mock.patch('cyclonedx.factory.license.is_spdx_license_id', return_value=True), \
+                unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'):
             actual = LicenseFactory().make_from_string('foo',
                                                        license_text=text,
                                                        license_url=url,
@@ -46,13 +46,10 @@ class TestFactoryLicense(unittest.TestCase):
         url = unittest.mock.NonCallableMock(spec=XsUri)
         acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
         expected = DisjunctiveLicense(name='foo', text=text, url=url, acknowledgement=acknowledgement)
-
-        with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None), \
-                unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=False):
-            actual = LicenseFactory().make_from_string('foo',
-                                                       license_text=text,
-                                                       license_url=url,
-                                                       license_acknowledgement=acknowledgement)
+        actual = LicenseFactory().make_from_string('foo',
+                                                   license_text=text,
+                                                   license_url=url,
+                                                   license_acknowledgement=acknowledgement)
 
         self.assertEqual(expected, actual)
 

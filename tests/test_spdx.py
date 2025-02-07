@@ -16,22 +16,83 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from itertools import chain
-from json import load as json_load
 from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
+from license_expression import get_license_index
 
 from cyclonedx import spdx
-from cyclonedx.schema._res import SPDX_JSON
 
-# rework access
-with open(SPDX_JSON) as spdx_schema:
-    KNOWN_SPDX_IDS = json_load(spdx_schema)['enum']
+KNOWN_SPDX_IDS = ([entry['spdx_license_key'] for entry in get_license_index()
+                   if entry['spdx_license_key'] and not entry['is_exception']]
+                  + [item for license_entry in get_license_index()
+                     for item in license_entry['other_spdx_license_keys'] if not license_entry['is_exception']])
+
+
+VALID_SPDX_LICENSE_IDENTIFIERS = {
+    # for valid SPDX license identifiers see spec: https://spdx.org/licenses/, list contained in license-expression
+    'Apache-2.0',
+    'MIT',
+    # deprecated, but valid license identifier
+    'AGPL-1.0'
+}
+
+
+VALID_SIMPLE_EXPRESSIONS = {
+    # for valid test data see also spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
+    # an SPDX license identifier
+    'MIT',
+    # a custom license identifier (from license-expression module)
+    'LicenseRef-scancode-3com-microcode',
+    # a custom license identifier (not from license expression module)
+    'LicenseRef-my-own-license'
+}
+
 
 VALID_COMPOUND_EXPRESSIONS = {
     # for valid test data see the spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
+    # for valid exceptions see the spec: https://spdx.org/licenses/exceptions-index.html
     '(MIT AND Apache-2.0)',
     'BSD-2-Clause OR Apache-2.0',
+    'GPL-2.0 WITH Bison-exception-2.2'
+}
+
+
+INVALID_SPDX_LICENSE_IDENTIFIERS = {
+    'MiT',
+    '389-exception',
+    '',
+    'Apache 2.0',
+    'MIT OR Apache-2.0',
+    'LicenseRef-custom-identifier',
+    None
+}
+
+
+INVALID_SIMPLE_EXPRESSIONS = {
+    'something_invalid'
+    'something invalid',
+    'Apache License, Version 2.0',
+    '',
+    '.MIT',
+    'MIT OR Apache-2.0',
+    'LicenseRef-Invalid#ID',
+    None
+}
+
+
+INVALID_COMPOUND_EXPRESSIONS = {
+    'MIT AND Apache-2.0 OR something-unknown'
+    'something invalid',
+    '(c) John Doe',
+    'Apache License, Version 2.0',
+    '',
+    'MIT',
+    'MIT. OR Apache-2.0',
+    'MIT WITH Apache-2.0',
+    'MIT OR Apache-2.0)',
+    '(MIT OR Apache-2.0',
+    None
 }
 
 
@@ -67,7 +128,8 @@ class TestSpdxFixup(TestCase):
     @unpack
     def test_positive(self, fixable: str, expected_fixed: str) -> None:
         actual = spdx.fixup_id(fixable)
-        self.assertEqual(expected_fixed, actual)
+        self.assertEqual(expected_fixed, actual,
+                         f'<{fixable}> was expected to get <{expected_fixed}>, but it is <{actual}>')
 
     @data(
         'something unfixable',
@@ -78,6 +140,34 @@ class TestSpdxFixup(TestCase):
 
 
 @ddt
+class TestSpdxIsSpdxLicenseIdentifier(TestCase):
+
+    @idata(VALID_SPDX_LICENSE_IDENTIFIERS)
+    def test_positive(self, valid_identifier: str) -> None:
+        actual = spdx.is_spdx_license_id(valid_identifier)
+        self.assertTrue(actual)
+
+    @idata(INVALID_SPDX_LICENSE_IDENTIFIERS)
+    def test_negative(self, invalid_identifier: str) -> None:
+        actual = spdx.is_spdx_license_id(invalid_identifier)
+        self.assertFalse(actual)
+
+
+@ddt
+class TestSpdxIsSimpleExpression(TestCase):
+
+    @idata(VALID_SIMPLE_EXPRESSIONS)
+    def test_positive(self, valid_simple_expression: str) -> None:
+        actual = spdx.is_simple_expression(valid_simple_expression)
+        self.assertTrue(actual)
+
+    @idata(INVALID_SIMPLE_EXPRESSIONS)
+    def test_negative(self, invalid_simple_expression: str) -> None:
+        actual = spdx.is_simple_expression(invalid_simple_expression)
+        self.assertFalse(actual)
+
+
+@ddt
 class TestSpdxIsCompoundExpression(TestCase):
 
     @idata(VALID_COMPOUND_EXPRESSIONS)
@@ -85,12 +175,7 @@ class TestSpdxIsCompoundExpression(TestCase):
         actual = spdx.is_compound_expression(valid_expression)
         self.assertTrue(actual)
 
-    @data(
-        'MIT AND Apache-2.0 OR something-unknown'
-        'something invalid',
-        '(c) John Doe',
-        'Apache License, Version 2.0'
-    )
+    @idata(INVALID_COMPOUND_EXPRESSIONS)
     def test_negative(self, invalid_expression: str) -> None:
         actual = spdx.is_compound_expression(invalid_expression)
         self.assertFalse(actual)

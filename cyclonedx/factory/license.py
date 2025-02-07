@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Optional
 
 from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
 from ..model.license import DisjunctiveLicense, LicenseExpression
-from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression
+from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression, is_spdx_license_id
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model import AttachedText, XsUri
@@ -35,24 +35,21 @@ class LicenseFactory:
                          license_acknowledgement: Optional['LicenseAcknowledgement'] = None
                          ) -> 'License':
         """Make a :class:`cyclonedx.model.license.License` from a string."""
-        try:
+        if is_spdx_license_id(value):
             return self.make_with_id(value,
                                      text=license_text,
                                      url=license_url,
                                      acknowledgement=license_acknowledgement)
-        except InvalidSpdxLicenseException:
-            pass
-        try:
+        elif is_spdx_compound_expression(value):
             return self.make_with_expression(value,
                                              acknowledgement=license_acknowledgement)
-        except InvalidLicenseExpressionException:
-            pass
         return self.make_with_name(value,
                                    text=license_text,
                                    url=license_url,
                                    acknowledgement=license_acknowledgement)
 
-    def make_with_expression(self, expression: str, *,
+    @staticmethod
+    def make_with_expression(expression: str, *,
                              acknowledgement: Optional['LicenseAcknowledgement'] = None
                              ) -> LicenseExpression:
         """Make a :class:`cyclonedx.model.license.LicenseExpression` with a compound expression.
@@ -65,7 +62,8 @@ class LicenseFactory:
             return LicenseExpression(expression, acknowledgement=acknowledgement)
         raise InvalidLicenseExpressionException(expression)
 
-    def make_with_id(self, spdx_id: str, *,
+    @staticmethod
+    def make_with_id(spdx_id: str, *,
                      text: Optional['AttachedText'] = None,
                      url: Optional['XsUri'] = None,
                      acknowledgement: Optional['LicenseAcknowledgement'] = None
@@ -79,7 +77,8 @@ class LicenseFactory:
             raise InvalidSpdxLicenseException(spdx_id)
         return DisjunctiveLicense(id=spdx_license_id, text=text, url=url, acknowledgement=acknowledgement)
 
-    def make_with_name(self, name: str, *,
+    @staticmethod
+    def make_with_name(name: str, *,
                        text: Optional['AttachedText'] = None,
                        url: Optional['XsUri'] = None,
                        acknowledgement: Optional['LicenseAcknowledgement'] = None
