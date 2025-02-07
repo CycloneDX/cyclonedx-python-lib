@@ -5,6 +5,12 @@ But please read the
 [CycloneDX contributing guidelines](https://github.com/CycloneDX/.github/blob/master/CONTRIBUTING.md)
 first.
 
+Before you start coding, please also read 
+[how to fork a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
+and [how create a pull request from a fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
+to learn how to incorporate your work into the project.
+
+Do not create a local branch from the main repository, as a push to GitHub is not granted this way.
 ## Setup
 
 This project uses [poetry]. Have it installed and setup first.
