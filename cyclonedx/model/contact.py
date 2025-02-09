@@ -18,7 +18,7 @@
 
 from typing import Any, Iterable, Optional, Union
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str

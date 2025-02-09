@@ -18,7 +18,7 @@
 from enum import Enum
 from typing import Any, Iterable, Optional
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple

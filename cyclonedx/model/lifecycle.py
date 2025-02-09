@@ -30,15 +30,15 @@ from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
 from xml.etree.ElementTree import Element  # nosec B405
 
-import serializable
-from serializable.helpers import BaseHelper
+import py_serializable as serializable
+from py_serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import CycloneDxDeserializationException
 
 if TYPE_CHECKING:  # pragma: no cover
-    from serializable import ViewType
+    from py_serializable import ViewType
 
 
 @serializable.serializable_enum

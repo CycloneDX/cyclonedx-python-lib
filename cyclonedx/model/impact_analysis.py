@@ -28,7 +28,7 @@ Impact Analysis is new for CycloneDX schema version 1.
 
 from enum import Enum
 
-import serializable
+import py_serializable as serializable
 
 
 @serializable.serializable_enum

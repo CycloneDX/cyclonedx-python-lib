@@ -18,7 +18,7 @@
 from datetime import datetime
 from typing import Iterable, Optional
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from ..model import Note, Property, XsUri

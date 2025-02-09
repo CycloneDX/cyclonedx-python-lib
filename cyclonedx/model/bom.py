@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING, Generator, Iterable, Optional, Union
 from uuid import UUID, uuid4
 from warnings import warn
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.time import get_now_utc as _get_now_utc

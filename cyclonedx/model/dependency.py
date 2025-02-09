@@ -19,7 +19,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional, Set
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
