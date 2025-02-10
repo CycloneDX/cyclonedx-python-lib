@@ -21,6 +21,7 @@ from typing import Iterable, Optional
 import serializable
 from sortedcontainers import SortedSet
 
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..model import Note, Property, XsUri
 from ..model.issue import IssueType
 
@@ -233,17 +234,23 @@ class ReleaseNotes:
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.type, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
+            _ComparableTuple(self.aliases),
+            _ComparableTuple(self.tags),
+            _ComparableTuple(self.resolves),
+            _ComparableTuple(self.notes),
+            _ComparableTuple(self.properties)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ReleaseNotes):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((
-            self.type, self.title, self.featured_image, self.social_image, self.description, self.timestamp,
-            tuple(self.aliases), tuple(self.tags), tuple(self.resolves), tuple(self.notes), tuple(self.properties)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<ReleaseNotes type={self.type}, title={self.title}>'

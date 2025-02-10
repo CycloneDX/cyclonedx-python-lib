@@ -239,7 +239,7 @@ class AttachedText:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.content_type, self.content, self.encoding
+            self.content_type, self.encoding, self.content,
         ))
 
     def __eq__(self, other: object) -> bool:

@@ -354,10 +354,11 @@ class Service(Dependable):
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.authenticated, _ComparableTuple(self.data), self.description, _ComparableTuple(self.endpoints),
-            _ComparableTuple(self.external_references), self.group, _ComparableTuple(self.licenses), self.name,
-            _ComparableTuple(self.properties), self.provider, self.release_notes, _ComparableTuple(
-                self.services), self.version,
+            self.group, self.name, self.version,
+            self.provider, self.description,
+            self.authenticated, _ComparableTuple(self.data), _ComparableTuple(self.endpoints),
+            _ComparableTuple(self.external_references), _ComparableTuple(self.licenses),
+            _ComparableTuple(self.properties), self.release_notes, _ComparableTuple(self.services),
             self.x_trust_boundary
         ))
 

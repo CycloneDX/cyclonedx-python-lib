@@ -148,22 +148,24 @@ class Tool:
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.vendor, self.name, self.version,
+            _ComparableTuple(self.hashes), _ComparableTuple(self.external_references)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Tool):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Tool):
-            return _ComparableTuple((
-                self.vendor, self.name, self.version
-            )) < _ComparableTuple((
-                other.vendor, other.name, other.version
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.vendor, self.name, self.version, tuple(self.hashes), tuple(self.external_references)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Tool name={self.name}, version={self.version}, vendor={self.vendor}>'
@@ -250,16 +252,20 @@ class ToolRepository:
             or len(self._components) > 0 \
             or len(self._services) > 0
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ToolRepository):
-            return False
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            _ComparableTuple(self._tools),
+            _ComparableTuple(self._components),
+            _ComparableTuple(self._services)
+        ))
 
-        return self._tools == other._tools \
-            and self._components == other._components \
-            and self._services == other._services
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ToolRepository):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
 
     def __hash__(self) -> int:
-        return hash((tuple(self._tools), tuple(self._components), tuple(self._services)))
+        return hash(self.__comparable_tuple())
 
 
 class _ToolRepositoryHelper(BaseHelper):

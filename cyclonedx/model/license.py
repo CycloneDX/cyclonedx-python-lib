@@ -218,25 +218,28 @@ class DisjunctiveLicense:
     def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._acknowledgement,
+            self._id, self._name,
+            self._url,
+            self._text,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, DisjunctiveLicense):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, DisjunctiveLicense):
-            return _ComparableTuple((
-                self._id, self._name
-            )) < _ComparableTuple((
-                other._id, other._name
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         if isinstance(other, LicenseExpression):
             return False  # self after any LicenseExpression
         return NotImplemented
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((self._id, self._name, self._text, self._url, self._acknowledgement))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<License id={self._id!r}, name={self._name!r}>'
@@ -312,18 +315,23 @@ class LicenseExpression:
     def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._acknowledgement,
+            self._value,
+        ))
+
     def __hash__(self) -> int:
-        # TODO
-        return hash((self._value, self._acknowledgement))
+        return hash(self.__comparable_tuple())
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, LicenseExpression):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, LicenseExpression):
-            return self._value < other._value
+            return self.__comparable_tuple() < other.__comparable_tuple()
         if isinstance(other, DisjunctiveLicense):
             return True  # self before any DisjunctiveLicense
         return NotImplemented

@@ -142,20 +142,22 @@ class NamedLifecycle:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._name, self._description
+        ))
+
     def __hash__(self) -> int:
-        # TODO
-        return hash((self._name, self._description))
+        return hash(self.__comparable_tuple())
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, NamedLifecycle):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, NamedLifecycle):
-            return _ComparableTuple((self._name, self._description)) < _ComparableTuple(
-                (other._name, other._description)
-            )
+            return self.__comparable_tuple() < other.__comparable_tuple()
         if isinstance(other, PredefinedLifecycle):
             return False  # put NamedLifecycle after any PredefinedLifecycle
         return NotImplemented

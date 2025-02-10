@@ -173,7 +173,9 @@ class Commit:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.uid, self.url, self.author, self.committer, self.message
+            self.uid, self.url,
+            self.author, self.committer,
+            self.message
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -487,7 +489,8 @@ class Diff:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.text, self.url
+            self.url,
+            self.text,
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -590,7 +593,8 @@ class Patch:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.type, self.diff, _ComparableTuple(self.resolves)
+            self.type, self.diff,
+            _ComparableTuple(self.resolves)
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -757,17 +761,23 @@ class Pedigree:
     def notes(self, notes: Optional[str]) -> None:
         self._notes = notes
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            _ComparableTuple(self.ancestors),
+            _ComparableTuple(self.descendants),
+            _ComparableTuple(self.variants),
+            _ComparableTuple(self.commits),
+            _ComparableTuple(self.patches),
+            self.notes
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Pedigree):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((
-            tuple(self.ancestors), tuple(self.descendants), tuple(self.variants), tuple(self.commits),
-            tuple(self.patches), self.notes
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Pedigree id={id(self)}, hash={hash(self)}>'
@@ -903,14 +913,23 @@ class Swid:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.tag_id,
+            self.name, self.version,
+            self.tag_version,
+            self.patch,
+            self.url,
+            self.text,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Swid):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((self.tag_id, self.name, self.version, self.tag_version, self.patch, self.text, self.url))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Swid tagId={self.tag_id}, name={self.name}, version={self.version}>'
@@ -1755,15 +1774,17 @@ class Component(Dependable):
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.type, self.group, self.name, self.version,
-            self.mime_type, self.supplier, self.author, self.publisher,
-            self.description, self.scope, _ComparableTuple(self.hashes),
-            _ComparableTuple(self.licenses), self.copyright, self.cpe,
             None if self.purl is None else _ComparablePackageURL(self.purl),
-            self.swid, self.pedigree,
+            self.swid, self.cpe, _ComparableTuple(self.swhids),
+            self.supplier, self.author, self.publisher,
+            self.description,
+            self.mime_type, self.scope, _ComparableTuple(self.hashes),
+            _ComparableTuple(self.licenses), self.copyright,
+            self.pedigree,
             _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
             _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
             _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
-            _ComparableTuple(self.swhids), self.crypto_properties, _ComparableTuple(self.tags),
+            self.crypto_properties, _ComparableTuple(self.tags),
         ))
 
     def __eq__(self, other: object) -> bool:

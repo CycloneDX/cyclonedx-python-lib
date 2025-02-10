@@ -90,23 +90,23 @@ class IssueTypeSource:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.name, self.url
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, IssueTypeSource):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueTypeSource):
-            return _ComparableTuple((
-                self.name, self.url
-            )) < _ComparableTuple((
-                other.name, other.url
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((self.name, self.url))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<IssueTypeSource name={self._name}, url={self.url}>'
@@ -232,25 +232,24 @@ class IssueType:
     def references(self, references: Iterable[XsUri]) -> None:
         self._references = SortedSet(references)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.type, self.id, self.name, self.description, self.source,
+            _ComparableTuple(self.references)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, IssueType):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
-            return _ComparableTuple((
-                self.type, self.id, self.name, self.description, self.source
-            )) < _ComparableTuple((
-                other.type, other.id, other.name, other.description, other.source
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((
-            self.type, self.id, self.name, self.description, self.source, tuple(self.references)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<IssueType type={self.type}, id={self.id}, name={self.name}>'
