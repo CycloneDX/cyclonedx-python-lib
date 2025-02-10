@@ -162,7 +162,7 @@ class PostalAddress:
         self._street_address = street_address
 
     def __comparable_tuple(self) -> _ComparableTuple:
-       return  _ComparableTuple((
+        return _ComparableTuple((
             self.bom_ref,
             self.country, self.region, self.locality, self.postal_code,
             self.post_office_box_number,

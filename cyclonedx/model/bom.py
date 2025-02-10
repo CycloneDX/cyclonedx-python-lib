@@ -25,6 +25,7 @@ from warnings import warn
 import serializable
 from sortedcontainers import SortedSet
 
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..schema.schema import (
@@ -48,8 +49,6 @@ from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelpe
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
 from .vulnerability import Vulnerability
-from .._internal.compare import ComparableTuple as _ComparableTuple
-
 
 if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
@@ -730,8 +729,10 @@ class Bom:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.serial_number, self.version, self.metadata, _ComparableTuple(self.components), _ComparableTuple(self.services),
-            _ComparableTuple(self.external_references), _ComparableTuple(self.dependencies), _ComparableTuple(self.properties),
+            self.serial_number, self.version, self.metadata, _ComparableTuple(
+                self.components), _ComparableTuple(self.services),
+            _ComparableTuple(self.external_references), _ComparableTuple(
+                self.dependencies), _ComparableTuple(self.properties),
             _ComparableTuple(self.vulnerabilities),
         ))
 

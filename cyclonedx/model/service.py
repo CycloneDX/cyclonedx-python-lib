@@ -356,7 +356,8 @@ class Service(Dependable):
         return _ComparableTuple((
             self.authenticated, _ComparableTuple(self.data), self.description, _ComparableTuple(self.endpoints),
             _ComparableTuple(self.external_references), self.group, _ComparableTuple(self.licenses), self.name,
-            _ComparableTuple(self.properties), self.provider, self.release_notes, _ComparableTuple(self.services), self.version,
+            _ComparableTuple(self.properties), self.provider, self.release_notes, _ComparableTuple(
+                self.services), self.version,
             self.x_trust_boundary
         ))
 
