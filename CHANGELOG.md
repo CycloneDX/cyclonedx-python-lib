@@ -2,6 +2,75 @@
 
 
 
+## v8.7.0 (2025-02-06)
+
+### Feature
+
+* feat: allow empty `OrganizationalContact` object (#772)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/771
+
+---------
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Johannes Feichtner &lt;johannes.feichtner@dynatrace.com&gt; ([`03b35f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/03b35f4293ab3b4c402c7bb8ff458831e492cb8b))
+
+
+## v8.6.0 (2025-02-04)
+
+### Feature
+
+* feat: expand the capabilities of `models.definition.Standard` (#713)
+
+
+---------
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`901dcdc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/901dcdc60a8a46d30878764d7b8bda69c6ba8b80))
+
+* feat: allow empty `OrganizationalEntity` object (#768)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/764
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt; ([`472bded`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/472bded38cd480ba6885d44c798e015b63c89190))
+
+
+## v8.5.1 (2025-01-28)
+
+### Documentation
+
+* docs: responsibilities &amp; capabilities (#763)
+
+
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ab4ae45`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ab4ae4578555f010914d7e904133dd478d7c80c1))
+
+* docs: Fix typos in in conda-forge.md and remove unused reference in README (#762)
+
+- Fix few typos in conda-forge.md
+- Removed unused PEP-508 ref in README.md
+
+Signed-off-by: Arthit Suriyawongkul &lt;arthit@gmail.com&gt; ([`66ece7a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/66ece7ae0042740a541ceed3048b89c4f2b24145))
+
+* docs: modernize docstrings for CDX1.6 (#759)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`fb9a42e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb9a42ef9bda6407ddf4c49e75d10aa0fc91e46d))
+
+### Feature
+
+* feat: couple classes and their serializes (#757)
+
+Deprecates `.serialization.BomRefHelper` and
+`.serialization.LicenseRepositoryHelper`
+
+fixes #756
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6003feb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6003febaa032969732ee246deb739d1e13bae581))
+
+
 ## v8.5.0 (2024-11-18)
 
 ### Documentation

@@ -78,7 +78,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
 )
-from cyclonedx.model.definition import Definitions, Standard
+from cyclonedx.model.definition import CreId, Definitions, Level, Requirement, Standard
 from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
@@ -1303,11 +1303,102 @@ def get_bom_with_definitions_standards() -> Bom:
     """
     return _make_bom(
         definitions=Definitions(standards=[
-            Standard(name='Some Standard', version='1.2.3', description='Some description', bom_ref='some-standard',
-                     owner='Some Owner', external_references=[get_external_reference_2()]
-                     )
+            Standard(
+                bom_ref='some-standard',
+                name='Some Standard',
+                version='1.2.3',
+                description='Some description',
+                owner='Some Owner',
+                external_references=[get_external_reference_2()]
+            )
         ])
     )
+
+
+def get_bom_with_definitions_and_detailed_standards() -> Bom:
+    """
+    Returns a BOM with definitions and multiple detailed standards including requirements and levels.
+    """
+    return _make_bom(
+        definitions=Definitions(standards=[
+            Standard(
+                bom_ref='some-standard',
+                name='Some Standard',
+                version='1.2.3',
+                description='Some description',
+                owner='Some Owner',
+                requirements=[
+                    req1 := Requirement(
+                        bom_ref='req-1',
+                        identifier='REQ-1',
+                        title='Requirement 1',
+                        text='some requirement text',
+                        descriptions=['Requirement 1 described here', 'and here'],
+                        open_cre=[CreId('CRE:1-2')],
+                        properties=[
+                            Property(name='key1', value='val1a'),
+                            Property(name='key1', value='val1b'),
+                        ],
+                        external_references=[get_external_reference_2()],
+                    ),
+                    req2 := Requirement(
+                        bom_ref='req-2',
+                        identifier='REQ-2',
+                        title='Requirement 2',
+                        text='some requirement text',
+                        descriptions=['Requirement 2 described here'],
+                        open_cre=[CreId('CRE:1-2'), CreId('CRE:3-4')],
+                        parent=req1.bom_ref,
+                        properties=[Property(name='key2', value='val2')],
+                    ),
+                ],
+                levels=[
+                    Level(
+                        bom_ref='lvl-1',
+                        identifier='LVL-1',
+                        title='Level 1',
+                        description='Level 1 description',
+                        # no requirements!
+                    ),
+                    Level(
+                        bom_ref='lvl-2',
+                        identifier='LVL-2',
+                        title='Level 2',
+                        description='Level 2 description',
+                        requirements=[req1.bom_ref, req2.bom_ref],
+                    ),
+                ],
+                external_references=[get_external_reference_1()],
+            ),
+            Standard(
+                bom_ref='other-standard',
+                name='Other Standard',
+                version='1.0.0',
+                description='Other description',
+                owner='Other Owner',
+                requirements=[
+                    req3 := Requirement(
+                        bom_ref='req-3',
+                        identifier='REQ-3',
+                        title='Requirement 3',
+                        text='some requirement text',
+                        descriptions=['Requirement 3 described here', 'and here'],
+                        open_cre=[CreId('CRE:5-6'), CreId('CRE:7-8')],
+                        properties=[Property(name='key3', value='val3')]
+                    ),
+                ],
+                levels=[
+                    Level(
+                        bom_ref='lvl-3',
+                        identifier='LVL-3',
+                        title='Level 3',
+                        description='Level 3 description',
+                        requirements=[req3.bom_ref]
+                    ),
+                ],
+                external_references=[get_external_reference_2()],
+            )
+        ]))
 
 
 # ---
@@ -1357,4 +1448,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_for_issue_630_empty_property,
     get_bom_with_lifecycles,
     get_bom_with_definitions_standards,
+    get_bom_with_definitions_and_detailed_standards,
 }

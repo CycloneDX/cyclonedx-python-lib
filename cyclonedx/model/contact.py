@@ -23,7 +23,6 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import NoPropertiesProvidedException
 from ..schema.schema import SchemaVersion1Dot6
 from . import XsUri
 from .bom_ref import BomRef
@@ -203,10 +202,6 @@ class OrganizationalContact:
         phone: Optional[str] = None,
         email: Optional[str] = None,
     ) -> None:
-        if not name and not phone and not email:
-            raise NoPropertiesProvidedException(
-                'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
-            )
         self.name = name
         self.email = email
         self.phone = phone
@@ -298,10 +293,6 @@ class OrganizationalEntity:
         contacts: Optional[Iterable[OrganizationalContact]] = None,
         address: Optional[PostalAddress] = None,
     ) -> None:
-        if name is None and not urls and not contacts:
-            raise NoPropertiesProvidedException(
-                'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
-            )
         self.name = name
         self.address = address
         self.urls = urls or []  # type:ignore[assignment]
