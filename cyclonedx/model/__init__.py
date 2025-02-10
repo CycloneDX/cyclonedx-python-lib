@@ -898,7 +898,7 @@ class ExternalReference:
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self._type, self._url, self._comment,
-            _ComparableTuple(sorted(self._hashes, key=hash))
+            _ComparableTuple(self._hashes)
         ))
 
     def __eq__(self, other: object) -> bool:
