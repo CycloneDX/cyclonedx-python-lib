@@ -351,8 +351,8 @@ class TestModelDiff(TestCase):
 class TestModelAttachedText(TestCase):
 
     def test_sort(self) -> None:
-        # expected sort order: (content_type, content, encoding)
-        expected_order = [0, 4, 2, 1, 3]
+        # expected sort order: (content_type, encoding, content)
+        expected_order = [0, 1, 2, 4, 3,]
         text = [
             AttachedText(content='a', content_type='a', encoding=Encoding.BASE_64),
             AttachedText(content='a', content_type='b', encoding=Encoding.BASE_64),
