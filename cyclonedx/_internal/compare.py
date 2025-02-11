@@ -63,9 +63,8 @@ class ComparableDict(ComparableTuple):
     Allows comparison of dictionaries, allowing for missing/None values.
     """
 
-    def __new__(cls, d:dict) -> 'ComparableDict':
-        data = tuple(sorted(d.items()))
-        return super(ComparableDict, cls).__new__(cls, data)
+    def __new__(cls, d: dict) -> 'ComparableDict':
+        return super(ComparableDict, cls).__new__(cls, tuple(sorted(d.items())))
 
 
 class ComparablePackageURL(ComparableTuple):
@@ -74,11 +73,10 @@ class ComparablePackageURL(ComparableTuple):
     """
 
     def __new__(cls, p: 'PackageURL') -> 'ComparablePackageURL':
-        data = (
+        return super(ComparablePackageURL, cls).__new__(cls, (
             p.type,
             p.namespace,
             p.version,
             ComparableDict(p.qualifiers) if isinstance(p.qualifiers, dict) else p.qualifiers,
             p.subpath
-        )
-        return super(ComparablePackageURL, cls).__new__(cls, data)
+        ))
