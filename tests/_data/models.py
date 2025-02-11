@@ -715,7 +715,7 @@ def get_bom_for_issue_692_components() -> Bom:
     bom = _make_bom()
 
     comp_root = Component(type=ComponentType.APPLICATION,
-                          name='my application', version='1')
+                          name='my application', version='1', bom_ref='my-project')
     comp_test = Component(
         name='comp_test',
         type=ComponentType.APPLICATION,
