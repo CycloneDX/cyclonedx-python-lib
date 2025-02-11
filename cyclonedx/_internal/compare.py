@@ -86,7 +86,7 @@ class ComparableDict:
         return self._dict == other._dict
 
     def __hash__(self) -> int:
-        return hash(tuple(self._dict.items()))
+        return hash(tuple(sorted(self._dict.items())))
 
     def __repr__(self) -> str:
         return f'<ComparableDict {self._dict!r}>'
