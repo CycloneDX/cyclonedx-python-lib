@@ -608,13 +608,13 @@ class Definitions:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Definitions):
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Definitions standards={self.standards!r} >'

@@ -352,26 +352,28 @@ class Service(Dependable):
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.group, self.name, self.version,
+            self.provider, self.description,
+            self.authenticated, _ComparableTuple(self.data), _ComparableTuple(self.endpoints),
+            _ComparableTuple(self.external_references), _ComparableTuple(self.licenses),
+            _ComparableTuple(self.properties), self.release_notes, _ComparableTuple(self.services),
+            self.x_trust_boundary
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Service):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Service):
-            return _ComparableTuple((
-                self.group, self.name, self.version
-            )) < _ComparableTuple((
-                other.group, other.name, other.version
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((
-            self.authenticated, tuple(self.data), self.description, tuple(self.endpoints),
-            tuple(self.external_references), self.group, tuple(self.licenses), self.name, tuple(self.properties),
-            self.provider, self.release_notes, tuple(self.services), self.version, self.x_trust_boundary
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Service bom-ref={self.bom_ref}, group={self.group}, name={self.name}, version={self.version}>'

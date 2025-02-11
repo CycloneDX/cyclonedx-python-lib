@@ -351,8 +351,8 @@ class TestModelDiff(TestCase):
 class TestModelAttachedText(TestCase):
 
     def test_sort(self) -> None:
-        # expected sort order: (content_type, content, encoding)
-        expected_order = [0, 4, 2, 1, 3]
+        # expected sort order: (content_type, encoding, content)
+        expected_order = [0, 2, 4, 1, 3]
         text = [
             AttachedText(content='a', content_type='a', encoding=Encoding.BASE_64),
             AttachedText(content='a', content_type='b', encoding=Encoding.BASE_64),
@@ -443,17 +443,17 @@ class TestModelPedigree(TestCase):
     def test_same_1(self) -> None:
         p1 = get_pedigree_1()
         p2 = get_pedigree_1()
-        self.assertNotEqual(id(p1), id(p2))
-        self.assertEqual(hash(p1), hash(p2))
-        self.assertTrue(p1 == p2)
+        self.assertNotEqual(id(p1), id(p2), 'id')
+        self.assertEqual(hash(p1), hash(p2), 'hash')
+        self.assertTrue(p1 == p2, 'equal')
 
     def test_not_same_1(self) -> None:
         p1 = get_pedigree_1()
         p2 = get_pedigree_1()
         p2.notes = 'Some other notes here'
-        self.assertNotEqual(id(p1), id(p2))
-        self.assertNotEqual(hash(p1), hash(p2))
-        self.assertFalse(p1 == p2)
+        self.assertNotEqual(id(p1), id(p2), 'id')
+        self.assertNotEqual(hash(p1), hash(p2), 'hash')
+        self.assertFalse(p1 == p2, 'equal')
 
 
 class TestModelSwid(TestCase):
@@ -461,20 +461,20 @@ class TestModelSwid(TestCase):
     def test_same_1(self) -> None:
         sw_1 = get_swid_1()
         sw_2 = get_swid_1()
-        self.assertNotEqual(id(sw_1), id(sw_2))
-        self.assertEqual(hash(sw_1), hash(sw_2))
-        self.assertTrue(sw_1 == sw_2)
+        self.assertNotEqual(id(sw_1), id(sw_2), 'id')
+        self.assertEqual(hash(sw_1), hash(sw_2), 'hash')
+        self.assertTrue(sw_1 == sw_2, 'equal')
 
     def test_same_2(self) -> None:
         sw_1 = get_swid_2()
         sw_2 = get_swid_2()
-        self.assertNotEqual(id(sw_1), id(sw_2))
-        self.assertEqual(hash(sw_1), hash(sw_2))
-        self.assertTrue(sw_1 == sw_2)
+        self.assertNotEqual(id(sw_1), id(sw_2), 'id')
+        self.assertEqual(hash(sw_1), hash(sw_2), 'hash')
+        self.assertTrue(sw_1 == sw_2, 'equal')
 
     def test_not_same(self) -> None:
         sw_1 = get_swid_1()
         sw_2 = get_swid_2()
-        self.assertNotEqual(id(sw_1), id(sw_2))
-        self.assertNotEqual(hash(sw_1), hash(sw_2))
-        self.assertFalse(sw_1 == sw_2)
+        self.assertNotEqual(id(sw_1), id(sw_2), 'id')
+        self.assertNotEqual(hash(sw_1), hash(sw_2), 'hash')
+        self.assertFalse(sw_1 == sw_2, 'equal')

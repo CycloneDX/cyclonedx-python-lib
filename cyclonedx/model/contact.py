@@ -161,25 +161,26 @@ class PostalAddress:
     def street_address(self, street_address: Optional[str]) -> None:
         self._street_address = street_address
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.bom_ref,
+            self.country, self.region, self.locality, self.postal_code,
+            self.post_office_box_number,
+            self.street_address
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, PostalAddress):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, PostalAddress):
-            return _ComparableTuple((
-                self.bom_ref, self.country, self.region, self.locality, self.post_office_box_number, self.postal_code,
-                self.street_address
-            )) < _ComparableTuple((
-                other.bom_ref, other.country, other.region, other.locality, other.post_office_box_number,
-                other.postal_code, other.street_address
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.bom_ref, self.country, self.region, self.locality, self.post_office_box_number,
-                     self.postal_code, self.street_address))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<PostalAddress bom-ref={self.bom_ref}, street_address={self.street_address}, country={self.country}>'
@@ -268,6 +269,7 @@ class OrganizationalContact:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, self.phone, self.email))
 
     def __repr__(self) -> str:
@@ -373,6 +375,7 @@ class OrganizationalEntity:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, tuple(self.urls), tuple(self.contacts)))
 
     def __repr__(self) -> str:

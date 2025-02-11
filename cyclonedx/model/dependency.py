@@ -83,22 +83,23 @@ class Dependency:
     def dependencies_as_bom_refs(self) -> Set[BomRef]:
         return set(map(lambda d: d.ref, self.dependencies))
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.ref, _ComparableTuple(self.dependencies)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Dependency):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Dependency):
-            return _ComparableTuple((
-                self.ref, _ComparableTuple(self.dependencies)
-            )) < _ComparableTuple((
-                other.ref, _ComparableTuple(other.dependencies)
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.ref, tuple(self.dependencies)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Dependency ref={self.ref!r}, targets={len(self.dependencies)}>'
