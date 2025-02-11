@@ -64,7 +64,7 @@ class ComparableDict(ComparableTuple):
     """
 
     def __new__(cls, d: dict) -> 'ComparableDict':
-        return super(ComparableDict, cls).__new__(cls, tuple(sorted(d.items())))
+        return super(ComparableDict, cls).__new__(cls, sorted(d.items()))
 
 
 class ComparablePackageURL(ComparableTuple):
