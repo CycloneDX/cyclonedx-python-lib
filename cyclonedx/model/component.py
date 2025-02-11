@@ -22,7 +22,7 @@ from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
 from warnings import warn
 
 # See https://github.com/package-url/packageurl-python/issues/65
-import serializable
+import py_serializable as serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
 

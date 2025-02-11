@@ -33,7 +33,7 @@ from uuid import UUID
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple

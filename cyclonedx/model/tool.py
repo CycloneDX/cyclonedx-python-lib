@@ -21,8 +21,8 @@ from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Type, Uni
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
-import serializable
-from serializable.helpers import BaseHelper
+import py_serializable as serializable
+from py_serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
@@ -33,7 +33,7 @@ from .component import Component
 from .service import Service
 
 if TYPE_CHECKING:  # pragma: no cover
-    from serializable import ObjectMetadataLibrary, ViewType
+    from py_serializable import ObjectMetadataLibrary, ViewType
 
 
 @serializable.serializable_class

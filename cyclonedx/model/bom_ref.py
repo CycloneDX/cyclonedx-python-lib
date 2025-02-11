@@ -18,7 +18,7 @@
 
 from typing import TYPE_CHECKING, Any, Optional
 
-import serializable
+import py_serializable as serializable
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 
