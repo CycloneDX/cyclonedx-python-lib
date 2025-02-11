@@ -63,7 +63,7 @@ class ComparableDict(ComparableTuple):
     Allows comparison of dictionaries, allowing for missing/None values.
     """
 
-    def __new__(cls, d: dict) -> 'ComparableDict':
+    def __new__(cls, d: Dict[Any, Any]) -> 'ComparableDict':
         return super(ComparableDict, cls).__new__(cls, sorted(d.items()))
 
 
