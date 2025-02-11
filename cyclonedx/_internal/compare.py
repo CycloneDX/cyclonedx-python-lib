@@ -80,6 +80,17 @@ class ComparableDict:
         return ComparableTuple(self._dict.get(k) for k in keys) \
             > ComparableTuple(other._dict.get(k) for k in keys)
 
+    def __eq__(self, other):
+        if not isinstance(other, ComparableDict):
+            return False
+        return self._dict == other._dict
+
+    def __hash__(self) -> int:
+        return hash(tuple(self._dict.items()))
+
+    def __repr__(self) -> str:
+        return f'<ComparableDict {self._dict!r}>'
+
 
 class ComparablePackageURL(ComparableTuple):
     """
@@ -87,11 +98,11 @@ class ComparablePackageURL(ComparableTuple):
     """
 
     def __new__(cls, purl: 'PackageURL') -> 'ComparablePackageURL':
-        return super().__new__(
-            ComparablePackageURL, (
-                purl.type,
-                purl.namespace,
-                purl.version,
-                ComparableDict(purl.qualifiers) if isinstance(purl.qualifiers, dict) else purl.qualifiers,
-                purl.subpath
-            ))
+        parts = (
+            purl.type,
+            purl.namespace,
+            purl.version,
+            ComparableDict(purl.qualifiers) if isinstance(purl.qualifiers, dict) else purl.qualifiers,
+            purl.subpath
+        )
+        return super(ComparablePackageURL, cls).__new__(cls, parts)
