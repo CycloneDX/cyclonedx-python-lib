@@ -58,38 +58,14 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
         return False
 
 
-class ComparableDict:
+class ComparableDict(ComparableTuple):
     """
     Allows comparison of dictionaries, allowing for missing/None values.
     """
 
-    def __init__(self, dict_: Dict[Any, Any]) -> None:
-        self._dict = dict_
-
-    def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, ComparableDict):
-            return True
-        keys = sorted(self._dict.keys() | other._dict.keys())
-        return ComparableTuple(self._dict.get(k) for k in keys) \
-            < ComparableTuple(other._dict.get(k) for k in keys)
-
-    def __gt__(self, other: Any) -> bool:
-        if not isinstance(other, ComparableDict):
-            return False
-        keys = sorted(self._dict.keys() | other._dict.keys())
-        return ComparableTuple(self._dict.get(k) for k in keys) \
-            > ComparableTuple(other._dict.get(k) for k in keys)
-
-    def __eq__(self, other):
-        if not isinstance(other, ComparableDict):
-            return False
-        return self._dict == other._dict
-
-    def __hash__(self) -> int:
-        return hash(tuple(sorted(self._dict.items())))
-
-    def __repr__(self) -> str:
-        return f'<ComparableDict {self._dict!r}>'
+    def __new__(cls, d:dict) -> 'ComparableDict':
+        data = tuple(sorted(d.items()))
+        return super(ComparableDict, cls).__new__(cls, data)
 
 
 class ComparablePackageURL(ComparableTuple):
@@ -97,12 +73,12 @@ class ComparablePackageURL(ComparableTuple):
     Allows comparison of PackageURL, allowing for qualifiers.
     """
 
-    def __new__(cls, purl: 'PackageURL') -> 'ComparablePackageURL':
-        parts = (
-            purl.type,
-            purl.namespace,
-            purl.version,
-            ComparableDict(purl.qualifiers) if isinstance(purl.qualifiers, dict) else purl.qualifiers,
-            purl.subpath
+    def __new__(cls, p: 'PackageURL') -> 'ComparablePackageURL':
+        data = (
+            p.type,
+            p.namespace,
+            p.version,
+            ComparableDict(p.qualifiers) if isinstance(p.qualifiers, dict) else p.qualifiers,
+            p.subpath
         )
-        return super(ComparablePackageURL, cls).__new__(cls, parts)
+        return super(ComparablePackageURL, cls).__new__(cls, data)
