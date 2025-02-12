@@ -38,10 +38,18 @@ class TestDeserializeRealWorldExamples(unittest.TestCase):
         with open(join(OWN_DATA_DIRECTORY, 'xml', '1.6', 'regression_issue630.xml')) as input_xml:
             Bom.from_xml(input_xml)
 
-    def test_merged_bom_duplicate_component(self, *_: Any, **__: Any) -> None:
-        with open(join(OWN_DATA_DIRECTORY, 'json', '1.5', 'duplicate_components.json')) as input_json:
+    def test_regression_issue677(self, *_: Any, **__: Any) -> None:
+        # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/677
+        with open(join(OWN_DATA_DIRECTORY, 'json', '1.5', 'issue677.json')) as input_json:
             json = json_loads(input_json.read())
-
         bom = Bom.from_json(json)
-        self.assertEqual(4, len(bom.components))  # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/540
-        bom.validate()  # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/677
+        self.assertEqual(4, len(bom.components))
+        bom.validate()
+
+    def test_regression_issue753(self, *_: Any, **__: Any) -> None:
+        # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/753
+        with open(join(OWN_DATA_DIRECTORY, 'json', '1.5', 'issue753.json')) as input_json:
+            json = json_loads(input_json.read())
+        bom = Bom.from_json(json)
+        self.assertEqual(2, len(bom.components))
+        bom.validate()

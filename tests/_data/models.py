@@ -1401,6 +1401,7 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
         ]))
 
 def get_bom_regression_issue540() -> Bom:
+    # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/540
     bom = _make_bom()
     bom.metadata.component = root_component = Component(
         name='myApp',

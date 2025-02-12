@@ -5,6 +5,7 @@
   "version": 1,
   "metadata": {
     "component": {
+      "description": "see issue #677 - https://github.com/CycloneDX/cyclonedx-python-lib/issues/677",
       "type": "application",
       "name": "test"
     }
