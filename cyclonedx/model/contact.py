@@ -18,12 +18,11 @@
 
 from typing import Any, Iterable, Optional, Union
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import NoPropertiesProvidedException
 from ..schema.schema import SchemaVersion1Dot6
 from . import XsUri
 from .bom_ref import BomRef
@@ -162,25 +161,26 @@ class PostalAddress:
     def street_address(self, street_address: Optional[str]) -> None:
         self._street_address = street_address
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.bom_ref,
+            self.country, self.region, self.locality, self.postal_code,
+            self.post_office_box_number,
+            self.street_address
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, PostalAddress):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, PostalAddress):
-            return _ComparableTuple((
-                self.bom_ref, self.country, self.region, self.locality, self.post_office_box_number, self.postal_code,
-                self.street_address
-            )) < _ComparableTuple((
-                other.bom_ref, other.country, other.region, other.locality, other.post_office_box_number,
-                other.postal_code, other.street_address
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.bom_ref, self.country, self.region, self.locality, self.post_office_box_number,
-                     self.postal_code, self.street_address))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<PostalAddress bom-ref={self.bom_ref}, street_address={self.street_address}, country={self.country}>'
@@ -202,10 +202,6 @@ class OrganizationalContact:
         phone: Optional[str] = None,
         email: Optional[str] = None,
     ) -> None:
-        if not name and not phone and not email:
-            raise NoPropertiesProvidedException(
-                'One of name, email or phone must be supplied for an OrganizationalContact - none supplied.'
-            )
         self.name = name
         self.email = email
         self.phone = phone
@@ -273,6 +269,7 @@ class OrganizationalContact:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, self.phone, self.email))
 
     def __repr__(self) -> str:
@@ -296,10 +293,6 @@ class OrganizationalEntity:
         contacts: Optional[Iterable[OrganizationalContact]] = None,
         address: Optional[PostalAddress] = None,
     ) -> None:
-        if name is None and not urls and not contacts:
-            raise NoPropertiesProvidedException(
-                'One of name, urls or contacts must be supplied for an OrganizationalEntity - none supplied.'
-            )
         self.name = name
         self.address = address
         self.urls = urls or []  # type:ignore[assignment]
@@ -382,6 +375,7 @@ class OrganizationalEntity:
         return NotImplemented
 
     def __hash__(self) -> int:
+        # TODO
         return hash((self.name, tuple(self.urls), tuple(self.contacts)))
 
     def __repr__(self) -> str:

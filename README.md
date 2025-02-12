@@ -17,20 +17,22 @@
 OWASP [CycloneDX][link_website] is a full-stack Bill of Materials (BOM) standard
 that provides advanced supply chain capabilities for cyber risk reduction.
 
-This Python package provides data models, validators and more, 
+This Python package provides data models, validators and more,
 to help you create/render/read CycloneDX documents.
 
-**This package is not designed for standalone use. It is a software library.**
-
-As of version `3.0.0`, the internal data model was adjusted to allow CycloneDX VEX documents to be produced as per
-[official examples](https://cyclonedx.org/capabilities/bomlink/#linking-external-vex-to-bom-inventory) linking VEX to a separate CycloneDX document.
-
-If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-of-materials documents, why not checkout 
-[CycloneDX Python][cyclonedx-python] or [Jake][jake].
+> [!NOTE]
+> This package is a software library not intended for standalone use. 
+> For generating Software Bill of Materials (SBOM), check out [CycloneDX Python][cyclonedx-python] or [Jake][jake].
 
 ## Documentation
 
-View the documentation [here](https://cyclonedx-python-library.readthedocs.io/).
+Complete documentation is available on [Read the Docs][link_rtfd]. This includes:
+- Responsibilities & Capabilities
+- Install Instructions
+- API Reference
+- Usage Examples
+- Integration Guides
+- Best Practices
 
 ## Python Support
 
@@ -81,5 +83,3 @@ See the [LICENSE][license_file] file for the full license.
 [link_slack]: https://cyclonedx.org/slack/invite
 [link_discussion]: https://groups.io/g/CycloneDX
 [link_twitter]: https://twitter.com/CycloneDX_Spec
-
-[PEP-508]: https://www.python.org/dev/peps/pep-0508/

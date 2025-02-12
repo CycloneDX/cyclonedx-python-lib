@@ -58,27 +58,13 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
         return False
 
 
-class ComparableDict:
+class ComparableDict(ComparableTuple):
     """
     Allows comparison of dictionaries, allowing for missing/None values.
     """
 
-    def __init__(self, dict_: Dict[Any, Any]) -> None:
-        self._dict = dict_
-
-    def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, ComparableDict):
-            return True
-        keys = sorted(self._dict.keys() | other._dict.keys())
-        return ComparableTuple(self._dict.get(k) for k in keys) \
-            < ComparableTuple(other._dict.get(k) for k in keys)
-
-    def __gt__(self, other: Any) -> bool:
-        if not isinstance(other, ComparableDict):
-            return False
-        keys = sorted(self._dict.keys() | other._dict.keys())
-        return ComparableTuple(self._dict.get(k) for k in keys) \
-            > ComparableTuple(other._dict.get(k) for k in keys)
+    def __new__(cls, d: Dict[Any, Any]) -> 'ComparableDict':
+        return super(ComparableDict, cls).__new__(cls, sorted(d.items()))
 
 
 class ComparablePackageURL(ComparableTuple):
@@ -86,12 +72,11 @@ class ComparablePackageURL(ComparableTuple):
     Allows comparison of PackageURL, allowing for qualifiers.
     """
 
-    def __new__(cls, purl: 'PackageURL') -> 'ComparablePackageURL':
-        return super().__new__(
-            ComparablePackageURL, (
-                purl.type,
-                purl.namespace,
-                purl.version,
-                ComparableDict(purl.qualifiers) if isinstance(purl.qualifiers, dict) else purl.qualifiers,
-                purl.subpath
-            ))
+    def __new__(cls, p: 'PackageURL') -> 'ComparablePackageURL':
+        return super(ComparablePackageURL, cls).__new__(cls, (
+            p.type,
+            p.namespace,
+            p.version,
+            ComparableDict(p.qualifiers) if isinstance(p.qualifiers, dict) else p.qualifiers,
+            p.subpath
+        ))

@@ -18,7 +18,10 @@
 
 from unittest import TestCase
 
-from cyclonedx.model.definition import Definitions, Standard
+from ddt import ddt, named_data
+
+from cyclonedx.exception.model import InvalidCreIdException
+from cyclonedx.model.definition import CreId, Definitions, Level, Requirement, Standard
 
 
 class TestModelDefinitions(TestCase):
@@ -28,13 +31,13 @@ class TestModelDefinitions(TestCase):
         dr = Definitions(
             standards=(s, ),
         )
+        self.assertEqual(1, len(dr.standards))
         self.assertIs(s, tuple(dr.standards)[0])
         return dr
 
     def test_filled(self) -> None:
         dr = self.test_init()
         self.assertIsNotNone(dr.standards)
-        self.assertEqual(1, len(dr.standards))
         self.assertTrue(dr)
 
     def test_empty(self) -> None:
@@ -65,3 +68,73 @@ class TestModelDefinitions(TestCase):
         tr2 = Definitions()
         tr2.standards.add(s)
         self.assertTrue(dr1 == tr2)
+
+
+@ddt
+class TestModelCreId(TestCase):
+
+    def test_different(self) -> None:
+        id1 = CreId('CRE:123-456')
+        id2 = CreId('CRE:987-654')
+        self.assertNotEqual(id(id1), id(id2))
+        self.assertNotEqual(hash(id1), hash(id2))
+        self.assertFalse(id1 == id2)
+
+    def test_same(self) -> None:
+        id1 = CreId('CRE:123-456')
+        id2 = CreId('CRE:123-456')
+        self.assertNotEqual(id(id1), id(id2))
+        self.assertEqual(hash(id1), hash(id2))
+        self.assertTrue(id1 == id2)
+
+    def test_invalid_no_id(self) -> None:
+        with self.assertRaises(TypeError):
+            CreId()
+
+    @named_data(
+        ['empty', ''],
+        ['arbitrary string', 'some string'],
+        ['missing prefix', '123-456'],
+        ['additional part', 'CRE:123-456-789'],
+        ['no numbers', 'CRE:abc-def'],
+        ['no delimiter', 'CRE:123456'],
+    )
+    def test_invalid_id(self, wrong_id: str) -> None:
+        with self.assertRaises(InvalidCreIdException):
+            CreId(wrong_id)
+
+
+class TestModelRequirements(TestCase):
+
+    def test_bom_ref_is_set_from_value(self) -> None:
+        r = Requirement(bom_ref='123-456')
+        self.assertIsNotNone(r.bom_ref)
+        self.assertEqual('123-456', r.bom_ref.value)
+
+    def test_bom_ref_is_set_if_none_given(self) -> None:
+        r = Requirement()
+        self.assertIsNotNone(r.bom_ref)
+
+
+class TestModelLevel(TestCase):
+
+    def test_bom_ref_is_set_from_value(self) -> None:
+        r = Level(bom_ref='123-456')
+        self.assertIsNotNone(r.bom_ref)
+        self.assertEqual('123-456', r.bom_ref.value)
+
+    def test_bom_ref_is_set_if_none_given(self) -> None:
+        r = Level()
+        self.assertIsNotNone(r.bom_ref)
+
+
+class TestModelStandard(TestCase):
+
+    def test_bom_ref_is_set_from_value(self) -> None:
+        r = Standard(bom_ref='123-456')
+        self.assertIsNotNone(r.bom_ref)
+        self.assertEqual('123-456', r.bom_ref.value)
+
+    def test_bom_ref_is_set_if_none_given(self) -> None:
+        r = Standard()
+        self.assertIsNotNone(r.bom_ref)

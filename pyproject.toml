@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
-version = "8.5.0"
+version = "8.7.0"
 description = "Python library for CycloneDX"
 authors = [
   "Paul Horton <phorton@sonatype.com>",
@@ -70,7 +70,7 @@ keywords = [
 [tool.poetry.dependencies]
 python = "^3.8"
 packageurl-python = ">=0.11, <2"
-py-serializable =  "^1.1.1"
+py-serializable =  "^2.0.0"
 sortedcontainers = "^2.4.0"
 license-expression = "^30"
 jsonschema = { version = "^4.18", extras=['format'], optional=true }
@@ -96,7 +96,7 @@ isort = "5.13.2"
 autopep8 = "2.3.1"
 mypy = "1.14.1"
 tomli = { version = "2.2.1", python = "<3.11" }
-tox = "4.23.2"
+tox = "4.24.1"
 xmldiff = "2.7.0"
 bandit = "1.7.10"
 
