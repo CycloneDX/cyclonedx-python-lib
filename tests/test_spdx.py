@@ -82,7 +82,7 @@ class TestSpdxIsCompoundExpression(TestCase):
 
     @idata(VALID_COMPOUND_EXPRESSIONS)
     def test_positive(self, valid_expression: str) -> None:
-        actual = spdx.is_compound_expression(valid_expression)
+        actual = spdx.is_expression(valid_expression)
         self.assertTrue(actual)
 
     @data(
@@ -92,5 +92,5 @@ class TestSpdxIsCompoundExpression(TestCase):
         'Apache License, Version 2.0'
     )
     def test_negative(self, invalid_expression: str) -> None:
-        actual = spdx.is_compound_expression(invalid_expression)
+        actual = spdx.is_expression(invalid_expression)
         self.assertFalse(actual)

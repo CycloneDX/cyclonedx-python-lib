@@ -33,7 +33,7 @@ class TestFactoryLicense(unittest.TestCase):
         expected = DisjunctiveLicense(id='bar', text=text, url=url, acknowledgement=acknowledgement)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value='bar'), \
-                unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
+                unittest.mock.patch('cyclonedx.factory.license.is_spdx_expression', return_value=True):
             actual = LicenseFactory().make_from_string('foo',
                                                        license_text=text,
                                                        license_url=url,
@@ -48,7 +48,7 @@ class TestFactoryLicense(unittest.TestCase):
         expected = DisjunctiveLicense(name='foo', text=text, url=url, acknowledgement=acknowledgement)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None), \
-                unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=False):
+                unittest.mock.patch('cyclonedx.factory.license.is_spdx_expression', return_value=False):
             actual = LicenseFactory().make_from_string('foo',
                                                        license_text=text,
                                                        license_url=url,
@@ -61,7 +61,7 @@ class TestFactoryLicense(unittest.TestCase):
         expected = LicenseExpression('foo', acknowledgement=acknowledgement)
 
         with unittest.mock.patch('cyclonedx.factory.license.spdx_fixup', return_value=None), \
-                unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
+                unittest.mock.patch('cyclonedx.factory.license.is_spdx_expression', return_value=True):
             actual = LicenseFactory().make_from_string('foo',
                                                        license_acknowledgement=acknowledgement)
 
@@ -94,11 +94,11 @@ class TestFactoryLicense(unittest.TestCase):
     def test_make_with_expression(self) -> None:
         acknowledgement = unittest.mock.NonCallableMock(spec=LicenseAcknowledgement)
         expected = LicenseExpression('foo', acknowledgement=acknowledgement)
-        with unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=True):
+        with unittest.mock.patch('cyclonedx.factory.license.is_spdx_expression', return_value=True):
             actual = LicenseFactory().make_with_expression(expression='foo', acknowledgement=acknowledgement)
         self.assertEqual(expected, actual)
 
     def test_make_with_expression_raises(self) -> None:
         with self.assertRaises(InvalidLicenseExpressionException, msg='foo'):
-            with unittest.mock.patch('cyclonedx.factory.license.is_spdx_compound_expression', return_value=False):
+            with unittest.mock.patch('cyclonedx.factory.license.is_spdx_expression', return_value=False):
                 LicenseFactory().make_with_expression('foo')
