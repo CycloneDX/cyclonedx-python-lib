@@ -42,7 +42,7 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
                 return False
             if o is None:
                 return True
-            return s < o
+            return bool(s < o)
         return False
 
     def __gt__(self, other: Any) -> bool:
@@ -54,7 +54,7 @@ class ComparableTuple(Tuple[Optional[Any], ...]):
                 return True
             if o is None:
                 return False
-            return s > o
+            return bool(s > o)
         return False
 
 
