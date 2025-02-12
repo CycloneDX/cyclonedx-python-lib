@@ -2,6 +2,16 @@
 
 
 
+## v8.8.0 (2025-02-12)
+
+### Feature
+
+* feat: add `cyclonedx.model.crypto.ProtocolProperties.crypto_refs` (#767)
+
+
+Signed-off-by: Indivar Mishra &lt;indimishra@gmail.com&gt; ([`beb35f5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/beb35f55e3e75d625db45e4ff084dee02e919ef6))
+
+
 ## v8.7.0 (2025-02-06)
 
 ### Feature
