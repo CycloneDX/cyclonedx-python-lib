@@ -239,6 +239,7 @@ def get_crypto_properties_protocol() -> CryptoProperties:
                     ]
                 )
             ],
+            crypto_refs=[BomRef('for-test-2'), BomRef('for-test-1')],
         ),
         oid='an-oid-here'
     )
@@ -705,33 +706,6 @@ def get_bom_for_issue_328_components() -> Bom:
     bom.register_dependency(comp_a, [comp_b])
     bom.register_dependency(comp_b, [comp_c])
 
-    return bom
-
-
-def get_bom_for_issue_692_components() -> Bom:
-    """regression test for issue #692
-    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/692
-    """
-    bom = _make_bom()
-
-    comp_root = Component(type=ComponentType.APPLICATION,
-                          name='my application', version='1', bom_ref='my-project')
-    comp_test = Component(
-        name='comp_test',
-        type=ComponentType.APPLICATION,
-        bom_ref='crypto/protocol/test',
-        crypto_properties=CryptoProperties(
-            asset_type=CryptoAssetType.PROTOCOL,
-            protocol_properties=ProtocolProperties(
-                type=ProtocolPropertiesType.TLS,
-                version='1.2',
-                crypto_refs=[BomRef(value='for-test')]
-            ),
-            oid='1.3.18.0.2.32.104',
-        ))
-    bom.metadata.component = comp_root
-    bom.register_dependency(comp_root, [comp_test])
-    bom.components = [comp_test]
     return bom
 
 
@@ -1476,5 +1450,4 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_lifecycles,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
-    get_bom_for_issue_692_components,
 }

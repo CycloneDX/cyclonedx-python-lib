@@ -38,6 +38,10 @@
               "name": "TLS_CHACHA20_POLY1305_SHA256"
             }
           ],
+          "cryptoRefArray": [
+            "for-test-1",
+            "for-test-2"
+          ],
           "type": "tls",
           "version": "1.3"
         }

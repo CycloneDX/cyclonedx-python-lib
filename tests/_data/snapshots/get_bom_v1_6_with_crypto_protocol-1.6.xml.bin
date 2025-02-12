@@ -44,6 +44,8 @@
               </identifiers>
             </cipherSuite>
           </cipherSuites>
+          <cryptoRef>for-test-1</cryptoRef>
+          <cryptoRef>for-test-2</cryptoRef>
         </protocolProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>
