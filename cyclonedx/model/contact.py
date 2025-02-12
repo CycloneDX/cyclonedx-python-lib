@@ -166,7 +166,7 @@ class PostalAddress:
             self.country, self.region, self.locality, self.postal_code,
             self.post_office_box_number,
             self.street_address,
-            self.bom_ref.value,
+            None if self.bom_ref is None else self.bom_ref.value,
         ))
 
     def __eq__(self, other: object) -> bool:
