@@ -494,16 +494,20 @@ class AlgorithmProperties:
             )
         self._nist_quantum_security_level = nist_quantum_security_level
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
+            self.implementation_platform, _ComparableTuple(self.certification_levels), self.mode, self.padding,
+            _ComparableTuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, AlgorithmProperties):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
-                     self.implementation_platform, tuple(self.certification_levels), self.mode, self.padding,
-                     tuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<AlgorithmProperties primitive={self.primitive}, execution_environment={self.execution_environment}>'
@@ -1336,11 +1340,13 @@ class ProtocolProperties:
         version: Optional[str] = None,
         cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
         ikev2_transform_types: Optional[Ikev2TransformTypes] = None,
+        crypto_refs: Optional[Iterable[BomRef]] = None,
     ) -> None:
         self.type = type
         self.version = version
         self.cipher_suites = cipher_suites or []  # type:ignore[assignment]
         self.ikev2_transform_types = ikev2_transform_types
+        self.crypto_refs = crypto_refs or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(10)
@@ -1403,9 +1409,29 @@ class ProtocolProperties:
     def ikev2_transform_types(self, ikev2_transform_types: Optional[Ikev2TransformTypes]) -> None:
         self._ikev2_transform_types = ikev2_transform_types
 
+    @property
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'cryptoRef')
+    @serializable.json_name('cryptoRefArray')
+    def crypto_refs(self) -> 'SortedSet[BomRef]':
+        """
+        A list of protocol-related cryptographic assets.
+
+        Returns:
+            `Iterable[BomRef]`
+        """
+        return self._crypto_refs
+
+    @crypto_refs.setter
+    def crypto_refs(self, crypto_refs: Iterable[BomRef]) -> None:
+        self._crypto_refs = SortedSet(crypto_refs)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.type, self.version, _ComparableTuple(self.cipher_suites), self.ikev2_transform_types
+            self.type,
+            self.version,
+            _ComparableTuple(self.cipher_suites),
+            self.ikev2_transform_types,
+            _ComparableTuple(self.crypto_refs)
         ))
 
     def __eq__(self, other: object) -> bool:

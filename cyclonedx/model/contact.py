@@ -254,23 +254,23 @@ class OrganizationalContact:
     def phone(self, phone: Optional[str]) -> None:
         self._phone = phone
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.name, self.email, self.phone
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, OrganizationalContact):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, OrganizationalContact):
-            return _ComparableTuple((
-                self.name, self.email, self.phone
-            )) < _ComparableTuple((
-                other.name, other.email, other.phone
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((self.name, self.phone, self.email))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<OrganizationalContact name={self.name}, email={self.email}, phone={self.phone}>'
@@ -364,19 +364,23 @@ class OrganizationalEntity:
     def contacts(self, contacts: Iterable[OrganizationalContact]) -> None:
         self._contacts = SortedSet(contacts)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.name, _ComparableTuple(self.urls), _ComparableTuple(self.contacts)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, OrganizationalEntity):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, OrganizationalEntity):
-            return hash(self) < hash(other)
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((self.name, tuple(self.urls), tuple(self.contacts)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<OrganizationalEntity name={self.name}>'

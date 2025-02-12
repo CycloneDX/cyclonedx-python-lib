@@ -239,6 +239,7 @@ def get_crypto_properties_protocol() -> CryptoProperties:
                     ]
                 )
             ],
+            crypto_refs=[BomRef('for-test-2'), BomRef('for-test-1')],
         ),
         oid='an-oid-here'
     )
