@@ -1401,6 +1401,37 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
         ]))
 
 
+def get_bom_for_issue540_duplicate_components() -> Bom:
+    # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/540
+    bom = _make_bom()
+    bom.metadata.component = root_component = Component(
+        name='myApp',
+        type=ComponentType.APPLICATION,
+        bom_ref='myApp'
+    )
+    component1 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-component',
+        bom_ref='some-component'
+    )
+    bom.components.add(component1)
+    bom.register_dependency(root_component, [component1])
+    component2 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library1'
+    )
+    bom.components.add(component2)
+    bom.register_dependency(component1, [component2])
+    component3 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library2'
+    )
+    bom.components.add(component3)
+    bom.register_dependency(component1, [component3])
+    return bom
+
 # ---
 
 

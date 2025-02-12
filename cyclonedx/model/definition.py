@@ -256,7 +256,7 @@ class Requirement:
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to compare all, in hope that one is unique
         return _ComparableTuple((
-            self.bom_ref, self.identifier,
+            self.identifier, self.bom_ref.value,
             self.title, self.text,
             _ComparableTuple(self.descriptions),
             _ComparableTuple(self.open_cre), self.parent, _ComparableTuple(self.properties),
@@ -373,7 +373,9 @@ class Level:
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to compare all, in hope that one is unique
         return _ComparableTuple((
-            self.bom_ref, self.identifier, self.title, self.description, _ComparableTuple(self.requirements)
+            self.identifier, self.bom_ref.value,
+            self.title, self.description,
+            _ComparableTuple(self.requirements)
         ))
 
     def __lt__(self, other: Any) -> bool:
@@ -545,8 +547,9 @@ class Standard:
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to apply all, in hope that one is unique
         return _ComparableTuple((
-            self.bom_ref,
-            self.name, self.version, self.description, self.owner,
+            self.name, self.version,
+            self.bom_ref.value,
+            self.description, self.owner,
             _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
             _ComparableTuple(self.external_references)
         ))

@@ -144,17 +144,17 @@ class TestModelComponent(TestCase):
         self.assertNotEqual(c1, c2)
 
     def test_external_references(self) -> None:
-        c = Component(name='test-component')
-        c.external_references.add(ExternalReference(
+        c1 = Component(name='test-component')
+        c1.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
-        self.assertEqual(c.name, 'test-component')
-        self.assertIsNone(c.version)
-        self.assertEqual(c.type, ComponentType.LIBRARY)
-        self.assertEqual(len(c.external_references), 1)
-        self.assertEqual(len(c.hashes), 0)
+        self.assertEqual(c1.name, 'test-component')
+        self.assertIsNone(c1.version)
+        self.assertEqual(c1.type, ComponentType.LIBRARY)
+        self.assertEqual(len(c1.external_references), 1)
+        self.assertEqual(len(c1.hashes), 0)
 
         c2 = Component(name='test2-component')
         self.assertEqual(c2.name, 'test2-component')
@@ -172,39 +172,35 @@ class TestModelComponent(TestCase):
         self.assertEqual(len(c.hashes), 0)
 
     def test_component_equal_1(self) -> None:
-        c = Component(name='test-component')
-        c.external_references.add(ExternalReference(
+        c1 = Component(name='test-component')
+        c1.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
-
         c2 = Component(name='test-component')
         c2.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
             comment='No comment'
         ))
-
-        self.assertEqual(c, c2)
+        self.assertEqual(c1, c2)
 
     def test_component_equal_2(self) -> None:
-        props: List[Property] = [
+        props: List[Property] = (
             Property(name='prop1', value='val1'),
-            Property(name='prop2', value='val2')
-        ]
-
-        c = Component(
+            Property(name='prop2', value='val2'),
+        )
+        c1 = Component(
             name='test-component', version='1.2.3', properties=props
         )
         c2 = Component(
             name='test-component', version='1.2.3', properties=props
         )
-
-        self.assertEqual(c, c2)
+        self.assertEqual(c1, c2)
 
     def test_component_equal_3(self) -> None:
-        c = Component(
+        c1 = Component(
             name='test-component', version='1.2.3', properties=[
                 Property(name='prop1', value='val1'),
                 Property(name='prop2', value='val2')
@@ -216,8 +212,16 @@ class TestModelComponent(TestCase):
                 Property(name='prop4', value='val4')
             ]
         )
+        self.assertNotEqual(c1, c2)
 
-        self.assertNotEqual(c, c2)
+    def test_component_equal_4(self) -> None:
+        c1 = Component(
+            name='test-component', version='1.2.3', bom_ref='ref1'
+        )
+        c2 = Component(
+            name='test-component', version='1.2.3', bom_ref='ref2'
+        )
+        self.assertNotEqual(c1, c2)
 
     def test_same_1(self) -> None:
         c1 = get_component_setuptools_simple()

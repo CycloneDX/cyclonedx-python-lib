@@ -1774,6 +1774,7 @@ class Component(Dependable):
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.type, self.group, self.name, self.version,
+            self.bom_ref.value,
             None if self.purl is None else _ComparablePackageURL(self.purl),
             self.swid, self.cpe, _ComparableTuple(self.swhids),
             self.supplier, self.author, self.publisher,
