@@ -1336,11 +1336,13 @@ class ProtocolProperties:
         version: Optional[str] = None,
         cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
         ikev2_transform_types: Optional[Ikev2TransformTypes] = None,
+        crypto_refs: Optional[Iterable[BomRef]] = None,
     ) -> None:
         self.type = type
         self.version = version
         self.cipher_suites = cipher_suites or []  # type:ignore[assignment]
         self.ikev2_transform_types = ikev2_transform_types
+        self.crypto_refs = crypto_refs or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_sequence(10)
@@ -1403,9 +1405,29 @@ class ProtocolProperties:
     def ikev2_transform_types(self, ikev2_transform_types: Optional[Ikev2TransformTypes]) -> None:
         self._ikev2_transform_types = ikev2_transform_types
 
+    @property
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'cryptoRef')
+    @serializable.json_name('cryptoRefArray')
+    def crypto_refs(self) -> 'SortedSet[BomRef]':
+        """
+        A list of protocol-related cryptographic assets.
+
+        Returns:
+            `Iterable[BomRef]`
+        """
+        return self._crypto_refs
+
+    @crypto_refs.setter
+    def crypto_refs(self, crypto_refs: Iterable[BomRef]) -> None:
+        self._crypto_refs = SortedSet(crypto_refs)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.type, self.version, _ComparableTuple(self.cipher_suites), self.ikev2_transform_types
+            self.type,
+            self.version,
+            _ComparableTuple(self.cipher_suites),
+            self.ikev2_transform_types,
+            _ComparableTuple(self.crypto_refs)
         ))
 
     def __eq__(self, other: object) -> bool:

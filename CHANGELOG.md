@@ -2,64 +2,14 @@
 
 
 
-## v9.0.0-rc.1 (2025-02-12)
+## v8.8.0 (2025-02-12)
 
-### Breaking
+### Feature
 
-* feat!: BomRef affect equality/comparisson (#754)
+* feat: add `cyclonedx.model.crypto.ProtocolProperties.crypto_refs` (#767)
 
-For some this is considered a bug-fix, for others this is a feature - it
-is a breaking change anyway since it modifies the order of things.
 
-----
-
-TODO:
-- [x] **every** symbol that has a property `bom-ref` MUST utilize it for
-dunder methods `hash`,`eq`,`gt`,`lt`,...
-- [x] add new test cases from #753
-- [x] add new test cases from #540
-- [x] add new test cases from #677
-- [x] create new tests snapshots (if applicable)
-
-----
-
-&gt; [!important]
-&gt; depends on #755
-
-supersedes #678
-closes #678
-
-fixes #753
-fixes #540
-fixes #677
-
----------
-
-Signed-off-by: wkoot &lt;3715211+wkoot@users.noreply.github.com&gt;
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
-Co-authored-by: wkoot &lt;3715211+wkoot@users.noreply.github.com&gt; ([`46bc3f5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/46bc3f53b9302159b7fa684d3cf78b08928ba731))
-
-* chore(deps)!: `py-serializable==^1.1.1` -&gt; `^2.0.0` (#775)
-
-bump to `py-serializable` v2.0.0:
-&lt;https://github.com/madpah/serializable/releases/tag/v2.0.0&gt;
-This is considered a breaking change, as downstream users might rely on
-the same package&#39;s previous version.
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7c20c8e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7c20c8e44fbc3de2942dd2f2ad298be2bd17614b))
-
-* refactor!: streamline comparison/hashing functions (#755)
-
-we have different methods of object comparison here and there, some work
-on tuples, other on hashes, other on different structures.
-
-this PR streamlines this.
-
-these changes might cause breaking changes for downstream users.
-
----------
-
-Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`fd9b755`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fd9b7559a49bdaf3f6d9fe9fea54db8a65958c01))
+Signed-off-by: Indivar Mishra &lt;indimishra@gmail.com&gt; ([`beb35f5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/beb35f55e3e75d625db45e4ff084dee02e919ef6))
 
 
 ## v8.7.0 (2025-02-06)

@@ -116,7 +116,7 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
 
     def test_regression_issue690(self) -> None:
         """
-        regressio test for issue#690.
+        regression test for issue#690.
         see https://github.com/CycloneDX/cyclonedx-python-lib/issues/690
         """
         json_file = join(OWN_DATA_DIRECTORY, 'json',
