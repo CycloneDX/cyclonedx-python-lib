@@ -1,0 +1,63 @@
+{
+  "components": [
+    {
+      "bom-ref": "some-component",
+      "name": "some-component",
+      "type": "library"
+    },
+    {
+      "bom-ref": "some-library1",
+      "name": "some-library",
+      "type": "library"
+    },
+    {
+      "bom-ref": "some-library2",
+      "name": "some-library",
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": [
+        "some-component"
+      ],
+      "ref": "myApp"
+    },
+    {
+      "dependsOn": [
+        "some-library1",
+        "some-library2"
+      ],
+      "ref": "some-component"
+    },
+    {
+      "ref": "some-library1"
+    },
+    {
+      "ref": "some-library2"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "myApp",
+      "name": "myApp",
+      "type": "application"
+    },
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5"
+}
