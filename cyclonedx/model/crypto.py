@@ -494,16 +494,20 @@ class AlgorithmProperties:
             )
         self._nist_quantum_security_level = nist_quantum_security_level
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
+            self.implementation_platform, _ComparableTuple(self.certification_levels), self.mode, self.padding,
+            _ComparableTuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, AlgorithmProperties):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        # TODO
-        return hash((self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
-                     self.implementation_platform, tuple(self.certification_levels), self.mode, self.padding,
-                     tuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<AlgorithmProperties primitive={self.primitive}, execution_environment={self.execution_environment}>'
