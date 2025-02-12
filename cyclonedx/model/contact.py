@@ -163,10 +163,10 @@ class PostalAddress:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.bom_ref,
             self.country, self.region, self.locality, self.postal_code,
             self.post_office_box_number,
-            self.street_address
+            self.street_address,
+            self.bom_ref.value,
         ))
 
     def __eq__(self, other: object) -> bool:

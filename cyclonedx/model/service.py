@@ -355,6 +355,7 @@ class Service(Dependable):
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.group, self.name, self.version,
+            self.bom_ref.value,
             self.provider, self.description,
             self.authenticated, _ComparableTuple(self.data), _ComparableTuple(self.endpoints),
             _ComparableTuple(self.external_references), _ComparableTuple(self.licenses),
