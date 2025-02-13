@@ -4,7 +4,7 @@ Any contribution is welcome.
 Please read the [CycloneDX contributing guidelines](https://github.com/CycloneDX/.github/blob/master/CONTRIBUTING.md) first.
 
 Pull-requests from forks are welcome.  
-We love to see your purposed changes, but we also like to discuss things first. Please open aticket and explain your intended changes to the community. And don't forget to mention that discussion in your pullrequest later. 
+We love to see your purposed changes, but we also like to discuss things first. Please open a ticket and explain your intended changes to the community. And don't forget to mention that discussion in your pullrequest later. 
 Find the needed basics here:
 * [how to fork a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
 * [how create a pull request from a fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
