@@ -18,7 +18,7 @@
 import re
 from typing import TYPE_CHECKING, Any, Iterable, Optional, Union
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
@@ -256,7 +256,7 @@ class Requirement:
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to compare all, in hope that one is unique
         return _ComparableTuple((
-            self.bom_ref, self.identifier,
+            self.identifier, self.bom_ref.value,
             self.title, self.text,
             _ComparableTuple(self.descriptions),
             _ComparableTuple(self.open_cre), self.parent, _ComparableTuple(self.properties),
@@ -373,7 +373,9 @@ class Level:
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to compare all, in hope that one is unique
         return _ComparableTuple((
-            self.bom_ref, self.identifier, self.title, self.description, _ComparableTuple(self.requirements)
+            self.identifier, self.bom_ref.value,
+            self.title, self.description,
+            _ComparableTuple(self.requirements)
         ))
 
     def __lt__(self, other: Any) -> bool:
@@ -545,8 +547,9 @@ class Standard:
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to apply all, in hope that one is unique
         return _ComparableTuple((
-            self.bom_ref,
-            self.name, self.version, self.description, self.owner,
+            self.name, self.version,
+            self.bom_ref.value,
+            self.description, self.owner,
             _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
             _ComparableTuple(self.external_references)
         ))
@@ -608,13 +611,13 @@ class Definitions:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Definitions):
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Definitions standards={self.standards!r} >'

@@ -18,7 +18,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Literal, Type
 
-from serializable import ViewType
+from py_serializable import ViewType
 
 from . import SchemaVersion
 

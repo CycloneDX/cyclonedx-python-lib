@@ -25,7 +25,7 @@ from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
-from serializable.helpers import BaseHelper
+from py_serializable.helpers import BaseHelper
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..model.bom_ref import BomRef

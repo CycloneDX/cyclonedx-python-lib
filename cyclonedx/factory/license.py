@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Optional
 
 from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
 from ..model.license import DisjunctiveLicense, LicenseExpression
-from ..spdx import fixup_id as spdx_fixup, is_compound_expression as is_spdx_compound_expression
+from ..spdx import fixup_id as spdx_fixup, is_expression as is_spdx_expression
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model import AttachedText, XsUri
@@ -57,11 +57,11 @@ class LicenseFactory:
                              ) -> LicenseExpression:
         """Make a :class:`cyclonedx.model.license.LicenseExpression` with a compound expression.
 
-        Utilizes :func:`cyclonedx.spdx.is_compound_expression`.
+        Utilizes :func:`cyclonedx.spdx.is_expression`.
 
         :raises InvalidLicenseExpressionException: if param `value` is not known/supported license expression
         """
-        if is_spdx_compound_expression(expression):
+        if is_spdx_expression(expression):
             return LicenseExpression(expression, acknowledgement=acknowledgement)
         raise InvalidLicenseExpressionException(expression)
 
