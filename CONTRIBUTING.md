@@ -1,9 +1,12 @@
 # Contributing
 
-Pull requests are welcome.
-But please read the
-[CycloneDX contributing guidelines](https://github.com/CycloneDX/.github/blob/master/CONTRIBUTING.md)
-first.
+Any contribution is welcome.  
+Please read the [CycloneDX contributing guidelines](https://github.com/CycloneDX/.github/blob/master/CONTRIBUTING.md) first.
+
+Pull-requests from forks are welcome.  
+Find the needed basics here:
+* [how to fork a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
+* [how create a pull request from a fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
 
 ## Setup
 
