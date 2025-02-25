@@ -2,6 +2,40 @@
 
 
 
+## v8.9.0 (2025-02-25)
+
+### Documentation
+
+* docs:  extended instructions for &#34;contributing&#34; (#783)
+
+supersedes
+https://github.com/CycloneDX/cyclonedx-python-lib/pull/773/files#r1954324461
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e2a4ed3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e2a4ed3608253b65a0f902f225fe7b7dd29ab864))
+
+### Feature
+
+* feat: avoid raising `NoPropertiesProvidedException` for optional parameters (#786)
+
+the following classes&#39; init no longer raise `NoPropertiesProvidedException`:
+* `cyclonedx.model.IdentifiableAction`
+* `cyclonedx.model.component.Commit`
+* `cyclonedx.model.component.ComponentEvidence`
+* `cyclonedx.model.component.Diff`
+* `cyclonedx.model.component.Pedigree`
+* `cyclonedx.model.issue.IssueTypeSource`
+* `cyclonedx.model.vulnerability.VulnerabilityAnalysis`
+* `cyclonedx.model.vulnerability.VulnerabilityCredits`
+* `cyclonedx.model.vulnerability.VulnerabilityRating`
+* `cyclonedx.model.vulnerability.VulnerabilitySource`
+
+---------
+
+Signed-off-by: Indivar Mishra &lt;indimishra@gmail.com&gt; ([`845b8d5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/845b8d538d2f0fcadb3a3257a066ad58e3640c97))
+
+
 ## v8.8.0 (2025-02-12)
 
 ### Feature
