@@ -29,7 +29,7 @@ from sortedcontainers import SortedSet
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
 from .._internal.hash import file_sha1sum as _file_sha1sum
-from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, NoPropertiesProvidedException
+from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException
 from ..exception.serialization import (
     CycloneDxDeserializationException,
     SerializationOfUnexpectedValueException,
@@ -82,11 +82,6 @@ class Commit:
         committer: Optional[IdentifiableAction] = None,
         message: Optional[str] = None,
     ) -> None:
-        if not uid and not url and not author and not committer and not message:
-            raise NoPropertiesProvidedException(
-                'At least one of `uid`, `url`, `author`, `committer` or `message` must be provided for a `Commit`.'
-            )
-
         self.uid = uid
         self.url = url
         self.author = author
@@ -211,11 +206,6 @@ class ComponentEvidence:
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[Iterable[Copyright]] = None,
     ) -> None:
-        if not licenses and not copyright:
-            raise NoPropertiesProvidedException(
-                'At least one of `licenses` or `copyright` must be supplied for a `ComponentEvidence`.'
-            )
-
         self.licenses = licenses or []  # type:ignore[assignment]
         self.copyright = copyright or []  # type:ignore[assignment]
 
@@ -451,11 +441,6 @@ class Diff:
         text: Optional[AttachedText] = None,
         url: Optional[XsUri] = None,
     ) -> None:
-        if not text and not url:
-            raise NoPropertiesProvidedException(
-                'At least one of `text` or `url` must be provided for a `Diff`.'
-            )
-
         self.text = text
         self.url = url
 
@@ -637,12 +622,6 @@ class Pedigree:
         patches: Optional[Iterable[Patch]] = None,
         notes: Optional[str] = None,
     ) -> None:
-        if not ancestors and not descendants and not variants and not commits and not patches and not notes:
-            raise NoPropertiesProvidedException(
-                'At least one of `ancestors`, `descendants`, `variants`, `commits`, `patches` or `notes` must be '
-                'provided for `Pedigree`'
-            )
-
         self.ancestors = ancestors or []  # type:ignore[assignment]
         self.descendants = descendants or []  # type:ignore[assignment]
         self.variants = variants or []  # type:ignore[assignment]

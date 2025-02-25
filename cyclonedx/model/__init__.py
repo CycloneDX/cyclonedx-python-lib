@@ -37,12 +37,7 @@ import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import (
-    InvalidLocaleTypeException,
-    InvalidUriException,
-    NoPropertiesProvidedException,
-    UnknownHashTypeException,
-)
+from ..exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -1185,11 +1180,6 @@ class IdentifiableAction:
         name: Optional[str] = None,
         email: Optional[str] = None,
     ) -> None:
-        if not timestamp and not name and not email:
-            raise NoPropertiesProvidedException(
-                'At least one of `timestamp`, `name` or `email` must be provided for an `IdentifiableAction`.'
-            )
-
         self.timestamp = timestamp
         self.name = name
         self.email = email

@@ -19,7 +19,6 @@ import datetime
 from typing import List
 from unittest import TestCase
 
-from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import (
     AttachedText,
     Copyright,
@@ -57,8 +56,7 @@ from tests._data.models import (
 class TestModelCommit(TestCase):
 
     def test_no_parameters(self) -> None:
-        with self.assertRaises(NoPropertiesProvidedException):
-            Commit()
+        Commit()  # Does not raise `NoPropertiesProvidedException`
 
     def test_same(self) -> None:
         ia_comitter = IdentifiableAction(timestamp=datetime.datetime.utcnow(), name='The Committer')
@@ -291,8 +289,7 @@ class TestModelComponent(TestCase):
 class TestModelComponentEvidence(TestCase):
 
     def test_no_params(self) -> None:
-        with self.assertRaises(NoPropertiesProvidedException):
-            ComponentEvidence()
+        ComponentEvidence()  # Does not raise `NoPropertiesProvidedException`
 
     def test_same_1(self) -> None:
         ce_1 = ComponentEvidence(copyright=[Copyright(text='Commercial')])
@@ -316,8 +313,7 @@ class TestModelComponentEvidence(TestCase):
 class TestModelDiff(TestCase):
 
     def test_no_params(self) -> None:
-        with self.assertRaises(NoPropertiesProvidedException):
-            Diff()
+        Diff()  # Does not raise `NoPropertiesProvidedException`
 
     def test_same(self) -> None:
         at = AttachedText(content='A very long diff')
@@ -441,8 +437,7 @@ class TestModelPatch(TestCase):
 class TestModelPedigree(TestCase):
 
     def test_no_params(self) -> None:
-        with self.assertRaises(NoPropertiesProvidedException):
-            Pedigree()
+        Pedigree()  # does not raise `NoPropertiesProvidedException`
 
     def test_same_1(self) -> None:
         p1 = get_pedigree_1()

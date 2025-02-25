@@ -24,12 +24,7 @@ from uuid import UUID
 from ddt import ddt, named_data
 
 from cyclonedx._internal.compare import ComparableTuple
-from cyclonedx.exception.model import (
-    InvalidLocaleTypeException,
-    InvalidUriException,
-    NoPropertiesProvidedException,
-    UnknownHashTypeException,
-)
+from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
 from cyclonedx.model import (
     Copyright,
     Encoding,
@@ -309,8 +304,7 @@ class TestModelHashType(TestCase):
 class TestModelIdentifiableAction(TestCase):
 
     def test_no_params(self) -> None:
-        with self.assertRaises(NoPropertiesProvidedException):
-            IdentifiableAction()
+        IdentifiableAction()  # Does not raise `NoPropertiesProvidedException`
 
     def test_same(self) -> None:
         ts = datetime.datetime.utcnow()
