@@ -22,7 +22,6 @@ import serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import NoPropertiesProvidedException
 from . import XsUri
 
 
@@ -54,10 +53,6 @@ class IssueTypeSource:
         name: Optional[str] = None,
         url: Optional[XsUri] = None,
     ) -> None:
-        if not name and not url:
-            raise NoPropertiesProvidedException(
-                'Neither `name` nor `url` were provided - at least one must be provided.'
-            )
         self.name = name
         self.url = url
 

@@ -17,7 +17,6 @@
 
 from unittest import TestCase
 
-from cyclonedx.exception.model import NoPropertiesProvidedException
 from cyclonedx.model import XsUri
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from tests import reorder
@@ -63,8 +62,7 @@ class TestModelIssueType(TestCase):
 class TestModelIssueTypeSource(TestCase):
 
     def test_no_params(self) -> None:
-        with self.assertRaises(NoPropertiesProvidedException):
-            IssueTypeSource()
+        IssueTypeSource()  # Does not raise `NoPropertiesProvidedException`
 
     def test_same(self) -> None:
         its_1 = IssueTypeSource(name='The Source', url=XsUri('https://cyclonedx.org'))
