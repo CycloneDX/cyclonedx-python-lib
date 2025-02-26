@@ -29,7 +29,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Iterable, Optional
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
@@ -494,15 +494,20 @@ class AlgorithmProperties:
             )
         self._nist_quantum_security_level = nist_quantum_security_level
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
+            self.implementation_platform, _ComparableTuple(self.certification_levels), self.mode, self.padding,
+            _ComparableTuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, AlgorithmProperties):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
-                     self.implementation_platform, tuple(self.certification_levels), self.mode, self.padding,
-                     tuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<AlgorithmProperties primitive={self.primitive}, execution_environment={self.execution_environment}>'
@@ -666,14 +671,19 @@ class CertificateProperties:
     def certificate_extension(self, certificate_extension: Optional[str]) -> None:
         self._certificate_extension = certificate_extension
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
+            self.certificate_format, self.certificate_extension
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CertificateProperties):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
-                     self.certificate_format, self.certificate_extension))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<CertificateProperties subject_name={self.subject_name}, certificate_format={self.certificate_format}>'
@@ -789,13 +799,18 @@ class RelatedCryptoMaterialSecuredBy:
     def algorithm_ref(self, algorithm_ref: Optional[BomRef]) -> None:
         self._algorithm_ref = algorithm_ref
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.mechanism, self.algorithm_ref
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, RelatedCryptoMaterialSecuredBy):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((self.mechanism, self.algorithm_ref))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<RelatedCryptoMaterialSecuredBy mechanism={self.mechanism}, algorithm_ref={self.algorithm_ref}>'
@@ -1028,14 +1043,19 @@ class RelatedCryptoMaterialProperties:
     def secured_by(self, secured_by: Optional[RelatedCryptoMaterialSecuredBy]) -> None:
         self._secured_by = secured_by
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.type, self.id, self.state, self.algorithm_ref, self.creation_date, self.activation_date,
+            self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, RelatedCryptoMaterialProperties):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((self.type, self.id, self.state, self.algorithm_ref, self.creation_date, self.activation_date,
-                     self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<RelatedCryptoMaterialProperties type={self.type}, id={self.id} state={self.state}>'
@@ -1136,22 +1156,23 @@ class ProtocolPropertiesCipherSuite:
     def identifiers(self, identifiers: Iterable[str]) -> None:
         self._identifiers = SortedSet(identifiers)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.name, _ComparableTuple(self.algorithms), _ComparableTuple(self.identifiers)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ProtocolPropertiesCipherSuite):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ProtocolPropertiesCipherSuite):
-            return _ComparableTuple((
-                self.name, _ComparableTuple(self.algorithms), _ComparableTuple(self.identifiers)
-            )) < _ComparableTuple((
-                other.name, _ComparableTuple(other.algorithms), _ComparableTuple(other.identifiers)
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.name, tuple(self.algorithms), tuple(self.identifiers)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<ProtocolPropertiesCipherSuite name={self.name}>'
@@ -1277,13 +1298,23 @@ class Ikev2TransformTypes:
     def auth(self, auth: Iterable[BomRef]) -> None:
         self._auth = SortedSet(auth)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            _ComparableTuple(self.encr),
+            _ComparableTuple(self.prf),
+            _ComparableTuple(self.integ),
+            _ComparableTuple(self.ke),
+            self.esn,
+            _ComparableTuple(self.auth)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Ikev2TransformTypes):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash((tuple(self.encr), tuple(self.prf), tuple(self.integ), tuple(self.ke), self.esn, tuple(self.auth)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Ikev2TransformTypes esn={self.esn}>'
@@ -1394,21 +1425,22 @@ class ProtocolProperties:
     def crypto_refs(self, crypto_refs: Iterable[BomRef]) -> None:
         self._crypto_refs = SortedSet(crypto_refs)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.type,
+            self.version,
+            _ComparableTuple(self.cipher_suites),
+            self.ikev2_transform_types,
+            _ComparableTuple(self.crypto_refs)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ProtocolProperties):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __hash__(self) -> int:
-        return hash(
-            (
-                self.type,
-                self.version,
-                tuple(self.cipher_suites),
-                self.ikev2_transform_types,
-                tuple(self.crypto_refs)
-            )
-        )
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<ProtocolProperties type={self.type}, version={self.version}>'
@@ -1539,33 +1571,28 @@ class CryptoProperties:
     def oid(self, oid: Optional[str]) -> None:
         self._oid = oid
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.asset_type,
+            self.algorithm_properties,
+            self.certificate_properties,
+            self.related_crypto_material_properties,
+            self.protocol_properties,
+            self.oid,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CryptoProperties):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, CryptoProperties):
-            return _ComparableTuple((
-                self.asset_type,
-                self.algorithm_properties,
-                self.certificate_properties,
-                self.related_crypto_material_properties,
-                self.protocol_properties,
-                self.oid,
-            )) < _ComparableTuple((
-                other.asset_type,
-                other.algorithm_properties,
-                other.certificate_properties,
-                other.related_crypto_material_properties,
-                other.protocol_properties,
-                other.oid,
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.asset_type, self.algorithm_properties, self.certificate_properties,
-                     self.related_crypto_material_properties, self.protocol_properties, self.oid))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<CryptoProperties asset_type={self.asset_type}, oid={self.oid}>'

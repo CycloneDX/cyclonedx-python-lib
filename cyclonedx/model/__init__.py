@@ -33,7 +33,7 @@ from uuid import UUID
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
@@ -128,22 +128,23 @@ class DataClassification:
     def classification(self, classification: str) -> None:
         self._classification = classification
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.flow, self.classification
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, DataClassification):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: object) -> bool:
         if isinstance(other, DataClassification):
-            return _ComparableTuple((
-                self.flow, self.classification
-            )) < _ComparableTuple((
-                other.flow, other.classification
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.flow, self.classification))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<DataClassification flow={self.flow}>'
@@ -231,22 +232,23 @@ class AttachedText:
     def content(self, content: str) -> None:
         self._content = content
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.content_type, self.encoding, self.content,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, AttachedText):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, AttachedText):
-            return _ComparableTuple((
-                self.content_type, self.content, self.encoding
-            )) < _ComparableTuple((
-                other.content_type, other.content, other.encoding
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.content, self.content_type, self.encoding))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<AttachedText content-type={self.content_type}, encoding={self.encoding}>'
@@ -510,22 +512,23 @@ class HashType:
     def content(self, content: str) -> None:
         self._content = content
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.alg, self.content
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, HashType):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, HashType):
-            return _ComparableTuple((
-                self.alg, self.content
-            )) < _ComparableTuple((
-                other.alg, other.content
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.alg, self.content))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<HashType {self.alg.name}:{self.content}>'
@@ -728,7 +731,7 @@ class XsUri(serializable.helpers.BaseHelper):
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, XsUri):
-            return hash(other) == hash(self)
+            return self._uri == other._uri
         return False
 
     def __lt__(self, other: Any) -> bool:
@@ -887,25 +890,24 @@ class ExternalReference:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._type, self._url, self._comment,
+            _ComparableTuple(self._hashes)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ExternalReference):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ExternalReference):
-            return _ComparableTuple((
-                self._type, self._url, self._comment
-            )) < _ComparableTuple((
-                other._type, other._url, other._comment
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((
-            self._type, self._url, self._comment,
-            tuple(sorted(self._hashes, key=hash))
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<ExternalReference {self.type.name}, {self.url}>'
@@ -964,22 +966,23 @@ class Property:
     def value(self, value: Optional[str]) -> None:
         self._value = value
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.name, self.value
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Property):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Property):
-            return _ComparableTuple((
-                self.name, self.value
-            )) < _ComparableTuple((
-                other.name, other.value
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.name, self.value))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Property name={self.name}>'
@@ -1055,22 +1058,23 @@ class NoteText:
     def encoding(self, encoding: Optional[Encoding]) -> None:
         self._encoding = encoding
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.content, self.content_type, self.encoding
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, NoteText):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, NoteText):
-            return _ComparableTuple((
-                self.content, self.content_type, self.encoding
-            )) < _ComparableTuple((
-                other.content, other.content_type, other.encoding
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.content, self.content_type, self.encoding))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<NoteText content_type={self.content_type}, encoding={self.encoding}>'
@@ -1139,22 +1143,23 @@ class Note:
                     " ISO-3166 (or higher) country code. according to ISO-639 format. Examples include: 'en', 'en-US'."
                 )
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.locale, self.text
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Note):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Note):
-            return _ComparableTuple((
-                self.locale, self.text
-            )) < _ComparableTuple((
-                other.locale, other.text
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.text, self.locale))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<Note id={id(self)}, locale={self.locale}>'
@@ -1224,22 +1229,23 @@ class IdentifiableAction:
     def email(self, email: Optional[str]) -> None:
         self._email = email
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.timestamp, self.name, self.email
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, IdentifiableAction):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IdentifiableAction):
-            return _ComparableTuple((
-                self.timestamp, self.name, self.email
-            )) < _ComparableTuple((
-                other.timestamp, other.name, other.email
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.timestamp, self.name, self.email))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<IdentifiableAction name={self.name}, email={self.email}>'
@@ -1277,16 +1283,16 @@ class Copyright:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Copyright):
-            return hash(other) == hash(self)
+            return self._text == other._text
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Copyright):
-            return self.text < other.text
+            return self._text < other._text
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.text)
+        return hash(self._text)
 
     def __repr__(self) -> str:
         return f'<Copyright text={self.text}>'

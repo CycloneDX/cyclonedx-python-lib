@@ -1,0 +1,49 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:66fa5692-2e9d-45c5-830a-ec8ccaf7dcc9",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "description": "see issue #677 - https://github.com/CycloneDX/cyclonedx-python-lib/issues/677",
+      "type": "application",
+      "name": "test"
+    }
+  },
+  "components": [
+    {
+      "type": "operating-system",
+      "bom-ref": "test12",
+      "name": "alpine"
+    },
+    {
+      "type": "container",
+      "bom-ref": "test11",
+      "name": "alpine"
+    },
+    {
+      "type": "operating-system",
+      "bom-ref": "test22",
+      "name": "alpine"
+    },
+    {
+      "type": "container",
+      "bom-ref": "test21",
+      "name": "alpine"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "test11",
+      "dependsOn": [
+        "test12"
+      ]
+    },
+    {
+      "ref": "test21",
+      "dependsOn": [
+        "test22"
+      ]
+    }
+  ]
+}

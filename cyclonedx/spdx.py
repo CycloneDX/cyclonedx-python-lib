@@ -18,7 +18,7 @@
 
 __all__ = [
     'is_supported_id', 'fixup_id',
-    'is_compound_expression'
+    'is_expression'
 ]
 
 from json import load as json_load
@@ -47,26 +47,26 @@ __SPDX_EXPRESSION_LICENSING: 'Licensing' = get_spdx_licensing()
 
 
 def is_supported_id(value: str) -> bool:
-    """Validate a SPDX-ID according to current spec."""
+    """Validate SPDX-ID according to current spec."""
     return value in __IDS
 
 
 def fixup_id(value: str) -> Optional[str]:
-    """Fixup a SPDX-ID.
+    """Fixup SPDX-ID.
 
     :returns: repaired value string, or `None` if fixup was unable to help.
     """
     return __IDS_LOWER_MAP.get(value.lower())
 
 
-def is_compound_expression(value: str) -> bool:
-    """Validate compound expression.
+def is_expression(value: str) -> bool:
+    """Validate SPDX license expression.
 
     .. note::
         Utilizes `license-expression library`_ to
         validate SPDX compound expression according to `SPDX license expression spec`_.
 
-    .. _SPDX license expression spec: https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
+    .. _SPDX license expression spec: https://spdx.github.io/spdx-spec/v3.0.1/annexes/spdx-license-expressions/
     .. _license-expression library: https://github.com/nexB/license-expression
     """
     try:
