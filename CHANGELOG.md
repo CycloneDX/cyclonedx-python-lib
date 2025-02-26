@@ -2,6 +2,42 @@
 
 
 
+## v9.0.0 (2025-02-26)
+
+### Breaking
+
+* feat!: 9.0.1 (#777)
+
+
+### BREAKING Changes
+
+* Fix: `model.vulnerability.VulnerabilityReference`&#39;s properties are all
+mandatory
+([#790](https://github.com/CycloneDX/cyclonedx-python-lib/issues/790)
+via [#792](https://github.com/CycloneDX/cyclonedx-python-lib/pull/792))
+* Refactor: Rename `spdx.is_compund_expression` -&gt; `spdx.is_expression`
+([#779](https://github.com/CycloneDX/cyclonedx-python-lib/pull/779))
+* Behavior: `BomRef` affects comparison/hashing
+([#754](https://github.com/CycloneDX/cyclonedx-python-lib/pull/754) &amp;
+[#780](https://github.com/CycloneDX/cyclonedx-python-lib/pull/780))
+  This is only a breaking change if you relied on ordering of elements.
+* Behavior: streamline comparison/hashing functions
+([#755](https://github.com/CycloneDX/cyclonedx-python-lib/pull/755))
+  This is only a breaking change if you relied on ordering of elements.
+* Dependency: bump dependency `py-serializable &gt;=2 &lt;3`, was `&gt;=1.1.1 &lt;2`
+([#775](https://github.com/CycloneDX/cyclonedx-python-lib/pull/775))
+This is only a breaking change if you have other packages depend on that
+specific version.
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: wkoot &lt;3715211+wkoot@users.noreply.github.com&gt;
+Signed-off-by: semantic-release &lt;semantic-release@bot.local&gt;
+Co-authored-by: wkoot &lt;3715211+wkoot@users.noreply.github.com&gt;
+Co-authored-by: semantic-release &lt;semantic-release@bot.local&gt; ([`e6f91fa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e6f91fa98cbb02cda62fd0bc5b1f1b9bf19902ee))
+
+
 ## v8.9.0 (2025-02-25)
 
 ### Documentation
