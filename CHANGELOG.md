@@ -2,6 +2,23 @@
 
 
 
+## v9.1.0 (2025-02-27)
+
+### Feature
+
+* feat: `model.VulnerabilityAnalysis` properties for issued/updated datetime (#794)
+
+
+
+Signed-off-by: Indivar Mishra &lt;indimishra@gmail.com&gt; ([`4a3955a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4a3955a610bad97550e11c426c61c1295b76f804))
+
+### Fix
+
+* fix: improved comparison functionality of `model.VulnerabilityAnalysis` (#795)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7d57c73`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7d57c73ef63bfb016099f4c0312b6702da488efc))
+
+
 ## v9.0.2 (2025-02-26)
 
 
