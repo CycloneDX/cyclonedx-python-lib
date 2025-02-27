@@ -503,7 +503,11 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         )),
         analysis=VulnerabilityAnalysis(
             state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
-            responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
+            responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail',
+            first_issued=datetime(year=2018, month=9, day=1, hour=10, minute=50, second=42, microsecond=51979,
+                                  tzinfo=timezone.utc),
+            last_updated=datetime(year=2018, month=9, day=1, hour=10, minute=50, second=42, microsecond=51979,
+                                  tzinfo=timezone.utc)
         ),
         affects=[
             BomTarget(
