@@ -122,8 +122,8 @@ jobs:
 
       - name: Publish package distributions to GitHub Releases
         if: steps.release.outputs.released == 'true'
-        # see https://github.com/python-semantic-release/upload-to-gh-release
-        uses: python-semantic-release/upload-to-gh-release@main
+        # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#python-semantic-release-publish-action
+        uses: python-semantic-release/publish-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.release.outputs.tag }}
