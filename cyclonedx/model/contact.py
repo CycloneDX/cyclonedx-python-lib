@@ -288,15 +288,32 @@ class OrganizationalEntity:
 
     def __init__(
         self, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
         name: Optional[str] = None,
         urls: Optional[Iterable[XsUri]] = None,
         contacts: Optional[Iterable[OrganizationalContact]] = None,
         address: Optional[PostalAddress] = None,
     ) -> None:
+        self._bom_ref = bom_ref
         self.name = name
         self.address = address
         self.urls = urls or []  # type:ignore[assignment]
         self.contacts = contacts or []  # type:ignore[assignment]
+
+    @property
+    @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    def bom_ref(self) -> Optional[BomRef]:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
 
     @property
     @serializable.xml_sequence(10)
