@@ -509,6 +509,20 @@ class TestModelOrganizationalEntity(TestCase):
         assert entity.name == name
         assert entity.urls == SortedSet([XsUri(url) for url in urls])
         assert entity.bom_ref == BomRef(bom_ref)
+        assert len(entity.urls) == 1
+        assert next(iter(entity.urls)) == XsUri(urls[0])
+
+    def test_init_from_json_without_url(self) -> None:
+        bom_ref = 'Example'
+        name = 'Example'
+        specification = {
+            'name': name,
+            'bom-ref': bom_ref
+        }
+        entity = OrganizationalEntity.from_json(specification)
+        assert entity.name == name
+        assert entity.urls == SortedSet()
+        assert entity.bom_ref == BomRef(bom_ref)
 
 
 class TestModelXsUri(TestCase):
