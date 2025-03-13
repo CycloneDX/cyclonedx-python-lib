@@ -1437,6 +1437,26 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
     bom.register_dependency(component1, [component3])
     return bom
 
+
+def get_bom_for_issue799_organizational_entity_bom_ref() -> Bom:
+    """regression test for issue #799
+    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/799
+    """
+    return _make_bom(
+        metadata=BomMetaData(
+            tools=ToolRepository(
+                services=(
+                    Service(name='service-1',
+                            provider=OrganizationalEntity(
+                                name='org-1',
+                                bom_ref=BomRef('bom-ref-1'),
+                            )),
+                )
+            )
+        )
+    )
+
+
 # ---
 
 
