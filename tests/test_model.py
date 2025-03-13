@@ -22,7 +22,6 @@ from unittest import TestCase
 from uuid import UUID
 
 from ddt import ddt, named_data
-from sortedcontainers import SortedSet
 
 from cyclonedx._internal.compare import ComparableTuple
 from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
@@ -40,7 +39,7 @@ from cyclonedx.model import (
     XsUri,
 )
 from cyclonedx.model.bom_ref import BomRef
-from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
+from cyclonedx.model.contact import OrganizationalContact
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from tests import reorder
 
@@ -462,67 +461,6 @@ class TestModelOrganizationalContact(TestCase):
         sorted_contacts = sorted(contacts)
         expected_contacts = reorder(contacts, expected_order)
         self.assertListEqual(sorted_contacts, expected_contacts)
-
-
-class TestModelOrganizationalEntity(TestCase):
-    def test_init_with_bom_ref(self) -> None:
-        contacts = [
-            OrganizationalContact(name='a', email='a', phone='a'),
-            OrganizationalContact(name='b', email='a', phone='a'),
-        ]
-        OrganizationalEntity(
-            bom_ref=BomRef('dummy-bom-ref'),
-            name='dummy-organizational-entity',
-            contacts=contacts,
-            address=PostalAddress(
-                country='dummy-country',
-                region='dummy-region',
-            ),
-        )
-
-    def test_init_without_bom_ref(self) -> None:
-        contacts = [
-            OrganizationalContact(name='a', email='a', phone='a'),
-            OrganizationalContact(name='b', email='a', phone='a'),
-        ]
-        OrganizationalEntity(
-            name='dummy-organizational-entity',
-            contacts=contacts,
-            address=PostalAddress(
-                country='dummy-country',
-                region='dummy-region',
-            ),
-        )
-
-    def test_init_from_json(self) -> None:
-        bom_ref = 'Example'
-        name = 'Example'
-        urls = [
-            'https://example.com/'
-        ]
-        specification = {
-            'name': name,
-            'url': urls,
-            'bom-ref': bom_ref
-        }
-        entity = OrganizationalEntity.from_json(specification)
-        assert entity.name == name
-        assert entity.urls == SortedSet([XsUri(url) for url in urls])
-        assert entity.bom_ref == BomRef(bom_ref)
-        assert len(entity.urls) == 1
-        assert next(iter(entity.urls)) == XsUri(urls[0])
-
-    def test_init_from_json_without_url(self) -> None:
-        bom_ref = 'Example'
-        name = 'Example'
-        specification = {
-            'name': name,
-            'bom-ref': bom_ref
-        }
-        entity = OrganizationalEntity.from_json(specification)
-        assert entity.name == name
-        assert entity.urls == SortedSet()
-        assert entity.bom_ref == BomRef(bom_ref)
 
 
 class TestModelXsUri(TestCase):
