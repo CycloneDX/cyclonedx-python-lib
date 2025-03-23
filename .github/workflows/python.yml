@@ -115,17 +115,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'windows-latest', 'macos-13']
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
         python-version:
           - "3.13" # highest supported
           - "3.12"
           - "3.11"
           - "3.10"
           - "3.9"
-          - "3.8"  # lowest supported
+          - "3.8"  # lowest supported -- handled in include
         toxenv-factors:
           - '-allExtras'
           - '-noExtras'
+        exclude:
+          - # macos-latest might be incompatible to py38 - see https://github.com/CycloneDX/cyclonedx-python-lib/pull/599#issuecomment-2077462142
+            os: macos-latest
+            python-version: '3.8'
+        include:
+          - os: macos-13
+            python-version: '3.8'
+            toxenv-factors: '-allExtras'
+          - os: macos-13
+            python-version: '3.8'
+            toxenv-factors: '-noExtras'
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
