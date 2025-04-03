@@ -1406,6 +1406,28 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
         ]))
 
 
+def get_bom_with_provides() -> Bom:
+    c1 = get_component_toml_with_hashes_with_references('crypto-library')
+    c2 = get_component_setuptools_simple('some-library')
+    c3 = get_component_crypto_asset_algorithm('crypto-algorithm')
+    return _make_bom(
+        components=[c1, c2, c3],
+        dependencies=[
+            Dependency(
+                ref=c1.bom_ref,
+                dependencies=[Dependency(ref=c2.bom_ref)],
+                provides=[Dependency(ref=c3.bom_ref)]
+            ),
+            Dependency(
+                ref=c2.bom_ref
+            ),
+            Dependency(
+                ref=c3.bom_ref
+            ),
+        ],
+    )
+
+
 def get_bom_for_issue540_duplicate_components() -> Bom:
     # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/540
     bom = _make_bom()
