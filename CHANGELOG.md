@@ -2,6 +2,192 @@
 
 
 
+## v9.1.1-rc.1 (2025-03-03)
+
+
+## v9.1.0 (2025-02-27)
+
+### Feature
+
+* feat: `model.VulnerabilityAnalysis` properties for issued/updated datetime (#794)
+
+
+
+Signed-off-by: Indivar Mishra &lt;indimishra@gmail.com&gt; ([`4a3955a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4a3955a610bad97550e11c426c61c1295b76f804))
+
+### Fix
+
+* fix: improved comparison functionality of `model.VulnerabilityAnalysis` (#795)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`7d57c73`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7d57c73ef63bfb016099f4c0312b6702da488efc))
+
+
+## v9.0.2 (2025-02-26)
+
+
+## v9.0.0 (2025-02-26)
+
+### Breaking
+
+* feat!: 9.0.1 (#777)
+
+
+### BREAKING Changes
+
+* Fix: `model.vulnerability.VulnerabilityReference`&#39;s properties are all
+mandatory
+([#790](https://github.com/CycloneDX/cyclonedx-python-lib/issues/790)
+via [#792](https://github.com/CycloneDX/cyclonedx-python-lib/pull/792))
+* Refactor: Rename `spdx.is_compund_expression` -&gt; `spdx.is_expression`
+([#779](https://github.com/CycloneDX/cyclonedx-python-lib/pull/779))
+* Behavior: `BomRef` affects comparison/hashing
+([#754](https://github.com/CycloneDX/cyclonedx-python-lib/pull/754) &amp;
+[#780](https://github.com/CycloneDX/cyclonedx-python-lib/pull/780))
+  This is only a breaking change if you relied on ordering of elements.
+* Behavior: streamline comparison/hashing functions
+([#755](https://github.com/CycloneDX/cyclonedx-python-lib/pull/755))
+  This is only a breaking change if you relied on ordering of elements.
+* Dependency: bump dependency `py-serializable &gt;=2 &lt;3`, was `&gt;=1.1.1 &lt;2`
+([#775](https://github.com/CycloneDX/cyclonedx-python-lib/pull/775))
+This is only a breaking change if you have other packages depend on that
+specific version.
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Signed-off-by: wkoot &lt;3715211+wkoot@users.noreply.github.com&gt;
+Signed-off-by: semantic-release &lt;semantic-release@bot.local&gt;
+Co-authored-by: wkoot &lt;3715211+wkoot@users.noreply.github.com&gt;
+Co-authored-by: semantic-release &lt;semantic-release@bot.local&gt; ([`e6f91fa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e6f91fa98cbb02cda62fd0bc5b1f1b9bf19902ee))
+
+
+## v8.9.0 (2025-02-25)
+
+### Documentation
+
+* docs:  extended instructions for &#34;contributing&#34; (#783)
+
+supersedes
+https://github.com/CycloneDX/cyclonedx-python-lib/pull/773/files#r1954324461
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`e2a4ed3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e2a4ed3608253b65a0f902f225fe7b7dd29ab864))
+
+### Feature
+
+* feat: avoid raising `NoPropertiesProvidedException` for optional parameters (#786)
+
+the following classes&#39; init no longer raise `NoPropertiesProvidedException`:
+* `cyclonedx.model.IdentifiableAction`
+* `cyclonedx.model.component.Commit`
+* `cyclonedx.model.component.ComponentEvidence`
+* `cyclonedx.model.component.Diff`
+* `cyclonedx.model.component.Pedigree`
+* `cyclonedx.model.issue.IssueTypeSource`
+* `cyclonedx.model.vulnerability.VulnerabilityAnalysis`
+* `cyclonedx.model.vulnerability.VulnerabilityCredits`
+* `cyclonedx.model.vulnerability.VulnerabilityRating`
+* `cyclonedx.model.vulnerability.VulnerabilitySource`
+
+---------
+
+Signed-off-by: Indivar Mishra &lt;indimishra@gmail.com&gt; ([`845b8d5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/845b8d538d2f0fcadb3a3257a066ad58e3640c97))
+
+
+## v8.8.0 (2025-02-12)
+
+### Feature
+
+* feat: add `cyclonedx.model.crypto.ProtocolProperties.crypto_refs` (#767)
+
+
+Signed-off-by: Indivar Mishra &lt;indimishra@gmail.com&gt; ([`beb35f5`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/beb35f55e3e75d625db45e4ff084dee02e919ef6))
+
+
+## v8.7.0 (2025-02-06)
+
+### Feature
+
+* feat: allow empty `OrganizationalContact` object (#772)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/771
+
+---------
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt;
+Signed-off-by: Johannes Feichtner &lt;johannes.feichtner@dynatrace.com&gt; ([`03b35f4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/03b35f4293ab3b4c402c7bb8ff458831e492cb8b))
+
+
+## v8.6.0 (2025-02-04)
+
+### Feature
+
+* feat: expand the capabilities of `models.definition.Standard` (#713)
+
+
+---------
+
+Signed-off-by: Hakan Dilek &lt;hakandilek@gmail.com&gt;
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt;
+Co-authored-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`901dcdc`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/901dcdc60a8a46d30878764d7b8bda69c6ba8b80))
+
+* feat: allow empty `OrganizationalEntity` object (#768)
+
+fixes https://github.com/CycloneDX/cyclonedx-python-lib/issues/764
+
+Signed-off-by: Johannes Feichtner &lt;johannes@web-wack.at&gt; ([`472bded`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/472bded38cd480ba6885d44c798e015b63c89190))
+
+
+## v8.5.1 (2025-01-28)
+
+### Documentation
+
+* docs: responsibilities &amp; capabilities (#763)
+
+
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`ab4ae45`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ab4ae4578555f010914d7e904133dd478d7c80c1))
+
+* docs: Fix typos in in conda-forge.md and remove unused reference in README (#762)
+
+- Fix few typos in conda-forge.md
+- Removed unused PEP-508 ref in README.md
+
+Signed-off-by: Arthit Suriyawongkul &lt;arthit@gmail.com&gt; ([`66ece7a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/66ece7ae0042740a541ceed3048b89c4f2b24145))
+
+* docs: modernize docstrings for CDX1.6 (#759)
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`fb9a42e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/fb9a42ef9bda6407ddf4c49e75d10aa0fc91e46d))
+
+### Feature
+
+* feat: couple classes and their serializes (#757)
+
+Deprecates `.serialization.BomRefHelper` and
+`.serialization.LicenseRepositoryHelper`
+
+fixes #756
+
+---------
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`6003feb`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6003febaa032969732ee246deb739d1e13bae581))
+
+
+## v8.5.0 (2024-11-18)
+
+### Documentation
+
+* docs: remove invalid docsting note about auto-assigned `bom-ref` values (#733) ([`5aa5787`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5aa5787767c60dc23fd09f6cf14e54e5b0efceb4))
+
+### Feature
+
+* feat: support CycloneDX 1.6.1 (#742)
+
+
+Signed-off-by: Jan Kowalleck &lt;jan.kowalleck@gmail.com&gt; ([`55eafed`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/55eafedf50d395911a697bd9c85eeab5820934ff))
+
+
 ## v8.4.0 (2024-10-29)
 
 ### Feature

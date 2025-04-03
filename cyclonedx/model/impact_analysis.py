@@ -22,13 +22,13 @@ This set of classes represents the data about Impact Analysis.
 Impact Analysis is new for CycloneDX schema version 1.
 
 .. note::
-    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.4
+    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.6
 """
 
 
 from enum import Enum
 
-import serializable
+import py_serializable as serializable
 
 
 @serializable.serializable_enum
@@ -45,7 +45,7 @@ class ImpactAnalysisAffectedStatus(str, Enum):
     has not disclosed the status.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_impactAnalysisAffectedStatusType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_impactAnalysisAffectedStatusType
     """
 
     AFFECTED = 'affected'
@@ -59,7 +59,7 @@ class ImpactAnalysisJustification(str, Enum):
     Enum object that defines the rationale of why the impact analysis state was asserted.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_impactAnalysisJustificationType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_impactAnalysisJustificationType
     """
 
     CODE_NOT_PRESENT = 'code_not_present'
@@ -79,7 +79,7 @@ class ImpactAnalysisResponse(str, Enum):
     Enum object that defines the valid rationales as to why the impact analysis state was asserted.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_impactAnalysisResponsesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_impactAnalysisResponsesType
     """
 
     CAN_NOT_FIX = 'can_not_fix'
@@ -95,7 +95,7 @@ class ImpactAnalysisState(str, Enum):
     Enum object that defines the permissible impact analysis states.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/#type_impactAnalysisStateType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_impactAnalysisStateType
     """
 
     RESOLVED = 'resolved'

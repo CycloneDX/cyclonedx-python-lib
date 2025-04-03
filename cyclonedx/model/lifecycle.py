@@ -22,7 +22,7 @@
     Introduced in CycloneDX v1.5
 
 .. note::
-    See the CycloneDX Schema for lifecycles: https://cyclonedx.org/docs/1.5/#metadata_lifecycles
+    See the CycloneDX Schema for lifecycles: https://cyclonedx.org/docs/1.6/#metadata_lifecycles
 """
 
 from enum import Enum
@@ -30,15 +30,15 @@ from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
 from xml.etree.ElementTree import Element  # nosec B405
 
-import serializable
-from serializable.helpers import BaseHelper
+import py_serializable as serializable
+from py_serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import CycloneDxDeserializationException
 
 if TYPE_CHECKING:  # pragma: no cover
-    from serializable import ViewType
+    from py_serializable import ViewType
 
 
 @serializable.serializable_enum
@@ -47,7 +47,7 @@ class LifecyclePhase(str, Enum):
     Enum object that defines the permissible 'phase' for a Lifecycle according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.3/#type_classification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_classification
     """
     DESIGN = 'design'
     PRE_BUILD = 'pre-build'
@@ -64,7 +64,7 @@ class PredefinedLifecycle:
     Object that defines pre-defined phases in the product lifecycle.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.5/#metadata_lifecycles
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#metadata_lifecycles
     """
 
     def __init__(self, phase: LifecyclePhase) -> None:
@@ -83,7 +83,7 @@ class PredefinedLifecycle:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, PredefinedLifecycle):
-            return hash(other) == hash(self)
+            return self._phase == other._phase
         return False
 
     def __lt__(self, other: Any) -> bool:
@@ -103,7 +103,7 @@ class NamedLifecycle:
     Object that defines custom state in the product lifecycle.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.5/#metadata_lifecycles
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#metadata_lifecycles
     """
 
     def __init__(self, name: str, *, description: Optional[str] = None) -> None:
@@ -142,19 +142,22 @@ class NamedLifecycle:
     def description(self, description: Optional[str]) -> None:
         self._description = description
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._name, self._description
+        ))
+
     def __hash__(self) -> int:
-        return hash((self._name, self._description))
+        return hash(self.__comparable_tuple())
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, NamedLifecycle):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, NamedLifecycle):
-            return _ComparableTuple((self._name, self._description)) < _ComparableTuple(
-                (other._name, other._description)
-            )
+            return self.__comparable_tuple() < other.__comparable_tuple()
         if isinstance(other, PredefinedLifecycle):
             return False  # put NamedLifecycle after any PredefinedLifecycle
         return NotImplemented

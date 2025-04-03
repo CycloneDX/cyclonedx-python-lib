@@ -18,11 +18,10 @@
 from enum import Enum
 from typing import Any, Iterable, Optional
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import NoPropertiesProvidedException
 from . import XsUri
 
 
@@ -32,7 +31,7 @@ class IssueClassification(str, Enum):
     This is our internal representation of the enum `issueClassification`.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueClassification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueClassification
     """
     DEFECT = 'defect'
     ENHANCEMENT = 'enhancement'
@@ -46,7 +45,7 @@ class IssueTypeSource:
     places within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueType
     """
 
     def __init__(
@@ -54,10 +53,6 @@ class IssueTypeSource:
         name: Optional[str] = None,
         url: Optional[XsUri] = None,
     ) -> None:
-        if not name and not url:
-            raise NoPropertiesProvidedException(
-                'Neither `name` nor `url` were provided - at least one must be provided.'
-            )
         self.name = name
         self.url = url
 
@@ -90,22 +85,23 @@ class IssueTypeSource:
     def url(self, url: Optional[XsUri]) -> None:
         self._url = url
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.name, self.url
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, IssueTypeSource):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueTypeSource):
-            return _ComparableTuple((
-                self.name, self.url
-            )) < _ComparableTuple((
-                other.name, other.url
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.name, self.url))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<IssueTypeSource name={self._name}, url={self.url}>'
@@ -118,7 +114,7 @@ class IssueType:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/xml/#type_issueType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueType
     """
 
     def __init__(
@@ -231,24 +227,24 @@ class IssueType:
     def references(self, references: Iterable[XsUri]) -> None:
         self._references = SortedSet(references)
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.type, self.id, self.name, self.description, self.source,
+            _ComparableTuple(self.references)
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, IssueType):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
-            return _ComparableTuple((
-                self.type, self.id, self.name, self.description, self.source
-            )) < _ComparableTuple((
-                other.type, other.id, other.name, other.description, other.source
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((
-            self.type, self.id, self.name, self.description, self.source, tuple(self.references)
-        ))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<IssueType type={self.type}, id={self.id}, name={self.name}>'

@@ -78,7 +78,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
 )
-from cyclonedx.model.definition import Definitions, Standard
+from cyclonedx.model.definition import CreId, Definitions, Level, Requirement, Standard
 from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.impact_analysis import (
     ImpactAnalysisAffectedStatus,
@@ -239,6 +239,7 @@ def get_crypto_properties_protocol() -> CryptoProperties:
                     ]
                 )
             ],
+            crypto_refs=[BomRef('for-test-2'), BomRef('for-test-1')],
         ),
         oid='an-oid-here'
     )
@@ -502,7 +503,11 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         )),
         analysis=VulnerabilityAnalysis(
             state=ImpactAnalysisState.EXPLOITABLE, justification=ImpactAnalysisJustification.REQUIRES_ENVIRONMENT,
-            responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail'
+            responses=[ImpactAnalysisResponse.CAN_NOT_FIX], detail='Some extra detail',
+            first_issued=datetime(year=2018, month=9, day=1, hour=10, minute=50, second=42, microsecond=51979,
+                                  tzinfo=timezone.utc),
+            last_updated=datetime(year=2018, month=9, day=1, hour=10, minute=50, second=42, microsecond=51979,
+                                  tzinfo=timezone.utc)
         ),
         affects=[
             BomTarget(
@@ -1303,34 +1308,134 @@ def get_bom_with_definitions_standards() -> Bom:
     """
     return _make_bom(
         definitions=Definitions(standards=[
-            Standard(name='Some Standard', version='1.2.3', description='Some description', bom_ref='some-standard',
-                     owner='Some Owner', external_references=[get_external_reference_2()]
-                     )
+            Standard(
+                bom_ref='some-standard',
+                name='Some Standard',
+                version='1.2.3',
+                description='Some description',
+                owner='Some Owner',
+                external_references=[get_external_reference_2()]
+            )
         ])
     )
 
 
-def get_bom_v1_6_with_provides() -> Bom:
-    c1 = get_component_toml_with_hashes_with_references('crypto-library')
-    c2 = get_component_setuptools_simple('some-library')
-    c3 = get_component_crypto_asset_algorithm('crypto-algorithm')
+def get_bom_with_definitions_and_detailed_standards() -> Bom:
+    """
+    Returns a BOM with definitions and multiple detailed standards including requirements and levels.
+    """
     return _make_bom(
-        components=[c1, c2, c3],
-        dependencies=[
-            Dependency(
-                ref=c1.bom_ref,
-                dependencies=[Dependency(ref=c2.bom_ref)],
-                provides=[Dependency(ref=c3.bom_ref)]
+        definitions=Definitions(standards=[
+            Standard(
+                bom_ref='some-standard',
+                name='Some Standard',
+                version='1.2.3',
+                description='Some description',
+                owner='Some Owner',
+                requirements=[
+                    req1 := Requirement(
+                        bom_ref='req-1',
+                        identifier='REQ-1',
+                        title='Requirement 1',
+                        text='some requirement text',
+                        descriptions=['Requirement 1 described here', 'and here'],
+                        open_cre=[CreId('CRE:1-2')],
+                        properties=[
+                            Property(name='key1', value='val1a'),
+                            Property(name='key1', value='val1b'),
+                        ],
+                        external_references=[get_external_reference_2()],
+                    ),
+                    req2 := Requirement(
+                        bom_ref='req-2',
+                        identifier='REQ-2',
+                        title='Requirement 2',
+                        text='some requirement text',
+                        descriptions=['Requirement 2 described here'],
+                        open_cre=[CreId('CRE:1-2'), CreId('CRE:3-4')],
+                        parent=req1.bom_ref,
+                        properties=[Property(name='key2', value='val2')],
+                    ),
+                ],
+                levels=[
+                    Level(
+                        bom_ref='lvl-1',
+                        identifier='LVL-1',
+                        title='Level 1',
+                        description='Level 1 description',
+                        # no requirements!
+                    ),
+                    Level(
+                        bom_ref='lvl-2',
+                        identifier='LVL-2',
+                        title='Level 2',
+                        description='Level 2 description',
+                        requirements=[req1.bom_ref, req2.bom_ref],
+                    ),
+                ],
+                external_references=[get_external_reference_1()],
             ),
-            Dependency(
-                ref=c2.bom_ref
-            ),
-            Dependency(
-                ref=c3.bom_ref
-            ),
-        ],
-    )
+            Standard(
+                bom_ref='other-standard',
+                name='Other Standard',
+                version='1.0.0',
+                description='Other description',
+                owner='Other Owner',
+                requirements=[
+                    req3 := Requirement(
+                        bom_ref='req-3',
+                        identifier='REQ-3',
+                        title='Requirement 3',
+                        text='some requirement text',
+                        descriptions=['Requirement 3 described here', 'and here'],
+                        open_cre=[CreId('CRE:5-6'), CreId('CRE:7-8')],
+                        properties=[Property(name='key3', value='val3')]
+                    ),
+                ],
+                levels=[
+                    Level(
+                        bom_ref='lvl-3',
+                        identifier='LVL-3',
+                        title='Level 3',
+                        description='Level 3 description',
+                        requirements=[req3.bom_ref]
+                    ),
+                ],
+                external_references=[get_external_reference_2()],
+            )
+        ]))
 
+
+def get_bom_for_issue540_duplicate_components() -> Bom:
+    # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/540
+    bom = _make_bom()
+    bom.metadata.component = root_component = Component(
+        name='myApp',
+        type=ComponentType.APPLICATION,
+        bom_ref='myApp'
+    )
+    component1 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-component',
+        bom_ref='some-component'
+    )
+    bom.components.add(component1)
+    bom.register_dependency(root_component, [component1])
+    component2 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library1'
+    )
+    bom.components.add(component2)
+    bom.register_dependency(component1, [component2])
+    component3 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library2'
+    )
+    bom.components.add(component3)
+    bom.register_dependency(component1, [component3])
+    return bom
 
 # ---
 
@@ -1379,4 +1484,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_for_issue_630_empty_property,
     get_bom_with_lifecycles,
     get_bom_with_definitions_standards,
+    get_bom_with_definitions_and_detailed_standards,
 }

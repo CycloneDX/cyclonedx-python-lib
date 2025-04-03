@@ -19,14 +19,13 @@
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional, Set
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from cyclonedx.schema.schema import SchemaVersion1Dot6
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import SerializationOfUnexpectedValueException
-from ..serialization import BomRefHelper
 from .bom_ref import BomRef
 
 
@@ -71,7 +70,7 @@ class Dependency:
         self.provides = provides or []  # type:ignore[assignment]
 
     @property
-    @serializable.type_mapping(BomRefHelper)
+    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     def ref(self) -> BomRef:
         return self._ref
@@ -106,29 +105,26 @@ class Dependency:
     def dependencies_as_bom_refs(self) -> Set[BomRef]:
         return set(map(lambda d: d.ref, self.dependencies))
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.ref, _ComparableTuple(self.dependencies), _ComparableTuple(self.provides)
+        ))
+
     def provides_as_bom_refs(self) -> Set[BomRef]:
         return set(map(lambda d: d.ref, self.provides))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Dependency):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Dependency):
-            return _ComparableTuple((
-                self.ref,
-                _ComparableTuple(self.dependencies),
-                _ComparableTuple(self.provides)
-            )) < _ComparableTuple((
-                other.ref,
-                _ComparableTuple(other.dependencies),
-                _ComparableTuple(other.provides)
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self.ref, tuple(self.dependencies), tuple(self.provides)))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return (

@@ -21,14 +21,17 @@ License related things
 """
 
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Optional, Union
+from json import loads as json_loads
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
 from warnings import warn
+from xml.etree.ElementTree import Element  # nosec B405
 
-import serializable
+import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
+from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot6
 from . import AttachedText, XsUri
 
@@ -64,7 +67,7 @@ class DisjunctiveLicense:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.4/json/#components_items_licenses
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_licenses
     """
 
     def __init__(
@@ -94,7 +97,7 @@ class DisjunctiveLicense:
 
         .. note::
           See the list of expected values:
-          https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_license_id
+          https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_license_id
 
         Returns:
             `str` or `None`
@@ -215,24 +218,28 @@ class DisjunctiveLicense:
     def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._acknowledgement,
+            self._id, self._name,
+            self._url,
+            self._text,
+        ))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, DisjunctiveLicense):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, DisjunctiveLicense):
-            return _ComparableTuple((
-                self._id, self._name
-            )) < _ComparableTuple((
-                other._id, other._name
-            ))
+            return self.__comparable_tuple() < other.__comparable_tuple()
         if isinstance(other, LicenseExpression):
             return False  # self after any LicenseExpression
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash((self._id, self._name, self._text, self._url, self._acknowledgement))
+        return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
         return f'<License id={self._id!r}, name={self._name!r}>'
@@ -246,7 +253,7 @@ class LicenseExpression:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.4/json/#components_items_licenses_items_expression
+        https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_expression
     """
 
     def __init__(
@@ -308,17 +315,23 @@ class LicenseExpression:
     def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._acknowledgement,
+            self._value,
+        ))
+
     def __hash__(self) -> int:
-        return hash((self._value, self._acknowledgement))
+        return hash(self.__comparable_tuple())
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, LicenseExpression):
-            return hash(other) == hash(self)
+            return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, LicenseExpression):
-            return self._value < other._value
+            return self.__comparable_tuple() < other.__comparable_tuple()
         if isinstance(other, DisjunctiveLicense):
             return True  # self before any DisjunctiveLicense
         return NotImplemented
@@ -350,6 +363,7 @@ if TYPE_CHECKING:  # pragma: no cover
         Denormalizers/deserializers will be thankful.
         The normalization/serialization process SHOULD take care of these facts and do what is needed.
         """
+
 else:
     class LicenseRepository(SortedSet):
         """Collection of :class:`License`.
@@ -364,3 +378,86 @@ else:
         Denormalizers/deserializers will be thankful.
         The normalization/serialization process SHOULD take care of these facts and do what is needed.
         """
+
+
+class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    @classmethod
+    def json_normalize(cls, o: LicenseRepository, *,
+                       view: Optional[Type[serializable.ViewType]],
+                       **__: Any) -> Any:
+        if len(o) == 0:
+            return None
+        expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
+        if expression:
+            # mixed license expression and license? this is an invalid constellation according to schema!
+            # see https://github.com/CycloneDX/specification/pull/205
+            # but models need to allow it for backwards compatibility with JSON CDX < 1.5
+            return [json_loads(expression.as_json(view_=view))]  # type:ignore[attr-defined]
+        return [
+            {'license': json_loads(
+                li.as_json(  # type:ignore[attr-defined]
+                    view_=view)
+            )}
+            for li in o
+            if isinstance(li, DisjunctiveLicense)
+        ]
+
+    @classmethod
+    def json_denormalize(cls, o: List[Dict[str, Any]],
+                         **__: Any) -> LicenseRepository:
+        repo = LicenseRepository()
+        for li in o:
+            if 'license' in li:
+                repo.add(DisjunctiveLicense.from_json(  # type:ignore[attr-defined]
+                    li['license']))
+            elif 'expression' in li:
+                repo.add(LicenseExpression.from_json(  # type:ignore[attr-defined]
+                    li
+                ))
+            else:
+                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
+        return repo
+
+    @classmethod
+    def xml_normalize(cls, o: LicenseRepository, *,
+                      element_name: str,
+                      view: Optional[Type[serializable.ViewType]],
+                      xmlns: Optional[str],
+                      **__: Any) -> Optional[Element]:
+        if len(o) == 0:
+            return None
+        elem = Element(element_name)
+        expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
+        if expression:
+            # mixed license expression and license? this is an invalid constellation according to schema!
+            # see https://github.com/CycloneDX/specification/pull/205
+            # but models need to allow it for backwards compatibility with JSON CDX < 1.5
+            elem.append(expression.as_xml(  # type:ignore[attr-defined]
+                view_=view, as_string=False, element_name='expression', xmlns=xmlns))
+        else:
+            elem.extend(
+                li.as_xml(  # type:ignore[attr-defined]
+                    view_=view, as_string=False, element_name='license', xmlns=xmlns)
+                for li in o
+                if isinstance(li, DisjunctiveLicense)
+            )
+        return elem
+
+    @classmethod
+    def xml_denormalize(cls, o: Element,
+                        default_ns: Optional[str],
+                        **__: Any) -> LicenseRepository:
+        repo = LicenseRepository()
+        for li in o:
+            tag = li.tag if default_ns is None else li.tag.replace(f'{{{default_ns}}}', '')
+            if tag == 'license':
+                repo.add(DisjunctiveLicense.from_xml(  # type:ignore[attr-defined]
+                    li, default_ns))
+            elif tag == 'expression':
+                repo.add(LicenseExpression.from_xml(  # type:ignore[attr-defined]
+                    li, default_ns))
+            else:
+                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
+        return repo
