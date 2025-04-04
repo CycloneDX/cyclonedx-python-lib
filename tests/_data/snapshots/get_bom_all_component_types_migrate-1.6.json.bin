@@ -1,0 +1,136 @@
+{
+  "components": [
+    {
+      "bom-ref": "BomRef.3524202375060418.3636045870007646",
+      "name": "Type: APPLICATION",
+      "type": "application"
+    },
+    {
+      "bom-ref": "BomRef.864604349010162.46952409773931003",
+      "name": "Type: CONTAINER",
+      "type": "container"
+    },
+    {
+      "bom-ref": "BomRef.3582521546031202.946491729220275",
+      "name": "Type: CRYPTOGRAPHIC_ASSET",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "BomRef.11668726083873049.49117509747081733",
+      "name": "Type: DATA",
+      "type": "data"
+    },
+    {
+      "bom-ref": "BomRef.43384340351744977.5692612533483422",
+      "name": "Type: DEVICE",
+      "type": "device"
+    },
+    {
+      "bom-ref": "BomRef.7355973605373682.6110017611744798",
+      "name": "Type: DEVICE_DRIVER",
+      "type": "device-driver"
+    },
+    {
+      "bom-ref": "BomRef.43755954900669536.4482683158359003",
+      "name": "Type: FILE",
+      "type": "file"
+    },
+    {
+      "bom-ref": "BomRef.5901401624929435.3430801397458302",
+      "name": "Type: FIRMWARE",
+      "type": "firmware"
+    },
+    {
+      "bom-ref": "BomRef.19975403180009055.3878740216592488",
+      "name": "Type: FRAMEWORK",
+      "type": "framework"
+    },
+    {
+      "bom-ref": "BomRef.500148746949865.999983419739932",
+      "name": "Type: LIBRARY",
+      "type": "library"
+    },
+    {
+      "bom-ref": "BomRef.34514177783962674.5676290392339102",
+      "name": "Type: MACHINE_LEARNING_MODEL",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "BomRef.3107654511599448.4221595010680078",
+      "name": "Type: OPERATING_SYSTEM",
+      "type": "operating-system"
+    },
+    {
+      "bom-ref": "BomRef.9105236023127157.7209430333727793",
+      "name": "Type: PLATFORM",
+      "type": "platform"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "BomRef.4927043804746529.600410268651951"
+    },
+    {
+      "ref": "BomRef.3524202375060418.3636045870007646"
+    },
+    {
+      "ref": "BomRef.864604349010162.46952409773931003"
+    },
+    {
+      "ref": "BomRef.3582521546031202.946491729220275"
+    },
+    {
+      "ref": "BomRef.11668726083873049.49117509747081733"
+    },
+    {
+      "ref": "BomRef.43384340351744977.5692612533483422"
+    },
+    {
+      "ref": "BomRef.7355973605373682.6110017611744798"
+    },
+    {
+      "ref": "BomRef.43755954900669536.4482683158359003"
+    },
+    {
+      "ref": "BomRef.5901401624929435.3430801397458302"
+    },
+    {
+      "ref": "BomRef.19975403180009055.3878740216592488"
+    },
+    {
+      "ref": "BomRef.500148746949865.999983419739932"
+    },
+    {
+      "ref": "BomRef.34514177783962674.5676290392339102"
+    },
+    {
+      "ref": "BomRef.3107654511599448.4221595010680078"
+    },
+    {
+      "ref": "BomRef.9105236023127157.7209430333727793"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "BomRef.4927043804746529.600410268651951",
+      "name": "primary",
+      "type": "library"
+    },
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

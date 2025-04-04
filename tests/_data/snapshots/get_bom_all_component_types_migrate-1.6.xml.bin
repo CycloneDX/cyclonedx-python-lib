@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <component type="library" bom-ref="BomRef.3030413426482098.9623482225967871">
+      <name>primary</name>
+    </component>
+  </metadata>
+  <components>
+    <component type="application" bom-ref="BomRef.8075876740857948.9081386397754696">
+      <name>Type: APPLICATION</name>
+    </component>
+    <component type="container" bom-ref="BomRef.5305301391130234.789343495981788">
+      <name>Type: CONTAINER</name>
+    </component>
+    <component type="cryptographic-asset" bom-ref="BomRef.049033918547457755.10062873413580897">
+      <name>Type: CRYPTOGRAPHIC_ASSET</name>
+    </component>
+    <component type="data" bom-ref="BomRef.7900696088510653.4410608377983358">
+      <name>Type: DATA</name>
+    </component>
+    <component type="device" bom-ref="BomRef.46638550956222125.8429331559277994">
+      <name>Type: DEVICE</name>
+    </component>
+    <component type="device-driver" bom-ref="BomRef.18587898315278617.810547510193839">
+      <name>Type: DEVICE_DRIVER</name>
+    </component>
+    <component type="file" bom-ref="BomRef.21582174476609184.8861669784715858">
+      <name>Type: FILE</name>
+    </component>
+    <component type="firmware" bom-ref="BomRef.5532132643946844.5513839254675">
+      <name>Type: FIRMWARE</name>
+    </component>
+    <component type="framework" bom-ref="BomRef.0038250764824969696.7572635540597932">
+      <name>Type: FRAMEWORK</name>
+    </component>
+    <component type="library" bom-ref="BomRef.896207421067583.12701134095806665">
+      <name>Type: LIBRARY</name>
+    </component>
+    <component type="machine-learning-model" bom-ref="BomRef.5702274056605658.42899569858015907">
+      <name>Type: MACHINE_LEARNING_MODEL</name>
+    </component>
+    <component type="operating-system" bom-ref="BomRef.07352514930076348.13240918911444188">
+      <name>Type: OPERATING_SYSTEM</name>
+    </component>
+    <component type="platform" bom-ref="BomRef.042075305438127986.9812108854868972">
+      <name>Type: PLATFORM</name>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="BomRef.3030413426482098.9623482225967871"/>
+    <dependency ref="BomRef.8075876740857948.9081386397754696"/>
+    <dependency ref="BomRef.5305301391130234.789343495981788"/>
+    <dependency ref="BomRef.049033918547457755.10062873413580897"/>
+    <dependency ref="BomRef.7900696088510653.4410608377983358"/>
+    <dependency ref="BomRef.46638550956222125.8429331559277994"/>
+    <dependency ref="BomRef.18587898315278617.810547510193839"/>
+    <dependency ref="BomRef.21582174476609184.8861669784715858"/>
+    <dependency ref="BomRef.5532132643946844.5513839254675"/>
+    <dependency ref="BomRef.0038250764824969696.7572635540597932"/>
+    <dependency ref="BomRef.896207421067583.12701134095806665"/>
+    <dependency ref="BomRef.5702274056605658.42899569858015907"/>
+    <dependency ref="BomRef.07352514930076348.13240918911444188"/>
+    <dependency ref="BomRef.042075305438127986.9812108854868972"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

@@ -1437,6 +1437,17 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
     bom.register_dependency(component1, [component3])
     return bom
 
+
+def get_bom_all_component_types_migrate() -> Bom:
+    """
+    get a bom with all possible component types
+    """
+    bom = _make_bom()
+    bom.metadata.component = Component(name='primary')
+    for ct in ComponentType:
+        bom.components.add(Component(name=f'Type: {ct.name}', type=ct))
+    return bom
+
 # ---
 
 
