@@ -19,9 +19,6 @@
       "ref": "A"
     },
     {
-      "provides": [
-        "C"
-      ],
       "ref": "B"
     },
     {
@@ -48,7 +45,7 @@
   ],
   "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "version": 1,
-  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.6"
+  "specVersion": "1.5"
 }

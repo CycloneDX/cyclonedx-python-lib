@@ -3,12 +3,14 @@
     {
       "bom-ref": "B",
       "name": "device B",
-      "type": "device"
+      "type": "device",
+      "version": ""
     },
     {
       "bom-ref": "C",
       "name": "device C",
-      "type": "device"
+      "type": "device",
+      "version": ""
     }
   ],
   "dependencies": [
@@ -19,9 +21,6 @@
       "ref": "A"
     },
     {
-      "provides": [
-        "C"
-      ],
       "ref": "B"
     },
     {
@@ -32,23 +31,14 @@
     "component": {
       "bom-ref": "A",
       "name": "app A",
-      "type": "application"
+      "type": "application",
+      "version": ""
     },
     "timestamp": "2023-01-07T13:44:32.312678+00:00"
   },
-  "properties": [
-    {
-      "name": "key1",
-      "value": "val1"
-    },
-    {
-      "name": "key2",
-      "value": "val2"
-    }
-  ],
   "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
   "version": 1,
-  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.6"
+  "specVersion": "1.3"
 }

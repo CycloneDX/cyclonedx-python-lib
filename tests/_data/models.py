@@ -1407,25 +1407,26 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
 
 
 def get_bom_with_provides() -> Bom:
-    c1 = get_component_toml_with_hashes_with_references('crypto-library')
-    c2 = get_component_setuptools_simple('some-library')
-    c3 = get_component_crypto_asset_algorithm('crypto-algorithm')
-    return _make_bom(
-        components=[c1, c2, c3],
-        dependencies=[
-            Dependency(
-                ref=c1.bom_ref,
-                dependencies=[Dependency(ref=c2.bom_ref)],
-                provides=[Dependency(ref=c3.bom_ref)]
-            ),
-            Dependency(
-                ref=c2.bom_ref
-            ),
-            Dependency(
-                ref=c3.bom_ref
-            ),
-        ],
-    )
+    bom = _make_bom()
+    bom.metadata.component = root_component = Component(name='app A', bom_ref='A', type=ComponentType.APPLICATION)
+    bom.components.add(
+        c1 := Component(name='device B', bom_ref='B', type=ComponentType.DEVICE))
+    bom.components.add(
+        c2 := Component(name='device C', bom_ref='C', type=ComponentType.DEVICE))
+    bom.dependencies = [
+        Dependency(
+            ref=c2.bom_ref
+        ),
+        Dependency(
+            ref=c1.bom_ref,
+            provides=[Dependency(ref=c2.bom_ref)]
+        ),
+        Dependency(
+            ref=root_component.bom_ref,
+            dependencies=[Dependency(ref=c2.bom_ref)]
+        ),
+    ]
+    return bom
 
 
 def get_bom_for_issue540_duplicate_components() -> Bom:
