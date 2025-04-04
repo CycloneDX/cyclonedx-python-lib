@@ -22,6 +22,8 @@ from typing import Any, Iterable, List, Optional, Set
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
+from cyclonedx.schema.schema import SchemaVersion1Dot6
+
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import SerializationOfUnexpectedValueException
 from .bom_ref import BomRef
@@ -52,12 +54,20 @@ class Dependency:
     Models a Dependency within a BOM.
 
     .. note::
-        See https://cyclonedx.org/docs/1.6/xml/#type_dependencyType
+        See:
+        1. https://cyclonedx.org/docs/1.6/xml/#type_dependencyType
+        2. https://cyclonedx.org/docs/1.6/json/#dependencies
     """
 
-    def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
+    def __init__(
+        self,
+        ref: BomRef,
+        dependencies: Optional[Iterable['Dependency']] = None,
+        provides: Optional[Iterable['Dependency']] = None
+    ) -> None:
         self.ref = ref
         self.dependencies = dependencies or []  # type:ignore[assignment]
+        self.provides = provides or []  # type:ignore[assignment]
 
     @property
     @serializable.type_mapping(BomRef)
@@ -80,13 +90,28 @@ class Dependency:
     def dependencies(self, dependencies: Iterable['Dependency']) -> None:
         self._dependencies = SortedSet(dependencies)
 
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.json_name('provides')
+    @serializable.type_mapping(_DependencyRepositorySerializationHelper)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'provides')
+    def provides(self) -> 'SortedSet[Dependency]':
+        return self._provides
+
+    @provides.setter
+    def provides(self, provides: Iterable['Dependency']) -> None:
+        self._provides = SortedSet(provides)
+
     def dependencies_as_bom_refs(self) -> Set[BomRef]:
         return set(map(lambda d: d.ref, self.dependencies))
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.ref, _ComparableTuple(self.dependencies)
+            self.ref, _ComparableTuple(self.dependencies), _ComparableTuple(self.provides)
         ))
+
+    def provides_as_bom_refs(self) -> Set[BomRef]:
+        return set(map(lambda d: d.ref, self.provides))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Dependency):
@@ -102,7 +127,11 @@ class Dependency:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<Dependency ref={self.ref!r}, targets={len(self.dependencies)}>'
+        return (
+            f'<Dependency ref={self.ref!r}'
+            f', targets={len(self.dependencies)}'
+            f', provides={len(self.provides)}>'
+        )
 
 
 class Dependable(ABC):
