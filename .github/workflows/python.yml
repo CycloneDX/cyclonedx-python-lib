@@ -86,7 +86,7 @@ jobs:
             toxenv-factors: '-current'
           - # test with the lowest dependencies
             os: ubuntu-latest
-            python-version: '3.8'
+            python-version: '3.9'
             toxenv-factors: '-lowest'
     steps:
       - name: Checkout
@@ -117,15 +117,14 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-13  # macos-latest might be incompatible to py38 - see https://github.com/CycloneDX/cyclonedx-python-lib/pull/599#issuecomment-2077462142
+          - macos-13  
           - windows-latest
         python-version:
           - "3.13" # highest supported
           - "3.12"
           - "3.11"
           - "3.10"
-          - "3.9"
-          - "3.8"  # lowest supported
+          - "3.9" # lowest supported          
         toxenv-factors:
           - '-allExtras'
           - '-noExtras'
@@ -219,7 +218,7 @@ jobs:
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v5
         with:
-          python-version: '>=3.8 <=3.13'  # supported version range
+          python-version: '>=3.9 <=3.13'  # supported version range
       - name: Validate Python Environment
         shell: python
         run: |
