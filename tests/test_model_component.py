@@ -16,7 +16,6 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import datetime
-from typing import List
 from unittest import TestCase
 
 from cyclonedx.model import (
@@ -185,7 +184,7 @@ class TestModelComponent(TestCase):
         self.assertEqual(c1, c2)
 
     def test_component_equal_2(self) -> None:
-        props: List[Property] = (
+        props: list[Property] = (
             Property(name='prop1', value='val1'),
             Property(name='prop2', value='val2'),
         )

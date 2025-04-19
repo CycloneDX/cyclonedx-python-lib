@@ -17,7 +17,7 @@
 
 from abc import abstractmethod
 from json import dumps as json_dumps, loads as json_loads
-from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
 from ..exception.output import FormatNotSupportedException
 from ..schema import OutputFormat, SchemaVersion
@@ -42,7 +42,7 @@ class Json(BaseOutput, BaseSchemaVersion):
 
     def __init__(self, bom: 'Bom') -> None:
         super().__init__(bom=bom)
-        self._bom_json: Dict[str, Any] = dict()
+        self._bom_json: dict[str, Any] = dict()
 
     @property
     def schema_version(self) -> SchemaVersion:
@@ -70,7 +70,7 @@ class Json(BaseOutput, BaseSchemaVersion):
         bom = self.get_bom()
         bom.validate()
         with BomRefDiscriminator.from_bom(bom):
-            bom_json: Dict[str, Any] = json_loads(
+            bom_json: dict[str, Any] = json_loads(
                 bom.as_json(  # type:ignore[attr-defined]
                     view_=_view))
         bom_json.update(_json_core)
@@ -131,7 +131,7 @@ class JsonV1Dot6(Json, SchemaVersion1Dot6):
         return 'http://cyclonedx.org/schema/bom-1.6.schema.json'
 
 
-BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Json]] = {
+BY_SCHEMA_VERSION: dict[SchemaVersion, type[Json]] = {
     SchemaVersion.V1_6: JsonV1Dot6,
     SchemaVersion.V1_5: JsonV1Dot5,
     SchemaVersion.V1_4: JsonV1Dot4,

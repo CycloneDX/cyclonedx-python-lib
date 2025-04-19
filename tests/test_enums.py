@@ -16,10 +16,11 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
+from collections.abc import Generator, Iterable
 from enum import Enum
 from itertools import chain
 from json import load as json_load
-from typing import Any, Generator, Iterable, Tuple, Type
+from typing import Any
 from unittest import TestCase
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
@@ -128,7 +129,7 @@ NAMED_OF_SV = tuple(
 
 class _EnumTestCase(TestCase, SnapshotMixin):
 
-    def _test_knows_value(self, enum: Type[Enum], value: str) -> None:
+    def _test_knows_value(self, enum: type[Enum], value: str) -> None:
         ec = enum(value)  # throws valueError if value unknown
         self.assertTrue(ec.name)  # TODO test for an expected name
 
@@ -258,7 +259,7 @@ class _DP_ComponentType():  # noqa: N801
     JSON_SCHEMA_POINTER = ('definitions', 'component', 'properties', 'type')
 
     @classmethod
-    def unsupported_cases(cls) -> Generator[Tuple[str, OutputFormat, SchemaVersion, ComponentType], None, None]:
+    def unsupported_cases(cls) -> Generator[tuple[str, OutputFormat, SchemaVersion, ComponentType], None, None]:
         for name, of, sv in NAMED_OF_SV:
             if OutputFormat.XML is of:
                 schema_cases = set(dp_cases_from_xml_schema(SCHEMA_XML[sv], cls.XML_SCHEMA_XPATH))

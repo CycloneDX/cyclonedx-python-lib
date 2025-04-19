@@ -23,13 +23,13 @@ Breaking changes without notice may happen.
 
 
 from os.path import dirname, join
-from typing import Dict, Optional
+from typing import Optional
 
 from .. import SchemaVersion
 
 __DIR = dirname(__file__)
 
-BOM_XML: Dict[SchemaVersion, Optional[str]] = {
+BOM_XML: dict[SchemaVersion, Optional[str]] = {
     SchemaVersion.V1_6: join(__DIR, 'bom-1.6.SNAPSHOT.xsd'),
     SchemaVersion.V1_5: join(__DIR, 'bom-1.5.SNAPSHOT.xsd'),
     SchemaVersion.V1_4: join(__DIR, 'bom-1.4.SNAPSHOT.xsd'),
@@ -39,7 +39,7 @@ BOM_XML: Dict[SchemaVersion, Optional[str]] = {
     SchemaVersion.V1_0: join(__DIR, 'bom-1.0.SNAPSHOT.xsd'),
 }
 
-BOM_JSON: Dict[SchemaVersion, Optional[str]] = {
+BOM_JSON: dict[SchemaVersion, Optional[str]] = {
     SchemaVersion.V1_6: join(__DIR, 'bom-1.6.SNAPSHOT.schema.json'),
     SchemaVersion.V1_5: join(__DIR, 'bom-1.5.SNAPSHOT.schema.json'),
     SchemaVersion.V1_4: join(__DIR, 'bom-1.4.SNAPSHOT.schema.json'),
@@ -50,7 +50,7 @@ BOM_JSON: Dict[SchemaVersion, Optional[str]] = {
     SchemaVersion.V1_0: None,
 }
 
-BOM_JSON_STRICT: Dict[SchemaVersion, Optional[str]] = {
+BOM_JSON_STRICT: dict[SchemaVersion, Optional[str]] = {
     SchemaVersion.V1_6: BOM_JSON[SchemaVersion.V1_6],
     SchemaVersion.V1_5: BOM_JSON[SchemaVersion.V1_5],
     SchemaVersion.V1_4: BOM_JSON[SchemaVersion.V1_4],

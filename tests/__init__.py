@@ -17,8 +17,9 @@
 
 import re
 import sys
+from collections.abc import Generator, Iterable
 from os import getenv, path
-from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, List, Optional, Tuple, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
 from unittest import TestCase
 from uuid import UUID
 
@@ -130,7 +131,7 @@ class DeepCompareMixin:
             self.assertEqual(0, len(d.dependencies), f'unexpected dependencies for {d.ref}')
 
 
-def reorder(items: List[_T], indexes: List[int]) -> List[_T]:
+def reorder(items: list[_T], indexes: list[int]) -> list[_T]:
     """
     Return list of items in the order indicated by indexes.
     """
@@ -186,14 +187,14 @@ def mksname(purpose: Union[Any], sv: SchemaVersion, f: OutputFormat) -> str:
     return f'{_get_purpose_as_str(purpose)}-{sv.to_version()}.{_SNAME_EXT[f]}'
 
 
-class DpTuple(Tuple[SchemaVersion, str]):
+class DpTuple(tuple[SchemaVersion, str]):
     @property
     def __name__(self) -> str:
         schema_version, test_data_file = self
         return f'{schema_version.to_version()}-{path.splitext(path.basename(test_data_file))[0]}'
 
 
-def load_pyproject() -> Dict[str, Any]:
+def load_pyproject() -> dict[str, Any]:
     if sys.version_info >= (3, 11):
         from tomllib import load as toml_load
     else:

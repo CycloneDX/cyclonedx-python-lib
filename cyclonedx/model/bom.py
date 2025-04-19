@@ -16,9 +16,10 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
+from collections.abc import Generator, Iterable
 from datetime import datetime
 from itertools import chain
-from typing import TYPE_CHECKING, Generator, Iterable, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 from uuid import UUID, uuid4
 from warnings import warn
 

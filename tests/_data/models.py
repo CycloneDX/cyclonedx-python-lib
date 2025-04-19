@@ -20,7 +20,7 @@ import sys
 from datetime import datetime, timezone
 from decimal import Decimal
 from inspect import getmembers, isfunction
-from typing import Any, List, Optional, Tuple
+from typing import Any, Optional
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -875,7 +875,7 @@ def get_pedigree_1() -> Pedigree:
     )
 
 
-def get_properties_1() -> List[Property]:
+def get_properties_1() -> list[Property]:
     return [
         Property(name='key1', value='val1'),
         Property(name='key2', value='val2')
@@ -992,7 +992,7 @@ def get_bom_metadata_licenses_invalid() -> Bom:
     return Bom(metadata=BomMetaData(licenses=get_invalid_license_repository()))
 
 
-def get_invalid_license_repository() -> List[License]:
+def get_invalid_license_repository() -> list[License]:
     """
     license expression and a license -- this is an invalid constellation according to schema
     see https://github.com/CycloneDX/specification/pull/205
@@ -1261,7 +1261,7 @@ def get_bom_for_issue_598_multiple_components_with_purl_qualifiers() -> Bom:
     ])
 
 
-def bom_all_same_bomref() -> Tuple[Bom, int]:
+def bom_all_same_bomref() -> tuple[Bom, int]:
     bom = Bom()
     bom.metadata.component = Component(name='root', bom_ref='foo', components=[
         Component(name='root.sub', bom_ref='foo')])

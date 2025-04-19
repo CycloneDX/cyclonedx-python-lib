@@ -3,19 +3,8 @@
 # The contents of this file were obtained from
 #  https://github.com/althonos/python-sortedcontainers/blob/d0a225d7fd0fb4c54532b8798af3cbeebf97e2d5/sortedcontainers/sortedset.pyi
 
-from typing import (  # Iterator,; Tuple,; Type, Set
-    Any,
-    Callable,
-    Hashable,
-    Iterable,
-    List,
-    MutableSet,
-    Optional,
-    Sequence,
-    TypeVar,
-    Union,
-    overload,
-)
+from collections.abc import Callable, Iterable, MutableSet, Sequence
+from typing import Any, Hashable, Optional, TypeVar, Union, overload  # Iterator,; Tuple,; Type, Set
 
 # --- Global
 
@@ -40,7 +29,7 @@ class SortedSet(MutableSet[_T], Sequence[_T]):
     # @overload
     # def __getitem__(self, index: int) -> _T: ...
     @overload
-    def __getitem__(self, index: slice) -> List[_T]: ...
+    def __getitem__(self, index: slice) -> list[_T]: ...
     # def __delitem__(self, index: Union[int, slice]) -> None: ...
     # def __eq__(self, other: Any) -> bool: ...
     # def __ne__(self, other: Any) -> bool: ...

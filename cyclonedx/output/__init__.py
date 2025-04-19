@@ -23,9 +23,10 @@ and according to different versions of the CycloneDX schema standard.
 
 import os
 from abc import ABC, abstractmethod
+from collections.abc import Iterable, Mapping
 from itertools import chain
 from random import random
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Mapping, Optional, Type, Union, overload
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 
 from ..schema import OutputFormat, SchemaVersion
 
@@ -124,7 +125,7 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
     :return: BaseOutput
     """
     if TYPE_CHECKING:  # pragma: no cover
-        BY_SCHEMA_VERSION: Mapping[SchemaVersion, Type[BaseOutput]]  # noqa:N806
+        BY_SCHEMA_VERSION: Mapping[SchemaVersion, type[BaseOutput]]  # noqa:N806
     if OutputFormat.JSON is output_format:
         from .json import BY_SCHEMA_VERSION
     elif OutputFormat.XML is output_format:

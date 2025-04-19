@@ -24,7 +24,8 @@ This set of classes represents the data that is possible about known Services.
 """
 
 
-from typing import Any, Iterable, Optional, Union
+from collections.abc import Iterable
+from typing import Any, Optional, Union
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet

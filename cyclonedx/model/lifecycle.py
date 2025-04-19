@@ -27,7 +27,7 @@
 
 from enum import Enum
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
@@ -192,7 +192,7 @@ else:
 class _LifecycleRepositoryHelper(BaseHelper):
     @classmethod
     def json_normalize(cls, o: LifecycleRepository, *,
-                       view: Optional[Type['ViewType']],
+                       view: Optional[type['ViewType']],
                        **__: Any) -> Any:
         if len(o) == 0:
             return None
@@ -200,7 +200,7 @@ class _LifecycleRepositoryHelper(BaseHelper):
             view_=view)) for li in o]
 
     @classmethod
-    def json_denormalize(cls, o: List[Dict[str, Any]],
+    def json_denormalize(cls, o: list[dict[str, Any]],
                          **__: Any) -> LifecycleRepository:
         repo = LifecycleRepository()
         for li in o:
@@ -217,7 +217,7 @@ class _LifecycleRepositoryHelper(BaseHelper):
     @classmethod
     def xml_normalize(cls, o: LifecycleRepository, *,
                       element_name: str,
-                      view: Optional[Type['ViewType']],
+                      view: Optional[type['ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
         if len(o) == 0:

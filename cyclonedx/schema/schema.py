@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import ABC, abstractmethod
-from typing import Dict, Literal, Type
+from typing import Literal
 
 from py_serializable import ViewType
 
@@ -83,7 +83,7 @@ class SchemaVersion1Dot0(BaseSchemaVersion):
         return SchemaVersion.V1_0
 
 
-SCHEMA_VERSIONS: Dict[SchemaVersion, Type[BaseSchemaVersion]] = {
+SCHEMA_VERSIONS: dict[SchemaVersion, type[BaseSchemaVersion]] = {
     SchemaVersion.V1_6: SchemaVersion1Dot6,
     SchemaVersion.V1_5: SchemaVersion1Dot5,
     SchemaVersion.V1_4: SchemaVersion1Dot4,

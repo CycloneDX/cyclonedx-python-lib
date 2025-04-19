@@ -15,10 +15,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from collections.abc import Generator
 from glob import iglob
 from itertools import chain
 from os.path import join
-from typing import Generator
 from unittest import TestCase
 
 from ddt import ddt, idata, unpack

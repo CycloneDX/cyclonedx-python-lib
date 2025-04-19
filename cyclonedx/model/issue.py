@@ -15,8 +15,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from collections.abc import Iterable
 from enum import Enum
-from typing import Any, Iterable, Optional
+from typing import Any, Optional
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet

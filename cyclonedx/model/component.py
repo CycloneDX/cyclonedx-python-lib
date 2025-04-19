@@ -16,9 +16,10 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import re
+from collections.abc import Iterable
 from enum import Enum
 from os.path import exists
-from typing import Any, Dict, FrozenSet, Iterable, Optional, Set, Type, Union
+from typing import Any, Optional, Union
 from warnings import warn
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -309,7 +310,7 @@ class ComponentScope(str, Enum):
 class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
-    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ComponentScope]] = dict()
+    __CASES: dict[type[serializable.ViewType], frozenset[ComponentScope]] = dict()
     __CASES[SchemaVersion1Dot0] = frozenset({
         ComponentScope.REQUIRED,
         ComponentScope.OPTIONAL,
@@ -324,21 +325,21 @@ class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
 
     @classmethod
-    def __normalize(cls, cs: ComponentScope, view: Type[serializable.ViewType]) -> Optional[str]:
+    def __normalize(cls, cs: ComponentScope, view: type[serializable.ViewType]) -> Optional[str]:
         return cs.value \
             if cs in cls.__CASES.get(view, ()) \
             else None
 
     @classmethod
     def json_normalize(cls, o: Any, *,
-                       view: Optional[Type[serializable.ViewType]],
+                       view: Optional[type[serializable.ViewType]],
                        **__: Any) -> Optional[str]:
         assert view is not None
         return cls.__normalize(o, view)
 
     @classmethod
     def xml_normalize(cls, o: Any, *,
-                      view: Optional[Type[serializable.ViewType]],
+                      view: Optional[type[serializable.ViewType]],
                       **__: Any) -> Optional[str]:
         assert view is not None
         return cls.__normalize(o, view)
@@ -375,7 +376,7 @@ class ComponentType(str, Enum):
 class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
-    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ComponentType]] = dict()
+    __CASES: dict[type[serializable.ViewType], frozenset[ComponentType]] = dict()
     __CASES[SchemaVersion1Dot0] = frozenset({
         ComponentType.APPLICATION,
         ComponentType.DEVICE,
@@ -403,21 +404,21 @@ class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
     }
 
     @classmethod
-    def __normalize(cls, ct: ComponentType, view: Type[serializable.ViewType]) -> Optional[str]:
+    def __normalize(cls, ct: ComponentType, view: type[serializable.ViewType]) -> Optional[str]:
         if ct in cls.__CASES.get(view, ()):
             return ct.value
         raise SerializationOfUnsupportedComponentTypeException(f'unsupported {ct!r} for view {view!r}')
 
     @classmethod
     def json_normalize(cls, o: Any, *,
-                       view: Optional[Type[serializable.ViewType]],
+                       view: Optional[type[serializable.ViewType]],
                        **__: Any) -> Optional[str]:
         assert view is not None
         return cls.__normalize(o, view)
 
     @classmethod
     def xml_normalize(cls, o: Any, *,
-                      view: Optional[Type[serializable.ViewType]],
+                      view: Optional[type[serializable.ViewType]],
                       **__: Any) -> Optional[str]:
         assert view is not None
         return cls.__normalize(o, view)
@@ -1734,7 +1735,7 @@ class Component(Dependable):
     def tags(self, tags: Iterable[str]) -> None:
         self._tags = SortedSet(tags)
 
-    def get_all_nested_components(self, include_self: bool = False) -> Set['Component']:
+    def get_all_nested_components(self, include_self: bool = False) -> set['Component']:
         components = set()
         if include_self:
             components.add(self)

@@ -23,7 +23,7 @@ import py_serializable as serializable
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 
 if TYPE_CHECKING:  # pragma: no cover
-    from typing import Type, TypeVar
+    from typing import TypeVar
 
     _T_BR = TypeVar('_T_BR', bound='BomRef')
 
@@ -90,7 +90,7 @@ class BomRef(serializable.helpers.BaseHelper):
             f'Attempt to serialize a non-BomRef: {o!r}')
 
     @classmethod
-    def deserialize(cls: 'Type[_T_BR]', o: Any) -> '_T_BR':
+    def deserialize(cls: 'type[_T_BR]', o: Any) -> '_T_BR':
         try:
             return cls(value=str(o))
         except ValueError as err:

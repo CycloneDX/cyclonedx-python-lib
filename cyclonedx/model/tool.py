@@ -16,8 +16,9 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
+from collections.abc import Iterable
 from itertools import chain
-from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
@@ -171,7 +172,7 @@ class Tool:
         return f'<Tool name={self.name}, version={self.version}, vendor={self.vendor}>'
 
     @classmethod
-    def from_component(cls: Type['Tool'], component: 'Component') -> 'Tool':
+    def from_component(cls: type['Tool'], component: 'Component') -> 'Tool':
         return cls(
             vendor=component.group,
             name=component.name,
@@ -181,7 +182,7 @@ class Tool:
         )
 
     @classmethod
-    def from_service(cls: Type['Tool'], service: 'Service') -> 'Tool':
+    def from_service(cls: type['Tool'], service: 'Service') -> 'Tool':
         return cls(
             vendor=service.group,
             name=service.name,
@@ -289,12 +290,12 @@ class _ToolRepositoryHelper(BaseHelper):
 
     @classmethod
     def json_normalize(cls, o: ToolRepository, *,
-                       view: Optional[Type['ViewType']],
+                       view: Optional[type['ViewType']],
                        **__: Any) -> Any:
         if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
             ts = cls.__all_as_tools(o)
             return tuple(ts) if ts else None
-        elem: Dict[str, Any] = {}
+        elem: dict[str, Any] = {}
         if o.components:
             elem['components'] = tuple(o.components)
         if o.services:
@@ -302,12 +303,12 @@ class _ToolRepositoryHelper(BaseHelper):
         return elem or None
 
     @classmethod
-    def json_denormalize(cls, o: Union[List[Dict[str, Any]], Dict[str, Any]],
+    def json_denormalize(cls, o: Union[list[dict[str, Any]], dict[str, Any]],
                          **__: Any) -> ToolRepository:
         tools = None
         components = None
         services = None
-        if isinstance(o, Dict):
+        if isinstance(o, dict):
             components = map(lambda c: Component.from_json(  # type:ignore[attr-defined]
                 c), o.get('components', ()))
             services = map(lambda s: Service.from_json(  # type:ignore[attr-defined]
@@ -320,7 +321,7 @@ class _ToolRepositoryHelper(BaseHelper):
     @classmethod
     def xml_normalize(cls, o: ToolRepository, *,
                       element_name: str,
-                      view: Optional[Type['ViewType']],
+                      view: Optional[type['ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
         elem = Element(element_name)
@@ -353,7 +354,7 @@ class _ToolRepositoryHelper(BaseHelper):
     def xml_denormalize(cls, o: Element, *,
                         default_ns: Optional[str],
                         prop_info: 'ObjectMetadataLibrary.SerializableProperty',
-                        ctx: Type[Any],
+                        ctx: type[Any],
                         **kwargs: Any) -> ToolRepository:
         ns_map = {'bom': default_ns or ''}
         # Do not iterate over `o` and do not check for expected `.tag` of items.

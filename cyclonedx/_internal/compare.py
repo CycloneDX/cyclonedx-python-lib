@@ -22,13 +22,13 @@ Everything might change without any notice.
 """
 
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
 
 
-class ComparableTuple(Tuple[Optional[Any], ...]):
+class ComparableTuple(tuple[Optional[Any], ...]):
     """
     Allows comparison of tuples, allowing for None values.
     """
@@ -63,7 +63,7 @@ class ComparableDict(ComparableTuple):
     Allows comparison of dictionaries, allowing for missing/None values.
     """
 
-    def __new__(cls, d: Dict[Any, Any]) -> 'ComparableDict':
+    def __new__(cls, d: dict[Any, Any]) -> 'ComparableDict':
         return super(ComparableDict, cls).__new__(cls, sorted(d.items()))
 
 

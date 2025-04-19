@@ -19,7 +19,7 @@
 __all__ = ['XmlValidator']
 
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Literal, Optional
 
 from ..exception import MissingOptionalDependencyException
 from ..schema import OutputFormat
@@ -29,7 +29,7 @@ from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError
 if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
 
-_missing_deps_error: Optional[Tuple[MissingOptionalDependencyException, ImportError]] = None
+_missing_deps_error: Optional[tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
     from lxml.etree import (  # type:ignore[import-untyped] # nosec B410
         XMLParser,

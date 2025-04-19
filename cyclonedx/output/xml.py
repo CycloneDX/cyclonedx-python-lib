@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import TYPE_CHECKING, Any, Dict, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 from xml.dom.minidom import parseString as dom_parseString  # nosec B408
 from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps  # nosec B405
 
@@ -124,7 +124,7 @@ class XmlV1Dot6(Xml, SchemaVersion1Dot6):
     pass
 
 
-BY_SCHEMA_VERSION: Dict[SchemaVersion, Type[Xml]] = {
+BY_SCHEMA_VERSION: dict[SchemaVersion, type[Xml]] = {
     SchemaVersion.V1_6: XmlV1Dot6,
     SchemaVersion.V1_5: XmlV1Dot5,
     SchemaVersion.V1_4: XmlV1Dot4,

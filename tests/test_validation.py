@@ -17,7 +17,6 @@
 
 
 from itertools import product
-from typing import Tuple
 from unittest import TestCase
 
 from ddt import data, ddt, named_data, unpack
@@ -49,6 +48,6 @@ class TestGetSchemabasedValidator(TestCase):
         *((f, v, (ValueError, 'Unsupported schema_version')) for f, v in UNDEFINED_FORMAT_VERSION)
     )
     @unpack
-    def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raises_regex: Tuple) -> None:
+    def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raises_regex: tuple) -> None:
         with self.assertRaisesRegex(*raises_regex):
             make_schemabased_validator(of, sv)

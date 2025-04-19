@@ -17,7 +17,7 @@
 
 
 from enum import Enum, auto, unique
-from typing import Any, Type, TypeVar
+from typing import Any, TypeVar
 
 
 @unique
@@ -64,7 +64,7 @@ class SchemaVersion(Enum):
     V1_0 = (1, 0)
 
     @classmethod
-    def from_version(cls: Type[_SV], version: str) -> _SV:
+    def from_version(cls: type[_SV], version: str) -> _SV:
         """Return instance based of a version string - e.g. `1.4`"""
         return cls(tuple(map(int, version.split('.')))[:2])
 
