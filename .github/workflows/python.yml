@@ -117,7 +117,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
+          - macos-13 # macos-latest might be incompatible to py310 - see https://github.com/CycloneDX/cyclonedx-python-lib/pull/599#issuecomment-2077462142
           - windows-latest
         python-version:
           - "3.13" # highest supported
