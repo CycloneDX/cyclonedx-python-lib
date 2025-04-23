@@ -87,7 +87,7 @@ flake8 = "7.2.0"
 flake8-annotations = "3.1.1"
 flake8-bugbear = "24.12.12"
 flake8-copyright-validator = "0.0.1"
-flake8-isort = "6.1.2" 
+flake8-isort = "6.1.2"
 flake8-quotes = "3.4.0"
 flake8-use-fstring = "1.4"
 pep8-naming = "0.14.1"
@@ -122,7 +122,7 @@ dist_glob_patterns = ["dist/*"]
 upload_to_vcs_release = true
 
 [tool.semantic_release.changelog]
-changelog_file = "CHANGELOG.md"
+default_templates = { changelog_file = "CHANGELOG.md" }
 exclude_commit_patterns = [
   '''chore(?:\([^)]*?\))?: .+''',
   '''ci(?:\([^)]*?\))?: .+''',
