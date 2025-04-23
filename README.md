@@ -20,8 +20,8 @@ that provides advanced supply chain capabilities for cyber risk reduction.
 This Python package provides data models, validators and more,
 to help you create/render/read CycloneDX documents.
 
-> [!NOTE]
-> This package is a software library not intended for standalone use. 
+> [!NOTE]  
+> This package is a software library not intended for standalone use.  
 > For generating Software Bill of Materials (SBOM), check out [CycloneDX Python][cyclonedx-python] or [Jake][jake].
 
 ## Documentation
