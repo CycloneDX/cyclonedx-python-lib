@@ -22,7 +22,7 @@ __all__ = [
 ]
 
 from json import load as json_load
-from typing import TYPE_CHECKING, Dict, Optional, Set
+from typing import TYPE_CHECKING, Optional
 
 from license_expression import get_spdx_licensing  # type:ignore[import-untyped]
 
@@ -36,10 +36,10 @@ if TYPE_CHECKING:  # pragma: no cover
 
 # !!! this requires to ship the actual schema data with the package.
 with open(__SPDX_JSON_SCHEMA) as schema:
-    __IDS: Set[str] = set(json_load(schema).get('enum', []))
+    __IDS: set[str] = set(json_load(schema).get('enum', []))
 assert len(__IDS) > 0, 'known SPDX-IDs should be non-empty set'
 
-__IDS_LOWER_MAP: Dict[str, str] = dict((id_.lower(), id_) for id_ in __IDS)
+__IDS_LOWER_MAP: dict[str, str] = dict((id_.lower(), id_) for id_ in __IDS)
 
 __SPDX_EXPRESSION_LICENSING: 'Licensing' = get_spdx_licensing()
 

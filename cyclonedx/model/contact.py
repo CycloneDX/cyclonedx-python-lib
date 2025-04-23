@@ -16,7 +16,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from typing import Any, Iterable, Optional, Union
+from collections.abc import Iterable
+from typing import Any, Optional, Union
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet

@@ -23,11 +23,12 @@ from a `cyclonedx.parser.BaseParser` implementation.
 """
 
 import re
+from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
 from functools import reduce
 from json import loads as json_loads
-from typing import Any, Dict, FrozenSet, Generator, Iterable, List, Optional, Tuple, Type, Union
+from typing import Any, Optional, Union
 from urllib.parse import quote as url_quote
 from uuid import UUID
 from warnings import warn
@@ -280,7 +281,7 @@ class HashAlgorithm(str, Enum):
 class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
-    __CASES: Dict[Type[serializable.ViewType], FrozenSet[HashAlgorithm]] = dict()
+    __CASES: dict[type[serializable.ViewType], frozenset[HashAlgorithm]] = dict()
     __CASES[SchemaVersion1Dot0] = frozenset({
         HashAlgorithm.MD5,
         HashAlgorithm.SHA_1,
@@ -304,7 +305,7 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
 
     @classmethod
-    def __prep(cls, hts: Iterable['HashType'], view: Type[serializable.ViewType]) -> Generator['HashType', None, None]:
+    def __prep(cls, hts: Iterable['HashType'], view: type[serializable.ViewType]) -> Generator['HashType', None, None]:
         cases = cls.__CASES.get(view, ())
         for ht in hts:
             if ht.alg in cases:
@@ -315,8 +316,8 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
 
     @classmethod
     def json_normalize(cls, o: Iterable['HashType'], *,
-                       view: Optional[Type[serializable.ViewType]],
-                       **__: Any) -> List[Any]:
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> list[Any]:
         assert view is not None
         return [
             json_loads(
@@ -328,7 +329,7 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def xml_normalize(cls, o: Iterable['HashType'], *,
                       element_name: str,
-                      view: Optional[Type[serializable.ViewType]],
+                      view: Optional[type[serializable.ViewType]],
                       xmlns: Optional[str],
                       **__: Any) -> XmlElement:
         assert view is not None
@@ -342,7 +343,7 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
 
     @classmethod
     def json_denormalize(cls, o: Any,
-                         **__: Any) -> List['HashType']:
+                         **__: Any) -> list['HashType']:
         return [
             HashType.from_json(  # type:ignore[attr-defined]
                 ht) for ht in o
@@ -351,14 +352,14 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def xml_denormalize(cls, o: 'XmlElement', *,
                         default_ns: Optional[str],
-                        **__: Any) -> List['HashType']:
+                        **__: Any) -> list['HashType']:
         return [
             HashType.from_xml(  # type:ignore[attr-defined]
                 ht, default_ns) for ht in o
         ]
 
 
-_MAP_HASHLIB: Dict[str, HashAlgorithm] = {
+_MAP_HASHLIB: dict[str, HashAlgorithm] = {
     # from hashlib.algorithms_guaranteed
     'md5': HashAlgorithm.MD5,
     'sha1': HashAlgorithm.SHA_1,
@@ -593,7 +594,7 @@ class ExternalReferenceType(str, Enum):
 class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
-    __CASES: Dict[Type[serializable.ViewType], FrozenSet[ExternalReferenceType]] = dict()
+    __CASES: dict[type[serializable.ViewType], frozenset[ExternalReferenceType]] = dict()
     __CASES[SchemaVersion1Dot1] = frozenset({
         ExternalReferenceType.VCS,
         ExternalReferenceType.ISSUE_TRACKER,
@@ -649,7 +650,7 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
     }
 
     @classmethod
-    def __normalize(cls, extref: ExternalReferenceType, view: Type[serializable.ViewType]) -> str:
+    def __normalize(cls, extref: ExternalReferenceType, view: type[serializable.ViewType]) -> str:
         return (
             extref
             if extref in cls.__CASES.get(view, ())
@@ -658,14 +659,14 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
 
     @classmethod
     def json_normalize(cls, o: Any, *,
-                       view: Optional[Type[serializable.ViewType]],
+                       view: Optional[type[serializable.ViewType]],
                        **__: Any) -> str:
         assert view is not None
         return cls.__normalize(o, view)
 
     @classmethod
     def xml_normalize(cls, o: Any, *,
-                      view: Optional[Type[serializable.ViewType]],
+                      view: Optional[type[serializable.ViewType]],
                       **__: Any) -> str:
         assert view is not None
         return cls.__normalize(o, view)
@@ -703,7 +704,7 @@ class XsUri(serializable.helpers.BaseHelper):
     )
 
     @staticmethod
-    def __spec_replace(v: str, r: Tuple[str, str]) -> str:
+    def __spec_replace(v: str, r: tuple[str, str]) -> str:
         return v.replace(*r)
 
     @classmethod

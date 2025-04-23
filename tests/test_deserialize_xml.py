@@ -15,7 +15,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 from unittest import TestCase
 from unittest.mock import patch
 

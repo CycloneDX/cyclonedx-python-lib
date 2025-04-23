@@ -16,7 +16,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import re
-from typing import TYPE_CHECKING, Any, Iterable, Optional, Union
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
@@ -29,7 +30,7 @@ from . import ExternalReference, Property
 from .bom_ref import BomRef
 
 if TYPE_CHECKING:  # pragma: no cover
-    from typing import Type, TypeVar
+    from typing import TypeVar
 
     _T_CreId = TypeVar('_T_CreId', bound='CreId')
 
@@ -65,7 +66,7 @@ class CreId(serializable.helpers.BaseHelper):
             f'Attempt to serialize a non-CreId: {o!r}')
 
     @classmethod
-    def deserialize(cls: 'Type[_T_CreId]', o: Any) -> '_T_CreId':
+    def deserialize(cls: 'type[_T_CreId]', o: Any) -> '_T_CreId':
         return cls(id=str(o))
 
     def __eq__(self, other: Any) -> bool:

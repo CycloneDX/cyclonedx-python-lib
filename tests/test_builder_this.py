@@ -15,7 +15,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import Any, Dict, Iterable, Tuple, Union
+from collections.abc import Iterable
+from typing import Any, Union
 from unittest import TestCase
 
 from cyclonedx.builder.this import this_component, this_tool
@@ -33,7 +34,7 @@ class ExtRefsTestMixin:
 
     def assertExtRefs(  # noqa:N802
         self: Union[TestCase, 'ExtRefsTestMixin'],
-        p: Dict[str, Any], ers: Iterable[ExternalReference]
+        p: dict[str, Any], ers: Iterable[ExternalReference]
     ) -> None:
         self.assertEqual(p['tool']['poetry']['homepage'], self.__first_ers_uri(
             ExternalReferenceType.WEBSITE, ers))
@@ -57,7 +58,7 @@ class TestThisComponent(TestCase, ExtRefsTestMixin):
 
     def test_license(self) -> None:
         p = load_pyproject()
-        ls: Tuple[License, ...] = tuple(this_component().licenses)
+        ls: tuple[License, ...] = tuple(this_component().licenses)
         self.assertEqual(1, len(ls))
         l = ls[0]  # noqa:E741
         self.assertIs(LicenseAcknowledgement.DECLARED, l.acknowledgement)
@@ -66,7 +67,7 @@ class TestThisComponent(TestCase, ExtRefsTestMixin):
 
     def test_extrefs(self) -> None:
         p = load_pyproject()
-        ers: Tuple[ExternalReference, ...] = tuple(this_component().external_references)
+        ers: tuple[ExternalReference, ...] = tuple(this_component().external_references)
         self.assertExtRefs(p, ers)
 
 
@@ -80,5 +81,5 @@ class TestThisTool(TestCase, ExtRefsTestMixin):
 
     def test_extrefs(self) -> None:
         p = load_pyproject()
-        ers: Tuple[ExternalReference, ...] = tuple(this_tool().external_references)
+        ers: tuple[ExternalReference, ...] = tuple(this_tool().external_references)
         self.assertExtRefs(p, ers)

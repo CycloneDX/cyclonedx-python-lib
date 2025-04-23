@@ -25,9 +25,10 @@ This set of classes represents cryptoPropertiesType Complex Type in the CycloneD
     See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
 """
 
+from collections.abc import Iterable
 from datetime import datetime
 from enum import Enum
-from typing import Any, Iterable, Optional
+from typing import Any, Optional
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet

@@ -22,7 +22,7 @@ License related things
 
 from enum import Enum
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
@@ -385,7 +385,7 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
 
     @classmethod
     def json_normalize(cls, o: LicenseRepository, *,
-                       view: Optional[Type[serializable.ViewType]],
+                       view: Optional[type[serializable.ViewType]],
                        **__: Any) -> Any:
         if len(o) == 0:
             return None
@@ -405,7 +405,7 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
         ]
 
     @classmethod
-    def json_denormalize(cls, o: List[Dict[str, Any]],
+    def json_denormalize(cls, o: list[dict[str, Any]],
                          **__: Any) -> LicenseRepository:
         repo = LicenseRepository()
         for li in o:
@@ -423,7 +423,7 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def xml_normalize(cls, o: LicenseRepository, *,
                       element_name: str,
-                      view: Optional[Type[serializable.ViewType]],
+                      view: Optional[type[serializable.ViewType]],
                       xmlns: Optional[str],
                       **__: Any) -> Optional[Element]:
         if len(o) == 0:

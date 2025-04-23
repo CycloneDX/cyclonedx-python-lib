@@ -17,7 +17,6 @@
 
 
 from itertools import product
-from typing import Tuple
 from unittest import TestCase
 from unittest.mock import Mock
 
@@ -46,7 +45,7 @@ class TestTestGetInstance(TestCase):
         *(('foo', sv, (ValueError, "Unexpected output_format: 'foo'")) for sv in SchemaVersion),
     )
     @unpack
-    def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raises_regex: Tuple) -> None:
+    def test_fails_on_wrong_args(self, of: OutputFormat, sv: SchemaVersion, raises_regex: tuple) -> None:
         bom = Mock(spec=Bom)
         with self.assertRaisesRegex(*raises_regex):
             make_outputter(bom, of, sv)

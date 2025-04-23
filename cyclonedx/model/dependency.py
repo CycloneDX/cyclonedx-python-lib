@@ -17,7 +17,8 @@
 
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, List, Optional, Set
+from collections.abc import Iterable
+from typing import Any, Optional
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
@@ -31,14 +32,14 @@ class _DependencyRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
     @classmethod
-    def serialize(cls, o: Any) -> List[str]:
+    def serialize(cls, o: Any) -> list[str]:
         if isinstance(o, (SortedSet, set)):
             return [str(i.ref) for i in o]
         raise SerializationOfUnexpectedValueException(
             f'Attempt to serialize a non-DependencyRepository: {o!r}')
 
     @classmethod
-    def deserialize(cls, o: Any) -> Set['Dependency']:
+    def deserialize(cls, o: Any) -> set['Dependency']:
         dependencies = set()
         if isinstance(o, list):
             for v in o:
@@ -80,7 +81,7 @@ class Dependency:
     def dependencies(self, dependencies: Iterable['Dependency']) -> None:
         self._dependencies = SortedSet(dependencies)
 
-    def dependencies_as_bom_refs(self) -> Set[BomRef]:
+    def dependencies_as_bom_refs(self) -> set[BomRef]:
         return set(map(lambda d: d.ref, self.dependencies))
 
     def __comparable_tuple(self) -> _ComparableTuple:

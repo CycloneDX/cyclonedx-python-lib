@@ -17,7 +17,8 @@
 
 
 import re
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, patch
 from warnings import warn

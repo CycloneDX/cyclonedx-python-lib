@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
-from typing import Callable, Tuple
+from collections.abc import Callable
 from unittest import TestCase
 from uuid import uuid4
 
@@ -253,7 +253,7 @@ class TestBom(TestCase):
         ('duplicate name(k)', ((Component(name='A', bom_ref='A1'), tuple()),
                                (Component(name='A', bom_ref='A2'), tuple()))),
     )
-    def test_register_dependency(self, dependencies: Tuple[Tuple[Component, Tuple[Component, ...]], ...]) -> None:
+    def test_register_dependency(self, dependencies: tuple[tuple[Component, tuple[Component, ...]], ...]) -> None:
         bom = Bom()
         for d1, d2 in dependencies:
             bom.components.update((d1,), d2)
