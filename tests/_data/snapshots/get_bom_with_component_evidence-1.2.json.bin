@@ -1,0 +1,237 @@
+{
+  "components": [
+    {
+      "author": "Test Author",
+      "bom-ref": "my-specific-bom-ref-for-dings",
+      "components": [
+        {
+          "author": "Test Author",
+          "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT"
+              }
+            }
+          ],
+          "name": "setuptools",
+          "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+          "type": "library",
+          "version": "50.3.2"
+        },
+        {
+          "bom-ref": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+          "externalReferences": [
+            {
+              "comment": "No comment",
+              "type": "distribution",
+              "url": "https://cyclonedx.org"
+            }
+          ],
+          "hashes": [
+            {
+              "alg": "SHA-256",
+              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+            }
+          ],
+          "name": "toml",
+          "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+          "type": "library",
+          "version": "0.10.2"
+        }
+      ],
+      "copyright": "Apache 2.0 baby!",
+      "cpe": "cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*",
+      "description": "This component is awesome",
+      "externalReferences": [
+        {
+          "comment": "No comment",
+          "type": "distribution",
+          "url": "https://cyclonedx.org"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "setuptools",
+      "pedigree": {
+        "ancestors": [
+          {
+            "author": "Test Author",
+            "bom-ref": "ccc8d7ee-4b9c-4750-aee0-a72585152291",
+            "licenses": [
+              {
+                "license": {
+                  "id": "MIT"
+                }
+              }
+            ],
+            "name": "setuptools",
+            "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+            "type": "library",
+            "version": "50.3.2"
+          },
+          {
+            "author": "Test Author",
+            "bom-ref": "8a3893b3-9923-4adb-a1d3-47456636ba0a",
+            "licenses": [
+              {
+                "license": {
+                  "id": "MIT"
+                }
+              }
+            ],
+            "name": "setuptools",
+            "purl": "pkg:pypi/setuptools?extension=tar.gz",
+            "type": "library",
+            "version": ""
+          }
+        ],
+        "commits": [
+          {
+            "message": "A commit message",
+            "uid": "a-random-uid"
+          }
+        ],
+        "descendants": [
+          {
+            "author": "Test Author",
+            "bom-ref": "28b2d8ce-def0-446f-a221-58dee0b44acc",
+            "licenses": [
+              {
+                "license": {
+                  "id": "MIT"
+                }
+              }
+            ],
+            "name": "setuptools",
+            "purl": "pkg:pypi/setuptools?extension=tar.gz",
+            "type": "library",
+            "version": ""
+          },
+          {
+            "bom-ref": "555ca729-93c6-48f3-956e-bdaa4a2f0bfa",
+            "externalReferences": [
+              {
+                "comment": "No comment",
+                "type": "distribution",
+                "url": "https://cyclonedx.org"
+              }
+            ],
+            "hashes": [
+              {
+                "alg": "SHA-256",
+                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+              }
+            ],
+            "name": "toml",
+            "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+            "type": "library",
+            "version": "0.10.2"
+          }
+        ],
+        "notes": "Some notes here please",
+        "patches": [
+          {
+            "diff": {
+              "text": {
+                "content": "LS0tIGZvbwkyMDI0LTAzLTA0IDEyOjQxOjExLjQxODc1OTE0NSArMDEwMAorKysgYmFyCTIwMjQtMDMtMDQgMTI6NDE6MjguMzE1NTE3ODQ3ICswMTAwCkBAIC0xLDIgKzEsMiBAQAotaGVsbG8gd29ybGQuCitIZWxsbyB3b3JsZC4KIAo=",
+                "contentType": "text/x-diff",
+                "encoding": "base64"
+              },
+              "url": "https://acme.com/my-patch.diff"
+            },
+            "type": "backport"
+          }
+        ],
+        "variants": [
+          {
+            "author": "Test Author",
+            "bom-ref": "ded1d73e-1fca-4302-b520-f1bc53979958",
+            "licenses": [
+              {
+                "license": {
+                  "id": "MIT"
+                }
+              }
+            ],
+            "name": "setuptools",
+            "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+            "type": "library",
+            "version": "50.3.2"
+          },
+          {
+            "bom-ref": "e7abdcca-5ba2-4f29-b2cf-b1e1ef788e66",
+            "externalReferences": [
+              {
+                "comment": "No comment",
+                "type": "distribution",
+                "url": "https://cyclonedx.org"
+              }
+            ],
+            "hashes": [
+              {
+                "alg": "SHA-256",
+                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+              }
+            ],
+            "name": "toml",
+            "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
+            "type": "library",
+            "version": "0.10.2"
+          }
+        ]
+      },
+      "publisher": "CycloneDX",
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "scope": "required",
+      "supplier": {
+        "contact": [
+          {
+            "email": "someone@somewhere.tld",
+            "name": "A N Other",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "email": "paul.horton@owasp.org",
+            "name": "Paul Horton"
+          }
+        ],
+        "name": "CycloneDX",
+        "url": [
+          "https://cyclonedx.org",
+          "https://cyclonedx.org/docs"
+        ]
+      },
+      "swid": {
+        "name": "Test Application",
+        "tagId": "swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1",
+        "text": {
+          "content": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiID8+CjxTb2Z0d2FyZUlkZW50aXR5IHhtbDpsYW5nPSJFTiIgbmFtZT0iQWNtZSBBcHBsaWNhdGlvbiIgdmVyc2lvbj0iOS4xLjEiIAogdmVyc2lvblNjaGVtZT0ibXVsdGlwYXJ0bnVtZXJpYyIgCiB0YWdJZD0ic3dpZGdlbi1iNTk1MWFjOS00MmMwLWYzODItM2YxZS1iYzdhMmE0NDk3Y2JfOS4xLjEiIAogeG1sbnM9Imh0dHA6Ly9zdGFuZGFyZHMuaXNvLm9yZy9pc28vMTk3NzAvLTIvMjAxNS9zY2hlbWEueHNkIj4gCiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiAKIHhzaTpzY2hlbWFMb2NhdGlvbj0iaHR0cDovL3N0YW5kYXJkcy5pc28ub3JnL2lzby8xOTc3MC8tMi8yMDE1LWN1cnJlbnQvc2NoZW1hLnhzZCBzY2hlbWEueHNkIiA+CiAgPE1ldGEgZ2VuZXJhdG9yPSJTV0lEIFRhZyBPbmxpbmUgR2VuZXJhdG9yIHYwLjEiIC8+IAogIDxFbnRpdHkgbmFtZT0iQWNtZSwgSW5jLiIgcmVnaWQ9ImV4YW1wbGUuY29tIiByb2xlPSJ0YWdDcmVhdG9yIiAvPiAKPC9Tb2Z0d2FyZUlkZW50aXR5Pg==",
+          "contentType": "text/xml",
+          "encoding": "base64"
+        },
+        "version": "3.4.5"
+      },
+      "type": "library",
+      "version": "50.3.2"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "my-specific-bom-ref-for-dings"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.2"
+}
