@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from cyclonedx.model.bom import Bom
     from cyclonedx.model.dependency import Dependency
 
-_T = TypeVar('_T')
+_T = TypeVar('_T')  # noqa:N808 -- false positive
 
 _TESTDATA_DIRECTORY = path.join(path.dirname(__file__), '_data')
 

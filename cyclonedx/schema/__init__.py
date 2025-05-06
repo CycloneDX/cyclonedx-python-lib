@@ -40,7 +40,7 @@ class OutputFormat(Enum):
         return self is other
 
 
-_SV = TypeVar('_SV', bound='SchemaVersion')
+_SV = TypeVar('_SV', bound='SchemaVersion')  # noqa:N808 -- false positive
 
 
 @unique
