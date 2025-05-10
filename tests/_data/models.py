@@ -44,16 +44,23 @@ from cyclonedx.model import (
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
+    AnalysisTechnique,
+    CallStack,
     Commit,
     Component,
     ComponentEvidence,
     ComponentScope,
     ComponentType,
     Diff,
+    Identity,
+    IdentityFieldType,
+    Method,
+    Occurrence,
     OmniborId,
     Patch,
     PatchClassification,
     Pedigree,
+    StackFrame,
     Swhid,
     Swid,
 )
@@ -455,6 +462,10 @@ def get_bom_with_component_setuptools_complete() -> Bom:
     return _make_bom(components=[get_component_setuptools_complete()])
 
 
+def get_bom_with_component_evidence() -> Bom:
+    return _make_bom(components=[get_component_with_evidence()])
+
+
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom = _make_bom()
     component = get_component_setuptools_simple()
@@ -735,6 +746,80 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     component.evidence = ComponentEvidence(copyright=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
     component.release_notes = get_release_notes()
     return component
+
+
+def get_component_with_evidence(include_pedigree: bool = True) -> Component:
+    component = get_component_setuptools_simple(bom_ref='my-specific-bom-ref-for-dings')
+    component.supplier = get_org_entity_1()
+    component.publisher = 'CycloneDX'
+    component.description = 'This component is awesome'
+    component.scope = ComponentScope.REQUIRED
+    component.copyright = 'Apache 2.0 baby!'
+    component.cpe = 'cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*'
+    component.swid = get_swid_1()
+    if include_pedigree:
+        component.pedigree = get_pedigree_1()
+    component.external_references.add(
+        get_external_reference_1()
+    )
+    component.properties = get_properties_1()
+    component.components.update([
+        get_component_setuptools_simple(),
+        get_component_toml_with_hashes_with_references()
+    ])
+    component.evidence = get_component_evidence_basic()
+    component.release_notes = get_release_notes()
+    return component
+
+
+def get_component_evidence_basic() -> ComponentEvidence:
+    """
+    Returns a basic ComponentEvidence object for testing.
+    """
+    return ComponentEvidence(
+        identity=[
+            Identity(
+                field=IdentityFieldType.NAME,
+                confidence=Decimal('0.9'),
+                concluded_value='example-component',
+                methods=[
+                    Method(technique=AnalysisTechnique.SOURCE_CODE_ANALYSIS,
+                           confidence=Decimal('0.8'), value='analysis-tool')
+                ],
+                tools=[
+                    BomRef('ref0'),  # BomRef reference
+                    BomRef('ref1')  # BomRef reference
+                ]
+            )
+        ],
+        occurrences=[
+            Occurrence(
+                location='path/to/file',
+                line=42,
+                offset=16,
+                symbol='exampleSymbol',
+                additional_context='Found in source code',
+                bom_ref='BomRef.2392456298152259.7035102660516194',
+            )
+        ],
+        callstack=CallStack(
+            frames=[
+                StackFrame(
+                    package='example.package',
+                    module='example.module',
+                    function='example_function',
+                    parameters=['param1', 'param2'],
+                    line=10,
+                    column=5,
+                    full_filename='path/to/file',
+                )
+            ]
+        ),
+        licenses=[DisjunctiveLicense(id='MIT')],
+        copyright=[
+            Copyright(text='Commercial'), Copyright(text='Commercial 2')
+        ]
+    )
 
 
 def get_component_setuptools_simple(
@@ -1485,4 +1570,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_lifecycles,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
+    get_bom_with_component_evidence,
 }
