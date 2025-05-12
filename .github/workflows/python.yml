@@ -17,6 +17,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions: {}
+
 env:
   REPORTS_DIR: CI_reports
   PYTHON_VERSION_DEFAULT: "3.11"
