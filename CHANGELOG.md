@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## v10.0.1 (2025-05-10)
+
+### Bug Fixes
+
+- Add missing comparator for VulnerabilityAnalysis
+  ([#812](https://github.com/CycloneDX/cyclonedx-python-lib/pull/812),
+  [`0df2982`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0df2982151a99ce6e21336e6904afc0a8058f9af))
+
+When trying to generate a CycloneDX BOM that has two vulnerabilities that only differ in their
+  analysis, you get ``` TypeError: '<' not supported between instances of 'VulnerabilityAnalysis'
+  and 'VulnerabilityAnalysis' ```
+
+This PR adds the `__lt__` method for the VulnerabilityAnalysis model to fix sorting and also
+  includes a test case to verify the fix.
+
+---------
+
+Signed-off-by: Riku Häkli <hakli.riku@gmail.com>
+
+Co-authored-by: Riku Häkli <hakli.riku@gmail.com>
+
+### Documentation
+
+- **fix**: Mdformat
+  ([`acf5c45`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/acf5c45874808b831c33344f08ea21df20c727bb))
+
+Signed-off-by: Jan Kowalleck <jan.kowalleck@gmail.com>
+
+
 ## v10.0.0 (2025-04-23)
 
 ### Features
