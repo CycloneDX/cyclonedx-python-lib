@@ -31,6 +31,21 @@
       <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
       <evidence>
         <identity>
+          <field>hash</field>
+          <confidence>0.1</confidence>
+          <concludedValue>example-hash</concludedValue>
+          <methods>
+            <method>
+              <technique>attestation</technique>
+              <confidence>0.1</confidence>
+              <value>analysis-tool</value>
+            </method>
+          </methods>
+          <tools>
+            <tool ref="cbom:generator"/>
+          </tools>
+        </identity>
+        <identity>
           <field>name</field>
           <confidence>0.9</confidence>
           <concludedValue>example-component</concludedValue>
