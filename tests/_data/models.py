@@ -21,7 +21,7 @@ from collections.abc import Iterable
 from datetime import datetime, timezone
 from decimal import Decimal
 from inspect import getmembers, isfunction
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -62,10 +62,10 @@ from cyclonedx.model.component_evidence import (
     CallStack,
     ComponentEvidence,
     Identity,
-    IdentityFieldType,
+    IdentityField,
     Method,
     Occurrence,
-    StackFrame,
+    CallStackFrame,
 )
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
@@ -776,23 +776,24 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     return component
 
 
-def get_component_evidence_basic(tools: Iterable[Tool]) -> ComponentEvidence:
+def get_component_evidence_basic(tools: Iterable[Component]) -> ComponentEvidence:
     """
     Returns a basic ComponentEvidence object for testing.
     """
     return ComponentEvidence(
         identity=[
             Identity(
-                field=IdentityFieldType.NAME,
+                field=IdentityField.NAME,
                 confidence=Decimal('0.9'),
                 concluded_value='example-component',
                 methods=[
                     Method(
                         technique=AnalysisTechnique.SOURCE_CODE_ANALYSIS,
-                        confidence=Decimal('0.8'), value='analysis-tool'
-                    )
+                        confidence=Decimal('0.8'),
+                        value='analysis-tool'
+                    ),
                 ],
-                tools=[tool.bom_ref for tool in tools]
+                tools=(tool.bom_ref for tool in tools)
             )
         ],
         occurrences=[
@@ -806,7 +807,7 @@ def get_component_evidence_basic(tools: Iterable[Tool]) -> ComponentEvidence:
         ],
         callstack=CallStack(
             frames=[
-                StackFrame(
+                CallStackFrame(
                     package='example.package',
                     module='example.module',
                     function='example_function',

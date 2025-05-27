@@ -30,6 +30,10 @@ class CycloneDxModelException(CycloneDxException):
     pass
 
 
+class InvalidValueException(CycloneDxModelException):
+    pass
+
+
 class InvalidLocaleTypeException(CycloneDxModelException):
     """
     Raised when the supplied locale does not conform to ISO-639 specification.
@@ -129,5 +133,13 @@ class InvalidCreIdException(CycloneDxModelException):
     """
     Raised when a supplied value for an CRE ID does not meet the format requirements
     as defined at https://opencre.org/
+    """
+    pass
+
+
+class InvalidConfidenceException(CycloneDxModelException):
+    """
+    Raised when an invalid value is provided for a Confidence.
+    The confidence of the evidence from 0 - 1, where 1 is 100% confidence.
     """
     pass

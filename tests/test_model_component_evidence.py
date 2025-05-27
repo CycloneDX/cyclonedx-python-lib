@@ -24,11 +24,12 @@ from cyclonedx.model.component_evidence import (
     CallStack,
     ComponentEvidence,
     Identity,
-    IdentityFieldType,
+    IdentityField,
     Method,
     Occurrence,
-    StackFrame,
+    CallStackFrame,
 )
+from cyclonedx.exception.model import InvalidConfidenceException
 
 
 class TestModelComponentEvidence(TestCase):
@@ -37,15 +38,15 @@ class TestModelComponentEvidence(TestCase):
         ComponentEvidence()  # Does not raise `NoPropertiesProvidedException`
 
     def test_identity(self) -> None:
-        identity = Identity(field=IdentityFieldType.NAME, confidence=Decimal('1'), concluded_value='test')
+        identity = Identity(field=IdentityField.NAME, confidence=Decimal('1'), concluded_value='test')
         ce = ComponentEvidence(identity=[identity])
         self.assertEqual(len(ce.identity), 1)
         self.assertEqual(ce.identity.pop().field, 'name')
 
     def test_identity_multiple(self) -> None:
         identities = [
-            Identity(field=IdentityFieldType.NAME, confidence=Decimal('1'), concluded_value='test'),
-            Identity(field=IdentityFieldType.VERSION, confidence=Decimal('0.8'), concluded_value='1.0.0')
+            Identity(field=IdentityField.NAME, confidence=Decimal('1'), concluded_value='test'),
+            Identity(field=IdentityField.VERSION, confidence=Decimal('0.8'), concluded_value='1.0.0')
         ]
         ce = ComponentEvidence(identity=identities)
         self.assertEqual(len(ce.identity), 2)
@@ -88,14 +89,9 @@ class TestModelComponentEvidence(TestCase):
         self.assertEqual(sorted_methods[1].technique, AnalysisTechnique.BINARY_ANALYSIS)
         self.assertEqual(sorted_methods[2].technique, AnalysisTechnique.SOURCE_CODE_ANALYSIS)
 
-    def test_invalid_method_technique(self) -> None:
-        """Test that invalid technique raises ValueError"""
-        with self.assertRaises(ValueError):
-            Method(technique='invalid', confidence=Decimal('0.5'))
-
     def test_invalid_method_confidence(self) -> None:
         """Test that invalid confidence raises ValueError"""
-        with self.assertRaises(ValueError):
+        with self.assertRaises(InvalidConfidenceException):
             Method(technique=AnalysisTechnique.FILENAME, confidence=Decimal('1.5'))
 
     def test_occurrences(self) -> None:
@@ -104,9 +100,9 @@ class TestModelComponentEvidence(TestCase):
         self.assertEqual(len(ce.occurrences), 1)
         self.assertEqual(ce.occurrences.pop().line, 42)
 
-    def test_stackframe(self) -> None:
-        # Test StackFrame with required fields
-        frame = StackFrame(
+    def test_CallStackFrame(self) -> None:
+        # Test CallStackFrame with required fields
+        frame = CallStackFrame(
             package='com.example',
             module='app',
             function='main',
@@ -123,9 +119,9 @@ class TestModelComponentEvidence(TestCase):
         self.assertEqual(frame.column, 10)
         self.assertEqual(frame.full_filename, '/path/to/file.py')
 
-    def test_stackframe_module_required(self) -> None:
+    def test_CallStackFrame_module_required(self) -> None:
         """Test that module is the only required field"""
-        frame = StackFrame(module='app')  # Only mandatory field
+        frame = CallStackFrame(module='app')  # Only mandatory field
         self.assertEqual(frame.module, 'app')
         self.assertIsNone(frame.package)
         self.assertIsNone(frame.function)
@@ -134,21 +130,8 @@ class TestModelComponentEvidence(TestCase):
         self.assertIsNone(frame.column)
         self.assertIsNone(frame.full_filename)
 
-    def test_stackframe_without_module(self) -> None:
-        """Test that omitting module raises TypeError"""
-        with self.assertRaises(TypeError):
-            StackFrame()  # Should raise TypeError for missing module
-
-        with self.assertRaises(TypeError):
-            StackFrame(package='com.example')  # Should raise TypeError for missing module
-
-    def test_stackframe_with_none_module(self) -> None:
-        """Test that setting module as None raises TypeError"""
-        with self.assertRaises(TypeError):
-            StackFrame(module=None)  # Should raise TypeError for None module
-
     def test_callstack(self) -> None:
-        frame = StackFrame(
+        frame = CallStackFrame(
             package='com.example',
             module='app',
             function='main'
@@ -172,9 +155,9 @@ class TestModelComponentEvidence(TestCase):
 
     def test_full_evidence(self) -> None:
         # Test with all fields populated
-        identity = Identity(field=IdentityFieldType.NAME, confidence=Decimal('1'), concluded_value='test')
+        identity = Identity(field=IdentityField.NAME, confidence=Decimal('1'), concluded_value='test')
         occurrence = Occurrence(location='/path/to/file', line=42)
-        frame = StackFrame(module='app', function='main', line=1)
+        frame = CallStackFrame(module='app', function='main', line=1)
         stack = CallStack(frames=[frame])
         from cyclonedx.model.license import DisjunctiveLicense
         license = DisjunctiveLicense(id='MIT')
@@ -196,10 +179,10 @@ class TestModelComponentEvidence(TestCase):
         self.assertEqual(len(ce.copyright), 1)
 
     def test_full_evidence_with_complete_stack(self) -> None:
-        identity = Identity(field=IdentityFieldType.NAME, confidence=Decimal('1'), concluded_value='test')
+        identity = Identity(field=IdentityField.NAME, confidence=Decimal('1'), concluded_value='test')
         occurrence = Occurrence(location='/path/to/file', line=42)
 
-        frame = StackFrame(
+        frame = CallStackFrame(
             package='com.example',
             module='app',
             function='main',

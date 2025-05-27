@@ -16,26 +16,28 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Generator
 from decimal import Decimal
 from enum import Enum
 from typing import Any, Optional, Union
-from xml.etree.ElementTree import Element  # nosec B405
+from xml.etree.ElementTree import Element as XmlElement
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
+from ..exception.serialization import SerializationOfUnexpectedValueException
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.serialization import CycloneDxDeserializationException
-from ..schema.schema import SchemaVersion1Dot6
-from . import Copyright, XsUri
+from ..exception.model import InvalidConfidenceException, InvalidValueException
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6
+from . import Copyright
 from .bom_ref import BomRef
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 
 
 @serializable.serializable_enum
-class IdentityFieldType(str, Enum):
+class IdentityField(str, Enum):
     """
     Enum object that defines the permissible field types for Identity.
 
@@ -80,7 +82,7 @@ class Method:
 
     def __init__(
         self, *,
-        technique: Union[AnalysisTechnique, str],
+        technique: AnalysisTechnique,
         confidence: Decimal,
         value: Optional[str] = None,
     ) -> None:
@@ -89,39 +91,30 @@ class Method:
         self.value = value
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'technique')
-    @serializable.json_name('technique')
     @serializable.xml_sequence(1)
-    def technique(self) -> str:
-        return self._technique.value
+    def technique(self) -> AnalysisTechnique:
+        return self._technique
 
     @technique.setter
-    def technique(self, technique: Union[AnalysisTechnique, str]) -> None:
-        if isinstance(technique, str):
-            try:
-                technique = AnalysisTechnique(technique)
-            except ValueError:
-                raise ValueError(
-                    f'Technique must be one of: {", ".join(t.value for t in AnalysisTechnique)}'
-                )
+    def technique(self, technique: AnalysisTechnique) -> None:
         self._technique = technique
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'confidence')
-    @serializable.json_name('confidence')
     @serializable.xml_sequence(2)
     def confidence(self) -> Decimal:
+        """
+        The confidence of the evidence from 0 - 1, where 1 is 100% confidence.
+        Confidence is specific to the technique used. Each technique of analysis can have independent confidence.
+        """
         return self._confidence
 
     @confidence.setter
     def confidence(self, confidence: Decimal) -> None:
-        if not 0 <= confidence <= 1:
-            raise ValueError('Confidence must be between 0 and 1')
+        if not (0 <= confidence <= 1):
+            raise InvalidConfidenceException(f'confidence {confidence!r} is invalid')
         self._confidence = confidence
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'value')
-    @serializable.json_name('value')
     @serializable.xml_sequence(3)
     def value(self) -> Optional[str]:
         return self._value
@@ -131,13 +124,11 @@ class Method:
         self._value = value
 
     def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple(
-            (
-                self.technique,
-                self.confidence,
-                self.value,
-            )
-        )
+        return _ComparableTuple((
+            self.technique,
+            self.confidence,
+            self.value,
+        ))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Method):
@@ -156,54 +147,37 @@ class Method:
         return f'<Method technique={self.technique}, confidence={self.confidence}, value={self.value}>'
 
 
-class _ToolsSerializationHelper(serializable.helpers.BaseHelper):
+class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
     @classmethod
-    def json_normalize(cls, o: Any, *,
-                       view: Optional[type[serializable.ViewType]],
-                       **__: Any) -> Any:
-        if isinstance(o, SortedSet):
-            return [str(t) for t in o]  # Convert BomRef to string
-        return o
+    def json_serialize(cls, o: Iterable['BomRef']) -> tuple[str]:
+        return tuple(i.value for i in o)
 
     @classmethod
-    def xml_normalize(cls, o: Any, *,
-                      element_name: str,
-                      view: Optional[type[serializable.ViewType]],
+    def json_deserialize(cls, o: Iterable[str]) -> tuple[BomRef]:
+        return tuple(BomRef(value=i) for i in o)
+
+    @classmethod
+    def xml_normalize(cls, o: Iterable[BomRef], *,
                       xmlns: Optional[str],
-                      **__: Any) -> Optional[Element]:
+                      **kwargs: Any) -> Optional[XmlElement]:
+        o = tuple(o)
         if len(o) == 0:
             return None
-
-        # Create tools element with namespace if provided
-        tools_elem = Element(f'{{{xmlns}}}tools' if xmlns else 'tools')
-        for tool in o:
-            tool_elem = Element(f'{{{xmlns}}}tool' if xmlns else 'tool')
-            tool_elem.set(f'{{{xmlns}}}ref' if xmlns else 'ref', str(tool))
-            tools_elem.append(tool_elem)
-        return tools_elem
-
-    @classmethod
-    def json_denormalize(cls, o: Any, **kwargs: Any) -> SortedSet[BomRef]:
-        if isinstance(o, (list, set, tuple)):
-            return SortedSet(BomRef(str(t)) for t in o)
-        return SortedSet()
+        elem_s = XmlElement(f'{{{xmlns}}}tools' if xmlns else 'tools')
+        elem_s.extend(
+            XmlElement(
+                f'{{{xmlns}}}tool' if xmlns else 'tool',
+                {'ref': t.value}
+            ) for t in o if t)
+        return elem_s
 
     @classmethod
-    def xml_denormalize(cls, o: Element,
+    def xml_denormalize(cls, o: 'XmlElement', *,
                         default_ns: Optional[str],
-                        **__: Any) -> SortedSet[BomRef]:
-        repo = []
-        tool_tag = f'{{{default_ns}}}tool' if default_ns else 'tool'
-        ref_attr = f'{{{default_ns}}}ref' if default_ns else 'ref'
-        for tool_elem in o.findall(f'.//{tool_tag}'):
-            ref = tool_elem.get(ref_attr) or tool_elem.get('ref')
-            if ref:
-                repo.append(BomRef(str(ref)))
-            else:
-                raise CycloneDxDeserializationException(f'unexpected: {tool_elem!r}')
-        return SortedSet(repo)
+                        **__: Any) -> tuple[BomRef]:
+        return tuple(BomRef(value=t.get('ref')) for t in o)
 
 
 @serializable.serializable_class
@@ -212,16 +186,16 @@ class Identity:
     Our internal representation of the `identityType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: hhttps://cyclonedx.org/docs/1.6/json/#components_items_evidence_identity
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_evidence_identity
     """
 
     def __init__(
         self, *,
-        field: Union[IdentityFieldType, str],  # Accept either enum or string
+        field: IdentityField,
         confidence: Optional[Decimal] = None,
         concluded_value: Optional[str] = None,
-        methods: Optional[Iterable[Method]] = None,  # Updated type
-        tools: Optional[Iterable[Union[str, BomRef]]] = None,
+        methods: Optional[Iterable[Method]] = None,
+        tools: Optional[Iterable[BomRef]] = None,
     ) -> None:
         self.field = field
         self.confidence = confidence
@@ -230,42 +204,30 @@ class Identity:
         self.tools = tools or []  # type: ignore[assignment]
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'field')
     @serializable.xml_sequence(1)
-    def field(self) -> str:
-        return self._field.value
+    def field(self) -> IdentityField:
+        return self._field
 
     @field.setter
-    def field(self, field: Union[IdentityFieldType, str]) -> None:
-        if isinstance(field, str):
-            try:
-                field = IdentityFieldType(field)
-            except ValueError:
-                raise ValueError(
-                    f'Field must be one of: {", ".join(f.value for f in IdentityFieldType)}'
-                )
+    def field(self, field: IdentityField) -> None:
         self._field = field
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'confidence')
     @serializable.xml_sequence(2)
     def confidence(self) -> Optional[Decimal]:
         """
-        Returns the confidence value if set, otherwise None.
+        The overall confidence of the evidence from 0 - 1, where 1 is 100% confidence.
         """
         return self._confidence
 
     @confidence.setter
     def confidence(self, confidence: Optional[Decimal]) -> None:
-        """
-        Sets the confidence value. Ensures it is between 0 and 1 if provided.
-        """
-        if confidence is not None and not 0 <= confidence <= 1:
-            raise ValueError('Confidence must be between 0 and 1')
+        if confidence is not None and not (0 <= confidence <= 1):
+            raise InvalidConfidenceException(f'{confidence} in invalid')
         self._confidence = confidence
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'concludedValue')
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(3)
     def concluded_value(self) -> Optional[str]:
         return self._concluded_value
@@ -277,50 +239,34 @@ class Identity:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'method')
     @serializable.xml_sequence(4)
-    def methods(self) -> 'SortedSet[Method]':  # Updated return type
+    def methods(self) -> 'SortedSet[Method]':
         return self._methods
 
     @methods.setter
-    def methods(self, methods: Iterable[Method]) -> None:  # Updated parameter type
+    def methods(self, methods: Iterable[Method]) -> None:
         self._methods = SortedSet(methods)
 
     @property
-    @serializable.type_mapping(_ToolsSerializationHelper)
+    @serializable.type_mapping(_IdentityToolRepositorySerializationHelper)
     @serializable.xml_sequence(5)
     def tools(self) -> 'SortedSet[BomRef]':
         """
         References to the tools used to perform analysis and collect evidence.
-        Can be either a string reference (refLinkType) or a BOM reference (bomLinkType).
-        All references are stored and serialized as strings.
-
-        Returns:
-            Set of tool references as BomRef
         """
         return self._tools
 
     @tools.setter
-    def tools(self, tools: Iterable[Union[str, BomRef]]) -> None:
-        """Convert all inputs to BomRef for consistent storage"""
-        validated = []
-        for t in tools:
-            ref_str = str(t)
-            if not (XsUri(ref_str).is_bom_link() or len(ref_str) >= 1):
-                raise ValueError(
-                    f'Invalid tool reference: {ref_str}. Must be a valid BOM reference or BOM-Link.'
-                )
-            validated.append(BomRef(ref_str))
-        self._tools = SortedSet(validated)
+    def tools(self, tools: Iterable[BomRef]) -> None:
+        self._tools = SortedSet(tools)
 
     def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple(
-            (
-                self.field,
-                self.confidence,
-                self.concluded_value,
-                _ComparableTuple(self.methods),
-                _ComparableTuple(self.tools),
-            )
-        )
+        return _ComparableTuple((
+            self.field,
+            self.confidence,
+            self.concluded_value,
+            _ComparableTuple(self.methods),
+            _ComparableTuple(self.tools),
+        ))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Identity):
@@ -336,7 +282,9 @@ class Identity:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<Identity field={self.field}, confidence={self.confidence}>'
+        return f'<Identity field={self.field}, confidence={self.confidence},' \
+               f' concludedValue={self.concluded_value},' \
+               f' methods={self.methods}, tools={self.tools}>'
 
 
 @serializable.serializable_class
@@ -357,7 +305,7 @@ class Occurrence:
         symbol: Optional[str] = None,
         additional_context: Optional[str] = None,
     ) -> None:
-        self.bom_ref = bom_ref  # type: ignore[assignment]
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.location = location
         self.line = line
         self.offset = offset
@@ -365,30 +313,21 @@ class Occurrence:
         self.additional_context = additional_context
 
     @property
-    @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRef)
-    @serializable.xml_attribute()
+    @serializable.json_name('bom-ref')
     @serializable.xml_name('bom-ref')
-    def bom_ref(self) -> Optional[BomRef]:
+    @serializable.xml_attribute()
+    def bom_ref(self) -> BomRef:
         """
-        Reference to a component defined in the BOM.
+        An optional identifier which can be used to reference the requirement elsewhere in the BOM.
+        Every bom-ref MUST be unique within the BOM.
+
+        Returns:
+            `BomRef`
         """
         return self._bom_ref
 
-    @bom_ref.setter
-    def bom_ref(self, bom_ref: Optional[Union[str, BomRef]]) -> None:
-        if bom_ref is None:
-            self._bom_ref = None
-            return
-        bom_ref_str = str(bom_ref)
-        if len(bom_ref_str) < 1:
-            raise ValueError('bom_ref must be at least 1 character long')
-        if XsUri(bom_ref_str).is_bom_link():
-            raise ValueError("bom_ref SHOULD NOT start with 'urn:cdx:' to avoid conflicts with BOM-Links")
-        self._bom_ref = BomRef(bom_ref_str)
-
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'location')
     @serializable.xml_sequence(1)
     def location(self) -> str:
         """
@@ -398,12 +337,10 @@ class Occurrence:
 
     @location.setter
     def location(self, location: str) -> None:
-        if location is None:
-            raise TypeError('location is required and cannot be None')
         self._location = location
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'line')
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(2)
     def line(self) -> Optional[int]:
         """
@@ -413,10 +350,12 @@ class Occurrence:
 
     @line.setter
     def line(self, line: Optional[int]) -> None:
+        if line is not None and line < 0:
+            raise InvalidValueException(f'line {line!r} must not be lower than zero')
         self._line = line
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'offset')
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(3)
     def offset(self) -> Optional[int]:
         """
@@ -426,10 +365,12 @@ class Occurrence:
 
     @offset.setter
     def offset(self, offset: Optional[int]) -> None:
+        if offset is not None and offset < 0:
+            raise InvalidValueException(f'offset {offset!r} must not be lower than zero')
         self._offset = offset
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'symbol')
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(4)
     def symbol(self) -> Optional[str]:
         """
@@ -442,8 +383,7 @@ class Occurrence:
         self._symbol = symbol
 
     @property
-    @serializable.json_name('additionalContext')
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'additionalContext')
+    @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(5)
     def additional_context(self) -> Optional[str]:
         """
@@ -456,16 +396,14 @@ class Occurrence:
         self._additional_context = additional_context
 
     def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple(
-            (
-                self.bom_ref,
-                self.location,
-                self.line,
-                self.offset,
-                self.symbol,
-                self.additional_context,
-            )
-        )
+        return _ComparableTuple((
+            self.bom_ref,
+            self.location,
+            self.line,
+            self.offset,
+            self.symbol,
+            self.additional_context,
+        ))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Occurrence):
@@ -485,7 +423,7 @@ class Occurrence:
 
 
 @serializable.serializable_class
-class StackFrame:
+class CallStackFrame:
     """
     Represents an individual frame in a call stack.
 
@@ -495,8 +433,8 @@ class StackFrame:
 
     def __init__(
         self, *,
+        module: str,
         package: Optional[str] = None,
-        module: str,  # module is required
         function: Optional[str] = None,
         parameters: Optional[Iterable[str]] = None,
         line: Optional[int] = None,
@@ -512,7 +450,6 @@ class StackFrame:
         self.full_filename = full_filename
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'package')
     @serializable.xml_sequence(1)
     def package(self) -> Optional[str]:
         """
@@ -528,7 +465,6 @@ class StackFrame:
         self._package = package
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'module')
     @serializable.xml_sequence(2)
     def module(self) -> str:
         """
@@ -538,12 +474,9 @@ class StackFrame:
 
     @module.setter
     def module(self, module: str) -> None:
-        if module is None:
-            raise TypeError('module is required and cannot be None')
         self._module = module
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'function')
     @serializable.xml_sequence(3)
     def function(self) -> Optional[str]:
         """
@@ -559,7 +492,6 @@ class StackFrame:
         self._function = function
 
     @property
-    @serializable.json_name('parameters')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'parameter')
     @serializable.xml_sequence(4)
     def parameters(self) -> 'SortedSet[str]':
@@ -573,7 +505,6 @@ class StackFrame:
         self._parameters = SortedSet(parameters)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'line')
     @serializable.xml_sequence(5)
     def line(self) -> Optional[int]:
         """
@@ -586,7 +517,6 @@ class StackFrame:
         self._line = line
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'column')
     @serializable.xml_sequence(6)
     def column(self) -> Optional[int]:
         """
@@ -599,8 +529,6 @@ class StackFrame:
         self._column = column
 
     @property
-    @serializable.json_name('fullFilename')
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'fullFilename')
     @serializable.xml_sequence(7)
     def full_filename(self) -> Optional[str]:
         """
@@ -613,25 +541,23 @@ class StackFrame:
         self._full_filename = full_filename
 
     def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple(
-            (
-                self.package,
-                self.module,
-                self.function,
-                _ComparableTuple(self.parameters),
-                self.line,
-                self.column,
-                self.full_filename,
-            )
-        )
+        return _ComparableTuple((
+            self.package,
+            self.module,
+            self.function,
+            _ComparableTuple(self.parameters),
+            self.line,
+            self.column,
+            self.full_filename,
+        ))
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, StackFrame):
+        if isinstance(other, CallStackFrame):
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: Any) -> bool:
-        if isinstance(other, StackFrame):
+        if isinstance(other, CallStackFrame):
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
@@ -639,7 +565,7 @@ class StackFrame:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<StackFrame package={self.package}, module={self.module}, function={self.function}>'
+        return f'<CallStackFrame package={self.package}, module={self.module}, function={self.function}>'
 
 
 @serializable.serializable_class
@@ -654,28 +580,26 @@ class CallStack:
 
     def __init__(
         self, *,
-        frames: Optional[Iterable[StackFrame]] = None,
+        frames: Optional[Iterable[CallStackFrame]] = None,
     ) -> None:
         self.frames = frames or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'frame')
-    def frames(self) -> 'SortedSet[StackFrame]':
+    def frames(self) -> 'List[CallStackFrame]':
         """
         Array of stack frames
         """
         return self._frames
 
     @frames.setter
-    def frames(self, frames: Iterable[StackFrame]) -> None:
-        self._frames = SortedSet(frames)
+    def frames(self, frames: Iterable[CallStackFrame]) -> None:
+        self._frames = list(frames)
 
     def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple(
-            (
-                _ComparableTuple(self.frames),
-            )
-        )
+        return _ComparableTuple((
+            _ComparableTuple(self.frames),
+        ))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CallStack):
@@ -688,7 +612,11 @@ class CallStack:
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
+        h = self.__comparable_tuple()
+        try:
+            return hash(h)
+        except TypeError as e:
+            raise e
 
     def __repr__(self) -> str:
         return f'<CallStack frames={len(self.frames)}>'
@@ -707,7 +635,7 @@ class ComponentEvidence:
 
     def __init__(
         self, *,
-        identity: Optional[Iterable[Identity]] = None,
+        identity: Optional[Union[Iterable[Identity], Identity]] = None,
         occurrences: Optional[Iterable[Occurrence]] = None,
         callstack: Optional[CallStack] = None,
         licenses: Optional[Iterable[License]] = None,
@@ -720,6 +648,7 @@ class ComponentEvidence:
         self.copyright = copyright or []  # type:ignore[assignment]
 
     @property
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     @serializable.xml_sequence(1)
@@ -731,11 +660,15 @@ class ComponentEvidence:
         return self._identity
 
     @identity.setter
-    def identity(self, identity: Iterable[Identity]) -> None:
-        self._identity = SortedSet(identity)
+    def identity(self, identity: Union[Iterable[Identity], Identity]) -> None:
+        self._identity = SortedSet(
+            (Identity,)  # convert to iterable
+            if isinstance(identity, Identity)
+            else identity  # is iterable already
+        )
 
     @property
-    # @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'occurrence')
     @serializable.xml_sequence(2)
@@ -748,7 +681,7 @@ class ComponentEvidence:
         self._occurrences = SortedSet(occurrences)
 
     @property
-    # @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(3)
     def callstack(self) -> Optional[CallStack]:
@@ -794,14 +727,13 @@ class ComponentEvidence:
         self._copyright = SortedSet(copyright)
 
     def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple(
-            (
-                _ComparableTuple(self.licenses),
-                _ComparableTuple(self.copyright),
-                self.callstack,
-                _ComparableTuple(self.identity),
-                _ComparableTuple(self.occurrences),
-            ))
+        return _ComparableTuple((
+            _ComparableTuple(self.licenses),
+            _ComparableTuple(self.copyright),
+            self.callstack,
+            _ComparableTuple(self.identity),
+            _ComparableTuple(self.occurrences),
+        ))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ComponentEvidence):
