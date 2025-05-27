@@ -19,9 +19,7 @@
 from collections.abc import Iterable
 from decimal import Decimal
 from enum import Enum
-from json import loads as json_loads
 from typing import Any, Optional, Union
-from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -170,7 +168,7 @@ class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper
         tool_name = f'{{{xmlns}}}tool' if xmlns else 'tool'
         ref_name = f'{{{xmlns}}}ref' if xmlns else 'ref'
         elem_s.extend(
-            XmlElement(tool_name,  {ref_name: t.value}) \
+            XmlElement(tool_name, {ref_name: t.value})
             for t in o if t.value)
         return elem_s
 
@@ -284,60 +282,8 @@ class Identity:
 
     def __repr__(self) -> str:
         return f'<Identity field={self.field}, confidence={self.confidence},' \
-               f' concludedValue={self.concluded_value},' \
-               f' methods={self.methods}, tools={self.tools}>'
-
-
-class _IdentityRepositorySerializationHelper(serializable.helpers.BaseHelper):
-    """  THIS CLASS IS NON-PUBLIC API  """
-
-    @classmethod
-    def json_normalize(cls, o: Iterable[Identity], *,
-                       view: Optional[type['serializable.ViewType']],
-                       **__: Any) -> Optional[Any]:
-        o = tuple(o)
-        if l := len(o) == 0:
-            return None
-        if view is SchemaVersion1Dot5:
-            if l >= 1:
-                warn(f'serialization omitted some identity evidences due to unsupported amount: {o!r}',
-                     category=UserWarning, stacklevel=0)
-            return json_loads(o[0].as_json(view))  # type:ignore[attr-defined]
-        return tuple(json_loads(i.as_json(view)) for i in o)  # type:ignore[attr-defined]
-
-    @classmethod
-    def json_deserialize(cls, o: Any) -> tuple[Identity]:
-        if isinstance(o, list):
-            return tuple(Identity.from_json(i) for i in o)  # type:ignore[attr-defined]
-        return (Identity.from_json(o),)  # type:ignore[attr-defined]
-
-    @classmethod
-    def xml_normalize(cls, o: Iterable[Identity], *,
-                      element_name: str,
-                      view: Optional[type['serializable.ViewType']],
-                      xmlns: Optional[str],
-                      **__: Any) -> Optional[XmlElement]:
-        o = tuple(o)
-        if l := len(o) == 0:
-            return None
-        if view is SchemaVersion1Dot5:
-            if l >= 1:
-                warn(f'serialization omitted some identity evidences due to unsupported amount: {o!r}',
-                     category=UserWarning, stacklevel=0)
-            o = (o[0],)
-        elem_s = XmlElement(f'{{{xmlns}}}' if xmlns else '')
-        elem_s.extend(i.as_xml(  # type:ignore[attr-defined]
-            view,
-            as_string=False,
-            element_name=element_name, xmlns=xmlns
-        ) for i in o)
-        return elem_s
-
-    @classmethod
-    def xml_denormalize(cls, o: 'XmlElement', *,
-                        default_ns: Optional[str],
-                        **__: Any) -> Identity:
-        return Identity.from_xml(o, default_ns)  # type:ignore[attr-defined,no-any-return]
+            f' concludedValue={self.concluded_value},' \
+            f' methods={self.methods}, tools={self.tools}>'
 
 
 @serializable.serializable_class
@@ -703,8 +649,10 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.type_mapping(_IdentityRepositorySerializationHelper)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     @serializable.xml_sequence(1)
+    # TODO: CDX 1.5 knows only one identity, all versions later known multiple ...
+    # TODO: need to fix the serializatoin/normlaization
     def identity(self) -> 'SortedSet[Identity]':
         """
         Provides a way to identify components via various methods.
