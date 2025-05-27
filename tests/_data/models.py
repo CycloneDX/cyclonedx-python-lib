@@ -21,7 +21,7 @@ from collections.abc import Iterable
 from datetime import datetime, timezone
 from decimal import Decimal
 from inspect import getmembers, isfunction
-from typing import Any, Optional, Union
+from typing import Any, Optional
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -60,12 +60,12 @@ from cyclonedx.model.component import (
 from cyclonedx.model.component_evidence import (
     AnalysisTechnique,
     CallStack,
+    CallStackFrame,
     ComponentEvidence,
     Identity,
     IdentityField,
     Method,
     Occurrence,
-    CallStackFrame,
 )
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (

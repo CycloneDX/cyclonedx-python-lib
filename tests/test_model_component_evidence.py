@@ -18,18 +18,18 @@
 from decimal import Decimal
 from unittest import TestCase
 
+from cyclonedx.exception.model import InvalidConfidenceException
 from cyclonedx.model import Copyright
 from cyclonedx.model.component_evidence import (
     AnalysisTechnique,
     CallStack,
+    CallStackFrame,
     ComponentEvidence,
     Identity,
     IdentityField,
     Method,
     Occurrence,
-    CallStackFrame,
 )
-from cyclonedx.exception.model import InvalidConfidenceException
 
 
 class TestModelComponentEvidence(TestCase):
@@ -99,36 +99,6 @@ class TestModelComponentEvidence(TestCase):
         ce = ComponentEvidence(occurrences=[occurrence])
         self.assertEqual(len(ce.occurrences), 1)
         self.assertEqual(ce.occurrences.pop().line, 42)
-
-    def test_CallStackFrame(self) -> None:
-        # Test CallStackFrame with required fields
-        frame = CallStackFrame(
-            package='com.example',
-            module='app',
-            function='main',
-            parameters=['arg1', 'arg2'],
-            line=1,
-            column=10,
-            full_filename='/path/to/file.py'
-        )
-        self.assertEqual(frame.package, 'com.example')
-        self.assertEqual(frame.module, 'app')
-        self.assertEqual(frame.function, 'main')
-        self.assertEqual(len(frame.parameters), 2)
-        self.assertEqual(frame.line, 1)
-        self.assertEqual(frame.column, 10)
-        self.assertEqual(frame.full_filename, '/path/to/file.py')
-
-    def test_CallStackFrame_module_required(self) -> None:
-        """Test that module is the only required field"""
-        frame = CallStackFrame(module='app')  # Only mandatory field
-        self.assertEqual(frame.module, 'app')
-        self.assertIsNone(frame.package)
-        self.assertIsNone(frame.function)
-        self.assertEqual(len(frame.parameters), 0)
-        self.assertIsNone(frame.line)
-        self.assertIsNone(frame.column)
-        self.assertIsNone(frame.full_filename)
 
     def test_callstack(self) -> None:
         frame = CallStackFrame(
@@ -230,3 +200,36 @@ class TestModelComponentEvidence(TestCase):
         ce_2 = ComponentEvidence(copyright=[Copyright(text='Commercial 2')])
         self.assertNotEqual(hash(ce_1), hash(ce_2))
         self.assertFalse(ce_1 == ce_2)
+
+
+class TestModelCallStackFrame(TestCase):
+
+    def test_fields(self) -> None:
+        # Test CallStackFrame with required fields
+        frame = CallStackFrame(
+            package='com.example',
+            module='app',
+            function='main',
+            parameters=['arg1', 'arg2'],
+            line=1,
+            column=10,
+            full_filename='/path/to/file.py'
+        )
+        self.assertEqual(frame.package, 'com.example')
+        self.assertEqual(frame.module, 'app')
+        self.assertEqual(frame.function, 'main')
+        self.assertEqual(len(frame.parameters), 2)
+        self.assertEqual(frame.line, 1)
+        self.assertEqual(frame.column, 10)
+        self.assertEqual(frame.full_filename, '/path/to/file.py')
+
+    def test_module_required(self) -> None:
+        """Test that module is the only required field"""
+        frame = CallStackFrame(module='app')  # Only mandatory field
+        self.assertEqual(frame.module, 'app')
+        self.assertIsNone(frame.package)
+        self.assertIsNone(frame.function)
+        self.assertEqual(len(frame.parameters), 0)
+        self.assertIsNone(frame.line)
+        self.assertIsNone(frame.column)
+        self.assertIsNone(frame.full_filename)
