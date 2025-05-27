@@ -45,25 +45,27 @@ from cyclonedx.model import (
 from cyclonedx.model.bom import Bom, BomMetaData
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
-    AnalysisTechnique,
-    CallStack,
     Commit,
     Component,
-    ComponentEvidence,
     ComponentScope,
     ComponentType,
     Diff,
-    Identity,
-    IdentityFieldType,
-    Method,
-    Occurrence,
     OmniborId,
     Patch,
     PatchClassification,
     Pedigree,
-    StackFrame,
     Swhid,
     Swid,
+)
+from cyclonedx.model.component_evidence import (
+    AnalysisTechnique,
+    CallStack,
+    ComponentEvidence,
+    Identity,
+    IdentityFieldType,
+    Method,
+    Occurrence,
+    StackFrame,
 )
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
