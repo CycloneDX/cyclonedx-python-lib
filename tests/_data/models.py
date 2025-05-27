@@ -794,7 +794,20 @@ def get_component_evidence_basic(tools: Iterable[Component]) -> ComponentEvidenc
                     ),
                 ],
                 tools=(tool.bom_ref for tool in tools)
-            )
+            ),
+            Identity(
+                field=IdentityField.HASH,
+                confidence=Decimal('0.1'),
+                concluded_value='example-hash',
+                methods=[
+                    Method(
+                        technique=AnalysisTechnique.ATTESTATION,
+                        confidence=Decimal('0.1'),
+                        value='analysis-tool'
+                    ),
+                ],
+                tools=(tool.bom_ref for tool in tools)
+            ),
         ],
         occurrences=[
             Occurrence(

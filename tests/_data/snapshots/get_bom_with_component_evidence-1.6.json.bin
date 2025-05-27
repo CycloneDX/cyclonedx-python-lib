@@ -30,6 +30,21 @@
         ],
         "identity": [
           {
+            "concludedValue": "example-hash",
+            "confidence": 0.1,
+            "field": "hash",
+            "methods": [
+              {
+                "confidence": 0.1,
+                "technique": "attestation",
+                "value": "analysis-tool"
+              }
+            ],
+            "tools": [
+              "cbom:generator"
+            ]
+          },
+          {
             "concludedValue": "example-component",
             "confidence": 0.9,
             "field": "name",

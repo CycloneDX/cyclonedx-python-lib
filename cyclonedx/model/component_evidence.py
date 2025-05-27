@@ -16,17 +16,18 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-from collections.abc import Iterable, Generator
+from collections.abc import Iterable
 from decimal import Decimal
 from enum import Enum
+from json import loads as json_loads
 from typing import Any, Optional, Union
+from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
-from ..exception.serialization import SerializationOfUnexpectedValueException
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidConfidenceException, InvalidValueException
@@ -151,12 +152,12 @@ class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper
     """  THIS CLASS IS NON-PUBLIC API  """
 
     @classmethod
-    def json_serialize(cls, o: Iterable['BomRef']) -> tuple[str]:
-        return tuple(i.value for i in o)
+    def json_serialize(cls, o: Iterable['BomRef']) -> tuple[str, ...]:
+        return tuple(t.value for t in o if t.value)
 
     @classmethod
-    def json_deserialize(cls, o: Iterable[str]) -> tuple[BomRef]:
-        return tuple(BomRef(value=i) for i in o)
+    def json_deserialize(cls, o: Iterable[str]) -> tuple[BomRef, ...]:
+        return tuple(BomRef(value=t) for t in o)
 
     @classmethod
     def xml_normalize(cls, o: Iterable[BomRef], *,
@@ -166,17 +167,17 @@ class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper
         if len(o) == 0:
             return None
         elem_s = XmlElement(f'{{{xmlns}}}tools' if xmlns else 'tools')
+        tool_name = f'{{{xmlns}}}tool' if xmlns else 'tool'
+        ref_name = f'{{{xmlns}}}ref' if xmlns else 'ref'
         elem_s.extend(
-            XmlElement(
-                f'{{{xmlns}}}tool' if xmlns else 'tool',
-                {'ref': t.value}
-            ) for t in o if t)
+            XmlElement(tool_name,  {ref_name: t.value}) \
+            for t in o if t.value)
         return elem_s
 
     @classmethod
     def xml_denormalize(cls, o: 'XmlElement', *,
                         default_ns: Optional[str],
-                        **__: Any) -> tuple[BomRef]:
+                        **__: Any) -> tuple[BomRef, ...]:
         return tuple(BomRef(value=t.get('ref')) for t in o)
 
 
@@ -285,6 +286,58 @@ class Identity:
         return f'<Identity field={self.field}, confidence={self.confidence},' \
                f' concludedValue={self.concluded_value},' \
                f' methods={self.methods}, tools={self.tools}>'
+
+
+class _IdentityRepositorySerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    @classmethod
+    def json_normalize(cls, o: Iterable[Identity], *,
+                       view: Optional[type['serializable.ViewType']],
+                       **__: Any) -> Optional[Any]:
+        o = tuple(o)
+        if l := len(o) == 0:
+            return None
+        if view is SchemaVersion1Dot5:
+            if l >= 1:
+                warn(f'serialization omitted some identity evidences due to unsupported amount: {o!r}',
+                     category=UserWarning, stacklevel=0)
+            return json_loads(o[0].as_json(view))  # type:ignore[attr-defined]
+        return tuple(json_loads(i.as_json(view)) for i in o)  # type:ignore[attr-defined]
+
+    @classmethod
+    def json_deserialize(cls, o: Any) -> tuple[Identity]:
+        if isinstance(o, list):
+            return tuple(Identity.from_json(i) for i in o)  # type:ignore[attr-defined]
+        return (Identity.from_json(o),)  # type:ignore[attr-defined]
+
+    @classmethod
+    def xml_normalize(cls, o: Iterable[Identity], *,
+                      element_name: str,
+                      view: Optional[type['serializable.ViewType']],
+                      xmlns: Optional[str],
+                      **__: Any) -> Optional[XmlElement]:
+        o = tuple(o)
+        if l := len(o) == 0:
+            return None
+        if view is SchemaVersion1Dot5:
+            if l >= 1:
+                warn(f'serialization omitted some identity evidences due to unsupported amount: {o!r}',
+                     category=UserWarning, stacklevel=0)
+            o = (o[0],)
+        elem_s = XmlElement(f'{{{xmlns}}}' if xmlns else '')
+        elem_s.extend(i.as_xml(  # type:ignore[attr-defined]
+            view,
+            as_string=False,
+            element_name=element_name, xmlns=xmlns
+        ) for i in o)
+        return elem_s
+
+    @classmethod
+    def xml_denormalize(cls, o: 'XmlElement', *,
+                        default_ns: Optional[str],
+                        **__: Any) -> Identity:
+        return Identity.from_xml(o, default_ns)  # type:ignore[attr-defined,no-any-return]
 
 
 @serializable.serializable_class
@@ -586,7 +639,7 @@ class CallStack:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'frame')
-    def frames(self) -> 'List[CallStackFrame]':
+    def frames(self) -> 'list[CallStackFrame]':
         """
         Array of stack frames
         """
@@ -650,7 +703,7 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
+    @serializable.type_mapping(_IdentityRepositorySerializationHelper)
     @serializable.xml_sequence(1)
     def identity(self) -> 'SortedSet[Identity]':
         """
@@ -662,9 +715,9 @@ class ComponentEvidence:
     @identity.setter
     def identity(self, identity: Union[Iterable[Identity], Identity]) -> None:
         self._identity = SortedSet(
-            (Identity,)  # convert to iterable
+            (identity,)
             if isinstance(identity, Identity)
-            else identity  # is iterable already
+            else identity
         )
 
     @property
