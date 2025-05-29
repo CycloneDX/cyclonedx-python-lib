@@ -43,21 +43,6 @@
             "tools": [
               "cbom:generator"
             ]
-          },
-          {
-            "concludedValue": "example-component",
-            "confidence": 0.9,
-            "field": "name",
-            "methods": [
-              {
-                "confidence": 0.8,
-                "technique": "source-code-analysis",
-                "value": "analysis-tool"
-              }
-            ],
-            "tools": [
-              "cbom:generator"
-            ]
           }
         ],
         "licenses": [

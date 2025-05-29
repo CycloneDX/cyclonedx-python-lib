@@ -19,8 +19,9 @@
 from collections.abc import Iterable
 from decimal import Decimal
 from enum import Enum
+from json import loads as json_loads
 from typing import Any, Optional, Union
-from xml.etree.ElementTree import Element as XmlElement
+from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
 # See https://github.com/package-url/packageurl-python/issues/65
 import py_serializable as serializable
@@ -579,21 +580,22 @@ class CallStack:
 
     def __init__(
         self, *,
-        frames: Optional[Iterable[CallStackFrame]] = None,
+        frames: Optional[SortedSet[CallStackFrame]] = None,
     ) -> None:
         self.frames = frames or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'frame')
-    def frames(self) -> 'list[CallStackFrame]':
+    @serializable.xml_sequence(1)
+    def frames(self) -> 'SortedSet[CallStackFrame]':
         """
         Array of stack frames
         """
         return self._frames
 
     @frames.setter
-    def frames(self, frames: Iterable[CallStackFrame]) -> None:
-        self._frames = list(frames)
+    def frames(self, frames: SortedSet[CallStackFrame]) -> None:
+        self._frames = frames
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
@@ -619,6 +621,33 @@ class CallStack:
 
     def __repr__(self) -> str:
         return f'<CallStack frames={len(self.frames)}>'
+
+
+class _IdentitySerializationHelper(serializable.helpers.BaseHelper):
+    """THIS CLASS IS NON-PUBLIC API"""
+
+    @classmethod
+    def json_normalize(cls, o: SortedSet[Identity], *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> Any:
+        if not o:
+            return None
+
+        # For Schema 1.5 JSON, return first identity as a single object
+        if view and issubclass(view, SchemaVersion1Dot5):
+            first_identity = next(iter(o))
+            return json_loads(first_identity.as_json(view_=view))  # type: ignore[attr-defined]
+
+        # For Schema 1.6 and others, return array of all identities
+        return [json_loads(identity.as_json(view_=view)) for identity in o]  # type: ignore[attr-defined]
+
+    @classmethod
+    def json_denormalize(cls, o: Any, **__: Any) -> SortedSet[Identity]:
+        if isinstance(o, dict):  # Single Identity object (Schema 1.5)
+            return SortedSet([Identity.from_json(o)])  # type: ignore[attr-defined]
+        elif isinstance(o, (list, tuple)):  # Array of Identity objects (Schema 1.6)
+            return SortedSet(Identity.from_json(i) for i in o)  # type: ignore[attr-defined]
+        return SortedSet()
 
 
 @serializable.serializable_class
@@ -649,10 +678,11 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     @serializable.xml_sequence(1)
+    @serializable.type_mapping(_IdentitySerializationHelper)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     # TODO: CDX 1.5 knows only one identity, all versions later known multiple ...
-    # TODO: need to fix the serializatoin/normlaization
+    # TODO: need to fix the serialization/normalization
     def identity(self) -> 'SortedSet[Identity]':
         """
         Provides a way to identify components via various methods.
