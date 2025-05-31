@@ -45,6 +45,21 @@
             <tool ref="cbom:generator"/>
           </tools>
         </identity>
+        <identity>
+          <field>name</field>
+          <confidence>0.9</confidence>
+          <concludedValue>example-component</concludedValue>
+          <methods>
+            <method>
+              <technique>source-code-analysis</technique>
+              <confidence>0.8</confidence>
+              <value>analysis-tool</value>
+            </method>
+          </methods>
+          <tools>
+            <tool ref="cbom:generator"/>
+          </tools>
+        </identity>
         <occurrences>
           <occurrence>
             <location>path/to/file</location>

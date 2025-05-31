@@ -623,31 +623,29 @@ class CallStack:
         return f'<CallStack frames={len(self.frames)}>'
 
 
-class _IdentitySerializationHelper(serializable.helpers.BaseHelper):
+class _IdentityRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """THIS CLASS IS NON-PUBLIC API"""
 
     @classmethod
     def json_normalize(cls, o: SortedSet[Identity], *,
                        view: Optional[type[serializable.ViewType]],
-                       **__: Any) -> Any:
+                       **__: Any) -> Union[dict,list[dict],None]:
         if not o:
             return None
-
-        # For Schema 1.5 JSON, return first identity as a single object
-        if view and issubclass(view, SchemaVersion1Dot5):
-            first_identity = next(iter(o))
+        if view and view is SchemaVersion1Dot5:
+            # For Schema 1.5 JSON, return first identity as a single object
+            first_identity = o[0]
             return json_loads(first_identity.as_json(view_=view))  # type: ignore[attr-defined]
-
         # For Schema 1.6 and others, return array of all identities
         return [json_loads(identity.as_json(view_=view)) for identity in o]  # type: ignore[attr-defined]
 
     @classmethod
-    def json_denormalize(cls, o: Any, **__: Any) -> SortedSet[Identity]:
+    def json_denormalize(cls, o: Any, **__: Any) -> Optional[list[Identity]]:
         if isinstance(o, dict):  # Single Identity object (Schema 1.5)
-            return SortedSet([Identity.from_json(o)])  # type: ignore[attr-defined]
+            return [Identity.from_json(o)]  # type: ignore[attr-defined]
         elif isinstance(o, (list, tuple)):  # Array of Identity objects (Schema 1.6)
-            return SortedSet(Identity.from_json(i) for i in o)  # type: ignore[attr-defined]
-        return SortedSet()
+            return [Identity.from_json(i) for i in o]  # type: ignore[attr-defined]
+        return None
 
 
 @serializable.serializable_class
@@ -679,7 +677,7 @@ class ComponentEvidence:
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(1)
-    @serializable.type_mapping(_IdentitySerializationHelper)
+    @serializable.type_mapping(_IdentityRepositorySerializationHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     # TODO: CDX 1.5 knows only one identity, all versions later known multiple ...
     # TODO: need to fix the serialization/normalization
