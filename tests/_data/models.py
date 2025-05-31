@@ -783,6 +783,19 @@ def get_component_evidence_basic(tools: Iterable[Component]) -> ComponentEvidenc
     return ComponentEvidence(
         identity=[
             Identity(
+                field=IdentityField.NAME,
+                confidence=Decimal('0.9'),
+                concluded_value='example-component',
+                methods=[
+                    Method(
+                        technique=AnalysisTechnique.SOURCE_CODE_ANALYSIS,
+                        confidence=Decimal('0.8'),
+                        value='analysis-tool'
+                    ),
+                ],
+                tools=(tool.bom_ref for tool in tools)
+            ),
+            Identity(
                 field=IdentityField.HASH,
                 confidence=Decimal('0.1'),
                 concluded_value='example-hash',
