@@ -652,8 +652,6 @@ class ComponentEvidence:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(1)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
-    # TODO: CDX 1.5 knows only one identity, all versions later known multiple ...
-    # TODO: need to fix the serialization/normalization
     def identity(self) -> 'SortedSet[Identity]':
         """
         Provides a way to identify components via various methods.
