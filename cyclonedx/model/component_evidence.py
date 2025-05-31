@@ -20,7 +20,7 @@ from collections.abc import Iterable
 from decimal import Decimal
 from enum import Enum
 from json import loads as json_loads
-from typing import Any, Optional, Union, Type
+from typing import Any, Optional, Type, Union
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -624,7 +624,6 @@ class CallStack:
         return f'<CallStack frames={len(self.frames)}>'
 
 
-
 @serializable.serializable_class
 class ComponentEvidence:
     """
@@ -751,24 +750,25 @@ class ComponentEvidence:
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
 
+
 class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
     """THIS CLASS IS NON-PUBLIC API"""
 
     @classmethod
     def json_normalize(cls, o: ComponentEvidence, *,
                        view: Optional[type[serializable.ViewType]],
-                       **__: Any) -> Union[dict,list[dict],None]:
-        data:dict[str, Any] = json_loads( o.as_json(view))
+                       **__: Any) -> dict[str, Any]:
+        data: dict[str, Any] = json_loads(o.as_json(view))  # type:ignore[attr-defined]
         if view is SchemaVersion1Dot5:
             identities = data.get('identity', [])
-            if il:=len(identities) > 1:
-                warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il-1} items.')
+            if il := len(identities) > 1:
+                warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il - 1} items.')
                 data['identity'] = identities[0]
         return data
 
     @classmethod
-    def json_denormalize(cls, o: dict[str, Any], **__: Any) -> Optional[list[Identity]]:
-        return ComponentEvidence.from_json(o)
+    def json_denormalize(cls, o: dict[str, Any], **__: Any) -> Any:
+        return ComponentEvidence.from_json(o)  # type:ignore[attr-defined]
 
     @classmethod
     def xml_normalize(cls, o: ComponentEvidence, *,
@@ -776,11 +776,11 @@ class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
                       view: Optional[Type['serializable.ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional['XmlElement']:
-        normalized: 'XmlElement' = o.as_xml(view, False, element_name, xmlns)
+        normalized: 'XmlElement' = o.as_xml(view, False, element_name, xmlns)  # type:ignore[attr-defined]
         if view is SchemaVersion1Dot5:
             identities = normalized.findall(f'./{{{xmlns}}}identity' if xmlns else './identity')
-            if il:=len(identities) > 1:
-                warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il-1} items.')
+            if il := len(identities) > 1:
+                warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il - 1} items.')
                 for i in identities[1:]:
                     normalized.remove(i)
         return normalized
@@ -789,5 +789,4 @@ class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
     def xml_denormalize(cls, o: 'XmlElement', *,
                         default_ns: Optional[str],
                         **__: Any) -> Any:
-        return ComponentEvidence.from_xml(o, default_ns)
-
+        return ComponentEvidence.from_xml(o, default_ns)  # type:ignore[attr-defined]
