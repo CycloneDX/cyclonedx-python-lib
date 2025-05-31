@@ -20,7 +20,8 @@ from collections.abc import Iterable
 from decimal import Decimal
 from enum import Enum
 from json import loads as json_loads
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Type
+from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -623,30 +624,6 @@ class CallStack:
         return f'<CallStack frames={len(self.frames)}>'
 
 
-class _IdentityRepositorySerializationHelper(serializable.helpers.BaseHelper):
-    """THIS CLASS IS NON-PUBLIC API"""
-
-    @classmethod
-    def json_normalize(cls, o: SortedSet[Identity], *,
-                       view: Optional[type[serializable.ViewType]],
-                       **__: Any) -> Union[dict,list[dict],None]:
-        if not o:
-            return None
-        if view and view is SchemaVersion1Dot5:
-            # For Schema 1.5 JSON, return first identity as a single object
-            first_identity = o[0]
-            return json_loads(first_identity.as_json(view_=view))  # type: ignore[attr-defined]
-        # For Schema 1.6 and others, return array of all identities
-        return [json_loads(identity.as_json(view_=view)) for identity in o]  # type: ignore[attr-defined]
-
-    @classmethod
-    def json_denormalize(cls, o: Any, **__: Any) -> Optional[list[Identity]]:
-        if isinstance(o, dict):  # Single Identity object (Schema 1.5)
-            return [Identity.from_json(o)]  # type: ignore[attr-defined]
-        elif isinstance(o, (list, tuple)):  # Array of Identity objects (Schema 1.6)
-            return [Identity.from_json(i) for i in o]  # type: ignore[attr-defined]
-        return None
-
 
 @serializable.serializable_class
 class ComponentEvidence:
@@ -677,7 +654,6 @@ class ComponentEvidence:
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(1)
-    @serializable.type_mapping(_IdentityRepositorySerializationHelper)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     # TODO: CDX 1.5 knows only one identity, all versions later known multiple ...
     # TODO: need to fix the serialization/normalization
@@ -774,3 +750,44 @@ class ComponentEvidence:
 
     def __repr__(self) -> str:
         return f'<ComponentEvidence id={id(self)}>'
+
+class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
+    """THIS CLASS IS NON-PUBLIC API"""
+
+    @classmethod
+    def json_normalize(cls, o: ComponentEvidence, *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> Union[dict,list[dict],None]:
+        data:dict[str, Any] = json_loads( o.as_json(view))
+        if view is SchemaVersion1Dot5:
+            identities = data.get('identity', [])
+            if il:=len(identities) > 1:
+                warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il-1} items.')
+                data['identity'] = identities[0]
+        return data
+
+    @classmethod
+    def json_denormalize(cls, o: dict[str, Any], **__: Any) -> Optional[list[Identity]]:
+        return ComponentEvidence.from_json(o)
+
+    @classmethod
+    def xml_normalize(cls, o: ComponentEvidence, *,
+                      element_name: str,
+                      view: Optional[Type['serializable.ViewType']],
+                      xmlns: Optional[str],
+                      **__: Any) -> Optional['XmlElement']:
+        normalized: 'XmlElement' = o.as_xml(view, False, element_name, xmlns)
+        if view is SchemaVersion1Dot5:
+            identities = normalized.findall(f'./{{{xmlns}}}identity' if xmlns else './identity')
+            if il:=len(identities) > 1:
+                warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il-1} items.')
+                for i in identities[1:]:
+                    normalized.remove(i)
+        return normalized
+
+    @classmethod
+    def xml_denormalize(cls, o: 'XmlElement', *,
+                        default_ns: Optional[str],
+                        **__: Any) -> Any:
+        return ComponentEvidence.from_xml(o, default_ns)
+

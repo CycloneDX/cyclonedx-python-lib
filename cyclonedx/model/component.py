@@ -57,7 +57,7 @@ from . import (
     _HashTypeRepositorySerializationHelper,
 )
 from .bom_ref import BomRef
-from .component_evidence import ComponentEvidence
+from .component_evidence import ComponentEvidence, _ComponentEvidenceSerializationHelper
 from .contact import OrganizationalContact, OrganizationalEntity
 from .crypto import CryptoProperties
 from .dependency import Dependable
@@ -1542,6 +1542,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(24)
+    @serializable.type_mapping(_ComponentEvidenceSerializationHelper)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
         Provides the ability to document evidence collected through various forms of extraction or analysis.
