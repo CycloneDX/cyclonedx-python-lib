@@ -20,7 +20,7 @@ from collections.abc import Iterable
 from decimal import Decimal
 from enum import Enum
 from json import loads as json_loads
-from typing import Any, Optional, Type, Union
+from typing import Any, List, Optional, Type, Union
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -586,7 +586,7 @@ class CallStack:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'frame')
     @serializable.xml_sequence(1)
-    def frames(self) -> 'list[CallStackFrame]':
+    def frames(self) -> 'List[CallStackFrame]':
         """
         Array of stack frames
         """
