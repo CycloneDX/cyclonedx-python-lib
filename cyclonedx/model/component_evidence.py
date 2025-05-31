@@ -557,16 +557,14 @@ class CallStackFrame:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, CallStackFrame):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<CallStackFrame package={self.package}, module={self.module}, function={self.function}>'
+        return '<CallStackFrame' \
+               f' package={self.package}, module={self.module}, ' \
+               f' function={self.function}, parameters={self.parameters!r},' \
+               f' line={self.line}, column={self.column}, full_filename={self.full_filename}>'
 
 
 @serializable.serializable_class
