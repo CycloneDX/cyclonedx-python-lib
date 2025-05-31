@@ -580,22 +580,22 @@ class CallStack:
 
     def __init__(
         self, *,
-        frames: Optional[SortedSet[CallStackFrame]] = None,
+        frames: Optional[Iterable[CallStackFrame]] = None,
     ) -> None:
         self.frames = frames or []  # type:ignore[assignment]
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'frame')
     @serializable.xml_sequence(1)
-    def frames(self) -> 'SortedSet[CallStackFrame]':
+    def frames(self) -> 'list[CallStackFrame]':
         """
         Array of stack frames
         """
         return self._frames
 
     @frames.setter
-    def frames(self, frames: SortedSet[CallStackFrame]) -> None:
-        self._frames = frames
+    def frames(self, frames: Iterable[CallStackFrame]) -> None:
+        self._frames = list(frames)
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
