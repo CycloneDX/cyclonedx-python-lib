@@ -151,12 +151,12 @@ class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper
     """  THIS CLASS IS NON-PUBLIC API  """
 
     @classmethod
-    def json_serialize(cls, o: Iterable['BomRef']) -> tuple[str, ...]:
-        return tuple(t.value for t in o if t.value)
+    def json_serialize(cls, o: Iterable['BomRef']) -> list[str]:
+        return [t.value for t in o if t.value]
 
     @classmethod
-    def json_deserialize(cls, o: Iterable[str]) -> tuple[BomRef, ...]:
-        return tuple(BomRef(value=t) for t in o)
+    def json_deserialize(cls, o: Iterable[str]) -> list[BomRef]:
+        return [BomRef(value=t) for t in o]
 
     @classmethod
     def xml_normalize(cls, o: Iterable[BomRef], *,
@@ -176,8 +176,8 @@ class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper
     @classmethod
     def xml_denormalize(cls, o: 'XmlElement', *,
                         default_ns: Optional[str],
-                        **__: Any) -> tuple[BomRef, ...]:
-        return tuple(BomRef(value=t.get('ref')) for t in o)
+                        **__: Any) -> list[BomRef]:
+        return [BomRef(value=t.get('ref')) for t in o]
 
 
 @serializable.serializable_class
