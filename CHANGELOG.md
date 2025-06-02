@@ -1,6 +1,29 @@
 # CHANGELOG
 
 
+## v10.0.2 (2025-06-02)
+
+### Bug Fixes
+
+- `model.bommetadata.component` setter typehint
+  ([#817](https://github.com/CycloneDX/cyclonedx-python-lib/pull/817),
+  [`bfe889a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bfe889a174536303939822404f77158c5c1fb668))
+
+---------
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+Signed-off-by: Jan Kowalleck <jan.kowalleck@gmail.com>
+
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+
+Co-authored-by: Jan Kowalleck <jan.kowalleck@gmail.com>
+
+- `model.bommetadata.component` setter typehint
+  ([#817](https://github.com/CycloneDX/cyclonedx-python-lib/pull/817),
+  [`bfe889a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bfe889a174536303939822404f77158c5c1fb668))
+
+
 ## v10.0.1 (2025-05-10)
 
 ### Bug Fixes
