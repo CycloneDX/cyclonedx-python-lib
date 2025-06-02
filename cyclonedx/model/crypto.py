@@ -295,10 +295,10 @@ class AlgorithmProperties:
         self.curve = curve
         self.execution_environment = execution_environment
         self.implementation_platform = implementation_platform
-        self.certification_levels = certification_levels or []  # type:ignore[assignment]
+        self.certification_levels = certification_levels or []
         self.mode = mode
         self.padding = padding
-        self.crypto_functions = crypto_functions or []  # type:ignore[assignment]
+        self.crypto_functions = crypto_functions or []
         self.classical_security_level = classical_security_level
         self.nist_quantum_security_level = nist_quantum_security_level
 
@@ -1107,8 +1107,8 @@ class ProtocolPropertiesCipherSuite:
         identifiers: Optional[Iterable[str]] = None,
     ) -> None:
         self.name = name
-        self.algorithms = algorithms or []  # type:ignore[assignment]
-        self.identifiers = identifiers or []  # type:ignore[assignment]
+        self.algorithms = algorithms or []
+        self.identifiers = identifiers or []
 
     @property
     @serializable.xml_sequence(10)
@@ -1202,12 +1202,12 @@ class Ikev2TransformTypes:
         esn: Optional[bool] = None,
         auth: Optional[Iterable[BomRef]] = None,
     ) -> None:
-        self.encr = encr or []  # type:ignore[assignment]
-        self.prf = prf or []  # type:ignore[assignment]
-        self.integ = integ or []  # type:ignore[assignment]
-        self.ke = ke or []  # type:ignore[assignment]
+        self.encr = encr or []
+        self.prf = prf or []
+        self.integ = integ or []
+        self.ke = ke or []
         self.esn = esn
-        self.auth = auth or []  # type:ignore[assignment]
+        self.auth = auth or []
 
     @property
     @serializable.xml_sequence(10)
@@ -1345,9 +1345,9 @@ class ProtocolProperties:
     ) -> None:
         self.type = type
         self.version = version
-        self.cipher_suites = cipher_suites or []  # type:ignore[assignment]
+        self.cipher_suites = cipher_suites or []
         self.ikev2_transform_types = ikev2_transform_types
-        self.crypto_refs = crypto_refs or []  # type:ignore[assignment]
+        self.crypto_refs = crypto_refs or []
 
     @property
     @serializable.xml_sequence(10)

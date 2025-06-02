@@ -111,11 +111,11 @@ class Requirement:
         self.identifier = identifier
         self.title = title
         self.text = text
-        self.descriptions = descriptions or ()  # type:ignore[assignment]
-        self.open_cre = open_cre or ()  # type:ignore[assignment]
-        self.parent = parent  # type:ignore[assignment]
-        self.properties = properties or ()  # type:ignore[assignment]
-        self.external_references = external_references or ()  # type:ignore[assignment]
+        self.descriptions = descriptions or ()
+        self.open_cre = open_cre or ()
+        self.parent = parent
+        self.properties = properties or ()
+        self.external_references = external_references or ()
 
     @property
     @serializable.type_mapping(BomRef)
@@ -300,7 +300,7 @@ class Level:
         self.identifier = identifier
         self.title = title
         self.description = description
-        self.requirements = requirements or ()  # type:ignore[assignment]
+        self.requirements = requirements or ()
 
     @property
     @serializable.type_mapping(BomRef)
@@ -421,9 +421,9 @@ class Standard:
         self.version = version
         self.description = description
         self.owner = owner
-        self.requirements = requirements or ()  # type:ignore[assignment]
-        self.levels = levels or ()  # type:ignore[assignment]
-        self.external_references = external_references or ()  # type:ignore[assignment]
+        self.requirements = requirements or ()
+        self.levels = levels or ()
+        self.external_references = external_references or ()
         # TODO: signature
 
     @property
@@ -584,7 +584,7 @@ class Definitions:
         self, *,
         standards: Optional[Iterable[Standard]] = None
     ) -> None:
-        self.standards = standards or ()  # type:ignore[assignment]
+        self.standards = standards or ()
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'standard')

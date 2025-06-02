@@ -60,7 +60,7 @@ class Xml(BaseSchemaVersion, BaseOutput):
         bom.validate()
         xmlns = self.get_target_namespace()
         with BomRefDiscriminator.from_bom(bom):
-            self._bom_xml = '<?xml version="1.0" ?>\n' + xml_dumps(
+            self._bom_xml = '<?xml version="1.0" ?>\n' + xml_dumps(  # type:ignore[call-overload]
                 bom.as_xml(  # type:ignore[attr-defined]
                     _view, as_string=False, xmlns=xmlns),
                 method='xml', default_namespace=xmlns, encoding='unicode',
