@@ -79,14 +79,14 @@ class BomMetaData:
         manufacture: Optional[OrganizationalEntity] = None,
     ) -> None:
         self.timestamp = timestamp or _get_now_utc()
-        self.tools = tools or []  # type:ignore[assignment]
-        self.authors = authors or []  # type:ignore[assignment]
+        self.tools = tools or []
+        self.authors = authors or []
         self.component = component
         self.supplier = supplier
-        self.licenses = licenses or []  # type:ignore[assignment]
-        self.properties = properties or []  # type:ignore[assignment]
+        self.licenses = licenses or []
+        self.properties = properties or []
         self.manufacturer = manufacturer
-        self.lifecycles = lifecycles or []  # type:ignore[assignment]
+        self.lifecycles = lifecycles or []
 
         self.manufacture = manufacture
         if manufacture:
@@ -179,7 +179,7 @@ class BomMetaData:
         return self._component
 
     @component.setter
-    def component(self, component: Component) -> None:
+    def component(self, component: Optional[Component]) -> None:
         """
         The (optional) component that the BOM describes.
 
@@ -345,12 +345,12 @@ class Bom:
         self.serial_number = serial_number or uuid4()
         self.version = version
         self.metadata = metadata or BomMetaData()
-        self.components = components or []  # type:ignore[assignment]
-        self.services = services or []  # type:ignore[assignment]
-        self.external_references = external_references or []  # type:ignore[assignment]
-        self.vulnerabilities = vulnerabilities or []  # type:ignore[assignment]
-        self.dependencies = dependencies or []  # type:ignore[assignment]
-        self.properties = properties or []  # type:ignore[assignment]
+        self.components = components or []
+        self.services = services or []
+        self.external_references = external_references or []
+        self.vulnerabilities = vulnerabilities or []
+        self.dependencies = dependencies or []
+        self.properties = properties or []
         self.definitions = definitions or Definitions()
 
     @property

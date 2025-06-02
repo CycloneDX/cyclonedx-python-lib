@@ -822,7 +822,7 @@ class ExternalReference:
         self.url = url
         self.comment = comment
         self.type = type
-        self.hashes = hashes or []  # type:ignore[assignment]
+        self.hashes = hashes or []
 
     @property
     @serializable.xml_sequence(1)

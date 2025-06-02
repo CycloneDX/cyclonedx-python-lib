@@ -207,8 +207,8 @@ class ComponentEvidence:
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[Iterable[Copyright]] = None,
     ) -> None:
-        self.licenses = licenses or []  # type:ignore[assignment]
-        self.copyright = copyright or []  # type:ignore[assignment]
+        self.licenses = licenses or []
+        self.copyright = copyright or []
 
     # @property
     # ...
@@ -527,7 +527,7 @@ class Patch:
     ) -> None:
         self.type = type
         self.diff = diff
-        self.resolves = resolves or []  # type:ignore[assignment]
+        self.resolves = resolves or []
 
     @property
     @serializable.xml_attribute()
@@ -623,11 +623,11 @@ class Pedigree:
         patches: Optional[Iterable[Patch]] = None,
         notes: Optional[str] = None,
     ) -> None:
-        self.ancestors = ancestors or []  # type:ignore[assignment]
-        self.descendants = descendants or []  # type:ignore[assignment]
-        self.variants = variants or []  # type:ignore[assignment]
-        self.commits = commits or []  # type:ignore[assignment]
-        self.patches = patches or []  # type:ignore[assignment]
+        self.ancestors = ancestors or []
+        self.descendants = descendants or []
+        self.variants = variants or []
+        self.commits = commits or []
+        self.patches = patches or []
         self.notes = notes
 
     @property
@@ -1111,7 +1111,7 @@ class Component(Dependable):
         self._bom_ref = _bom_ref_from_str(bom_ref)
         self.supplier = supplier
         self.manufacturer = manufacturer
-        self.authors = authors or []  # type:ignore[assignment]
+        self.authors = authors or []
         self.author = author
         self.publisher = publisher
         self.group = group
@@ -1119,23 +1119,23 @@ class Component(Dependable):
         self.version = version
         self.description = description
         self.scope = scope
-        self.hashes = hashes or []  # type:ignore[assignment]
-        self.licenses = licenses or []  # type:ignore[assignment]
+        self.hashes = hashes or []
+        self.licenses = licenses or []
         self.copyright = copyright
         self.cpe = cpe
         self.purl = purl
-        self.omnibor_ids = omnibor_ids or []  # type:ignore[assignment]
-        self.swhids = swhids or []  # type:ignore[assignment]
+        self.omnibor_ids = omnibor_ids or []
+        self.swhids = swhids or []
         self.swid = swid
         self.modified = modified
         self.pedigree = pedigree
-        self.external_references = external_references or []  # type:ignore[assignment]
-        self.properties = properties or []  # type:ignore[assignment]
-        self.components = components or []  # type:ignore[assignment]
+        self.external_references = external_references or []
+        self.properties = properties or []
+        self.components = components or []
         self.evidence = evidence
         self.release_notes = release_notes
         self.crypto_properties = crypto_properties
-        self.tags = tags or []  # type:ignore[assignment]
+        self.tags = tags or []
 
         if modified:
             warn('`.component.modified` is deprecated from CycloneDX v1.3 onwards. '

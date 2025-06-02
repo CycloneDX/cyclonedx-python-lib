@@ -62,8 +62,8 @@ class Tool:
         self.vendor = vendor
         self.name = name
         self.version = version
-        self.hashes = hashes or ()  # type:ignore[assignment]
-        self.external_references = external_references or ()  # type:ignore[assignment]
+        self.hashes = hashes or ()
+        self.external_references = external_references or ()
 
     @property
     @serializable.xml_sequence(1)
@@ -207,9 +207,9 @@ class ToolRepository:
             warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
                  'Please use `@.components` and `@.services` instead.',
                  DeprecationWarning)
-        self.components = components or ()  # type:ignore[assignment]
-        self.services = services or ()  # type:ignore[assignment]
-        self.tools = tools or ()  # type:ignore[assignment]
+        self.components = components or ()
+        self.services = services or ()
+        self.tools = tools or ()
 
     @property
     def components(self) -> 'SortedSet[Component]':
