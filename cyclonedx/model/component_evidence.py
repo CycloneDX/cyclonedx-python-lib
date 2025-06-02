@@ -201,8 +201,8 @@ class Identity:
         self.field = field
         self.confidence = confidence
         self.concluded_value = concluded_value
-        self.methods = methods or []  # type: ignore[assignment]
-        self.tools = tools or []  # type: ignore[assignment]
+        self.methods = methods or []
+        self.tools = tools or []
 
     @property
     @serializable.xml_sequence(1)
@@ -445,7 +445,7 @@ class CallStackFrame:
         self.package = package
         self.module = module
         self.function = function
-        self.parameters = parameters or []  # type: ignore[assignment]
+        self.parameters = parameters or []
         self.line = line
         self.column = column
         self.full_filename = full_filename
@@ -581,7 +581,7 @@ class CallStack:
         self, *,
         frames: Optional[Iterable[CallStackFrame]] = None,
     ) -> None:
-        self.frames = frames or []  # type:ignore[assignment]
+        self.frames = frames or []
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'frame')
@@ -641,11 +641,11 @@ class ComponentEvidence:
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[Iterable[Copyright]] = None,
     ) -> None:
-        self.identity = identity or []  # type:ignore[assignment]
-        self.occurrences = occurrences or []  # type:ignore[assignment]
+        self.identity = identity or []
+        self.occurrences = occurrences or []
         self.callstack = callstack
-        self.licenses = licenses or []  # type:ignore[assignment]
-        self.copyright = copyright or []  # type:ignore[assignment]
+        self.licenses = licenses or []
+        self.copyright = copyright or []
 
     @property
     @serializable.view(SchemaVersion1Dot5)

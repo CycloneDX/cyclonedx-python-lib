@@ -716,7 +716,7 @@ class Bom:
         # 3. If a LicenseExpression is set, then there must be no other license.
         # see https://github.com/CycloneDX/specification/pull/205
         elem: Union[BomMetaData, Component, Service]
-        for elem in chain(  # type: ignore[assignment]
+        for elem in chain(  # type:ignore[assignment]
             [self.metadata],
             self.metadata.component.get_all_nested_components(include_self=True) if self.metadata.component else [],
             chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
