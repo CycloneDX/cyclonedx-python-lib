@@ -179,7 +179,7 @@ class BomMetaData:
         return self._component
 
     @component.setter
-    def component(self, component: Component) -> None:
+    def component(self, component: Optional[Component]) -> None:
         """
         The (optional) component that the BOM describes.
 
