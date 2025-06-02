@@ -56,11 +56,19 @@
 
 ## v9.0.0 (2025-02-26)
 
-### Features
+### BREAKING Changes
 
-- 9.0.1 ([#777](https://github.com/CycloneDX/cyclonedx-python-lib/pull/777),
-  [`e6f91fa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/e6f91fa98cbb02cda62fd0bc5b1f1b9bf19902ee))
-
+* Fix: `model.vulnerability.VulnerabilityReference`'s properties are all mandatory ([#790](https://github.com/CycloneDX/cyclonedx-python-lib/issues/790) via
+  [#792](https://github.com/CycloneDX/cyclonedx-python-lib/pull/792)) 
+* Refactor: Rename `spdx.is_compund_expression` -> `spdx.is_expression`
+  ([#779](https://github.com/CycloneDX/cyclonedx-python-lib/pull/779)) 
+* Behavior: `BomRef` affects comparison/hashing ([#754](https://github.com/CycloneDX/cyclonedx-python-lib/pull/754) &
+  [#780](https://github.com/CycloneDX/cyclonedx-python-lib/pull/780))  
+  This is only a breaking change if you relied on ordering of elements. 
+* Behavior: streamline comparison/hashing functions ([#755](https://github.com/CycloneDX/cyclonedx-python-lib/pull/755)) This is only a breaking
+  change if you relied on ordering of elements.
+* Dependency: bump dependency `py-serializable >=2 <3`, was `>=1.1.1 <2` ([#775](https://github.com/CycloneDX/cyclonedx-python-lib/pull/775)) This is
+  only a breaking change if you have other packages depend on that specific version.
 
 ## v8.9.0 (2025-02-25)
 
@@ -218,6 +226,43 @@
 - V8.0.0 ([#665](https://github.com/CycloneDX/cyclonedx-python-lib/pull/665),
   [`002f966`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/002f96630ce8fc6f1766ee6cc92a16b35a821c69))
 
+### BREAKING Changes
+
+* Removed `cyclonedx.mode.ThisTool`, utilize `cyclonedx.builder.this.this_tool()` instead. * Moved
+  `cyclonedx.model.Tool` to `cyclonedx.model.tool.Tool`. 
+* Property `cyclonedx.mode.bom.BomMetaData.tools` is of type `cyclonedx.model.tool.ToolRepository` now, was
+  `SortedSet[cyclonedx.model.Tool]`. The getter will act accordingly; the setter might act in a
+  backwards-compatible way.
+* Property `cyclonedx.mode.vulnerability.Vulnerability.tools` is of type `cyclonedx.model.tool.ToolRepository` now, was `SortedSet[cyclonedx.model.Tool]`. The getter will
+  act accordingly; the setter might act in a backwards-compatible way.
+* Constructor `cyclonedx.model.license.LicenseExpression()` accepts optional argument `acknowledgement` only as
+  key-word argument, no longer as positional argument.
+
+### Changes
+
+* Constructor of `cyclonedx.model.bom.BomMetaData` also accepts an instance of
+  `cyclonedx.model.tool.ToolRepository` for argument `tools`. * Constructor of
+  `cyclonedx.model.bom.BomMetaData` no longer adds this very library as a tool. Downstream users
+  SHOULD add it manually, like
+  `my-bom.metadata.tools.components.add(cyclonedx.builder.this.this_component())`.
+
+### Fixes
+
+* Deserialization of CycloneDX that do not include tools in the metadata are no longer unexpectedly
+  modified/altered.
+
+### Added
+
+Enabled Metadata Tools representation and serialization in accordance with CycloneDX 1.5
+
+* New class `cyclonedx.model.tool.ToolRepository`. * New function
+  `cyclonedx.builder.this.this_component()` -- representation of this very python library as a
+  `Component`. * New function `cyclonedx.builder.this.this_tool()` -- representation of this very
+  python library as a `Tool`. * New function `cyclonedx.model.tool.Tool.from_component()`.
+
+### Dependencies
+
+* Raised runtime dependency `py-serializable>=1.1.1,<2`, was `>=1.1.0,<2`.
 
 ## v7.6.2 (2024-10-07)
 
@@ -373,6 +418,15 @@
 - Support for CycloneDX v1.6
   ([`8bbdf46`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8bbdf461434ab66673a496a8305c2878bf5c88da))
 
+* added draft v1.6 schemas and boilerplate for v1.6
+* re-generated test snapshots for v1.6
+* note `bom.metadata.manufacture` as deprecated
+* work on `bom.metadata` for v1.6
+* Deprecated `.component.author`. Added `.component.authors` and `.component.manufacturer`
+* work to add `.component.omniborid` - but tests deserialisation tests fail due to schema
+  differences (`.component.author` not in 1.6)
+* work to get deserialization tests passing
+
 
 ## v6.4.4 (2024-03-18)
 
@@ -500,6 +554,99 @@
 - V6.0.0 ([#492](https://github.com/CycloneDX/cyclonedx-python-lib/pull/492),
   [`74865f8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/74865f8e498c9723c2ce3556ceecb6a3cfc4c490))
 
+### Breaking Changes
+
+* Removed symbols that were already marked as deprecated (via [#493]) 
+* Removed symbols in `parser.*` ([#489] via [#495])
+* Removed `output.LATEST_SUPPORTED_SCHEMA_VERSION` ([#491] via [#494])
+* Serialization of unsupported enum values might downgrade/migrate/omit them ([#490] via
+  [#496]) Handling might raise warnings if a data loss occurred due to omitting. The result is a
+  guaranteed valid XML/JSON, since no (enum-)invalid values are rendered.
+* Serialization of any `model.component.Component` with unsupported `type` raises
+  `exception.serialization.SerializationOfUnsupportedComponentTypeException` ([#490] via [#496]) *
+  Object `model.bom_ref.BomRef`'s property `value` defaults to `Null`, was arbitrary `UUID` ([#504]
+  via [#505]) This change does not affect serialization. All `bom-ref`s are guaranteed to have
+  unique values on rendering.
+* Removed helpers from public API ([#503] via [#506])
+
+### Added
+
+* Basic support for CycloneDX 1.5 ([#404] via [#488]) * No data models were enhanced nor added, yet.
+  Pull requests to add functionality are welcome. * Existing enumerable got new cases, to reflect
+  features of CycloneDX 1.5 ([#404] via [#488]) * Outputters were enabled to render CycloneDX 1.5
+  ([#404] via [#488])
+
+### Tests
+
+* Created (regression/unit/integration/functional) tests for CycloneDX 1.5 ([#404] via [#488]) *
+  Created (regression/functional) tests for Enums' handling and completeness ([#490] via [#496])
+
+### Misc
+
+* Bumped dependency `py-serializable@^0.16`, was `@^0.15` (via [#496])
+
+### API Changes — the details for migration
+
+* Added new sub-package `exception.serialization` (via [#496])
+* Removed class
+  `models.ComparableTuple` ([#503] via [#506]) 
+* Enum `model.ExternalReferenceType` got new cases,
+  to reflect features for CycloneDX 1.5 ([#404] via [#488]) 
+* Removed function `models.get_now_utc`
+  ([#503] via [#506]) * Removed function `models.sha1sum` ([#503] via [#506]) 
+* Enum
+  `model.component.ComponentType` got new cases, to reflect features for CycloneDX 1.5 ([#404] via
+  [#488]) 
+* Removed `model.component.Component.__init__()`'s deprecated optional kwarg `namespace`
+  (via [#493]) Use kwarg `group` instead. 
+* Removed `model.component.Component.__init__()`'s
+  deprecated optional kwarg `license_str` (via [#493]) Use kwarg `licenses` instead. 
+* Removed
+  deprecated method `model.component.Component.get_namespace()` (via [#493]) 
+* Removed class
+  `models.dependency.DependencyDependencies` ([#503] via [#506]) 
+* Removed
+  `model.vulnerability.Vulnerability.__init__()`'s deprecated optional kwarg `source_name` (via
+  [#493]) Use kwarg `source` instead. 
+* Removed `model.vulnerability.Vulnerability.__init__()`'s
+  deprecated optional kwarg `source_url` (via [#493]) Use kwarg `source` instead. 
+* Removed
+  `model.vulnerability.Vulnerability.__init__()`'s deprecated optional kwarg `recommendations` (via
+  [#493]) Use kwarg `recommendation` instead. 
+* Removed
+  `model.vulnerability.VulnerabilityRating.__init__()`'s deprecated optional kwarg `score_base` (via
+  [#493]) Use kwarg `score` instead. 
+* Enum `model.vulnerability.VulnerabilityScoreSource` got new
+  cases, to reflect features for CycloneDX 1.5 ([#404] via [#488]) 
+* Removed
+  `output.LATEST_SUPPORTED_SCHEMA_VERSION` ([#491] via [#494]) 
+* Removed deprecated function
+  `output.get_instance()` (via [#493]) Use function `output.make_outputter()` instead. * Added new
+  class `output.json.JsonV1Dot5`, to reflect CycloneDX 1.5 ([#404] via [#488]) 
+* Added new item to
+  dict `output.json.BY_SCHEMA_VERSION`, to reflect CycloneDX 1.5 ([#404] via [#488]) 
+* Added new
+  class `output.xml.XmlV1Dot5`, to reflect CycloneDX 1.5 ([#404] via [#488]) 
+* Added new item to
+  dict `output.xml.BY_SCHEMA_VERSION`, to reflect CycloneDX 1.5 ([#404] via [#488]) 
+* Removed class
+  `parser.ParserWarning` ([#489] via [#495]) 
+* Removed class `parser.BaseParser` ([#489] via [#495])
+* Enum `schema.SchemaVersion` got new case `V1_5`, to reflect CycloneDX 1.5 ([#404] via [#488])
+
+[#404]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/404 
+[#488]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/488
+[#489]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/489 
+[#490]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/490
+[#491]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/491
+[#493]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/493 
+[#494]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/494 
+[#495]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/495 
+[#496]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/496
+[#503]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/503 
+[#504]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/504 
+[#505]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/505 
+[#506]: https://github.com/CycloneDX/cyclonedx-python-lib/pull/506
 
 ## v5.2.0 (2023-12-02)
 
@@ -556,6 +703,134 @@
 - V5.0.0 ([#440](https://github.com/CycloneDX/cyclonedx-python-lib/pull/440),
   [`26b151c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/26b151cba7d7d484f23ee7888444f09ad6d016b1))
 
+### BREAKING CHANGES 
+* Dropped support for python<3.8 ([#436] via [#441]; enable
+  [#433]) 
+* Reworked license related models, collections, and factories ([#365] via [#466]) 
+* Behavior * Method `model.bom.Bom.validate()` will throw
+  `exception.LicenseExpressionAlongWithOthersException`, if detecting invalid license constellation
+  ([#453] via [#452]) 
+* Fixed tuple comparison when unequal lengths (via [#461])
+* API * Enum
+  `schema.SchemaVersion` is no longer string-like ([#442] via [#447]) 
+* Enum `schema.OutputVersion`
+  is no longer string-like ([#442] via [#447]) 
+* Abstract class `output.BaseOutput` requires
+  implementation of new method `output_format` ([#446] via [#447]) 
+* Abstract method
+  `output.BaseOutput.output_as_string()` got new optional parameter `indent` ([#437] via [#458]) *
+  Abstract method `output.BaseOutput.output_as_string()` accepts arbitrary kwargs (via [#458],
+  [#462]) 
+* Removed class `factory.license.LicenseChoiceFactory` (via [#466]) The old functionality
+  was integrated into `factory.license.LicenseFactory`. 
+* Method
+  `factory.license.LicenseFactory.make_from_string()`'s parameter `name_or_spdx` was renamed to
+  `value` (via [#466]) 
+* Method `factory.license.LicenseFactory.make_from_string()`'s return value
+  can also be a `LicenseExpression` ([#365] via [#466]) The behavior imitates the old
+  `factory.license.LicenseChoiceFactory.make_from_string()` 
+* Renamed class `module.License` to
+  `module.license.DisjunctliveLicense` ([#365] via [#466]) 
+* Removed class `module.LicenseChoice`
+  ([#365] via [#466]) Use dedicated classes `module.license.DisjunctliveLicense` and
+  `module.license.LicenseExpression` instead 
+* All occurrences of `models.LicenseChoice` were
+  replaced by `models.licenses.License` ([#365] via [#466]) 
+* All occurrences of
+  `SortedSet[LicenseChoice]` were specialized to `models.license.LicenseRepository` ([#365] via
+  [#466])
+
+### Fixed
+* Serialization of multy-licenses ([#365] via [#466]) * Detect unused
+  "dependent" components in `model.bom.validate()` (via [#464])
+
+### Changed 
+* Updated latest supported list of supported SPDX license identifiers (via
+  [#433]) 
+* Shipped schema files are moved to a protected space (via [#433])  
+  These files were never
+  intended for public use. 
+* XML output uses a default namespace, which makes results smaller.
+  ([#438] via [#458])
+
+### Added
+* Support for Python 3.12 (via [#460]) 
+* JSON- & XML-Validators ([#432],
+  [#446] via [#433], [#448])   
+  The functionality might require additional dependencies, that can be
+  installed with the extra "validation". See the docs in section "Installation" for details. * JSON
+  & XML can be generated in a more human-friendly form ([#437], [#438] via [#458]) 
+* Type hints,
+  typings & overloads for better integration downstream (via [#463]) * API * New function
+  `output.make_outputter()` (via [#469]) This replaces the deprecated function
+  `output.get_instance()`. 
+* New sub-package `validation` ([#432], [#446] via [#433], [#448],
+  [#469], [#468], [#469]) 
+* New class `exception.MissingOptionalDependencyException` ([#432] via
+  [#433]) * New class `exception.LicenseExpressionAlongWithOthersException` ([#453] via [#452]) *
+  New dictionaries `output.{json,xml}.BY_SCHEMA_VERSION` ([#446] via [#447]) * Existing
+  implementations of class `output.BaseOutput` now have a new method `output_format` ([#446] via
+  [#447]) 
+* Existing implementations of method `output.BaseOutput.output_as_string()` got new
+  optional parameter `indent` ([#437] via [#458]) 
+* Existing implementations of method
+  `output.BaseOutput.output_to_file()` got new optional parameter `indent` ([#437] via [#458]) * New
+  method `factory.license.LicenseFactory.make_with_expression()` (via [#466]) 
+* New class
+  `model.license.DisjunctiveLicense` ([#365] via [#466]) 
+* New class
+  `model.license.LicenseExpression` ([#365] via [#466]) 
+* New class
+  `model.license.LicenseRepository` ([#365] via [#466]) 
+* New class
+  `serialization.LicenseRepositoryHelper` ([#365] via [#466])
+
+### Deprecated
+* Function `output.get_instance()` might be removed, use
+  `output.make_outputter()` instead (via [#469])
+
+### Tests
+* Added validation tests with official CycloneDX schema test data ([#432] via
+  [#433]) 
+* Use proper snapshots, instead of pseudo comparison ([#437] via [#464]) 
+* Added
+  regression test for bug [#365] (via [#466], [#467])
+
+### Misc
+* Dependencies: bumped `py-serializable@^0.15.0`, was `@^0.11.1` (via [#458],
+  [#463], [#464], [#466]) 
+* Style: streamlined quotes and strings (via [#472]) 
+* Chore: bumped
+  internal dev- and QA-tools ([#436] via [#441], [#472]) 
+* Chore: added more QA tools to prevent
+  common security issues (via [#473])
+
+[#432]: https://github.com/CycloneDX/cyclonedx-python-lib/issues/432
+[#433]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/433
+[#436]:  https://github.com/CycloneDX/cyclonedx-python-lib/issues/436
+[#437]:  https://github.com/CycloneDX/cyclonedx-python-lib/issues/437
+[#365]:  https://github.com/CycloneDX/cyclonedx-python-lib/issues/365
+[#438]:  https://github.com/CycloneDX/cyclonedx-python-lib/issues/438
+[#440]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/440
+[#441]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/441
+[#442]:  https://github.com/CycloneDX/cyclonedx-python-lib/issues/442
+[#446]:  https://github.com/CycloneDX/cyclonedx-python-lib/issues/446
+[#447]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/447
+[#448]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/448
+[#452]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/452
+[#453]:  https://github.com/CycloneDX/cyclonedx-python-lib/issues/453
+[#458]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/458
+[#460]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/460
+[#461]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/461
+[#462]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/462
+[#463]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/463
+[#464]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/464
+[#466]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/466
+[#467]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/467
+[#468]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/468
+[#469]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/469
+[#472]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/472
+[#473]:  https://github.com/CycloneDX/cyclonedx-python-lib/pull/473
 
 ## v4.2.3 (2023-10-16)
 
@@ -885,6 +1160,12 @@
 
 
 ## v2.0.0 (2022-02-21)
+
+### BREAKING Changes
+- BREAKING CHANGE: Adopt PEP-3102
+- BREAKING CHANGE: Optional Lists are now non-optional Sets
+- BREAKING CHANGE: Remove concept of DEFAULT schema version - replaced with LATEST schema version
+- BREAKING CHANGE: Added `BomRef` data type
 
 ### Bug Fixes
 
