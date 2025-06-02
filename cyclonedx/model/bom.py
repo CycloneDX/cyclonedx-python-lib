@@ -703,7 +703,7 @@ class Bom:
         # 2. if root component is set and there are other components: dependencies should exist for the Component
         # this BOM is describing
         if self.metadata.component and len(self.components) > 0 and not any(map(
-            lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type: ignore[union-attr]
+            lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type:ignore[union-attr]
             self.dependencies
         )):
             warn(
