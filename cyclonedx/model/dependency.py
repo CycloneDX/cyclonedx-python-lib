@@ -58,7 +58,7 @@ class Dependency:
 
     def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
         self.ref = ref
-        self.dependencies = dependencies or []  # type:ignore[assignment]
+        self.dependencies = dependencies or []
 
     @property
     @serializable.type_mapping(BomRef)

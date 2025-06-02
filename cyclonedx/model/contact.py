@@ -296,8 +296,8 @@ class OrganizationalEntity:
     ) -> None:
         self.name = name
         self.address = address
-        self.urls = urls or []  # type:ignore[assignment]
-        self.contacts = contacts or []  # type:ignore[assignment]
+        self.urls = urls or []
+        self.contacts = contacts or []
 
     @property
     @serializable.xml_sequence(10)
