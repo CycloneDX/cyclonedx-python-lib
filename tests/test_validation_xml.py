@@ -69,7 +69,7 @@ class TestXmlValidator(TestCase):
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = XmlValidator(schema_version)
-        with open(join(test_data_file), 'r') as tdfh:
+        with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)
@@ -84,7 +84,7 @@ class TestXmlValidator(TestCase):
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = XmlValidator(schema_version)
-        with open(join(test_data_file), 'r') as tdfh:
+        with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)

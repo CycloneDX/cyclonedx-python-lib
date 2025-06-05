@@ -103,8 +103,7 @@ def dp_cases_from_json_schema(sf: str, jsonpointer: Iterable[str]) -> Generator[
             data = data[pp]
     except KeyError:
         return
-    for value in data['enum']:
-        yield value
+    yield from data['enum']
 
 
 def dp_cases_from_json_schemas(*jsonpointer: str) -> Generator[str, None, None]:

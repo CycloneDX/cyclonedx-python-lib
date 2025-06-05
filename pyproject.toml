@@ -98,6 +98,7 @@ tomli = { version = "2.2.1", python = "<3.11" }
 tox = "4.26.0"
 xmldiff = "2.7.0"
 bandit = "1.8.3"
+pyupgrade = "3.20.0"
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html

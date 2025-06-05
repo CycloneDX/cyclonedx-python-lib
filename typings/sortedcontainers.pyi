@@ -3,8 +3,8 @@
 # The contents of this file were obtained from
 #  https://github.com/althonos/python-sortedcontainers/blob/d0a225d7fd0fb4c54532b8798af3cbeebf97e2d5/sortedcontainers/sortedset.pyi
 
-from collections.abc import Callable, Iterable, MutableSet, Sequence
-from typing import Any, Hashable, Optional, TypeVar, Union, overload  # Iterator,; Tuple,; Type, Set
+from collections.abc import Callable, Hashable, Iterable, MutableSet, Sequence
+from typing import Any, Optional, TypeVar, Union, overload  # Iterator,; Tuple,; Type, Set
 
 # --- Global
 

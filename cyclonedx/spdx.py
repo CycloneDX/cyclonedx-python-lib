@@ -39,7 +39,7 @@ with open(__SPDX_JSON_SCHEMA) as schema:
     __IDS: set[str] = set(json_load(schema).get('enum', []))
 assert len(__IDS) > 0, 'known SPDX-IDs should be non-empty set'
 
-__IDS_LOWER_MAP: dict[str, str] = dict((id_.lower(), id_) for id_ in __IDS)
+__IDS_LOWER_MAP: dict[str, str] = {id_.lower(): id_ for id_ in __IDS}
 
 __SPDX_EXPRESSION_LICENSING: 'Licensing' = get_spdx_licensing()
 
