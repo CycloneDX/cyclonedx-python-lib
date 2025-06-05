@@ -21,13 +21,16 @@ poetry install --all-extras
 
 ## Code style
 
+THis project loves latest python features.
 This project uses [PEP8] Style Guide for Python Code.  
-This project loves sorted imports.  
+This project loves sorted imports.
+
 Get it all applied via:
 
 ```shell
-poetry run isort .
-poetry run autopep8 -ir cyclonedx/ tests/ typings/ examples/
+poetry run -- tox r -e pyupgrade -- --exit-zero-even-if-changed
+poetry run -- tox r -e isort
+poetry run -- tox r -e autopep8
 ```
 
 This project prefers `f'strings'` over `'string'.format()`.  

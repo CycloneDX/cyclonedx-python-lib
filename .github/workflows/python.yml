@@ -27,7 +27,7 @@ env:
 
 jobs:
   pyupgrade:
-    name: test upgradable
+    name: Find Upgradable CodingStandards
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
