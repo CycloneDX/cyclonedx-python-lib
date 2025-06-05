@@ -20,7 +20,7 @@ from collections.abc import Iterable
 from decimal import Decimal
 from enum import Enum
 from json import loads as json_loads
-from typing import Any, List, Optional, Type, Union
+from typing import Any, List, Optional, Union
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
@@ -769,7 +769,7 @@ class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def xml_normalize(cls, o: ComponentEvidence, *,
                       element_name: str,
-                      view: Optional[Type['serializable.ViewType']],
+                      view: Optional[type['serializable.ViewType']],
                       xmlns: Optional[str],
                       **__: Any) -> Optional['XmlElement']:
         normalized: 'XmlElement' = o.as_xml(view, False, element_name, xmlns)  # type:ignore[attr-defined]
