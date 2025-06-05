@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v10.1.0 (2025-06-05)
+
+### Features
+
+- Pulled SPDX license IDs v1.0-3.26.0
+  ([#823](https://github.com/CycloneDX/cyclonedx-python-lib/pull/823),
+  [`41b2d25`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/41b2d25bc23045f1b60610410e4bbbcdec137b4f))
+
+
 ## v10.0.2 (2025-06-02)
 
 ### Bug Fixes
