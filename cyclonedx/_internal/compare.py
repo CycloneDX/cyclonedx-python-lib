@@ -64,7 +64,7 @@ class ComparableDict(ComparableTuple):
     """
 
     def __new__(cls, d: dict[Any, Any]) -> 'ComparableDict':
-        return super(ComparableDict, cls).__new__(cls, sorted(d.items()))
+        return super().__new__(cls, sorted(d.items()))
 
 
 class ComparablePackageURL(ComparableTuple):
@@ -73,7 +73,7 @@ class ComparablePackageURL(ComparableTuple):
     """
 
     def __new__(cls, p: 'PackageURL') -> 'ComparablePackageURL':
-        return super(ComparablePackageURL, cls).__new__(cls, (
+        return super().__new__(cls, (
             p.type,
             p.namespace,
             p.version,

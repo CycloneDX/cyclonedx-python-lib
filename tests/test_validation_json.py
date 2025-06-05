@@ -15,10 +15,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from collections.abc import Generator
 from glob import iglob
 from itertools import chain
 from os.path import join
-from typing import Generator
 from unittest import TestCase
 
 from ddt import data, ddt, idata, unpack
@@ -69,7 +69,7 @@ class TestJsonValidator(TestCase):
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
-        with open(join(test_data_file), 'r') as tdfh:
+        with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)
@@ -84,7 +84,7 @@ class TestJsonValidator(TestCase):
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
-        with open(join(test_data_file), 'r') as tdfh:
+        with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)
@@ -109,7 +109,7 @@ class TestJsonStrictValidator(TestCase):
     @unpack
     def test_validate_no_none(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonStrictValidator(schema_version)
-        with open(join(test_data_file), 'r') as tdfh:
+        with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)
@@ -124,7 +124,7 @@ class TestJsonStrictValidator(TestCase):
     @unpack
     def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonStrictValidator(schema_version)
-        with open(join(test_data_file), 'r') as tdfh:
+        with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
         try:
             validation_error = validator.validate_str(test_data)

@@ -102,7 +102,7 @@ for dspec in (BOM_XSD, BOM_JSON_LAX, BOM_JSON_STRICT):
         target = dspec['targetPattern'].replace('%s', version)
         tempfile, _ = urlretrieve(source)  # nosec B310
         print(source, '->', target)
-        with open(tempfile, 'r') as tmpf:
+        with open(tempfile) as tmpf:
             text = tmpf.read()
         with open(target, 'w', newline='\n') as tarf:
             for search, replace in dspec['replace']:

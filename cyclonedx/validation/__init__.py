@@ -110,8 +110,7 @@ def make_schemabased_validator(output_format: OutputFormat, schema_version: 'Sch
     Raises error when no instance could be made.
     """
     if TYPE_CHECKING:  # pragma: no cover
-        from typing import Type
-        Validator: Type[BaseSchemabasedValidator]  # noqa:N806
+        Validator: type[BaseSchemabasedValidator]  # noqa:N806
     if OutputFormat.JSON is output_format:
         from .json import JsonValidator as Validator
     elif OutputFormat.XML is output_format:

@@ -58,7 +58,7 @@ class SnapshotMixin:
 
     @classmethod
     def readSnapshot(cls, snapshot_name: str) -> str:  # noqa: N802
-        with open(cls.getSnapshotFile(snapshot_name), 'r') as s:
+        with open(cls.getSnapshotFile(snapshot_name)) as s:
             return s.read()
 
     def assertEqualSnapshot(self: Union[TestCase, 'SnapshotMixin'],  # noqa: N802
