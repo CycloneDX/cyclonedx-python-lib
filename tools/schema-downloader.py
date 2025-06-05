@@ -22,6 +22,7 @@ from os.path import dirname, join, realpath
 from urllib.request import urlretrieve
 
 SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/tags/1.6.1/schema/'
+SOURCE_ROOT_LATEST = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/heads/master/schema/'
 TARGET_ROOT = realpath(join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res'))
 
 BOM_XSD = {
@@ -91,9 +92,9 @@ BOM_JSON_STRICT = {
 }
 
 OTHER_DOWNLOADABLES = [
-    (f'{SOURCE_ROOT}spdx.schema.json', join(TARGET_ROOT, 'spdx.SNAPSHOT.schema.json')),
-    (f'{SOURCE_ROOT}spdx.xsd', join(TARGET_ROOT, 'spdx.SNAPSHOT.xsd')),
-    (f'{SOURCE_ROOT}jsf-0.82.schema.json', join(TARGET_ROOT, 'jsf-0.82.SNAPSHOT.schema.json')),
+    (f'{SOURCE_ROOT_LATEST}spdx.schema.json', join(TARGET_ROOT, 'spdx.SNAPSHOT.schema.json')),
+    (f'{SOURCE_ROOT_LATEST}spdx.xsd', join(TARGET_ROOT, 'spdx.SNAPSHOT.xsd')),
+    (f'{SOURCE_ROOT_LATEST}jsf-0.82.schema.json', join(TARGET_ROOT, 'jsf-0.82.SNAPSHOT.schema.json')),
 ]
 
 for dspec in (BOM_XSD, BOM_JSON_LAX, BOM_JSON_STRICT):
