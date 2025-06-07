@@ -20,7 +20,6 @@ from unittest import TestCase
 
 from cyclonedx.model import (
     AttachedText,
-    Copyright,
     Encoding,
     ExternalReference,
     ExternalReferenceType,
@@ -28,16 +27,7 @@ from cyclonedx.model import (
     Property,
     XsUri,
 )
-from cyclonedx.model.component import (
-    Commit,
-    Component,
-    ComponentEvidence,
-    ComponentType,
-    Diff,
-    Patch,
-    PatchClassification,
-    Pedigree,
-)
+from cyclonedx.model.component import Commit, Component, ComponentType, Diff, Patch, PatchClassification, Pedigree
 from cyclonedx.model.issue import IssueClassification, IssueType
 from tests import reorder
 from tests._data.models import (
@@ -283,30 +273,6 @@ class TestModelComponent(TestCase):
         self.assertEqual(2, len(comp_b.components))
         self.assertEqual(3, len(comp_b.get_all_nested_components(include_self=True)))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=False)))
-
-
-class TestModelComponentEvidence(TestCase):
-
-    def test_no_params(self) -> None:
-        ComponentEvidence()  # Does not raise `NoPropertiesProvidedException`
-
-    def test_same_1(self) -> None:
-        ce_1 = ComponentEvidence(copyright=[Copyright(text='Commercial')])
-        ce_2 = ComponentEvidence(copyright=[Copyright(text='Commercial')])
-        self.assertEqual(hash(ce_1), hash(ce_2))
-        self.assertTrue(ce_1 == ce_2)
-
-    def test_same_2(self) -> None:
-        ce_1 = ComponentEvidence(copyright=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
-        ce_2 = ComponentEvidence(copyright=[Copyright(text='Commercial 2'), Copyright(text='Commercial')])
-        self.assertEqual(hash(ce_1), hash(ce_2))
-        self.assertTrue(ce_1 == ce_2)
-
-    def test_not_same_1(self) -> None:
-        ce_1 = ComponentEvidence(copyright=[Copyright(text='Commercial')])
-        ce_2 = ComponentEvidence(copyright=[Copyright(text='Commercial 2')])
-        self.assertNotEqual(hash(ce_1), hash(ce_2))
-        self.assertFalse(ce_1 == ce_2)
 
 
 class TestModelDiff(TestCase):

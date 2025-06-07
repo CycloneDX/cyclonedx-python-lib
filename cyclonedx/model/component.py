@@ -48,7 +48,6 @@ from ..schema.schema import (
 from ..serialization import PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
-    Copyright,
     ExternalReference,
     HashAlgorithm,
     HashType,
@@ -58,6 +57,7 @@ from . import (
     _HashTypeRepositorySerializationHelper,
 )
 from .bom_ref import BomRef
+from .component_evidence import ComponentEvidence, _ComponentEvidenceSerializationHelper
 from .contact import OrganizationalContact, OrganizationalEntity
 from .crypto import CryptoProperties
 from .dependency import Dependable
@@ -189,108 +189,6 @@ class Commit:
 
     def __repr__(self) -> str:
         return f'<Commit uid={self.uid}, url={self.url}, message={self.message}>'
-
-
-@serializable.serializable_class
-class ComponentEvidence:
-    """
-    Our internal representation of the `componentEvidenceType` complex type.
-
-    Provides the ability to document evidence collected through various forms of extraction or analysis.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_componentEvidenceType
-    """
-
-    def __init__(
-        self, *,
-        licenses: Optional[Iterable[License]] = None,
-        copyright: Optional[Iterable[Copyright]] = None,
-    ) -> None:
-        self.licenses = licenses or []
-        self.copyright = copyright or []
-
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(1)
-    # def identity(self) -> ...:
-    #    ... # TODO since CDX1.5
-    #
-    # @identity.setter
-    # def identity(self, ...) -> None:
-    #    ... # TODO since CDX1.5
-
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(2)
-    # def occurrences(self) -> ...:
-    #    ... # TODO since CDX1.5
-    #
-    # @occurrences.setter
-    # def occurrences(self, ...) -> None:
-    #    ... # TODO since CDX1.5
-
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(3)
-    # def callstack(self) -> ...:
-    #    ... # TODO since CDX1.5
-    #
-    # @callstack.setter
-    # def callstack(self, ...) -> None:
-    #    ... # TODO since CDX1.5
-
-    @property
-    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
-    @serializable.xml_sequence(4)
-    def licenses(self) -> LicenseRepository:
-        """
-        Optional list of licenses obtained during analysis.
-
-        Returns:
-            Set of `LicenseChoice`
-        """
-        return self._licenses
-
-    @licenses.setter
-    def licenses(self, licenses: Iterable[License]) -> None:
-        self._licenses = LicenseRepository(licenses)
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'text')
-    @serializable.xml_sequence(5)
-    def copyright(self) -> 'SortedSet[Copyright]':
-        """
-        Optional list of copyright statements.
-
-        Returns:
-             Set of `Copyright`
-        """
-        return self._copyright
-
-    @copyright.setter
-    def copyright(self, copyright: Iterable[Copyright]) -> None:
-        self._copyright = SortedSet(copyright)
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            _ComparableTuple(self.licenses),
-            _ComparableTuple(self.copyright),
-        ))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, ComponentEvidence):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<ComponentEvidence id={id(self)}>'
 
 
 @serializable.serializable_enum
@@ -1644,6 +1542,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_sequence(24)
+    @serializable.type_mapping(_ComponentEvidenceSerializationHelper)
     def evidence(self) -> Optional[ComponentEvidence]:
         """
         Provides the ability to document evidence collected through various forms of extraction or analysis.

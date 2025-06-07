@@ -17,6 +17,7 @@
 
 import base64
 import sys
+from collections.abc import Iterable
 from datetime import datetime, timezone
 from decimal import Decimal
 from inspect import getmembers, isfunction
@@ -46,7 +47,6 @@ from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
     Commit,
     Component,
-    ComponentEvidence,
     ComponentScope,
     ComponentType,
     Diff,
@@ -56,6 +56,16 @@ from cyclonedx.model.component import (
     Pedigree,
     Swhid,
     Swid,
+)
+from cyclonedx.model.component_evidence import (
+    AnalysisTechnique,
+    CallStack,
+    CallStackFrame,
+    ComponentEvidence,
+    Identity,
+    IdentityField,
+    Method,
+    Occurrence,
 )
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
@@ -455,6 +465,35 @@ def get_bom_with_component_setuptools_complete() -> Bom:
     return _make_bom(components=[get_component_setuptools_complete()])
 
 
+def get_bom_with_component_evidence() -> Bom:
+    bom = _make_bom()
+    tool_component = Component(
+        name='product-cbom-generator',
+        type=ComponentType.APPLICATION,
+        bom_ref='cbom:generator'
+    )
+    bom.metadata.tools.components.add(tool_component)
+    bom.metadata.component = Component(
+        name='root-component',
+        type=ComponentType.APPLICATION,
+        licenses=[DisjunctiveLicense(id='MIT')],
+        bom_ref='myApp',
+    )
+    component = Component(
+        name='setuptools', version='50.3.2',
+        bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
+        purl=PackageURL(
+            type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
+        ),
+        licenses=[DisjunctiveLicense(id='MIT')],
+        author='Test Author'
+    )
+    component.evidence = get_component_evidence_basic(tools=[tool_component])
+    bom.components.add(component)
+    bom.register_dependency(bom.metadata.component, depends_on=[component])
+    return bom
+
+
 def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
     bom = _make_bom()
     component = get_component_setuptools_simple()
@@ -735,6 +774,68 @@ def get_component_setuptools_complete(include_pedigree: bool = True) -> Componen
     component.evidence = ComponentEvidence(copyright=[Copyright(text='Commercial'), Copyright(text='Commercial 2')])
     component.release_notes = get_release_notes()
     return component
+
+
+def get_component_evidence_basic(tools: Iterable[Component]) -> ComponentEvidence:
+    """
+    Returns a basic ComponentEvidence object for testing.
+    """
+    return ComponentEvidence(
+        identity=[
+            Identity(
+                field=IdentityField.NAME,
+                confidence=Decimal('0.9'),
+                concluded_value='example-component',
+                methods=[
+                    Method(
+                        technique=AnalysisTechnique.SOURCE_CODE_ANALYSIS,
+                        confidence=Decimal('0.8'),
+                        value='analysis-tool'
+                    ),
+                ],
+                tools=(tool.bom_ref for tool in tools)
+            ),
+            Identity(
+                field=IdentityField.HASH,
+                confidence=Decimal('0.1'),
+                concluded_value='example-hash',
+                methods=[
+                    Method(
+                        technique=AnalysisTechnique.ATTESTATION,
+                        confidence=Decimal('0.1'),
+                        value='analysis-tool'
+                    ),
+                ],
+                tools=(tool.bom_ref for tool in tools)
+            ),
+        ],
+        occurrences=[
+            Occurrence(
+                location='path/to/file',
+                line=42,
+                offset=16,
+                symbol='exampleSymbol',
+                additional_context='Found in source code',
+            )
+        ],
+        callstack=CallStack(
+            frames=[
+                CallStackFrame(
+                    package='example.package',
+                    module='example.module',
+                    function='example_function',
+                    parameters=['param1', 'param2'],
+                    line=10,
+                    column=5,
+                    full_filename='path/to/file',
+                )
+            ]
+        ),
+        licenses=[DisjunctiveLicense(id='MIT')],
+        copyright=[
+            Copyright(text='Commercial'), Copyright(text='Commercial 2')
+        ]
+    )
 
 
 def get_component_setuptools_simple(
