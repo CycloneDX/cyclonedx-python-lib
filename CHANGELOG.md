@@ -2,6 +2,21 @@
 
 <!-- version list -->
 
+## v10.2.0 (2025-06-10)
+
+### Bug Fixes
+
+- `vulnerabilityscoresource.get_from_vector()` for `CVSS_V3_1` and `CVSS_V4`
+  ([#824](https://github.com/CycloneDX/cyclonedx-python-lib/pull/824),
+  [`a97ccd4`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a97ccd44f494f96dd11de950b16bce87f63b9f61))
+
+### Features
+
+- Add support for component's evidences according to spec
+  ([#810](https://github.com/CycloneDX/cyclonedx-python-lib/pull/810),
+  [`3395fda`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3395fda371ea20c17a136fbb07302852fe97707a))
+
+
 ## v10.1.0 (2025-06-05)
 
 ### Features
