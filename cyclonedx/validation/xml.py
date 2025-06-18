@@ -60,12 +60,12 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
             raise self.__MDERROR[0] from self.__MDERROR[1]
     else:
         def validate_str(self, data: str) -> Optional[ValidationError]:
-            return self._validata_data(
+            return self._validate_data(
                 xml_fromstring(  # nosec B320
                     bytes(data, encoding='utf8'),
                     parser=self.__xml_parser))
 
-        def _validata_data(self, data: Any) -> Optional[ValidationError]:
+        def _validate_data(self, data: Any) -> Optional[ValidationError]:
             validator = self._validator  # may throw on error that MUST NOT be caught
             if not validator.validate(data):
                 return ValidationError(validator.error_log.last_error)

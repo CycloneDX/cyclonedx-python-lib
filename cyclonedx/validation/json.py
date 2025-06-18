@@ -64,10 +64,10 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
 
     else:
         def validate_str(self, data: str) -> Optional[ValidationError]:
-            return self._validata_data(
+            return self._validate_data(
                 json_loads(data))
 
-        def _validata_data(self, data: Any) -> Optional[ValidationError]:
+        def _validate_data(self, data: Any) -> Optional[ValidationError]:
             validator = self._validator  # may throw on error that MUST NOT be caught
             try:
                 validator.validate(data)
