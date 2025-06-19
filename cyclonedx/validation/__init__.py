@@ -30,10 +30,26 @@ if TYPE_CHECKING:  # pragma: no cover
 class ValidationError:
     """Validation failed with this specific error.
 
-    Use :attr:`~data` to access the content.
+    You can use :attr:`~data` to access the raw error object, but prefer
+    other properties and functions, if possible.
     """
 
     data: Any
+    """Raw error data from one of the validation libraries."""
+
+    @property
+    def message(self) -> str:
+        """The error message."""
+        return str(getattr(self.data, 'message', self))
+
+    @property
+    def path(self) -> str:
+        """Path to the location of the problem in the document.
+
+        An XPath/JSONPath string.
+        """
+        # only subclasses know how to extract this info
+        return str(getattr(self.data, 'path', ''))
 
     def __init__(self, data: Any) -> None:
         self.data = data

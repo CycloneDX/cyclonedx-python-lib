@@ -33,7 +33,7 @@ from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError
 
 _missing_deps_error: Optional[tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
-    from jsonschema.exceptions import ValidationError as JsonValidationError  # type:ignore[import-untyped]
+    from jsonschema.exceptions import ValidationError as JsonSchemaValidationError  # type:ignore[import-untyped]
     from jsonschema.validators import Draft7Validator  # type:ignore[import-untyped]
     from referencing import Registry
     from referencing.jsonschema import DRAFT7
@@ -45,6 +45,16 @@ except ImportError as err:
         'This functionality requires optional dependencies.\n'
         'Please install `cyclonedx-python-lib` with the extra "json-validation".\n'
     ), err
+
+
+class _JsonValidationError(ValidationError):
+    @property
+    def path(self) -> str:
+        """Path to the location of the problem in the document.
+
+        An XPath/JSONPath string.
+        """
+        return str(getattr(self.data, 'json_path', ''))
 
 
 class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
@@ -71,8 +81,8 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
             validator = self._validator  # may throw on error that MUST NOT be caught
             try:
                 validator.validate(data)
-            except JsonValidationError as error:
-                return ValidationError(error)
+            except JsonSchemaValidationError as error:
+                return _JsonValidationError(error)
             return None
 
         __validator: Optional['JsonSchemaValidator'] = None

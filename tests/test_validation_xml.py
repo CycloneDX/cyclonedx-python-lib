@@ -92,3 +92,5 @@ class TestXmlValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNotNone(validation_error)
         self.assertIsNotNone(validation_error.data)
+        self.assertTrue(bool(validation_error.message))
+        self.assertTrue(bool(validation_error.path))
