@@ -29,7 +29,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 from ..exception import MissingOptionalDependencyException
 from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
-from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError
+from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError, squeeze
 
 _missing_deps_error: Optional[tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
@@ -47,7 +47,42 @@ except ImportError as err:
     ), err
 
 
+def _get_message_with_squeezed_context(error: 'JsonSchemaValidationError', context_limit: int, replacement: str) -> str:
+    # The below code depends on jsonschema internals, that messages are created
+    # like `yield ValidationError(f"{instance!r} has non-unique elements")`
+    # and tries to replace `{instance!r}` with a shortened version, if needed
+    message: str = error.message
+    if context_limit <= 0 or len(message) <= context_limit:
+        return message
+
+    repr_context = repr(error.instance)
+    if len(repr_context) <= context_limit:
+        return message
+
+    return message.replace(repr_context, squeeze(repr_context, context_limit, replacement))
+
+
 class _JsonValidationError(ValidationError):
+    def get_squeezed_message(self, *, context_limit: int = -1, max_size: int = -1, replacement: str = ' ... ') -> str:
+        """Extracts, and sanitizes the error message.
+
+        Messages can be quite big from underlying libraries, as they sometimes
+        add context to the error message..
+
+        This is amended both in a generic and library specific ways here.
+
+        :param max_size: squeeze message to this size.
+        :param context_limit: jsonschema messages most of the time include the
+                              instance repr as context, which can be very big
+                              (in the megabytes range), so an attempt is made to
+                              shorten context to this size.
+        :param replacement: to mark place of dropped text bit[s]
+
+        With the defaults, no squeezing happens.
+        """
+        message = _get_message_with_squeezed_context(self.data, context_limit, replacement)
+        return squeeze(message, max_size, replacement)
+
     @property
     def path(self) -> str:
         """Path to the location of the problem in the document.

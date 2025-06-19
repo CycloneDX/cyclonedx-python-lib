@@ -93,4 +93,8 @@ class TestXmlValidator(TestCase):
         self.assertIsNotNone(validation_error)
         self.assertIsNotNone(validation_error.data)
         self.assertTrue(bool(validation_error.message))
+        self.assertTrue(bool(validation_error.get_squeezed_message()))
         self.assertTrue(bool(validation_error.path))
+
+        squeezed_message = validation_error.get_squeezed_message(max_size=100)
+        self.assertLessEqual(len(squeezed_message), 100, squeezed_message)
