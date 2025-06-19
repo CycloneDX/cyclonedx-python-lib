@@ -77,6 +77,8 @@ class TestXmlValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNone(validation_error)
 
+        self.assertEqual(list(validator.iterate_errors(test_data)), [])
+
     @idata(chain(
         _dp_sv_tf(False),
         _dp_sv_own(False)
@@ -98,3 +100,5 @@ class TestXmlValidator(TestCase):
 
         squeezed_message = validation_error.get_squeezed_message(max_size=100)
         self.assertLessEqual(len(squeezed_message), 100, squeezed_message)
+
+        self.assertNotEqual(list(validator.iterate_errors(test_data)), [])

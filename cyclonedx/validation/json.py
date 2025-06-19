@@ -19,6 +19,7 @@
 __all__ = ['JsonValidator', 'JsonStrictValidator']
 
 from abc import ABC
+from collections.abc import Iterable
 from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Literal, Optional
 
@@ -107,7 +108,14 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
         def validate_str(self, data: str) -> Optional[ValidationError]:
             raise self.__MDERROR[0] from self.__MDERROR[1]
 
+        def iterate_errors(self, data: str) -> Iterable[ValidationError]:
+            raise self.__MDERROR[0] from self.__MDERROR[1]
     else:
+        def iterate_errors(self, data: str) -> Iterable[ValidationError]:
+            json_data = json_loads(data)
+            validator = self._validator  # may throw on error that MUST NOT be caught
+            yield from validator.iter_errors(json_data)
+
         def validate_str(self, data: str) -> Optional[ValidationError]:
             return self._validate_data(
                 json_loads(data))

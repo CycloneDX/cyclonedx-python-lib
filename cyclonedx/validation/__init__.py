@@ -17,6 +17,7 @@
 
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Union, overload
 
 from ..schema import OutputFormat
@@ -117,6 +118,14 @@ class SchemabasedValidator(Protocol):
         :return: validation error
         :retval None: if ``data`` is valid
         :retval ValidationError:  if ``data`` is invalid
+        """
+        ...  # pragma: no cover
+
+    def iterate_errors(self, data: str) -> Iterable[ValidationError]:
+        """Validate a string, enumerating all the problems.
+
+        :param data: the data string to validate
+        :return: iterator over the errors
         """
         ...  # pragma: no cover
 

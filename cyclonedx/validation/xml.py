@@ -19,6 +19,7 @@
 __all__ = ['XmlValidator']
 
 from abc import ABC
+from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any, Literal, Optional
 
 from ..exception import MissingOptionalDependencyException
@@ -53,12 +54,24 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
         # this is the def that is used for generating the documentation
         super().__init__(schema_version)
 
-    if _missing_deps_error:
+    if _missing_deps_error:  # noqa:C901
         __MDERROR = _missing_deps_error
 
         def validate_str(self, data: str) -> Optional[ValidationError]:
             raise self.__MDERROR[0] from self.__MDERROR[1]
+
+        def iterate_errors(self, data: str) -> Iterable[ValidationError]:
+            raise self.__MDERROR[0] from self.__MDERROR[1]
     else:
+        def iterate_errors(self, data: str) -> Iterable[ValidationError]:
+            xml_data = xml_fromstring(  # nosec B320
+                bytes(data, encoding='utf8'),
+                parser=self.__xml_parser)
+            validator = self._validator  # may throw on error that MUST NOT be caught
+            validator.validate(xml_data)
+            for error in validator.error_log:
+                yield ValidationError(error)
+
         def validate_str(self, data: str) -> Optional[ValidationError]:
             return self._validate_data(
                 xml_fromstring(  # nosec B320
