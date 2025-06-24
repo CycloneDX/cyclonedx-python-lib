@@ -3,21 +3,42 @@ repos:
   - repo: local
     hooks:
       - id: system
-        name: mypy
-        entry: poetry run tox -e mypy-current
+        name: pyupgrade
+        entry: poetry run -- tox r -e pyupgrade -- --exit-zero-even-if-changed
         pass_filenames: false
         language: system
   - repo: local
     hooks:
       - id: system
         name: isort
-        entry: poetry run isort -c .
+        entry: poetry run -- tox r -e isort
+        pass_filenames: false
+        language: system
+  - repo: local
+    hooks:
+      - id: system
+        name: autopep8
+        entry: poetry run -- tox r -e autopep8
         pass_filenames: false
         language: system
   - repo: local
     hooks:
       - id: system
         name: flake8
-        entry: poetry run flake8 cyclonedx/ tests/
+        entry: poetry run -- tox r -e flake8
+        pass_filenames: false
+        language: system
+  - repo: local
+    hooks:
+      - id: system
+        name: mypy
+        entry: poetry run -- tox -e mypy-current
+        pass_filenames: false
+        language: system
+  - repo: local
+    hooks:
+      - id: system
+        name: bandit
+        entry: poetry run -- tox r -e bandit
         pass_filenames: false
         language: system
