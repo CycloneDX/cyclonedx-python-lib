@@ -82,7 +82,7 @@ class TestJsonValidator(TestCase):
         _dp_sv_own(False)
     ))
     @unpack
-    def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+    def test_validate_expected_error_one(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonValidator(schema_version)
         with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
@@ -92,6 +92,25 @@ class TestJsonValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNotNone(validation_error)
         self.assertIsNotNone(validation_error.data)
+
+    @idata(chain(
+        _dp_sv_tf(False),
+        _dp_sv_own(False)
+    ))
+    @unpack
+    def test_validate_expected_error_iterator(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+        validator = JsonValidator(schema_version)
+        with open(join(test_data_file)) as tdfh:
+            test_data = tdfh.read()
+        try:
+            validation_errors = validator.validate_str(test_data, all_errors=True)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(validation_errors)
+        validation_errors = tuple(validation_errors)
+        self.assertGreater(len(validation_errors), 0)
+        for validation_error in validation_errors:
+            self.assertIsNotNone(validation_error.data)
 
 
 @ddt
@@ -117,14 +136,12 @@ class TestJsonStrictValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNone(validation_error)
 
-        self.assertEqual(list(validator.iterate_errors(test_data)), [])
-
     @idata(chain(
         _dp_sv_tf(False),
         _dp_sv_own(False)
     ))
     @unpack
-    def test_validate_expected_error(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+    def test_validate_expected_error_one(self, schema_version: SchemaVersion, test_data_file: str) -> None:
         validator = JsonStrictValidator(schema_version)
         with open(join(test_data_file)) as tdfh:
             test_data = tdfh.read()
@@ -141,4 +158,21 @@ class TestJsonStrictValidator(TestCase):
         squeezed_message = validation_error.get_squeezed_message(max_size=100)
         self.assertLessEqual(len(squeezed_message), 100, squeezed_message)
 
-        self.assertNotEqual(list(validator.iterate_errors(test_data)), [])
+    @idata(chain(
+        _dp_sv_tf(False),
+        _dp_sv_own(False)
+    ))
+    @unpack
+    def test_validate_expected_error_iterator(self, schema_version: SchemaVersion, test_data_file: str) -> None:
+        validator = JsonValidator(schema_version)
+        with open(join(test_data_file)) as tdfh:
+            test_data = tdfh.read()
+        try:
+            validation_errors = validator.validate_str(test_data, all_errors=True)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(validation_errors)
+        validation_errors = tuple(validation_errors)
+        self.assertGreater(len(validation_errors), 0)
+        for validation_error in validation_errors:
+            self.assertIsNotNone(validation_error.data)

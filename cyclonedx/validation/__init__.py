@@ -116,7 +116,7 @@ class SchemabasedValidator(Protocol):
         """Validate a string
 
         :param data: the data string to validate
-        :param all_errors: whether to return all errors or only the last error - if any
+        :param all_errors: whether to return all errors or only (any)one - if any
         :return: validation error
         :retval None: if ``data`` is valid
         :retval ValidationError:  if ``data`` is invalid
@@ -128,7 +128,7 @@ class SchemabasedValidator(Protocol):
         """Validate a string
 
         :param data: the data string to validate
-        :param all_errors: whether to return all errors or only the last error - if any
+        :param all_errors: whether to return all errors or only (any)one - if any
         :return: validation error
         :retval None: if ``data`` is valid
         :retval Iterable[ValidationError]:  if ``data`` is invalid
@@ -142,7 +142,7 @@ class SchemabasedValidator(Protocol):
         """Validate a string
 
         :param data: the data string to validate
-        :param all_errors: whether to return all errors or only the last error - if any
+        :param all_errors: whether to return all errors or only (any)one - if any
         :return: validation error
         :retval None: if ``data`` is valid
         :retval ValidationError:  if ``data`` is invalid and ``all_errors`` is ``False``
