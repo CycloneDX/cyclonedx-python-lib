@@ -20,8 +20,9 @@ __all__ = ['JsonValidator', 'JsonStrictValidator']
 
 from abc import ABC
 from collections.abc import Iterable
+from itertools import chain
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Literal, Optional
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 
 from ..schema import OutputFormat
 
@@ -102,31 +103,46 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
         # this is the def that is used for generating the documentation
         super().__init__(schema_version)
 
+    # region typing-relevant copy from parent class - needed for mypy and doc tools
+
+    @overload
+    def validate_str(self, data: str, *, all_errors: Literal[False] = ...) -> Optional[ValidationError]:
+        ...  # pragma: no cover
+
+    @overload
+    def validate_str(self, data: str, *, all_errors: Literal[True]) -> Optional[Iterable[ValidationError]]:
+        ...  # pragma: no cover
+
+    def validate_str(
+        self, data: str, *, all_errors: bool = False
+    ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+        ...  # pragma: no cover
+
+    # endregion
+
     if _missing_deps_error:  # noqa:C901
         __MDERROR = _missing_deps_error
 
-        def validate_str(self, data: str) -> Optional[ValidationError]:
+        def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
+            self, data: str, *, all_errors: bool = False
+        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
             raise self.__MDERROR[0] from self.__MDERROR[1]
 
-        def iterate_errors(self, data: str) -> Iterable[ValidationError]:
-            raise self.__MDERROR[0] from self.__MDERROR[1]
     else:
-        def iterate_errors(self, data: str) -> Iterable[ValidationError]:
-            json_data = json_loads(data)
-            validator = self._validator  # may throw on error that MUST NOT be caught
-            yield from validator.iter_errors(json_data)
 
-        def validate_str(self, data: str) -> Optional[ValidationError]:
-            return self._validate_data(
-                json_loads(data))
-
-        def _validate_data(self, data: Any) -> Optional[ValidationError]:
+        def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
+            self, data: str, *, all_errors: bool = False
+        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
             validator = self._validator  # may throw on error that MUST NOT be caught
-            try:
-                validator.validate(data)
-            except JsonSchemaValidationError as error:
-                return _JsonValidationError(error)
-            return None
+            structure = json_loads(data)
+            errors = validator.iter_errors(structure)
+            first_error = next(errors, None)
+            if first_error is None:
+                return None
+            first_error = _JsonValidationError(first_error)
+            return chain((first_error,), map(_JsonValidationError, errors)) \
+                if all_errors \
+                else first_error
 
         __validator: Optional['JsonSchemaValidator'] = None
 
