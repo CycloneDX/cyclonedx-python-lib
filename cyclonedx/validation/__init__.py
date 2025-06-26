@@ -111,21 +111,42 @@ class ValidationError:
 class SchemabasedValidator(Protocol):
     """Schema-based Validator protocol"""
 
-    def validate_str(self, data: str) -> Optional[ValidationError]:
+    @overload
+    def validate_str(self, data: str, *, all_errors: Literal[False] = ...) -> Optional[ValidationError]:
         """Validate a string
 
         :param data: the data string to validate
+        :param all_errors: whether to return all errors or only the last error - if any
         :return: validation error
         :retval None: if ``data`` is valid
         :retval ValidationError:  if ``data`` is invalid
         """
         ...  # pragma: no cover
 
-    def iterate_errors(self, data: str) -> Iterable[ValidationError]:
-        """Validate a string, enumerating all the problems.
+    @overload
+    def validate_str(self, data: str, *, all_errors: Literal[True]) -> Optional[Iterable[ValidationError]]:
+        """Validate a string
 
         :param data: the data string to validate
-        :return: iterator over the errors
+        :param all_errors: whether to return all errors or only the last error - if any
+        :return: validation error
+        :retval None: if ``data`` is valid
+        :retval Iterable[ValidationError]:  if ``data`` is invalid
+        """
+        ...   # pragma: no cover
+
+    def validate_str(
+        self, data: str, *,
+        all_errors: bool = False
+    ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+        """Validate a string
+
+        :param data: the data string to validate
+        :param all_errors: whether to return all errors or only the last error - if any
+        :return: validation error
+        :retval None: if ``data`` is valid
+        :retval ValidationError:  if ``data`` is invalid and ``all_errors`` is ``False``
+        :retval Iterable[ValidationError]:  if ``data`` is invalid and ``all_errors`` is ``True``
         """
         ...  # pragma: no cover
 
