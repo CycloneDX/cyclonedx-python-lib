@@ -73,9 +73,6 @@ class DataClassification:
     """
     This is our internal representation of the `dataClassificationType` complex type within the CycloneDX standard.
 
-    DataClassification might be deprecated since CycloneDX 1.5, but it is not deprecated in this library.
-    In fact, this library will try to provide a compatibility layer if needed.
-
     .. note::
         See the CycloneDX Schema for dataClassificationType:
         https://cyclonedx.org/docs/1.6/xml/#type_dataClassificationType
