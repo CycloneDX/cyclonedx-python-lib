@@ -26,6 +26,11 @@ import py_serializable as serializable
 from py_serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
+try:
+    from warnings import deprecated
+except ImportError:
+    from typing_extensions import deprecated
+
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema import SchemaVersion
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
@@ -37,6 +42,12 @@ if TYPE_CHECKING:  # pragma: no cover
     from py_serializable import ObjectMetadataLibrary, ViewType
 
 
+@deprecated(
+    '`Tool` is deprecated from CycloneDX v1.5 onwards. '
+    'This class provides a compatibility layer for backward compatibility '
+    'Use `Component` or `Service` instead, and store data under '
+    '`tools.components` or `tools.services`.'
+)
 @serializable.serializable_class
 class Tool:
     """
