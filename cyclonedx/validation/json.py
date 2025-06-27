@@ -31,11 +31,10 @@ if TYPE_CHECKING:  # pragma: no cover
 
 from ..exception import MissingOptionalDependencyException
 from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
-from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError, squeeze
+from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError
 
 _missing_deps_error: Optional[tuple[MissingOptionalDependencyException, ImportError]] = None
 try:
-    from jsonschema.exceptions import ValidationError as JsonSchemaValidationError  # type:ignore[import-untyped]
     from jsonschema.validators import Draft7Validator  # type:ignore[import-untyped]
     from referencing import Registry
     from referencing.jsonschema import DRAFT7
