@@ -16,8 +16,8 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-import unittest
 from itertools import product
+from unittest import TestCase
 
 from ddt import data, ddt, named_data, unpack
 
@@ -31,7 +31,7 @@ UNDEFINED_FORMAT_VERSION = {
 
 
 @ddt
-class TestGetSchemabasedValidator(unittest.TestCase):
+class TestGetSchemabasedValidator(TestCase):
 
     @named_data(*([f'{f.name} {v.name}', f, v]
                   for f, v
