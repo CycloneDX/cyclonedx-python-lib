@@ -87,13 +87,7 @@ class BomMetaData:
         self.properties = properties or []
         self.manufacturer = manufacturer
         self.lifecycles = lifecycles or []
-
         self.manufacture = manufacture
-        if manufacture:
-            warn(
-                '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
-                'Please use `bom.metadata.component.manufacturer` instead.',
-                DeprecationWarning)
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
@@ -214,6 +208,11 @@ class BomMetaData:
         @todo Based on https://github.com/CycloneDX/specification/issues/346,
               we should set this data on `.component.manufacturer`.
         """
+        if manufacture:
+            warn(
+                '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
+                'Please use `bom.metadata.component.manufacturer` instead.',
+                DeprecationWarning)
         self._manufacture = manufacture
 
     @property

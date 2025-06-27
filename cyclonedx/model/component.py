@@ -1035,12 +1035,6 @@ class Component(Dependable):
         self.crypto_properties = crypto_properties
         self.tags = tags or []
 
-        if modified:
-            warn('`.component.modified` is deprecated from CycloneDX v1.3 onwards. '
-                 'Please use `@.pedigree` instead.', DeprecationWarning)
-        if author:
-            warn('`.component.author` is deprecated from CycloneDX v1.6 onwards. '
-                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
 
     @property
     @serializable.type_mapping(_ComponentTypeSerializationHelper)
@@ -1175,6 +1169,9 @@ class Component(Dependable):
 
     @author.setter
     def author(self, author: Optional[str]) -> None:
+        if author:
+            warn('`.component.author` is deprecated from CycloneDX v1.6 onwards. '
+                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
         self._author = author
 
     @property
@@ -1450,6 +1447,9 @@ class Component(Dependable):
 
     @modified.setter
     def modified(self, modified: bool) -> None:
+        if modified:
+            warn('`.component.modified` is deprecated from CycloneDX v1.3 onwards. '
+                 'Please use `@.pedigree` instead.', DeprecationWarning)
         self._modified = modified
 
     @property
