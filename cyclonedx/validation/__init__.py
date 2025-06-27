@@ -28,75 +28,14 @@ if TYPE_CHECKING:  # pragma: no cover
     from .xml import XmlValidator
 
 
-def squeeze(text: str, size: int, replacement: str = ' ... ') -> str:
-    """Replaces the middle of ``text`` with ``replacement``.
-
-    :param size: the length of the output, -1 to make no squeezing.
-    :return: potentially shorter text
-    :retval: ``text`` if ``size`` is -1 (for easy pass-through)
-    :retval: ``text`` if it is shorter than ``size``
-    :retval: ``text`` with the middle of it replaced with ``replacement``,
-             if ``text`` is longer, than ``size``
-
-    Raises error if ``replacement`` is longer than ``size``, and replacement
-    would happen.
-    """
-    if size == -1:
-        return text
-
-    if size < len(replacement):
-        raise ValueError(f'squeeze: {size = } < {len(replacement) = }')
-
-    if len(text) <= size:
-        return text
-
-    left_size = (size - len(replacement)) // 2
-    right_size = size - len(replacement) - left_size
-    right_offset = len(text) - right_size
-
-    return f'{text[:left_size]}{replacement}{text[right_offset:]}'
-
-
 class ValidationError:
     """Validation failed with this specific error.
 
-    You can use :attr:`~data` to access the raw error object, but prefer
-    other properties and functions, if possible.
+    Use :attr:`~data` to access the content.
     """
 
     data: Any
-    """Raw error data from one of the validation libraries."""
-
-    @property
-    def message(self) -> str:
-        """The error message."""
-        return str(getattr(self.data, 'message', self))
-
-    @property
-    def path(self) -> str:
-        """Path to the location of the problem in the document.
-
-        An XPath/JSONPath string.
-        """
-        # only subclasses know how to extract this info
-        return str(getattr(self.data, 'path', ''))
-
-    def get_squeezed_message(self, *, context_limit: int = -1, max_size: int = -1, replacement: str = ' ... ') -> str:
-        """Extracts, and sanitizes the error message.
-
-        Messages can be quite big from underlying libraries, as they sometimes
-        add context to the error message: both the input or the rule can be big.
-
-        This can be amended both in a generic and library specific ways.
-
-        :param max_size: squeeze message to this size.
-        :param context_limit: limit of tolerated context length.
-        :param replacement: to mark place of dropped text bit[s]
-
-        With the defaults, no squeezing happens.
-        """
-        # subclasses may know how to do it better
-        return squeeze(self.message, max_size, replacement)
+    """Raw error data from one of the underlying validation methods."""
 
     def __init__(self, data: Any) -> None:
         self.data = data

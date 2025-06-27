@@ -49,51 +49,6 @@ except ImportError as err:
     ), err
 
 
-def _get_message_with_squeezed_context(error: 'JsonSchemaValidationError', context_limit: int, replacement: str) -> str:
-    # The below code depends on jsonschema internals, that messages are created
-    # like `yield ValidationError(f"{instance!r} has non-unique elements")`
-    # and tries to replace `{instance!r}` with a shortened version, if needed
-    message: str = error.message
-    if context_limit <= 0 or len(message) <= context_limit:
-        return message
-
-    repr_context = repr(error.instance)
-    if len(repr_context) <= context_limit:
-        return message
-
-    return message.replace(repr_context, squeeze(repr_context, context_limit, replacement))
-
-
-class _JsonValidationError(ValidationError):
-    def get_squeezed_message(self, *, context_limit: int = -1, max_size: int = -1, replacement: str = ' ... ') -> str:
-        """Extracts, and sanitizes the error message.
-
-        Messages can be quite big from underlying libraries, as they sometimes
-        add context to the error message..
-
-        This is amended both in a generic and library specific ways here.
-
-        :param max_size: squeeze message to this size.
-        :param context_limit: jsonschema messages most of the time include the
-                              instance repr as context, which can be very big
-                              (in the megabytes range), so an attempt is made to
-                              shorten context to this size.
-        :param replacement: to mark place of dropped text bit[s]
-
-        With the defaults, no squeezing happens.
-        """
-        message = _get_message_with_squeezed_context(self.data, context_limit, replacement)
-        return squeeze(message, max_size, replacement)
-
-    @property
-    def path(self) -> str:
-        """Path to the location of the problem in the document.
-
-        An XPath/JSONPath string.
-        """
-        return str(getattr(self.data, 'json_path', ''))
-
-
 class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
     @property
     def output_format(self) -> Literal[OutputFormat.JSON]:
@@ -139,8 +94,8 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
             first_error = next(errors, None)
             if first_error is None:
                 return None
-            first_error = _JsonValidationError(first_error)
-            return chain((first_error,), map(_JsonValidationError, errors)) \
+            first_error = ValidationError(first_error)
+            return chain((first_error,), map(ValidationError, errors)) \
                 if all_errors \
                 else first_error
 
