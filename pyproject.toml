@@ -73,7 +73,7 @@ py-serializable =  "^2.0.0"
 sortedcontainers = "^2.4.0"
 license-expression = "^30"
 jsonschema = { version = "^4.18", extras=['format'], optional=true }
-lxml = { version=">=4,<6", optional=true }
+lxml = { version=">=4,<7", optional=true }
 
 [tool.poetry.extras]
 validation = ["jsonschema", "lxml"]
