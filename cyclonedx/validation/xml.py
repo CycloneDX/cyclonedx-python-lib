@@ -19,7 +19,8 @@
 __all__ = ['XmlValidator']
 
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Literal, Optional
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, Literal, Optional, Union, overload
 
 from ..exception import MissingOptionalDependencyException
 from ..schema import OutputFormat
@@ -53,23 +54,46 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
         # this is the def that is used for generating the documentation
         super().__init__(schema_version)
 
-    if _missing_deps_error:
+    # region typing-relevant copy from parent class - needed for mypy and doc tools
+
+    @overload
+    def validate_str(self, data: str, *, all_errors: Literal[False] = ...) -> Optional[ValidationError]:
+        ...  # pragma: no cover
+
+    @overload
+    def validate_str(self, data: str, *, all_errors: Literal[True]) -> Optional[Iterable[ValidationError]]:
+        ...  # pragma: no cover
+
+    def validate_str(
+        self, data: str, *, all_errors: bool = False
+    ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+        ...  # pragma: no cover
+
+    # endregion typing-relevant
+
+    if _missing_deps_error:  # noqa:C901
         __MDERROR = _missing_deps_error
 
-        def validate_str(self, data: str) -> Optional[ValidationError]:
+        def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
+            self, data: str, *, all_errors: bool = False
+        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
             raise self.__MDERROR[0] from self.__MDERROR[1]
+
     else:
-        def validate_str(self, data: str) -> Optional[ValidationError]:
-            return self._validata_data(
-                xml_fromstring(  # nosec B320
+        def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
+            self, data: str, *, all_errors: bool = False
+        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+            validator = self._validator  # may throw on error that MUST NOT be caught
+            valid = validator.validate(
+                xml_fromstring(  # nosec B320 -- we use a custom prepared safe parser
                     bytes(data, encoding='utf8'),
                     parser=self.__xml_parser))
-
-        def _validata_data(self, data: Any) -> Optional[ValidationError]:
-            validator = self._validator  # may throw on error that MUST NOT be caught
-            if not validator.validate(data):
-                return ValidationError(validator.error_log.last_error)
-            return None
+            if valid:
+                return None
+            errors = validator.error_log
+            return map(ValidationError, errors) \
+                if all_errors \
+                else ValidationError(errors.last_error)
 
         __validator: Optional['XMLSchema'] = None
 
