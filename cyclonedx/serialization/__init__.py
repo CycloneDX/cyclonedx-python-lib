@@ -27,11 +27,17 @@ from uuid import UUID
 from packageurl import PackageURL
 from py_serializable.helpers import BaseHelper
 
+try:
+    from warnings import deprecated
+except ImportError:
+    from typing_extensions import deprecated
+
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..model.bom_ref import BomRef
 from ..model.license import _LicenseRepositorySerializationHelper
 
 
+@deprecated('Use :class:`BomRef` instead.')
 class BomRefHelper(BaseHelper):
     """**DEPRECATED** in favour of :class:`BomRef`.
 
@@ -88,6 +94,7 @@ class UrnUuidHelper(BaseHelper):
             ) from err
 
 
+@deprecated('No public API planned for replacing this,')
 class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
     """**DEPRECATED**
 
