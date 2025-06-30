@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v10.3.0 (2025-06-30)
+
+### Documentation
+
+- Instructions for code style
+  ([`160810f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/160810f077c211ee5cf59a5ca9e9c27fb3d5818c))
+
+### Features
+
+- Schema based validation may return iterable of all errors
+  ([#834](https://github.com/CycloneDX/cyclonedx-python-lib/pull/834),
+  [`f95576f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f95576fb583480372e65903894f766ae542e4951))
+
+
 ## v10.2.0 (2025-06-10)
 
 ### Bug Fixes
