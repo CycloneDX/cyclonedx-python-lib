@@ -20,6 +20,7 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
+import sys
 from typing import Any, Optional
 from uuid import UUID
 
@@ -27,9 +28,9 @@ from uuid import UUID
 from packageurl import PackageURL
 from py_serializable.helpers import BaseHelper
 
-try:
+if sys.version_info > (3, 13):
     from warnings import deprecated
-except ImportError:
+else:
     from typing_extensions import deprecated
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
