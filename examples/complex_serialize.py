@@ -91,9 +91,9 @@ serialized_json = my_json_outputter.output_as_string(indent=2)
 print(serialized_json)
 my_json_validator = JsonStrictValidator(SchemaVersion.V1_6)
 try:
-    validation_errors = my_json_validator.validate_str(serialized_json)
-    if validation_errors:
-        print('JSON invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+    json_validation_errors = my_json_validator.validate_str(serialized_json)
+    if json_validation_errors:
+        print('JSON invalid', 'ValidationError:', repr(json_validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
     print('JSON valid')
 except MissingOptionalDependencyException as error:
@@ -112,9 +112,9 @@ print(serialized_xml)
 my_xml_validator: 'XmlValidator' = make_schemabased_validator(
     my_xml_outputter.output_format, my_xml_outputter.schema_version)
 try:
-    validation_errors = my_xml_validator.validate_str(serialized_xml)
-    if validation_errors:
-        print('XML invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+    xml_validation_errors = my_xml_validator.validate_str(serialized_xml)
+    if xml_validation_errors:
+        print('XML invalid', 'ValidationError:', repr(xml_validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
     print('XML valid')
 except MissingOptionalDependencyException as error:

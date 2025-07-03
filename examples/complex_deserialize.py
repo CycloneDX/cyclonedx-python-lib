@@ -147,9 +147,9 @@ json_data = """{
 }"""
 my_json_validator = JsonStrictValidator(SchemaVersion.V1_6)
 try:
-    validation_errors = my_json_validator.validate_str(json_data)
-    if validation_errors:
-        print('JSON invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+    json_validation_errors = my_json_validator.validate_str(json_data)
+    if json_validation_errors:
+        print('JSON invalid', 'ValidationError:', repr(json_validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
     print('JSON valid')
 except MissingOptionalDependencyException as error:
@@ -248,9 +248,9 @@ xml_data = """<?xml version="1.0" ?>
 </bom>"""
 my_xml_validator: 'XmlValidator' = make_schemabased_validator(OutputFormat.XML, SchemaVersion.V1_6)
 try:
-    validation_errors = my_xml_validator.validate_str(xml_data)
-    if validation_errors:
-        print('XML invalid', 'ValidationError:', repr(validation_errors), sep='\n', file=sys.stderr)
+    xml_validation_errors = my_xml_validator.validate_str(xml_data)
+    if xml_validation_errors:
+        print('XML invalid', 'ValidationError:', repr(xml_validation_errors), sep='\n', file=sys.stderr)
         sys.exit(2)
     print('XML valid')
 except MissingOptionalDependencyException as error:
