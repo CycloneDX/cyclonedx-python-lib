@@ -203,12 +203,9 @@ class ToolRepository:
         # Deprecated since v1.5
         tools: Optional[Iterable[Tool]] = None
     ) -> None:
-        if tools:
-            warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
-                 'Please use `@.components` and `@.services` instead.',
-                 DeprecationWarning)
         self.components = components or ()
         self.services = services or ()
+        # spec-deprecated properties below
         self.tools = tools or ()
 
     @property
@@ -241,6 +238,10 @@ class ToolRepository:
 
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
+        if tools:
+            warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
+                 'Please use `@.components` and `@.services` instead.',
+                 DeprecationWarning)
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
