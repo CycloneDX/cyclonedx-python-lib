@@ -26,7 +26,6 @@ This set of classes represents the data that is possible about known Services.
 
 from collections.abc import Iterable
 from typing import Any, Optional, Union
-from warnings import warn
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
@@ -62,7 +61,6 @@ class Service(Dependable):
         endpoints: Optional[Iterable[XsUri]] = None,
         authenticated: Optional[bool] = None,
         x_trust_boundary: Optional[bool] = None,
-        # Deprecated since v1.5
         data: Optional[Iterable[DataClassification]] = None,
         licenses: Optional[Iterable[License]] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
@@ -261,10 +259,6 @@ class Service(Dependable):
 
     @data.setter
     def data(self, data: Iterable[DataClassification]) -> None:
-        if data:
-            warn('`@.data` is deprecated from CycloneDX v1.5 onwards. '
-                 'Alternative implementation is planned for future versions.',
-                 DeprecationWarning)
         self._data = SortedSet(data)
 
     @property
