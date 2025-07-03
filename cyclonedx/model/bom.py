@@ -208,7 +208,7 @@ class BomMetaData:
         @todo Based on https://github.com/CycloneDX/specification/issues/346,
               we should set this data on `.component.manufacturer`.
         """
-        if manufacture:
+        if manufacture is not None:
             warn(
                 '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
                 'Please use `bom.metadata.component.manufacturer` instead.',
