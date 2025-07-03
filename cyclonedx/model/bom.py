@@ -87,6 +87,7 @@ class BomMetaData:
         self.properties = properties or []
         self.manufacturer = manufacturer
         self.lifecycles = lifecycles or []
+        # deprecated properties below
         self.manufacture = manufacture
 
     @property
