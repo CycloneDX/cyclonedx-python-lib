@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-__all__ = ['JsonValidator', 'JsonStrictValidator']
+__all__ = ['JsonValidator', 'JsonStrictValidator', 'JsonValidationError']
 
 from abc import ABC
 from collections.abc import Iterable
@@ -40,12 +40,21 @@ try:
     from referencing.jsonschema import DRAFT7
 
     if TYPE_CHECKING:  # pragma: no cover
+        from jsonschema.exceptions import ValidationError as JsonSchemaValidationError  # type:ignore[import-untyped]
         from jsonschema.protocols import Validator as JsonSchemaValidator  # type:ignore[import-untyped]
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'
         'Please install `cyclonedx-python-lib` with the extra "json-validation".\n'
     ), err
+
+
+class JsonValidationError(ValidationError):
+    @classmethod
+    def _make_from_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonValidationError':
+        """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
+        # in preparation for https://github.com/CycloneDX/cyclonedx-python-lib/pull/836
+        return cls(e)
 
 
 class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
@@ -60,16 +69,16 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
     # region typing-relevant copy from parent class - needed for mypy and doc tools
 
     @overload
-    def validate_str(self, data: str, *, all_errors: Literal[False] = ...) -> Optional[ValidationError]:
+    def validate_str(self, data: str, *, all_errors: Literal[False] = ...) -> Optional[JsonValidationError]:
         ...  # pragma: no cover
 
     @overload
-    def validate_str(self, data: str, *, all_errors: Literal[True]) -> Optional[Iterable[ValidationError]]:
+    def validate_str(self, data: str, *, all_errors: Literal[True]) -> Optional[Iterable[JsonValidationError]]:
         ...  # pragma: no cover
 
     def validate_str(
         self, data: str, *, all_errors: bool = False
-    ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+    ) -> Union[None, JsonValidationError, Iterable[JsonValidationError]]:
         ...  # pragma: no cover
 
     # endregion
@@ -79,22 +88,22 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
 
         def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
             self, data: str, *, all_errors: bool = False
-        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+        ) -> Union[None, JsonValidationError, Iterable[JsonValidationError]]:
             raise self.__MDERROR[0] from self.__MDERROR[1]
 
     else:
 
         def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
             self, data: str, *, all_errors: bool = False
-        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+        ) -> Union[None, JsonValidationError, Iterable[JsonValidationError]]:
             validator = self._validator  # may throw on error that MUST NOT be caught
             structure = json_loads(data)
             errors = validator.iter_errors(structure)
             first_error = next(errors, None)
             if first_error is None:
                 return None
-            first_error = ValidationError(first_error)
-            return chain((first_error,), map(ValidationError, errors)) \
+            first_error = JsonValidationError._make_from_jsve(first_error)
+            return chain((first_error,), map(JsonValidationError._make_from_jsve, errors)) \
                 if all_errors \
                 else first_error
 
