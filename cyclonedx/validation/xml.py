@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
-__all__ = ['XmlValidator']
+__all__ = ['XmlValidator', 'XmlValidationError']
 
 from abc import ABC
 from collections.abc import Iterable
@@ -37,11 +37,22 @@ try:
         XMLSchema,
         fromstring as xml_fromstring,
     )
+
+    if TYPE_CHECKING:  # pragma: no cover
+        from lxml.etree import _LogEntry as _XmlLogEntry
 except ImportError as err:
     _missing_deps_error = MissingOptionalDependencyException(
         'This functionality requires optional dependencies.\n'
         'Please install `cyclonedx-python-lib` with the extra "xml-validation".\n'
     ), err
+
+
+class XmlValidationError(ValidationError):
+    @classmethod
+    def _make_from_xle(cls, e: '_XmlLogEntry') -> 'XmlValidationError':
+        """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
+        # in preparation for https://github.com/CycloneDX/cyclonedx-python-lib/pull/836
+        return cls(e)
 
 
 class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
@@ -57,16 +68,16 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
     # region typing-relevant copy from parent class - needed for mypy and doc tools
 
     @overload
-    def validate_str(self, data: str, *, all_errors: Literal[False] = ...) -> Optional[ValidationError]:
+    def validate_str(self, data: str, *, all_errors: Literal[False] = ...) -> Optional[XmlValidationError]:
         ...  # pragma: no cover
 
     @overload
-    def validate_str(self, data: str, *, all_errors: Literal[True]) -> Optional[Iterable[ValidationError]]:
+    def validate_str(self, data: str, *, all_errors: Literal[True]) -> Optional[Iterable[XmlValidationError]]:
         ...  # pragma: no cover
 
     def validate_str(
         self, data: str, *, all_errors: bool = False
-    ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+    ) -> Union[None, XmlValidationError, Iterable[XmlValidationError]]:
         ...  # pragma: no cover
 
     # endregion typing-relevant
@@ -76,13 +87,13 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
 
         def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
             self, data: str, *, all_errors: bool = False
-        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+        ) -> Union[None, XmlValidationError, Iterable[XmlValidationError]]:
             raise self.__MDERROR[0] from self.__MDERROR[1]
 
     else:
         def validate_str(  # type:ignore[no-redef] # noqa:F811 # typing-relevant headers go first
             self, data: str, *, all_errors: bool = False
-        ) -> Union[None, ValidationError, Iterable[ValidationError]]:
+        ) -> Union[None, XmlValidationError, Iterable[XmlValidationError]]:
             validator = self._validator  # may throw on error that MUST NOT be caught
             valid = validator.validate(
                 xml_fromstring(  # nosec B320 -- we use a custom prepared safe parser
@@ -91,9 +102,9 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
             if valid:
                 return None
             errors = validator.error_log
-            return map(ValidationError, errors) \
+            return map(XmlValidationError._make_from_xle, errors) \
                 if all_errors \
-                else ValidationError(errors.last_error)
+                else XmlValidationError._make_from_xle(errors.last_error)
 
         __validator: Optional['XMLSchema'] = None
 
