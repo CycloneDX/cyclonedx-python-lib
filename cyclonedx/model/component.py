@@ -1169,7 +1169,7 @@ class Component(Dependable):
 
     @author.setter
     def author(self, author: Optional[str]) -> None:
-        if author:
+        if author is not None:
             warn('`.component.author` is deprecated from CycloneDX v1.6 onwards. '
                  'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
         self._author = author
