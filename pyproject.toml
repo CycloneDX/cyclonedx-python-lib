@@ -74,6 +74,7 @@ sortedcontainers = "^2.4.0"
 license-expression = "^30"
 jsonschema = { version = "^4.18", extras=['format'], optional=true }
 lxml = { version=">=4,<7", optional=true }
+typing_extensions = { version="^4.6", python = "<3.13"}  # for `@deprecated` - which was added in v4.5 but this version appesrs to be broken...
 
 [tool.poetry.extras]
 validation = ["jsonschema", "lxml"]

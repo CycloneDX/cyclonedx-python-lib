@@ -28,7 +28,7 @@ from uuid import UUID
 from packageurl import PackageURL
 from py_serializable.helpers import BaseHelper
 
-if sys.version_info > (3, 13):
+if sys.version_info >= (3, 13):
     from warnings import deprecated
 else:
     from typing_extensions import deprecated
