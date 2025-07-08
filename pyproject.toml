@@ -101,7 +101,7 @@ tox = "4.27.0"
 xmldiff = "2.7.0"
 bandit = "1.8.5"
 pyupgrade = "3.20.0"
-deptry = "^0.23.0"
+deptry = "0.23.0"
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html
