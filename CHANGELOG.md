@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v10.4.1 (2025-07-08)
+
+### Bug Fixes
+
+- Add runtime dependnecy `typing_extensions>=4.6; python_version<"3.13"`
+  ([#845](https://github.com/CycloneDX/cyclonedx-python-lib/pull/845),
+  [`95b560a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/95b560a6730bc8bb43c41768a33ad221ba9ca283))
+
+- Added runtime dependnecy `referencing>=0.28.4"`
+  ([#846](https://github.com/CycloneDX/cyclonedx-python-lib/pull/846),
+  [`4d01e87`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4d01e87dcf7a118d7f0011b669809d5df9bfd9d5))
+
+
 ## v10.4.0 (2025-07-08)
 
 ### Bug Fixes
