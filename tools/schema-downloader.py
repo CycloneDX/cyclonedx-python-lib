@@ -80,6 +80,8 @@ BOM_JSON_LAX = {
         # this is wrong in schema<1.5
         # with current SchemaValidator this is no longer required, as defaults are not applied
         # (re.compile(r'\s+"default": "",(?![^}]*?"pattern": "\^\(\.\*\)\$")', re.MULTILINE), '')
+        # anyway, lets get rid of unnecessary/broken patterns
+        (re.compile(r',?\s+"pattern": "\^\(\.\*\)\$"', re.MULTILINE), '')
     ]
 }
 
