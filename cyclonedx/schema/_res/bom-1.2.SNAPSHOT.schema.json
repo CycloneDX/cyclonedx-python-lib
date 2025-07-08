@@ -166,16 +166,14 @@
           "default": "",
           "examples": [
             "Example Inc."
-          ],
-          "pattern": "^(.*)$"
+          ]
         },
         "url": {
           "type": "array",
           "title": "URL",
           "description": "The URL of the organization. Multiple URLs are allowed.",
           "default": "",
-          "examples": ["https://example.com"],
-          "pattern": "^(.*)$"
+          "examples": ["https://example.com"]
         },
         "contact": {
           "type": "array",
@@ -195,24 +193,21 @@
           "title": "Name",
           "description": "The name of a contact",
           "default": "",
-          "examples": ["Contact name"],
-          "pattern": "^(.*)$"
+          "examples": ["Contact name"]
         },
         "email": {
           "type": "string",
           "title": "Email Address",
           "description": "The email address of the contact. Multiple email addresses are allowed.",
           "default": "",
-          "examples": ["firstname.lastname@example.com"],
-          "pattern": "^(.*)$"
+          "examples": ["firstname.lastname@example.com"]
         },
         "phone": {
           "type": "string",
           "title": "Phone",
           "description": "The phone number of the contact. Multiple phone numbers are allowed.",
           "default": "",
-          "examples": ["800-555-1212"],
-          "pattern": "^(.*)$"
+          "examples": ["800-555-1212"]
         }
       }
     },
@@ -240,8 +235,7 @@
           "title": "Component Type",
           "description": "Specifies the type of component. For software components, classify as application if no more specific appropriate classification is available or cannot be determined for the component.",
           "default": "",
-          "examples": ["library"],
-          "pattern": "^(.*)$"
+          "examples": ["library"]
         },
         "mime-type": {
           "type": "string",
@@ -255,8 +249,7 @@
           "$ref": "#/definitions/refType",
           "title": "BOM Reference",
           "description": "An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref should be unique.",
-          "default": "",
-          "pattern": "^(.*)$"
+          "default": ""
         },
         "supplier": {
           "title": "Component Supplier",
@@ -268,47 +261,41 @@
           "title": "Component Author",
           "description": "The person(s) or organization(s) that authored the component",
           "default": "",
-          "examples": ["Acme Inc"],
-          "pattern": "^(.*)$"
+          "examples": ["Acme Inc"]
         },
         "publisher": {
           "type": "string",
           "title": "Component Publisher",
           "description": "The person(s) or organization(s) that published the component",
           "default": "",
-          "examples": ["Acme Inc"],
-          "pattern": "^(.*)$"
+          "examples": ["Acme Inc"]
         },
         "group": {
           "type": "string",
           "title": "Component Group",
           "description": "The grouping name or identifier. This will often be a shortened, single name of the company or project that produced the component, or the source package or domain name. Whitespace and special characters should be avoided. Examples include: apache, org.apache.commons, and apache.org.",
           "default": "",
-          "examples": ["com.acme"],
-          "pattern": "^(.*)$"
+          "examples": ["com.acme"]
         },
         "name": {
           "type": "string",
           "title": "Component Name",
           "description": "The name of the component. This will often be a shortened, single name of the component. Examples: commons-lang3 and jquery",
           "default": "",
-          "examples": ["tomcat-catalina"],
-          "pattern": "^(.*)$"
+          "examples": ["tomcat-catalina"]
         },
         "version": {
           "type": "string",
           "title": "Component Version",
           "description": "The component version. The version should ideally comply with semantic versioning but is not enforced.",
           "default": "",
-          "examples": ["9.0.14"],
-          "pattern": "^(.*)$"
+          "examples": ["9.0.14"]
         },
         "description": {
           "type": "string",
           "title": "Component Description",
           "description": "Specifies a description for the component",
-          "default": "",
-          "pattern": "^(.*)$"
+          "default": ""
         },
         "scope": {
           "type": "string",
@@ -319,8 +306,7 @@
           ],
           "title": "Component Scope",
           "description": "Specifies the scope of the component. If scope is not specified, 'required' scope should be assumed by the consumer of the BOM",
-          "default": "required",
-          "pattern": "^(.*)$"
+          "default": "required"
         },
         "hashes": {
           "type": "array",
@@ -341,8 +327,7 @@
                 "examples": [
                   "Apache-2.0 AND (MIT OR GPL-2.0-only)",
                   "GPL-3.0-only WITH Classpath-exception-2.0"
-                ],
-                "pattern": "^(.*)$"
+                ]
               }
             },
             "oneOf":[
@@ -359,22 +344,19 @@
           "type": "string",
           "title": "Component Copyright",
           "description": "An optional copyright notice informing users of the underlying claims to copyright ownership in a published work.",
-          "examples": ["Acme Inc"],
-          "pattern": "^(.*)$"
+          "examples": ["Acme Inc"]
         },
         "cpe": {
           "type": "string",
           "title": "Component Common Platform Enumeration (CPE)",
           "description": "DEPRECATED - DO NOT USE. This will be removed in a future version. Specifies a well-formed CPE name. See https://nvd.nist.gov/products/cpe",
-          "examples": ["cpe:2.3:a:acme:component_framework:-:*:*:*:*:*:*:*"],
-          "pattern": "^(.*)$"
+          "examples": ["cpe:2.3:a:acme:component_framework:-:*:*:*:*:*:*:*"]
         },
         "purl": {
           "type": "string",
           "title": "Component Package URL (purl)",
           "default": "",
-          "examples": ["pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar"],
-          "pattern": "^(.*)$"
+          "examples": ["pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar"]
         },
         "swid": {
           "$ref": "#/definitions/swid",
@@ -424,8 +406,7 @@
             "notes": {
               "type": "string",
               "title": "Notes",
-              "description": "Notes, observations, and other non-structured commentary describing the components pedigree.",
-              "pattern": "^(.*)$"
+              "description": "Notes, observations, and other non-structured commentary describing the components pedigree."
             }
           }
         },
@@ -488,8 +469,7 @@
         "url": {
           "type": "string",
           "title": "URL",
-          "default": "The URL to the SWID file.",
-          "pattern": "^(.*)$"
+          "default": "The URL to the SWID file."
         }
       }
     },
@@ -514,8 +494,7 @@
           "enum": [
             "base64"
           ],
-          "default": "",
-          "pattern": "^(.*)$"
+          "default": ""
         },
         "content": {
           "type": "string",
@@ -557,8 +536,7 @@
         "BLAKE3"
       ],
       "title": "Hash Algorithm",
-      "default": "",
-      "pattern": "^(.*)$"
+      "default": ""
     },
     "hash-content": {
       "type": "string",
@@ -590,8 +568,7 @@
           "title": "License Name",
           "description": "If SPDX does not define the license used, this field may be used to provide the license name",
           "default": "",
-          "examples": ["Acme Software License"],
-          "pattern": "^(.*)$"
+          "examples": ["Acme Software License"]
         },
         "text": {
           "title": "License text",
@@ -602,8 +579,7 @@
           "type": "string",
           "title": "License URL",
           "description": "The URL to the license file. If specified, a 'license' externalReference should also be specified for completeness",
-          "examples": ["https://www.apache.org/licenses/LICENSE-2.0.txt"],
-          "pattern": "^(.*)$"
+          "examples": ["https://www.apache.org/licenses/LICENSE-2.0.txt"]
         }
       }
     },
@@ -615,8 +591,7 @@
         "uid": {
           "type": "string",
           "title": "UID",
-          "description": "A unique identifier of the commit. This may be version control specific. For example, Subversion uses revision numbers whereas git uses commit hashes.",
-          "pattern": "^(.*)$"
+          "description": "A unique identifier of the commit. This may be version control specific. For example, Subversion uses revision numbers whereas git uses commit hashes."
         },
         "url": {
           "type": "string",
@@ -637,8 +612,7 @@
         "message": {
           "type": "string",
           "title": "Message",
-          "description": "The text description of the contents of the commit",
-          "pattern": "^(.*)$"
+          "description": "The text description of the contents of the commit"
         }
       }
     },
@@ -687,8 +661,7 @@
         "url": {
           "type": "string",
           "title": "URL",
-          "description": "Specifies the URL to the diff",
-          "pattern": "^(.*)$"
+          "description": "Specifies the URL to the diff"
         }
       }
     },
@@ -713,20 +686,17 @@
         "id": {
           "type": "string",
           "title": "ID",
-          "description": "The identifier of the issue assigned by the source of the issue",
-          "pattern": "^(.*)$"
+          "description": "The identifier of the issue assigned by the source of the issue"
         },
         "name": {
           "type": "string",
           "title": "Name",
-          "description": "The name of the issue",
-          "pattern": "^(.*)$"
+          "description": "The name of the issue"
         },
         "description": {
           "type": "string",
           "title": "Description",
-          "description": "A description of the issue",
-          "pattern": "^(.*)$"
+          "description": "A description of the issue"
         },
         "source": {
           "type": "object",
@@ -736,14 +706,12 @@
             "name": {
               "type": "string",
               "title": "Name",
-              "description": "The name of the source. For example 'National Vulnerability Database', 'NVD', and 'Apache'",
-              "pattern": "^(.*)$"
+              "description": "The name of the source. For example 'National Vulnerability Database', 'NVD', and 'Apache'"
             },
             "url": {
               "type": "string",
               "title": "URL",
-              "description": "The url of the issue documentation as provided by the source",
-              "pattern": "^(.*)$"
+              "description": "The url of the issue documentation as provided by the source"
             }
           }
         },
@@ -752,8 +720,7 @@
           "title": "References",
           "description": "A collection of URL's for reference. Multiple URLs are allowed.",
           "default": "",
-          "examples": ["https://example.com"],
-          "pattern": "^(.*)$"
+          "examples": ["https://example.com"]
         }
       }
     },
@@ -771,8 +738,7 @@
         "name": {
           "type": "string",
           "title": "Name",
-          "description": "The name of the individual who performed the action",
-          "pattern": "^(.*)$"
+          "description": "The name of the individual who performed the action"
         },
         "email": {
           "type": "string",
@@ -794,14 +760,12 @@
         "url": {
           "type": "string",
           "title": "URL",
-          "description": "The URL to the external reference",
-          "pattern": "^(.*)$"
+          "description": "The URL to the external reference"
         },
         "comment": {
           "type": "string",
           "title": "Comment",
-          "description": "An optional comment describing the external reference",
-          "pattern": "^(.*)$"
+          "description": "An optional comment describing the external reference"
         },
         "type": {
           "type": "string",
@@ -863,8 +827,7 @@
           "$ref": "#/definitions/refType",
           "title": "BOM Reference",
           "description": "An optional identifier which can be used to reference the service elsewhere in the BOM. Every bom-ref should be unique.",
-          "default": "",
-          "pattern": "^(.*)$"
+          "default": ""
         },
         "provider": {
           "title": "Provider",
@@ -876,39 +839,34 @@
           "title": "Service Group",
           "description": "The grouping name, namespace, or identifier. This will often be a shortened, single name of the company or project that produced the service or domain name. Whitespace and special characters should be avoided.",
           "default": "",
-          "examples": ["com.acme"],
-          "pattern": "^(.*)$"
+          "examples": ["com.acme"]
         },
         "name": {
           "type": "string",
           "title": "Service Name",
           "description": "The name of the service. This will often be a shortened, single name of the service.",
           "default": "",
-          "examples": ["ticker-service"],
-          "pattern": "^(.*)$"
+          "examples": ["ticker-service"]
         },
         "version": {
           "type": "string",
           "title": "Service Version",
           "description": "The service version.",
           "default": "",
-          "examples": ["1.0.0"],
-          "pattern": "^(.*)$"
+          "examples": ["1.0.0"]
         },
         "description": {
           "type": "string",
           "title": "Service Description",
           "description": "Specifies a description for the service",
-          "default": "",
-          "pattern": "^(.*)$"
+          "default": ""
         },
         "endpoints": {
           "type": "array",
           "title": "Endpoints",
           "description": "The endpoint URIs of the service. Multiple endpoints are allowed.",
           "default": "",
-          "examples": ["https://example.com/api/v1/ticker"],
-          "pattern": "^(.*)$"
+          "examples": ["https://example.com/api/v1/ticker"]
         },
         "authenticated": {
           "type": "boolean",
@@ -940,8 +898,7 @@
                 "examples": [
                   "Apache-2.0 AND (MIT OR GPL-2.0-only)",
                   "GPL-3.0-only WITH Classpath-exception-2.0"
-                ],
-                "pattern": "^(.*)$"
+                ]
               }
             },
             "oneOf":[
@@ -993,8 +950,7 @@
         "unknown"
       ],
       "title": "Data flow direction",
-      "default": "",
-      "pattern": "^(.*)$"
+      "default": ""
     }
   }
 }
