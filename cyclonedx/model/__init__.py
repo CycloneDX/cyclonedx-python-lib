@@ -676,7 +676,7 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
         return ExternalReferenceType(o)
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class XsUri(serializable.helpers.BaseHelper):
     """
     Helper class that allows us to perform validation on data strings that are defined as xs:anyURI
@@ -802,7 +802,7 @@ class XsUri(serializable.helpers.BaseHelper):
         return self._uri.startswith(_BOM_LINK_PREFIX)
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ExternalReference:
     """
     This is our internal representation of an ExternalReference complex type that can be used in multiple places within
@@ -914,7 +914,7 @@ class ExternalReference:
         return f'<ExternalReference {self.type.name}, {self.url}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Property:
     """
     This is our internal representation of `propertyType` complex type that can be used in multiple places within
@@ -989,7 +989,7 @@ class Property:
         return f'<Property name={self.name}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class NoteText:
     """
     This is our internal representation of the Note.text complex type that can be used in multiple places within
@@ -1081,7 +1081,7 @@ class NoteText:
         return f'<NoteText content_type={self.content_type}, encoding={self.encoding}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Note:
     """
     This is our internal representation of the Note complex type that can be used in multiple places within
@@ -1166,7 +1166,7 @@ class Note:
         return f'<Note id={id(self)}, locale={self.locale}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class IdentifiableAction:
     """
     This is our internal representation of the `identifiableActionType` complex type.
@@ -1252,7 +1252,7 @@ class IdentifiableAction:
         return f'<IdentifiableAction name={self.name}, email={self.email}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Copyright:
     """
     This is our internal representation of the `copyrightsType` complex type.

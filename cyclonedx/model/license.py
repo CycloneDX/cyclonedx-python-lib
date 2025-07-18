@@ -60,7 +60,10 @@ LicenseExpressionAcknowledgement = LicenseAcknowledgement
 """Deprecated alias for :class:`LicenseAcknowledgement`"""
 
 
-@serializable.serializable_class(name='license')
+@serializable.serializable_class(
+    name='license',
+    ignore_unknown_during_deserialization=True
+)
 class DisjunctiveLicense:
     """
     This is our internal representation of `licenseType` complex type that can be used in multiple places within
@@ -245,7 +248,10 @@ class DisjunctiveLicense:
         return f'<License id={self._id!r}, name={self._name!r}>'
 
 
-@serializable.serializable_class(name='expression')
+@serializable.serializable_class(
+    name='expression',
+    ignore_unknown_during_deserialization=True
+)
 class LicenseExpression:
     """
     This is our internal representation of `licenseType`'s  expression type that can be used in multiple places within

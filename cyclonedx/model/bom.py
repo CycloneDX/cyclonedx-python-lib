@@ -55,7 +55,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class BomMetaData:
     """
     This is our internal representation of the metadata complex type within the CycloneDX standard.
@@ -314,7 +314,7 @@ class BomMetaData:
         return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
 
 
-@serializable.serializable_class(ignore_during_deserialization=['$schema', 'bom_format', 'spec_version'])
+@serializable.serializable_class(    ignore_unknown_during_deserialization=True)
 class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
