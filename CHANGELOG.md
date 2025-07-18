@@ -2,6 +2,41 @@
 
 <!-- version list -->
 
+## v10.4.1 (2025-07-08)
+
+### Bug Fixes
+
+- Add runtime dependnecy `typing_extensions>=4.6; python_version<"3.13"`
+  ([#845](https://github.com/CycloneDX/cyclonedx-python-lib/pull/845),
+  [`95b560a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/95b560a6730bc8bb43c41768a33ad221ba9ca283))
+
+- Added runtime dependnecy `referencing>=0.28.4"`
+  ([#846](https://github.com/CycloneDX/cyclonedx-python-lib/pull/846),
+  [`4d01e87`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4d01e87dcf7a118d7f0011b669809d5df9bfd9d5))
+
+
+## v10.4.0 (2025-07-08)
+
+### Bug Fixes
+
+- Issue `DeprecationWarnings` for deprecated properties properly
+  ([#838](https://github.com/CycloneDX/cyclonedx-python-lib/pull/838),
+  [`34a11aa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/34a11aacf65a3be7766304e7ec3a009d2d8720d1))
+
+- Removed meaningless pattern checks for CycloneDX 1.2 JSON schema
+  ([#843](https://github.com/CycloneDX/cyclonedx-python-lib/pull/843),
+  [`6e8083a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6e8083a7adc626b6e420518c4919807574ad5f50))
+
+### Features
+
+- Decorate deprecated symbols ([#839](https://github.com/CycloneDX/cyclonedx-python-lib/pull/839),
+  [`33daaf1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/33daaf1e93b0993cc5076874e1894d8c9fcd4df9))
+
+- Validators return specific error classes
+  ([#840](https://github.com/CycloneDX/cyclonedx-python-lib/pull/840),
+  [`23a0f72`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/23a0f72ef29428e712917efa3b083c858e60dc04))
+
+
 ## v10.3.0 (2025-06-30)
 
 ### Documentation

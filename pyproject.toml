@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "cyclonedx-python-lib"
 # !! version is managed by semantic_release
-version = "10.3.0"
+version = "10.4.1"
 description = "Python library for CycloneDX"
 authors = [
   "Paul Horton <phorton@sonatype.com>",
@@ -73,16 +73,18 @@ py-serializable =  "^2.0.0"
 sortedcontainers = "^2.4.0"
 license-expression = "^30"
 jsonschema = { version = "^4.18", extras=['format'], optional=true }
+referencing = { version = ">=0.28.4", optional=true }  # in sync with the transitive dependency of `jsonschema`
 lxml = { version=">=4,<7", optional=true }
+typing_extensions = { version="^4.6", python = "<3.13"}  # for `@deprecated` - which was added in v4.5 but this version appesrs to be broken...
 
 [tool.poetry.extras]
-validation = ["jsonschema", "lxml"]
-json-validation = ["jsonschema"]
+validation = ["jsonschema", "referencing", "lxml"]
+json-validation = ["jsonschema", "referencing"]
 xml-validation = ["lxml"]
 
 [tool.poetry.group.dev.dependencies]
 ddt = "1.7.2"
-coverage = "7.9.1"
+coverage = "7.9.2"
 flake8 = "7.3.0"
 flake8-annotations = "3.1.1"
 flake8-bugbear = "24.12.12"
@@ -97,8 +99,9 @@ mypy = "1.16.1"
 tomli = { version = "2.2.1", python = "<3.11" }
 tox = "4.27.0"
 xmldiff = "2.7.0"
-bandit = "1.8.5"
+bandit = "1.8.6"
 pyupgrade = "3.20.0"
+deptry = "0.23.0"
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html
@@ -146,3 +149,6 @@ prerelease_token = "alpha"
 match = "(\\d+\\.0\\.0-(dev|rc)|dev/\\d+\\.0\\.0)"
 prerelease = true
 prerelease_token = "rc"
+
+[tool.deptry]
+extend_exclude = ["docs", "examples", "package_aliases", "tools"]

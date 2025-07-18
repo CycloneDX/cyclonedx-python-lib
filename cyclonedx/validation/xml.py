@@ -49,7 +49,7 @@ except ImportError as err:
 
 class XmlValidationError(ValidationError):
     @classmethod
-    def __make_from_xle(cls, e: '_XmlLogEntry') -> 'XmlValidationError':
+    def _make_from_xle(cls, e: '_XmlLogEntry') -> 'XmlValidationError':
         """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
         return cls(e.message)  # TODO: shorten and more useful message? maybe there is a massage formatter?
 

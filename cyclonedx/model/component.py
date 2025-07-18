@@ -1010,11 +1010,9 @@ class Component(Dependable):
         self.supplier = supplier
         self.manufacturer = manufacturer
         self.authors = authors or []
-        self.author = author
         self.publisher = publisher
         self.group = group
         self.name = name
-        self.version = version
         self.description = description
         self.scope = scope
         self.hashes = hashes or []
@@ -1025,7 +1023,6 @@ class Component(Dependable):
         self.omnibor_ids = omnibor_ids or []
         self.swhids = swhids or []
         self.swid = swid
-        self.modified = modified
         self.pedigree = pedigree
         self.external_references = external_references or []
         self.properties = properties or []
@@ -1034,13 +1031,10 @@ class Component(Dependable):
         self.release_notes = release_notes
         self.crypto_properties = crypto_properties
         self.tags = tags or []
-
-        if modified:
-            warn('`.component.modified` is deprecated from CycloneDX v1.3 onwards. '
-                 'Please use `@.pedigree` instead.', DeprecationWarning)
-        if author:
-            warn('`.component.author` is deprecated from CycloneDX v1.6 onwards. '
-                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
+        # spec-deprecated properties below
+        self.author = author
+        self.modified = modified
+        self.version = version
 
     @property
     @serializable.type_mapping(_ComponentTypeSerializationHelper)
@@ -1175,6 +1169,9 @@ class Component(Dependable):
 
     @author.setter
     def author(self, author: Optional[str]) -> None:
+        if author is not None:
+            warn('`@.author` is deprecated from CycloneDX v1.6 onwards. '
+                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
         self._author = author
 
     @property
@@ -1255,7 +1252,7 @@ class Component(Dependable):
     @version.setter
     def version(self, version: Optional[str]) -> None:
         if version and len(version) > 1024:
-            warn('`.component.version`has a maximum length of 1024 from CycloneDX v1.6 onwards.', UserWarning)
+            warn('`@.version`has a maximum length of 1024 from CycloneDX v1.6 onwards.', UserWarning)
         self._version = version
 
     @property
@@ -1450,6 +1447,9 @@ class Component(Dependable):
 
     @modified.setter
     def modified(self, modified: bool) -> None:
+        if modified:
+            warn('`@.modified` is deprecated from CycloneDX v1.3 onwards. '
+                 'Please use `@.pedigree` instead.', DeprecationWarning)
         self._modified = modified
 
     @property

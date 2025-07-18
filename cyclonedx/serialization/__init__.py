@@ -20,6 +20,7 @@
 Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
 """
 
+import sys
 from typing import Any, Optional
 from uuid import UUID
 
@@ -27,11 +28,17 @@ from uuid import UUID
 from packageurl import PackageURL
 from py_serializable.helpers import BaseHelper
 
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
+
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..model.bom_ref import BomRef
 from ..model.license import _LicenseRepositorySerializationHelper
 
 
+@deprecated('Use :class:`BomRef` instead.')
 class BomRefHelper(BaseHelper):
     """**DEPRECATED** in favour of :class:`BomRef`.
 
@@ -88,6 +95,7 @@ class UrnUuidHelper(BaseHelper):
             ) from err
 
 
+@deprecated('No public API planned for replacing this,')
 class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
     """**DEPRECATED**
 
