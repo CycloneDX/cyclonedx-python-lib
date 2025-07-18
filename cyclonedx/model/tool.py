@@ -37,7 +37,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from py_serializable import ObjectMetadataLibrary, ViewType
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.

@@ -66,7 +66,7 @@ from .license import License, LicenseRepository, _LicenseRepositorySerialization
 from .release_note import ReleaseNotes
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Commit:
     """
     Our internal representation of the `commitType` complex type.
@@ -326,7 +326,7 @@ class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
         return ComponentType(o)
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Diff:
     """
     Our internal representation of the `diffType` complex type.
@@ -408,7 +408,7 @@ class PatchClassification(str, Enum):
     UNOFFICIAL = 'unofficial'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Patch:
     """
     Our internal representation of the `patchType` complex type.
@@ -498,7 +498,7 @@ class Patch:
         return f'<Patch type={self.type}, id={id(self)}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Pedigree:
     """
     Our internal representation of the `pedigreeType` complex type.
@@ -661,7 +661,7 @@ class Pedigree:
         return f'<Pedigree id={id(self)}, hash={hash(self)}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Swid:
     """
     Our internal representation of the `swidType` complex type.
@@ -813,7 +813,7 @@ class Swid:
         return f'<Swid tagId={self.tag_id}, name={self.name}, version={self.version}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class OmniborId(serializable.helpers.BaseHelper):
     """
     Helper class that allows us to perform validation on data strings that must conform to
@@ -872,7 +872,7 @@ class OmniborId(serializable.helpers.BaseHelper):
         return self._id
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Swhid(serializable.helpers.BaseHelper):
     """
     Helper class that allows us to perform validation on data strings that must conform to
@@ -931,7 +931,7 @@ class Swhid(serializable.helpers.BaseHelper):
         return self._id
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Component(Dependable):
     """
     This is our internal representation of a Component within a Bom.
