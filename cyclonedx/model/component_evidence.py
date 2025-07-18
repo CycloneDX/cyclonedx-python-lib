@@ -75,7 +75,7 @@ class AnalysisTechnique(str, Enum):
     OTHER = 'other'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Method:
     """
     Represents a method used to extract and/or analyze evidence.
@@ -181,7 +181,7 @@ class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper
         return [BomRef(value=t.get('ref')) for t in o]
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Identity:
     """
     Our internal representation of the `identityType` complex type.
@@ -288,7 +288,7 @@ class Identity:
             f' methods={self.methods}, tools={self.tools}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Occurrence:
     """
     Our internal representation of the `occurrenceType` complex type.
@@ -423,7 +423,7 @@ class Occurrence:
         return f'<Occurrence location={self.location}, line={self.line}, symbol={self.symbol}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class CallStackFrame:
     """
     Represents an individual frame in a call stack.
@@ -567,7 +567,7 @@ class CallStackFrame:
                f' line={self.line}, column={self.column}, full_filename={self.full_filename}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class CallStack:
     """
     Our internal representation of the `callStackType` complex type.
@@ -622,7 +622,7 @@ class CallStack:
         return f'<CallStack frames={len(self.frames)}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ComponentEvidence:
     """
     Our internal representation of the `componentEvidenceType` complex type.

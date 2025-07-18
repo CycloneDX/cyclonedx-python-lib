@@ -29,7 +29,7 @@ from . import XsUri
 from .bom_ref import BomRef
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class PostalAddress:
     """
     This is our internal representation of the `postalAddressType` complex type that can be used in multiple places
@@ -187,7 +187,7 @@ class PostalAddress:
         return f'<PostalAddress bom-ref={self.bom_ref}, street_address={self.street_address}, country={self.country}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class OrganizationalContact:
     """
     This is our internal representation of the `organizationalContact` complex type that can be used in multiple places
@@ -277,7 +277,7 @@ class OrganizationalContact:
         return f'<OrganizationalContact name={self.name}, email={self.email}, phone={self.phone}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class OrganizationalEntity:
     """
     This is our internal representation of the `organizationalEntity` complex type that can be used in multiple places

@@ -27,7 +27,7 @@ from ..model import Note, Property, XsUri
 from ..model.issue import IssueType
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ReleaseNotes:
     """
     This is our internal representation of a `releaseNotesType` for a Component in a BOM.

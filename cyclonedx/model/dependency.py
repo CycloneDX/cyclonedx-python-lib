@@ -47,7 +47,7 @@ class _DependencyRepositorySerializationHelper(serializable.helpers.BaseHelper):
         return dependencies
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Dependency:
     """
     Models a Dependency within a BOM.

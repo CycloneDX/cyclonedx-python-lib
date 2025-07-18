@@ -39,7 +39,7 @@ class IssueClassification(str, Enum):
     SECURITY = 'security'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class IssueTypeSource:
     """
     This is our internal representation ofa source within the IssueType complex type that can be used in multiple
@@ -108,7 +108,7 @@ class IssueTypeSource:
         return f'<IssueTypeSource name={self._name}, url={self.url}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class IssueType:
     """
     This is our internal representation of an IssueType complex type that can be used in multiple places within

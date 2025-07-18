@@ -58,7 +58,7 @@ class LifecyclePhase(str, Enum):
     DECOMMISSION = 'decommission'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class PredefinedLifecycle:
     """
     Object that defines pre-defined phases in the product lifecycle.
@@ -97,7 +97,7 @@ class PredefinedLifecycle:
         return f'<PredefinedLifecycle phase={self._phase}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class NamedLifecycle:
     """
     Object that defines custom state in the product lifecycle.
