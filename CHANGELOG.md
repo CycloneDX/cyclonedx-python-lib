@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v10.5.0 (2025-07-20)
+
+### Features
+
+- Use only nonGPL dependencies ([#854](https://github.com/CycloneDX/cyclonedx-python-lib/pull/854),
+  [`9c14ee6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9c14ee606b5537e8f12f6925a8fca5475a331012))
+
+
 ## v10.4.1 (2025-07-08)
 
 ### Bug Fixes
