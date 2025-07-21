@@ -41,7 +41,7 @@ from .license import License, LicenseRepository, _LicenseRepositorySerialization
 from .release_note import ReleaseNotes
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Service(Dependable):
     """
     Class that models the `service` complex type in the CycloneDX schema.
