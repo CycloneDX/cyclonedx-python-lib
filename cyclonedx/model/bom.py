@@ -314,7 +314,7 @@ class BomMetaData:
         return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
 
 
-@serializable.serializable_class(    ignore_unknown_during_deserialization=True)
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
