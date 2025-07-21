@@ -39,6 +39,7 @@ class TestDeserializeRealWorldExamples(unittest.TestCase):
             Bom.from_xml(input_xml)
 
     def test_regression_issue_850(self, *_: Any, **__: Any) -> None:
+        # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/850
         with open(join(OWN_DATA_DIRECTORY, 'xml', '1.6', 'regression_issue850.xml')) as input_xml:
             Bom.from_xml(input_xml)
 
