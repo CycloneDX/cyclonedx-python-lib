@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v11.0.0 (2025-07-21)
+
+### Features
+
+- Ignore unknown properties when deserializing
+  ([#853](https://github.com/CycloneDX/cyclonedx-python-lib/pull/853),
+  [`4842828`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4842828031771cf62b1e17abe0123a1d4c137bd1))
+
+
 ## v10.5.0 (2025-07-20)
 
 ### Features
