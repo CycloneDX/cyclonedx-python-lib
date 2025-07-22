@@ -95,7 +95,8 @@ class Requirement:
     A requirement comprising a standard.
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/json/#definitions_standards_items_requirements
+        See the CycloneDX Schema for hashType:
+        https://cyclonedx.org/docs/1.6/json/#definitions_standards_items_requirements
     """
 
     def __init__(
