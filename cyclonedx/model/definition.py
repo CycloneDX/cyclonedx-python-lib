@@ -581,6 +581,9 @@ class Standard:
 class Definitions:
     """
     The repository for definitions
+
+    .. note::
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_definitionsType
     """
 
     def __init__(

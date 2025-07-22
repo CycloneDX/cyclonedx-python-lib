@@ -46,7 +46,8 @@ class IssueTypeSource:
     places within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueType
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.6/json/#components_items_pedigree_patches_items_resolves_items_source
     """
 
     def __init__(
