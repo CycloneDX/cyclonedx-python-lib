@@ -63,6 +63,7 @@
         "licenses": [
           {
             "license": {
+              "bom-ref": "evidence_license",
               "id": "MIT"
             }
           }
@@ -80,6 +81,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "c_license",
             "id": "MIT"
           }
         }
@@ -107,6 +109,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "root_c_license",
             "id": "MIT"
           }
         }

@@ -8,7 +8,7 @@
       <author>Test Author</author>
       <name>setuptools</name>
       <licenses>
-        <license>
+        <license bom-ref="pkg:pypi/setuptools?extension=tar.gz_license">
           <id>MIT</id>
         </license>
       </licenses>

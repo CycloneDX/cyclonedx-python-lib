@@ -62,6 +62,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "service_license",
             "name": "Commercial"
           }
         }
@@ -79,18 +80,22 @@
       ],
       "provider": {
         "address": {
+          "bom-ref": "PostalAddress_1_s1",
           "country": "GB",
           "locality": "Cheshire",
           "region": "England",
           "streetAddress": "100 Main Street"
         },
+        "bom-ref": "OrganizationalEntity_cdx_s1",
         "contact": [
           {
+            "bom-ref": "OrganizationalContact_ano_s1",
             "email": "someone@somewhere.tld",
             "name": "A N Other",
             "phone": "+44 (0)1234 567890"
           },
           {
+            "bom-ref": "OrganizationalContact_ph_s1",
             "email": "paul.horton@owasp.org",
             "name": "Paul Horton"
           }
