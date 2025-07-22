@@ -29,11 +29,13 @@ from xml.etree.ElementTree import Element  # nosec B405
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
-from ..schema.schema import SchemaVersion1Dot6
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import AttachedText, XsUri
+from .bom_ref import BomRef
 
 
 @serializable.serializable_enum
@@ -75,6 +77,7 @@ class DisjunctiveLicense:
 
     def __init__(
         self, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
         id: Optional[str] = None, name: Optional[str] = None,
         text: Optional[AttachedText] = None, url: Optional[XsUri] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
@@ -86,11 +89,29 @@ class DisjunctiveLicense:
                 'Both `id` and `name` have been supplied - `name` will be ignored!',
                 category=RuntimeWarning, stacklevel=1
             )
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self._id = id
         self._name = name if not id else None
         self._text = text
         self._url = url
         self._acknowledgement = acknowledgement
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
 
     @property
     @serializable.xml_sequence(1)
@@ -186,16 +207,6 @@ class DisjunctiveLicense:
     # def properties(self, ...) -> None:
     #     ...  # TODO since CDX1.5
 
-    # @property
-    # @serializable.json_name('bom-ref')
-    # @serializable.type_mapping(BomRefHelper)
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.view(SchemaVersion1Dot6)
-    # @serializable.xml_attribute()
-    # @serializable.xml_name('bom-ref')
-    # def bom_ref(self) -> BomRef:
-    #     ...  # TODO since CDX1.5
-
     @property
     @serializable.view(SchemaVersion1Dot6)
     @serializable.xml_attribute()
@@ -227,6 +238,7 @@ class DisjunctiveLicense:
             self._id, self._name,
             self._url,
             self._text,
+            self._bom_ref.value,
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -264,10 +276,29 @@ class LicenseExpression:
 
     def __init__(
         self, value: str, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
     ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self._value = value
         self._acknowledgement = acknowledgement
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
 
     @property
     @serializable.xml_name('.')
@@ -285,16 +316,6 @@ class LicenseExpression:
     @value.setter
     def value(self, value: str) -> None:
         self._value = value
-
-    # @property
-    # @serializable.json_name('bom-ref')
-    # @serializable.type_mapping(BomRefHelper)
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.view(SchemaVersion1Dot6)
-    # @serializable.xml_attribute()
-    # @serializable.xml_name('bom-ref')
-    # def bom_ref(self) -> BomRef:
-    #     ...  # TODO since CDX1.5
 
     @property
     @serializable.view(SchemaVersion1Dot6)
@@ -325,6 +346,7 @@ class LicenseExpression:
         return _ComparableTuple((
             self._acknowledgement,
             self._value,
+            self._bom_ref.value,
         ))
 
     def __hash__(self) -> int:
