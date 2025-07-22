@@ -79,6 +79,10 @@ class AnalysisTechnique(str, Enum):
 class Method:
     """
     Represents a method used to extract and/or analyze evidence.
+
+    .. note::
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.6/json/#components_items_evidence_identity_oneOf_i0_items_methods
     """
 
     def __init__(

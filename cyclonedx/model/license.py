@@ -70,7 +70,7 @@ class DisjunctiveLicense:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_licenses
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_licenseType
     """
 
     def __init__(
