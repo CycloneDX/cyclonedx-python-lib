@@ -22,7 +22,7 @@ This set of classes represents cryptoPropertiesType Complex Type in the CycloneD
     Introduced in CycloneDX v1.6
 
 .. note::
-    See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+    See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
 """
 
 from collections.abc import Iterable
@@ -48,7 +48,7 @@ class CryptoAssetType(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     ALGORITHM = 'algorithm'
@@ -67,7 +67,7 @@ class CryptoPrimitive(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     AE = 'ae'
@@ -98,7 +98,7 @@ class CryptoExecutionEnvironment(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     HARDWARE = 'hardware'
@@ -120,7 +120,7 @@ class CryptoImplementationPlatform(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     ARMV7_A = 'armv7-a'
@@ -150,7 +150,7 @@ class CryptoCertificationLevel(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     NONE = 'none'
@@ -196,7 +196,7 @@ class CryptoMode(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     CBC = 'cbc'
@@ -221,7 +221,7 @@ class CryptoPadding(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     PKCS5 = 'pkcs5'
@@ -244,7 +244,7 @@ class CryptoFunction(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     DECAPSULATE = 'decapsulate'
@@ -273,7 +273,7 @@ class AlgorithmProperties:
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(
@@ -525,7 +525,7 @@ class CertificateProperties:
 
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(
@@ -700,7 +700,7 @@ class RelatedCryptoMaterialType(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     ADDITIONAL_DATA = 'additional-data'
@@ -735,7 +735,7 @@ class RelatedCryptoMaterialState(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     ACTIVE = 'active'
@@ -757,7 +757,7 @@ class RelatedCryptoMaterialSecuredBy:
 
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(
@@ -828,7 +828,7 @@ class RelatedCryptoMaterialProperties:
 
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(
@@ -1072,7 +1072,7 @@ class ProtocolPropertiesType(str, Enum):
         Introduced in CycloneDX v1.6
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     IKE = 'ike'
@@ -1097,7 +1097,7 @@ class ProtocolPropertiesCipherSuite:
 
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(
@@ -1190,7 +1190,7 @@ class Ikev2TransformTypes:
 
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(
@@ -1332,7 +1332,7 @@ class ProtocolProperties:
 
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(
@@ -1457,7 +1457,7 @@ class CryptoProperties:
 
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_cryptoPropertiesType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_cryptoPropertiesType
     """
 
     def __init__(

@@ -47,7 +47,7 @@ class LicenseAcknowledgement(str, Enum):
 
     .. note::
         See the CycloneDX Schema for hashType:
-        https://cyclonedx.org/docs/1.6/#type_licenseAcknowledgementEnumerationType
+        https://cyclonedx.org/docs/1.6/xml/#type_licenseAcknowledgementEnumerationType
     """
 
     CONCLUDED = 'concluded'

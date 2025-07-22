@@ -197,7 +197,7 @@ class ComponentScope(str, Enum):
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_scope
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_scope
     """
     # see `_ComponentScopeSerializationHelper.__CASES` for view/case map
     REQUIRED = 'required'
@@ -253,7 +253,7 @@ class ComponentType(str, Enum):
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_classification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_classification
     """
     # see `_ComponentTypeSerializationHelper.__CASES` for view/case map
     APPLICATION = 'application'
@@ -937,7 +937,7 @@ class Component(Dependable):
     This is our internal representation of a Component within a Bom.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_component
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_component
     """
 
     @staticmethod
