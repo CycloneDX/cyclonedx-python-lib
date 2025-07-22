@@ -64,7 +64,8 @@ class PredefinedLifecycle:
     Object that defines pre-defined phases in the product lifecycle.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#metadata_lifecycles
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.6/json/#tab-pane_metadata_lifecycles_items_oneOf_i0
     """
 
     def __init__(self, phase: LifecyclePhase) -> None:
@@ -103,7 +104,8 @@ class NamedLifecycle:
     Object that defines custom state in the product lifecycle.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#metadata_lifecycles
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.6/json/#tab-pane_metadata_lifecycles_items_oneOf_i1
     """
 
     def __init__(self, name: str, *, description: Optional[str] = None) -> None:
