@@ -24,7 +24,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..schema.schema import SchemaVersion1Dot6
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6
 from . import XsUri
 from .bom_ref import BomRef
 
@@ -49,7 +49,7 @@ class PostalAddress:
         postal_code: Optional[str] = None,
         street_address: Optional[str] = None,
     ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref, optional=True)
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.country = country
         self.region = region
         self.locality = locality
@@ -58,11 +58,11 @@ class PostalAddress:
         self.street_address = street_address
 
     @property
-    @serializable.json_name('bom-ref')
     @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
-    def bom_ref(self) -> Optional[BomRef]:
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
         """
         An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
@@ -167,7 +167,7 @@ class PostalAddress:
             self.country, self.region, self.locality, self.postal_code,
             self.post_office_box_number,
             self.street_address,
-            None if self.bom_ref is None else self.bom_ref.value,
+            self._bom_ref.value,
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -199,13 +199,32 @@ class OrganizationalContact:
 
     def __init__(
         self, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
         name: Optional[str] = None,
         phone: Optional[str] = None,
         email: Optional[str] = None,
     ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.name = name
         self.email = email
         self.phone = phone
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
 
     @property
     @serializable.xml_sequence(1)
@@ -257,7 +276,8 @@ class OrganizationalContact:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.name, self.email, self.phone
+            self.name, self.email, self.phone,
+            self._bom_ref.value,
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -289,15 +309,34 @@ class OrganizationalEntity:
 
     def __init__(
         self, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
         name: Optional[str] = None,
         urls: Optional[Iterable[XsUri]] = None,
         contacts: Optional[Iterable[OrganizationalContact]] = None,
         address: Optional[PostalAddress] = None,
     ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.name = name
         self.address = address
         self.urls = urls or []
         self.contacts = contacts or []
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
 
     @property
     @serializable.xml_sequence(10)
@@ -367,7 +406,8 @@ class OrganizationalEntity:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.name, _ComparableTuple(self.urls), _ComparableTuple(self.contacts)
+            self.name, _ComparableTuple(self.urls), _ComparableTuple(self.contacts),
+            self._bom_ref.value,
         ))
 
     def __eq__(self, other: object) -> bool:
