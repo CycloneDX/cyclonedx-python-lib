@@ -21,7 +21,7 @@ from collections.abc import Iterable
 from datetime import datetime, timezone
 from decimal import Decimal
 from inspect import getmembers, isfunction
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 # See https://github.com/package-url/packageurl-python/issues/65
@@ -284,8 +284,9 @@ def get_crypto_properties_related_material() -> CryptoProperties:
 
 def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
     component = get_component_setuptools_simple()
-    component.manufacturer = get_org_entity_1()
-    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.manufacturer = get_org_entity_1(f'_{component.bom_ref.value}_manufacturer')
+    component.authors = [get_org_contact_1(f'_{component.bom_ref.value}_authors1'),
+                         get_org_contact_2(f'_{component.bom_ref.value}_authors2')]
     component.omnibor_ids = [OmniborId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
     component.swhids = [
         Swhid('swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2'),
@@ -306,16 +307,18 @@ def get_bom_with_component_setuptools_with_v16_fields() -> Bom:
 
 def get_bom_with_component_setuptools_with_v16_fields_omnibor_id_invalid() -> Bom:
     component = get_component_setuptools_simple()
-    component.manufacturer = get_org_entity_1()
-    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.manufacturer = get_org_entity_1(f'_{component.bom_ref.value}_manufacturer')
+    component.authors = [get_org_contact_1(f'_{component.bom_ref.value}_authors1'),
+                         get_org_contact_2(f'_{component.bom_ref.value}_authors2')]
     component.omnibor_ids = [OmniborId('gitoid:stuff:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
     return _make_bom(components=[component])
 
 
 def get_bom_with_component_setuptools_with_v16_fields_swhid_invalid() -> Bom:
     component = get_component_setuptools_simple()
-    component.manufacturer = get_org_entity_1()
-    component.authors = [get_org_contact_1(), get_org_contact_2()]
+    component.manufacturer = get_org_entity_1(f'_{component.bom_ref.value}_manufacturer')
+    component.authors = [get_org_contact_1(f'_{component.bom_ref.value}_authors1'),
+                         get_org_contact_2(f'_{component.bom_ref.value}_authors2')]
     component.omnibor_ids = [OmniborId('gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64')]
     component.swhids = [
         Swhid('swh:1:cntp:94a9ed024d3859793618152ea559a168bbcbb5e2'),
@@ -324,7 +327,7 @@ def get_bom_with_component_setuptools_with_v16_fields_swhid_invalid() -> Bom:
 
 
 def get_component_crypto_asset_algorithm(
-    bom_ref: Optional[str] = '8182921e-0588-472e-b8f9-9c527c68f067'
+    bom_ref: str = '8182921e-0588-472e-b8f9-9c527c68f067'
 ) -> Component:
     return Component(
         name='My Algorithm', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
@@ -335,7 +338,7 @@ def get_component_crypto_asset_algorithm(
 
 
 def get_component_crypto_asset_certificate(
-    bom_ref: Optional[str] = '1f4ed1e4-582a-4fa0-8c38-1b4facc16972'
+    bom_ref: str = '1f4ed1e4-582a-4fa0-8c38-1b4facc16972'
 ) -> Component:
     return Component(
         name='My Certificate', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
@@ -346,7 +349,7 @@ def get_component_crypto_asset_certificate(
 
 
 def get_component_crypto_asset_protocol_tls_v13(
-    bom_ref: Optional[str] = '26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec'
+    bom_ref: str = '26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec'
 ) -> Component:
     return Component(
         name='TLS', version='v1.3', type=ComponentType.CRYPTOGRAPHIC_ASSET,
@@ -357,7 +360,7 @@ def get_component_crypto_asset_protocol_tls_v13(
 
 
 def get_component_crypto_asset_related_material(
-    bom_ref: Optional[str] = '332b3cee-078c-4789-ab15-887565b6fac5'
+    bom_ref: str = '332b3cee-078c-4789-ab15-887565b6fac5'
 ) -> Component:
     return Component(
         name='My Encrypted Thing', version='1.0', type=ComponentType.CRYPTOGRAPHIC_ASSET,
@@ -476,7 +479,7 @@ def get_bom_with_component_evidence() -> Bom:
     bom.metadata.component = Component(
         name='root-component',
         type=ComponentType.APPLICATION,
-        licenses=[DisjunctiveLicense(id='MIT')],
+        licenses=[DisjunctiveLicense(bom_ref='root_c_license', id='MIT')],
         bom_ref='myApp',
     )
     component = Component(
@@ -485,7 +488,7 @@ def get_bom_with_component_evidence() -> Bom:
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[DisjunctiveLicense(id='MIT')],
+        licenses=[DisjunctiveLicense(bom_ref='c_license', id='MIT')],
         author='Test Author'
     )
     component.evidence = get_component_evidence_basic(tools=[tool_component])
@@ -533,9 +536,9 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
                          tzinfo=timezone.utc),
         credits=VulnerabilityCredits(
             organizations=[
-                get_org_entity_1()
+                get_org_entity_1('_vuln_credits_org')
             ],
-            individuals=[get_org_contact_2()]
+            individuals=[get_org_contact_2('_vuln_credits_ind')]
         ),
         tools=ToolRepository(tools=(
             Tool(vendor='CycloneDX', name='cyclonedx-python-lib'),
@@ -567,12 +570,13 @@ def get_bom_with_component_toml_1() -> Bom:
 
 def get_bom_just_complete_metadata() -> Bom:
     bom = _make_bom()
-    bom.metadata.authors = [get_org_contact_1(), get_org_contact_2()]
+    bom.metadata.authors = [get_org_contact_1('_bom_authors'), get_org_contact_2('_bom_authors')]
     bom.metadata.component = get_component_setuptools_complete()
-    bom.metadata.component.manufacturer = get_org_entity_1()
-    bom.metadata.manufacture = get_org_entity_1()  # Deprecated from v1.6 onwards
-    bom.metadata.supplier = get_org_entity_2()
+    bom.metadata.component.manufacturer = get_org_entity_1('_rc_manufacturer')
+    bom.metadata.manufacture = get_org_entity_1('_bom_manufacture')  # Deprecated from v1.6 onwards
+    bom.metadata.supplier = get_org_entity_2('_bom_supplier')
     bom.metadata.licenses = [DisjunctiveLicense(
+        bom_ref='bom_license',
         id='Apache-2.0',
         url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt'),
         text=AttachedText(
@@ -608,7 +612,7 @@ def get_bom_with_services_complex() -> Bom:
     bom = _make_bom(services=[
         Service(
             name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service',
-            provider=get_org_entity_1(), group='a-group', version='1.2.3',
+            provider=get_org_entity_1('_s1'), group='a-group', version='1.2.3',
             description='Description goes here', endpoints=[
                 XsUri('/api/thing/1'),
                 XsUri('/api/thing/2')
@@ -616,7 +620,7 @@ def get_bom_with_services_complex() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[DisjunctiveLicense(name='Commercial')],
+            licenses=[DisjunctiveLicense(bom_ref='service_license', name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -636,7 +640,7 @@ def get_bom_with_nested_services() -> Bom:
     bom = _make_bom(services=[
         Service(
             name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service',
-            provider=get_org_entity_1(), group='a-group', version='1.2.3',
+            provider=get_org_entity_1('_s1'), group='a-group', version='1.2.3',
             description='Description goes here', endpoints=[
                 XsUri('/api/thing/1'),
                 XsUri('/api/thing/2')
@@ -644,7 +648,7 @@ def get_bom_with_nested_services() -> Bom:
             authenticated=False, x_trust_boundary=True, data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
-            licenses=[DisjunctiveLicense(name='Commercial')],
+            licenses=[DisjunctiveLicense(bom_ref='service_license', name='Commercial')],
             external_references=[
                 get_external_reference_1()
             ],
@@ -655,7 +659,7 @@ def get_bom_with_nested_services() -> Bom:
                 ),
                 Service(
                     name='second-nested-service', bom_ref='my-specific-bom-ref-for-second-nested-service',
-                    provider=get_org_entity_1(), group='no-group', version='3.2.1',
+                    provider=get_org_entity_1('_s2'), group='no-group', version='3.2.1',
                     authenticated=True, x_trust_boundary=False,
                 )
             ],
@@ -668,7 +672,7 @@ def get_bom_with_nested_services() -> Bom:
                 Service(
                     name='yet-another-nested-service',
                     bom_ref='yet-another-nested-service',
-                    provider=get_org_entity_1(), group='what-group', version='6.5.4'
+                    provider=get_org_entity_1('_s3'), group='what-group', version='6.5.4'
                 ),
                 Service(
                     name='another-nested-service',
@@ -754,7 +758,7 @@ def get_bom_for_issue_328_components() -> Bom:
 
 def get_component_setuptools_complete(include_pedigree: bool = True) -> Component:
     component = get_component_setuptools_simple(bom_ref='my-specific-bom-ref-for-dings')
-    component.supplier = get_org_entity_1()
+    component.supplier = get_org_entity_1(f'_{component.bom_ref.value}')
     component.publisher = 'CycloneDX'
     component.description = 'This component is awesome'
     component.scope = ComponentScope.REQUIRED
@@ -831,7 +835,7 @@ def get_component_evidence_basic(tools: Iterable[Component]) -> ComponentEvidenc
                 )
             ]
         ),
-        licenses=[DisjunctiveLicense(id='MIT')],
+        licenses=[DisjunctiveLicense(bom_ref='evidence_license', id='MIT')],
         copyright=[
             Copyright(text='Commercial'), Copyright(text='Commercial 2')
         ]
@@ -839,7 +843,7 @@ def get_component_evidence_basic(tools: Iterable[Component]) -> ComponentEvidenc
 
 
 def get_component_setuptools_simple(
-    bom_ref: Optional[str] = 'pkg:pypi/setuptools@50.3.2?extension=tar.gz'
+    bom_ref: str = 'pkg:pypi/setuptools@50.3.2?extension=tar.gz'
 ) -> Component:
     return Component(
         name='setuptools', version='50.3.2',
@@ -847,25 +851,25 @@ def get_component_setuptools_simple(
         purl=PackageURL(
             type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
         ),
-        licenses=[DisjunctiveLicense(id='MIT')],
+        licenses=[DisjunctiveLicense(bom_ref=f'{bom_ref}_license', id='MIT')],
         author='Test Author'
     )
 
 
-def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) -> Component:
+def get_component_setuptools_simple_no_version(bom_ref: str = 'pkg:pypi/setuptools?extension=tar.gz') -> Component:
     return Component(
-        name='setuptools', bom_ref=bom_ref or 'pkg:pypi/setuptools?extension=tar.gz',
+        name='setuptools', bom_ref=bom_ref,
         purl=PackageURL(
             type='pypi', name='setuptools', qualifiers='extension=tar.gz'
         ),
-        licenses=[DisjunctiveLicense(id='MIT')],
+        licenses=[DisjunctiveLicense(bom_ref=f'{bom_ref}_license', id='MIT')],
         author='Test Author'
     )
 
 
-def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None) -> Component:
+def get_component_toml_with_hashes_with_references(bom_ref: str = 'pkg:pypi/toml@0.10.2?extension=tar.gz') -> Component:
     return Component(
-        name='toml', version='0.10.2', bom_ref=bom_ref or 'pkg:pypi/toml@0.10.2?extension=tar.gz',
+        name='toml', version='0.10.2', bom_ref=bom_ref,
         purl=PackageURL(
             type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
         ), hashes=[
@@ -919,34 +923,43 @@ def get_issue_2() -> IssueType:
     )
 
 
-def get_org_contact_1() -> OrganizationalContact:
-    return OrganizationalContact(name='Paul Horton', email='paul.horton@owasp.org')
+def get_org_contact_1(br_postfix: str = '') -> OrganizationalContact:
+    return OrganizationalContact(
+        bom_ref=f'OrganizationalContact_ph{br_postfix}',
+        name='Paul Horton', email='paul.horton@owasp.org')
 
 
-def get_org_contact_2() -> OrganizationalContact:
-    return OrganizationalContact(name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890')
+def get_org_contact_2(br_postfix: str = '') -> OrganizationalContact:
+    return OrganizationalContact(
+        bom_ref=f'OrganizationalContact_ano{br_postfix}',
+        name='A N Other', email='someone@somewhere.tld', phone='+44 (0)1234 567890')
 
 
-def get_postal_address_1() -> PostalAddress:
-    return PostalAddress(country='GB', region='England', locality='Cheshire', street_address='100 Main Street')
+def get_postal_address_1(br_postfix: str = '') -> PostalAddress:
+    return PostalAddress(bom_ref=f'PostalAddress_1{br_postfix}',
+                         country='GB', region='England', locality='Cheshire', street_address='100 Main Street')
 
 
-def get_postal_address_2() -> PostalAddress:
-    return PostalAddress(country='US', region='Texas', locality='Austin', street_address='100 Yee-Ha Street',
+def get_postal_address_2(br_postfix: str = '') -> PostalAddress:
+    return PostalAddress(bom_ref=f'PostalAddress_2{br_postfix}',
+                         country='US', region='Texas', locality='Austin', street_address='100 Yee-Ha Street',
                          postal_code='12345', post_office_box_number='105a')
 
 
-def get_org_entity_1() -> OrganizationalEntity:
+def get_org_entity_1(br_postfix: str = '') -> OrganizationalEntity:
     return OrganizationalEntity(
+        bom_ref=f'OrganizationalEntity_cdx{br_postfix}',
         name='CycloneDX', urls=[XsUri('https://cyclonedx.org'), XsUri('https://cyclonedx.org/docs')],
-        contacts=[get_org_contact_1(), get_org_contact_2()], address=get_postal_address_1()
+        contacts=[get_org_contact_1(br_postfix), get_org_contact_2(br_postfix)],
+        address=get_postal_address_1(br_postfix)
     )
 
 
-def get_org_entity_2() -> OrganizationalEntity:
+def get_org_entity_2(br_postfix: str = '') -> OrganizationalEntity:
     return OrganizationalEntity(
-        name='Cyclone DX', urls=[XsUri('https://cyclonedx.org/')], contacts=[get_org_contact_2()],
-        address=get_postal_address_2()
+        bom_ref=f'OrganizationalEntity_cd_x{br_postfix}',
+        name='Cyclone DX', urls=[XsUri('https://cyclonedx.org/')], contacts=[get_org_contact_2(br_postfix)],
+        address=get_postal_address_2(br_postfix)
     )
 
 
@@ -1051,39 +1064,47 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
 def get_bom_with_licenses() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
-            licenses=[DisjunctiveLicense(id='CC-BY-1.0')],
+            licenses=[DisjunctiveLicense(bom_ref='bom_license', id='CC-BY-1.0')],
             component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',
-                                licenses=[DisjunctiveLicense(name='proprietary')])
+                                licenses=[DisjunctiveLicense(bom_ref='root_component_license', name='proprietary')])
         ),
         components=[
             Component(name='c-with-expression', type=ComponentType.LIBRARY, bom_ref='C1',
-                      licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
+                      licenses=[LicenseExpression(bom_ref='C1_license',
+                                                  value='Apache-2.0 OR MIT',
                                                   acknowledgement=LicenseAcknowledgement.CONCLUDED)]),
             Component(name='c-with-SPDX', type=ComponentType.LIBRARY, bom_ref='C2',
-                      licenses=[DisjunctiveLicense(id='Apache-2.0',
+                      licenses=[DisjunctiveLicense(bom_ref='C2_license',
+                                                   id='Apache-2.0',
                                                    url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
                                                    acknowledgement=LicenseAcknowledgement.CONCLUDED)]),
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
                       licenses=[
-                          DisjunctiveLicense(name='some commercial license',
+                          DisjunctiveLicense(bom_ref='c-with-name_license_1',
+                                             name='some commercial license',
                                              text=AttachedText(content='this is a license text')),
-                          DisjunctiveLicense(name='some additional',
+                          DisjunctiveLicense(bom_ref='c-with-name_license_2',
+                                             name='some additional',
                                              text=AttachedText(content='this is additional license text')),
                       ]),
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
-                    licenses=[LicenseExpression(value='Apache-2.0 OR MIT',
+                    licenses=[LicenseExpression(bom_ref='S1_license',
+                                                value='Apache-2.0 OR MIT',
                                                 acknowledgement=LicenseAcknowledgement.DECLARED)]),
             Service(name='s-with-SPDX', bom_ref='S2',
-                    licenses=[DisjunctiveLicense(id='Apache-2.0',
+                    licenses=[DisjunctiveLicense(bom_ref='S2_license',
+                                                 id='Apache-2.0',
                                                  url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.html'),
                                                  acknowledgement=LicenseAcknowledgement.DECLARED)]),
             Service(name='s-with-name', bom_ref='S3',
                     licenses=[
-                        DisjunctiveLicense(name='some commercial license',
+                        DisjunctiveLicense(bom_ref='S3_license1',
+                                           name='some commercial license',
                                            text=AttachedText(content='this is a license text')),
-                        DisjunctiveLicense(name='some additional',
+                        DisjunctiveLicense(bom_ref='S3_license2',
+                                           name='some additional',
                                            text=AttachedText(content='this is additional license text')),
                     ]),
         ])
@@ -1140,20 +1161,21 @@ def get_bom_service_licenses_invalid() -> Bom:
 
 
 def get_bom_with_multiple_licenses() -> Bom:
-    multi_licenses = (
-        DisjunctiveLicense(id='MIT'),
-        DisjunctiveLicense(name='foo license'),
-    )
+    def multi_licenses(br_prefix: str) -> tuple[DisjunctiveLicense, ...]:
+        return (
+            DisjunctiveLicense(bom_ref=f'{br_prefix}_license_mit', id='MIT'),
+            DisjunctiveLicense(bom_ref=f'{br_prefix}_license_foo', name='foo license'),
+        )
     return _make_bom(
         metadata=BomMetaData(
-            licenses=multi_licenses,
+            licenses=multi_licenses('bom'),
             component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app',
-                                licenses=multi_licenses)
+                                licenses=multi_licenses('my-app'))
         ),
         components=[Component(name='comp', type=ComponentType.LIBRARY, bom_ref='my-compo',
-                              licenses=multi_licenses)],
+                              licenses=multi_licenses('my-compo'))],
         services=[Service(name='serv', bom_ref='my-serv',
-                          licenses=multi_licenses)]
+                          licenses=multi_licenses('my-serv'))]
     )
 
 

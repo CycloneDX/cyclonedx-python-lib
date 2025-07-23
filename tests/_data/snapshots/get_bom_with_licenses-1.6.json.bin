@@ -6,6 +6,7 @@
         {
           "license": {
             "acknowledgement": "concluded",
+            "bom-ref": "C2_license",
             "id": "Apache-2.0",
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
           }
@@ -19,6 +20,7 @@
       "licenses": [
         {
           "acknowledgement": "concluded",
+          "bom-ref": "C1_license",
           "expression": "Apache-2.0 OR MIT"
         }
       ],
@@ -30,6 +32,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "c-with-name_license_2",
             "name": "some additional",
             "text": {
               "content": "this is additional license text",
@@ -39,6 +42,7 @@
         },
         {
           "license": {
+            "bom-ref": "c-with-name_license_1",
             "name": "some commercial license",
             "text": {
               "content": "this is a license text",
@@ -80,6 +84,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "root_component_license",
             "name": "proprietary"
           }
         }
@@ -90,6 +95,7 @@
     "licenses": [
       {
         "license": {
+          "bom-ref": "bom_license",
           "id": "CC-BY-1.0"
         }
       }
@@ -114,6 +120,7 @@
         {
           "license": {
             "acknowledgement": "declared",
+            "bom-ref": "S2_license",
             "id": "Apache-2.0",
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
           }
@@ -126,6 +133,7 @@
       "licenses": [
         {
           "acknowledgement": "declared",
+          "bom-ref": "S1_license",
           "expression": "Apache-2.0 OR MIT"
         }
       ],
@@ -136,6 +144,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "S3_license2",
             "name": "some additional",
             "text": {
               "content": "this is additional license text",
@@ -145,6 +154,7 @@
         },
         {
           "license": {
+            "bom-ref": "S3_license1",
             "name": "some commercial license",
             "text": {
               "content": "this is a license text",
