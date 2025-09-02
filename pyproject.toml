@@ -102,6 +102,8 @@ xmldiff = "2.7.0"
 bandit = "1.8.6"
 pyupgrade = "3.20.0"
 deptry = "0.23.1"
+# for tests, use the GPL-version of jsonschema format validators - they are faster
+jsonschema = { version = "*", extras = ["format"], optional=true }
 
 [tool.semantic_release]
 # see https://python-semantic-release.readthedocs.io/en/latest/configuration.html
