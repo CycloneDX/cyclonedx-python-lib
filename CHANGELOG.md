@@ -2,6 +2,33 @@
 
 <!-- version list -->
 
+## v11.1.0 (2025-09-09)
+
+### Documentation
+
+- Shorten lines
+  ([`5621705`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5621705fef98e0d5a510af22f8ece16c8f2f1e76))
+
+- Update CDX spec links ([#858](https://github.com/CycloneDX/cyclonedx-python-lib/pull/858),
+  [`ba0b5c0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ba0b5c092cd4c5761e3b00e808506e7ba71de3a8))
+
+- Update linked CDX spec ([#860](https://github.com/CycloneDX/cyclonedx-python-lib/pull/860),
+  [`0ecdaa8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ecdaa8eff200dce74e1fee8202807ab273b6971))
+
+- Update linked XML spec ([#857](https://github.com/CycloneDX/cyclonedx-python-lib/pull/857),
+  [`ea627ec`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ea627ec8fa3e8e19a2a8f4a618c9b084922e025f))
+
+### Features
+
+- Add BomRefs for known models according to CycloneDX 1.5
+  ([#859](https://github.com/CycloneDX/cyclonedx-python-lib/pull/859),
+  [`0898cf7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0898cf76f1ad97a49cb438fe2130a86a59f8c150))
+
+- Updating SPDX license list to 3.27.0
+  ([#885](https://github.com/CycloneDX/cyclonedx-python-lib/pull/885),
+  [`876a364`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/876a36416d4ea82ec493893c89d9ac0bb6e0d95f))
+
+
 ## v11.0.0 (2025-07-21)
 
 ### Features
