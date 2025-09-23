@@ -4,11 +4,13 @@
       "author": "Test Author",
       "authors": [
         {
+          "bom-ref": "OrganizationalContact_ano_pkg:pypi/setuptools@50.3.2?extension=tar.gz_authors2",
           "email": "someone@somewhere.tld",
           "name": "A N Other",
           "phone": "+44 (0)1234 567890"
         },
         {
+          "bom-ref": "OrganizationalContact_ph_pkg:pypi/setuptools@50.3.2?extension=tar.gz_authors1",
           "email": "paul.horton@owasp.org",
           "name": "Paul Horton"
         }
@@ -17,24 +19,29 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz_license",
             "id": "MIT"
           }
         }
       ],
       "manufacturer": {
         "address": {
+          "bom-ref": "PostalAddress_1_pkg:pypi/setuptools@50.3.2?extension=tar.gz_manufacturer",
           "country": "GB",
           "locality": "Cheshire",
           "region": "England",
           "streetAddress": "100 Main Street"
         },
+        "bom-ref": "OrganizationalEntity_cdx_pkg:pypi/setuptools@50.3.2?extension=tar.gz_manufacturer",
         "contact": [
           {
+            "bom-ref": "OrganizationalContact_ano_pkg:pypi/setuptools@50.3.2?extension=tar.gz_manufacturer",
             "email": "someone@somewhere.tld",
             "name": "A N Other",
             "phone": "+44 (0)1234 567890"
           },
           {
+            "bom-ref": "OrganizationalContact_ph_pkg:pypi/setuptools@50.3.2?extension=tar.gz_manufacturer",
             "email": "paul.horton@owasp.org",
             "name": "Paul Horton"
           }

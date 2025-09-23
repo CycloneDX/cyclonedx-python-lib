@@ -7,7 +7,7 @@
     <component type="library" bom-ref="dummy">
       <name>dummy</name>
       <licenses>
-        <license>
+        <license bom-ref="dummy_license">
           <name>att.encoding: BASE_64</name>
           <text content-type="text/plain" encoding="base64">att.encoding: BASE_64</text>
         </license>
