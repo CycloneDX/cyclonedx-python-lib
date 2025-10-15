@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v11.2.0 (2025-10-15)
+
+### Documentation
+
+- Add Changelog to project urls
+  ([`d8a24b7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d8a24b788d10dac65ec579c106c6a421b9644b76))
+
+### Features
+
+- Support Python 3.14 ([#897](https://github.com/CycloneDX/cyclonedx-python-lib/pull/897),
+  [`267672b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/267672b637c23ebb7f69ccf7c1109f2b874f4b96))
+
+
 ## v11.1.0 (2025-09-09)
 
 ### Documentation
