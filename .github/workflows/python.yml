@@ -21,7 +21,7 @@ permissions: {}
 
 env:
   REPORTS_DIR: CI_reports
-  PYTHON_VERSION_DEFAULT: "3.11"
+  PYTHON_VERSION_DEFAULT: "3.14"
   POETRY_VERSION: "1.8.1"
   TESTS_REPORTS_ARTIFACT: tests-reports
 

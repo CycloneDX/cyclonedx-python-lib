@@ -39,7 +39,7 @@ concurrency:
 permissions: {}
 
 env:
-  PYTHON_VERSION_DEFAULT: "3.11"
+  PYTHON_VERSION_DEFAULT: "3.14"
   POETRY_VERSION: "1.8.1"
 
 jobs:
