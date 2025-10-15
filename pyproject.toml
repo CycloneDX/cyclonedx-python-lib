@@ -99,7 +99,7 @@ isort = "6.1.0"
 autopep8 = "2.3.2"
 mypy = "1.18.2"
 tomli = { version = "2.2.1", python = "<3.11" }
-tox = "4.30.2"
+tox = "4.30.3"
 xmldiff = "2.7.0"
 bandit = "1.8.6"
 pyupgrade = "3.20.0"
