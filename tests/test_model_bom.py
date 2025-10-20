@@ -107,6 +107,26 @@ class TestBomMetaData(TestCase):
         self.assertTrue(tools[0] in metadata.tools.tools)
         self.assertTrue(tools[1] in metadata.tools.tools)
 
+    def test_bom_metadata_sorting(self) -> None:
+        """Test that BomMetaData instances can be sorted without triggering TypeError"""
+        metadata1 = BomMetaData(
+            tools=[Tool(name='tool_a')],
+            authors=[OrganizationalContact(name='contact_a')]
+        )
+        metadata2 = BomMetaData(
+            tools=[Tool(name='tool_b')],
+            authors=[OrganizationalContact(name='contact_b')]
+        )
+        metadata3 = BomMetaData(
+            tools=[Tool(name='tool_c')],
+            authors=[OrganizationalContact(name='contact_c')]
+        )
+
+        # This should not raise TypeError: '<' not supported between instances
+        metadata_list = [metadata3, metadata1, metadata2]
+        sorted_metadata = sorted(metadata_list)
+        self.assertEqual(len(sorted_metadata), 3)
+
 
 @ddt
 class TestBom(TestCase):

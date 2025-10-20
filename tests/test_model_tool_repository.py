@@ -79,3 +79,19 @@ class TestModelToolRepository(TestCase):
         tr2.services.add(s)
         tr2.tools.add(t)
         self.assertTrue(tr1 == tr2)
+
+    def test_tool_repository_sorting(self) -> None:
+        """Test that ToolRepository instances can be sorted without triggering TypeError"""
+        tr1 = ToolRepository()
+        tr1.tools.add(Tool(name='tool-a'))
+
+        tr2 = ToolRepository()
+        tr2.tools.add(Tool(name='tool-b'))
+
+        tr3 = ToolRepository()
+        tr3.tools.add(Tool(name='tool-c'))
+
+        # This should not raise TypeError: '<' not supported between instances
+        tr_list = [tr3, tr1, tr2]
+        sorted_tr = sorted(tr_list)
+        self.assertEqual(len(sorted_tr), 3)

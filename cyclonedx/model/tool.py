@@ -266,6 +266,11 @@ class ToolRepository:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, ToolRepository):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 

@@ -201,6 +201,17 @@ class TestModelComponentEvidence(TestCase):
         self.assertNotEqual(hash(ce_1), hash(ce_2))
         self.assertFalse(ce_1 == ce_2)
 
+    def test_component_evidence_sorting(self) -> None:
+        """Test that ComponentEvidence instances can be sorted without triggering TypeError"""
+        ce_1 = ComponentEvidence(copyright=[Copyright(text='Copyright A')])
+        ce_2 = ComponentEvidence(copyright=[Copyright(text='Copyright B')])
+        ce_3 = ComponentEvidence(copyright=[Copyright(text='Copyright C')])
+
+        # This should not raise TypeError: '<' not supported between instances
+        evidence_list = [ce_3, ce_1, ce_2]
+        sorted_evidence = sorted(evidence_list)
+        self.assertEqual(len(sorted_evidence), 3)
+
 
 class TestModelCallStackFrame(TestCase):
 
@@ -233,3 +244,14 @@ class TestModelCallStackFrame(TestCase):
         self.assertIsNone(frame.line)
         self.assertIsNone(frame.column)
         self.assertIsNone(frame.full_filename)
+
+    def test_callstack_frame_sorting(self) -> None:
+        """Test that CallStackFrame instances can be sorted without triggering TypeError"""
+        frame1 = CallStackFrame(module='app_a', function='func_a')
+        frame2 = CallStackFrame(module='app_b', function='func_b')
+        frame3 = CallStackFrame(module='app_c', function='func_c')
+
+        # This should not raise TypeError: '<' not supported between instances
+        frame_list = [frame3, frame1, frame2]
+        sorted_frames = sorted(frame_list)
+        self.assertEqual(len(sorted_frames), 3)

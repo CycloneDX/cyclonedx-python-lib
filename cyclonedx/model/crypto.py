@@ -507,6 +507,11 @@ class AlgorithmProperties:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, AlgorithmProperties):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -683,6 +688,11 @@ class CertificateProperties:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, CertificateProperties):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -809,6 +819,11 @@ class RelatedCryptoMaterialSecuredBy:
         if isinstance(other, RelatedCryptoMaterialSecuredBy):
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, RelatedCryptoMaterialSecuredBy):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
@@ -1054,6 +1069,11 @@ class RelatedCryptoMaterialProperties:
         if isinstance(other, RelatedCryptoMaterialProperties):
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, RelatedCryptoMaterialProperties):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
@@ -1314,6 +1334,11 @@ class Ikev2TransformTypes:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Ikev2TransformTypes):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -1439,6 +1464,11 @@ class ProtocolProperties:
         if isinstance(other, ProtocolProperties):
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, ProtocolProperties):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
