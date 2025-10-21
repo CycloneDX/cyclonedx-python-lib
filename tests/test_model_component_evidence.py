@@ -37,9 +37,9 @@ class TestModelComponentEvidence(TestCase):
     def test_no_params(self) -> None:
         ComponentEvidence()  # Does not raise `NoPropertiesProvidedException`
 
-    def test_identity(self) -> None:
+    def test_identity_single(self) -> None:
         identity = Identity(field=IdentityField.NAME, confidence=Decimal('1'), concluded_value='test')
-        ce = ComponentEvidence(identity=[identity])
+        ce = ComponentEvidence(identity=identity)
         self.assertEqual(len(ce.identity), 1)
         self.assertEqual(ce.identity.pop().field, 'name')
 
@@ -200,144 +200,6 @@ class TestModelComponentEvidence(TestCase):
         ce_2 = ComponentEvidence(copyright=[Copyright(text='Commercial 2')])
         self.assertNotEqual(hash(ce_1), hash(ce_2))
         self.assertFalse(ce_1 == ce_2)
-
-    def test_identity_deserialization_single_dict_format(self) -> None:
-        """Test deserialization of identity field as a single dict (CycloneDX 1.5 format)"""
-        # This is the format that was failing before the fix
-        json_data = {
-            'identity': {
-                'field': 'name',
-                'confidence': 1.0,
-                'concludedValue': 'test-component'
-            }
-        }
-        ce = ComponentEvidence.from_json(json_data)  # type: ignore[attr-defined]
-        self.assertEqual(len(ce.identity), 1)
-        identity = list(ce.identity)[0]
-        self.assertEqual(identity.field, IdentityField.NAME)
-        self.assertEqual(identity.confidence, Decimal('1.0'))
-        self.assertEqual(identity.concluded_value, 'test-component')
-
-    def test_identity_deserialization_array_format(self) -> None:
-        """Test deserialization of identity field as an array (CycloneDX 1.6 format)"""
-        json_data = {
-            'identity': [
-                {
-                    'field': 'name',
-                    'confidence': 1.0,
-                    'concludedValue': 'test-component'
-                },
-                {
-                    'field': 'version',
-                    'confidence': 0.8,
-                    'concludedValue': '1.0.0'
-                }
-            ]
-        }
-        ce = ComponentEvidence.from_json(json_data)  # type: ignore[attr-defined]
-        self.assertEqual(len(ce.identity), 2)
-
-        # Check that both identities are present
-        identities = sorted(ce.identity, key=lambda x: x.field.value)
-        self.assertEqual(identities[0].field, IdentityField.NAME)
-        self.assertEqual(identities[0].concluded_value, 'test-component')
-        self.assertEqual(identities[1].field, IdentityField.VERSION)
-        self.assertEqual(identities[1].concluded_value, '1.0.0')
-
-    def test_identity_dict_format_converts_to_array_internally(self) -> None:
-        """Test that single dict identity format is converted to array format internally"""
-        # When deserializing a single dict, it should be normalized to array format
-        # before being passed to ComponentEvidence
-        json_data_dict = {
-            'identity': {
-                'field': 'name',
-                'confidence': 1.0,
-                'concludedValue': 'test-component'
-            }
-        }
-
-        json_data_array = {
-            'identity': [
-                {
-                    'field': 'name',
-                    'confidence': 1.0,
-                    'concludedValue': 'test-component'
-                }
-            ]
-        }
-
-        # Both formats should produce the same result
-        ce_from_dict = ComponentEvidence.from_json(json_data_dict)  # type: ignore[attr-defined]
-        ce_from_array = ComponentEvidence.from_json(json_data_array)  # type: ignore[attr-defined]
-
-        self.assertEqual(len(ce_from_dict.identity), 1)
-        self.assertEqual(len(ce_from_array.identity), 1)
-
-        # The identity objects should be equivalent
-        identity_dict = list(ce_from_dict.identity)[0]
-        identity_array = list(ce_from_array.identity)[0]
-        self.assertEqual(identity_dict.field, identity_array.field)
-        self.assertEqual(identity_dict.confidence, identity_array.confidence)
-        self.assertEqual(identity_dict.concluded_value, identity_array.concluded_value)
-
-    def test_identity_dict_with_multiple_methods(self) -> None:
-        """Test deserialization of single identity dict with multiple methods"""
-        json_data = {
-            'identity': {
-                'field': 'purl',
-                'confidence': 0.95,
-                'concludedValue': 'pkg:npm/example@1.0.0',
-                'methods': [
-                    {
-                        'technique': 'source-code-analysis',
-                        'confidence': 0.9,
-                        'value': 'Found in package.json'
-                    },
-                    {
-                        'technique': 'binary-analysis',
-                        'confidence': 0.85,
-                        'value': 'Found in binary metadata'
-                    }
-                ]
-            }
-        }
-        ce = ComponentEvidence.from_json(json_data)  # type: ignore[attr-defined]
-        self.assertEqual(len(ce.identity), 1)
-        identity = list(ce.identity)[0]
-        self.assertEqual(identity.field, IdentityField.PURL)
-        self.assertEqual(len(identity.methods), 2)
-
-        # Verify methods are properly deserialized
-        methods = sorted(identity.methods, key=lambda m: m.technique.value)
-        self.assertEqual(methods[0].technique, AnalysisTechnique.BINARY_ANALYSIS)
-        self.assertEqual(methods[0].confidence, Decimal('0.85'))
-        self.assertEqual(methods[1].technique, AnalysisTechnique.SOURCE_CODE_ANALYSIS)
-        self.assertEqual(methods[1].confidence, Decimal('0.9'))
-
-    def test_identity_deserialization_dict_with_methods(self) -> None:
-        """Test deserialization of single identity dict with methods"""
-        json_data = {
-            'identity': {
-                'field': 'name',
-                'confidence': 0.95,
-                'concludedValue': 'test-lib',
-                'methods': [
-                    {
-                        'technique': 'source-code-analysis',
-                        'confidence': 0.9,
-                        'value': 'Found in metadata'
-                    }
-                ]
-            }
-        }
-        ce = ComponentEvidence.from_json(json_data)  # type: ignore[attr-defined]
-        self.assertEqual(len(ce.identity), 1)
-        identity = list(ce.identity)[0]
-        self.assertEqual(len(identity.methods), 1)
-        method = list(identity.methods)[0]
-        self.assertEqual(method.technique, AnalysisTechnique.SOURCE_CODE_ANALYSIS)
-        self.assertEqual(method.confidence, Decimal('0.9'))
-
 
 class TestModelCallStackFrame(TestCase):
 

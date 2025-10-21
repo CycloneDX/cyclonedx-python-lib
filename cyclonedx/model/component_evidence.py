@@ -185,24 +185,6 @@ class _IdentityToolRepositorySerializationHelper(serializable.helpers.BaseHelper
         return [BomRef(value=t.get('ref')) for t in o]
 
 
-class _IdentitySetSerializationHelper(serializable.helpers.BaseHelper):
-    """  THIS CLASS IS NON-PUBLIC API  """
-
-    @classmethod
-    def json_normalize(cls, o: Iterable['Identity'], *,
-                       view: Optional[type[serializable.ViewType]],
-                       **__: Any) -> list[dict[str, Any]]:
-        # Serialize identity as a list of dicts, preserving the view context
-        return [json_loads(item.as_json(view)) for item in o]  # type: ignore[attr-defined]
-
-    @classmethod
-    def json_deserialize(cls, o: Union[dict[str, Any], list[dict[str, Any]]]) -> list['Identity']:
-        # Handle identity field which can be a dict (CycloneDX 1.5) or list of dicts (CycloneDX 1.6)
-        if isinstance(o, dict):
-            return [Identity.from_json(o)]  # type: ignore[attr-defined]
-        return [Identity.from_json(item) for item in o]  # type: ignore[attr-defined]
-
-
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Identity:
     """
@@ -672,7 +654,6 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
-    @serializable.type_mapping(_IdentitySetSerializationHelper)
     @serializable.xml_sequence(1)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     def identity(self) -> 'SortedSet[Identity]':
@@ -771,7 +752,10 @@ class ComponentEvidence:
 
 
 class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
-    """THIS CLASS IS NON-PUBLIC API"""
+    """THIS CLASS IS NON-PUBLIC API
+
+    This helper takes care of :attr:`ComponentEvidence.identity`.
+    """
 
     @classmethod
     def json_normalize(cls, o: ComponentEvidence, *,
@@ -780,17 +764,16 @@ class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
         data: dict[str, Any] = json_loads(o.as_json(view))  # type:ignore[attr-defined]
         if view is SchemaVersion1Dot5:
             identities = data.get('identity', [])
-            if il := len(identities) > 1:
-                warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il - 1} items.')
+            if identities:
+                if (il := len(identities)) > 1:
+                    warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il - 1} items.')
                 data['identity'] = identities[0]
         return data
 
     @classmethod
     def json_denormalize(cls, o: dict[str, Any], **__: Any) -> Any:
-        # Handle identity field which can be a dict (CycloneDX 1.5) or list of dicts (CycloneDX 1.6)
-        # Before passing to ComponentEvidence.from_json, ensure it's always a list
-        if 'identity' in o and isinstance(o['identity'], dict):
-            o = {**o, 'identity': [o['identity']]}
+        if isinstance(identity := o.get('identity'), dict):
+            o = {**o, 'identity': [identity]}
         return ComponentEvidence.from_json(o)  # type:ignore[attr-defined]
 
     @classmethod
@@ -802,7 +785,7 @@ class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
         normalized: 'XmlElement' = o.as_xml(view, False, element_name, xmlns)  # type:ignore[attr-defined]
         if view is SchemaVersion1Dot5:
             identities = normalized.findall(f'./{{{xmlns}}}identity' if xmlns else './identity')
-            if il := len(identities) > 1:
+            if (il := len(identities)) > 1:
                 warn(f'CycloneDX 1.5 does not support multiple identity items; dropping {il - 1} items.')
                 for i in identities[1:]:
                     normalized.remove(i)
