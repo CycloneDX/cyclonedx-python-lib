@@ -288,8 +288,8 @@ class Identity:
 
     def __repr__(self) -> str:
         return f'<Identity field={self.field}, confidence={self.confidence},' \
-            f' concludedValue={self.concluded_value},' \
-            f' methods={self.methods}, tools={self.tools}>'
+               f' concludedValue={self.concluded_value},' \
+               f' methods={self.methods}, tools={self.tools}>'
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
@@ -768,6 +768,10 @@ class _ComponentEvidenceSerializationHelper(serializable.helpers.BaseHelper):
 
     @classmethod
     def json_denormalize(cls, o: dict[str, Any], **__: Any) -> Any:
+        if isinstance(identity := o.get('identity', []), dict):
+            # Handle identity field which can be a dict (CycloneDX 1.5) or list of dicts (CycloneDX 1.6)
+            # Before passing to ComponentEvidence.from_json, ensure it's always a list
+            o = {**o, 'identity': [identity]}
         return ComponentEvidence.from_json(o)  # type:ignore[attr-defined]
 
     @classmethod
