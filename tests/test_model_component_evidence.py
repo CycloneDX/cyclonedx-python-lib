@@ -201,6 +201,7 @@ class TestModelComponentEvidence(TestCase):
         self.assertNotEqual(hash(ce_1), hash(ce_2))
         self.assertFalse(ce_1 == ce_2)
 
+
 class TestModelCallStackFrame(TestCase):
 
     def test_fields(self) -> None:
