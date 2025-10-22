@@ -2,6 +2,21 @@
 
 <!-- version list -->
 
+## v11.3.0 (2025-10-22)
+
+### Bug Fixes
+
+- Implement `__lt__` for models still missing it
+  ([#899](https://github.com/CycloneDX/cyclonedx-python-lib/pull/899),
+  [`bebda4f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bebda4fe34e9aa6149c032fd1aa41eb39cd57124))
+
+### Features
+
+- Deserialize single `ComponentEvidence.identity`
+  ([#900](https://github.com/CycloneDX/cyclonedx-python-lib/pull/900),
+  [`9425c67`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9425c67557a3f547c64cd740e19b112196146577))
+
+
 ## v11.2.0 (2025-10-15)
 
 ### Documentation
