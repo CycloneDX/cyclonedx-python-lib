@@ -1,0 +1,39 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:66fa5692-2e9d-45c5-830a-ec8ccaf7dcc9",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "description": "test component evidence identity",
+      "type": "application",
+      "name": "test"
+    }
+  },
+  "components": [
+    {
+      "type": "operating-system",
+      "bom-ref": "alpine12",
+      "name": "alpine",
+      "version": "12",
+      "evidence": {
+        "identity": {
+          "field": "name",
+          "confidence": 1.0
+        }
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "libssl",
+      "name": "libssl",
+      "evidence": {
+        "identity": {
+          "field": "name",
+          "confidence": 1.0
+        }
+      }
+    }
+  ]
+}
