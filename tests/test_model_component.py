@@ -419,6 +419,17 @@ class TestModelPedigree(TestCase):
         self.assertNotEqual(hash(p1), hash(p2), 'hash')
         self.assertFalse(p1 == p2, 'equal')
 
+    def test_pedigree_sorting(self) -> None:
+        """Test that Pedigree instances can be sorted without triggering TypeError"""
+        p1 = Pedigree(notes='Note A')
+        p2 = Pedigree(notes='Note B')
+        p3 = Pedigree(notes='Note C')
+
+        # This should not raise TypeError: '<' not supported between instances
+        pedigree_list = [p3, p1, p2]
+        sorted_pedigree = sorted(pedigree_list)
+        self.assertEqual(len(sorted_pedigree), 3)
+
 
 class TestModelSwid(TestCase):
 
@@ -442,3 +453,14 @@ class TestModelSwid(TestCase):
         self.assertNotEqual(id(sw_1), id(sw_2), 'id')
         self.assertNotEqual(hash(sw_1), hash(sw_2), 'hash')
         self.assertFalse(sw_1 == sw_2, 'equal')
+
+    def test_swid_sorting(self) -> None:
+        """Test that Swid instances can be sorted without triggering TypeError"""
+        sw_1 = get_swid_1()
+        sw_2 = get_swid_2()
+        sw_3 = get_swid_1()
+
+        # This should not raise TypeError: '<' not supported between instances
+        swid_list = [sw_2, sw_1, sw_3]
+        sorted_swid = sorted(swid_list)
+        self.assertEqual(len(sorted_swid), 3)

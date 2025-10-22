@@ -68,3 +68,14 @@ class TestModelReleaseNote(TestCase):
         self.assertSetEqual(rn.resolves, set())
         self.assertFalse(rn.notes)
         self.assertSetEqual(rn.properties, set())
+
+    def test_release_notes_sorting(self) -> None:
+        """Test that ReleaseNotes instances can be sorted without triggering TypeError"""
+        rn1 = ReleaseNotes(type='major', title='Release 1.0')
+        rn2 = ReleaseNotes(type='minor', title='Release 1.1')
+        rn3 = ReleaseNotes(type='patch', title='Release 1.1.1')
+
+        # This should not raise TypeError: '<' not supported between instances
+        rn_list = [rn3, rn1, rn2]
+        sorted_rn = sorted(rn_list)
+        self.assertEqual(len(sorted_rn), 3)
