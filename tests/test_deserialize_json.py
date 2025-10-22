@@ -136,3 +136,15 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
             json = json_loads(f.read())
         bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
         self.assertIsNotNone(bom)
+
+    def test_pr899(self) -> None:
+        """real world case from PR#899
+        see https://github.com/CycloneDX/cyclonedx-python-lib/pull/899
+        """
+        json_file = join(OWN_DATA_DIRECTORY, 'json',
+                         SchemaVersion.V1_6.to_version(),
+                         'pr899.json')
+        with open(json_file) as f:
+            json = json_loads(f.read())
+        bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
+        self.assertIsNotNone(bom)
