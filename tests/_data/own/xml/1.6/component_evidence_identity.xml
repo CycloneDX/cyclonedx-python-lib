@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6"
+     serialNumber="urn:uuid:66fa5692-2e9d-45c5-830a-ec8ccaf7dcc9"
+     version="1"
+>
+    <metadata>
+        <component type="application">
+            <name>test</name>
+            <description>test component evidence identit</description>
+        </component>
+    </metadata>
+    <components>
+        <component type="operating-system">
+            <name>alpine</name>
+            <version>12</version>
+            <evidence>
+                <identity>
+                    <field>name</field>
+                    <confidence>1.0</confidence>
+                </identity>
+                <identity>
+                    <field>version</field>
+                    <confidence>0.98</confidence>
+                </identity>
+            </evidence>
+        </component>
+        <component type="library">
+            <name>libssl</name>
+            <evidence>
+                <identity>
+                    <field>name</field>
+                    <confidence>1.0</confidence>
+                </identity>
+            </evidence>
+        </component>
+    </components>
+</bom>

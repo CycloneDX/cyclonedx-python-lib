@@ -37,9 +37,9 @@ class TestModelComponentEvidence(TestCase):
     def test_no_params(self) -> None:
         ComponentEvidence()  # Does not raise `NoPropertiesProvidedException`
 
-    def test_identity(self) -> None:
+    def test_identity_single(self) -> None:
         identity = Identity(field=IdentityField.NAME, confidence=Decimal('1'), concluded_value='test')
-        ce = ComponentEvidence(identity=[identity])
+        ce = ComponentEvidence(identity=identity)
         self.assertEqual(len(ce.identity), 1)
         self.assertEqual(ce.identity.pop().field, 'name')
 
