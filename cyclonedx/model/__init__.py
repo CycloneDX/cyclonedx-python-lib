@@ -277,8 +277,8 @@ class HashAlgorithm(str, Enum):
     SHA3_256 = 'SHA3-256'
     SHA3_384 = 'SHA3-384'  # Only supported in >= 1.2
     SHA3_512 = 'SHA3-512'
-    STREEBOG_256 = 'Streebog-256'
-    STREEBOG_512 = 'Streebog-512'
+    STREEBOG_256 = 'Streebog-256'  # Only supported in >= 1.7
+    STREEBOG_512 = 'Streebog-512'  # Only supported in >= 1.7
 
 
 class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
@@ -559,6 +559,7 @@ class ExternalReferenceType(str, Enum):
     BUILD_SYSTEM = 'build-system'
     CERTIFICATION_REPORT = 'certification-report'  # Only supported in >= 1.5
     CHAT = 'chat'
+    CITATION = 'citation'  # Only supported in >= 1.7
     CODIFIED_INFRASTRUCTURE = 'codified-infrastructure'  # Only supported in >= 1.5
     COMPONENT_ANALYSIS_REPORT = 'component-analysis-report'  # Only supported in >= 1.5
     CONFIGURATION = 'configuration'  # Only supported in >= 1.5
@@ -577,6 +578,9 @@ class ExternalReferenceType(str, Enum):
     MAILING_LIST = 'mailing-list'
     MATURITY_REPORT = 'maturity-report'  # Only supported in >= 1.5
     MODEL_CARD = 'model-card'  # Only supported in >= 1.5
+    PATENT = 'patent'  # Only supported in >= 1.7
+    PATENT_ASSERTION = 'patent-assertion'  # Only supported in >= 1.7
+    PATENT_FAMILY = 'patent-family'  # Only supported in >= 1.7
     PENTEST_REPORT = 'pentest-report'  # Only supported in >= 1.5
     POAM = 'poam'  # Only supported in >= 1.5
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
@@ -594,10 +598,6 @@ class ExternalReferenceType(str, Enum):
     VCS = 'vcs'
     VULNERABILITY_ASSERTION = 'vulnerability-assertion'  # Only supported in >= 1.5
     WEBSITE = 'website'
-    CITATION = 'citation'
-    PATENT = 'patent'
-    PATENT_ASSERTION = 'patent-assertion'
-    PATENT_FAMILY = 'patent-family'
     # --
     OTHER = 'other'
 
