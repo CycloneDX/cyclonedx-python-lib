@@ -124,6 +124,7 @@ class XmlV1Dot5(Xml, SchemaVersion1Dot5):
 class XmlV1Dot6(Xml, SchemaVersion1Dot6):
     pass
 
+
 class XmlV1Dot7(Xml, SchemaVersion1Dot7):
     pass
 

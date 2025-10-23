@@ -28,12 +28,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema import SchemaVersion
-from ..schema.schema import (
-    SchemaVersion1Dot4,
-    SchemaVersion1Dot5,
-    SchemaVersion1Dot6,
-    SchemaVersion1Dot7,
-)
+from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
 from .component import Component
 from .service import Service

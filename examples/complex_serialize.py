@@ -89,7 +89,7 @@ bom.register_dependency(component1, [component2])
 my_json_outputter: 'JsonOutputter' = JsonV1Dot5(bom)
 serialized_json = my_json_outputter.output_as_string(indent=2)
 print(serialized_json)
-my_json_validator = JsonStrictValidator(SchemaVersion.V1_6)
+my_json_validator = JsonStrictValidator(SchemaVersion.V1_7)
 try:
     json_validation_errors = my_json_validator.validate_str(serialized_json)
     if json_validation_errors:
@@ -106,7 +106,7 @@ print('', '=' * 30, '', sep='\n')
 # region XML
 """demo with implicit instructions for SchemaVersion, outputter and validator. TypeCheckers will catch errors."""
 
-my_xml_outputter: 'XmlOutputter' = make_outputter(bom, OutputFormat.XML, SchemaVersion.V1_6)
+my_xml_outputter: 'XmlOutputter' = make_outputter(bom, OutputFormat.XML, SchemaVersion.V1_7)
 serialized_xml = my_xml_outputter.output_as_string(indent=2)
 print(serialized_xml)
 my_xml_validator: 'XmlValidator' = make_schemabased_validator(

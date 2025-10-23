@@ -33,11 +33,7 @@ from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
-from ..schema.schema import (
-    SchemaVersion1Dot5,
-    SchemaVersion1Dot6,
-    SchemaVersion1Dot7,
-)
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import AttachedText, XsUri
 from .bom_ref import BomRef
 

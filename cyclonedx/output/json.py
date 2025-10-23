@@ -131,6 +131,7 @@ class JsonV1Dot6(Json, SchemaVersion1Dot6):
     def _get_schema_uri(self) -> str:
         return 'http://cyclonedx.org/schema/bom-1.6.schema.json'
 
+
 class JsonV1Dot7(Json, SchemaVersion1Dot7):
 
     def _get_schema_uri(self) -> str:

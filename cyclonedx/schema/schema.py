@@ -40,6 +40,7 @@ class SchemaVersion1Dot7(BaseSchemaVersion):
     def schema_version_enum(self) -> Literal[SchemaVersion.V1_7]:
         return SchemaVersion.V1_7
 
+
 class SchemaVersion1Dot6(BaseSchemaVersion):
 
     @property

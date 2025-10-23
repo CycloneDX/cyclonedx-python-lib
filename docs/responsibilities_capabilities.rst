@@ -53,6 +53,7 @@ Capabilities
    * Build a :class:`Component <cyclonedx.model.component.Component>` data model that represents this library
    * Build a :class:`Tool <cyclonedx.model.tool.Tool>` data model that represents this library
 * Implementation of the `CycloneDX Specification`_ for the following versions:
+   * ``1.7``
    * ``1.6``
    * ``1.5``
    * ``1.4``

@@ -34,6 +34,7 @@ from tests._data.models import (
 
 _LATEST_SCHEMA = SchemaVersion.V1_7
 
+
 @ddt
 class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
 
