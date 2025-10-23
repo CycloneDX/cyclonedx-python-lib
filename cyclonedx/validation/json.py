@@ -30,7 +30,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
 
 from ..exception import MissingOptionalDependencyException
-from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
+from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX, CRYPTOGRAPHY_DEFS as _S_CDEFS
 from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError
 
 _missing_deps_error: Optional[tuple[MissingOptionalDependencyException, ImportError]] = None
@@ -125,9 +125,10 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
         @staticmethod
         def __make_validator_registry() -> Registry[Any]:
             schema_prefix = 'http://cyclonedx.org/schema/'
-            with open(_S_SPDX) as spdx, open(_S_JSF) as jsf:
+            with open(_S_SPDX) as spdx, open(_S_JSF) as jsf, open(_S_CDEFS) as cdefs:
                 return Registry().with_resources([
                     (f'{schema_prefix}spdx.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(spdx.read()))),
+                    (f'{schema_prefix}cryptography-defs.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(cdefs.read()))),
                     (f'{schema_prefix}jsf-0.82.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(jsf.read()))),
                 ])
 
