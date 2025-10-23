@@ -30,6 +30,7 @@ from .. import SchemaVersion
 __DIR = dirname(__file__)
 
 BOM_XML: dict[SchemaVersion, Optional[str]] = {
+    SchemaVersion.V1_7: join(__DIR, 'bom-1.7.SNAPSHOT.xsd'),
     SchemaVersion.V1_6: join(__DIR, 'bom-1.6.SNAPSHOT.xsd'),
     SchemaVersion.V1_5: join(__DIR, 'bom-1.5.SNAPSHOT.xsd'),
     SchemaVersion.V1_4: join(__DIR, 'bom-1.4.SNAPSHOT.xsd'),
@@ -40,6 +41,7 @@ BOM_XML: dict[SchemaVersion, Optional[str]] = {
 }
 
 BOM_JSON: dict[SchemaVersion, Optional[str]] = {
+    SchemaVersion.V1_7: join(__DIR, 'bom-1.7.SNAPSHOT.schema.json'),
     SchemaVersion.V1_6: join(__DIR, 'bom-1.6.SNAPSHOT.schema.json'),
     SchemaVersion.V1_5: join(__DIR, 'bom-1.5.SNAPSHOT.schema.json'),
     SchemaVersion.V1_4: join(__DIR, 'bom-1.4.SNAPSHOT.schema.json'),
@@ -51,6 +53,7 @@ BOM_JSON: dict[SchemaVersion, Optional[str]] = {
 }
 
 BOM_JSON_STRICT: dict[SchemaVersion, Optional[str]] = {
+    SchemaVersion.V1_7: BOM_JSON[SchemaVersion.V1_7],
     SchemaVersion.V1_6: BOM_JSON[SchemaVersion.V1_6],
     SchemaVersion.V1_5: BOM_JSON[SchemaVersion.V1_5],
     SchemaVersion.V1_4: BOM_JSON[SchemaVersion.V1_4],
@@ -64,5 +67,7 @@ BOM_JSON_STRICT: dict[SchemaVersion, Optional[str]] = {
 
 SPDX_JSON = join(__DIR, 'spdx.SNAPSHOT.schema.json')
 SPDX_XML = join(__DIR, 'spdx.SNAPSHOT.xsd')
+
+CRYPTOGRAPHY_DEFS = join(__DIR, 'cryptography-defs.SNAPSHOT.schema.json')
 
 JSF = join(__DIR, 'jsf-0.82.SNAPSHOT.schema.json')

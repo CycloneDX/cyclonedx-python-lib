@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <component type="application" bom-ref="my-app">
+      <name>app</name>
+      <licenses>
+        <license>
+          <name>proprietary</name>
+        </license>
+      </licenses>
+    </component>
+    <licenses>
+      <license>
+        <id>CC-BY-1.0</id>
+      </license>
+    </licenses>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="C2">
+      <name>c-with-SPDX</name>
+      <licenses>
+        <license acknowledgement="concluded">
+          <id>Apache-2.0</id>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+      </licenses>
+    </component>
+    <component type="library" bom-ref="C1">
+      <name>c-with-expression</name>
+      <licenses>
+        <expression acknowledgement="concluded">Apache-2.0 OR MIT</expression>
+      </licenses>
+    </component>
+    <component type="library" bom-ref="C3">
+      <name>c-with-name</name>
+      <licenses>
+        <license>
+          <name>some additional</name>
+          <text content-type="text/plain">this is additional license text</text>
+        </license>
+        <license>
+          <name>some commercial license</name>
+          <text content-type="text/plain">this is a license text</text>
+        </license>
+      </licenses>
+    </component>
+  </components>
+  <services>
+    <service bom-ref="S2">
+      <name>s-with-SPDX</name>
+      <licenses>
+        <license acknowledgement="declared">
+          <id>Apache-2.0</id>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+      </licenses>
+    </service>
+    <service bom-ref="S1">
+      <name>s-with-expression</name>
+      <licenses>
+        <expression acknowledgement="declared">Apache-2.0 OR MIT</expression>
+      </licenses>
+    </service>
+    <service bom-ref="S3">
+      <name>s-with-name</name>
+      <licenses>
+        <license>
+          <name>some additional</name>
+          <text content-type="text/plain">this is additional license text</text>
+        </license>
+        <license>
+          <name>some commercial license</name>
+          <text content-type="text/plain">this is a license text</text>
+        </license>
+      </licenses>
+    </service>
+  </services>
+  <dependencies>
+    <dependency ref="C1"/>
+    <dependency ref="C2"/>
+    <dependency ref="C3"/>
+    <dependency ref="S1"/>
+    <dependency ref="S2"/>
+    <dependency ref="S3"/>
+    <dependency ref="my-app"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

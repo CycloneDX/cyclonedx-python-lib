@@ -31,7 +31,7 @@ from sortedcontainers import SortedSet
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidConfidenceException, InvalidValueException
-from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import Copyright
 from .bom_ref import BomRef
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
@@ -43,7 +43,7 @@ class IdentityField(str, Enum):
     Enum object that defines the permissible field types for Identity.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_evidence_identity
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/json/#components_items_evidence_identity
     """
 
     GROUP = 'group'
@@ -82,7 +82,7 @@ class Method:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.6/json/#components_items_evidence_identity_oneOf_i0_items_methods
+        https://cyclonedx.org/docs/1.7/json/#components_items_evidence_identity_oneOf_i0_items_methods
     """
 
     def __init__(
@@ -191,7 +191,7 @@ class Identity:
     Our internal representation of the `identityType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_evidence_identity
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/json/#components_items_evidence_identity
     """
 
     def __init__(
@@ -233,6 +233,7 @@ class Identity:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(3)
     def concluded_value(self) -> Optional[str]:
         return self._concluded_value
@@ -298,7 +299,7 @@ class Occurrence:
     Our internal representation of the `occurrenceType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_evidence_occurrences
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/json/#components_items_evidence_occurrences
     """
 
     def __init__(
@@ -346,6 +347,7 @@ class Occurrence:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     def line(self) -> Optional[int]:
         """
@@ -361,6 +363,7 @@ class Occurrence:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(3)
     def offset(self) -> Optional[int]:
         """
@@ -376,6 +379,7 @@ class Occurrence:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(4)
     def symbol(self) -> Optional[str]:
         """
@@ -389,6 +393,7 @@ class Occurrence:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(5)
     def additional_context(self) -> Optional[str]:
         """
@@ -433,7 +438,7 @@ class CallStackFrame:
     Represents an individual frame in a call stack.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_evidence_callstack
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/json/#components_items_evidence_callstack
     """
 
     def __init__(
@@ -583,7 +588,7 @@ class CallStack:
     Contains an array of stack frames describing a call stack from when a component was identified.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_evidence_callstack
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/json/#components_items_evidence_callstack
     """
 
     def __init__(
@@ -639,7 +644,7 @@ class ComponentEvidence:
     Provides the ability to document evidence collected through various forms of extraction or analysis.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_componentEvidenceType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_componentEvidenceType
     """
 
     def __init__(
@@ -659,6 +664,7 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'identity')
     def identity(self) -> 'SortedSet[Identity]':
@@ -679,6 +685,7 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'occurrence')
     @serializable.xml_sequence(2)
     def occurrences(self) -> 'SortedSet[Occurrence]':
@@ -692,6 +699,7 @@ class ComponentEvidence:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(3)
     def callstack(self) -> Optional[CallStack]:
         """

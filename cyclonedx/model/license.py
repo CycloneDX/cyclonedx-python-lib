@@ -33,7 +33,11 @@ from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
-from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6
+from ..schema.schema import (
+    SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
+)
 from . import AttachedText, XsUri
 from .bom_ref import BomRef
 
@@ -49,7 +53,7 @@ class LicenseAcknowledgement(str, Enum):
 
     .. note::
         See the CycloneDX Schema for hashType:
-        https://cyclonedx.org/docs/1.6/xml/#type_licenseAcknowledgementEnumerationType
+        https://cyclonedx.org/docs/1.7/xml/#type_licenseAcknowledgementEnumerationType
     """
 
     CONCLUDED = 'concluded'
@@ -72,7 +76,7 @@ class DisjunctiveLicense:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_licenseType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_licenseType
     """
 
     def __init__(
@@ -99,6 +103,7 @@ class DisjunctiveLicense:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
@@ -121,7 +126,7 @@ class DisjunctiveLicense:
 
         .. note::
           See the list of expected values:
-          https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_license_id
+          https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_license_id
 
         Returns:
             `str` or `None`
@@ -209,6 +214,7 @@ class DisjunctiveLicense:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
         """
@@ -271,7 +277,7 @@ class LicenseExpression:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_expression
+        https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_expression
     """
 
     def __init__(
@@ -286,6 +292,7 @@ class LicenseExpression:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
@@ -319,6 +326,7 @@ class LicenseExpression:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
         """

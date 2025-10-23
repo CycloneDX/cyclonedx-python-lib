@@ -31,6 +31,7 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
 )
 from . import BaseOutput, BomRefDiscriminator
 
@@ -123,8 +124,12 @@ class XmlV1Dot5(Xml, SchemaVersion1Dot5):
 class XmlV1Dot6(Xml, SchemaVersion1Dot6):
     pass
 
+class XmlV1Dot7(Xml, SchemaVersion1Dot7):
+    pass
+
 
 BY_SCHEMA_VERSION: dict[SchemaVersion, type[Xml]] = {
+    SchemaVersion.V1_7: XmlV1Dot7,
     SchemaVersion.V1_6: XmlV1Dot6,
     SchemaVersion.V1_5: XmlV1Dot5,
     SchemaVersion.V1_4: XmlV1Dot4,

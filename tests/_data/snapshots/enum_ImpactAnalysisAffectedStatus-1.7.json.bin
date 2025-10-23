@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "vulnerabilities": [
+    {
+      "affects": [
+        {
+          "ref": "urn:cdx:bom23/1#comp42",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.33.7+AFFECTED"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.33.7+UNAFFECTED"
+            },
+            {
+              "status": "unknown",
+              "version": "1.33.7+UNKNOWN"
+            }
+          ]
+        }
+      ],
+      "bom-ref": "dummy",
+      "id": "dummy"
+    }
+  ],
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

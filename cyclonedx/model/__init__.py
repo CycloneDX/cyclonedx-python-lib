@@ -48,6 +48,7 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
 )
 from .bom_ref import BomRef
 
@@ -60,7 +61,7 @@ class DataFlow(str, Enum):
     This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_dataFlowType
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.7/xml/#type_dataFlowType
     """
     INBOUND = 'inbound'
     OUTBOUND = 'outbound'
@@ -78,7 +79,7 @@ class DataClassification:
 
     .. note::
         See the CycloneDX Schema for dataClassificationType:
-        https://cyclonedx.org/docs/1.6/xml/#type_dataClassificationType
+        https://cyclonedx.org/docs/1.7/xml/#type_dataClassificationType
     """
 
     def __init__(
@@ -157,7 +158,7 @@ class Encoding(str, Enum):
     This is our internal representation of the encoding simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_encoding
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.7/xml/#type_encoding
     """
     BASE_64 = 'base64'
 
@@ -168,7 +169,7 @@ class AttachedText:
     This is our internal representation of the `attachedTextType` complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_attachedTextType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_attachedTextType
     """
 
     DEFAULT_CONTENT_TYPE = 'text/plain'
@@ -261,7 +262,7 @@ class HashAlgorithm(str, Enum):
     This is our internal representation of the hashAlg simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_hashAlg
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.7/xml/#type_hashAlg
     """
     # see `_HashTypeRepositorySerializationHelper.__CASES` for view/case map
     BLAKE2B_256 = 'BLAKE2b-256'  # Only supported in >= 1.2
@@ -276,6 +277,8 @@ class HashAlgorithm(str, Enum):
     SHA3_256 = 'SHA3-256'
     SHA3_384 = 'SHA3-384'  # Only supported in >= 1.2
     SHA3_512 = 'SHA3-512'
+    STREEBOG_256 = 'Streebog-256'
+    STREEBOG_512 = 'Streebog-512'
 
 
 class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
@@ -303,6 +306,10 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
     __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        HashAlgorithm.STREEBOG_256,
+        HashAlgorithm.STREEBOG_512,
+    }
 
     @classmethod
     def __prep(cls, hts: Iterable['HashType'], view: type[serializable.ViewType]) -> Generator['HashType', None, None]:
@@ -384,7 +391,7 @@ class HashType:
     This is our internal representation of the hashType complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/xml/#type_hashType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_hashType
     """
 
     @staticmethod
@@ -541,7 +548,7 @@ class ExternalReferenceType(str, Enum):
     Enum object that defines the permissible 'types' for an External Reference according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_externalReferenceType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_externalReferenceType
     """
     # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
     ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
@@ -587,6 +594,10 @@ class ExternalReferenceType(str, Enum):
     VCS = 'vcs'
     VULNERABILITY_ASSERTION = 'vulnerability-assertion'  # Only supported in >= 1.5
     WEBSITE = 'website'
+    CITATION = 'citation'
+    PATENT = 'patent'
+    PATENT_ASSERTION = 'patent-assertion'
+    PATENT_FAMILY = 'patent-family'
     # --
     OTHER = 'other'
 
@@ -647,6 +658,12 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
         ExternalReferenceType.ELECTRONIC_SIGNATURE,
         ExternalReferenceType.DIGITAL_SIGNATURE,
         ExternalReferenceType.RFC_9166,
+    }
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        ExternalReferenceType.CITATION,
+        ExternalReferenceType.PATENT,
+        ExternalReferenceType.PATENT_ASSERTION,
+        ExternalReferenceType.PATENT_FAMILY,
     }
 
     @classmethod
@@ -809,7 +826,7 @@ class ExternalReference:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_externalReference
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_externalReference
     """
 
     def __init__(
@@ -877,6 +894,7 @@ class ExternalReference:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     def hashes(self) -> 'SortedSet[HashType]':
         """
@@ -921,7 +939,7 @@ class Property:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_propertyType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_propertyType
 
     Specifies an individual property with a name and value.
     """
@@ -996,7 +1014,7 @@ class NoteText:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_releaseNotesType
     """
 
     DEFAULT_CONTENT_TYPE: str = 'text/plain'
@@ -1088,7 +1106,7 @@ class Note:
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_releaseNotesType
 
     @todo: Replace ``NoteText`` with ``AttachedText``?
     """
@@ -1172,7 +1190,7 @@ class IdentifiableAction:
     This is our internal representation of the `identifiableActionType` complex type.
 
     .. note::
-        See the CycloneDX specification: https://cyclonedx.org/docs/1.6/xml/#type_identifiableActionType
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.7/xml/#type_identifiableActionType
     """
 
     def __init__(
@@ -1258,7 +1276,7 @@ class Copyright:
     This is our internal representation of the `copyrightsType` complex type.
 
     .. note::
-        See the CycloneDX specification: https://cyclonedx.org/docs/1.6/xml/#type_copyrightsType
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.7/xml/#type_copyrightsType
     """
 
     def __init__(

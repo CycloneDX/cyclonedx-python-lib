@@ -22,7 +22,7 @@
     Introduced in CycloneDX v1.5
 
 .. note::
-    See the CycloneDX Schema for lifecycles: https://cyclonedx.org/docs/1.6/xml/#metadata_lifecycles
+    See the CycloneDX Schema for lifecycles: https://cyclonedx.org/docs/1.7/xml/#metadata_lifecycles
 """
 
 from enum import Enum
@@ -47,7 +47,7 @@ class LifecyclePhase(str, Enum):
     Enum object that defines the permissible 'phase' for a Lifecycle according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_classification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_classification
     """
     DESIGN = 'design'
     PRE_BUILD = 'pre-build'
@@ -65,7 +65,7 @@ class PredefinedLifecycle:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.6/json/#tab-pane_metadata_lifecycles_items_oneOf_i0
+        https://cyclonedx.org/docs/1.7/json/#tab-pane_metadata_lifecycles_items_oneOf_i0
     """
 
     def __init__(self, phase: LifecyclePhase) -> None:
@@ -105,7 +105,7 @@ class NamedLifecycle:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.6/json/#tab-pane_metadata_lifecycles_items_oneOf_i1
+        https://cyclonedx.org/docs/1.7/json/#tab-pane_metadata_lifecycles_items_oneOf_i1
     """
 
     def __init__(self, name: str, *, description: Optional[str] = None) -> None:

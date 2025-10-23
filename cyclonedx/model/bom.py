@@ -37,6 +37,7 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
 )
 from ..serialization import UrnUuidHelper
 from . import _BOM_LINK_PREFIX, ExternalReference, Property
@@ -61,7 +62,7 @@ class BomMetaData:
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/xml/#type_metadata
+        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.7/xml/#type_metadata
     """
 
     def __init__(
@@ -109,6 +110,7 @@ class BomMetaData:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(_LifecycleRepositoryHelper)
     @serializable.xml_sequence(2)
     def lifecycles(self) -> LifecycleRepository:
@@ -193,6 +195,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(6)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
@@ -218,6 +221,7 @@ class BomMetaData:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(7)
     def manufacturer(self) -> Optional[OrganizationalEntity]:
         """
@@ -256,6 +260,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(9)
     def licenses(self) -> LicenseRepository:
@@ -276,6 +281,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(10)
     def properties(self) -> 'SortedSet[Property]':
@@ -371,6 +377,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     def serial_number(self) -> UUID:
         """
@@ -401,6 +408,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(10)
     def metadata(self) -> BomMetaData:
         """
@@ -410,7 +418,7 @@ class Bom:
             Metadata object instance for this Bom.
 
         .. note::
-            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/xml/#type_metadata
+            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.7/xml/#type_metadata
         """
         return self._metadata
 
@@ -442,6 +450,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     @serializable.xml_sequence(30)
     def services(self) -> 'SortedSet[Service]':
@@ -464,6 +473,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(40)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -485,6 +495,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
     @serializable.xml_sequence(50)
     def dependencies(self) -> 'SortedSet[Dependency]':
@@ -512,6 +523,7 @@ class Bom:
     # @serializable.view(SchemaVersion1Dot4) @todo: Update py-serializable to support view by OutputFormat filtering
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(70)
     def properties(self) -> 'SortedSet[Property]':
@@ -534,6 +546,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
     @serializable.xml_sequence(80)
     def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
@@ -573,6 +586,7 @@ class Bom:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(110)
     def definitions(self) -> Optional[Definitions]:
         """

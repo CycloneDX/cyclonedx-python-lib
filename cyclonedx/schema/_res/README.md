@@ -1,10 +1,10 @@
 # Resources: Schema files
 
-some schema for offline use as download via [script](../../../tools/schema-downloader.py).
+some schema for offline use as downloaded via [script](../../../tools/schema-downloader.py).
 original sources: <https://github.com/CycloneDX/specification/tree/master/schema>
 
 Currently using version
-[8a27bfd1be5be0dcb2c208a34d2f4fa0b6d75bd7](https://github.com/CycloneDX/specification/commit/8a27bfd1be5be0dcb2c208a34d2f4fa0b6d75bd7)
+[4b3f59453366e27c8073fd24e98bf21ef8892c8e](https://github.com/CycloneDX/specification/commit/4b3f59453366e27c8073fd24e98bf21ef8892c8e)
 
 | file | note |
 |------|------|
@@ -15,15 +15,18 @@ Currently using version
 | [`bom-1.4.SNAPSHOT.xsd`](bom-1.4.SNAPSHOT.xsd) | applied changes: 1 |
 | [`bom-1.5.SNAPSHOT.xsd`](bom-1.5.SNAPSHOT.xsd) | applied changes: 1 |
 | [`bom-1.6.SNAPSHOT.xsd`](bom-1.6.SNAPSHOT.xsd) | applied changes: 1 |
+| [`bom-1.7.SNAPSHOT.xsd`](bom-1.7.SNAPSHOT.xsd) | applied changes: 1 |
 | [`bom-1.2.SNAPSHOT.schema.json`](bom-1.2.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6 |
 | [`bom-1.3.SNAPSHOT.schema.json`](bom-1.3.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6 |
 | [`bom-1.4.SNAPSHOT.schema.json`](bom-1.4.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6 |
 | [`bom-1.5.SNAPSHOT.schema.json`](bom-1.5.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6 |
 | [`bom-1.6.SNAPSHOT.schema.json`](bom-1.6.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6 |
+| [`bom-1.7.SNAPSHOT.schema.json`](bom-1.7.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6,7 |
 | [`bom-1.2-strict.SNAPSHOT.schema.json`](bom-1.2-strict.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6 |
 | [`bom-1.3-strict.SNAPSHOT.schema.json`](bom-1.3-strict.SNAPSHOT.schema.json) | applied changes: 2,3,4,5,6 |
 | [`spdx.SNAPSHOT.xsd`](spdx.SNAPSHOT.xsd) | |
 | [`spdx.SNAPSHOT.schema.json`](spdx.SNAPSHOT.schema.json) | |
+| [`cryptography-defs.SNAPSHOT.schema.json`](cryptography-defs.SNAPSHOT.schema.json) | |
 | [`jsf-0.82.SNAPSHOT.schema.json`](jsf-0.82.SNAPSHOT.schema.json) | |
 
 changes:
@@ -33,3 +36,5 @@ changes:
 4. `properties.$schema.enum` was removed
 5. `required.version` removed, as it is actually optional with default value
 6. `"pattern": "^(.*)$"` removed as it has no meaning
+7. `cryptography-defs.schema.json` was replaced with `cryptography-defs.SNAPSHOT.schema.json`
+
