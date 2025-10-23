@@ -30,7 +30,7 @@ from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.tool import Tool
-from cyclonedx.output.json import JsonV1Dot6
+from cyclonedx.output.json import JsonV1Dot7
 from tests._data.models import (
     get_bom_component_licenses_invalid,
     get_bom_component_nested_licenses_invalid,
@@ -163,14 +163,14 @@ class TestBom(TestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             bom = Bom(metadata=BomMetaData(component=Component(name='test', version='1.2')))
-            _ = JsonV1Dot6(bom).output_as_string()
+            _ = JsonV1Dot7(bom).output_as_string()
             self.assertEqual(len(w), 0)
 
     def test_warning_missing_dependency(self) -> None:
         with self.assertWarns(expected_warning=UserWarning) as w:
             bom = Bom(metadata=BomMetaData(component=Component(name='root_component', version='1.2')))
             bom.components.add(Component(name='test2', version='4.2'))
-            _ = JsonV1Dot6(bom).output_as_string()
+            _ = JsonV1Dot7(bom).output_as_string()
             self.assertEqual(len(w.warnings), 1)
             self.assertIn('has no defined dependencies ', str(w.warnings[0]))
 

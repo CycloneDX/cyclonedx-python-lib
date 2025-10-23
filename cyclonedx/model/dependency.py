@@ -53,7 +53,7 @@ class Dependency:
     Models a Dependency within a BOM.
 
     .. note::
-        See https://cyclonedx.org/docs/1.6/xml/#type_dependencyType
+        See https://cyclonedx.org/docs/1.7/xml/#type_dependencyType
     """
 
     def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:

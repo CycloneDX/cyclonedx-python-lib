@@ -21,12 +21,12 @@ import re
 from os.path import dirname, join, realpath
 from urllib.request import urlretrieve
 
-SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/tags/1.6.1/schema/'
+SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/tags/1.7/schema/'
 SOURCE_ROOT_LATEST = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/heads/master/schema/'
 TARGET_ROOT = realpath(join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res'))
 
 BOM_XSD = {
-    'versions': ['1.6', '1.5', '1.4', '1.3', '1.2', '1.1', '1.0'],
+    'versions': ['1.7', '1.6', '1.5', '1.4', '1.3', '1.2', '1.1', '1.0'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.xsd',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.xsd'),
     'replace': [],
@@ -66,11 +66,12 @@ _DEFAULTS_WITH_PATTERN_RE = re.compile(r'\s+"default": "",(?![^}]*?"pattern": "\
 _DEFAULTS_WITH_PATERN_REPL = r''
 
 BOM_JSON_LAX = {
-    'versions': ['1.6', '1.5', '1.4', '1.3', '1.2'],
+    'versions': ['1.7', '1.6', '1.5', '1.4', '1.3', '1.2'],
     'sourcePattern': f'{SOURCE_ROOT}bom-%s.schema.json',
     'targetPattern': join(TARGET_ROOT, 'bom-%s.SNAPSHOT.schema.json'),
     'replace': [
         ('spdx.schema.json', 'spdx.SNAPSHOT.schema.json'),
+        ('cryptography-defs.schema.json', 'cryptography-defs.SNAPSHOT.schema.json'),
         ('jsf-0.82.schema.json', 'jsf-0.82.SNAPSHOT.schema.json'),
         (_BOM_REQUIRED_S, _BOM_REQUIRED_R),
     ],
@@ -94,8 +95,9 @@ BOM_JSON_STRICT = {
 }
 
 OTHER_DOWNLOADABLES = [
-    (f'{SOURCE_ROOT_LATEST}spdx.schema.json', join(TARGET_ROOT, 'spdx.SNAPSHOT.schema.json')),
     (f'{SOURCE_ROOT_LATEST}spdx.xsd', join(TARGET_ROOT, 'spdx.SNAPSHOT.xsd')),
+    (f'{SOURCE_ROOT_LATEST}spdx.schema.json', join(TARGET_ROOT, 'spdx.SNAPSHOT.schema.json')),
+    (f'{SOURCE_ROOT_LATEST}cryptography-defs.schema.json', join(TARGET_ROOT, 'cryptography-defs.SNAPSHOT.schema.json')),
     (f'{SOURCE_ROOT_LATEST}jsf-0.82.schema.json', join(TARGET_ROOT, 'jsf-0.82.SNAPSHOT.schema.json')),
 ]
 

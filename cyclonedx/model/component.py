@@ -44,6 +44,7 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
 )
 from ..serialization import PackageUrl as PackageUrlSH
 from . import (
@@ -72,7 +73,7 @@ class Commit:
     Our internal representation of the `commitType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_commitType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_commitType
     """
 
     def __init__(
@@ -197,7 +198,7 @@ class ComponentScope(str, Enum):
     Enum object that defines the permissable 'scopes' for a Component according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_scope
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_scope
     """
     # see `_ComponentScopeSerializationHelper.__CASES` for view/case map
     REQUIRED = 'required'
@@ -221,6 +222,7 @@ class _ComponentScopeSerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
     __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6]
 
     @classmethod
     def __normalize(cls, cs: ComponentScope, view: type[serializable.ViewType]) -> Optional[str]:
@@ -253,7 +255,7 @@ class ComponentType(str, Enum):
     Enum object that defines the permissible 'types' for a Component according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_classification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_classification
     """
     # see `_ComponentTypeSerializationHelper.__CASES` for view/case map
     APPLICATION = 'application'
@@ -300,6 +302,7 @@ class _ComponentTypeSerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5] | {
         ComponentType.CRYPTOGRAPHIC_ASSET,
     }
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6]
 
     @classmethod
     def __normalize(cls, ct: ComponentType, view: type[serializable.ViewType]) -> Optional[str]:
@@ -332,7 +335,7 @@ class Diff:
     Our internal representation of the `diffType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_diffType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_diffType
     """
 
     def __init__(
@@ -400,7 +403,7 @@ class PatchClassification(str, Enum):
     Enum object that defines the permissible `patchClassification`s.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_patchClassification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_patchClassification
     """
     BACKPORT = 'backport'
     CHERRY_PICK = 'cherry-pick'
@@ -414,7 +417,7 @@ class Patch:
     Our internal representation of the `patchType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_patchType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_patchType
     """
 
     def __init__(
@@ -509,7 +512,7 @@ class Pedigree:
     may not be known.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_pedigreeType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_pedigreeType
     """
 
     def __init__(
@@ -608,6 +611,7 @@ class Pedigree:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'patch')
     @serializable.xml_sequence(5)
     def patches(self) -> 'SortedSet[Patch]':
@@ -672,7 +676,7 @@ class Swid:
     Our internal representation of the `swidType` complex type.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_swidType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_swidType
     """
 
     def __init__(
@@ -947,7 +951,7 @@ class Component(Dependable):
     This is our internal representation of a Component within a Bom.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_component
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_component
     """
 
     @staticmethod
@@ -1090,6 +1094,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
@@ -1108,6 +1113,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
     def supplier(self) -> Optional[OrganizationalEntity]:
         """
@@ -1125,6 +1131,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     def manufacturer(self) -> Optional[OrganizationalEntity]:
         """
@@ -1143,6 +1150,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'author')
     @serializable.xml_sequence(3)
     def authors(self) -> 'SortedSet[OrganizationalContact]':
@@ -1165,7 +1173,8 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot3)
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)  # todo: this is deprecated in v1.6?
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(4)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def author(self) -> Optional[str]:
@@ -1322,6 +1331,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(12)
     def licenses(self) -> LicenseRepository:
@@ -1392,6 +1402,7 @@ class Component(Dependable):
     @property
     @serializable.json_name('omniborId')
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='omniborId')
     @serializable.xml_sequence(16)
     def omnibor_ids(self) -> 'SortedSet[OmniborId]':
@@ -1412,6 +1423,7 @@ class Component(Dependable):
     @property
     @serializable.json_name('swhid')
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='swhid')
     @serializable.xml_sequence(17)
     def swhids(self) -> 'SortedSet[Swhid]':
@@ -1435,6 +1447,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(18)
     def swid(self) -> Optional[Swid]:
         """
@@ -1469,6 +1482,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(20)
     def pedigree(self) -> Optional[Pedigree]:
         """
@@ -1491,6 +1505,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(21)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -1512,6 +1527,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(22)
     def properties(self) -> 'SortedSet[Property]':
@@ -1551,6 +1567,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(24)
     @serializable.type_mapping(_ComponentEvidenceSerializationHelper)
     def evidence(self) -> Optional[ComponentEvidence]:
@@ -1570,6 +1587,7 @@ class Component(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(25)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """
@@ -1608,6 +1626,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(30)
     def crypto_properties(self) -> Optional[CryptoProperties]:
         """
@@ -1628,6 +1647,7 @@ class Component(Dependable):
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'tag')
     @serializable.xml_sequence(31)
     def tags(self) -> 'SortedSet[str]':

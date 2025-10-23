@@ -46,16 +46,16 @@ as a ``str``.
 
     from cyclonedx.output import make_outputter, BaseOutput, OutputFormat, SchemaVersion
 
-    outputter: BaseOutput = make_outputter(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_6)
+    outputter: BaseOutput = make_outputter(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_7)
     bom_json: str = outputter.output_as_string()
 
 Alternatively, if the output format and schema version are constants, you can use the predefined format+schema combined outputs:
 
 .. code-block:: python
 
-    from cyclonedx.output.json import JsonV1Dot6
+    from cyclonedx.output.json import JsonV1Dot7
 
-    outputter = JsonV1Dot6(bom=bom)
+    outputter = JsonV1Dot7(bom=bom)
     bom_json: str = outputter.output_as_string()
 
 

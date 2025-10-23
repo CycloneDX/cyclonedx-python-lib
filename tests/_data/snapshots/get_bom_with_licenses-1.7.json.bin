@@ -1,0 +1,163 @@
+{
+  "components": [
+    {
+      "bom-ref": "C2",
+      "licenses": [
+        {
+          "license": {
+            "acknowledgement": "concluded",
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+          }
+        }
+      ],
+      "name": "c-with-SPDX",
+      "type": "library"
+    },
+    {
+      "bom-ref": "C1",
+      "licenses": [
+        {
+          "acknowledgement": "concluded",
+          "expression": "Apache-2.0 OR MIT"
+        }
+      ],
+      "name": "c-with-expression",
+      "type": "library"
+    },
+    {
+      "bom-ref": "C3",
+      "licenses": [
+        {
+          "license": {
+            "name": "some additional",
+            "text": {
+              "content": "this is additional license text",
+              "contentType": "text/plain"
+            }
+          }
+        },
+        {
+          "license": {
+            "name": "some commercial license",
+            "text": {
+              "content": "this is a license text",
+              "contentType": "text/plain"
+            }
+          }
+        }
+      ],
+      "name": "c-with-name",
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "C1"
+    },
+    {
+      "ref": "C2"
+    },
+    {
+      "ref": "C3"
+    },
+    {
+      "ref": "S1"
+    },
+    {
+      "ref": "S2"
+    },
+    {
+      "ref": "S3"
+    },
+    {
+      "ref": "my-app"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "my-app",
+      "licenses": [
+        {
+          "license": {
+            "name": "proprietary"
+          }
+        }
+      ],
+      "name": "app",
+      "type": "application"
+    },
+    "licenses": [
+      {
+        "license": {
+          "id": "CC-BY-1.0"
+        }
+      }
+    ],
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "services": [
+    {
+      "bom-ref": "S2",
+      "licenses": [
+        {
+          "license": {
+            "acknowledgement": "declared",
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+          }
+        }
+      ],
+      "name": "s-with-SPDX"
+    },
+    {
+      "bom-ref": "S1",
+      "licenses": [
+        {
+          "acknowledgement": "declared",
+          "expression": "Apache-2.0 OR MIT"
+        }
+      ],
+      "name": "s-with-expression"
+    },
+    {
+      "bom-ref": "S3",
+      "licenses": [
+        {
+          "license": {
+            "name": "some additional",
+            "text": {
+              "content": "this is additional license text",
+              "contentType": "text/plain"
+            }
+          }
+        },
+        {
+          "license": {
+            "name": "some commercial license",
+            "text": {
+              "content": "this is a license text",
+              "contentType": "text/plain"
+            }
+          }
+        }
+      ],
+      "name": "s-with-name"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

@@ -20,7 +20,7 @@
 This set of classes represents the data that is possible about known Services.
 
 .. note::
-    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.6/xml/#type_servicesType
+    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.7/xml/#type_servicesType
 """
 
 
@@ -32,7 +32,13 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..schema.schema import SchemaVersion1Dot3, SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
+from ..schema.schema import (
+    SchemaVersion1Dot3,
+    SchemaVersion1Dot4,
+    SchemaVersion1Dot5,
+    SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
+)
 from . import DataClassification, ExternalReference, Property, XsUri
 from .bom_ref import BomRef
 from .contact import OrganizationalEntity
@@ -47,7 +53,7 @@ class Service(Dependable):
     Class that models the `service` complex type in the CycloneDX schema.
 
     .. note::
-        See the CycloneDX schema: https://cyclonedx.org/docs/1.6/xml/#type_service
+        See the CycloneDX schema: https://cyclonedx.org/docs/1.7/xml/#type_service
     """
 
     def __init__(
@@ -299,6 +305,7 @@ class Service(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(13)
     def properties(self) -> 'SortedSet[Property]':
@@ -339,6 +346,7 @@ class Service(Dependable):
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(15)
     def release_notes(self) -> Optional[ReleaseNotes]:
         """

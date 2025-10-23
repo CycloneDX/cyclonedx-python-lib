@@ -24,7 +24,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import XsUri
 from .bom_ref import BomRef
 
@@ -36,7 +36,7 @@ class PostalAddress:
     within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_postalAddressType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_postalAddressType
     """
 
     def __init__(
@@ -194,7 +194,7 @@ class OrganizationalContact:
     within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_organizationalContact
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_organizationalContact
     """
 
     def __init__(
@@ -212,6 +212,7 @@ class OrganizationalContact:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
@@ -304,7 +305,7 @@ class OrganizationalEntity:
     within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_organizationalEntity
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_organizationalEntity
     """
 
     def __init__(
@@ -324,6 +325,7 @@ class OrganizationalEntity:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
@@ -356,6 +358,7 @@ class OrganizationalEntity:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(20)
     def address(self) -> Optional[PostalAddress]:
         """

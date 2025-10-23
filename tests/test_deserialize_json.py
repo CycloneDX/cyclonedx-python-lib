@@ -35,6 +35,8 @@ from tests._data.models import (
     all_get_bom_funct_with_incomplete_deps,
 )
 
+_LATEST_SCHEMA = SchemaVersion.V1_7
+
 
 @ddt
 class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
@@ -44,7 +46,7 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
     @patch('cyclonedx.builder.this.__ThisVersion', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
-        snapshot_name = mksname(get_bom, SchemaVersion.V1_6, OutputFormat.JSON)
+        snapshot_name = mksname(get_bom, _LATEST_SCHEMA, OutputFormat.JSON)
         expected = get_bom()
         json = json_loads(self.readSnapshot(snapshot_name))
         bom = Bom.from_json(json)

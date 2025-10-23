@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="1f4ed1e4-582a-4fa0-8c38-1b4facc16972">
+      <name>My Certificate</name>
+      <version>1.0</version>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <subjectName>cyclonedx.org</subjectName>
+          <issuerName>Cloudflare Inc ECC CA-3</issuerName>
+          <notValidBefore>2023-05-19T01:00:00+00:00</notValidBefore>
+          <notValidAfter>2024-05-19T00:59:59.999999+00:00</notValidAfter>
+          <certificateFormat>pem</certificateFormat>
+          <certificateExtension>csr</certificateExtension>
+        </certificateProperties>
+        <oid>an-oid-here</oid>
+      </cryptoProperties>
+      <tags>
+        <tag>certificate</tag>
+      </tags>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="1f4ed1e4-582a-4fa0-8c38-1b4facc16972"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

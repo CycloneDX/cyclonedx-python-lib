@@ -33,7 +33,7 @@ class ReleaseNotes:
     This is our internal representation of a `releaseNotesType` for a Component in a BOM.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_releaseNotesType
     """
 
     def __init__(
