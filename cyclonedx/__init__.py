@@ -22,4 +22,4 @@ Python library for CycloneDX
 
 # !! version is managed by semantic_release
 # do not use typing here, or else `semantic_release` might have issues finding the variable
-__version__ = "11.3.0"  # noqa:Q000
+__version__ = "11.4.0"  # noqa:Q000

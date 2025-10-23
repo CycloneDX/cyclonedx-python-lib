@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v11.4.0 (2025-10-23)
+
+### Features
+
+- Add support for CycloneDX 1.7 (basics)
+  ([#902](https://github.com/CycloneDX/cyclonedx-python-lib/pull/902),
+  [`f35b9ee`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f35b9eed0803f70882e30616f6fb3c0a4e212651))
+
+
 ## v11.3.0 (2025-10-22)
 
 ### Bug Fixes
