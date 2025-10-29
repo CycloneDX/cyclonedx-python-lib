@@ -18,6 +18,7 @@
 
 from collections.abc import Generator, Iterable
 from datetime import datetime
+from enum import Enum
 from itertools import chain
 from typing import TYPE_CHECKING, Optional, Union
 from uuid import UUID, uuid4
@@ -56,6 +57,81 @@ if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
 
 
+@serializable.serializable_enum
+class TlpClassification(str, Enum):
+    """
+    Enum object that defines the Traffic Light Protocol (TLP) classification that controls the sharing and distribution
+    of the data that the BOM describes.
+
+    .. note::
+        Introduced in CycloneDX v1.7
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_tlpClassificationType
+    """
+
+    CLEAR = 'CLEAR'
+    GREEN = 'GREEN'
+    AMBER = 'AMBER'
+    AMBER_AND_STRICT = 'AMBER_AND_STRICT'
+    RED = 'RED'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class DistributionConstraints:
+    """
+    Our internal representation of the `distributionConstraints` complex type.
+    Conditions and constraints governing the sharing and distribution of the data or components described by this BOM.
+
+    .. note::
+        Introduced in CycloneDX v1.7
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_metadata
+    """
+
+    def __init__(
+        self, *,
+        tlp: Optional[TlpClassification] = None,
+    ) -> None:
+        self.tlp = tlp or TlpClassification.CLEAR
+
+    @property
+    @serializable.xml_sequence(0)
+    def tlp(self) -> TlpClassification:
+        """
+        The Traffic Light Protocol (TLP) classification that controls the sharing and distribution of the data that the
+        BOM describes.
+
+        Returns:
+            `TlpClassification` enum value
+        """
+        return self._tlp
+
+    @tlp.setter
+    def tlp(self, tlp: TlpClassification) -> None:
+        self._tlp = tlp
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(self.tlp)
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, DistributionConstraints):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, DistributionConstraints):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<DistributionConstraints tlp={self.tlp}>'
+
+
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class BomMetaData:
     """
@@ -76,6 +152,7 @@ class BomMetaData:
         timestamp: Optional[datetime] = None,
         manufacturer: Optional[OrganizationalEntity] = None,
         lifecycles: Optional[Iterable[Lifecycle]] = None,
+        distribution_constraints: Optional[DistributionConstraints] = None,
         # Deprecated as of v1.6
         manufacture: Optional[OrganizationalEntity] = None,
     ) -> None:
@@ -88,6 +165,7 @@ class BomMetaData:
         self.properties = properties or []
         self.manufacturer = manufacturer
         self.lifecycles = lifecycles or []
+        self.distribution_constraints = distribution_constraints
         # deprecated properties below
         self.manufacture = manufacture
 
@@ -301,10 +379,27 @@ class BomMetaData:
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(11)
+    def distribution_constraints(self) -> Optional[DistributionConstraints]:
+        """
+        Conditions and constraints governing the sharing and distribution of the data or components described by this
+        BOM.
+
+        Returns:
+            `DistributionConstraints` or `None`
+        """
+        return self._distribution_constraints
+
+    @distribution_constraints.setter
+    def distribution_constraints(self, distribution_constraints: Optional[DistributionConstraints]) -> None:
+        self._distribution_constraints = distribution_constraints
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             _ComparableTuple(self.authors), self.component, _ComparableTuple(self.licenses), self.manufacture,
-            _ComparableTuple(self.properties),
+            _ComparableTuple(self.properties), self.distribution_constraints,
             _ComparableTuple(self.lifecycles), self.supplier, self.timestamp, self.tools, self.manufacturer
         ))
 

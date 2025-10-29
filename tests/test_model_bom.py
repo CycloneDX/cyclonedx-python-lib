@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 import warnings
 from collections.abc import Callable
+from random import shuffle
 from unittest import TestCase
 from uuid import uuid4
 
@@ -23,7 +24,7 @@ from ddt import ddt, named_data
 
 from cyclonedx.exception.model import LicenseExpressionAlongWithOthersException
 from cyclonedx.model import Property
-from cyclonedx.model.bom import Bom, BomMetaData
+from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
@@ -31,6 +32,7 @@ from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.tool import Tool
 from cyclonedx.output.json import JsonV1Dot7
+from tests import reorder
 from tests._data.models import (
     get_bom_component_licenses_invalid,
     get_bom_component_nested_licenses_invalid,
@@ -45,6 +47,43 @@ from tests._data.models import (
 )
 
 
+class TestDistributionConstraints(TestCase):
+
+    def test_create(self) -> None:
+        dc = DistributionConstraints(tlp=TlpClassification.GREEN)
+        self.assertIs(TlpClassification.GREEN, dc.tlp)
+
+    def test_update(self) -> None:
+        dc = DistributionConstraints(tlp=TlpClassification.AMBER_AND_STRICT)
+        dc.tlp = TlpClassification.RED
+        self.assertIs(TlpClassification.RED, dc.tlp)
+
+    def test_equal(self) -> None:
+        a = DistributionConstraints(tlp=TlpClassification.GREEN)
+        b = DistributionConstraints(tlp=TlpClassification.GREEN)
+        c = DistributionConstraints(tlp=TlpClassification.RED)
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, c)
+
+    def test_sort(self) -> None:
+        expected_order = [2, 1, 3, 0]
+        dcs = [
+            DistributionConstraints(tlp=TlpClassification.RED),
+            DistributionConstraints(tlp=TlpClassification.AMBER),
+            DistributionConstraints(tlp=TlpClassification.AMBER_AND_STRICT),
+            DistributionConstraints(tlp=TlpClassification.CLEAR),
+        ]
+        expected_dcs = reorder(dcs, expected_order)
+        shuffle(dcs)
+        sorted_dcs = sorted(dcs)
+        self.assertListEqual(sorted_dcs, expected_dcs)
+
+    def test_create_distribution_constraints(self) -> None:
+        dc = DistributionConstraints(tlp=TlpClassification.AMBER)
+        self.assertIsNotNone(dc)
+        self.assertEqual(TlpClassification.AMBER, dc.tlp)
+
+
 class TestBomMetaData(TestCase):
 
     def test_empty_bom_metadata(self) -> None:
@@ -54,6 +93,7 @@ class TestBomMetaData(TestCase):
         self.assertIsNone(metadata.component)
         self.assertIsNone(metadata.manufacture)
         self.assertIsNone(metadata.supplier)
+        self.assertIsNone(metadata.distribution_constraints)
         self.assertEqual(0, len(metadata.licenses))
         self.assertEqual(0, len(metadata.lifecycles))
         self.assertEqual(0, len(metadata.properties))
@@ -83,9 +123,11 @@ class TestBomMetaData(TestCase):
             Property(name='property_1', value='value_1'),
             Property(name='property_2', value='value_2', )
         ]
+        distribution_constraints = DistributionConstraints(tlp=TlpClassification.CLEAR)
 
         metadata = BomMetaData(tools=tools, authors=authors, component=component, lifecycles=lifecycles,
-                               manufacture=manufacturer, supplier=supplier, licenses=licenses, properties=properties)
+                               manufacture=manufacturer, supplier=supplier, licenses=licenses, properties=properties,
+                               distribution_constraints=distribution_constraints)
         self.assertIsNotNone(metadata.timestamp)
         self.assertIsNotNone(metadata.authors)
         self.assertTrue(authors[0] in metadata.authors)
@@ -106,6 +148,7 @@ class TestBomMetaData(TestCase):
         self.assertEqual(2, len(metadata.tools.tools))
         self.assertTrue(tools[0] in metadata.tools.tools)
         self.assertTrue(tools[1] in metadata.tools.tools)
+        self.assertEqual(metadata.distribution_constraints, distribution_constraints)
 
     def test_bom_metadata_sorting(self) -> None:
         """Test that BomMetaData instances can be sorted without triggering TypeError"""

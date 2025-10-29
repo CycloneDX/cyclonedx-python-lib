@@ -42,7 +42,7 @@ from cyclonedx.model import (
     Property,
     XsUri,
 )
-from cyclonedx.model.bom import Bom, BomMetaData
+from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
     Commit,
@@ -1403,6 +1403,17 @@ def get_bom_with_lifecycles() -> Bom:
     )
 
 
+def get_bom_with_distribution_constraints() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            distribution_constraints=DistributionConstraints(
+                tlp=TlpClassification.CLEAR
+            ),
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app'),
+        )
+    )
+
+
 def get_bom_with_definitions_standards() -> Bom:
     """
     Returns a BOM with definitions and standards only.
@@ -1584,6 +1595,7 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_component_setuptools_with_v16_fields,
     get_bom_for_issue_630_empty_property,
     get_bom_with_lifecycles,
+    get_bom_with_distribution_constraints,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
 }
