@@ -820,119 +820,6 @@ class XsUri(serializable.helpers.BaseHelper):
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class ExternalReference:
-    """
-    This is our internal representation of an ExternalReference complex type that can be used in multiple places within
-    a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_externalReference
-    """
-
-    def __init__(
-        self, *,
-        type: ExternalReferenceType,
-        url: XsUri,
-        comment: Optional[str] = None,
-        hashes: Optional[Iterable[HashType]] = None,
-    ) -> None:
-        self.url = url
-        self.comment = comment
-        self.type = type
-        self.hashes = hashes or []
-
-    @property
-    @serializable.xml_sequence(1)
-    def url(self) -> XsUri:
-        """
-        The URL to the external reference.
-
-        Returns:
-            `XsUri`
-        """
-        return self._url
-
-    @url.setter
-    def url(self, url: XsUri) -> None:
-        self._url = url
-
-    @property
-    def comment(self) -> Optional[str]:
-        """
-        An optional comment describing the external reference.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._comment
-
-    @comment.setter
-    def comment(self, comment: Optional[str]) -> None:
-        self._comment = comment
-
-    @property
-    @serializable.type_mapping(_ExternalReferenceSerializationHelper)
-    @serializable.xml_attribute()
-    def type(self) -> ExternalReferenceType:
-        """
-        Specifies the type of external reference.
-
-        There are built-in types to describe common references. If a type does not exist for the reference being
-        referred to, use the "other" type.
-
-        Returns:
-            `ExternalReferenceType`
-        """
-        return self._type
-
-    @type.setter
-    def type(self, type: ExternalReferenceType) -> None:
-        self._type = type
-
-    @property
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
-    def hashes(self) -> 'SortedSet[HashType]':
-        """
-        The hashes of the external reference (if applicable).
-
-        Returns:
-            Set of `HashType`
-        """
-        return self._hashes
-
-    @hashes.setter
-    def hashes(self, hashes: Iterable[HashType]) -> None:
-        self._hashes = SortedSet(hashes)
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self._type, self._url, self._comment,
-            _ComparableTuple(self._hashes)
-        ))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, ExternalReference):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, ExternalReference):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<ExternalReference {self.type.name}, {self.url}>'
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Property:
     """
     This is our internal representation of `propertyType` complex type that can be used in multiple places within
@@ -1005,6 +892,138 @@ class Property:
 
     def __repr__(self) -> str:
         return f'<Property name={self.name}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class ExternalReference:
+    """
+    This is our internal representation of an ExternalReference complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_externalReference
+    """
+
+    def __init__(
+        self, *,
+        type: ExternalReferenceType,
+        url: XsUri,
+        comment: Optional[str] = None,
+        hashes: Optional[Iterable[HashType]] = None,
+        properties: Optional[Iterable[Property]] = None,
+    ) -> None:
+        self.url = url
+        self.comment = comment
+        self.type = type
+        self.hashes = hashes or []
+        self.properties = properties or []
+
+    @property
+    @serializable.xml_sequence(1)
+    def url(self) -> XsUri:
+        """
+        The URL to the external reference.
+
+        Returns:
+            `XsUri`
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url: XsUri) -> None:
+        self._url = url
+
+    @property
+    def comment(self) -> Optional[str]:
+        """
+        An optional comment describing the external reference.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._comment
+
+    @comment.setter
+    def comment(self, comment: Optional[str]) -> None:
+        self._comment = comment
+
+    @property
+    @serializable.type_mapping(_ExternalReferenceSerializationHelper)
+    @serializable.xml_attribute()
+    def type(self) -> ExternalReferenceType:
+        """
+        Specifies the type of external reference.
+
+        There are built-in types to describe common references. If a type does not exist for the reference being
+        referred to, use the "other" type.
+
+        Returns:
+            `ExternalReferenceType`
+        """
+        return self._type
+
+    @type.setter
+    def type(self, type: ExternalReferenceType) -> None:
+        self._type = type
+
+    @property
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
+    def hashes(self) -> 'SortedSet[HashType]':
+        """
+        The hashes of the external reference (if applicable).
+
+        Returns:
+            Set of `HashType`
+        """
+        return self._hashes
+
+    @hashes.setter
+    def hashes(self, hashes: Iterable[HashType]) -> None:
+        self._hashes = SortedSet(hashes)
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._type, self._url, self._comment,
+            _ComparableTuple(self._hashes), _ComparableTuple(self.properties),
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ExternalReference):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, ExternalReference):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<ExternalReference {self.type.name}, {self.url}>'
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
