@@ -820,81 +820,6 @@ class XsUri(serializable.helpers.BaseHelper):
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class Property:
-    """
-    This is our internal representation of `propertyType` complex type that can be used in multiple places within
-    a CycloneDX BOM document.
-
-    .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_propertyType
-
-    Specifies an individual property with a name and value.
-    """
-
-    def __init__(
-        self, *,
-        name: str,
-        value: Optional[str] = None,
-    ) -> None:
-        self.name = name
-        self.value = value
-
-    @property
-    @serializable.xml_attribute()
-    def name(self) -> str:
-        """
-        The name of the property.
-
-        Duplicate names are allowed, each potentially having a different value.
-
-        Returns:
-            `str`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: str) -> None:
-        self._name = name
-
-    @property
-    @serializable.xml_name('.')
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def value(self) -> Optional[str]:
-        """
-        Value of this Property.
-
-        Returns:
-             `str`
-        """
-        return self._value
-
-    @value.setter
-    def value(self, value: Optional[str]) -> None:
-        self._value = value
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self.name, self.value
-        ))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Property):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, Property):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Property name={self.name}>'
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ExternalReference:
     """
     This is our internal representation of an ExternalReference complex type that can be used in multiple places within
@@ -910,7 +835,7 @@ class ExternalReference:
         url: XsUri,
         comment: Optional[str] = None,
         hashes: Optional[Iterable[HashType]] = None,
-        properties: Optional[Iterable[Property]] = None,
+        properties: Optional[Iterable['Property']] = None,
     ) -> None:
         self.url = url
         self.comment = comment
@@ -1000,7 +925,7 @@ class ExternalReference:
         return self._properties
 
     @properties.setter
-    def properties(self, properties: Iterable[Property]) -> None:
+    def properties(self, properties: Iterable['Property']) -> None:
         self._properties = SortedSet(properties)
 
     def __comparable_tuple(self) -> _ComparableTuple:
@@ -1024,6 +949,81 @@ class ExternalReference:
 
     def __repr__(self) -> str:
         return f'<ExternalReference {self.type.name}, {self.url}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class Property:
+    """
+    This is our internal representation of `propertyType` complex type that can be used in multiple places within
+    a CycloneDX BOM document.
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_propertyType
+
+    Specifies an individual property with a name and value.
+    """
+
+    def __init__(
+        self, *,
+        name: str,
+        value: Optional[str] = None,
+    ) -> None:
+        self.name = name
+        self.value = value
+
+    @property
+    @serializable.xml_attribute()
+    def name(self) -> str:
+        """
+        The name of the property.
+
+        Duplicate names are allowed, each potentially having a different value.
+
+        Returns:
+            `str`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: str) -> None:
+        self._name = name
+
+    @property
+    @serializable.xml_name('.')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def value(self) -> Optional[str]:
+        """
+        Value of this Property.
+
+        Returns:
+             `str`
+        """
+        return self._value
+
+    @value.setter
+    def value(self, value: Optional[str]) -> None:
+        self._value = value
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.name, self.value
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Property):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Property):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<Property name={self.name}>'
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)

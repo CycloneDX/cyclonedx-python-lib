@@ -587,7 +587,7 @@ def get_bom_just_complete_metadata() -> Bom:
 
 def get_bom_with_external_references() -> Bom:
     bom = _make_bom(external_references=[
-        get_external_reference_1(), get_external_reference_2()
+        get_external_reference_1(), get_external_reference_2(), get_external_reference_with_properties()
     ])
     return bom
 
@@ -892,6 +892,17 @@ def get_external_reference_2() -> ExternalReference:
     return ExternalReference(
         type=ExternalReferenceType.WEBSITE,
         url=XsUri('https://cyclonedx.org')
+    )
+
+
+def get_external_reference_with_properties() -> ExternalReference:
+    return ExternalReference(
+        type=ExternalReferenceType.VCS,
+        url=XsUri('https://cyclonedx.org'),
+        properties=[
+            Property(name='property_1', value='value_1'),
+            Property(name='property_2', value='value_2')
+        ]
     )
 
 
