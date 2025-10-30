@@ -6,7 +6,7 @@
       <name>app</name>
     </component>
     <distributionConstraints>
-      <tlp>CLEAR</tlp>
+      <tlp>AMBER_AND_STRICT</tlp>
     </distributionConstraints>
   </metadata>
   <dependencies>

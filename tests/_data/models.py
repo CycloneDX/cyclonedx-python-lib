@@ -1407,7 +1407,7 @@ def get_bom_with_distribution_constraints() -> Bom:
     return _make_bom(
         metadata=BomMetaData(
             distribution_constraints=DistributionConstraints(
-                tlp=TlpClassification.CLEAR
+                tlp=TlpClassification.AMBER_AND_STRICT
             ),
             component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app'),
         )
