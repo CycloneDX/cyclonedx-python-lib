@@ -367,6 +367,9 @@
       "type": "library",
       "version": "50.3.2"
     },
+    "distributionConstraints": {
+      "tlp": "GREEN"
+    },
     "licenses": [
       {
         "license": {

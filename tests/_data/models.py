@@ -582,6 +582,7 @@ def get_bom_just_complete_metadata() -> Bom:
     )]
     bom.metadata.lifecycles = [PredefinedLifecycle(LifecyclePhase.BUILD)]
     bom.metadata.properties = get_properties_1()
+    bom.metadata.distribution_constraints = DistributionConstraints(tlp=TlpClassification.GREEN)
     return bom
 
 
