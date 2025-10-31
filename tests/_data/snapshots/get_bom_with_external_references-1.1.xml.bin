@@ -6,6 +6,9 @@
       <url>https://cyclonedx.org</url>
       <comment>No comment</comment>
     </reference>
+    <reference type="vcs">
+      <url>https://cyclonedx.org</url>
+    </reference>
     <reference type="website">
       <url>https://cyclonedx.org</url>
     </reference>

@@ -132,16 +132,24 @@ class TestModelComponent(TestCase):
 
     def test_external_references(self) -> None:
         c1 = Component(name='test-component')
+        properties = [
+            Property(name='property_1', value='value_1'),
+            Property(name='property_2', value='value_2')
+        ]
         c1.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
-            comment='No comment'
+            comment='No comment',
+            properties=properties
         ))
         self.assertEqual(c1.name, 'test-component')
         self.assertIsNone(c1.version)
         self.assertEqual(c1.type, ComponentType.LIBRARY)
         self.assertEqual(len(c1.external_references), 1)
         self.assertEqual(len(c1.hashes), 0)
+        self.assertIsNotNone(c1.external_references[0].properties)
+        self.assertIn(properties[0], c1.external_references[0].properties)
+        self.assertIn(properties[1], c1.external_references[0].properties)
 
         c2 = Component(name='test2-component')
         self.assertEqual(c2.name, 'test2-component')
@@ -163,13 +171,15 @@ class TestModelComponent(TestCase):
         c1.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
-            comment='No comment'
+            comment='No comment',
+            properties=[Property(name='property_1', value='value_1')]
         ))
         c2 = Component(name='test-component')
         c2.external_references.add(ExternalReference(
             type=ExternalReferenceType.OTHER,
             url=XsUri('https://cyclonedx.org'),
-            comment='No comment'
+            comment='No comment',
+            properties=[Property(name='property_1', value='value_1')]
         ))
         self.assertEqual(c1, c2)
 

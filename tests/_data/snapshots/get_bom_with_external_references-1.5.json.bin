@@ -12,6 +12,10 @@
       "url": "https://cyclonedx.org"
     },
     {
+      "type": "vcs",
+      "url": "https://cyclonedx.org"
+    },
+    {
       "type": "website",
       "url": "https://cyclonedx.org"
     }

@@ -835,11 +835,13 @@ class ExternalReference:
         url: XsUri,
         comment: Optional[str] = None,
         hashes: Optional[Iterable[HashType]] = None,
+        properties: Optional[Iterable['Property']] = None,
     ) -> None:
         self.url = url
         self.comment = comment
         self.type = type
         self.hashes = hashes or []
+        self.properties = properties or []
 
     @property
     @serializable.xml_sequence(1)
@@ -909,10 +911,27 @@ class ExternalReference:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable['Property']) -> None:
+        self._properties = SortedSet(properties)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self._type, self._url, self._comment,
-            _ComparableTuple(self._hashes)
+            _ComparableTuple(self._hashes), _ComparableTuple(self.properties),
         ))
 
     def __eq__(self, other: object) -> bool:

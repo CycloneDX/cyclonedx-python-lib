@@ -12,6 +12,20 @@
       "url": "https://cyclonedx.org"
     },
     {
+      "properties": [
+        {
+          "name": "property_1",
+          "value": "value_1"
+        },
+        {
+          "name": "property_2",
+          "value": "value_2"
+        }
+      ],
+      "type": "vcs",
+      "url": "https://cyclonedx.org"
+    },
+    {
       "type": "website",
       "url": "https://cyclonedx.org"
     }
