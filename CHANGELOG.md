@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v11.5.0 (2025-10-31)
+
+### Features
+
+- Add support for DistributionConstraints in BOM metadata
+  ([#906](https://github.com/CycloneDX/cyclonedx-python-lib/pull/906),
+  [`70adb7c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/70adb7ccceb1296f197c70c95a2f01dc130cc6ae))
+
+- Add support for properties in external references
+  ([#907](https://github.com/CycloneDX/cyclonedx-python-lib/pull/907),
+  [`73e7c1a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/73e7c1a5ddb8935730c896739348cb808d05fa18))
+
+
 ## v11.4.0 (2025-10-23)
 
 ### Features
