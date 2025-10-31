@@ -317,6 +317,9 @@
       <property name="key1">val1</property>
       <property name="key2">val2</property>
     </properties>
+    <distributionConstraints>
+      <tlp>GREEN</tlp>
+    </distributionConstraints>
   </metadata>
   <dependencies>
     <dependency ref="my-specific-bom-ref-for-dings"/>
