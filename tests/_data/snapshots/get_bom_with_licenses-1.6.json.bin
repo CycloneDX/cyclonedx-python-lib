@@ -26,6 +26,12 @@
       "type": "library"
     },
     {
+      "bom-ref": "C4",
+      "licenses": [],
+      "name": "c-with-expression-details",
+      "type": "library"
+    },
+    {
       "bom-ref": "C3",
       "licenses": [
         {
@@ -60,6 +66,9 @@
     },
     {
       "ref": "C3"
+    },
+    {
+      "ref": "C4"
     },
     {
       "ref": "S1"

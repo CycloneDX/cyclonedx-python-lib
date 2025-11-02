@@ -22,11 +22,12 @@ License related things
 
 from enum import Enum
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterable, Optional, Union
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
+from cyclonedx.schema import SchemaVersion
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
@@ -34,7 +35,7 @@ from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
-from . import AttachedText, XsUri
+from . import AttachedText, Property, XsUri
 from .bom_ref import BomRef
 
 
@@ -251,6 +252,8 @@ class DisjunctiveLicense:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, DisjunctiveLicense):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        if isinstance(other, LicenseExpressionDetailed):
+            return False  # self after any LicenseExpressionDetailed
         if isinstance(other, LicenseExpression):
             return False  # self after any LicenseExpression
         return NotImplemented
@@ -364,6 +367,8 @@ class LicenseExpression:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, LicenseExpression):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        if isinstance(other, LicenseExpressionDetailed):
+            return False  # self after any LicenseExpressionDetailed
         if isinstance(other, DisjunctiveLicense):
             return True  # self before any DisjunctiveLicense
         return NotImplemented
@@ -372,10 +377,281 @@ class LicenseExpression:
         return f'<LicenseExpression value={self._value!r}>'
 
 
-License = Union[LicenseExpression, DisjunctiveLicense]
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class ExpressionDetails:
+    """
+    This is our internal representation of the `licenseExpressionDetailedType` complex type that specifies the details
+    and attributes related to a software license identifier within a CycloneDX BOM document.
+
+    .. note::
+        Introduced in CycloneDX v1.7
+
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_licenseExpressionDetailedType
+    """
+
+    def __init__(
+        self, license_identifier: str, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        text: Optional[AttachedText] = None,
+        url: Optional[XsUri] = None,
+    ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref)
+        self.license_identifier = license_identifier
+        self.text = text
+        self.url = url
+
+    @property
+    @serializable.xml_name('license-identifier')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_attribute()
+    def license_identifier(self) -> str:
+        """
+        A valid SPDX license identifier. Refer to https://spdx.org/specifications for syntax requirements.
+        This field serves as the primary key, which uniquely identifies each record.
+
+        Example values:
+         - "Apache-2.0",
+         - "GPL-3.0-only WITH Classpath-exception-2.0"
+         - "LicenseRef-my-custom-license"
+
+        Returns:
+            `str`
+        """
+        return self._license_identifier
+
+    @license_identifier.setter
+    def license_identifier(self, license_identifier: str) -> None:
+        self._license_identifier = license_identifier
+
+    @property
+    @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
+
+    @property
+    @serializable.xml_sequence(1)
+    def text(self) -> Optional[AttachedText]:
+        """
+        Specifies the optional full text of the attachment
+
+        Returns:
+            `AttachedText` else `None`
+        """
+        return self._text
+
+    @text.setter
+    def text(self, text: Optional[AttachedText]) -> None:
+        self._text = text
+
+    @property
+    @serializable.xml_sequence(2)
+    def url(self) -> Optional[XsUri]:
+        """
+        The URL to the attachment file. If the attachment is a license or BOM, an externalReference should also be
+        specified for completeness.
+
+        Returns:
+            `XsUri` or `None`
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url: Optional[XsUri]) -> None:
+        self._url = url
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.bom_ref.value, self.license_identifier, self.url, self.text,
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ExpressionDetails):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, ExpressionDetails):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<ExpressionDetails bom-ref={self.bom_ref!r}, license_identifier={self.license_identifier}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class LicenseExpressionDetailed:
+    """
+    Specifies the details and attributes related to a software license.
+    It must be a valid SPDX license expression, along with additional properties such as license acknowledgment.
+
+    .. note::
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_oneOf_i1_expressionDetails
+    """
+
+    def __init__(
+        self, expression: str, *,
+        expression_details: Optional[Iterable[ExpressionDetails]] = None,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        acknowledgement: Optional[LicenseAcknowledgement] = None,
+        properties: Optional[Iterable[Property]] = None,
+    ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref)
+        self.expression = expression
+        self.acknowledgement = acknowledgement
+        self.expression_details = expression_details or []
+        self.properties = properties or []
+
+    @property
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
+
+    @property
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_attribute()
+    def expression(self) -> str:
+        """
+        A valid SPDX license expression.
+        Refer to https://spdx.org/specifications for syntax requirements.
+
+        Returns:
+             `str`
+        """
+        return self._expression
+
+    @expression.setter
+    def expression(self, expression: str) -> None:
+        self._expression = expression
+
+    @property
+    @serializable.xml_attribute()
+    def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
+        """
+        Declared licenses and concluded licenses represent two different stages in the licensing process within
+        software development.
+
+        Declared licenses refer to the initial intention of the software authors regarding the
+        licensing terms under which their code is released. On the other hand, concluded licenses are the result of a
+        comprehensive analysis of the project's codebase to identify and confirm the actual licenses of the components
+        used, which may differ from the initially declared licenses. While declared licenses provide an upfront
+        indication of the licensing intentions, concluded licenses offer a more thorough understanding of the actual
+        licensing within a project, facilitating proper compliance and risk management. Observed licenses are defined
+        in evidence.licenses. Observed licenses form the evidence necessary to substantiate a concluded license.
+
+        Returns:
+            `LicenseAcknowledgement` or `None`
+        """
+        return self._acknowledgement
+
+    @acknowledgement.setter
+    def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
+        self._acknowledgement = acknowledgement
+
+    @property
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='details')
+    @serializable.xml_sequence(1)
+    def expression_details(self) -> 'SortedSet[ExpressionDetails]':
+        """
+        Details for parts of the expression.
+
+        Returns:
+            `Iterable[ExpressionDetails]` if set else `None`
+        """
+        return self._expression_details
+
+    @expression_details.setter
+    def expression_details(self, expression_details: Iterable[ExpressionDetails]) -> None:
+        self._expression_details = SortedSet(expression_details)
+
+    # @property
+    # ...
+    # @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='licensing')
+    # @serializable.xml_sequence(2)
+    # def licensing(self) -> ...:
+    #     ...  # TODO
+    #
+
+    @property
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(3)
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Property names of interest to the general public are encouraged to be registered in the CycloneDX Property
+        Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy. Formal registration is OPTIONAL.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._acknowledgement,
+            self._expression,
+            self._bom_ref.value,
+            _ComparableTuple(self.expression_details),
+            _ComparableTuple(self.properties),
+        ))
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, LicenseExpressionDetailed):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, LicenseExpressionDetailed):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        if isinstance(other, LicenseExpression):
+            return True  # self before any LicenseExpression
+        if isinstance(other, DisjunctiveLicense):
+            return False  # self before any LicenseExpression
+        return NotImplemented
+
+    def __repr__(self) -> str:
+        return f'<LicenseExpressionDetailed expression={self._expression!r}>'
+
+
+License = Union[LicenseExpression, LicenseExpressionDetailed, DisjunctiveLicense]
 """TypeAlias for a union of supported license models.
 
 - :class:`LicenseExpression`
+- :class:`LicenseExpressionDetailed`
 - :class:`DisjunctiveLicense`
 """
 
@@ -415,12 +691,27 @@ else:
 class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
+    @staticmethod
+    def __supports_expression_details(view: Any) -> bool:
+        try:
+            return view is not None and view().schema_version_enum >= SchemaVersion.V1_7
+        except Exception:  # pragma: no cover
+            return False
+
     @classmethod
     def json_normalize(cls, o: LicenseRepository, *,
                        view: Optional[type[serializable.ViewType]],
                        **__: Any) -> Any:
         if len(o) == 0:
             return None
+
+        expression_detailed = next((li for li in o if isinstance(li, LicenseExpressionDetailed)), None)
+        if expression_detailed:
+            if cls.__supports_expression_details(view):
+                return [json_loads(expression_detailed.as_json(view_=view))]  # type:ignore[attr-defined]
+            else:
+                warn('LicenseExpressionDetailed is not supported in schema versions before 1.7; skipping serialization')
+
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
             # mixed license expression and license? this is an invalid constellation according to schema!
@@ -444,6 +735,10 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             if 'license' in li:
                 repo.add(DisjunctiveLicense.from_json(  # type:ignore[attr-defined]
                     li['license']))
+            elif 'expressionDetails' in li:
+                repo.add(LicenseExpressionDetailed.from_json(  # type:ignore[attr-defined]
+                    li
+                ))
             elif 'expression' in li:
                 repo.add(LicenseExpression.from_json(  # type:ignore[attr-defined]
                     li
@@ -461,6 +756,15 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
         if len(o) == 0:
             return None
         elem = Element(element_name)
+
+        expression_detailed = next((li for li in o if isinstance(li, LicenseExpressionDetailed)), None)
+        if expression_detailed:
+            if cls.__supports_expression_details(view):
+                elem.append(expression_detailed.as_xml(  # type:ignore[attr-defined]
+                    view_=view, as_string=False, element_name='expression-detailed', xmlns=xmlns))
+            else:
+                warn('LicenseExpressionDetailed is not supported in schema versions before 1.7; skipping serialization')
+
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
             # mixed license expression and license? this is an invalid constellation according to schema!
@@ -486,6 +790,9 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             tag = li.tag if default_ns is None else li.tag.replace(f'{{{default_ns}}}', '')
             if tag == 'license':
                 repo.add(DisjunctiveLicense.from_xml(  # type:ignore[attr-defined]
+                    li, default_ns))
+            elif tag == 'expression-detailed':
+                repo.add(LicenseExpressionDetailed.from_xml(  # type:ignore[attr-defined]
                     li, default_ns))
             elif tag == 'expression':
                 repo.add(LicenseExpression.from_xml(  # type:ignore[attr-defined]

@@ -32,6 +32,10 @@
         <expression acknowledgement="concluded">Apache-2.0 OR MIT</expression>
       </licenses>
     </component>
+    <component type="library" bom-ref="C4">
+      <name>c-with-expression-details</name>
+      <licenses/>
+    </component>
     <component type="library" bom-ref="C3">
       <name>c-with-name</name>
       <licenses>
@@ -80,6 +84,7 @@
     <dependency ref="C1"/>
     <dependency ref="C2"/>
     <dependency ref="C3"/>
+    <dependency ref="C4"/>
     <dependency ref="S1"/>
     <dependency ref="S2"/>
     <dependency ref="S3"/>

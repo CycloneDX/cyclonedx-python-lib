@@ -21,8 +21,8 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from cyclonedx.exception.model import MutuallyExclusivePropertiesException
-from cyclonedx.model import AttachedText, XsUri
-from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression
+from cyclonedx.model import AttachedText, XsUri, Property
+from cyclonedx.model.license import DisjunctiveLicense, ExpressionDetails, LicenseExpression, LicenseExpressionDetailed
 from tests import reorder
 
 
@@ -102,6 +102,49 @@ class TestModelLicenseExpression(TestCase):
         self.assertNotEqual(a, 'foo')
 
 
+class TestModelLicenseExpressionDetailed(TestCase):
+    def test_create(self) -> None:
+        a = LicenseExpressionDetailed('foo')
+        self.assertEqual('foo', a.expression)
+
+        details = [
+            ExpressionDetails('qux'),
+            ExpressionDetails('baz')
+        ]
+        properties = [
+            Property(name='prop1', value='val1'),
+            Property(name='prop2', value='val2'),
+        ]
+        b = LicenseExpressionDetailed('bar', expression_details=details, properties=properties)
+        self.assertListEqual(sorted(details), list(b.expression_details))
+        self.assertIn(properties[0], b.properties)
+        self.assertIn(properties[1], b.properties)
+
+    def test_update(self) -> None:
+        a = LicenseExpressionDetailed('foo')
+        self.assertEqual('foo', a.expression)
+        a.expression = 'bar'
+        self.assertEqual('bar', a.expression)
+
+        details = [
+            ExpressionDetails('qux'),
+            ExpressionDetails('baz')
+        ]
+        b = LicenseExpressionDetailed('bar', expression_details=[details[0]])
+        b.expression_details.add(details[1])
+        self.assertListEqual(sorted(details), list(b.expression_details))
+
+    def test_equal(self) -> None:
+        a = LicenseExpressionDetailed('foo')
+        b = LicenseExpressionDetailed('foo')
+        c = LicenseExpressionDetailed('bar')
+        d = LicenseExpressionDetailed('bar', expression_details=[ExpressionDetails('baz')])
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, c)
+        self.assertNotEqual(a, 'foo')
+        self.assertNotEqual(c, d)
+
+
 class TestModelLicense(TestCase):
 
     def test_sort_mixed(self) -> None:
@@ -115,3 +158,25 @@ class TestModelLicense(TestCase):
         shuffle(licenses)
         sorted_licenses = sorted(licenses)
         self.assertListEqual(sorted_licenses, expected_licenses)
+
+
+class TestModelExpressionDetails(TestCase):
+    def test_equal(self) -> None:
+        a = ExpressionDetails(license_identifier='MIT')
+        b = ExpressionDetails(license_identifier='MIT')
+        c = ExpressionDetails(license_identifier='MIT', text=AttachedText(content='some text'))
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, c)
+
+    def test_sort(self) -> None:
+        expected_order = [0, 3, 2, 1]
+        details = [
+            ExpressionDetails(license_identifier='Apache-2.0'),
+            ExpressionDetails(license_identifier='MIT'),
+            ExpressionDetails(license_identifier='MIT'),
+            ExpressionDetails(license_identifier='GPL-3.0'),
+        ]
+        expected_details = reorder(details, expected_order)
+        shuffle(details)
+        sorted_details = sorted(details)
+        self.assertListEqual(sorted_details, expected_details)
