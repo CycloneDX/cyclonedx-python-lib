@@ -21,7 +21,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from cyclonedx.exception.model import MutuallyExclusivePropertiesException
-from cyclonedx.model import AttachedText, XsUri, Property
+from cyclonedx.model import AttachedText, Property, XsUri
 from cyclonedx.model.license import DisjunctiveLicense, ExpressionDetails, LicenseExpression, LicenseExpressionDetailed
 from tests import reorder
 

@@ -97,8 +97,14 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from cyclonedx.model.license import DisjunctiveLicense, ExpressionDetails, License, LicenseAcknowledgement, \
-    LicenseExpression, LicenseExpressionDetailed
+from cyclonedx.model.license import (
+    DisjunctiveLicense,
+    ExpressionDetails,
+    License,
+    LicenseAcknowledgement,
+    LicenseExpression,
+    LicenseExpressionDetailed,
+)
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -1063,12 +1069,12 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
 
 def get_bom_with_licenses() -> Bom:
     expression_details = [
-        ExpressionDetails(license_identifier="GPL-3.0-or-later",
+        ExpressionDetails(license_identifier='GPL-3.0-or-later',
                           url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt'),
-                          text=AttachedText(content="specific GPL-3.0-or-later license text")),
-        ExpressionDetails(license_identifier="GPL-2.0",
-                          bom_ref="some-bomref-1234",
-                          text=AttachedText(content="specific GPL-2.0 license text")),
+                          text=AttachedText(content='specific GPL-3.0-or-later license text')),
+        ExpressionDetails(license_identifier='GPL-2.0',
+                          bom_ref='some-bomref-1234',
+                          text=AttachedText(content='specific GPL-2.0 license text')),
     ]
 
     return _make_bom(

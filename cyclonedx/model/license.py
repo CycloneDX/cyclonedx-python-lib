@@ -22,7 +22,8 @@ License related things
 
 from enum import Enum
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Any, Iterable, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
+from collections.abc import Iterable
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
