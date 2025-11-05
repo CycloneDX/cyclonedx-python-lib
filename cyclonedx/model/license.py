@@ -641,7 +641,7 @@ class LicenseExpressionDetailed:
         if isinstance(other, LicenseExpression):
             return True  # self before any LicenseExpression
         if isinstance(other, DisjunctiveLicense):
-            return False  # self before any LicenseExpression
+            return False  # self after any DisjunctiveLicense
         return NotImplemented
 
     def __repr__(self) -> str:
