@@ -21,7 +21,9 @@
     <component type="library" bom-ref="C4">
       <name>c-with-expression-details</name>
       <version/>
-      <licenses/>
+      <licenses>
+        <expression>GPL-3.0-or-later OR GPL-2.0</expression>
+      </licenses>
     </component>
     <component type="library" bom-ref="C3">
       <name>c-with-name</name>

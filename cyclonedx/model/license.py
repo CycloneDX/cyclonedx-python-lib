@@ -20,10 +20,10 @@
 License related things
 """
 
+from collections.abc import Iterable
 from enum import Enum
 from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Optional, Union
-from collections.abc import Iterable
 from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
@@ -519,6 +519,9 @@ class LicenseExpressionDetailed:
         self.properties = properties or []
 
     @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
@@ -551,6 +554,8 @@ class LicenseExpressionDetailed:
         self._expression = expression
 
     @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
         """
@@ -575,6 +580,7 @@ class LicenseExpressionDetailed:
         self._acknowledgement = acknowledgement
 
     @property
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='details')
     @serializable.xml_sequence(1)
     def expression_details(self) -> 'SortedSet[ExpressionDetails]':
@@ -591,6 +597,7 @@ class LicenseExpressionDetailed:
         self._expression_details = SortedSet(expression_details)
 
     # @property
+    # @serializable.view(SchemaVersion1Dot7)
     # ...
     # @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='licensing')
     # @serializable.xml_sequence(2)
@@ -599,6 +606,7 @@ class LicenseExpressionDetailed:
     #
 
     @property
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(3)
     def properties(self) -> 'SortedSet[Property]':
@@ -699,6 +707,27 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
         except Exception:  # pragma: no cover
             return False
 
+    @staticmethod
+    def __transpile_license_expression_details_xml(
+        expression_detailed: LicenseExpressionDetailed,
+        view: Optional[type[serializable.ViewType]],
+        xmlns: Optional[str]
+    ) -> Element:
+        normalized: Element = expression_detailed.as_xml(  # type:ignore[attr-defined]
+            view_=view, as_string=False, element_name='expression', xmlns=xmlns)
+
+        ns_prefix = f'{{{xmlns}}}' if xmlns else ''
+        details = normalized.findall(f'./{ns_prefix}details')
+        for details_elem in details:
+            normalized.remove(details_elem)
+
+        expression_value = normalized.get(f'{ns_prefix}expression')
+        if expression_value:
+            normalized.text = expression_value
+            del normalized.attrib[f'{ns_prefix}expression']
+
+        return normalized
+
     @classmethod
     def json_normalize(cls, o: LicenseRepository, *,
                        view: Optional[type[serializable.ViewType]],
@@ -708,10 +737,9 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
 
         expression_detailed = next((li for li in o if isinstance(li, LicenseExpressionDetailed)), None)
         if expression_detailed:
-            if cls.__supports_expression_details(view):
-                return [json_loads(expression_detailed.as_json(view_=view))]  # type:ignore[attr-defined]
-            else:
-                warn('LicenseExpressionDetailed is not supported in schema versions before 1.7; skipping serialization')
+            if not cls.__supports_expression_details(view):
+                warn('LicenseExpressionDetailed is not supported in schema versions < 1.7; ignoring expressionDetails')
+            return [json_loads(expression_detailed.as_json(view_=view))]  # type:ignore[attr-defined]
 
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
@@ -764,7 +792,8 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
                 elem.append(expression_detailed.as_xml(  # type:ignore[attr-defined]
                     view_=view, as_string=False, element_name='expression-detailed', xmlns=xmlns))
             else:
-                warn('LicenseExpressionDetailed is not supported in schema versions before 1.7; skipping serialization')
+                warn('LicenseExpressionDetailed is not supported in schema versions < 1.7; ignoring details')
+                elem.append(cls.__transpile_license_expression_details_xml(expression_detailed, view, xmlns))
 
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
