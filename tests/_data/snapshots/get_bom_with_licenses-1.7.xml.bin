@@ -35,7 +35,7 @@
     <component type="library" bom-ref="C4">
       <name>c-with-expression-details</name>
       <licenses>
-        <expression-detailed expression="GPL-3.0-or-later OR GPL-2.0" acknowledgement="declared">
+        <expression-detailed acknowledgement="declared" expression="GPL-3.0-or-later OR GPL-2.0">
           <details bom-ref="some-bomref-1234" license-identifier="GPL-2.0">
             <text content-type="text/plain">specific GPL-2.0 license text</text>
           </details>

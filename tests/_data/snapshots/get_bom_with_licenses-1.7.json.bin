@@ -30,7 +30,6 @@
       "licenses": [
         {
           "acknowledgement": "declared",
-          "expression": "GPL-3.0-or-later OR GPL-2.0",
           "expressionDetails": [
             {
               "bom-ref": "some-bomref-1234",
@@ -48,7 +47,8 @@
               },
               "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
             }
-          ]
+          ],
+          "expression": "GPL-3.0-or-later OR GPL-2.0"
         }
       ],
       "name": "c-with-expression-details",

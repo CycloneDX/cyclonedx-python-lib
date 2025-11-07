@@ -103,7 +103,6 @@ from cyclonedx.model.license import (
     License,
     LicenseAcknowledgement,
     LicenseExpression,
-    LicenseExpressionDetailed,
 )
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
@@ -1099,10 +1098,10 @@ def get_bom_with_licenses() -> Bom:
                                              text=AttachedText(content='this is additional license text')),
                       ]),
             Component(name='c-with-expression-details', type=ComponentType.LIBRARY, bom_ref='C4',
-                      licenses=[LicenseExpressionDetailed(expression='GPL-3.0-or-later OR GPL-2.0',
-                                                          expression_details=expression_details,
-                                                          acknowledgement=LicenseAcknowledgement.DECLARED
-                                                          )]),
+                      licenses=[LicenseExpression(value='GPL-3.0-or-later OR GPL-2.0',
+                                                  expression_details=expression_details,
+                                                  acknowledgement=LicenseAcknowledgement.DECLARED
+                                                  )]),
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
