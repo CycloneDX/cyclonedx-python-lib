@@ -1099,7 +1099,7 @@ def get_bom_with_licenses() -> Bom:
                       ]),
             Component(name='c-with-expression-details', type=ComponentType.LIBRARY, bom_ref='C4',
                       licenses=[LicenseExpression(value='GPL-3.0-or-later OR GPL-2.0',
-                                                  expression_details=expression_details,
+                                                  details=expression_details,
                                                   acknowledgement=LicenseAcknowledgement.DECLARED
                                                   )]),
         ],

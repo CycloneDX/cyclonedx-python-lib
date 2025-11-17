@@ -398,14 +398,12 @@ class LicenseExpression:
         self, value: str, *,
         bom_ref: Optional[Union[str, BomRef]] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
-        expression_details: Optional[Iterable[ExpressionDetails]] = None,
-        properties: Optional[Iterable[Property]] = None,
+        details: Optional[Iterable[ExpressionDetails]] = None,
     ) -> None:
         self._bom_ref = _bom_ref_from_str(bom_ref)
         self._value = value
         self._acknowledgement = acknowledgement
-        self.expression_details = expression_details or []
-        self.properties = properties or []
+        self.details = details or []
 
     @property
     @serializable.view(SchemaVersion1Dot5)
@@ -469,6 +467,7 @@ class LicenseExpression:
         self._acknowledgement = acknowledgement
 
     @property
+    @serializable.json_name('expressionDetails')
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='details')
     @serializable.xml_sequence(1)
@@ -479,49 +478,18 @@ class LicenseExpression:
         Returns:
             `Iterable[ExpressionDetails]` if set else `None`
         """
-        return self._expression_details
+        return self._details
 
-    @expression_details.setter
-    def details(self, expression_details: Iterable[ExpressionDetails]) -> None:
-        self._expression_details = SortedSet(expression_details)
-
-    # @property
-    # @serializable.view(SchemaVersion1Dot7)
-    # ...
-    # @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='licensing')
-    # @serializable.xml_sequence(2)
-    # def licensing(self) -> ...:
-    #     ...  # TODO
-    #
-
-    @property
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(3)
-    def properties(self) -> 'SortedSet[Property]':
-        """
-        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
-        officially supported in the standard without having to use additional namespaces or create extensions.
-
-        Property names of interest to the general public are encouraged to be registered in the CycloneDX Property
-        Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy. Formal registration is OPTIONAL.
-
-        Return:
-            Set of `Property`
-        """
-        return self._properties
-
-    @properties.setter
-    def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = SortedSet(properties)
+    @details.setter
+    def details(self, details: Iterable[ExpressionDetails]) -> None:
+        self._details = SortedSet(details)
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self._acknowledgement,
             self._value,
             self._bom_ref.value,
-            _ComparableTuple(self.expression_details),
-            _ComparableTuple(self.properties),
+            _ComparableTuple(self.details),
         ))
 
     def __hash__(self) -> int:
@@ -671,10 +639,10 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             # mixed license expression and license? this is an invalid constellation according to schema!
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
-            if expression.expression_details and cls.__supports_expression_details(view):
+            if expression.details and cls.__supports_expression_details(view):
                 elem.append(cls.__serialize_license_expression_details_xml(expression, view, xmlns))
             else:
-                if expression.expression_details:
+                if expression.details:
                     warn('LicenseExpression details are not supported in schema versions < 1.7; skipping serialization')
                 elem.append(expression.as_xml(  # type:ignore[attr-defined]
                     view_=view, as_string=False, element_name='expression', xmlns=xmlns))

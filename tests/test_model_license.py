@@ -92,14 +92,8 @@ class TestModelLicenseExpression(TestCase):
             ExpressionDetails('qux'),
             ExpressionDetails('baz')
         ]
-        properties = [
-            Property(name='prop1', value='val1'),
-            Property(name='prop2', value='val2'),
-        ]
-        b = LicenseExpression('bar', expression_details=details, properties=properties)
-        self.assertListEqual(sorted(details), list(b.expression_details))
-        self.assertIn(properties[0], b.properties)
-        self.assertIn(properties[1], b.properties)
+        b = LicenseExpression('bar', details=details)
+        self.assertListEqual(sorted(details), list(b.details))
 
     def test_update(self) -> None:
         license = LicenseExpression('foo')
@@ -112,9 +106,9 @@ class TestModelLicenseExpression(TestCase):
             ExpressionDetails('qux'),
             ExpressionDetails('baz')
         ]
-        b = LicenseExpression('bar', expression_details=[details[0]])
-        b.expression_details.add(details[1])
-        self.assertListEqual(sorted(details), list(b.expression_details))
+        b = LicenseExpression('bar', details=[details[0]])
+        b.details.add(details[1])
+        self.assertListEqual(sorted(details), list(b.details))
 
     def test_equal(self) -> None:
         a = LicenseExpression('foo')
@@ -128,7 +122,7 @@ class TestModelLicenseExpression(TestCase):
         a = LicenseExpression('foo')
         b = LicenseExpression('foo')
         c = LicenseExpression('bar')
-        d = LicenseExpression('bar', expression_details=[ExpressionDetails('baz')])
+        d = LicenseExpression('bar', details=[ExpressionDetails('baz')])
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
         self.assertNotEqual(a, 'foo')
