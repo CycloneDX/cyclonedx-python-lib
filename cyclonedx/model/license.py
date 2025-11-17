@@ -677,7 +677,6 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             # mixed license expression and license? this is an invalid constellation according to schema!
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
-
             if expression.expression_details and cls.__supports_expression_details(view):
                 elem.append(cls.__serialize_license_expression_details_xml(expression, view, xmlns))
             else:
