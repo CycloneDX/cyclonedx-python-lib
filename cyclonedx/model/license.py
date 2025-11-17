@@ -605,7 +605,6 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
         if expression_value:
             elem.set(f'{{{xmlns}}}expression' if xmlns else 'expression', expression_value)
             elem.text = None
-
         return elem
 
     @staticmethod
