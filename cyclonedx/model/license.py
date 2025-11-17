@@ -616,7 +616,6 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
         expression_value = li.get('expression')
         if not expression_value:
             raise CycloneDxDeserializationException(f'unexpected content: {li!r}')
-
         license_expression = LicenseExpression.from_xml(  # type:ignore[attr-defined]
             li, default_ns)
         license_expression.value = expression_value
