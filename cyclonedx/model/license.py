@@ -618,7 +618,6 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
         license_expression = LicenseExpression.from_xml(  # type:ignore[attr-defined]
             li, default_ns)
         license_expression.value = expression_value
-
         return license_expression
 
     @classmethod
