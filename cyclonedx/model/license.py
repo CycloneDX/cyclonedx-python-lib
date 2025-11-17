@@ -472,7 +472,7 @@ class LicenseExpression:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='details')
     @serializable.xml_sequence(1)
-    def expression_details(self) -> 'SortedSet[ExpressionDetails]':
+    def details(self) -> 'SortedSet[ExpressionDetails]':
         """
         Details for parts of the expression.
 
