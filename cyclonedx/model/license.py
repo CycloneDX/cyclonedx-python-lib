@@ -627,7 +627,6 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
                        **__: Any) -> Any:
         if len(o) == 0:
             return None
-
         expression = next((li for li in o if isinstance(li, LicenseExpression)), None)
         if expression:
             # mixed license expression and license? this is an invalid constellation according to schema!
