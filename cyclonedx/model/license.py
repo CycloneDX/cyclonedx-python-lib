@@ -482,7 +482,7 @@ class LicenseExpression:
         return self._expression_details
 
     @expression_details.setter
-    def expression_details(self, expression_details: Iterable[ExpressionDetails]) -> None:
+    def details(self, expression_details: Iterable[ExpressionDetails]) -> None:
         self._expression_details = SortedSet(expression_details)
 
     # @property
