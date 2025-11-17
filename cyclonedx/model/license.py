@@ -36,7 +36,7 @@ from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
 from ..schema import SchemaVersion
 from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
-from . import AttachedText, Property, XsUri
+from . import AttachedText, XsUri
 from .bom_ref import BomRef
 
 
