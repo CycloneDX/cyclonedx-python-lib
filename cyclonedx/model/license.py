@@ -601,7 +601,6 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
     ) -> Element:
         elem: Element = license_expression.as_xml(  # type:ignore[attr-defined]
             view_=view, as_string=False, element_name='expression-detailed', xmlns=xmlns)
-
         expression_value = elem.text
         if expression_value:
             elem.set(f'{{{xmlns}}}expression' if xmlns else 'expression', expression_value)
