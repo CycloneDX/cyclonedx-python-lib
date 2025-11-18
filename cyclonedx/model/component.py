@@ -64,8 +64,8 @@ from .crypto import CryptoProperties
 from .dependency import Dependable
 from .issue import IssueType
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
-from .release_note import ReleaseNotes
 from .model_card import ModelCard
+from .release_note import ReleaseNotes
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)

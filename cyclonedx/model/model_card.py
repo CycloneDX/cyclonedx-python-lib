@@ -1,3 +1,20 @@
+# This file is part of CycloneDX Python Library
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
+
 """CycloneDX Model Card data structures.
 
 This module introduces support for the CycloneDX `modelCard` object (schema v1.5+).
@@ -9,22 +26,19 @@ References:
 - CycloneDX 1.5/1.6/1.7 modelCardType definitions (JSON & XSD)
 """
 
-from typing import Optional, Iterable, Any, Union
+from collections.abc import Iterable
 from enum import Enum
+from typing import Any, Optional, Union
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
-from .bom_ref import BomRef
-from . import Property, AttachedText, ExternalReference
-from .contact import OrganizationalEntity
-from ..schema.schema import (
-    SchemaVersion1Dot5,
-    SchemaVersion1Dot6,
-    SchemaVersion1Dot7,
-)
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
+from . import AttachedText, ExternalReference, Property
+from .bom_ref import BomRef
+from .contact import OrganizationalEntity
 
 
 @serializable.serializable_enum

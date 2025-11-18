@@ -1,36 +1,49 @@
 # This file is part of CycloneDX Python Library
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from unittest import TestCase
 from warnings import warn
 
+from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.contact import OrganizationalEntity
 from cyclonedx.model.model_card import (
     Approach,
+    Co2Measure,
     Considerations,
     EnergyActivity,
     EnergyConsumption,
     EnergyMeasure,
     EnergyProvider,
     EnergySource,
+    EnvironmentalConsiderations,
     InputOutputMLParameters,
     MachineLearningApproach,
     ModelCard,
     ModelParameters,
     PerformanceMetric,
     QuantitativeAnalysis,
-    EnvironmentalConsiderations,
-    Co2Measure,
 )
 from cyclonedx.output.json import BY_SCHEMA_VERSION as JSON_BY_SCHEMA_VERSION
 from cyclonedx.output.xml import BY_SCHEMA_VERSION as XML_BY_SCHEMA_VERSION
 from cyclonedx.schema import SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
 from cyclonedx.validation.xml import XmlValidator
-from cyclonedx.exception import MissingOptionalDependencyException
 
 
 class TestModelCardOnComponent(TestCase):
