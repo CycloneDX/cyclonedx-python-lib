@@ -1,8 +1,9 @@
 """CycloneDX Model Card data structures.
 
 This module introduces support for the CycloneDX `modelCard` object (schema v1.5+).
-Only the top-level container (`ModelCard`) is implemented here first; nested types
-will follow in subsequent TODOs to keep changes reviewable.
+Implements the full `modelCard` structure including `modelParameters`,
+`quantitativeAnalysis`, `considerations`, and environmental energy types.
+Note: `modelParameters.datasets` remains a staged placeholder until #913.
 
 References:
 - CycloneDX 1.5/1.6/1.7 modelCardType definitions (JSON & XSD)
@@ -18,7 +19,8 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .bom_ref import BomRef
-from . import Property, AttachedText
+from . import Property, AttachedText, ExternalReference
+from .contact import OrganizationalEntity
 from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
@@ -45,8 +47,8 @@ class ModelCard:
             self, *,
             bom_ref: Optional[Union[str, BomRef]] = None,
             model_parameters: Optional['ModelParameters'] = None,
-            quantitative_analysis: Optional[Any] = None,  # will be refined
-            considerations: Optional[Any] = None,  # will be refined
+            quantitative_analysis: Optional['QuantitativeAnalysis'] = None,
+            considerations: Optional['Considerations'] = None,
             properties: Optional[Iterable[Property]] = None,
     ) -> None:
         self._bom_ref = _bom_ref_from_str(bom_ref) if bom_ref is not None else _bom_ref_from_str(None)
@@ -99,11 +101,13 @@ class ModelCard:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(3)
-    def considerations(self) -> Optional[Any]:  # placeholder type
+    @serializable.json_name('considerations')
+    @serializable.xml_name('considerations')
+    def considerations(self) -> Optional['Considerations']:
         return self._considerations
 
     @considerations.setter
-    def considerations(self, considerations: Optional[Any]) -> None:
+    def considerations(self, considerations: Optional['Considerations']) -> None:
         self._considerations = considerations
 
     @property
@@ -724,11 +728,755 @@ class QuantitativeAnalysis:
     def __repr__(self) -> str:
         return f'<QuantitativeAnalysis metrics={len(self.performance_metrics)}>'
 
-# TODO GraphicsCollection, Graphic (using existing AttachedText for images)
 
-# TODO Considerations, Risk, FairnessAssessment (+ environmental considerations for >=1.6)
+# Considerations and nested structures
 
-# TODO only for 1.6/1.7: EnvironmentalConsiderations, EnergyConsumptions, EnergyConsumption, EnergyMeasure, Co2Measure, EnergyProvider, plus the activity/unit enums per XSD.
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class EthicalConsideration:
+    """Entry in `ethicalConsiderations` with name and mitigation strategy."""
+
+    def __init__(self, *, name: Optional[str] = None, mitigation_strategy: Optional[str] = None) -> None:
+        self.name = name
+        self.mitigation_strategy = mitigation_strategy
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def name(self) -> Optional[str]:
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.json_name('mitigationStrategy')
+    @serializable.xml_name('mitigationStrategy')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def mitigation_strategy(self) -> Optional[str]:
+        return self._mitigation_strategy
+
+    @mitigation_strategy.setter
+    def mitigation_strategy(self, mitigation_strategy: Optional[str]) -> None:
+        self._mitigation_strategy = mitigation_strategy
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.name, self.mitigation_strategy))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, EthicalConsideration):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, EthicalConsideration):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<EthicalConsideration name={self.name!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class FairnessAssessment:
+    """Entry in `fairnessAssessments`."""
+
+    def __init__(
+        self, *,
+        group_at_risk: Optional[str] = None,
+        benefits: Optional[str] = None,
+        harms: Optional[str] = None,
+        mitigation_strategy: Optional[str] = None,
+    ) -> None:
+        self.group_at_risk = group_at_risk
+        self.benefits = benefits
+        self.harms = harms
+        self.mitigation_strategy = mitigation_strategy
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.json_name('groupAtRisk')
+    @serializable.xml_name('groupAtRisk')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def group_at_risk(self) -> Optional[str]:
+        return self._group_at_risk
+
+    @group_at_risk.setter
+    def group_at_risk(self, group_at_risk: Optional[str]) -> None:
+        self._group_at_risk = group_at_risk
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def benefits(self) -> Optional[str]:
+        return self._benefits
+
+    @benefits.setter
+    def benefits(self, benefits: Optional[str]) -> None:
+        self._benefits = benefits
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(3)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def harms(self) -> Optional[str]:
+        return self._harms
+
+    @harms.setter
+    def harms(self, harms: Optional[str]) -> None:
+        self._harms = harms
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(4)
+    @serializable.json_name('mitigationStrategy')
+    @serializable.xml_name('mitigationStrategy')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def mitigation_strategy(self) -> Optional[str]:
+        return self._mitigation_strategy
+
+    @mitigation_strategy.setter
+    def mitigation_strategy(self, mitigation_strategy: Optional[str]) -> None:
+        self._mitigation_strategy = mitigation_strategy
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.group_at_risk, self.benefits, self.harms, self.mitigation_strategy))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, FairnessAssessment):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, FairnessAssessment):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<FairnessAssessment group_at_risk={self.group_at_risk!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class EnvironmentalConsiderations:
+    """Environmental considerations (1.6+). Energy consumptions and properties.
+
+    NOTE: Prior revisions kept `energy_consumptions` opaque. This has been replaced by
+    concrete types that match CycloneDX 1.6+/1.7 schema: `EnergyConsumption`, `EnergyMeasure`,
+    `Co2Measure`, `EnergyProvider`, and enumerations for `activity` and `energySource`.
+    """
+
+    def __init__(
+        self, *,
+        energy_consumptions: Optional[Iterable['EnergyConsumption']] = None,
+        properties: Optional[Iterable[Property]] = None,
+    ) -> None:
+        self.energy_consumptions = energy_consumptions or []
+        self.properties = properties or []
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.json_name('energyConsumptions')
+    @serializable.xml_name('energyConsumptions')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'energyConsumption')
+    def energy_consumptions(self) -> 'SortedSet[EnergyConsumption]':
+        return self._energy_consumptions
+
+    @energy_consumptions.setter
+    def energy_consumptions(self, energy_consumptions: Iterable['EnergyConsumption']) -> None:
+        self._energy_consumptions = SortedSet(energy_consumptions)
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.xml_name('properties')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    def properties(self) -> 'SortedSet[Property]':
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((_ComparableTuple(self.energy_consumptions), _ComparableTuple(self.properties)))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, EnvironmentalConsiderations):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, EnvironmentalConsiderations):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<EnvironmentalConsiderations energies={len(self.energy_consumptions)}>'
+
+
+@serializable.serializable_enum
+class EnergyActivity(str, Enum):
+    """Enumeration for lifecycle activity in `energyConsumption.activity` (1.6+)."""
+    DESIGN = 'design'
+    DATA_COLLECTION = 'data-collection'
+    DATA_PREPARATION = 'data-preparation'
+    TRAINING = 'training'
+    FINE_TUNING = 'fine-tuning'
+    VALIDATION = 'validation'
+    DEPLOYMENT = 'deployment'
+    INFERENCE = 'inference'
+    OTHER = 'other'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class EnergyMeasure:
+    """A measure of energy. Schema `energyMeasure` (1.6+): value + unit (kWh)."""
+
+    def __init__(self, *, value: float, unit: str = 'kWh') -> None:
+        self.value = value
+        self.unit = unit
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    def value(self) -> float:
+        return self._value
+
+    @value.setter
+    def value(self, value: float) -> None:
+        self._value = value
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def unit(self) -> str:
+        return self._unit
+
+    @unit.setter
+    def unit(self, unit: str) -> None:
+        # Spec allows only "kWh"
+        self._unit = unit
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.value, self.unit))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, EnergyMeasure):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, EnergyMeasure):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<EnergyMeasure {self.value} {self.unit}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class Co2Measure:
+    """A measure of CO2. Schema `co2Measure` (1.6+): value + unit (tCO2eq)."""
+
+    def __init__(self, *, value: float, unit: str = 'tCO2eq') -> None:
+        self.value = value
+        self.unit = unit
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    def value(self) -> float:
+        return self._value
+
+    @value.setter
+    def value(self, value: float) -> None:
+        self._value = value
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def unit(self) -> str:
+        return self._unit
+
+    @unit.setter
+    def unit(self, unit: str) -> None:
+        # Spec allows only "tCO2eq"
+        self._unit = unit
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.value, self.unit))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Co2Measure):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Co2Measure):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<Co2Measure {self.value} {self.unit}>'
+
+
+@serializable.serializable_enum
+class EnergySource(str, Enum):
+    """Enumeration for provider `energySource` (1.6+)."""
+    COAL = 'coal'
+    OIL = 'oil'
+    NATURAL_GAS = 'natural-gas'
+    NUCLEAR = 'nuclear'
+    WIND = 'wind'
+    SOLAR = 'solar'
+    GEOTHERMAL = 'geothermal'
+    HYDROPOWER = 'hydropower'
+    BIOFUEL = 'biofuel'
+    UNKNOWN = 'unknown'
+    OTHER = 'other'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class EnergyProvider:
+    """Energy provider per schema `energyProvider` (1.6+)."""
+
+    def __init__(
+        self, *,
+        organization: OrganizationalEntity,
+        energy_source: EnergySource,
+        energy_provided: EnergyMeasure,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        description: Optional[str] = None,
+        external_references: Optional[Iterable[ExternalReference]] = None,
+    ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref) if bom_ref is not None else _bom_ref_from_str(None)
+        self.description = description
+        self.organization = organization
+        self.energy_source = energy_source
+        self.energy_provided = energy_provided
+        self.external_references = external_references or []
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.json_name('bom-ref')
+    @serializable.xml_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        return self._bom_ref
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @description.setter
+    def description(self, description: Optional[str]) -> None:
+        self._description = description
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    def organization(self) -> OrganizationalEntity:
+        return self._organization
+
+    @organization.setter
+    def organization(self, organization: OrganizationalEntity) -> None:
+        self._organization = organization
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(3)
+    @serializable.json_name('energySource')
+    @serializable.xml_name('energySource')
+    def energy_source(self) -> EnergySource:
+        return self._energy_source
+
+    @energy_source.setter
+    def energy_source(self, energy_source: EnergySource) -> None:
+        self._energy_source = energy_source
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(4)
+    @serializable.json_name('energyProvided')
+    @serializable.xml_name('energyProvided')
+    def energy_provided(self) -> EnergyMeasure:
+        return self._energy_provided
+
+    @energy_provided.setter
+    def energy_provided(self, energy_provided: EnergyMeasure) -> None:
+        self._energy_provided = energy_provided
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(5)
+    @serializable.xml_name('externalReferences')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
+    def external_references(self) -> 'SortedSet[ExternalReference]':
+        return self._external_references
+
+    @external_references.setter
+    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
+        self._external_references = SortedSet(external_references)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self._bom_ref.value,
+            self.description,
+            self.organization,
+            self.energy_source,
+            self.energy_provided,
+            _ComparableTuple(self.external_references),
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, EnergyProvider):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, EnergyProvider):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<EnergyProvider org={self.organization.name!r} source={self.energy_source}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class EnergyConsumption:
+    """Energy consumption entry. Matches schema `energyConsumption` (1.6+)."""
+
+    def __init__(
+        self, *,
+        activity: EnergyActivity,
+        energy_providers: Iterable[EnergyProvider],
+        activity_energy_cost: EnergyMeasure,
+        co2_cost_equivalent: Optional[Co2Measure] = None,
+        co2_cost_offset: Optional[Co2Measure] = None,
+        properties: Optional[Iterable[Property]] = None,
+    ) -> None:
+        self.activity = activity
+        self.energy_providers = energy_providers
+        self.activity_energy_cost = activity_energy_cost
+        self.co2_cost_equivalent = co2_cost_equivalent
+        self.co2_cost_offset = co2_cost_offset
+        self.properties = properties or []
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    def activity(self) -> EnergyActivity:
+        return self._activity
+
+    @activity.setter
+    def activity(self, activity: EnergyActivity) -> None:
+        self._activity = activity
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.json_name('energyProviders')
+    @serializable.xml_name('energyProviders')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'energyProvider')
+    def energy_providers(self) -> 'SortedSet[EnergyProvider]':
+        return self._energy_providers
+
+    @energy_providers.setter
+    def energy_providers(self, energy_providers: Iterable[EnergyProvider]) -> None:
+        self._energy_providers = SortedSet(energy_providers)
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(3)
+    @serializable.json_name('activityEnergyCost')
+    @serializable.xml_name('activityEnergyCost')
+    def activity_energy_cost(self) -> EnergyMeasure:
+        return self._activity_energy_cost
+
+    @activity_energy_cost.setter
+    def activity_energy_cost(self, activity_energy_cost: EnergyMeasure) -> None:
+        self._activity_energy_cost = activity_energy_cost
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(4)
+    @serializable.json_name('co2CostEquivalent')
+    @serializable.xml_name('co2CostEquivalent')
+    def co2_cost_equivalent(self) -> Optional[Co2Measure]:
+        return self._co2_cost_equivalent
+
+    @co2_cost_equivalent.setter
+    def co2_cost_equivalent(self, co2_cost_equivalent: Optional[Co2Measure]) -> None:
+        self._co2_cost_equivalent = co2_cost_equivalent
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(5)
+    @serializable.json_name('co2CostOffset')
+    @serializable.xml_name('co2CostOffset')
+    def co2_cost_offset(self) -> Optional[Co2Measure]:
+        return self._co2_cost_offset
+
+    @co2_cost_offset.setter
+    def co2_cost_offset(self, co2_cost_offset: Optional[Co2Measure]) -> None:
+        self._co2_cost_offset = co2_cost_offset
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(6)
+    @serializable.xml_name('properties')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    def properties(self) -> 'SortedSet[Property]':
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.activity,
+            _ComparableTuple(self.energy_providers),
+            self.activity_energy_cost,
+            self.co2_cost_equivalent,
+            self.co2_cost_offset,
+            _ComparableTuple(self.properties),
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, EnergyConsumption):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, EnergyConsumption):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return (
+            f'<EnergyConsumption activity={self.activity} providers={len(self.energy_providers)} '
+            f'energy={self.activity_energy_cost}>'
+        )
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class Considerations:
+    """`considerations` block within `modelCard`."""
+
+    def __init__(
+        self, *,
+        users: Optional[Iterable[str]] = None,
+        use_cases: Optional[Iterable[str]] = None,
+        technical_limitations: Optional[Iterable[str]] = None,
+        performance_tradeoffs: Optional[Iterable[str]] = None,
+        ethical_considerations: Optional[Iterable[EthicalConsideration]] = None,
+        environmental_considerations: Optional[EnvironmentalConsiderations] = None,
+        fairness_assessments: Optional[Iterable[FairnessAssessment]] = None,
+    ) -> None:
+        self.users = users or []
+        self.use_cases = use_cases or []
+        self.technical_limitations = technical_limitations or []
+        self.performance_tradeoffs = performance_tradeoffs or []
+        self.ethical_considerations = ethical_considerations or []
+        self.environmental_considerations = environmental_considerations
+        self.fairness_assessments = fairness_assessments or []
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.xml_name('users')
+    @serializable.json_name('users')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'user')
+    def users(self) -> 'SortedSet[str]':
+        return self._users
+
+    @users.setter
+    def users(self, users: Iterable[str]) -> None:
+        self._users = SortedSet(users)
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.json_name('useCases')
+    @serializable.xml_name('useCases')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'useCase')
+    def use_cases(self) -> 'SortedSet[str]':
+        return self._use_cases
+
+    @use_cases.setter
+    def use_cases(self, use_cases: Iterable[str]) -> None:
+        self._use_cases = SortedSet(use_cases)
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(3)
+    @serializable.json_name('technicalLimitations')
+    @serializable.xml_name('technicalLimitations')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'technicalLimitation')
+    def technical_limitations(self) -> 'SortedSet[str]':
+        return self._technical_limitations
+
+    @technical_limitations.setter
+    def technical_limitations(self, technical_limitations: Iterable[str]) -> None:
+        self._technical_limitations = SortedSet(technical_limitations)
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(4)
+    @serializable.json_name('performanceTradeoffs')
+    @serializable.xml_name('performanceTradeoffs')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'performanceTradeoff')
+    def performance_tradeoffs(self) -> 'SortedSet[str]':
+        return self._performance_tradeoffs
+
+    @performance_tradeoffs.setter
+    def performance_tradeoffs(self, performance_tradeoffs: Iterable[str]) -> None:
+        self._performance_tradeoffs = SortedSet(performance_tradeoffs)
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(5)
+    @serializable.json_name('ethicalConsiderations')
+    @serializable.xml_name('ethicalConsiderations')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'ethicalConsideration')
+    def ethical_considerations(self) -> 'SortedSet[EthicalConsideration]':
+        return self._ethical_considerations
+
+    @ethical_considerations.setter
+    def ethical_considerations(self, ethical_considerations: Iterable[EthicalConsideration]) -> None:
+        self._ethical_considerations = SortedSet(ethical_considerations)
+
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(6)
+    @serializable.json_name('environmentalConsiderations')
+    @serializable.xml_name('environmentalConsiderations')
+    def environmental_considerations(self) -> Optional[EnvironmentalConsiderations]:
+        return self._environmental_considerations
+
+    @environmental_considerations.setter
+    def environmental_considerations(self, environmental_considerations: Optional[EnvironmentalConsiderations]) -> None:
+        self._environmental_considerations = environmental_considerations
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(7)
+    @serializable.json_name('fairnessAssessments')
+    @serializable.xml_name('fairnessAssessments')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'fairnessAssessment')
+    def fairness_assessments(self) -> 'SortedSet[FairnessAssessment]':
+        return self._fairness_assessments
+
+    @fairness_assessments.setter
+    def fairness_assessments(self, fairness_assessments: Iterable[FairnessAssessment]) -> None:
+        self._fairness_assessments = SortedSet(fairness_assessments)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            _ComparableTuple(self.users),
+            _ComparableTuple(self.use_cases),
+            _ComparableTuple(self.technical_limitations),
+            _ComparableTuple(self.performance_tradeoffs),
+            _ComparableTuple(self.ethical_considerations),
+            self.environmental_considerations,
+            _ComparableTuple(self.fairness_assessments),
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Considerations):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Considerations):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return (
+            f'<Considerations users={len(self.users)} useCases={len(self.use_cases)} '
+            f'ethics={len(self.ethical_considerations)} fairness={len(self.fairness_assessments)}>'
+        )
 
 # TODO (not in this file)
 # - Add `Component.model_card` with `@serializable.view` gating for 1.5/1.6/1.7.
