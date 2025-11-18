@@ -18,7 +18,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .bom_ref import BomRef
-from . import Property
+from . import Property, AttachedText
 from ..schema.schema import (
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
@@ -71,6 +71,8 @@ class ModelCard:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
+    @serializable.json_name('modelParameters')
+    @serializable.xml_name('modelParameters')
     def model_parameters(self) -> Optional['ModelParameters']:
         return self._model_parameters
 
@@ -83,11 +85,13 @@ class ModelCard:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
-    def quantitative_analysis(self) -> Optional[Any]:  # placeholder type
+    @serializable.json_name('quantitativeAnalysis')
+    @serializable.xml_name('quantitativeAnalysis')
+    def quantitative_analysis(self) -> Optional['QuantitativeAnalysis']:
         return self._quantitative_analysis
 
     @quantitative_analysis.setter
-    def quantitative_analysis(self, quantitative_analysis: Optional[Any]) -> None:
+    def quantitative_analysis(self, quantitative_analysis: Optional['QuantitativeAnalysis']) -> None:
         self._quantitative_analysis = quantitative_analysis
 
     @property
@@ -271,7 +275,9 @@ class ModelParameters:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
+    @serializable.json_name('task')
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_name('task')
     def task(self) -> Optional[str]:
         return self._task
 
@@ -284,7 +290,9 @@ class ModelParameters:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(3)
+    @serializable.json_name('architectureFamily')
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_name('architectureFamily')
     def architecture_family(self) -> Optional[str]:
         return self._architecture_family
 
@@ -297,7 +305,9 @@ class ModelParameters:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(4)
+    @serializable.json_name('modelArchitecture')
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_name('modelArchitecture')
     def model_architecture(self) -> Optional[str]:
         return self._model_architecture
 
@@ -306,10 +316,33 @@ class ModelParameters:
         self._model_architecture = model_architecture
 
     @property
+    # NOTE on `datasets` placeholder (to be refined with #913):
+    # The CycloneDX spec allows two shapes for each dataset entry under `modelParameters.datasets`:
+    # - Inline dataset information via the `componentData` object (XSD: element `dataset` of type `componentDataType`)
+    # - A reference object with a single child `ref` that points to an existing data component by bom-ref
+    #   (XSD: element `ref` with union type of `refLinkType` or `bomLinkElementType`).
+    #
+    # In JSON (1.5/1.6/1.7) this is expressed as an array with items oneOf: { componentData | { ref: ... } }.
+    # In XML (1.5/1.6/1.7) this is expressed as a choice between <ref>…</ref> or <dataset>…</dataset> entries.
+    #
+    # The parent issue (#913) tracks adding first-class support for Component.data (`component.data`) and its
+    # associated types. To avoid duplicating transient types and serializers here, we intentionally keep the
+    # `datasets` field as `SortedSet[Any]` for now. Once `component.data` is modeled, we will:
+    # - Introduce a concrete type (e.g., `ModelDatasetEntry`) that can represent either a `componentData` inline
+    #   object or a `{ref: ...}` reference, similar to how other union-like schemas are modeled in this codebase.
+    # - Provide serialization helpers that emit either the `<dataset>` element (mapped to the `componentData` type)
+    #   or the `<ref>` element, and the equivalent JSON oneOf shape, based on the actual instance provided.
+    # - Ensure both `component.data` and `modelParameters.datasets` reuse the same `componentData` type definition
+    #   and the same normalization logic, so producers/consumers see consistent structures across the BOM.
+    #
+    # Until #913 lands, using `Any` here keeps the public API unblocked for the `modelCard` work, while making the
+    # intended future refinement explicit and localized.
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(5)
+    @serializable.json_name('datasets')
+    @serializable.xml_name('datasets')
     def datasets(self) -> 'SortedSet[Any]':  # TODO: refine type
         return self._datasets
 
@@ -322,7 +355,9 @@ class ModelParameters:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(6)
+    @serializable.json_name('inputs')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'input')
+    @serializable.xml_name('inputs')
     def inputs(self) -> 'SortedSet[InputOutputMLParameters]':
         return self._inputs
 
@@ -335,7 +370,9 @@ class ModelParameters:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(7)
+    @serializable.json_name('outputs')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'output')
+    @serializable.xml_name('outputs')
     def outputs(self) -> 'SortedSet[InputOutputMLParameters]':
         return self._outputs
 
@@ -370,7 +407,322 @@ class ModelParameters:
     def __repr__(self) -> str:
         return f'<ModelParameters task={self.task!r} arch={self.model_architecture!r}>'
 
-# TODO PerformanceMetric, ConfidenceInterval
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class ConfidenceInterval:
+    """Confidence interval with lower/upper bounds."""
+
+    def __init__(self, *, lower_bound: Optional[str] = None, upper_bound: Optional[str] = None) -> None:
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.json_name('lowerBound')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_name('lowerBound')
+    def lower_bound(self) -> Optional[str]:
+        return self._lower_bound
+
+    @lower_bound.setter
+    def lower_bound(self, lower_bound: Optional[str]) -> None:
+        self._lower_bound = lower_bound
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.json_name('upperBound')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_name('upperBound')
+    def upper_bound(self) -> Optional[str]:
+        return self._upper_bound
+
+    @upper_bound.setter
+    def upper_bound(self, upper_bound: Optional[str]) -> None:
+        self._upper_bound = upper_bound
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.lower_bound, self.upper_bound))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ConfidenceInterval):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, ConfidenceInterval):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<ConfidenceInterval {self.lower_bound},{self.upper_bound}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class PerformanceMetric:
+    """A single performance metric entry."""
+
+    def __init__(
+        self, *,
+        type: Optional[str] = None,
+        value: Optional[str] = None,
+        slice: Optional[str] = None,
+        confidence_interval: Optional[ConfidenceInterval] = None,
+    ) -> None:
+        self.type = type
+        self.value = value
+        self.slice = slice
+        self.confidence_interval = confidence_interval
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def type(self) -> Optional[str]:
+        return self._type
+
+    @type.setter
+    def type(self, type: Optional[str]) -> None:
+        self._type = type
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def value(self) -> Optional[str]:
+        return self._value
+
+    @value.setter
+    def value(self, value: Optional[str]) -> None:
+        self._value = value
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(3)
+    @serializable.json_name('slice')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_name('slice')
+    def slice(self) -> Optional[str]:
+        return self._slice
+
+    @slice.setter
+    def slice(self, slice: Optional[str]) -> None:
+        self._slice = slice
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(4)
+    @serializable.json_name('confidenceInterval')
+    @serializable.xml_name('confidenceInterval')
+    def confidence_interval(self) -> Optional[ConfidenceInterval]:
+        return self._confidence_interval
+
+    @confidence_interval.setter
+    def confidence_interval(self, confidence_interval: Optional[ConfidenceInterval]) -> None:
+        self._confidence_interval = confidence_interval
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.type, self.value, self.slice, self.confidence_interval))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, PerformanceMetric):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, PerformanceMetric):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<PerformanceMetric type={self.type!r} value={self.value!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class Graphic:
+    """Graphic entry with optional name and image (AttachedText)."""
+
+    def __init__(self, *, name: Optional[str] = None, image: Optional[AttachedText] = None) -> None:
+        self.name = name
+        self.image = image
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def name(self) -> Optional[str]:
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    def image(self) -> Optional[AttachedText]:
+        return self._image
+
+    @image.setter
+    def image(self, image: Optional[AttachedText]) -> None:
+        self._image = image
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.name, self.image))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Graphic):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Graphic):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<Graphic name={self.name!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class GraphicsCollection:
+    """A collection of graphics with optional description."""
+
+    def __init__(self, *, description: Optional[str] = None, collection: Optional[Iterable[Graphic]] = None) -> None:
+        self.description = description
+        self.collection = collection or []
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @description.setter
+    def description(self, description: Optional[str]) -> None:
+        self._description = description
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.json_name('collection')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'graphic')
+    @serializable.xml_name('collection')
+    def collection(self) -> 'SortedSet[Graphic]':
+        return self._collection
+
+    @collection.setter
+    def collection(self, collection: Iterable[Graphic]) -> None:
+        self._collection = SortedSet(collection)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.description, _ComparableTuple(self.collection)))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, GraphicsCollection):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, GraphicsCollection):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<GraphicsCollection count={len(self.collection)}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class QuantitativeAnalysis:
+    """`quantitativeAnalysis` block within `modelCard`."""
+
+    def __init__(
+        self, *,
+        performance_metrics: Optional[Iterable[PerformanceMetric]] = None,
+        graphics: Optional[GraphicsCollection] = None,
+    ) -> None:
+        self.performance_metrics = performance_metrics or []
+        self.graphics = graphics
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.json_name('performanceMetrics')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'performanceMetric')
+    @serializable.xml_name('performanceMetrics')
+    def performance_metrics(self) -> 'SortedSet[PerformanceMetric]':
+        return self._performance_metrics
+
+    @performance_metrics.setter
+    def performance_metrics(self, performance_metrics: Iterable[PerformanceMetric]) -> None:
+        self._performance_metrics = SortedSet(performance_metrics)
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    def graphics(self) -> Optional[GraphicsCollection]:
+        return self._graphics
+
+    @graphics.setter
+    def graphics(self, graphics: Optional[GraphicsCollection]) -> None:
+        self._graphics = graphics
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((_ComparableTuple(self.performance_metrics), self.graphics))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, QuantitativeAnalysis):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, QuantitativeAnalysis):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<QuantitativeAnalysis metrics={len(self.performance_metrics)}>'
 
 # TODO GraphicsCollection, Graphic (using existing AttachedText for images)
 
