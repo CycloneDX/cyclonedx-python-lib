@@ -15,15 +15,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-"""CycloneDX Model Card data structures.
+"""
+This set of classes represents the model card types in the CycloneDX standard.
 
-This module introduces support for the CycloneDX `modelCard` object (schema v1.5+).
-Implements the full `modelCard` structure including `modelParameters`,
-`quantitativeAnalysis`, `considerations`, and environmental energy types.
-Note: `modelParameters.datasets` remains a staged placeholder until #913.
+.. note::
+    Introduced in CycloneDX v1.5. Environmental considerations were added in v1.6.
 
-References:
-- CycloneDX 1.5/1.6/1.7 modelCardType definitions (JSON & XSD)
+.. note::
+    See the CycloneDX Schema for model cards:\n
+    - XML: https://cyclonedx.org/docs/1.7/xml/#type_modelCardType\n
+    - JSON: https://cyclonedx.org/docs/1.7/json/#components_items_modelCard
 """
 
 from collections.abc import Iterable
@@ -143,7 +144,7 @@ class ModelParameters:
             task: Optional[str] = None,
             architecture_family: Optional[str] = None,
             model_architecture: Optional[str] = None,
-            datasets: Optional[Iterable[Any]] = None,  # TODO: refine (componentData or ref)
+            datasets: Optional[Iterable[Any]] = None,  # Unsupported placeholder until #913 lands.
             inputs: Optional[Iterable[InputOutputMLParameters]] = None,
             outputs: Optional[Iterable[InputOutputMLParameters]] = None,
     ) -> None:
@@ -151,7 +152,14 @@ class ModelParameters:
         self.task = task
         self.architecture_family = architecture_family
         self.model_architecture = model_architecture
-        self.datasets = datasets or []
+        # datasets: The CycloneDX spec allows inline componentData or ref entries.
+        # This library has not yet implemented component.data (#913). To avoid emitting
+        # invalid or partial structures, any attempt to populate datasets is rejected.
+        if datasets and len(list(datasets)) > 0:
+            raise NotImplementedError(
+                'modelParameters.datasets is not yet supported. Tracked by issue #913.'
+            )
+        self._datasets: 'SortedSet[Any]' = SortedSet()  # always empty until implemented
         self.inputs = inputs or []
         self.outputs = outputs or []
 
@@ -212,40 +220,8 @@ class ModelParameters:
     def model_architecture(self, model_architecture: Optional[str]) -> None:
         self._model_architecture = model_architecture
 
-    @property
-    # NOTE on `datasets` placeholder (to be refined with #913):
-    # The CycloneDX spec allows two shapes for each dataset entry under `modelParameters.datasets`:
-    # - Inline dataset information via the `componentData` object (XSD: element `dataset` of type `componentDataType`)
-    # - A reference object with a single child `ref` that points to an existing data component by bom-ref
-    #   (XSD: element `ref` with union type of `refLinkType` or `bomLinkElementType`).
-    #
-    # In JSON (1.5/1.6/1.7) this is expressed as an array with items oneOf: { componentData | { ref: ... } }.
-    # In XML (1.5/1.6/1.7) this is expressed as a choice between <ref>…</ref> or <dataset>…</dataset> entries.
-    #
-    # The parent issue (#913) tracks adding first-class support for Component.data (`component.data`) and its
-    # associated types. To avoid duplicating transient types and serializers here, we intentionally keep the
-    # `datasets` field as `SortedSet[Any]` for now. Once `component.data` is modeled, we will:
-    # - Introduce a concrete type (e.g., `ModelDatasetEntry`) that can represent either a `componentData` inline
-    #   object or a `{ref: ...}` reference, similar to how other union-like schemas are modeled in this codebase.
-    # - Provide serialization helpers that emit either the `<dataset>` element (mapped to the `componentData` type)
-    #   or the `<ref>` element, and the equivalent JSON oneOf shape, based on the actual instance provided.
-    # - Ensure both `component.data` and `modelParameters.datasets` reuse the same `componentData` type definition
-    #   and the same normalization logic, so producers/consumers see consistent structures across the BOM.
-    #
-    # Until #913 lands, using `Any` here keeps the public API unblocked for the `modelCard` work, while making the
-    # intended future refinement explicit and localized.
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(5)
-    @serializable.json_name('datasets')
-    @serializable.xml_name('datasets')
-    def datasets(self) -> 'SortedSet[Any]':  # TODO: refine type
-        return self._datasets
-
-    @datasets.setter
-    def datasets(self, datasets: Iterable[Any]) -> None:
-        self._datasets = SortedSet(datasets)
+    # datasets intentionally omitted from serialization until #913 implemented.
+    # A future implementation will add a concrete union type and proper annotations.
 
     @property
     @serializable.view(SchemaVersion1Dot5)
@@ -283,7 +259,7 @@ class ModelParameters:
             self.task,
             self.architecture_family,
             self.model_architecture,
-            _ComparableTuple(self.datasets),
+            _ComparableTuple(self._datasets),
             _ComparableTuple(self.inputs),
             _ComparableTuple(self.outputs),
         ))
