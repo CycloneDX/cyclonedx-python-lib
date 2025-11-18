@@ -9,8 +9,6 @@ References:
 - CycloneDX 1.5/1.6/1.7 modelCardType definitions (JSON & XSD)
 """
 
-from __future__ import annotations
-
 from typing import Optional, Iterable, Any, Union
 from enum import Enum
 
@@ -27,125 +25,6 @@ from ..schema.schema import (
     SchemaVersion1Dot7,
 )
 from .._internal.compare import ComparableTuple as _ComparableTuple
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class ModelCard:
-    """Internal representation of CycloneDX `modelCardType`.
-
-    Version gating:
-    - Introduced in schema 1.5
-    - Unchanged structurally in 1.6 except for additional nested environmental considerations inside `considerations`
-    - 1.7 retains 1.6 structure (additions in nested types only)
-
-    NOTE: Nested complex objects (modelParameters, quantitativeAnalysis, considerations) will be
-    implemented in later steps. For now they are treated as opaque objects so that `Component.model_card`
-    can reference this container.
-    """
-
-    def __init__(
-            self, *,
-            bom_ref: Optional[Union[str, BomRef]] = None,
-            model_parameters: Optional['ModelParameters'] = None,
-            quantitative_analysis: Optional['QuantitativeAnalysis'] = None,
-            considerations: Optional['Considerations'] = None,
-            properties: Optional[Iterable[Property]] = None,
-    ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref) if bom_ref is not None else _bom_ref_from_str(None)
-        self.model_parameters = model_parameters
-        self.quantitative_analysis = quantitative_analysis
-        self.considerations = considerations
-        self.properties = properties or []
-
-    # bom-ref attribute
-    @property
-    @serializable.json_name('bom-ref')
-    @serializable.xml_name('bom-ref')
-    @serializable.xml_attribute()
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    def bom_ref(self) -> BomRef:
-        return self._bom_ref
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(1)
-    @serializable.json_name('modelParameters')
-    @serializable.xml_name('modelParameters')
-    def model_parameters(self) -> Optional['ModelParameters']:
-        return self._model_parameters
-
-    @model_parameters.setter
-    def model_parameters(self, model_parameters: Optional['ModelParameters']) -> None:
-        self._model_parameters = model_parameters
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(2)
-    @serializable.json_name('quantitativeAnalysis')
-    @serializable.xml_name('quantitativeAnalysis')
-    def quantitative_analysis(self) -> Optional['QuantitativeAnalysis']:
-        return self._quantitative_analysis
-
-    @quantitative_analysis.setter
-    def quantitative_analysis(self, quantitative_analysis: Optional['QuantitativeAnalysis']) -> None:
-        self._quantitative_analysis = quantitative_analysis
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(3)
-    @serializable.json_name('considerations')
-    @serializable.xml_name('considerations')
-    def considerations(self) -> Optional['Considerations']:
-        return self._considerations
-
-    @considerations.setter
-    def considerations(self, considerations: Optional['Considerations']) -> None:
-        self._considerations = considerations
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(4)
-    def properties(self) -> 'SortedSet[Property]':
-        return self._properties
-
-    @properties.setter
-    def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = SortedSet(properties)
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self.bom_ref.value,
-            self.model_parameters,
-            self.quantitative_analysis,
-            self.considerations,
-            _ComparableTuple(self.properties),
-        ))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, ModelCard):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, ModelCard):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<ModelCard bom-ref={self.bom_ref!r}>'
 
 
 @serializable.serializable_enum
@@ -1098,11 +977,11 @@ class EnergyProvider:
         self.external_references = external_references or []
 
     @property
+    @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRef)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
-    @serializable.type_mapping(BomRef)
     @serializable.xml_attribute()
-    @serializable.json_name('bom-ref')
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
         return self._bom_ref
@@ -1232,8 +1111,7 @@ class EnergyConsumption:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     @serializable.json_name('energyProviders')
-    @serializable.xml_name('energyProviders')
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'energyProvider')
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'energyProviders')
     def energy_providers(self) -> 'SortedSet[EnergyProvider]':
         return self._energy_providers
 
@@ -1478,11 +1356,118 @@ class Considerations:
             f'ethics={len(self.ethical_considerations)} fairness={len(self.fairness_assessments)}>'
         )
 
-# TODO (not in this file)
-# - Add `Component.model_card` with `@serializable.view` gating for 1.5/1.6/1.7.
-# - Use `@serializable.xml_sequence(26)` and ensure correct JSON name `modelCard`.
-# - Add to `__comparable_tuple` for equality/hash.
 
-# TODO (not in this file)
-# - JSON tests across views; XML order validation; round-trip tests.
-# - Docs & changelog updates.
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class ModelCard:
+    """Internal representation of CycloneDX `modelCardType`.
+
+    Version gating:
+    - Introduced in schema 1.5
+    - Unchanged structurally in 1.6 except for additional nested environmental considerations inside `considerations`
+    - 1.7 retains 1.6 structure (additions in nested types only)
+    """
+
+    def __init__(
+            self, *,
+            bom_ref: Optional[Union[str, BomRef]] = None,
+            model_parameters: Optional[ModelParameters] = None,
+            quantitative_analysis: Optional[QuantitativeAnalysis] = None,
+            considerations: Optional[Considerations] = None,
+            properties: Optional[Iterable[Property]] = None,
+    ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref) if bom_ref is not None else _bom_ref_from_str(None)
+        self.model_parameters = model_parameters
+        self.quantitative_analysis = quantitative_analysis
+        self.considerations = considerations
+        self.properties = properties or []
+
+    # bom-ref attribute
+    @property
+    @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRef)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        return self._bom_ref
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(1)
+    @serializable.json_name('modelParameters')
+    @serializable.xml_name('modelParameters')
+    def model_parameters(self) -> Optional[ModelParameters]:
+        return self._model_parameters
+
+    @model_parameters.setter
+    def model_parameters(self, model_parameters: Optional[ModelParameters]) -> None:
+        self._model_parameters = model_parameters
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(2)
+    @serializable.json_name('quantitativeAnalysis')
+    @serializable.xml_name('quantitativeAnalysis')
+    def quantitative_analysis(self) -> Optional[QuantitativeAnalysis]:
+        return self._quantitative_analysis
+
+    @quantitative_analysis.setter
+    def quantitative_analysis(self, quantitative_analysis: Optional[QuantitativeAnalysis]) -> None:
+        self._quantitative_analysis = quantitative_analysis
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(3)
+    @serializable.json_name('considerations')
+    @serializable.xml_name('considerations')
+    def considerations(self) -> Optional[Considerations]:
+        return self._considerations
+
+    @considerations.setter
+    def considerations(self, considerations: Optional[Considerations]) -> None:
+        self._considerations = considerations
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(4)
+    def properties(self) -> 'SortedSet[Property]':
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.bom_ref.value,
+            self.model_parameters,
+            self.quantitative_analysis,
+            self.considerations,
+            _ComparableTuple(self.properties),
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ModelCard):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, ModelCard):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<ModelCard bom-ref={self.bom_ref!r}>'
