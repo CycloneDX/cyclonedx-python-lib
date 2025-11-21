@@ -87,6 +87,16 @@ class Approach:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, Approach):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, Approach):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -127,6 +137,16 @@ class InputOutputMLParameters:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, InputOutputMLParameters):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, InputOutputMLParameters):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -155,10 +175,12 @@ class ModelParameters:
         # datasets: The CycloneDX spec allows inline componentData or ref entries.
         # This library has not yet implemented component.data (#913). To avoid emitting
         # invalid or partial structures, any attempt to populate datasets is rejected.
-        if datasets and len(list(datasets)) > 0:
-            raise NotImplementedError(
-                'modelParameters.datasets is not yet supported. Tracked by issue #913.'
-            )
+        if datasets is not None:
+            datasets_list = list(datasets)
+            if len(datasets_list) > 0:
+                raise NotImplementedError(
+                    'modelParameters.datasets is not yet supported. Tracked by issue #913.'
+                )
         self._datasets: 'SortedSet[Any]' = SortedSet()  # always empty until implemented
         self.inputs = inputs or []
         self.outputs = outputs or []
@@ -274,6 +296,16 @@ class ModelParameters:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, ModelParameters):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, ModelParameters):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -330,6 +362,16 @@ class ConfidenceInterval:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ConfidenceInterval):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, ConfidenceInterval):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, ConfidenceInterval):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -423,6 +465,16 @@ class PerformanceMetric:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, PerformanceMetric):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, PerformanceMetric):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -474,6 +526,16 @@ class Graphic:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Graphic):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, Graphic):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, Graphic):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -530,6 +592,16 @@ class GraphicsCollection:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, GraphicsCollection):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, GraphicsCollection):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, GraphicsCollection):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -591,6 +663,16 @@ class QuantitativeAnalysis:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, QuantitativeAnalysis):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, QuantitativeAnalysis):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -647,6 +729,16 @@ class EthicalConsideration:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, EthicalConsideration):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, EthicalConsideration):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, EthicalConsideration):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -741,6 +833,16 @@ class FairnessAssessment:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, FairnessAssessment):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, FairnessAssessment):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -803,6 +905,16 @@ class EnvironmentalConsiderations:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, EnvironmentalConsiderations):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, EnvironmentalConsiderations):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, EnvironmentalConsiderations):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -871,6 +983,16 @@ class EnergyMeasure:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, EnergyMeasure):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, EnergyMeasure):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -921,6 +1043,16 @@ class Co2Measure:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Co2Measure):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, Co2Measure):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, Co2Measure):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1058,6 +1190,16 @@ class EnergyProvider:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, EnergyProvider):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, EnergyProvider):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -1179,6 +1321,16 @@ class EnergyConsumption:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, EnergyConsumption):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, EnergyConsumption):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, EnergyConsumption):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1337,6 +1489,16 @@ class Considerations:
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, Considerations):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, Considerations):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -1429,8 +1591,16 @@ class ModelCard:
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(4)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(22)
     def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Return:
+            Set of `Property`
+        """
         return self._properties
 
     @properties.setter
@@ -1454,6 +1624,16 @@ class ModelCard:
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, ModelCard):
             return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __le__(self, other: Any) -> bool:
+        if isinstance(other, ModelCard):
+            return self.__comparable_tuple() <= other.__comparable_tuple()
+        return NotImplemented
+
+    def __ge__(self, other: Any) -> bool:
+        if isinstance(other, ModelCard):
+            return self.__comparable_tuple() >= other.__comparable_tuple()
         return NotImplemented
 
     def __hash__(self) -> int:

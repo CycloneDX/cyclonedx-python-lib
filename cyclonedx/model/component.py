@@ -1717,7 +1717,7 @@ class Component(Dependable):
             _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
             _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
             _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
-            self.model_card, self.crypto_properties, _ComparableTuple(self.tags),
+            self.crypto_properties, _ComparableTuple(self.tags), self.model_card,
         ))
 
     def __eq__(self, other: object) -> bool:
