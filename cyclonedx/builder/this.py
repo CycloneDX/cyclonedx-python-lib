@@ -17,8 +17,6 @@
 
 """Representation of this very python library."""
 
-__all__ = []
-
 from ..contrib.this import this_tool as _this_tool, this_component as _this_component
 
 # endregion deprecated re-export

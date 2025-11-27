@@ -15,8 +15,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-__all__ = []
-
 from ..contrib.license import LicenseFactory as _LicenseFactory
 
 # region deprecated re-export
