@@ -36,7 +36,7 @@ class LicenseFactory(_LicenseFactory):
     .. deprecated:: next
         This re-export location is deprecated.
         Use ``from cyclonedx.contrib.license.factories import LicenseFactory`` instead.
-        The exported symbol itself is NOT deprecated - only this import path.
+        The exported symbol itself is NOT deprecated — only this import path.
     """
     pass
 
