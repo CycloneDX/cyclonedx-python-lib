@@ -31,13 +31,12 @@ from json import loads as json_loads
 from typing import Any, Optional, Union
 from urllib.parse import quote as url_quote
 from uuid import UUID
-from warnings import warn
+from warnings import warn, deprecated
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
-from contrib.hash.factories import HashTypeFactory
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidLocaleTypeException, InvalidUriException
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
@@ -377,6 +376,7 @@ class HashType:
     """
 
     @staticmethod
+    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg instead')
     def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':
         """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alge`.
 
@@ -385,9 +385,12 @@ class HashType:
         .. deprecated:: next
             Use ``cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg()`` instead.
         """
+        from ..contrib.hash.factories import HashTypeFactory
+
         return HashTypeFactory().from_hashlib_alg(hashlib_alg, content)
 
     @staticmethod
+    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str instead')
     def from_composite_str(composite_hash: str) -> 'HashType':
         """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str`.
 
@@ -397,6 +400,8 @@ class HashType:
         .. deprecated:: next
             Use ``cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str()`` instead.
         """
+        from ..contrib.hash.factories import HashTypeFactory
+
         return HashTypeFactory().from_composite_str(composite_hash)
 
     def __init__(

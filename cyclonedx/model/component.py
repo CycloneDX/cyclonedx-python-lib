@@ -27,7 +27,6 @@ from packageurl import PackageURL
 from sortedcontainers import SortedSet
 from typing_extensions import deprecated
 
-from contrib.component.builders import ComponentBuilder
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException
@@ -963,6 +962,8 @@ class Component(Dependable):
         .. deprecated:: next
             Use ``cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file()`` instead.
         """
+        from ..contrib.component.builders import ComponentBuilder
+
         component = ComponentBuilder().make_for_file(absolute_file_path, name=path_for_bom)
         sha1_hash = next(h.content for h in component.hashes if h.alg is HashAlgorithm.SHA_1)
         component.version=f'0.0.0-{sha1_hash[0:12]}'
