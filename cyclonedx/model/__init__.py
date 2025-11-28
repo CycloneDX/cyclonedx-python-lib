@@ -37,8 +37,9 @@ from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
+from contrib.hash.factories import HashTypeFactory
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
+from ..exception.model import InvalidLocaleTypeException, InvalidUriException
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -366,25 +367,6 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
         ]
 
 
-_MAP_HASHLIB: dict[str, HashAlgorithm] = {
-    # from hashlib.algorithms_guaranteed
-    'md5': HashAlgorithm.MD5,
-    'sha1': HashAlgorithm.SHA_1,
-    # sha224:
-    'sha256': HashAlgorithm.SHA_256,
-    'sha384': HashAlgorithm.SHA_384,
-    'sha512': HashAlgorithm.SHA_512,
-    # blake2b:
-    # blake2s:
-    # sha3_224:
-    'sha3_256': HashAlgorithm.SHA3_256,
-    'sha3_384': HashAlgorithm.SHA3_384,
-    'sha3_512': HashAlgorithm.SHA3_512,
-    # shake_128:
-    # shake_256:
-}
-
-
 @serializable.serializable_class
 class HashType:
     """
@@ -395,91 +377,27 @@ class HashType:
     """
 
     @staticmethod
-    def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':  # TODO: move to contrib
-        """
+    def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':
+        """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alge`.
+
         Attempts to convert a hashlib-algorithm to our internal model classes.
 
-        Args:
-             hashlib_alg:
-                Hash algorith - like it is used by `hashlib`.
-                Example: `sha256`.
-
-            content:
-                Hash value.
-
-        Raises:
-            `UnknownHashTypeException` if the algorithm of hash cannot be determined.
-
-        Returns:
-            An instance of `HashType`.
+        .. deprecated:: next
+            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg()`` instead.
         """
-        alg = _MAP_HASHLIB.get(hashlib_alg.lower())
-        if alg is None:
-            raise UnknownHashTypeException(f'Unable to determine hash alg for {hashlib_alg!r}')
-        return HashType(alg=alg, content=content)
+        return HashTypeFactory().from_hashlib_alg(hashlib_alg, content)
 
     @staticmethod
-    def from_composite_str(composite_hash: str) -> 'HashType':  # TODO: move to contrib
-        """
+    def from_composite_str(composite_hash: str) -> 'HashType':
+        """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str`.
+
         Attempts to convert a string which includes both the Hash Algorithm and Hash Value and represent using our
         internal model classes.
 
-        Args:
-             composite_hash:
-                Composite Hash string of the format `HASH_ALGORITHM`:`HASH_VALUE`.
-                Example: `sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b`.
-
-                Valid case insensitive prefixes are:
-                `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `blake2b256`, `blake2b384`, `blake2b512`,
-                `blake2256`, `blake2384`, `blake2512`, `sha3-256`, `sha3-384`, `sha3-512`,
-                `blake3`.
-
-        Raises:
-            `UnknownHashTypeException` if the type of hash cannot be determined.
-
-        Returns:
-            An instance of `HashType`.
+        .. deprecated:: next
+            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str()`` instead.
         """
-        parts = composite_hash.split(':')
-
-        algorithm_prefix = parts[0].lower()
-        if algorithm_prefix == 'md5':
-            return HashType(
-                alg=HashAlgorithm.MD5,
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:4] == 'sha3':
-            return HashType(
-                alg=getattr(HashAlgorithm, f'SHA3_{algorithm_prefix[5:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix == 'sha1':
-            return HashType(
-                alg=HashAlgorithm.SHA_1,
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:3] == 'sha':
-            # This is actually SHA2...
-            return HashType(
-                alg=getattr(HashAlgorithm, f'SHA_{algorithm_prefix[3:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:7] == 'blake2b':
-            return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[7:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:6] == 'blake2':
-            return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[6:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:6] == 'blake3':
-            return HashType(
-                alg=HashAlgorithm.BLAKE3,
-                content=parts[1].lower()
-            )
-        raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
+        return HashTypeFactory().from_composite_str(composite_hash)
 
     def __init__(
         self, *,

@@ -27,7 +27,8 @@ from ...model.component import Component, ComponentType
 
 class ComponentBuilder:
 
-    def make_for_file(self, absolute_file_path: str, name: Optional[str]) -> Component:
+    def make_for_file(self, absolute_file_path: str, *,
+                      name: Optional[str]) -> Component:
         """
         Helper method to create a :class:`cyclonedx.model.component.Component`
         that represents the provided local file as a Component.

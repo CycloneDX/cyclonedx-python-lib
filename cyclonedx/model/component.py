@@ -960,19 +960,10 @@ class Component(Dependable):
 
         Helper method to create a Component that represents the provided local file as a Component.
 
-        Args:
-            absolute_file_path:
-                Absolute path to the file you wish to represent
-            path_for_bom:
-                Optionally, if supplied this is the path that will be used to identify the file in the BOM
-
-        Returns:
-            `Component` representing the supplied file
-
         .. deprecated:: next
             Use ``cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file()`` instead.
         """
-        component = ComponentBuilder().make_for_file(absolute_file_path, path_for_bom)
+        component = ComponentBuilder().make_for_file(absolute_file_path, name=path_for_bom)
         sha1_hash = next(h.content for h in component.hashes if h.alg is HashAlgorithm.SHA_1)
         component.version=f'0.0.0-{sha1_hash[0:12]}'
         component.purl=PackageURL(  # DEPRECATED: a file has no PURL!
