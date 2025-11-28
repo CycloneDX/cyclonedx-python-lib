@@ -15,6 +15,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+"""License related factories"""
+
 __all__ = ['LicenseFactory']
 
 from typing import TYPE_CHECKING, Optional
@@ -88,3 +90,8 @@ class LicenseFactory:
                        ) -> DisjunctiveLicense:
         """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` with a name."""
         return DisjunctiveLicense(name=name, text=text, url=url, acknowledgement=acknowledgement)
+
+
+# Idea for more factories:
+# class LicenseAttachmentFactory:
+#    def male_from_file(self, path: PathLike) -> AttachedText: ...
