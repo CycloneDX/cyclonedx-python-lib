@@ -15,19 +15,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+__all__ = ['LicenseFactory']
+
 from ..contrib.license import LicenseFactory as _LicenseFactory
 
 # region deprecated re-export
 
 LicenseFactory = _LicenseFactory
-"""
-Alias of :class:`cyclonedx.contrib.license.LicenseFactory`.
-
-This re-export location is deprecated.
-Use ``from ...contrib.license import LicenseFactory`` instead.
-The exported symbol itself is NOT deprecated - only this import path.
+"""Deprecated — Alias of :class:`cyclonedx.contrib.license.LicenseFactory`.
 
 .. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.license import LicenseFactory`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
 """
 
 # endregion deprecated re-export

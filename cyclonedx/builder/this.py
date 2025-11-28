@@ -17,30 +17,28 @@
 
 """Representation of this very python library."""
 
-from ..contrib.this import this_tool as _this_tool, this_component as _this_component
+__all__ = ['this_component', 'this_tool', ]
+
+from ..contrib.this import this_component as _this_component, this_tool as _this_tool
 
 # endregion deprecated re-export
 
 this_component = _this_component
-"""
-Alias of :func:`cyclonedx..contrib.this.this_component`.
-
-This re-export location is deprecated.
-Use ``from ...contrib.this import this_component`` instead.
-The exported symbol itself is NOT deprecated - only this import path.
+"""Deprecated — Alias of :func:`cyclonedx.contrib.this.this_component`.
 
 .. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.this import this_component`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
 """
 
 this_tool = _this_tool
-"""
-Alias of :func:`cyclonedx..contrib.this.this_tool`.
-
-This re-export location is deprecated.
-Use ``from ...contrib.this import this_tool`` instead.
-The exported symbol itself is NOT deprecated - only this import path.
+"""Deprecated — Alias of :func:`cyclonedx.contrib.this.this_tool`.
 
 .. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.this import this_tool`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
 """
 
 # endregion deprecated re-export
