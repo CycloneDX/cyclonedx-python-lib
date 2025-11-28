@@ -21,7 +21,7 @@ from ..contrib.license import LicenseFactory as _LicenseFactory
 
 LicenseFactory = _LicenseFactory
 """
-Alias of :class:`_LicenseFactory`.
+Alias of :class:`cyclonedx.contrib.license.LicenseFactory`.
 
 This re-export location is deprecated.
 Use ``from ...contrib.license import LicenseFactory`` instead.

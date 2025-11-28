@@ -23,7 +23,7 @@ from ..contrib.this import this_tool as _this_tool, this_component as _this_comp
 
 this_component = _this_component
 """
-Alias of :class:`_this_component`.
+Alias of :func:`cyclonedx..contrib.this.this_component`.
 
 This re-export location is deprecated.
 Use ``from ...contrib.this import this_component`` instead.
@@ -34,7 +34,7 @@ The exported symbol itself is NOT deprecated - only this import path.
 
 this_tool = _this_tool
 """
-Alias of :class:`_this_tool`.
+Alias of :func:`cyclonedx..contrib.this.this_tool`.
 
 This re-export location is deprecated.
 Use ``from ...contrib.this import this_tool`` instead.
