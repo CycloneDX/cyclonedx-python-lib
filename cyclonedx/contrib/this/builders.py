@@ -19,11 +19,11 @@
 
 __all__ = ['this_component', 'this_tool', ]
 
-from .. import __version__ as __ThisVersion  # noqa: N812
-from ..model import ExternalReference, ExternalReferenceType, XsUri
-from ..model.component import Component, ComponentType
-from ..model.license import DisjunctiveLicense, LicenseAcknowledgement
-from ..model.tool import Tool
+from ... import __version__ as __ThisVersion  # noqa: N812
+from ...model import ExternalReference, ExternalReferenceType, XsUri
+from ...model.component import Component, ComponentType
+from ...model.license import DisjunctiveLicense, LicenseAcknowledgement
+from ...model.tool import Tool
 
 # !!! keep this file in sync with `pyproject.toml`
 

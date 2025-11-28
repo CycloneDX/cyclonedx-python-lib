@@ -19,13 +19,13 @@ __all__ = ['LicenseFactory']
 
 from typing import TYPE_CHECKING, Optional
 
-from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
-from ..model.license import DisjunctiveLicense, LicenseExpression
-from ..spdx import fixup_id as spdx_fixup, is_expression as is_spdx_expression
+from ...exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
+from ...model.license import DisjunctiveLicense, LicenseExpression
+from ...spdx import fixup_id as spdx_fixup, is_expression as is_spdx_expression
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ..model import AttachedText, XsUri
-    from ..model.license import License, LicenseAcknowledgement
+    from ...model import AttachedText, XsUri
+    from ...model.license import License, LicenseAcknowledgement
 
 
 class LicenseFactory:

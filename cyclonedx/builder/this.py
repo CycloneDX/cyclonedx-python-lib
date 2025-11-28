@@ -27,7 +27,7 @@ if sys.version_info >= (3, 13):
 else:
     from typing_extensions import deprecated
 
-from ..contrib.this import this_component as _this_component, this_tool as _this_tool
+from ..contrib.this.builders import this_component as _this_component, this_tool as _this_tool
 
 # region deprecated re-export
 
@@ -38,11 +38,11 @@ if TYPE_CHECKING:
 
 @deprecated('Deprecated re-export location - see docstring of "this_component" for details.')
 def this_component() -> 'Component':
-    """Deprecated — alias of :func:`~cyclonedx.contrib.this.this_component`.
+    """Deprecated — Alias of :func:`cyclonedx.contrib.this.builders.this_component`.
 
     .. deprecated:: next
         This re-export location is deprecated.
-        Use ``from cyclonedx.contrib.this import this_component`` instead.
+        Use ``from cyclonedx.contrib.this.builders import this_component`` instead.
         The exported symbol itself is NOT deprecated — only this import path.
     """
     return _this_component()
@@ -50,11 +50,11 @@ def this_component() -> 'Component':
 
 @deprecated('Deprecated re-export location - see docstring of "this_tool" for details.')
 def this_tool() -> 'Tool':
-    """Deprecated — alias of :func:`~cyclonedx.contrib.this.this_tool`.
+    """Deprecated — Alias of :func:`cyclonedx.contrib.this.builders.this_tool`.
 
     .. deprecated:: next
         This re-export location is deprecated.
-        Use ``from cyclonedx.contrib.this import this_tool`` instead.
+        Use ``from cyclonedx.contrib.this.builders import this_tool`` instead.
         The exported symbol itself is NOT deprecated — only this import path.
     """
     return _this_tool()
