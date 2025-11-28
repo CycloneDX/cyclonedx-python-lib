@@ -17,28 +17,46 @@
 
 """Representation of this very python library."""
 
-__all__ = ['this_component', 'this_tool', ]
+__all__ = ['this_component', 'this_tool']
+
+import sys
+from typing import TYPE_CHECKING
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
 
 from ..contrib.this import this_component as _this_component, this_tool as _this_tool
 
-# endregion deprecated re-export
+# region deprecated re-export
 
-this_component = _this_component
-"""Deprecated — Alias of :func:`cyclonedx.contrib.this.this_component`.
+if TYPE_CHECKING:
+    from ..model.component import Component
+    from ..model.tool import Tool
 
-.. deprecated:: next
-    This re-export location is deprecated.
-    Use ``from cyclonedx.contrib.this import this_component`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
-"""
 
-this_tool = _this_tool
-"""Deprecated — Alias of :func:`cyclonedx.contrib.this.this_tool`.
+@deprecated('Deprecated re-export location - see docstring of "this_component" for details.')
+def this_component() -> 'Component':
+    """Deprecated — alias of :func:`~cyclonedx.contrib.this.this_component`.
 
-.. deprecated:: next
-    This re-export location is deprecated.
-    Use ``from cyclonedx.contrib.this import this_tool`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
-"""
+    .. deprecated:: next
+        This re-export location is deprecated.
+        Use ``from cyclonedx.contrib.this import this_component`` instead.
+        The exported symbol itself is NOT deprecated — only this import path.
+    """
+    return _this_component()
+
+
+@deprecated('Deprecated re-export location - see docstring of "this_tool" for details.')
+def this_tool() -> 'Tool':
+    """Deprecated — alias of :func:`~cyclonedx.contrib.this.this_tool`.
+
+    .. deprecated:: next
+        This re-export location is deprecated.
+        Use ``from cyclonedx.contrib.this import this_tool`` instead.
+        The exported symbol itself is NOT deprecated — only this import path.
+    """
+    return _this_tool()
 
 # endregion deprecated re-export

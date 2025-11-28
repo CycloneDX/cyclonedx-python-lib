@@ -17,17 +17,26 @@
 
 __all__ = ['LicenseFactory']
 
+import sys
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
+
 from ..contrib.license import LicenseFactory as _LicenseFactory
 
 # region deprecated re-export
 
-LicenseFactory = _LicenseFactory
-"""Deprecated — Alias of :class:`cyclonedx.contrib.license.LicenseFactory`.
 
-.. deprecated:: next
-    This re-export location is deprecated.
-    Use ``from cyclonedx.contrib.license import LicenseFactory`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
-"""
+@deprecated('Deprecated re-export location - see docstring of "LicenseFactory" for details.')
+class LicenseFactory(_LicenseFactory):
+    """Deprecated — Alias of :class:`cyclonedx.contrib.license.LicenseFactory`.
+
+    .. deprecated:: next
+        This re-export location is deprecated.
+        Use ``from cyclonedx.contrib.license import LicenseFactory`` instead.
+        The exported symbol itself is NOT deprecated - only this import path.
+    """
 
 # endregion deprecated re-export
