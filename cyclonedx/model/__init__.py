@@ -395,7 +395,7 @@ class HashType:
     """
 
     @staticmethod
-    def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':
+    def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':  # TODO: move to contrib
         """
         Attempts to convert a hashlib-algorithm to our internal model classes.
 
@@ -419,7 +419,7 @@ class HashType:
         return HashType(alg=alg, content=content)
 
     @staticmethod
-    def from_composite_str(composite_hash: str) -> 'HashType':
+    def from_composite_str(composite_hash: str) -> 'HashType':  # TODO: move to contrib
         """
         Attempts to convert a string which includes both the Hash Algorithm and Hash Value and represent using our
         internal model classes.
