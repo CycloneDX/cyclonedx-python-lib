@@ -20,39 +20,65 @@
 Exceptions relating to specific conditions that occur when factoring a model.
 """
 
-from . import CycloneDxException
+__all__ = ['CycloneDxFactoryException', 'LicenseChoiceFactoryException',
+           'InvalidSpdxLicenseException', 'LicenseFactoryException', 'InvalidLicenseExpressionException']
+
+from ..contrib.license.exceptions import (
+    FactoryException as _FactoryException,
+    InvalidLicenseExpressionException as _InvalidLicenseExpressionException,
+    InvalidSpdxLicenseException as _InvalidSpdxLicenseException,
+    LicenseChoiceFactoryException as _LicenseChoiceFactoryException,
+    LicenseFactoryException as _LicenseFactoryException,
+)
+
+# region deprecated re-export
+
+# re-export NOT as inherited class with @deprecated, to keep the original subclassing intact!!1
 
 
-class CycloneDxFactoryException(CycloneDxException):
-    """
-    Base exception that covers all exceptions that may be thrown during model factoring..
-    """
-    pass
+CycloneDxFactoryException = _FactoryException
+"""Deprecated — Alias of :class:`cyclonedx.contrib.license.exceptions.FactoryException`.
 
+.. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.license.exceptions import FactoryException`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
+"""
 
-class LicenseChoiceFactoryException(CycloneDxFactoryException):
-    """
-    Base exception that covers all LicenseChoiceFactory exceptions.
-    """
-    pass
+LicenseChoiceFactoryException = _LicenseChoiceFactoryException
+"""Deprecated — Alias of :class:`cyclonedx.contrib.license.exceptions.LicenseChoiceFactoryException`.
 
+.. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.license.exceptions import LicenseChoiceFactoryException`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
+"""
 
-class InvalidSpdxLicenseException(LicenseChoiceFactoryException):
-    """
-    Thrown when an invalid SPDX License is provided.
-    """
-    pass
+InvalidSpdxLicenseException = _InvalidSpdxLicenseException
+"""Deprecated — Alias of :class:`cyclonedx.contrib.license.exceptions.InvalidSpdxLicenseException`.
 
+.. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.license.exceptions import InvalidSpdxLicenseException`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
+"""
 
-class LicenseFactoryException(CycloneDxFactoryException):
-    """
-    Base exception that covers all LicenseFactory exceptions.
-    """
-    pass
+LicenseFactoryException = _LicenseFactoryException
+"""Deprecated — Alias of :class:`cyclonedx.contrib.license.exceptions.LicenseFactoryException`.
 
+.. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.license.exceptions import LicenseFactoryException`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
+"""
 
-class InvalidLicenseExpressionException(LicenseFactoryException):
-    """
-    Thrown when an invalid License expressions is provided.
-    """
-    pass
+InvalidLicenseExpressionException = _InvalidLicenseExpressionException
+"""Deprecated — Alias of :class:`cyclonedx.contrib.license.exceptions.InvalidLicenseExpressionException`.
+
+.. deprecated:: next
+    This re-export location is deprecated.
+    Use ``from cyclonedx.contrib.license.exceptions import InvalidLicenseExpressionException`` instead.
+    The exported symbol itself is NOT deprecated - only this import path.
+"""
+
+# endregion deprecated re-export

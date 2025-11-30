@@ -15,29 +15,4 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-
-"""
-!!! ALL SYMBOLS IN HERE ARE INTERNAL.
-Everything might change without any notice.
-"""
-
-
-from hashlib import sha1
-
-
-def file_sha1sum(filename: str) -> str:
-    """
-    Generate a SHA1 hash of the provided file.
-
-    Args:
-        filename:
-            Absolute path to file to hash as `str`
-
-    Returns:
-        SHA-1 hash
-    """
-    h = sha1()  # nosec B303, B324
-    with open(filename, 'rb') as f:
-        for byte_block in iter(lambda: f.read(4096), b''):
-            h.update(byte_block)
-    return h.hexdigest()
+"""Component related functionality"""

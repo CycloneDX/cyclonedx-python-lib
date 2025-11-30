@@ -116,7 +116,7 @@ class UnknownHashTypeException(CycloneDxModelException):
     """
     Exception raised when we are unable to determine the type of hash from a composite hash string.
     """
-    pass
+    pass  # TODO research deprecation of this...
 
 
 class LicenseExpressionAlongWithOthersException(CycloneDxModelException):

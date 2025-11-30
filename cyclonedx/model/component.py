@@ -18,7 +18,6 @@
 import re
 from collections.abc import Iterable
 from enum import Enum
-from os.path import exists
 from typing import Any, Optional, Union
 from warnings import warn
 
@@ -26,10 +25,10 @@ from warnings import warn
 import py_serializable as serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
+from typing_extensions import deprecated
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
-from .._internal.hash import file_sha1sum as _file_sha1sum
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException
 from ..exception.serialization import (
     CycloneDxDeserializationException,
@@ -50,12 +49,11 @@ from ..serialization import PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
     ExternalReference,
-    HashAlgorithm,
     HashType,
     IdentifiableAction,
     Property,
     XsUri,
-    _HashTypeRepositorySerializationHelper,
+    _HashTypeRepositorySerializationHelper, HashAlgorithm,
 )
 from .bom_ref import BomRef
 from .component_evidence import ComponentEvidence, _ComponentEvidenceSerializationHelper
@@ -955,34 +953,25 @@ class Component(Dependable):
     """
 
     @staticmethod
+    @deprecated('Deprecated - use cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file instead')
     def for_file(absolute_file_path: str, path_for_bom: Optional[str]) -> 'Component':
-        """
+        """Deprecated — Wrapper of :func:`cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file`.
+
         Helper method to create a Component that represents the provided local file as a Component.
 
-        Args:
-            absolute_file_path:
-                Absolute path to the file you wish to represent
-            path_for_bom:
-                Optionally, if supplied this is the path that will be used to identify the file in the BOM
-
-        Returns:
-            `Component` representing the supplied file
+        .. deprecated:: next
+            Use ``cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file()`` instead.
         """
-        if not exists(absolute_file_path):
-            raise FileExistsError(f'Supplied file path {absolute_file_path!r} does not exist')
+        from ..contrib.component.builders import ComponentBuilder
 
-        sha1_hash: str = _file_sha1sum(absolute_file_path)
-        return Component(
-            name=path_for_bom if path_for_bom else absolute_file_path,
-            version=f'0.0.0-{sha1_hash[0:12]}',
-            hashes=[
-                HashType(alg=HashAlgorithm.SHA_1, content=sha1_hash)
-            ],
-            type=ComponentType.FILE, purl=PackageURL(
-                type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
-                version=f'0.0.0-{sha1_hash[0:12]}'
-            )
+        component = ComponentBuilder().make_for_file(absolute_file_path, name=path_for_bom)
+        sha1_hash = next(h.content for h in component.hashes if h.alg is HashAlgorithm.SHA_1)
+        component.version=f'0.0.0-{sha1_hash[0:12]}'
+        component.purl=PackageURL(  # DEPRECATED: a file has no PURL!
+            type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
+            version=f'0.0.0-{sha1_hash[0:12]}'
         )
+        return component
 
     def __init__(
         self, *,

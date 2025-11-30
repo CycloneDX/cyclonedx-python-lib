@@ -26,7 +26,7 @@ from cyclonedx.model.bom import Bom
 from tests import OWN_DATA_DIRECTORY
 
 
-@patch('cyclonedx.builder.this.__ThisVersion', 'TESTING')
+@patch('cyclonedx.contrib.this.builders.__ThisVersion', 'TESTING')
 @patch('cyclonedx.model.bom._get_now_utc', return_value=datetime.fromisoformat('2023-01-07 13:44:32.312678+00:00'))
 class TestDeserializeRealWorldExamples(unittest.TestCase):
 
