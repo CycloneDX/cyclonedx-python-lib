@@ -22,6 +22,7 @@ You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or 
 from a `cyclonedx.parser.BaseParser` implementation.
 """
 
+import sys
 import re
 from collections.abc import Generator, Iterable
 from datetime import datetime
@@ -31,8 +32,13 @@ from json import loads as json_loads
 from typing import Any, Optional, Union
 from urllib.parse import quote as url_quote
 from uuid import UUID
-from warnings import deprecated, warn
+from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
