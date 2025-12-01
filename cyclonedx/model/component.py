@@ -16,16 +16,21 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import re
+import sys
 from collections.abc import Iterable
 from enum import Enum
 from typing import Any, Optional, Union
 from warnings import warn
 
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
+
 # See https://github.com/package-url/packageurl-python/issues/65
 import py_serializable as serializable
 from packageurl import PackageURL
 from sortedcontainers import SortedSet
-from typing_extensions import deprecated
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple

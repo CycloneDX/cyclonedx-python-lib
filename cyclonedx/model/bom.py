@@ -26,7 +26,6 @@ from warnings import warn
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
-from typing_extensions import deprecated
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
@@ -760,8 +759,8 @@ class Bom:
             `SortedSet` of `Vulnerability`
 
         .. deprecated:: next
+        Deprecated without any replacement.
         """
-
         vulnerabilities: SortedSet[Vulnerability] = SortedSet()
         for v in self.vulnerabilities:
             for target in v.affects:
@@ -777,6 +776,7 @@ class Bom:
             `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
 
         .. deprecated:: next
+        Deprecated without any replacement.
         """
         return bool(self.vulnerabilities)
 
@@ -801,6 +801,7 @@ class Bom:
     def urn(self) -> str:
         """
         .. deprecated:: next
+        Deprecated without any replacement.
         """
         # idea: have 'serial_number' be a string, and use it instead of this method
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
@@ -814,6 +815,7 @@ class Bom:
              `bool`
 
         .. deprecated:: next
+        Deprecated without any replacement.
         """
         # !! deprecated function. have this as an part of the normlization process, like the BomRefDiscrimator
         # 0. Make sure all Dependable have a Dependency entry
