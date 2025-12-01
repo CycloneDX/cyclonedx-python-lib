@@ -22,8 +22,8 @@ You can either create a `cyclonedx.model.bom.Bom` yourself programmatically, or 
 from a `cyclonedx.parser.BaseParser` implementation.
 """
 
-import sys
 import re
+import sys
 from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
