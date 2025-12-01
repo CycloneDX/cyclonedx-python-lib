@@ -31,7 +31,7 @@ from json import loads as json_loads
 from typing import Any, Optional, Union
 from urllib.parse import quote as url_quote
 from uuid import UUID
-from warnings import warn, deprecated
+from warnings import deprecated, warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
 import py_serializable as serializable

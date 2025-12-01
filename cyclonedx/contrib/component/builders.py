@@ -19,11 +19,12 @@
 
 
 from hashlib import sha1
-from typing import Optional
 from os.path import exists
+from typing import Optional
 
-from ...model import HashType, HashAlgorithm
+from ...model import HashAlgorithm, HashType
 from ...model.component import Component, ComponentType
+
 
 class ComponentBuilder:
 

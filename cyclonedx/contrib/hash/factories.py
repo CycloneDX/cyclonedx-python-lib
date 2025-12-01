@@ -19,11 +19,8 @@
 
 __all__ = ['HashTypeFactory']
 
-from ...model import HashType, HashAlgorithm
-
 from ...exception.model import UnknownHashTypeException
-
-
+from ...model import HashAlgorithm, HashType
 
 _MAP_HASHLIB: dict[str, HashAlgorithm] = {
     # from hashlib.algorithms_guaranteed
@@ -42,6 +39,7 @@ _MAP_HASHLIB: dict[str, HashAlgorithm] = {
     # shake_128:
     # shake_256:
 }
+
 
 class HashTypeFactory:
 

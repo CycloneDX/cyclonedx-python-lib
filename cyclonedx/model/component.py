@@ -49,11 +49,12 @@ from ..serialization import PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
     ExternalReference,
+    HashAlgorithm,
     HashType,
     IdentifiableAction,
     Property,
     XsUri,
-    _HashTypeRepositorySerializationHelper, HashAlgorithm,
+    _HashTypeRepositorySerializationHelper,
 )
 from .bom_ref import BomRef
 from .component_evidence import ComponentEvidence, _ComponentEvidenceSerializationHelper
@@ -966,8 +967,8 @@ class Component(Dependable):
 
         component = ComponentBuilder().make_for_file(absolute_file_path, name=path_for_bom)
         sha1_hash = next(h.content for h in component.hashes if h.alg is HashAlgorithm.SHA_1)
-        component.version=f'0.0.0-{sha1_hash[0:12]}'
-        component.purl=PackageURL(  # DEPRECATED: a file has no PURL!
+        component.version = f'0.0.0-{sha1_hash[0:12]}'
+        component.purl = PackageURL(  # DEPRECATED: a file has no PURL!
             type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
             version=f'0.0.0-{sha1_hash[0:12]}'
         )
