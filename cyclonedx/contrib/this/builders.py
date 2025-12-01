@@ -29,7 +29,7 @@ from ...model.tool import Tool
 
 
 def this_component() -> Component:
-    """Representation of this very python library as a :class:`Component`."""
+    """Representation of this very python library as a :class:`cyclonedx.model.component.Component`."""
     return Component(
         type=ComponentType.LIBRARY,
         group='CycloneDX',
@@ -79,5 +79,5 @@ def this_component() -> Component:
 
 
 def this_tool() -> Tool:
-    """Representation of this very python library as a :class:`Tool`."""
+    """Representation of this very python library as a :class:`cyclonedx.model.tool.Tool`."""
     return Tool.from_component(this_component())
