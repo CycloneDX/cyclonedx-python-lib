@@ -20,8 +20,8 @@ from typing import TYPE_CHECKING
 
 from packageurl import PackageURL
 
-from cyclonedx.contrib.this.builders import this_component as cdx_lib_component
 from cyclonedx.contrib.license.factories import LicenseFactory
+from cyclonedx.contrib.this.builders import this_component as cdx_lib_component
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.model import XsUri
 from cyclonedx.model.bom import Bom
