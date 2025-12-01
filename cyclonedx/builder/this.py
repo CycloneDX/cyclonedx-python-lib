@@ -15,7 +15,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-"""Representation of this very python library."""
+"""Representation of this very python library.
+
+.. deprecated:: next
+"""
 
 __all__ = ['this_component', 'this_tool']
 

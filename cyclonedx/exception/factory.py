@@ -18,6 +18,8 @@
 
 """
 Exceptions relating to specific conditions that occur when factoring a model.
+
+.. deprecated:: next
 """
 
 __all__ = ['CycloneDxFactoryException', 'LicenseChoiceFactoryException',
