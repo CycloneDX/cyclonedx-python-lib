@@ -49,7 +49,7 @@ class HashTypeFactory:
 
         Args:
              hashlib_alg:
-                Hash algorith - like it is used by `hashlib`.
+                Hash algorithm - like it is used by `hashlib`.
                 Example: `sha256`.
 
             content:

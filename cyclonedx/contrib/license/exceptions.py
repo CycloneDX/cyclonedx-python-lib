@@ -17,7 +17,7 @@
 
 
 """
-Exceptions relating to specific conditions that occur when factoring a module.
+Exceptions relating to specific conditions that occur when factoring a model.
 """
 
 from ...exception import CycloneDxException

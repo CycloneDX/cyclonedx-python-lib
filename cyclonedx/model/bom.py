@@ -817,7 +817,7 @@ class Bom:
         .. deprecated:: next
         Deprecated without any replacement.
         """
-        # !! deprecated function. have this as an part of the normlization process, like the BomRefDiscrimator
+        # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
         # 0. Make sure all Dependable have a Dependency entry
         if self.metadata.component:
             self.register_dependency(target=self.metadata.component)

@@ -971,7 +971,8 @@ class Component(Dependable):
         from ..contrib.component.builders import ComponentBuilder
 
         component = ComponentBuilder().make_for_file(absolute_file_path, name=path_for_bom)
-        sha1_hash = next(h.content for h in component.hashes if h.alg is HashAlgorithm.SHA_1)
+        sha1_hash = next((h.content for h in component.hashes if h.alg is HashAlgorithm.SHA_1), None)
+        assert sha1_hash is not None
         component.version = f'0.0.0-{sha1_hash[0:12]}'
         component.purl = PackageURL(  # DEPRECATED: a file has no PURL!
             type='generic', name=path_for_bom if path_for_bom else absolute_file_path,

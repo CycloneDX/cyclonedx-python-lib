@@ -384,7 +384,7 @@ class HashType:
     @staticmethod
     @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg instead')
     def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':
-        """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alge`.
+        """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg`.
 
         Attempts to convert a hashlib-algorithm to our internal model classes.
 
