@@ -17,6 +17,7 @@
 
 """Component related builders"""
 
+__all__ = ['ComponentBuilder']
 
 from hashlib import sha1
 from os.path import exists

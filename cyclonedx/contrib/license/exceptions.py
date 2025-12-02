@@ -56,6 +56,6 @@ class LicenseFactoryException(FactoryException):
 
 class InvalidLicenseExpressionException(LicenseFactoryException):
     """
-    Thrown when an invalid License expressions is provided.
+    Thrown when an invalid License expression is provided.
     """
     pass

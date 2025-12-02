@@ -759,7 +759,7 @@ class Bom:
             `SortedSet` of `Vulnerability`
 
         .. deprecated:: next
-        Deprecated without any replacement.
+            Deprecated without any replacement.
         """
         vulnerabilities: SortedSet[Vulnerability] = SortedSet()
         for v in self.vulnerabilities:
@@ -776,7 +776,7 @@ class Bom:
             `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
 
         .. deprecated:: next
-        Deprecated without any replacement.
+            Deprecated without any replacement.
         """
         return bool(self.vulnerabilities)
 
@@ -801,7 +801,7 @@ class Bom:
     def urn(self) -> str:
         """
         .. deprecated:: next
-        Deprecated without any replacement.
+            Deprecated without any replacement.
         """
         # idea: have 'serial_number' be a string, and use it instead of this method
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
@@ -815,7 +815,7 @@ class Bom:
              `bool`
 
         .. deprecated:: next
-        Deprecated without any replacement.
+            Deprecated without any replacement.
         """
         # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
         # 0. Make sure all Dependable have a Dependency entry
