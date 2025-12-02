@@ -706,6 +706,8 @@ class Bom:
 
         Returns:
             `Component` or `None`
+
+        .. deprecated:: next
         """
         if purl:
             found = [x for x in self.components if x.purl == purl]
@@ -720,6 +722,8 @@ class Bom:
 
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
+
+        .. deprecated:: next
         """
         return self.serial_number.urn
 
@@ -733,6 +737,8 @@ class Bom:
 
         Returns:
             `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
+
+        .. deprecated:: next
         """
         return component in self.components
 
@@ -751,8 +757,10 @@ class Bom:
 
         Returns:
             `SortedSet` of `Vulnerability`
-        """
 
+        .. deprecated:: next
+            Deprecated without any replacement.
+        """
         vulnerabilities: SortedSet[Vulnerability] = SortedSet()
         for v in self.vulnerabilities:
             for target in v.affects:
@@ -766,6 +774,9 @@ class Bom:
 
         Returns:
             `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
+
+        .. deprecated:: next
+            Deprecated without any replacement.
         """
         return bool(self.vulnerabilities)
 
@@ -788,6 +799,11 @@ class Bom:
                 self.register_dependency(target=_d2, depends_on=None)
 
     def urn(self) -> str:
+        """
+        .. deprecated:: next
+            Deprecated without any replacement.
+        """
+        # idea: have 'serial_number' be a string, and use it instead of this method
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
 
     def validate(self) -> bool:
@@ -797,7 +813,11 @@ class Bom:
 
         Returns:
              `bool`
+
+        .. deprecated:: next
+            Deprecated without any replacement.
         """
+        # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
         # 0. Make sure all Dependable have a Dependency entry
         if self.metadata.component:
             self.register_dependency(target=self.metadata.component)

@@ -24,6 +24,8 @@ supported in prior versions of the CycloneDX schema.
 Root Level Schema Support
 -------------------------
 
+This is a snapshot. See the API docs for the latest state.
+
 +----------------------------+---------------+---------------------------------------------------------------------------------------------------+
 | Data Path                  | Supported?    | Notes                                                                                             |
 +============================+===============+===================================================================================================+
@@ -61,6 +63,8 @@ Root Level Schema Support
 
 Internal Model Schema Support
 -----------------------------
+
+This is a snapshot. See the API docs for the latest state.
 
 +----------------------------+---------------+----------------------------------------------------------------------------------------------+
 | Internal Model             | Supported?    | Notes                                                                                        |

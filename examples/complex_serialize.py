@@ -20,9 +20,9 @@ from typing import TYPE_CHECKING
 
 from packageurl import PackageURL
 
-from cyclonedx.builder.this import this_component as cdx_lib_component
+from cyclonedx.contrib.license.factories import LicenseFactory
+from cyclonedx.contrib.this.builders import this_component as cdx_lib_component
 from cyclonedx.exception import MissingOptionalDependencyException
-from cyclonedx.factory.license import LicenseFactory
 from cyclonedx.model import XsUri
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.component import Component, ComponentType

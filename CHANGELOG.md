@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v11.6.0 (2025-12-02)
+
+### Documentation
+
+- Update 1.7 ([#920](https://github.com/CycloneDX/cyclonedx-python-lib/pull/920),
+  [`7e6771b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7e6771b0c1166d384ee438460e45794914937b6e))
+
+### Features
+
+- Moved non‑standard implementations to Contrib area
+  ([#916](https://github.com/CycloneDX/cyclonedx-python-lib/pull/916),
+  [`15a9023`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/15a902374bc6507788853a854256d3570ab250a7))
+
+
 ## v11.5.0 (2025-10-31)
 
 ### Features
