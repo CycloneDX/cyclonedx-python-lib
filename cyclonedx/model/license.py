@@ -59,7 +59,7 @@ class LicenseAcknowledgement(str, Enum):
 # In an error, the name of the enum was `LicenseExpressionAcknowledgement`.
 # Even though this was changed, there might be some downstream usage of this symbol, so we keep it around ...
 LicenseExpressionAcknowledgement = LicenseAcknowledgement
-"""Deprecated - Alias for :class:`LicenseAcknowledgement`
+"""Deprecated — Alias for :class:`LicenseAcknowledgement`
 
 .. deprecated:: next Import `LicenseAcknowledgement` instead.
     The exported original symbol itself is NOT deprecated - only this import path.

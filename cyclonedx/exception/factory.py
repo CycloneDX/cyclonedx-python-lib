@@ -44,7 +44,7 @@ CycloneDxFactoryException = _FactoryException
 .. deprecated:: next
     This re-export location is deprecated.
     Use ``from cyclonedx.contrib.license.exceptions import FactoryException`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
+    The exported symbol itself is NOT deprecated — only this import path.
 """
 
 LicenseChoiceFactoryException = _LicenseChoiceFactoryException
@@ -53,7 +53,7 @@ LicenseChoiceFactoryException = _LicenseChoiceFactoryException
 .. deprecated:: next
     This re-export location is deprecated.
     Use ``from cyclonedx.contrib.license.exceptions import LicenseChoiceFactoryException`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
+    The exported symbol itself is NOT deprecated — only this import path.
 """
 
 InvalidSpdxLicenseException = _InvalidSpdxLicenseException
@@ -62,7 +62,7 @@ InvalidSpdxLicenseException = _InvalidSpdxLicenseException
 .. deprecated:: next
     This re-export location is deprecated.
     Use ``from cyclonedx.contrib.license.exceptions import InvalidSpdxLicenseException`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
+    The exported symbol itself is NOT deprecated — only this import path.
 """
 
 LicenseFactoryException = _LicenseFactoryException
@@ -71,7 +71,7 @@ LicenseFactoryException = _LicenseFactoryException
 .. deprecated:: next
     This re-export location is deprecated.
     Use ``from cyclonedx.contrib.license.exceptions import LicenseFactoryException`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
+    The exported symbol itself is NOT deprecated — only this import path.
 """
 
 InvalidLicenseExpressionException = _InvalidLicenseExpressionException
@@ -80,7 +80,7 @@ InvalidLicenseExpressionException = _InvalidLicenseExpressionException
 .. deprecated:: next
     This re-export location is deprecated.
     Use ``from cyclonedx.contrib.license.exceptions import InvalidLicenseExpressionException`` instead.
-    The exported symbol itself is NOT deprecated - only this import path.
+    The exported symbol itself is NOT deprecated — only this import path.
 """
 
 # endregion deprecated re-export

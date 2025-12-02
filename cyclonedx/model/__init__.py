@@ -382,21 +382,21 @@ class HashType:
     """
 
     @staticmethod
-    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg instead')
+    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory().from_hashlib_alg() instead')
     def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':
         """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg`.
 
         Attempts to convert a hashlib-algorithm to our internal model classes.
 
         .. deprecated:: next
-            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg()`` instead.
+            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory().from_hashlib_alg()`` instead.
         """
         from ..contrib.hash.factories import HashTypeFactory
 
         return HashTypeFactory().from_hashlib_alg(hashlib_alg, content)
 
     @staticmethod
-    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str instead')
+    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory().from_composite_str() instead')
     def from_composite_str(composite_hash: str) -> 'HashType':
         """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str`.
 
@@ -404,7 +404,7 @@ class HashType:
         internal model classes.
 
         .. deprecated:: next
-            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str()`` instead.
+            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory().from_composite_str()`` instead.
         """
         from ..contrib.hash.factories import HashTypeFactory
 

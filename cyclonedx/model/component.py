@@ -959,14 +959,14 @@ class Component(Dependable):
     """
 
     @staticmethod
-    @deprecated('Deprecated - use cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file instead')
+    @deprecated('Deprecated - use cyclonedx.contrib.component.builders.ComponentBuilder().make_for_file() instead')
     def for_file(absolute_file_path: str, path_for_bom: Optional[str]) -> 'Component':
         """Deprecated — Wrapper of :func:`cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file`.
 
         Helper method to create a Component that represents the provided local file as a Component.
 
         .. deprecated:: next
-            Use ``cyclonedx.contrib.component.builders.ComponentBuilder.make_for_file()`` instead.
+            Use ``cyclonedx.contrib.component.builders.ComponentBuilder().make_for_file()`` instead.
         """
         from ..contrib.component.builders import ComponentBuilder
 
