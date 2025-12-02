@@ -49,7 +49,7 @@ class TestOutputXml(TestCase, SnapshotMixin):
         if is_valid_for_schema_version(gb, sv)
     ))
     @unpack
-    @patch('cyclonedx.builder.this.__ThisVersion', 'TESTING')
+    @patch('cyclonedx.contrib.this.builders.__ThisVersion', 'TESTING')
     def test_valid(self, get_bom: Callable[[], Bom], sv: SchemaVersion, *_: Any, **__: Any) -> None:
         snapshot_name = mksname(get_bom, sv, OutputFormat.XML)
         if snapshot_name is None:
