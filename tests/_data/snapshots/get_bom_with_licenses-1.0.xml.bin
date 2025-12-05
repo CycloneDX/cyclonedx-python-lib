@@ -12,6 +12,11 @@
       <modified>false</modified>
     </component>
     <component type="library">
+      <name>c-with-expression-details</name>
+      <version/>
+      <modified>false</modified>
+    </component>
+    <component type="library">
       <name>c-with-name</name>
       <version/>
       <modified>false</modified>

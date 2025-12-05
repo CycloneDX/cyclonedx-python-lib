@@ -26,6 +26,35 @@
       "type": "library"
     },
     {
+      "bom-ref": "C4",
+      "licenses": [
+        {
+          "acknowledgement": "declared",
+          "expressionDetails": [
+            {
+              "bom-ref": "some-bomref-1234",
+              "licenseIdentifier": "GPL-2.0",
+              "text": {
+                "content": "specific GPL-2.0 license text",
+                "contentType": "text/plain"
+              }
+            },
+            {
+              "licenseIdentifier": "GPL-3.0-or-later",
+              "text": {
+                "content": "specific GPL-3.0-or-later license text",
+                "contentType": "text/plain"
+              },
+              "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+          ],
+          "expression": "GPL-3.0-or-later OR GPL-2.0"
+        }
+      ],
+      "name": "c-with-expression-details",
+      "type": "library"
+    },
+    {
       "bom-ref": "C3",
       "licenses": [
         {
@@ -60,6 +89,9 @@
     },
     {
       "ref": "C3"
+    },
+    {
+      "ref": "C4"
     },
     {
       "ref": "S1"
