@@ -5,13 +5,13 @@
     <component type="application" bom-ref="my-app">
       <name>app</name>
       <licenses>
-        <license>
+        <license bom-ref="root_component_license">
           <name>proprietary</name>
         </license>
       </licenses>
     </component>
     <licenses>
-      <license>
+      <license bom-ref="bom_license">
         <id>CC-BY-1.0</id>
       </license>
     </licenses>
@@ -20,7 +20,7 @@
     <component type="library" bom-ref="C2">
       <name>c-with-SPDX</name>
       <licenses>
-        <license acknowledgement="concluded">
+        <license bom-ref="C2_license" acknowledgement="concluded">
           <id>Apache-2.0</id>
           <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
@@ -29,17 +29,17 @@
     <component type="library" bom-ref="C1">
       <name>c-with-expression</name>
       <licenses>
-        <expression acknowledgement="concluded">Apache-2.0 OR MIT</expression>
+        <expression bom-ref="C1_license" acknowledgement="concluded">Apache-2.0 OR MIT</expression>
       </licenses>
     </component>
     <component type="library" bom-ref="C3">
       <name>c-with-name</name>
       <licenses>
-        <license>
+        <license bom-ref="c-with-name_license_2">
           <name>some additional</name>
           <text content-type="text/plain">this is additional license text</text>
         </license>
-        <license>
+        <license bom-ref="c-with-name_license_1">
           <name>some commercial license</name>
           <text content-type="text/plain">this is a license text</text>
         </license>
@@ -50,7 +50,7 @@
     <service bom-ref="S2">
       <name>s-with-SPDX</name>
       <licenses>
-        <license acknowledgement="declared">
+        <license bom-ref="S2_license" acknowledgement="declared">
           <id>Apache-2.0</id>
           <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
@@ -59,17 +59,17 @@
     <service bom-ref="S1">
       <name>s-with-expression</name>
       <licenses>
-        <expression acknowledgement="declared">Apache-2.0 OR MIT</expression>
+        <expression bom-ref="S1_license" acknowledgement="declared">Apache-2.0 OR MIT</expression>
       </licenses>
     </service>
     <service bom-ref="S3">
       <name>s-with-name</name>
       <licenses>
-        <license>
+        <license bom-ref="S3_license2">
           <name>some additional</name>
           <text content-type="text/plain">this is additional license text</text>
         </license>
-        <license>
+        <license bom-ref="S3_license1">
           <name>some commercial license</name>
           <text content-type="text/plain">this is a license text</text>
         </license>

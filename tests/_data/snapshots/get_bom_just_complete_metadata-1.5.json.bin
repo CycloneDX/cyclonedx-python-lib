@@ -7,11 +7,13 @@
   "metadata": {
     "authors": [
       {
+        "bom-ref": "OrganizationalContact_ano_bom_authors",
         "email": "someone@somewhere.tld",
         "name": "A N Other",
         "phone": "+44 (0)1234 567890"
       },
       {
+        "bom-ref": "OrganizationalContact_ph_bom_authors",
         "email": "paul.horton@owasp.org",
         "name": "Paul Horton"
       }
@@ -26,6 +28,7 @@
           "licenses": [
             {
               "license": {
+                "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz_license",
                 "id": "MIT"
               }
             }
@@ -91,6 +94,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "my-specific-bom-ref-for-dings_license",
             "id": "MIT"
           }
         }
@@ -104,6 +108,7 @@
             "licenses": [
               {
                 "license": {
+                  "bom-ref": "ccc8d7ee-4b9c-4750-aee0-a72585152291_license",
                   "id": "MIT"
                 }
               }
@@ -119,6 +124,7 @@
             "licenses": [
               {
                 "license": {
+                  "bom-ref": "8a3893b3-9923-4adb-a1d3-47456636ba0a_license",
                   "id": "MIT"
                 }
               }
@@ -141,6 +147,7 @@
             "licenses": [
               {
                 "license": {
+                  "bom-ref": "28b2d8ce-def0-446f-a221-58dee0b44acc_license",
                   "id": "MIT"
                 }
               }
@@ -197,6 +204,7 @@
             "licenses": [
               {
                 "license": {
+                  "bom-ref": "ded1d73e-1fca-4302-b520-f1bc53979958_license",
                   "id": "MIT"
                 }
               }
@@ -307,13 +315,16 @@
       },
       "scope": "required",
       "supplier": {
+        "bom-ref": "OrganizationalEntity_cdx_my-specific-bom-ref-for-dings",
         "contact": [
           {
+            "bom-ref": "OrganizationalContact_ano_my-specific-bom-ref-for-dings",
             "email": "someone@somewhere.tld",
             "name": "A N Other",
             "phone": "+44 (0)1234 567890"
           },
           {
+            "bom-ref": "OrganizationalContact_ph_my-specific-bom-ref-for-dings",
             "email": "paul.horton@owasp.org",
             "name": "Paul Horton"
           }
@@ -340,6 +351,7 @@
     "licenses": [
       {
         "license": {
+          "bom-ref": "bom_license",
           "id": "Apache-2.0",
           "text": {
             "content": "VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=",
@@ -356,13 +368,16 @@
       }
     ],
     "manufacture": {
+      "bom-ref": "OrganizationalEntity_cdx_bom_manufacture",
       "contact": [
         {
+          "bom-ref": "OrganizationalContact_ano_bom_manufacture",
           "email": "someone@somewhere.tld",
           "name": "A N Other",
           "phone": "+44 (0)1234 567890"
         },
         {
+          "bom-ref": "OrganizationalContact_ph_bom_manufacture",
           "email": "paul.horton@owasp.org",
           "name": "Paul Horton"
         }
@@ -384,8 +399,10 @@
       }
     ],
     "supplier": {
+      "bom-ref": "OrganizationalEntity_cd_x_bom_supplier",
       "contact": [
         {
+          "bom-ref": "OrganizationalContact_ano_bom_supplier",
           "email": "someone@somewhere.tld",
           "name": "A N Other",
           "phone": "+44 (0)1234 567890"
