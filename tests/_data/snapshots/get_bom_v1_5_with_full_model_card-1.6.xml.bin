@@ -1,0 +1,167 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="machine-learning-model" bom-ref="ml-card-full">
+      <name>full-model-card-component</name>
+      <version>1.0.0</version>
+      <purl>pkg:pypi/full-model-card@1.0.0</purl>
+      <modelCard bom-ref="mc-full">
+        <modelParameters>
+          <approach>
+            <type>supervised</type>
+          </approach>
+          <task>text-classification</task>
+          <architectureFamily>Transformer</architectureFamily>
+          <modelArchitecture>tiny-transformer-v1</modelArchitecture>
+          <inputs>
+            <input>
+              <format>application/json</format>
+            </input>
+            <input>
+              <format>text/plain</format>
+            </input>
+          </inputs>
+          <outputs>
+            <output>
+              <format>confidence-score</format>
+            </output>
+            <output>
+              <format>label</format>
+            </output>
+          </outputs>
+        </modelParameters>
+        <quantitativeAnalysis>
+          <performanceMetrics>
+            <performanceMetric>
+              <type>accuracy</type>
+              <value>0.93</value>
+              <slice>all</slice>
+            </performanceMetric>
+            <performanceMetric>
+              <type>f1</type>
+              <value>0.88</value>
+              <slice>en</slice>
+            </performanceMetric>
+          </performanceMetrics>
+          <graphics>
+            <description>Performance plots</description>
+            <collection>
+              <graphic>
+                <name>pr-curve</name>
+                <image content-type="image/png" encoding="base64">ZnVsbC1tb2RlbC1jYXJkLWltYWdl</image>
+              </graphic>
+              <graphic>
+                <name>roc-curve</name>
+                <image content-type="image/png" encoding="base64">ZnVsbC1tb2RlbC1jYXJkLWltYWdl</image>
+              </graphic>
+            </collection>
+          </graphics>
+        </quantitativeAnalysis>
+        <considerations>
+          <users>
+            <user>ml-engineer</user>
+          </users>
+          <useCases>
+            <useCase>spam-detection</useCase>
+          </useCases>
+          <technicalLimitations>
+            <technicalLimitation>may misclassify non-standard language</technicalLimitation>
+          </technicalLimitations>
+          <performanceTradeoffs>
+            <performanceTradeoff>accuracy-over-speed</performanceTradeoff>
+          </performanceTradeoffs>
+          <ethicalConsiderations>
+            <ethicalConsideration>
+              <name>bias</name>
+              <mitigationStrategy>augment data and monitor drift</mitigationStrategy>
+            </ethicalConsideration>
+            <ethicalConsideration>
+              <name>privacy</name>
+              <mitigationStrategy>anonymize inputs and strip PII</mitigationStrategy>
+            </ethicalConsideration>
+          </ethicalConsiderations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders bom-ref="mc-energy-provider">
+                  <description>Primary renewable provider</description>
+                  <organization>
+                    <name>CycloneDX</name>
+                    <address>
+                      <country>GB</country>
+                      <region>England</region>
+                      <locality>Cheshire</locality>
+                      <streetAddress>100 Main Street</streetAddress>
+                    </address>
+                    <url>https://cyclonedx.org</url>
+                    <url>https://cyclonedx.org/docs</url>
+                    <contact>
+                      <name>A N Other</name>
+                      <email>someone@somewhere.tld</email>
+                      <phone>+44 (0)1234 567890</phone>
+                    </contact>
+                    <contact>
+                      <name>Paul Horton</name>
+                      <email>paul.horton@owasp.org</email>
+                    </contact>
+                  </organization>
+                  <energySource>wind</energySource>
+                  <energyProvided>
+                    <value>321.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                  <externalReferences>
+                    <reference type="distribution">
+                      <url>https://cyclonedx.org</url>
+                      <comment>No comment</comment>
+                      <hashes>
+                        <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
+                      </hashes>
+                    </reference>
+                  </externalReferences>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>42.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+                <co2CostEquivalent>
+                  <value>0.7</value>
+                  <unit>tCO2eq</unit>
+                </co2CostEquivalent>
+                <co2CostOffset>
+                  <value>0.2</value>
+                  <unit>tCO2eq</unit>
+                </co2CostOffset>
+                <properties>
+                  <property name="phase">pretraining</property>
+                </properties>
+              </energyConsumption>
+            </energyConsumptions>
+            <properties>
+              <property name="footprint">low</property>
+            </properties>
+          </environmentalConsiderations>
+          <fairnessAssessments>
+            <fairnessAssessment>
+              <groupAtRisk>non-native speakers</groupAtRisk>
+              <benefits>faster responses</benefits>
+              <harms>potential false positives</harms>
+              <mitigationStrategy>rebalance dataset and track metrics</mitigationStrategy>
+            </fairnessAssessment>
+          </fairnessAssessments>
+        </considerations>
+      </modelCard>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="ml-card-full"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
