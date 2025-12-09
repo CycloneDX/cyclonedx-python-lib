@@ -45,6 +45,7 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
         # only latest schema will have all data populated in serialized form
         snapshot_name = mksname(get_bom, _LATEST_SCHEMA, OutputFormat.XML)
         expected = get_bom()
+        self._apply_xml_only_workarounds(expected)
         with open(self.getSnapshotFile(snapshot_name)) as s:
             bom = Bom.from_xml(s)
         self.assertBomDeepEqual(expected, bom,
@@ -57,3 +58,30 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
         with open(xml_file) as f:
             bom: Bom = Bom.from_xml(f)  # <<< is expected to not crash
         self.assertIsNotNone(bom)
+
+    @classmethod
+    def _apply_xml_only_workarounds(cls, bom: Bom) -> None:
+        """Adjust expected BOM for known XML serialization gaps (spec issue #726)."""
+        cls._strip_model_card_properties(bom)
+
+    @classmethod
+    def _strip_model_card_properties(cls, bom: Bom) -> None:
+        # ModelCard.properties are currently omitted from XML output until spec issue #726 is resolved.
+        # To keep the XML deserialize snapshot test accurate, remove those properties from the expected BOM.
+        for component in bom.components:
+            cls._strip_component_model_card_properties(component)
+
+        metadata_component = getattr(bom.metadata, 'component', None)
+        if metadata_component is not None:
+            cls._strip_component_model_card_properties(metadata_component)
+
+    @classmethod
+    def _strip_component_model_card_properties(cls, component: Any) -> None:
+        model_card = getattr(component, 'model_card', None)
+        if model_card is not None and getattr(model_card, 'properties', None):
+            model_card.properties = []
+
+        sub_components = getattr(component, 'components', None)
+        if sub_components:
+            for child in sub_components:
+                cls._strip_component_model_card_properties(child)

@@ -1,0 +1,217 @@
+{
+  "components": [
+    {
+      "bom-ref": "ml-card-full",
+      "modelCard": {
+        "bom-ref": "mc-full",
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 42.0
+                },
+                "co2CostEquivalent": {
+                  "unit": "tCO2eq",
+                  "value": 0.7
+                },
+                "co2CostOffset": {
+                  "unit": "tCO2eq",
+                  "value": 0.2
+                },
+                "energyProviders": [
+                  {
+                    "bom-ref": "mc-energy-provider",
+                    "description": "Primary renewable provider",
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 321.0
+                    },
+                    "energySource": "wind",
+                    "externalReferences": [
+                      {
+                        "comment": "No comment",
+                        "hashes": [
+                          {
+                            "alg": "SHA-256",
+                            "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+                          }
+                        ],
+                        "type": "distribution",
+                        "url": "https://cyclonedx.org"
+                      }
+                    ],
+                    "organization": {
+                      "address": {
+                        "country": "GB",
+                        "locality": "Cheshire",
+                        "region": "England",
+                        "streetAddress": "100 Main Street"
+                      },
+                      "contact": [
+                        {
+                          "email": "someone@somewhere.tld",
+                          "name": "A N Other",
+                          "phone": "+44 (0)1234 567890"
+                        },
+                        {
+                          "email": "paul.horton@owasp.org",
+                          "name": "Paul Horton"
+                        }
+                      ],
+                      "name": "CycloneDX",
+                      "url": [
+                        "https://cyclonedx.org",
+                        "https://cyclonedx.org/docs"
+                      ]
+                    }
+                  }
+                ],
+                "properties": [
+                  {
+                    "name": "phase",
+                    "value": "pretraining"
+                  }
+                ]
+              }
+            ],
+            "properties": [
+              {
+                "name": "footprint",
+                "value": "low"
+              }
+            ]
+          },
+          "ethicalConsiderations": [
+            {
+              "mitigationStrategy": "augment data and monitor drift",
+              "name": "bias"
+            },
+            {
+              "mitigationStrategy": "anonymize inputs and strip PII",
+              "name": "privacy"
+            }
+          ],
+          "fairnessAssessments": [
+            {
+              "benefits": "faster responses",
+              "groupAtRisk": "non-native speakers",
+              "harms": "potential false positives",
+              "mitigationStrategy": "rebalance dataset and track metrics"
+            }
+          ],
+          "performanceTradeoffs": [
+            "accuracy-over-speed"
+          ],
+          "technicalLimitations": [
+            "may misclassify non-standard language"
+          ],
+          "useCases": [
+            "spam-detection"
+          ],
+          "users": [
+            "ml-engineer"
+          ]
+        },
+        "modelParameters": {
+          "approach": {
+            "type": "supervised"
+          },
+          "architectureFamily": "Transformer",
+          "inputs": [
+            {
+              "format": "application/json"
+            },
+            {
+              "format": "text/plain"
+            }
+          ],
+          "modelArchitecture": "tiny-transformer-v1",
+          "outputs": [
+            {
+              "format": "confidence-score"
+            },
+            {
+              "format": "label"
+            }
+          ],
+          "task": "text-classification"
+        },
+        "properties": [
+          {
+            "name": "owner",
+            "value": "ml-team"
+          },
+          {
+            "name": "release",
+            "value": "2024-01-01"
+          }
+        ],
+        "quantitativeAnalysis": {
+          "graphics": {
+            "collection": [
+              {
+                "image": {
+                  "content": "ZnVsbC1tb2RlbC1jYXJkLWltYWdl",
+                  "contentType": "image/png",
+                  "encoding": "base64"
+                },
+                "name": "pr-curve"
+              },
+              {
+                "image": {
+                  "content": "ZnVsbC1tb2RlbC1jYXJkLWltYWdl",
+                  "contentType": "image/png",
+                  "encoding": "base64"
+                },
+                "name": "roc-curve"
+              }
+            ],
+            "description": "Performance plots"
+          },
+          "performanceMetrics": [
+            {
+              "slice": "all",
+              "type": "accuracy",
+              "value": "0.93"
+            },
+            {
+              "slice": "en",
+              "type": "f1",
+              "value": "0.88"
+            }
+          ]
+        }
+      },
+      "name": "full-model-card-component",
+      "purl": "pkg:pypi/full-model-card@1.0.0",
+      "type": "machine-learning-model",
+      "version": "1.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "ml-card-full"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

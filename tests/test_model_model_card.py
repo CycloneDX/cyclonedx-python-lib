@@ -15,6 +15,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+import json as _json
+import xml.etree.ElementTree as ElementTree  # nosec B405
 from unittest import TestCase
 from warnings import warn
 
@@ -200,11 +202,14 @@ class TestModelCardOnComponent(TestCase):
             ),
             quantitative_analysis=graphics,
             considerations=Considerations(
-                users=['ml-engineer'],
-                use_cases=['topic-grouping'],
-                technical_limitations=['small-context'],
-                performance_tradeoffs=['speed-over-accuracy'],
+                users=['ml-engineer', 'data-scientist'],
+                use_cases=['topic-grouping', 'anomaly-detection'],
+                technical_limitations=['small-context', 'limited-training-data'],
+                performance_tradeoffs=['speed-over-accuracy', 'low-memory-footprint'],
             ),
+            # Test properties serialization via custom helper
+            # due to json-xml asymmetry in spec (see model_card.py)
+            properties=[Property(name='release', value='2024-01-01')],
         )
 
         # Add rich environmental considerations
@@ -233,6 +238,8 @@ class TestModelCardOnComponent(TestCase):
             ],
             properties=[Property(name='footprint', value='low')],
         )
+        # Currently users, use_cases, technical_limitations, performance_tradeoffs can only contain one string each
+        # in the xml specification. This will be addressed in spec issue #737.
         mc.considerations = Considerations(
             users=['ml-engineer'],
             use_cases=['topic-grouping'],
@@ -259,6 +266,16 @@ class TestModelCardOnComponent(TestCase):
         self.assertIn('"energyProviders"', json)
         self.assertIn('"bom-ref": "prov-1"', json)
 
+        # Verify JSON/XML asymmetry for modelCard.properties
+        # Assert JSON contains modelCard.properties (array of objects)
+        j = _json.loads(json)
+        self.assertIn('components', j)
+        self.assertGreaterEqual(len(j['components']), 1)
+        mc_json = j['components'][0].get('modelCard', {})
+        self.assertIn('properties', mc_json)
+        self.assertIsInstance(mc_json['properties'], list)
+        self.assertIn({'name': 'release', 'value': '2024-01-01'}, mc_json['properties'])
+
         # XML 1.7
         xml = XML_BY_SCHEMA_VERSION[SchemaVersion.V1_7](bom).output_as_string(indent=2)
         try:
@@ -272,6 +289,17 @@ class TestModelCardOnComponent(TestCase):
         self.assertIn('<environmentalConsiderations>', xml)
         self.assertIn('<energyProviders ', xml)
         self.assertIn('bom-ref="prov-1"', xml)
+
+        # XML omits properties under <modelCard>, nested ones remain
+        root = ElementTree.fromstring(xml)  # nosec B314
+        ns = {'bom': 'http://cyclonedx.org/schema/bom/1.7'}
+        model_card_e = root.find('.//bom:modelCard', ns)
+        self.assertIsNotNone(model_card_e)
+        # No direct <properties> child under modelCard (JSON/XML asymmetry workaround)
+        self.assertIsNone(model_card_e.find('bom:properties', ns))
+        # But nested properties (e.g., under environmentalConsiderations) do exist
+        env_props = root.findall('.//bom:environmentalConsiderations/bom:properties', ns)
+        self.assertGreaterEqual(len(env_props), 1)
 
 
 class TestModelCardValueObjects(TestCase):
