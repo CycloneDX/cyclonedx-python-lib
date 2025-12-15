@@ -25,8 +25,8 @@ import os
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Mapping
 from itertools import chain
-from random import random
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
+from uuid import uuid4
 
 from ..schema import OutputFormat, SchemaVersion
 
@@ -166,7 +166,7 @@ class BomRefDiscriminator:
             bomref.value = original_value
 
     def _make_unique(self) -> str:
-        return f'{self._prefix}{str(random())[1:]}{str(random())[1:]}'  # nosec B311
+        return f'{self._prefix}.{uuid4().int}.{uuid4().int}'
 
     @classmethod
     def from_bom(cls, bom: 'Bom', prefix: str = 'BomRef') -> 'BomRefDiscriminator':

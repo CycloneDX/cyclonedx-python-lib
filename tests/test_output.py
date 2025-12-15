@@ -76,3 +76,8 @@ class TestBomRefDiscriminator(TestCase):
         discr.reset()
         self.assertEqual('djdlkfjdslkf', bomref1.value)
         self.assertEqual('djdlkfjdslkf', bomref2.value)
+
+    def test_make_unique_generates_integers(self) -> None:
+        discr = BomRefDiscriminator([])
+        for _ in range(1000):
+            self.assertRegex(discr._make_unique(), r'^BomRef\.\d+\.\d+$')
