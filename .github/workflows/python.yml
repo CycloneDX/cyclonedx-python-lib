@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v6
@@ -57,7 +57,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v6
@@ -81,7 +81,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v6
@@ -105,7 +105,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v6
@@ -141,7 +141,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v6
@@ -180,23 +180,10 @@ jobs:
           - "-allExtras"
           - "-noExtras"
         exclude:
-          - os: macos-latest
+          - os: macos-latest  # macos-latest is incompatible with some PY versions
             python-version: "3.10"
-          - os: macos-latest
+          - os: macos-latest  # macos-latest is incompatible with some PY versions
             python-version: "3.9"
-        include:
-          - os: macos-13
-            python-version: "3.10"
-            toxenv-factors: "-allExtras"
-          - os: macos-13
-            python-version: "3.10"
-            toxenv-factors: "-noExtras"
-          - os: macos-13
-            python-version: "3.9"
-            toxenv-factors: "-allExtras"
-          - os: macos-13
-            python-version: "3.9"
-            toxenv-factors: "-noExtras"
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
@@ -204,7 +191,7 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Create reports directory
         run: mkdir ${{ env.REPORTS_DIR }}
       - name: Setup Python Environment
@@ -239,7 +226,7 @@ jobs:
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.TESTS_REPORTS_ARTIFACT }}-${{ matrix.os }}-py${{ matrix.python-version }}${{ matrix.toxenv-factors }}
           path: ${{ env.REPORTS_DIR }}
@@ -253,7 +240,7 @@ jobs:
     steps:
       - name: fetch test artifacts
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: ${{ env.REPORTS_DIR }}
           pattern: ${{ env.TESTS_REPORTS_ARTIFACT }}-*
@@ -282,7 +269,7 @@ jobs:
     steps:
       - name: Checkout
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v6

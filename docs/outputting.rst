@@ -30,11 +30,14 @@ Supported CycloneDX Schema Versions
 
 This library supports the following schema versions:
 
+* 1.7 (XML, JSON) - the latest supported schema version
+* 1.6 (XML, JSON)
+* 1.5 (XML, JSON)
+* 1.4 (XML, JSON)
+* 1.3 (XML, JSON)
+* 1.2 (XML, JSON)
 * 1.0 (XML) - `(note, 1.1 schema version has no support for JSON)`
 * 1.1 (XML) - `(note, 1.1 schema version has no support for JSON)`
-* 1.2 (XML, JSON)
-* 1.3 (XML, JSON)
-* 1.4 (XML, JSON) - the latest supported schema version
 
 Outputting to JSON
 ------------------

@@ -15,74 +15,33 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from typing import TYPE_CHECKING, Optional
+"""
+.. deprecated:: next
+"""
 
-from ..exception.factory import InvalidLicenseExpressionException, InvalidSpdxLicenseException
-from ..model.license import DisjunctiveLicense, LicenseExpression
-from ..spdx import fixup_id as spdx_fixup, is_expression as is_spdx_expression
+__all__ = ['LicenseFactory']
 
-if TYPE_CHECKING:  # pragma: no cover
-    from ..model import AttachedText, XsUri
-    from ..model.license import License, LicenseAcknowledgement
+import sys
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
+
+from ..contrib.license.factories import LicenseFactory as _LicenseFactory
+
+# region deprecated re-export
 
 
-class LicenseFactory:
-    """Factory for :class:`cyclonedx.model.license.License`."""
+@deprecated('Deprecated re-export location - see docstring of "LicenseFactory" for details.')
+class LicenseFactory(_LicenseFactory):
+    """Deprecated — Alias of :class:`cyclonedx.contrib.license.factories.LicenseFactory`.
 
-    def make_from_string(self, value: str, *,
-                         license_text: Optional['AttachedText'] = None,
-                         license_url: Optional['XsUri'] = None,
-                         license_acknowledgement: Optional['LicenseAcknowledgement'] = None
-                         ) -> 'License':
-        """Make a :class:`cyclonedx.model.license.License` from a string."""
-        try:
-            return self.make_with_id(value,
-                                     text=license_text,
-                                     url=license_url,
-                                     acknowledgement=license_acknowledgement)
-        except InvalidSpdxLicenseException:
-            pass
-        try:
-            return self.make_with_expression(value,
-                                             acknowledgement=license_acknowledgement)
-        except InvalidLicenseExpressionException:
-            pass
-        return self.make_with_name(value,
-                                   text=license_text,
-                                   url=license_url,
-                                   acknowledgement=license_acknowledgement)
+    .. deprecated:: next
+        This re-export location is deprecated.
+        Use ``from cyclonedx.contrib.license.factories import LicenseFactory`` instead.
+        The exported symbol itself is NOT deprecated — only this import path.
+    """
+    pass
 
-    def make_with_expression(self, expression: str, *,
-                             acknowledgement: Optional['LicenseAcknowledgement'] = None
-                             ) -> LicenseExpression:
-        """Make a :class:`cyclonedx.model.license.LicenseExpression` with a compound expression.
-
-        Utilizes :func:`cyclonedx.spdx.is_expression`.
-
-        :raises InvalidLicenseExpressionException: if param `value` is not known/supported license expression
-        """
-        if is_spdx_expression(expression):
-            return LicenseExpression(expression, acknowledgement=acknowledgement)
-        raise InvalidLicenseExpressionException(expression)
-
-    def make_with_id(self, spdx_id: str, *,
-                     text: Optional['AttachedText'] = None,
-                     url: Optional['XsUri'] = None,
-                     acknowledgement: Optional['LicenseAcknowledgement'] = None
-                     ) -> DisjunctiveLicense:
-        """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` from an SPDX-ID.
-
-        :raises InvalidSpdxLicenseException: if param `spdx_id` was not known/supported SPDX-ID
-        """
-        spdx_license_id = spdx_fixup(spdx_id)
-        if spdx_license_id is None:
-            raise InvalidSpdxLicenseException(spdx_id)
-        return DisjunctiveLicense(id=spdx_license_id, text=text, url=url, acknowledgement=acknowledgement)
-
-    def make_with_name(self, name: str, *,
-                       text: Optional['AttachedText'] = None,
-                       url: Optional['XsUri'] = None,
-                       acknowledgement: Optional['LicenseAcknowledgement'] = None
-                       ) -> DisjunctiveLicense:
-        """Make a :class:`cyclonedx.model.license.DisjunctiveLicense` with a name."""
-        return DisjunctiveLicense(name=name, text=text, url=url, acknowledgement=acknowledgement)
+# endregion deprecated re-export
