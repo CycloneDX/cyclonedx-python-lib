@@ -97,12 +97,15 @@ flake8-use-fstring = "1.4"
 pep8-naming = "0.15.1"
 isort = "6.1.0"
 autopep8 = "2.3.2"
-mypy = "1.19.0"
+mypy = "1.19.1"
 tomli = { version = "2.3.0", python = "<3.11" }
 tox = "4.30.3"
 xmldiff = "2.7.0"
 bandit = "1.8.6"
-pyupgrade = "3.21.0"
+pyupgrade = [
+  { version = "3.21.0", python = "<3.10" },
+  { version = "3.21.2", python = ">=3.10" },
+]
 deptry = "0.23.1"
 # for tests, use the GPL-version of jsonschema format validators - they are faster
 jsonschema = { version = "*", extras = ["format"], optional=true }
