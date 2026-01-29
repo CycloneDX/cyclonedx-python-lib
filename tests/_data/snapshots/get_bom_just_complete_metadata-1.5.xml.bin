@@ -8,27 +8,27 @@
       </lifecycle>
     </lifecycles>
     <authors>
-      <author>
+      <author bom-ref="OrganizationalContact_ano_bom_authors">
         <name>A N Other</name>
         <email>someone@somewhere.tld</email>
         <phone>+44 (0)1234 567890</phone>
       </author>
-      <author>
+      <author bom-ref="OrganizationalContact_ph_bom_authors">
         <name>Paul Horton</name>
         <email>paul.horton@owasp.org</email>
       </author>
     </authors>
     <component type="library" bom-ref="my-specific-bom-ref-for-dings">
-      <supplier>
+      <supplier bom-ref="OrganizationalEntity_cdx_my-specific-bom-ref-for-dings">
         <name>CycloneDX</name>
         <url>https://cyclonedx.org</url>
         <url>https://cyclonedx.org/docs</url>
-        <contact>
+        <contact bom-ref="OrganizationalContact_ano_my-specific-bom-ref-for-dings">
           <name>A N Other</name>
           <email>someone@somewhere.tld</email>
           <phone>+44 (0)1234 567890</phone>
         </contact>
-        <contact>
+        <contact bom-ref="OrganizationalContact_ph_my-specific-bom-ref-for-dings">
           <name>Paul Horton</name>
           <email>paul.horton@owasp.org</email>
         </contact>
@@ -40,7 +40,7 @@
       <description>This component is awesome</description>
       <scope>required</scope>
       <licenses>
-        <license>
+        <license bom-ref="my-specific-bom-ref-for-dings_license">
           <id>MIT</id>
         </license>
       </licenses>
@@ -57,7 +57,7 @@
             <name>setuptools</name>
             <version>50.3.2</version>
             <licenses>
-              <license>
+              <license bom-ref="ccc8d7ee-4b9c-4750-aee0-a72585152291_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -67,7 +67,7 @@
             <author>Test Author</author>
             <name>setuptools</name>
             <licenses>
-              <license>
+              <license bom-ref="8a3893b3-9923-4adb-a1d3-47456636ba0a_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -79,7 +79,7 @@
             <author>Test Author</author>
             <name>setuptools</name>
             <licenses>
-              <license>
+              <license bom-ref="28b2d8ce-def0-446f-a221-58dee0b44acc_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -109,7 +109,7 @@
             <name>setuptools</name>
             <version>50.3.2</version>
             <licenses>
-              <license>
+              <license bom-ref="ded1d73e-1fca-4302-b520-f1bc53979958_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -168,7 +168,7 @@
           <name>setuptools</name>
           <version>50.3.2</version>
           <licenses>
-            <license>
+            <license bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz_license">
               <id>MIT</id>
             </license>
           </licenses>
@@ -243,31 +243,31 @@
         </properties>
       </releaseNotes>
     </component>
-    <manufacture>
+    <manufacture bom-ref="OrganizationalEntity_cdx_bom_manufacture">
       <name>CycloneDX</name>
       <url>https://cyclonedx.org</url>
       <url>https://cyclonedx.org/docs</url>
-      <contact>
+      <contact bom-ref="OrganizationalContact_ano_bom_manufacture">
         <name>A N Other</name>
         <email>someone@somewhere.tld</email>
         <phone>+44 (0)1234 567890</phone>
       </contact>
-      <contact>
+      <contact bom-ref="OrganizationalContact_ph_bom_manufacture">
         <name>Paul Horton</name>
         <email>paul.horton@owasp.org</email>
       </contact>
     </manufacture>
-    <supplier>
+    <supplier bom-ref="OrganizationalEntity_cd_x_bom_supplier">
       <name>Cyclone DX</name>
       <url>https://cyclonedx.org/</url>
-      <contact>
+      <contact bom-ref="OrganizationalContact_ano_bom_supplier">
         <name>A N Other</name>
         <email>someone@somewhere.tld</email>
         <phone>+44 (0)1234 567890</phone>
       </contact>
     </supplier>
     <licenses>
-      <license>
+      <license bom-ref="bom_license">
         <id>Apache-2.0</id>
         <text content-type="text/plain" encoding="base64">VGVzdCBjb250ZW50IC0gdGhpcyBpcyBub3QgdGhlIEFwYWNoZSAyLjAgbGljZW5zZSE=</text>
         <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
