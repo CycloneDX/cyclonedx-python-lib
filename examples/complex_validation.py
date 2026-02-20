@@ -17,9 +17,7 @@
 
 import json
 import sys
-from typing import TYPE_CHECKING
-
-from lxml import etree  # type: ignore[import-untyped]
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
@@ -136,40 +134,44 @@ print('\n' + '=' * 30 + '\n')
 print('--- Dynamic Validation ---')
 
 
-def _detect_json_format(raw_data: str) -> tuple[OutputFormat, SchemaVersion] | None:
+def _detect_json_format(raw_data: str) -> 'Optional[Tuple[OutputFormat, SchemaVersion]]':
     """Detect JSON format and extract schema version."""
     try:
         data = json.loads(raw_data)
-        spec_version_str = data.get('specVersion')
-        if not spec_version_str:
-            print('Error: Missing specVersion in JSON SBOM', file=sys.stderr)
-            return None
-        schema_version = SchemaVersion.from_version(spec_version_str)
-        return (OutputFormat.JSON, schema_version)
-    except (json.JSONDecodeError, ValueError):
+    except json.JSONDecodeError:
         return None
 
+    spec_version_str = data.get('specVersion')
+    try:
+        schema_version = SchemaVersion.from_version(spec_version_str)
+    except Exception:
+        print('failed to detect schema_version from', repr(spec_version_str), file=sys.stderr)
+        return None
+    return (OutputFormat.JSON, schema_version)
 
-def _detect_xml_format(raw_data: str) -> tuple[OutputFormat, SchemaVersion] | None:
-    """Detect XML format and extract schema version."""
+
+def _detect_xml_format(raw_data: str) -> 'Optional[Tuple[OutputFormat, SchemaVersion]]':
+    try:
+        from lxml import etree  # type: ignore[import-untyped]
+    except ImportError:
+        return None
+
     try:
         xml_tree = etree.fromstring(raw_data.encode('utf-8'))
-        # Extract version from CycloneDX namespace
-        schema_version = SchemaVersion.V1_5  # Default
-        for ns in xml_tree.nsmap.values():
-            if ns and ns.startswith('http://cyclonedx.org/schema/bom/'):
-                try:
-                    schema_version = SchemaVersion.from_version(ns.split('/')[-1])
-                    break
-                except ValueError:
-                    pass
-        return (OutputFormat.XML, schema_version)
     except etree.XMLSyntaxError:
-        print('Error: Unknown or malformed SBOM format', file=sys.stderr)
         return None
-    except Exception as e:
-        print(f'Error: Format detection failed: {e}', file=sys.stderr)
-        return None
+
+    for ns in xml_tree.nsmap.values():
+        if ns and ns.startswith('http://cyclonedx.org/schema/bom/'):
+            version_str = ns.split('/')[-1]
+            try:
+                return (OutputFormat.XML, SchemaVersion.from_version(version_str))
+            except Exception:
+                print('failed to detect schema_version from namespace', repr(ns), file=sys.stderr)
+                return None
+
+    print('failed to detect CycloneDX namespace in XML document', file=sys.stderr)
+    return None
 
 
 def validate_sbom(raw_data: str) -> bool:
@@ -180,22 +182,17 @@ def validate_sbom(raw_data: str) -> bool:
         return False
 
     input_format, schema_version = format_info
-
-    # Perform validation
     try:
         validator = make_schemabased_validator(input_format, schema_version)
         errors = validator.validate_str(raw_data)
-
         if errors:
-            print(f'Validation failed for {input_format.name} version {schema_version.to_version()}', file=sys.stderr)
-            print(f'Reason: {errors}', file=sys.stderr)
+            print(f'Validation failed ({input_format.name} {schema_version.to_version()}): {errors}',
+                  file=sys.stderr)
             return False
-
-        print(f'Successfully validated {input_format.name} SBOM (Version {schema_version.to_version()})')
+        print(f'Valid {input_format.name} SBOM (schema {schema_version.to_version()})')
         return True
-
-    except MissingOptionalDependencyException as error:
-        print(f'Validation skipped due to missing dependencies: {error}')
+    except MissingOptionalDependencyException as e:
+        print(f'Validation skipped (missing dependencies): {e}')
         return False
 
 
