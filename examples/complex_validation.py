@@ -17,7 +17,7 @@
 
 import json
 import sys
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
@@ -83,9 +83,12 @@ print('--- JSON Validation ---')
 # Create a JSON validator for a specific schema version
 json_validator: 'JsonValidator' = make_schemabased_validator(OutputFormat.JSON, SchemaVersion.V1_5)
 
+# 1. Validate valid SBOM
 try:
-    # 1. Validate valid SBOM
     validation_errors = json_validator.validate_str(JSON_SBOM)
+except MissingOptionalDependencyException as error:
+    print('JSON validation was skipped:', error)
+else:
     if validation_errors:
         print('JSON SBOM is unexpectedly invalid!', file=sys.stderr)
     else:
@@ -93,14 +96,16 @@ try:
 
     # 2. Validate invalid SBOM and inspect details
     print('\nChecking invalid JSON SBOM...')
-    validation_errors = json_validator.validate_str(INVALID_JSON_SBOM)
-    if validation_errors:
-        print('Validation failed as expected.')
-        print(f'Error Message: {validation_errors.data.message}')
-        print(f'JSON Path:     {validation_errors.data.json_path}')
-        print(f'Invalid Data:  {validation_errors.data.instance}')
-except MissingOptionalDependencyException as error:
-    print('JSON validation was skipped:', error)
+    try:
+        validation_errors = json_validator.validate_str(INVALID_JSON_SBOM)
+    except MissingOptionalDependencyException as error:
+        print('JSON validation was skipped:', error)
+    else:
+        if validation_errors:
+            print('Validation failed as expected.')
+            print(f'Error Message: {validation_errors.data.message}')
+            print(f'JSON Path:     {validation_errors.data.json_path}')
+            print(f'Invalid Data:  {validation_errors.data.instance}')
 
 # endregion JSON Validation
 
@@ -134,7 +139,7 @@ print('\n' + '=' * 30 + '\n')
 print('--- Dynamic Validation ---')
 
 
-def _detect_json_format(raw_data: str) -> Optional[Tuple[OutputFormat, SchemaVersion]]:
+def _detect_json_format(raw_data: str) -> Optional[tuple[OutputFormat, SchemaVersion]]:
     """Detect JSON format and extract schema version."""
     try:
         data = json.loads(raw_data)
@@ -150,7 +155,7 @@ def _detect_json_format(raw_data: str) -> Optional[Tuple[OutputFormat, SchemaVer
     return (OutputFormat.JSON, schema_version)
 
 
-def _detect_xml_format(raw_data: str) -> Optional[Tuple[OutputFormat, SchemaVersion]]:
+def _detect_xml_format(raw_data: str) -> Optional[tuple[OutputFormat, SchemaVersion]]:
     try:
         from lxml import etree  # type: ignore[import-untyped]
     except ImportError:
