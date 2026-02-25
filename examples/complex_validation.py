@@ -134,7 +134,7 @@ print('\n' + '=' * 30 + '\n')
 print('--- Dynamic Validation ---')
 
 
-def _detect_json_format(raw_data: str) -> 'Optional[Tuple[OutputFormat, SchemaVersion]]':
+def _detect_json_format(raw_data: str) -> Optional[Tuple[OutputFormat, SchemaVersion]]:
     """Detect JSON format and extract schema version."""
     try:
         data = json.loads(raw_data)
