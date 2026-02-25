@@ -150,7 +150,7 @@ def _detect_json_format(raw_data: str) -> 'Optional[Tuple[OutputFormat, SchemaVe
     return (OutputFormat.JSON, schema_version)
 
 
-def _detect_xml_format(raw_data: str) -> 'Optional[Tuple[OutputFormat, SchemaVersion]]':
+def _detect_xml_format(raw_data: str) -> Optional[Tuple[OutputFormat, SchemaVersion]]:
     try:
         from lxml import etree  # type: ignore[import-untyped]
     except ImportError:
