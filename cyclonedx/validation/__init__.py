@@ -18,7 +18,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, Union, overload
+from typing import TYPE_CHECKING, Literal, Optional, Protocol, Union, overload
 
 from ..schema import OutputFormat
 
@@ -29,22 +29,20 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class ValidationError:
-    """Validation failed with this specific error.
+    """Validation failed with this specific error. """
 
-    Use :attr:`~data` to access the content.
-    """
+    def __init__(self, message: str) -> None:
+        self._message = message
 
-    data: Any
-    """Raw error data from one of the underlying validation methods."""
-
-    def __init__(self, data: Any) -> None:
-        self.data = data
+    @property
+    def message(self) -> str:
+        return self._message
 
     def __repr__(self) -> str:
-        return repr(self.data)
+        return f'<{self.__class__.__qualname__} {self._message!r}>'
 
     def __str__(self) -> str:
-        return str(self.data)
+        return self._message
 
 
 class SchemabasedValidator(Protocol):
