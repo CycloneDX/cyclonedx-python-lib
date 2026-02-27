@@ -29,3 +29,11 @@ Complex Deserialize
 .. literalinclude:: ../examples/complex_deserialize.py
   :language: python
   :linenos:
+
+
+Complex Validation
+------------------
+
+.. literalinclude:: ../examples/complex_validation.py
+  :language: python
+  :linenos:
