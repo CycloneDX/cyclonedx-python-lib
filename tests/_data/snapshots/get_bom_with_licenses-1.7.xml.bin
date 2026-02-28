@@ -32,6 +32,20 @@
         <expression acknowledgement="concluded">Apache-2.0 OR MIT</expression>
       </licenses>
     </component>
+    <component type="library" bom-ref="C4">
+      <name>c-with-expression-details</name>
+      <licenses>
+        <expression-detailed acknowledgement="declared" expression="GPL-3.0-or-later OR GPL-2.0">
+          <details bom-ref="some-bomref-1234" license-identifier="GPL-2.0">
+            <text content-type="text/plain">specific GPL-2.0 license text</text>
+          </details>
+          <details license-identifier="GPL-3.0-or-later">
+            <text content-type="text/plain">specific GPL-3.0-or-later license text</text>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          </details>
+        </expression-detailed>
+      </licenses>
+    </component>
     <component type="library" bom-ref="C3">
       <name>c-with-name</name>
       <licenses>
@@ -80,6 +94,7 @@
     <dependency ref="C1"/>
     <dependency ref="C2"/>
     <dependency ref="C3"/>
+    <dependency ref="C4"/>
     <dependency ref="S1"/>
     <dependency ref="S2"/>
     <dependency ref="S3"/>
