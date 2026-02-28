@@ -31,9 +31,7 @@ class TestComponent(TestCase):
 
     def test_purl_correct(self) -> None:
         self.assertEqual(
-            PackageURL(
-                type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-            ),
+            'pkg:pypi/setuptools@50.3.2?extension=tar.gz',
             get_component_setuptools_simple().purl
         )
 
@@ -72,5 +70,12 @@ class TestComponent(TestCase):
         purl = PackageURL(
             type='generic', name='fixtures/bom_setuptools.xml', version=expected_version
         )
-        self.assertEqual(c.purl, purl)
+        self.assertEqual(c.purl, str(purl))
         self.assertEqual(len(c.hashes), 1)
+
+
+    def test_purl_casted_to_string(self) -> None:
+        purl = PackageURL(type='pypi', name='example', version='1.2.3')
+        component = Component(name='example', purl=purl)
+
+        self.assertEqual(component.purl, str(purl))
