@@ -18,18 +18,14 @@
 
 from typing import TYPE_CHECKING, Any, Optional
 
-import py_serializable as serializable
-
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 
 if TYPE_CHECKING:  # pragma: no cover
     from typing import TypeVar
-
     _T_BR = TypeVar('_T_BR', bound='BomRef')
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class BomRef(serializable.helpers.BaseHelper):
+class BomRef:
     """
     An identifier that can be used to reference objects elsewhere in the BOM.
 
@@ -40,11 +36,10 @@ class BomRef(serializable.helpers.BaseHelper):
     """
 
     def __init__(self, value: Optional[str] = None) -> None:
-        self.value = value
+        # empty strings become `None`
+        self._value = value or None
 
     @property
-    @serializable.json_name('.')
-    @serializable.xml_name('.')
     def value(self) -> Optional[str]:
         return self._value
 
@@ -80,8 +75,6 @@ class BomRef(serializable.helpers.BaseHelper):
     def __bool__(self) -> bool:
         return self._value is not None
 
-    # region impl BaseHelper
-
     @classmethod
     def serialize(cls, o: Any) -> Optional[str]:
         if isinstance(o, cls):
@@ -97,5 +90,3 @@ class BomRef(serializable.helpers.BaseHelper):
             raise CycloneDxDeserializationException(
                 f'BomRef string supplied does not parse: {o!r}'
             ) from err
-
-    # endregion impl BaseHelper

@@ -1,58 +1,63 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
+      "name": "TLS",
+      "type": "cryptographic-asset",
       "bom-ref": "26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec",
+      "version": "v1.3",
       "cryptoProperties": {
         "assetType": "protocol",
-        "oid": "an-oid-here",
         "protocolProperties": {
+          "type": "tls",
+          "version": "1.3",
           "cipherSuites": [
             {
+              "name": "TLS_AES_128_CCM_8_SHA256",
               "identifiers": [
                 "TLS_AES_128_CCM_8_SHA256"
-              ],
-              "name": "TLS_AES_128_CCM_8_SHA256"
+              ]
             },
             {
+              "name": "TLS_AES_128_CCM_SHA256",
               "identifiers": [
                 "TLS_AES_128_CCM_SHA256"
-              ],
-              "name": "TLS_AES_128_CCM_SHA256"
+              ]
             },
             {
+              "name": "TLS_AES_128_GCM_SHA256",
               "identifiers": [
                 "TLS_AES_128_GCM_SHA256"
-              ],
-              "name": "TLS_AES_128_GCM_SHA256"
+              ]
             },
             {
+              "name": "TLS_AES_256_GCM_SHA384",
               "identifiers": [
                 "TLS_AES_256_GCM_SHA384"
-              ],
-              "name": "TLS_AES_256_GCM_SHA384"
+              ]
             },
             {
+              "name": "TLS_CHACHA20_POLY1305_SHA256",
               "identifiers": [
                 "TLS_CHACHA20_POLY1305_SHA256"
-              ],
-              "name": "TLS_CHACHA20_POLY1305_SHA256"
+              ]
             }
           ],
           "cryptoRefArray": [
             "for-test-1",
             "for-test-2"
-          ],
-          "type": "tls",
-          "version": "1.3"
-        }
+          ]
+        },
+        "oid": "an-oid-here"
       },
-      "name": "TLS",
       "tags": [
         "protocl",
         "tls"
-      ],
-      "type": "cryptographic-asset",
-      "version": "v1.3"
+      ]
     }
   ],
   "dependencies": [
@@ -60,9 +65,6 @@
       "ref": "26b1ce0f-bec6-4bfe-9db1-03b75a4ed1ec"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -73,8 +75,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7"

@@ -1,12 +1,38 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "services": [
+    {
+      "name": "dummy",
+      "bom-ref": "dummy",
+      "data": [
+        {
+          "flow": "bi-directional",
+          "classification": "BI_DIRECTIONAL"
+        },
+        {
+          "flow": "inbound",
+          "classification": "INBOUND"
+        },
+        {
+          "flow": "outbound",
+          "classification": "OUTBOUND"
+        },
+        {
+          "flow": "unknown",
+          "classification": "UNKNOWN"
+        }
+      ]
+    }
+  ],
   "dependencies": [
     {
       "ref": "dummy"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -17,32 +43,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "services": [
-    {
-      "bom-ref": "dummy",
-      "data": [
-        {
-          "classification": "BI_DIRECTIONAL",
-          "flow": "bi-directional"
-        },
-        {
-          "classification": "INBOUND",
-          "flow": "inbound"
-        },
-        {
-          "classification": "OUTBOUND",
-          "flow": "outbound"
-        },
-        {
-          "classification": "UNKNOWN",
-          "flow": "unknown"
-        }
-      ],
-      "name": "dummy"
-    }
-  ],
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6"

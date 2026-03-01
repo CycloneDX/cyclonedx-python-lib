@@ -19,7 +19,7 @@ import re
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any, Optional, Union
 
-import py_serializable as serializable
+from attrs import define, field
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
@@ -35,12 +35,21 @@ if TYPE_CHECKING:  # pragma: no cover
     _T_CreId = TypeVar('_T_CreId', bound='CreId')
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class CreId(serializable.helpers.BaseHelper):
+def _sortedset_converter(value: Any) -> SortedSet:
+    """Convert a value to SortedSet."""
+    if value is None:
+        return SortedSet()
+    if isinstance(value, SortedSet):
+        return value
+    if isinstance(value, Iterable) and not isinstance(value, (str, bytes, dict)):
+        return SortedSet(value)
+    return SortedSet([value])
+
+
+class CreId:
     """
     Helper class that allows us to perform validation on data strings that must conform to
     Common Requirements Enumeration (CRE) identifier(s).
-
     """
 
     _VALID_CRE_REGEX = re.compile(r'^CRE:[0-9]+-[0-9]+$')
@@ -53,8 +62,6 @@ class CreId(serializable.helpers.BaseHelper):
         self._id = id
 
     @property
-    @serializable.json_name('.')
-    @serializable.xml_name('.')
     def id(self) -> str:
         return self._id
 
@@ -89,7 +96,7 @@ class CreId(serializable.helpers.BaseHelper):
         return self._id
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+@define
 class Requirement:
     """
     A requirement comprising a standard.
@@ -99,90 +106,75 @@ class Requirement:
         https://cyclonedx.org/docs/1.7/json/#definitions_standards_items_requirements
     """
 
-    def __init__(
-        self, *,
-        bom_ref: Optional[Union[str, BomRef]] = None,
-        identifier: Optional[str] = None,
-        title: Optional[str] = None,
-        text: Optional[str] = None,
-        descriptions: Optional[Iterable[str]] = None,
-        open_cre: Optional[Iterable[CreId]] = None,
-        parent: Optional[Union[str, BomRef]] = None,
-        properties: Optional[Iterable[Property]] = None,
-        external_references: Optional[Iterable[ExternalReference]] = None,
-    ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref)
-        self.identifier = identifier
-        self.title = title
-        self.text = text
-        self.descriptions = descriptions or ()
-        self.open_cre = open_cre or ()
-        self.parent = parent
-        self.properties = properties or ()
-        self.external_references = external_references or ()
+    _bom_ref: BomRef = field(
+        factory=BomRef,
+        converter=_bom_ref_from_str,
+        metadata={'json_name': 'bom-ref', 'xml_name': 'bom-ref', 'xml_attribute': True}
+    )
+    """An optional identifier which can be used to reference the requirement elsewhere in the BOM."""
+
+    identifier: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'identifier', 'xml_name': 'identifier', 'xml_sequence': 1}
+    )
+    """The identifier of the requirement."""
+
+    title: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'title', 'xml_name': 'title', 'xml_sequence': 2}
+    )
+    """The title of the requirement."""
+
+    text: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'text', 'xml_name': 'text', 'xml_sequence': 3}
+    )
+    """The text of the requirement."""
+
+    _descriptions: 'SortedSet[str]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'descriptions', 'xml_name': 'descriptions', 'xml_item_name': 'description',
+                  'xml_sequence': 4}
+    )
+    """A SortedSet of descriptions of the requirement."""
+
+    _open_cre: 'SortedSet[CreId]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'openCre', 'xml_name': 'openCre', 'xml_sequence': 5}
+    )
+    """The Common Requirements Enumeration (CRE) identifier(s)."""
+
+    _parent: Optional[BomRef] = field(
+        default=None,
+        metadata={'json_name': 'parent', 'xml_name': 'parent', 'xml_sequence': 6}
+    )
+    """The optional bom-ref to a parent requirement."""
+
+    _properties: 'SortedSet[Property]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'properties', 'xml_name': 'properties', 'xml_item_name': 'property', 'xml_sequence': 7}
+    )
+    """Properties in a key/value store."""
+
+    _external_references: 'SortedSet[ExternalReference]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'externalReferences', 'xml_name': 'externalReferences', 'xml_item_name': 'reference',
+                  'xml_sequence': 8}
+    )
+    """External references related to the component."""
 
     @property
-    @serializable.type_mapping(BomRef)
-    @serializable.json_name('bom-ref')
-    @serializable.xml_name('bom-ref')
-    @serializable.xml_attribute()
     def bom_ref(self) -> BomRef:
-        """
-        An optional identifier which can be used to reference the requirement elsewhere in the BOM.
-        Every bom-ref MUST be unique within the BOM.
-
-        Returns:
-            `BomRef`
-        """
+        """An optional identifier which can be used to reference the requirement elsewhere in the BOM."""
         return self._bom_ref
 
     @property
-    @serializable.xml_sequence(1)
-    def identifier(self) -> Optional[str]:
-        """
-        Returns:
-            The identifier of the requirement.
-        """
-        return self._identifier
-
-    @identifier.setter
-    def identifier(self, identifier: Optional[str]) -> None:
-        self._identifier = identifier
-
-    @property
-    @serializable.xml_sequence(2)
-    def title(self) -> Optional[str]:
-        """
-        Returns:
-            The title of the requirement.
-        """
-        return self._title
-
-    @title.setter
-    def title(self, title: Optional[str]) -> None:
-        self._title = title
-
-    @property
-    @serializable.xml_sequence(3)
-    def text(self) -> Optional[str]:
-        """
-        Returns:
-            The text of the requirement.
-        """
-        return self._text
-
-    @text.setter
-    def text(self, text: Optional[str]) -> None:
-        self._text = text
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'description')
-    @serializable.xml_sequence(4)
     def descriptions(self) -> 'SortedSet[str]':
-        """
-        Returns:
-            A SortedSet of descriptions of the requirement.
-        """
+        """A SortedSet of descriptions of the requirement."""
         return self._descriptions
 
     @descriptions.setter
@@ -190,19 +182,8 @@ class Requirement:
         self._descriptions = SortedSet(descriptions)
 
     @property
-    @serializable.json_name('openCre')
-    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'openCre')
-    @serializable.xml_sequence(5)
     def open_cre(self) -> 'SortedSet[CreId]':
-        """
-        CRE is a structured and standardized framework for uniting security standards and guidelines. CRE links each
-        section of a resource to a shared topic identifier (a Common Requirement). Through this shared topic link, all
-        resources map to each other. Use of CRE promotes clear and unambiguous communication among stakeholders.
-
-        Returns:
-            The Common Requirements Enumeration (CRE) identifier(s).
-            CREs must match regular expression: ^CRE:[0-9]+-[0-9]+$
-        """
+        """The Common Requirements Enumeration (CRE) identifier(s)."""
         return self._open_cre
 
     @open_cre.setter
@@ -210,14 +191,8 @@ class Requirement:
         self._open_cre = SortedSet(open_cre)
 
     @property
-    @serializable.type_mapping(BomRef)
-    @serializable.xml_sequence(6)
     def parent(self) -> Optional[BomRef]:
-        """
-        Returns:
-            The optional bom-ref to a parent requirement. This establishes a hierarchy of requirements. Top-level
-            requirements must not define a parent. Only child requirements should define parents.
-        """
+        """The optional bom-ref to a parent requirement."""
         return self._parent
 
     @parent.setter
@@ -225,16 +200,8 @@ class Requirement:
         self._parent = _bom_ref_from_str(parent, optional=True)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(7)
     def properties(self) -> 'SortedSet[Property]':
-        """
-        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
-        officially supported in the standard without having to use additional namespaces or create extensions.
-
-        Return:
-            Set of `Property`
-        """
+        """Properties in a key/value store."""
         return self._properties
 
     @properties.setter
@@ -242,51 +209,24 @@ class Requirement:
         self._properties = SortedSet(properties)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(8)
     def external_references(self) -> 'SortedSet[ExternalReference]':
-        """
-        Provides the ability to document external references related to the component or to the project the component
-        describes.
-
-        Returns:
-            Set of `ExternalReference`
-        """
+        """External references related to the component."""
         return self._external_references
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    def __comparable_tuple(self) -> _ComparableTuple:
-        # all properties are optional - so need to compare all, in hope that one is unique
-        return _ComparableTuple((
-            self.identifier, self.bom_ref.value,
-            self.title, self.text,
-            _ComparableTuple(self.descriptions),
-            _ComparableTuple(self.open_cre), self.parent, _ComparableTuple(self.properties),
-            _ComparableTuple(self.external_references)
-        ))
+    def __hash__(self) -> int:
+        return hash((self.identifier, self.bom_ref.value, self.title, self.text))
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Requirement):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            return (self.identifier or '', self.bom_ref.value or '') < (other.identifier or '', other.bom_ref.value or '')
         return NotImplemented
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Requirement):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
 
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Requirement bom-ref={self._bom_ref}, identifier={self.identifier}, ' \
-            f'title={self.title}, text={self.text}, parent={self.parent}>'
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+@define
 class Level:
     """
     Level of compliance for a standard.
@@ -295,82 +235,47 @@ class Level:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/json/#definitions_standards_items_levels
     """
 
-    def __init__(
-        self, *,
-        bom_ref: Optional[Union[str, BomRef]] = None,
-        identifier: Optional[str] = None,
-        title: Optional[str] = None,
-        description: Optional[str] = None,
-        requirements: Optional[Iterable[Union[str, BomRef]]] = None,
-    ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref)
-        self.identifier = identifier
-        self.title = title
-        self.description = description
-        self.requirements = requirements or ()
+    _bom_ref: BomRef = field(
+        factory=BomRef,
+        converter=_bom_ref_from_str,
+        metadata={'json_name': 'bom-ref', 'xml_name': 'bom-ref', 'xml_attribute': True}
+    )
+    """An optional identifier which can be used to reference the level elsewhere in the BOM."""
+
+    identifier: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'identifier', 'xml_name': 'identifier', 'xml_sequence': 1}
+    )
+    """The identifier of the level."""
+
+    title: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'title', 'xml_name': 'title', 'xml_sequence': 2}
+    )
+    """The title of the level."""
+
+    description: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'description', 'xml_name': 'description', 'xml_sequence': 3}
+    )
+    """The description of the level."""
+
+    _requirements: 'SortedSet[BomRef]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'requirements', 'xml_name': 'requirements', 'xml_item_name': 'requirement',
+                  'xml_sequence': 4}
+    )
+    """A SortedSet of requirements associated with the level."""
 
     @property
-    @serializable.type_mapping(BomRef)
-    @serializable.json_name('bom-ref')
-    @serializable.xml_name('bom-ref')
-    @serializable.xml_attribute()
     def bom_ref(self) -> BomRef:
-        """
-        An optional identifier which can be used to reference the level elsewhere in the BOM.
-        Every bom-ref MUST be unique within the BOM.
-
-        Returns:
-            `BomRef`
-        """
+        """An optional identifier which can be used to reference the level elsewhere in the BOM."""
         return self._bom_ref
 
     @property
-    @serializable.xml_sequence(1)
-    def identifier(self) -> Optional[str]:
-        """
-        Returns:
-            The identifier of the level.
-        """
-        return self._identifier
-
-    @identifier.setter
-    def identifier(self, identifier: Optional[str]) -> None:
-        self._identifier = identifier
-
-    @property
-    @serializable.xml_sequence(2)
-    def title(self) -> Optional[str]:
-        """
-        Returns:
-            The title of the level.
-        """
-        return self._title
-
-    @title.setter
-    def title(self, title: Optional[str]) -> None:
-        self._title = title
-
-    @property
-    @serializable.xml_sequence(3)
-    def description(self) -> Optional[str]:
-        """
-        Returns:
-            The description of the level.
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description: Optional[str]) -> None:
-        self._description = description
-
-    @property
-    @serializable.xml_sequence(4)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'requirement')
     def requirements(self) -> 'SortedSet[BomRef]':
-        """
-        Returns:
-            A SortedSet of requirements associated with the level.
-        """
+        """A SortedSet of requirements associated with the level."""
         return self._requirements
 
     @requirements.setter
@@ -378,33 +283,16 @@ class Level:
         self._requirements = SortedSet(map(_bom_ref_from_str,  # type:ignore[arg-type]
                                            requirements))
 
-    def __comparable_tuple(self) -> _ComparableTuple:
-        # all properties are optional - so need to compare all, in hope that one is unique
-        return _ComparableTuple((
-            self.identifier, self.bom_ref.value,
-            self.title, self.description,
-            _ComparableTuple(self.requirements)
-        ))
+    def __hash__(self) -> int:
+        return hash((self.identifier, self.bom_ref.value, self.title, self.description))
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Level):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            return (self.identifier or '', self.bom_ref.value or '') < (other.identifier or '', other.bom_ref.value or '')
         return NotImplemented
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Level):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
 
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Level bom-ref={self.bom_ref}, identifier={self.identifier}, ' \
-            f'title={self.title}, description={self.description}>'
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+@define
 class Standard:
     """
     A standard of regulations, industry or organizational-specific standards, maturity models, best practices,
@@ -414,103 +302,68 @@ class Standard:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_standard
     """
 
-    def __init__(
-        self, *,
-        bom_ref: Optional[Union[str, BomRef]] = None,
-        name: Optional[str] = None,
-        version: Optional[str] = None,
-        description: Optional[str] = None,
-        owner: Optional[str] = None,
-        requirements: Optional[Iterable[Requirement]] = None,
-        levels: Optional[Iterable[Level]] = None,
-        external_references: Optional[Iterable['ExternalReference']] = None
-        # TODO: signature
-    ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref)
-        self.name = name
-        self.version = version
-        self.description = description
-        self.owner = owner
-        self.requirements = requirements or ()
-        self.levels = levels or ()
-        self.external_references = external_references or ()
-        # TODO: signature
+    _bom_ref: BomRef = field(
+        factory=BomRef,
+        converter=_bom_ref_from_str,
+        metadata={'json_name': 'bom-ref', 'xml_name': 'bom-ref', 'xml_attribute': True}
+    )
+    """An optional identifier which can be used to reference the standard elsewhere in the BOM."""
+
+    name: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'name', 'xml_name': 'name', 'xml_sequence': 1}
+    )
+    """The name of the standard."""
+
+    version: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'version', 'xml_name': 'version', 'xml_sequence': 2}
+    )
+    """The version of the standard."""
+
+    description: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'description', 'xml_name': 'description', 'xml_sequence': 3}
+    )
+    """The description of the standard."""
+
+    owner: Optional[str] = field(
+        default=None,
+        metadata={'json_name': 'owner', 'xml_name': 'owner', 'xml_sequence': 4}
+    )
+    """The owner of the standard."""
+
+    _requirements: 'SortedSet[Requirement]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'requirements', 'xml_name': 'requirements', 'xml_item_name': 'requirement',
+                  'xml_sequence': 5}
+    )
+    """A SortedSet of requirements comprising the standard."""
+
+    _levels: 'SortedSet[Level]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'levels', 'xml_name': 'levels', 'xml_item_name': 'level', 'xml_sequence': 6}
+    )
+    """A SortedSet of levels associated with the standard."""
+
+    _external_references: 'SortedSet[ExternalReference]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'externalReferences', 'xml_name': 'externalReferences', 'xml_item_name': 'reference',
+                  'xml_sequence': 7}
+    )
+    """A SortedSet of external references associated with the standard."""
 
     @property
-    @serializable.type_mapping(BomRef)
-    @serializable.json_name('bom-ref')
-    @serializable.xml_name('bom-ref')
-    @serializable.xml_attribute()
     def bom_ref(self) -> BomRef:
-        """
-        An optional identifier which can be used to reference the standard elsewhere in the BOM. Every bom-ref MUST be
-        unique within the BOM.
-
-        Returns:
-            `BomRef`
-        """
+        """An optional identifier which can be used to reference the standard elsewhere in the BOM."""
         return self._bom_ref
 
     @property
-    @serializable.xml_sequence(1)
-    def name(self) -> Optional[str]:
-        """
-        Returns:
-            The name of the standard
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    @serializable.xml_sequence(2)
-    def version(self) -> Optional[str]:
-        """
-        Returns:
-            The version of the standard
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version: Optional[str]) -> None:
-        self._version = version
-
-    @property
-    @serializable.xml_sequence(3)
-    def description(self) -> Optional[str]:
-        """
-        Returns:
-            The description of the standard
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description: Optional[str]) -> None:
-        self._description = description
-
-    @property
-    @serializable.xml_sequence(4)
-    def owner(self) -> Optional[str]:
-        """
-        Returns:
-            The owner of the standard, often the entity responsible for its release.
-        """
-        return self._owner
-
-    @owner.setter
-    def owner(self, owner: Optional[str]) -> None:
-        self._owner = owner
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'requirement')
-    @serializable.xml_sequence(5)
     def requirements(self) -> 'SortedSet[Requirement]':
-        """
-        Returns:
-            A SortedSet of requirements comprising the standard.
-        """
+        """A SortedSet of requirements comprising the standard."""
         return self._requirements
 
     @requirements.setter
@@ -518,13 +371,8 @@ class Standard:
         self._requirements = SortedSet(requirements)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'level')
-    @serializable.xml_sequence(6)
     def levels(self) -> 'SortedSet[Level]':
-        """
-        Returns:
-            A SortedSet of levels associated with the standard. Some standards have different levels of compliance.
-        """
+        """A SortedSet of levels associated with the standard."""
         return self._levels
 
     @levels.setter
@@ -532,62 +380,24 @@ class Standard:
         self._levels = SortedSet(levels)
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(7)
     def external_references(self) -> 'SortedSet[ExternalReference]':
-        """
-        Returns:
-            A SortedSet of external references associated with the standard.
-        """
+        """A SortedSet of external references associated with the standard."""
         return self._external_references
 
     @external_references.setter
     def external_references(self, external_references: Iterable[ExternalReference]) -> None:
         self._external_references = SortedSet(external_references)
 
-    # @property
-    # @serializable.xml_sequence(8)
-    # # MUST NOT RENDER FOR XML -- this is JSON only
-    # def signature(self) -> ...:
-    #     ...
-    #
-    # @signature.setter
-    # def levels(self, signature: ...) -> None:
-    #     ...
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        # all properties are optional - so need to apply all, in hope that one is unique
-        return _ComparableTuple((
-            self.name, self.version,
-            self.bom_ref.value,
-            self.description, self.owner,
-            _ComparableTuple(self.requirements), _ComparableTuple(self.levels),
-            _ComparableTuple(self.external_references)
-        ))
+    def __hash__(self) -> int:
+        return hash((self.name, self.version, self.bom_ref.value))
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Standard):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            return (self.name or '', self.version or '') < (other.name or '', other.version or '')
         return NotImplemented
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Standard):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
 
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Standard bom-ref={self.bom_ref}, ' \
-            f'name={self.name}, version={self.version}, ' \
-            f'description={self.description}, owner={self.owner}>'
-
-
-@serializable.serializable_class(
-    name='definitions',
-    ignore_unknown_during_deserialization=True
-)
+@define
 class Definitions:
     """
     The repository for definitions
@@ -596,20 +406,16 @@ class Definitions:
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_definitionsType
     """
 
-    def __init__(
-        self, *,
-        standards: Optional[Iterable[Standard]] = None
-    ) -> None:
-        self.standards = standards or ()
+    _standards: 'SortedSet[Standard]' = field(
+        factory=SortedSet,
+        converter=_sortedset_converter,
+        metadata={'json_name': 'standards', 'xml_name': 'standards', 'xml_item_name': 'standard', 'xml_sequence': 1}
+    )
+    """A SortedSet of Standards."""
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'standard')
-    @serializable.xml_sequence(1)
     def standards(self) -> 'SortedSet[Standard]':
-        """
-        Returns:
-            A SortedSet of Standards
-        """
+        """A SortedSet of Standards."""
         return self._standards
 
     @standards.setter
@@ -619,22 +425,8 @@ class Definitions:
     def __bool__(self) -> bool:
         return len(self._standards) > 0
 
-    def __comparable_tuple(self) -> _ComparableTuple:
-        # all properties are optional - so need to apply all, in hope that one is unique
-        return _ComparableTuple(self._standards)
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Definitions):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, Definitions):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
+    def __len__(self) -> int:
+        return len(self._standards)
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Definitions standards={self.standards!r} >'
+        return hash(tuple(self._standards))

@@ -1,19 +1,51 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
-      "author": "Test Author",
+      "name": "setuptools",
+      "type": "library",
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "manufacturer": {
+        "name": "CycloneDX",
+        "address": {
+          "country": "GB",
+          "region": "England",
+          "locality": "Cheshire",
+          "streetAddress": "100 Main Street"
+        },
+        "url": [
+          "https://cyclonedx.org",
+          "https://cyclonedx.org/docs"
+        ],
+        "contact": [
+          {
+            "name": "A N Other",
+            "email": "someone@somewhere.tld",
+            "phone": "+44 (0)1234 567890"
+          },
+          {
+            "name": "Paul Horton",
+            "email": "paul.horton@owasp.org"
+          }
+        ]
+      },
       "authors": [
         {
-          "email": "someone@somewhere.tld",
           "name": "A N Other",
+          "email": "someone@somewhere.tld",
           "phone": "+44 (0)1234 567890"
         },
         {
-          "email": "paul.horton@owasp.org",
-          "name": "Paul Horton"
+          "name": "Paul Horton",
+          "email": "paul.horton@owasp.org"
         }
       ],
-      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "author": "Test Author",
+      "version": "50.3.2",
       "licenses": [
         {
           "license": {
@@ -21,43 +53,16 @@
           }
         }
       ],
-      "manufacturer": {
-        "address": {
-          "country": "GB",
-          "locality": "Cheshire",
-          "region": "England",
-          "streetAddress": "100 Main Street"
-        },
-        "contact": [
-          {
-            "email": "someone@somewhere.tld",
-            "name": "A N Other",
-            "phone": "+44 (0)1234 567890"
-          },
-          {
-            "email": "paul.horton@owasp.org",
-            "name": "Paul Horton"
-          }
-        ],
-        "name": "CycloneDX",
-        "url": [
-          "https://cyclonedx.org",
-          "https://cyclonedx.org/docs"
-        ]
-      },
-      "name": "setuptools",
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
       "omniborId": [
         "gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
       ],
-      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
       "swhid": [
         "swh:1:cnt:4d99d2d18326621ccdd70f5ea66c2e2ac236ad8b;origin=https://gitorious.org/ocamlp3l/ocamlp3l_cvs.git;visit=swh:1:snp:d7f1b9eb7ccb596c2622c4780febaa02549830f9;anchor=swh:1:rev:2db189928c94d62a3b4757b3eec68f0a4d4113f0;path=/Examples/SimpleFarm/simplefarm.ml;lines=9-15",
         "swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2",
         "swh:1:cnt:f10371aa7b8ccabca8479196d6cd640676fd4a04;origin=https://github.com/web-platform-tests/wpt;visit=swh:1:snp:b37d435721bbd450624165f334724e3585346499;anchor=swh:1:rev:259d0612af038d14f2cd889a14a3adb6c9e96d96;path=/html/semantics/document-metadata/the-meta-element/pragma-directives/attr-meta-http-equiv-refresh/support/x%3Burl=foo/",
         "swh:1:rel:22ece559cc7cc2364edc5e5593d63ae8bd229f9f"
-      ],
-      "type": "library",
-      "version": "50.3.2"
+      ]
     }
   ],
   "dependencies": [
@@ -65,9 +70,6 @@
       "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -78,8 +80,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7"

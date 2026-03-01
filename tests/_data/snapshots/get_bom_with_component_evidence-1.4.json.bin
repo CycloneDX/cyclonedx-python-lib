@@ -1,51 +1,16 @@
 {
-  "components": [
-    {
-      "author": "Test Author",
-      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
-      "evidence": {
-        "copyright": [
-          {
-            "text": "Commercial"
-          },
-          {
-            "text": "Commercial 2"
-          }
-        ],
-        "licenses": [
-          {
-            "license": {
-              "id": "MIT"
-            }
-          }
-        ]
-      },
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ],
-      "name": "setuptools",
-      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
-      "type": "library",
-      "version": "50.3.2"
-    }
-  ],
-  "dependencies": [
-    {
-      "dependsOn": [
-        "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
-      ],
-      "ref": "myApp"
-    },
-    {
-      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
-    }
-  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
   "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": [
+      {
+        "name": "product-cbom-generator"
+      }
+    ],
     "component": {
+      "name": "root-component",
+      "type": "application",
       "bom-ref": "myApp",
       "licenses": [
         {
@@ -53,19 +18,54 @@
             "id": "MIT"
           }
         }
-      ],
-      "name": "root-component",
-      "type": "application"
-    },
-    "timestamp": "2023-01-07T13:44:32.312678+00:00",
-    "tools": [
-      {
-        "name": "product-cbom-generator"
-      }
-    ]
+      ]
+    }
   },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
+  "components": [
+    {
+      "name": "setuptools",
+      "type": "library",
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "author": "Test Author",
+      "version": "50.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "evidence": {
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ],
+        "copyright": [
+          {
+            "text": "Commercial"
+          },
+          {
+            "text": "Commercial 2"
+          }
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "myApp",
+      "dependsOn": [
+        "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+      ]
+    },
+    {
+      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+    }
+  ],
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.4"

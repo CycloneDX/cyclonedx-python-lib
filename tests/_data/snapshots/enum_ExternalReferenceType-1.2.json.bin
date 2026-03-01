@@ -1,19 +1,19 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
+      "name": "dummy",
+      "type": "library",
       "bom-ref": "dummy",
+      "version": "",
       "externalReferences": [
-        {
-          "type": "other",
-          "url": "tests/ADVERSARY_MODEL"
-        },
         {
           "type": "advisories",
           "url": "tests/ADVISORIES"
-        },
-        {
-          "type": "other",
-          "url": "tests/ATTESTATION"
         },
         {
           "type": "bom",
@@ -28,64 +28,16 @@
           "url": "tests/BUILD_SYSTEM"
         },
         {
-          "type": "other",
-          "url": "tests/CERTIFICATION_REPORT"
-        },
-        {
           "type": "chat",
           "url": "tests/CHAT"
-        },
-        {
-          "type": "other",
-          "url": "tests/CITATION"
-        },
-        {
-          "type": "other",
-          "url": "tests/CODIFIED_INFRASTRUCTURE"
-        },
-        {
-          "type": "other",
-          "url": "tests/COMPONENT_ANALYSIS_REPORT"
-        },
-        {
-          "type": "other",
-          "url": "tests/CONFIGURATION"
-        },
-        {
-          "type": "other",
-          "url": "tests/DIGITAL_SIGNATURE"
         },
         {
           "type": "distribution",
           "url": "tests/DISTRIBUTION"
         },
         {
-          "type": "other",
-          "url": "tests/DISTRIBUTION_INTAKE"
-        },
-        {
           "type": "documentation",
           "url": "tests/DOCUMENTATION"
-        },
-        {
-          "type": "other",
-          "url": "tests/DYNAMIC_ANALYSIS_REPORT"
-        },
-        {
-          "type": "other",
-          "url": "tests/ELECTRONIC_SIGNATURE"
-        },
-        {
-          "type": "other",
-          "url": "tests/EVIDENCE"
-        },
-        {
-          "type": "other",
-          "url": "tests/EXPLOITABILITY_STATEMENT"
-        },
-        {
-          "type": "other",
-          "url": "tests/FORMULATION"
         },
         {
           "type": "issue-tracker",
@@ -96,105 +48,30 @@
           "url": "tests/LICENSE"
         },
         {
-          "type": "other",
-          "url": "tests/LOG"
-        },
-        {
           "type": "mailing-list",
           "url": "tests/MAILING_LIST"
-        },
-        {
-          "type": "other",
-          "url": "tests/MATURITY_REPORT"
-        },
-        {
-          "type": "other",
-          "url": "tests/MODEL_CARD"
         },
         {
           "type": "other",
           "url": "tests/OTHER"
         },
         {
-          "type": "other",
-          "url": "tests/PATENT"
-        },
-        {
-          "type": "other",
-          "url": "tests/PATENT_ASSERTION"
-        },
-        {
-          "type": "other",
-          "url": "tests/PATENT_FAMILY"
-        },
-        {
-          "type": "other",
-          "url": "tests/PENTEST_REPORT"
-        },
-        {
-          "type": "other",
-          "url": "tests/POAM"
-        },
-        {
-          "type": "other",
-          "url": "tests/QUALITY_METRICS"
-        },
-        {
-          "type": "other",
-          "url": "tests/RELEASE_NOTES"
-        },
-        {
-          "type": "other",
-          "url": "tests/RFC_9166"
-        },
-        {
-          "type": "other",
-          "url": "tests/RISK_ASSESSMENT"
-        },
-        {
-          "type": "other",
-          "url": "tests/RUNTIME_ANALYSIS_REPORT"
-        },
-        {
-          "type": "other",
-          "url": "tests/SECURITY_CONTACT"
-        },
-        {
           "type": "social",
           "url": "tests/SOCIAL"
-        },
-        {
-          "type": "other",
-          "url": "tests/SOURCE_DISTRIBUTION"
-        },
-        {
-          "type": "other",
-          "url": "tests/STATIC_ANALYSIS_REPORT"
         },
         {
           "type": "support",
           "url": "tests/SUPPORT"
         },
         {
-          "type": "other",
-          "url": "tests/THREAT_MODEL"
-        },
-        {
           "type": "vcs",
           "url": "tests/SCM"
-        },
-        {
-          "type": "other",
-          "url": "tests/VULNERABILITY_ASSERTION"
         },
         {
           "type": "website",
           "url": "tests/WEBSITE"
         }
-      ],
-      "name": "dummy",
-      "type": "library",
-      "version": ""
+      ]
     }
   ],
   "dependencies": [
@@ -202,11 +79,6 @@
       "ref": "dummy"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.2"

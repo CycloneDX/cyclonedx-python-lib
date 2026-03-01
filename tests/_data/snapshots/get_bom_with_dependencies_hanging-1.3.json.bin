@@ -1,8 +1,22 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 23,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "component": {
+      "name": "rootComponent",
+      "type": "application",
+      "bom-ref": "root-component",
+      "version": ""
+    }
+  },
   "components": [
     {
-      "author": "Test Author",
+      "name": "setuptools",
+      "type": "library",
       "bom-ref": "setuptools",
+      "author": "Test Author",
+      "version": "50.3.2",
       "licenses": [
         {
           "license": {
@@ -10,36 +24,33 @@
           }
         }
       ],
-      "name": "setuptools",
-      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
-      "type": "library",
-      "version": "50.3.2"
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
     },
     {
+      "name": "toml",
+      "type": "library",
       "bom-ref": "toml",
-      "externalReferences": [
-        {
-          "comment": "No comment",
-          "hashes": [
-            {
-              "alg": "SHA-256",
-              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-            }
-          ],
-          "type": "distribution",
-          "url": "https://cyclonedx.org"
-        }
-      ],
+      "version": "0.10.2",
       "hashes": [
         {
           "alg": "SHA-256",
           "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
         }
       ],
-      "name": "toml",
       "purl": "pkg:pypi/toml@0.10.2?extension=tar.gz",
-      "type": "library",
-      "version": "0.10.2"
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://cyclonedx.org",
+          "comment": "No comment",
+          "hashes": [
+            {
+              "alg": "SHA-256",
+              "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+            }
+          ]
+        }
+      ]
     }
   ],
   "dependencies": [
@@ -47,26 +58,15 @@
       "ref": "root-component"
     },
     {
+      "ref": "setuptools",
       "dependsOn": [
         "toml"
-      ],
-      "ref": "setuptools"
+      ]
     },
     {
       "ref": "toml"
     }
   ],
-  "metadata": {
-    "component": {
-      "bom-ref": "root-component",
-      "name": "rootComponent",
-      "type": "application",
-      "version": ""
-    },
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 23,
   "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.3"

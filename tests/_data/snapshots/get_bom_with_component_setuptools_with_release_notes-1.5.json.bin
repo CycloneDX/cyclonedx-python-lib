@@ -1,8 +1,16 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
-      "author": "Test Author",
+      "name": "setuptools",
+      "type": "library",
       "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "author": "Test Author",
+      "version": "50.3.2",
       "licenses": [
         {
           "license": {
@@ -10,30 +18,53 @@
           }
         }
       ],
-      "name": "setuptools",
       "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
       "releaseNotes": {
+        "type": "major",
+        "title": "Release Notes Title",
+        "featuredImage": "https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png",
+        "socialImage": "https://cyclonedx.org/cyclonedx-icon.png",
+        "description": "This release is a test release",
+        "timestamp": "2023-08-15T01:23:45.678900+00:00",
         "aliases": [
           "First Test Release"
         ],
-        "description": "This release is a test release",
-        "featuredImage": "https://cyclonedx.org/theme/assets/images/CycloneDX-Twitter-Card.png",
+        "tags": [
+          "alpha",
+          "test"
+        ],
+        "resolves": [
+          {
+            "type": "security",
+            "id": "CVE-2021-44228",
+            "name": "Apache Log3Shell",
+            "description": "Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...",
+            "source": {
+              "name": "NVD",
+              "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-44228"
+            },
+            "references": [
+              "https://central.sonatype.org/news/20211213_log4shell_help",
+              "https://logging.apache.org/log4j/2.x/security.html"
+            ]
+          }
+        ],
         "notes": [
           {
-            "locale": "en-GB",
             "text": {
               "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==",
               "contentType": "text/plain; charset=UTF-8",
               "encoding": "base64"
-            }
+            },
+            "locale": "en-GB"
           },
           {
-            "locale": "en-US",
             "text": {
               "content": "U29tZSBzaW1wbGUgcGxhaW4gdGV4dA==",
               "contentType": "text/plain; charset=UTF-8",
               "encoding": "base64"
-            }
+            },
+            "locale": "en-US"
           }
         ],
         "properties": [
@@ -45,34 +76,8 @@
             "name": "key2",
             "value": "val2"
           }
-        ],
-        "resolves": [
-          {
-            "description": "Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features...",
-            "id": "CVE-2021-44228",
-            "name": "Apache Log3Shell",
-            "references": [
-              "https://central.sonatype.org/news/20211213_log4shell_help",
-              "https://logging.apache.org/log4j/2.x/security.html"
-            ],
-            "source": {
-              "name": "NVD",
-              "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-44228"
-            },
-            "type": "security"
-          }
-        ],
-        "socialImage": "https://cyclonedx.org/cyclonedx-icon.png",
-        "tags": [
-          "alpha",
-          "test"
-        ],
-        "timestamp": "2023-08-15T01:23:45.678900+00:00",
-        "title": "Release Notes Title",
-        "type": "major"
-      },
-      "type": "library",
-      "version": "50.3.2"
+        ]
+      }
     }
   ],
   "dependencies": [
@@ -80,9 +85,6 @@
       "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -93,8 +95,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.5"

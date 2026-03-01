@@ -1,6 +1,13 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
+      "name": "dummy",
+      "type": "library",
       "bom-ref": "dummy",
       "hashes": [
         {
@@ -51,9 +58,7 @@
           "alg": "SHA3-512",
           "content": "ae2b1fca515949e5d54fb22b8ed95575"
         }
-      ],
-      "name": "dummy",
-      "type": "library"
+      ]
     }
   ],
   "dependencies": [
@@ -61,9 +66,6 @@
       "ref": "dummy"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -74,8 +76,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.5"

@@ -17,16 +17,17 @@
 
 
 """
-Set of helper classes for use with ``serializable`` when conducting (de-)serialization.
+Serialization infrastructure for CycloneDX models using attrs and cattrs.
+
+This module provides converters and utilities for serializing/deserializing
+CycloneDX models to/from JSON and XML formats.
 """
 
 import sys
 from typing import Any, Optional
 from uuid import UUID
 
-# See https://github.com/package-url/packageurl-python/issues/65
 from packageurl import PackageURL
-from py_serializable.helpers import BaseHelper
 
 if sys.version_info >= (3, 13):
     from warnings import deprecated
@@ -34,33 +35,36 @@ else:
     from typing_extensions import deprecated
 
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
-from ..model.bom_ref import BomRef
-from ..model.license import _LicenseRepositorySerializationHelper
+from ._converters import (
+    ALL_VERSIONS,
+    METADATA_KEY_INCLUDE_NONE,
+    METADATA_KEY_JSON_NAME,
+    METADATA_KEY_TYPE_MAPPING,
+    METADATA_KEY_VERSIONS,
+    METADATA_KEY_XML_ARRAY,
+    METADATA_KEY_XML_ATTR,
+    METADATA_KEY_XML_NAME,
+    METADATA_KEY_XML_SEQUENCE,
+    VERSIONS_1_0_THROUGH_1_3,
+    VERSIONS_1_1_AND_LATER,
+    VERSIONS_1_2_AND_LATER,
+    VERSIONS_1_3_AND_LATER,
+    VERSIONS_1_4_AND_LATER,
+    VERSIONS_1_5_AND_LATER,
+    VERSIONS_1_6_AND_LATER,
+    VERSIONS_1_7_AND_LATER,
+    CycloneDxConverter,
+    XmlArrayConfig,
+    make_converter,
+    versions,
+)
 
 
-@deprecated('Use :class:`BomRef` instead.')
-class BomRefHelper(BaseHelper):
-    """**DEPRECATED** in favour of :class:`BomRef`.
-
-    .. deprecated:: 8.6
-       Use :class:`BomRef` instead.
-    """
-
-    # TODO: remove, no longer needed
+class PackageUrl:
+    """Helper for PackageURL serialization."""
 
     @classmethod
-    def serialize(cls, o: Any) -> Optional[str]:
-        return BomRef.serialize(o)
-
-    @classmethod
-    def deserialize(cls, o: Any) -> BomRef:
-        return BomRef.deserialize(o)
-
-
-class PackageUrl(BaseHelper):
-
-    @classmethod
-    def serialize(cls, o: Any, ) -> str:
+    def serialize(cls, o: Any) -> str:
         if isinstance(o, PackageURL):
             return str(o.to_string())
         raise SerializationOfUnexpectedValueException(
@@ -76,7 +80,8 @@ class PackageUrl(BaseHelper):
             ) from err
 
 
-class UrnUuidHelper(BaseHelper):
+class UrnUuidHelper:
+    """Helper for UUID serialization as URN."""
 
     @classmethod
     def serialize(cls, o: Any) -> str:
@@ -95,14 +100,33 @@ class UrnUuidHelper(BaseHelper):
             ) from err
 
 
-@deprecated('No public API planned for replacing this,')
-class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
-    """**DEPRECATED**
-
-    .. deprecated:: 8.6
-       No public API planned for replacing this,
-    """
-
-    # TODO: remove, no longer needed
-
-    pass
+# Re-export from _converters for public API
+__all__ = [
+    # Converter
+    'CycloneDxConverter',
+    'make_converter',
+    # Metadata keys
+    'METADATA_KEY_VERSIONS',
+    'METADATA_KEY_JSON_NAME',
+    'METADATA_KEY_XML_NAME',
+    'METADATA_KEY_XML_ATTR',
+    'METADATA_KEY_XML_SEQUENCE',
+    'METADATA_KEY_XML_ARRAY',
+    'METADATA_KEY_INCLUDE_NONE',
+    'METADATA_KEY_TYPE_MAPPING',
+    # Version sets
+    'ALL_VERSIONS',
+    'VERSIONS_1_1_AND_LATER',
+    'VERSIONS_1_2_AND_LATER',
+    'VERSIONS_1_3_AND_LATER',
+    'VERSIONS_1_4_AND_LATER',
+    'VERSIONS_1_5_AND_LATER',
+    'VERSIONS_1_6_AND_LATER',
+    'VERSIONS_1_7_AND_LATER',
+    'versions',
+    # Configs
+    'XmlArrayConfig',
+    # Helpers
+    'PackageUrl',
+    'UrnUuidHelper',
+]

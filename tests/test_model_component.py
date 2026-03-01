@@ -395,7 +395,8 @@ class TestModelPatch(TestCase):
         ]
 
         # expected sort order: (type, [diff], sorted(resolves))
-        expected_order = [5, 4, 3, 2, 1, 0]
+        # Empty resolves sorts before non-empty (standard tuple comparison)
+        expected_order = [5, 4, 2, 3, 1, 0]
         patches = [
             Patch(type=PatchClassification.MONKEY),
             Patch(type=PatchClassification.MONKEY, diff=diff_b),

@@ -26,22 +26,14 @@
 """
 
 from enum import Enum
-from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Optional, Union
-from xml.etree.ElementTree import Element  # nosec B405
 
-import py_serializable as serializable
-from py_serializable.helpers import BaseHelper
+import attrs
 from sortedcontainers import SortedSet
 
-from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.serialization import CycloneDxDeserializationException
-
-if TYPE_CHECKING:  # pragma: no cover
-    from py_serializable import ViewType
+from ..serialization import METADATA_KEY_XML_SEQUENCE
 
 
-@serializable.serializable_enum
 class LifecyclePhase(str, Enum):
     """
     Enum object that defines the permissible 'phase' for a Lifecycle according to the CycloneDX schema.
@@ -58,7 +50,7 @@ class LifecyclePhase(str, Enum):
     DECOMMISSION = 'decommission'
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+@attrs.define
 class PredefinedLifecycle:
     """
     Object that defines pre-defined phases in the product lifecycle.
@@ -67,38 +59,23 @@ class PredefinedLifecycle:
         See the CycloneDX Schema definition:
         https://cyclonedx.org/docs/1.7/json/#tab-pane_metadata_lifecycles_items_oneOf_i0
     """
-
-    def __init__(self, phase: LifecyclePhase) -> None:
-        self._phase = phase
-
-    @property
-    def phase(self) -> LifecyclePhase:
-        return self._phase
-
-    @phase.setter
-    def phase(self, phase: LifecyclePhase) -> None:
-        self._phase = phase
+    phase: LifecyclePhase
 
     def __hash__(self) -> int:
-        return hash(self._phase)
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, PredefinedLifecycle):
-            return self._phase == other._phase
-        return False
+        return hash(self.phase)
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, PredefinedLifecycle):
-            return self._phase < other._phase
+            return self.phase.value < other.phase.value
         if isinstance(other, NamedLifecycle):
             return True  # put PredefinedLifecycle before any NamedLifecycle
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'<PredefinedLifecycle phase={self._phase}>'
+        return f'<PredefinedLifecycle phase={self.phase}>'
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+@attrs.define
 class NamedLifecycle:
     """
     Object that defines custom state in the product lifecycle.
@@ -107,65 +84,31 @@ class NamedLifecycle:
         See the CycloneDX Schema definition:
         https://cyclonedx.org/docs/1.7/json/#tab-pane_metadata_lifecycles_items_oneOf_i1
     """
-
-    def __init__(self, name: str, *, description: Optional[str] = None) -> None:
-        self._name = name
-        self._description = description
-
-    @property
-    @serializable.xml_sequence(1)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def name(self) -> str:
-        """
-        Name of the lifecycle phase.
-
-        Returns:
-             `str`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: str) -> None:
-        self._name = name
-
-    @property
-    @serializable.xml_sequence(2)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def description(self) -> Optional[str]:
-        """
-        Description of the lifecycle phase.
-
-        Returns:
-             `str`
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description: Optional[str]) -> None:
-        self._description = description
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self._name, self._description
-        ))
+    name: str = attrs.field(
+        metadata={METADATA_KEY_XML_SEQUENCE: 1}
+    )
+    description: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 2}
+    )
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
+        return hash((self.name, self.description))
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, NamedLifecycle):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
+    @staticmethod
+    def _cmp(val: Any) -> tuple:
+        """Wrap value for None-safe comparison (None sorts last)."""
+        return (0, val) if val is not None else (1, '')
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, NamedLifecycle):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            return (self.name, self._cmp(self.description)) < (other.name, self._cmp(other.description))
         if isinstance(other, PredefinedLifecycle):
             return False  # put NamedLifecycle after any PredefinedLifecycle
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'<NamedLifecycle name={self._name}>'
+        return f'<NamedLifecycle name={self.name}>'
 
 
 Lifecycle = Union[PredefinedLifecycle, NamedLifecycle]
@@ -177,7 +120,6 @@ Lifecycle = Union[PredefinedLifecycle, NamedLifecycle]
 
 if TYPE_CHECKING:  # pragma: no cover
     # workaround for https://github.com/python/mypy/issues/5264
-    # this code path is taken when static code analysis or documentation tools runs through.
     class LifecycleRepository(SortedSet[Lifecycle]):
         """Collection of :class:`Lifecycle`.
 
@@ -189,62 +131,3 @@ else:
 
         This is a `set`, not a `list`.  Order MUST NOT matter here.
         """
-
-
-class _LifecycleRepositoryHelper(BaseHelper):
-    @classmethod
-    def json_normalize(cls, o: LifecycleRepository, *,
-                       view: Optional[type['ViewType']],
-                       **__: Any) -> Any:
-        if len(o) == 0:
-            return None
-        return [json_loads(li.as_json(  # type:ignore[union-attr]
-            view_=view)) for li in o]
-
-    @classmethod
-    def json_denormalize(cls, o: list[dict[str, Any]],
-                         **__: Any) -> LifecycleRepository:
-        repo = LifecycleRepository()
-        for li in o:
-            if 'phase' in li:
-                repo.add(PredefinedLifecycle.from_json(  # type:ignore[attr-defined]
-                    li))
-            elif 'name' in li:
-                repo.add(NamedLifecycle.from_json(  # type:ignore[attr-defined]
-                    li))
-            else:
-                raise CycloneDxDeserializationException(f'unexpected: {li!r}')
-        return repo
-
-    @classmethod
-    def xml_normalize(cls, o: LifecycleRepository, *,
-                      element_name: str,
-                      view: Optional[type['ViewType']],
-                      xmlns: Optional[str],
-                      **__: Any) -> Optional[Element]:
-        if len(o) == 0:
-            return None
-        elem = Element(element_name)
-        for li in o:
-            elem.append(li.as_xml(  # type:ignore[union-attr]
-                view_=view, as_string=False, element_name='lifecycle', xmlns=xmlns))
-        return elem
-
-    @classmethod
-    def xml_denormalize(cls, o: Element,
-                        default_ns: Optional[str],
-                        **__: Any) -> LifecycleRepository:
-        repo = LifecycleRepository()
-        ns_map = {'bom': default_ns or ''}
-        # Do not iterate over `o` and do not check for expected `.tag` of items.
-        # This check could have been done by schema validators before even deserializing.
-        for li in o.iterfind('bom:lifecycle', ns_map):
-            if li.find('bom:phase', ns_map) is not None:
-                repo.add(PredefinedLifecycle.from_xml(  # type:ignore[attr-defined]
-                    li, default_ns))
-            elif li.find('bom:name', ns_map) is not None:
-                repo.add(NamedLifecycle.from_xml(  # type:ignore[attr-defined]
-                    li, default_ns))
-            else:
-                raise CycloneDxDeserializationException(f'unexpected content: {li!r}')
-        return repo

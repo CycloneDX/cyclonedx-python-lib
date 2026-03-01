@@ -1,6 +1,13 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
+      "name": "dummy",
+      "type": "library",
       "bom-ref": "dummy",
       "externalReferences": [
         {
@@ -34,10 +41,6 @@
         {
           "type": "chat",
           "url": "tests/CHAT"
-        },
-        {
-          "type": "other",
-          "url": "tests/CITATION"
         },
         {
           "type": "codified-infrastructure",
@@ -116,18 +119,6 @@
           "url": "tests/OTHER"
         },
         {
-          "type": "other",
-          "url": "tests/PATENT"
-        },
-        {
-          "type": "other",
-          "url": "tests/PATENT_ASSERTION"
-        },
-        {
-          "type": "other",
-          "url": "tests/PATENT_FAMILY"
-        },
-        {
           "type": "pentest-report",
           "url": "tests/PENTEST_REPORT"
         },
@@ -191,9 +182,7 @@
           "type": "website",
           "url": "tests/WEBSITE"
         }
-      ],
-      "name": "dummy",
-      "type": "library"
+      ]
     }
   ],
   "dependencies": [
@@ -201,9 +190,6 @@
       "ref": "dummy"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -214,8 +200,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6"

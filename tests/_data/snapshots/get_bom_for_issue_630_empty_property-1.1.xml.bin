@@ -1,9 +1,10 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac">
   <components>
     <component type="library" bom-ref="example@15.8.0">
       <name>example</name>
       <version>15.8.0</version>
+      <modified>false</modified>
     </component>
   </components>
 </bom>

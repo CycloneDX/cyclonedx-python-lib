@@ -18,26 +18,36 @@
 
 from collections.abc import Iterable
 from itertools import chain
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 from warnings import warn
-from xml.etree.ElementTree import Element  # nosec B405
 
-import py_serializable as serializable
-from py_serializable.helpers import BaseHelper
+import attrs
 from sortedcontainers import SortedSet
 
-from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..schema import SchemaVersion
-from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
-from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
-from .component import Component
-from .service import Service
+from ..serialization import METADATA_KEY_VERSIONS, METADATA_KEY_XML_SEQUENCE, VERSIONS_1_4_AND_LATER
+from . import ExternalReference, HashType
 
 if TYPE_CHECKING:  # pragma: no cover
-    from py_serializable import ObjectMetadataLibrary, ViewType
+    from .component import Component
+    from .service import Service
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+def _sortedset_factory() -> SortedSet:
+    return SortedSet()
+
+
+def _sortedset_converter(value: Any) -> SortedSet:
+    """Convert a value to SortedSet."""
+    if value is None:
+        return SortedSet()
+    if isinstance(value, SortedSet):
+        return value
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return SortedSet(value)
+    return SortedSet([value])
+
+
+@attrs.define
 class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
@@ -50,124 +60,54 @@ class Tool:
     .. note::
         See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.7/xml/#type_toolType
     """
+    vendor: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 1}
+    )
+    name: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 2}
+    )
+    version: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 3}
+    )
+    hashes: 'SortedSet[HashType]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={METADATA_KEY_XML_SEQUENCE: 4}
+    )
+    external_references: 'SortedSet[ExternalReference]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={
+            METADATA_KEY_VERSIONS: VERSIONS_1_4_AND_LATER,
+            METADATA_KEY_XML_SEQUENCE: 5,
+        }
+    )
 
-    def __init__(
-        self, *,
-        vendor: Optional[str] = None,
-        name: Optional[str] = None,
-        version: Optional[str] = None,
-        hashes: Optional[Iterable[HashType]] = None,
-        external_references: Optional[Iterable[ExternalReference]] = None,
-    ) -> None:
-        self.vendor = vendor
-        self.name = name
-        self.version = version
-        self.hashes = hashes or ()
-        self.external_references = external_references or ()
-
-    @property
-    @serializable.xml_sequence(1)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def vendor(self) -> Optional[str]:
-        """
-        The name of the vendor who created the tool.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._vendor
-
-    @vendor.setter
-    def vendor(self, vendor: Optional[str]) -> None:
-        self._vendor = vendor
-
-    @property
-    @serializable.xml_sequence(2)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def name(self) -> Optional[str]:
-        """
-        The name of the tool.
-
-        Returns:
-             `str` if set else `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    @serializable.xml_sequence(3)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def version(self) -> Optional[str]:
-        """
-        The version of the tool.
-
-        Returns:
-             `str` if set else `None`
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version: Optional[str]) -> None:
-        self._version = version
-
-    @property
-    @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
-    @serializable.xml_sequence(4)
-    def hashes(self) -> 'SortedSet[HashType]':
-        """
-        The hashes of the tool (if applicable).
-
-        Returns:
-            Set of `HashType`
-        """
-        return self._hashes
-
-    @hashes.setter
-    def hashes(self, hashes: Iterable[HashType]) -> None:
-        self._hashes = SortedSet(hashes)
-
-    @property
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(5)
-    def external_references(self) -> 'SortedSet[ExternalReference]':
-        """
-        External References provides a way to document systems, sites, and information that may be relevant but which
-        are not included with the BOM.
-
-        Returns:
-            Set of `ExternalReference`
-        """
-        return self._external_references
-
-    @external_references.setter
-    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = SortedSet(external_references)
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self.vendor, self.name, self.version,
-            _ComparableTuple(self.hashes), _ComparableTuple(self.external_references)
-        ))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Tool):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
+    @staticmethod
+    def _cmp(val: Any) -> tuple:
+        """Wrap value for None-safe comparison (None sorts last)."""
+        return (0, val) if val is not None else (1, '')
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Tool):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            c = self._cmp
+            return (
+                c(self.vendor), c(self.name), c(self.version),
+                tuple(self.hashes), tuple(self.external_references)
+            ) < (
+                c(other.vendor), c(other.name), c(other.version),
+                tuple(other.hashes), tuple(other.external_references)
+            )
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
+        return hash((
+            self.vendor, self.name, self.version,
+            tuple(self.hashes), tuple(self.external_references)
+        ))
 
     def __repr__(self) -> str:
         return f'<Tool name={self.name}, version={self.version}, vendor={self.vendor}>'
@@ -199,15 +139,19 @@ class ToolRepository:
 
     def __init__(
         self, *,
-        components: Optional[Iterable[Component]] = None,
-        services: Optional[Iterable[Service]] = None,
+        components: Optional[Iterable['Component']] = None,
+        services: Optional[Iterable['Service']] = None,
         # Deprecated since v1.5
         tools: Optional[Iterable[Tool]] = None
     ) -> None:
-        self.components = components or ()
-        self.services = services or ()
-        # spec-deprecated properties below
-        self.tools = tools or ()
+        self._components: SortedSet = SortedSet(components or ())
+        self._services: SortedSet = SortedSet(services or ())
+        self._tools: SortedSet = SortedSet()
+        if tools:
+            warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
+                 'Please use `@.components` and `@.services` instead.',
+                 DeprecationWarning)
+            self._tools = SortedSet(tools)
 
     @property
     def components(self) -> 'SortedSet[Component]':
@@ -218,7 +162,7 @@ class ToolRepository:
         return self._components
 
     @components.setter
-    def components(self, components: Iterable[Component]) -> None:
+    def components(self, components: Iterable['Component']) -> None:
         self._components = SortedSet(components)
 
     @property
@@ -230,7 +174,7 @@ class ToolRepository:
         return self._services
 
     @services.setter
-    def services(self, services: Iterable[Service]) -> None:
+    def services(self, services: Iterable['Service']) -> None:
         self._services = SortedSet(services)
 
     @property
@@ -246,136 +190,40 @@ class ToolRepository:
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
-        return len(self._tools) \
-            + len(self._components) \
-            + len(self._services)
+        return len(self._tools) + len(self._components) + len(self._services)
 
     def __bool__(self) -> bool:
-        return len(self._tools) > 0 \
-            or len(self._components) > 0 \
-            or len(self._services) > 0
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            _ComparableTuple(self._tools),
-            _ComparableTuple(self._components),
-            _ComparableTuple(self._services)
-        ))
+        return len(self._tools) > 0 or len(self._components) > 0 or len(self._services) > 0
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ToolRepository):
-            return self.__comparable_tuple() == other.__comparable_tuple()
+            return (
+                tuple(self._tools), tuple(self._components), tuple(self._services)
+            ) == (
+                tuple(other._tools), tuple(other._components), tuple(other._services)
+            )
         return False
 
     def __lt__(self, other: object) -> bool:
         if isinstance(other, ToolRepository):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            return (
+                tuple(self._tools), tuple(self._components), tuple(self._services)
+            ) < (
+                tuple(other._tools), tuple(other._components), tuple(other._services)
+            )
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
+        return hash((tuple(self._tools), tuple(self._components), tuple(self._services)))
 
+    def all_as_tools(self) -> 'SortedSet[Tool]':
+        """Get all tools, components, and services as Tool objects."""
+        # Import here to avoid circular imports
+        from .component import Component
+        from .service import Service
 
-class _ToolRepositoryHelper(BaseHelper):
-
-    @staticmethod
-    def __all_as_tools(o: ToolRepository) -> 'SortedSet[Tool]':
-        # use a set here, so the collection gets deduplicated.
-        # use SortedSet set here, so the order stays reproducible.
         return SortedSet(chain(
-            o.tools,
-            map(Tool.from_component, o.components),
-            map(Tool.from_service, o.services),
+            self.tools,
+            map(Tool.from_component, self.components),
+            map(Tool.from_service, self.services),
         ))
-
-    @staticmethod
-    def __supports_components_and_services(view: Any) -> bool:
-        try:
-            return view is not None and view().schema_version_enum >= SchemaVersion.V1_5
-        except Exception:  # pragma: no cover
-            return False
-
-    @classmethod
-    def json_normalize(cls, o: ToolRepository, *,
-                       view: Optional[type['ViewType']],
-                       **__: Any) -> Any:
-        if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
-            ts = cls.__all_as_tools(o)
-            return tuple(ts) if ts else None
-        elem: dict[str, Any] = {}
-        if o.components:
-            elem['components'] = tuple(o.components)
-        if o.services:
-            elem['services'] = tuple(o.services)
-        return elem or None
-
-    @classmethod
-    def json_denormalize(cls, o: Union[list[dict[str, Any]], dict[str, Any]],
-                         **__: Any) -> ToolRepository:
-        tools = None
-        components = None
-        services = None
-        if isinstance(o, dict):
-            components = map(lambda c: Component.from_json(  # type:ignore[attr-defined]
-                c), o.get('components', ()))
-            services = map(lambda s: Service.from_json(  # type:ignore[attr-defined]
-                s), o.get('services', ()))
-        elif isinstance(o, Iterable):
-            tools = map(lambda t: Tool.from_json(  # type:ignore[attr-defined]
-                t), o)
-        return ToolRepository(components=components, services=services, tools=tools)
-
-    @classmethod
-    def xml_normalize(cls, o: ToolRepository, *,
-                      element_name: str,
-                      view: Optional[type['ViewType']],
-                      xmlns: Optional[str],
-                      **__: Any) -> Optional[Element]:
-        elem = Element(element_name)
-        if len(o.tools) > 0 or not cls.__supports_components_and_services(view):
-            elem.extend(
-                ti.as_xml(  # type:ignore[attr-defined]
-                    view_=view, as_string=False, element_name='tool', xmlns=xmlns)
-                for ti in cls.__all_as_tools(o)
-            )
-        else:
-            if o.components:
-                elem_c = Element(f'{{{xmlns}}}components' if xmlns else 'components')
-                elem_c.extend(
-                    ci.as_xml(  # type:ignore[attr-defined]
-                        view_=view, as_string=False, element_name='component', xmlns=xmlns)
-                    for ci in o.components)
-                elem.append(elem_c)
-            if o.services:
-                elem_s = Element(f'{{{xmlns}}}services' if xmlns else 'services')
-                elem_s.extend(
-                    si.as_xml(  # type:ignore[attr-defined]
-                        view_=view, as_string=False, element_name='service', xmlns=xmlns)
-                    for si in o.services)
-                elem.append(elem_s)
-        return elem \
-            if len(elem) > 0 \
-            else None
-
-    @classmethod
-    def xml_denormalize(cls, o: Element, *,
-                        default_ns: Optional[str],
-                        prop_info: 'ObjectMetadataLibrary.SerializableProperty',
-                        ctx: type[Any],
-                        **kwargs: Any) -> ToolRepository:
-        ns_map = {'bom': default_ns or ''}
-        # Do not iterate over `o` and do not check for expected `.tag` of items.
-        # This check could have been done by schema validators before even deserializing.
-        tools = None
-        components = None
-        services = None
-        ts = o.findall('bom:tool', ns_map)
-        if len(ts) > 0:
-            tools = map(lambda t: Tool.from_xml(  # type:ignore[attr-defined]
-                t, default_ns), ts)
-        else:
-            components = map(lambda c: Component.from_xml(  # type:ignore[attr-defined]
-                c, default_ns), o.iterfind('./bom:components/bom:component', ns_map))
-            services = map(lambda s: Service.from_xml(  # type:ignore[attr-defined]
-                s, default_ns), o.iterfind('./bom:services/bom:service', ns_map))
-        return ToolRepository(components=components, services=services, tools=tools)

@@ -1,37 +1,48 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "component": {
+      "name": "myApp",
+      "type": "application",
+      "bom-ref": "myApp",
+      "version": ""
+    }
+  },
   "components": [
     {
-      "bom-ref": "some-component",
       "name": "some-component",
       "type": "library",
+      "bom-ref": "some-component",
       "version": ""
     },
     {
+      "name": "some-library",
+      "type": "library",
       "bom-ref": "some-library1",
-      "name": "some-library",
-      "type": "library",
       "version": ""
     },
     {
-      "bom-ref": "some-library2",
       "name": "some-library",
       "type": "library",
+      "bom-ref": "some-library2",
       "version": ""
     }
   ],
   "dependencies": [
     {
+      "ref": "myApp",
       "dependsOn": [
         "some-component"
-      ],
-      "ref": "myApp"
+      ]
     },
     {
+      "ref": "some-component",
       "dependsOn": [
         "some-library1",
         "some-library2"
-      ],
-      "ref": "some-component"
+      ]
     },
     {
       "ref": "some-library1"
@@ -40,17 +51,6 @@
       "ref": "some-library2"
     }
   ],
-  "metadata": {
-    "component": {
-      "bom-ref": "myApp",
-      "name": "myApp",
-      "type": "application",
-      "version": ""
-    },
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.3"

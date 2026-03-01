@@ -1,8 +1,15 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
-      "bom-ref": "dummy",
       "name": "dummy",
+      "type": "library",
+      "bom-ref": "dummy",
+      "version": "",
       "pedigree": {
         "patches": [
           {
@@ -18,9 +25,7 @@
             "type": "unofficial"
           }
         ]
-      },
-      "type": "library",
-      "version": ""
+      }
     }
   ],
   "dependencies": [
@@ -28,11 +33,6 @@
       "ref": "dummy"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.2"

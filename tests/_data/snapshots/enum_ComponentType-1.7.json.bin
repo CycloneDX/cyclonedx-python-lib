@@ -1,69 +1,74 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
-      "bom-ref": "typed-APPLICATION",
       "name": "dummy APPLICATION",
-      "type": "application"
+      "type": "application",
+      "bom-ref": "typed-APPLICATION"
     },
     {
-      "bom-ref": "typed-CONTAINER",
       "name": "dummy CONTAINER",
-      "type": "container"
+      "type": "container",
+      "bom-ref": "typed-CONTAINER"
     },
     {
-      "bom-ref": "typed-CRYPTOGRAPHIC_ASSET",
       "name": "dummy CRYPTOGRAPHIC_ASSET",
-      "type": "cryptographic-asset"
+      "type": "cryptographic-asset",
+      "bom-ref": "typed-CRYPTOGRAPHIC_ASSET"
     },
     {
-      "bom-ref": "typed-DATA",
       "name": "dummy DATA",
-      "type": "data"
+      "type": "data",
+      "bom-ref": "typed-DATA"
     },
     {
-      "bom-ref": "typed-DEVICE",
       "name": "dummy DEVICE",
-      "type": "device"
+      "type": "device",
+      "bom-ref": "typed-DEVICE"
     },
     {
-      "bom-ref": "typed-DEVICE_DRIVER",
       "name": "dummy DEVICE_DRIVER",
-      "type": "device-driver"
+      "type": "device-driver",
+      "bom-ref": "typed-DEVICE_DRIVER"
     },
     {
-      "bom-ref": "typed-FILE",
       "name": "dummy FILE",
-      "type": "file"
+      "type": "file",
+      "bom-ref": "typed-FILE"
     },
     {
-      "bom-ref": "typed-FIRMWARE",
       "name": "dummy FIRMWARE",
-      "type": "firmware"
+      "type": "firmware",
+      "bom-ref": "typed-FIRMWARE"
     },
     {
-      "bom-ref": "typed-FRAMEWORK",
       "name": "dummy FRAMEWORK",
-      "type": "framework"
+      "type": "framework",
+      "bom-ref": "typed-FRAMEWORK"
     },
     {
-      "bom-ref": "typed-LIBRARY",
       "name": "dummy LIBRARY",
-      "type": "library"
+      "type": "library",
+      "bom-ref": "typed-LIBRARY"
     },
     {
-      "bom-ref": "typed-MACHINE_LEARNING_MODEL",
       "name": "dummy MACHINE_LEARNING_MODEL",
-      "type": "machine-learning-model"
+      "type": "machine-learning-model",
+      "bom-ref": "typed-MACHINE_LEARNING_MODEL"
     },
     {
-      "bom-ref": "typed-OPERATING_SYSTEM",
       "name": "dummy OPERATING_SYSTEM",
-      "type": "operating-system"
+      "type": "operating-system",
+      "bom-ref": "typed-OPERATING_SYSTEM"
     },
     {
-      "bom-ref": "typed-PLATFORM",
       "name": "dummy PLATFORM",
-      "type": "platform"
+      "type": "platform",
+      "bom-ref": "typed-PLATFORM"
     }
   ],
   "dependencies": [
@@ -107,9 +112,6 @@
       "ref": "typed-PLATFORM"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -120,8 +122,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7"

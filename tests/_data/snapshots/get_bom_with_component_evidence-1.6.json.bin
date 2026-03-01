@@ -1,108 +1,20 @@
 {
-  "components": [
-    {
-      "author": "Test Author",
-      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
-      "evidence": {
-        "callstack": {
-          "frames": [
-            {
-              "column": 5,
-              "fullFilename": "path/to/file",
-              "function": "example_function",
-              "line": 10,
-              "module": "example.module",
-              "package": "example.package",
-              "parameters": [
-                "param1",
-                "param2"
-              ]
-            }
-          ]
-        },
-        "copyright": [
-          {
-            "text": "Commercial"
-          },
-          {
-            "text": "Commercial 2"
-          }
-        ],
-        "identity": [
-          {
-            "concludedValue": "example-hash",
-            "confidence": 0.1,
-            "field": "hash",
-            "methods": [
-              {
-                "confidence": 0.1,
-                "technique": "attestation",
-                "value": "analysis-tool"
-              }
-            ],
-            "tools": [
-              "cbom:generator"
-            ]
-          },
-          {
-            "concludedValue": "example-component",
-            "confidence": 0.9,
-            "field": "name",
-            "methods": [
-              {
-                "confidence": 0.8,
-                "technique": "source-code-analysis",
-                "value": "analysis-tool"
-              }
-            ],
-            "tools": [
-              "cbom:generator"
-            ]
-          }
-        ],
-        "licenses": [
-          {
-            "license": {
-              "id": "MIT"
-            }
-          }
-        ],
-        "occurrences": [
-          {
-            "additionalContext": "Found in source code",
-            "line": 42,
-            "location": "path/to/file",
-            "offset": 16,
-            "symbol": "exampleSymbol"
-          }
-        ]
-      },
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ],
-      "name": "setuptools",
-      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
-      "type": "library",
-      "version": "50.3.2"
-    }
-  ],
-  "dependencies": [
-    {
-      "dependsOn": [
-        "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
-      ],
-      "ref": "myApp"
-    },
-    {
-      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
-    }
-  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
   "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "tools": {
+      "components": [
+        {
+          "name": "product-cbom-generator",
+          "type": "application",
+          "bom-ref": "cbom:generator"
+        }
+      ]
+    },
     "component": {
+      "name": "root-component",
+      "type": "application",
       "bom-ref": "myApp",
       "licenses": [
         {
@@ -110,21 +22,111 @@
             "id": "MIT"
           }
         }
-      ],
-      "name": "root-component",
-      "type": "application"
-    },
-    "timestamp": "2023-01-07T13:44:32.312678+00:00",
-    "tools": {
-      "components": [
-        {
-          "bom-ref": "cbom:generator",
-          "name": "product-cbom-generator",
-          "type": "application"
-        }
       ]
     }
   },
+  "components": [
+    {
+      "name": "setuptools",
+      "type": "library",
+      "bom-ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "author": "Test Author",
+      "version": "50.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/setuptools@50.3.2?extension=tar.gz",
+      "evidence": {
+        "identity": [
+          {
+            "field": "hash",
+            "confidence": 0.1,
+            "concludedValue": "example-hash",
+            "methods": [
+              {
+                "technique": "attestation",
+                "confidence": 0.1,
+                "value": "analysis-tool"
+              }
+            ],
+            "tools": [
+              "cbom:generator"
+            ]
+          },
+          {
+            "field": "name",
+            "confidence": 0.9,
+            "concludedValue": "example-component",
+            "methods": [
+              {
+                "technique": "source-code-analysis",
+                "confidence": 0.8,
+                "value": "analysis-tool"
+              }
+            ],
+            "tools": [
+              "cbom:generator"
+            ]
+          }
+        ],
+        "occurrences": [
+          {
+            "location": "path/to/file",
+            "line": 42,
+            "offset": 16,
+            "symbol": "exampleSymbol",
+            "additionalContext": "Found in source code"
+          }
+        ],
+        "callstack": {
+          "frames": [
+            {
+              "module": "example.module",
+              "package": "example.package",
+              "function": "example_function",
+              "parameters": [
+                "param1",
+                "param2"
+              ],
+              "line": 10,
+              "column": 5,
+              "fullFilename": "path/to/file"
+            }
+          ]
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ],
+        "copyright": [
+          {
+            "text": "Commercial"
+          },
+          {
+            "text": "Commercial 2"
+          }
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "myApp",
+      "dependsOn": [
+        "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+      ]
+    },
+    {
+      "ref": "pkg:pypi/setuptools@50.3.2?extension=tar.gz"
+    }
+  ],
   "properties": [
     {
       "name": "key1",
@@ -135,8 +137,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6"
