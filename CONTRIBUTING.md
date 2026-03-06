@@ -21,7 +21,7 @@ poetry install --all-extras
 
 ## Code style
 
-THis project loves latest python features.  
+This project loves latest python features.  
 This project loves sorted imports.  
 This project uses [PEP8] Style Guide for Python Code.  
 
@@ -67,7 +67,7 @@ Please sign off your commits, to show that you agree to publish your changes und
 , and to indicate agreement with [Developer Certificate of Origin (DCO)](https://developercertificate.org/).
 
 ```shell
-git commit --signed-off ...
+git commit --signoff ...
 ```
 
 ## Pre-commit hooks
