@@ -57,10 +57,23 @@ except ImportError as err:
 
 class JsonValidationError(ValidationError):
     @classmethod
+    def __get_most_relevant_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonSchemaValidationError':
+        if not e.context:
+            return e
+        # nested `context` errors generally provide more useful details than
+        # generic parent messages, e.g. for oneOf/anyOf checks.
+        child = max(e.context, key=lambda ce: len(ce.absolute_path))
+        return cls.__get_most_relevant_jsve(child)
+
+    @classmethod
     def _make_from_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonValidationError':
         """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
-        # in preparation for https://github.com/CycloneDX/cyclonedx-python-lib/pull/836
-        return cls(e)
+        useful = cls.__get_most_relevant_jsve(e)
+        return cls(
+            e,
+            message=useful.message,
+            path=tuple(useful.absolute_path)
+        )
 
 
 class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
