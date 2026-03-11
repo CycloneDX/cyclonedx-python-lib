@@ -815,10 +815,13 @@ class Bom:
              `bool`
 
         .. deprecated:: next
-            Deprecated without any replacement.
+            Use :class:`cyclonedx.validation.model.ModelValidator` instead.
         """
-        # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
-        # 0. Make sure all Dependable have a Dependency entry
+        from ..validation.model import ModelValidator
+        warn('`Bom.validate()` is deprecated. Use `cyclonedx.validation.model.ModelValidator` instead.',
+             category=DeprecationWarning, stacklevel=2)
+
+        # Maintain backward compatibility: perform side effects (normalization)
         if self.metadata.component:
             self.register_dependency(target=self.metadata.component)
         for _c in self.components:
@@ -826,45 +829,10 @@ class Bom:
         for _s in self.services:
             self.register_dependency(target=_s)
 
-        # 1. Make sure dependencies are all in this Bom.
-        component_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
-            map(lambda s: s.bom_ref, self.services))
-        dependency_bom_refs = set(chain(
-            (d.ref for d in self.dependencies),
-            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies)
-        ))
-        dependency_diff = dependency_bom_refs - component_bom_refs
-        if len(dependency_diff) > 0:
-            raise UnknownComponentDependencyException(
-                'One or more Components have Dependency references to Components/Services that are not known in this '
-                f'BOM. They are: {dependency_diff}')
-
-        # 2. if root component is set and there are other components: dependencies should exist for the Component
-        # this BOM is describing
-        if self.metadata.component and len(self.components) > 0 and not any(map(
-            lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type:ignore[union-attr]
-            self.dependencies
-        )):
-            warn(
-                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
-                'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
-                '"root" Component to complete the Dependency Graph data.',
-                category=UserWarning, stacklevel=1
-            )
-
-        # 3. If a LicenseExpression is set, then there must be no other license.
-        # see https://github.com/CycloneDX/specification/pull/205
-        elem: Union[BomMetaData, Component, Service]
-        for elem in chain(  # type:ignore[assignment]
-            [self.metadata],
-            self.metadata.component.get_all_nested_components(include_self=True) if self.metadata.component else [],
-            chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
-            self.services
-        ):
-            if len(elem.licenses) > 1 and any(isinstance(li, LicenseExpression) for li in elem.licenses):
-                raise LicenseExpressionAlongWithOthersException(
-                    f'Found LicenseExpression along with others licenses in: {elem!r}')
-
+        errors = ModelValidator().validate(self)
+        first_error = next(iter(errors), None)
+        if first_error:
+            raise first_error.data
         return True
 
     def __comparable_tuple(self) -> _ComparableTuple:
