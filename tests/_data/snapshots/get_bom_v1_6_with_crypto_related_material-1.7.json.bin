@@ -1,32 +1,37 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
+      "name": "My Encrypted Thing",
+      "type": "cryptographic-asset",
       "bom-ref": "332b3cee-078c-4789-ab15-887565b6fac5",
+      "version": "1.0",
       "cryptoProperties": {
         "assetType": "related-crypto-material",
-        "oid": "an-oid-here",
         "relatedCryptoMaterialProperties": {
-          "activationDate": "2023-05-19T01:00:00+00:00",
-          "creationDate": "2023-05-19T01:00:00+00:00",
-          "expirationDate": "2024-05-19T00:59:59.999999+00:00",
-          "format": "a-format",
+          "type": "digest",
           "id": "some-identifier",
+          "state": "active",
+          "creationDate": "2023-05-19T01:00:00+00:00",
+          "activationDate": "2023-05-19T01:00:00+00:00",
+          "expirationDate": "2024-05-19T00:59:59.999999+00:00",
+          "value": "some-random-value",
+          "size": 32,
+          "format": "a-format",
           "securedBy": {
             "mechanism": "hard-work"
-          },
-          "size": 32,
-          "state": "active",
-          "type": "digest",
-          "value": "some-random-value"
-        }
+          }
+        },
+        "oid": "an-oid-here"
       },
-      "name": "My Encrypted Thing",
       "tags": [
         "data",
         "encrypted"
-      ],
-      "type": "cryptographic-asset",
-      "version": "1.0"
+      ]
     }
   ],
   "dependencies": [
@@ -34,9 +39,6 @@
       "ref": "332b3cee-078c-4789-ab15-887565b6fac5"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -47,8 +49,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7"

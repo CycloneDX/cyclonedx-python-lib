@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac">
   <components>
     <component type="library" bom-ref="my-specific-bom-ref-for-dings">
       <publisher>CycloneDX</publisher>
@@ -15,6 +15,7 @@
       <copyright>Apache 2.0 baby!</copyright>
       <cpe>cpe:2.3:a:python:setuptools:50.3.2:*:*:*:*:*:*:*</cpe>
       <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+      <modified>false</modified>
       <pedigree>
         <ancestors>
           <component type="library" bom-ref="ccc8d7ee-4b9c-4750-aee0-a72585152291">
@@ -114,6 +115,7 @@
             </license>
           </licenses>
           <purl>pkg:pypi/setuptools@50.3.2?extension=tar.gz</purl>
+          <modified>false</modified>
         </component>
         <component type="library" bom-ref="pkg:pypi/toml@0.10.2?extension=tar.gz">
           <name>toml</name>
@@ -122,6 +124,7 @@
             <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
           </hashes>
           <purl>pkg:pypi/toml@0.10.2?extension=tar.gz</purl>
+          <modified>false</modified>
           <externalReferences>
             <reference type="distribution">
               <url>https://cyclonedx.org</url>

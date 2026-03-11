@@ -1,62 +1,62 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "component": {
+      "name": "my-project",
+      "type": "application",
+      "bom-ref": "my-project",
+      "version": "1"
+    }
+  },
   "components": [
     {
-      "bom-ref": "component-A",
-      "components": [
-        {
-          "bom-ref": "component-B",
-          "components": [
-            {
-              "bom-ref": "component-C",
-              "name": "C",
-              "type": "library",
-              "version": "1.0"
-            }
-          ],
-          "name": "B",
-          "type": "library",
-          "version": "1.0"
-        }
-      ],
       "name": "A",
       "type": "library",
-      "version": "0.1"
+      "bom-ref": "component-A",
+      "version": "0.1",
+      "components": [
+        {
+          "name": "B",
+          "type": "library",
+          "bom-ref": "component-B",
+          "version": "1.0",
+          "components": [
+            {
+              "name": "C",
+              "type": "library",
+              "bom-ref": "component-C",
+              "version": "1.0"
+            }
+          ]
+        }
+      ]
     }
   ],
   "dependencies": [
     {
+      "ref": "component-A",
       "dependsOn": [
         "component-B"
-      ],
-      "ref": "component-A"
+      ]
     },
     {
+      "ref": "component-B",
       "dependsOn": [
         "component-C"
-      ],
-      "ref": "component-B"
+      ]
     },
     {
       "ref": "component-C"
     },
     {
+      "ref": "my-project",
       "dependsOn": [
         "component-A"
-      ],
-      "ref": "my-project"
+      ]
     }
   ],
-  "metadata": {
-    "component": {
-      "bom-ref": "my-project",
-      "name": "my-project",
-      "type": "application",
-      "version": "1"
-    },
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.2"

@@ -18,12 +18,10 @@
 from abc import ABC, abstractmethod
 from typing import Literal
 
-from py_serializable import ViewType
-
 from . import SchemaVersion
 
 
-class BaseSchemaVersion(ABC, ViewType):
+class BaseSchemaVersion(ABC):
 
     @property
     @abstractmethod

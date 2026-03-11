@@ -71,7 +71,8 @@ keywords = [
 [tool.poetry.dependencies]
 python = "^3.9"
 packageurl-python = ">=0.11, <2"
-py-serializable =  "^2.1.0"
+attrs = ">=23.1.0"
+cattrs = ">=23.1.0"
 sortedcontainers = "^2.4.0"
 license-expression = "^30"
 jsonschema = { version = "^4.25", extras=['format-nongpl'], optional=true }

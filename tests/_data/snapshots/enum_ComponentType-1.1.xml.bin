@@ -1,29 +1,35 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.1" version="1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac">
   <components>
     <component type="application" bom-ref="typed-APPLICATION">
       <name>dummy APPLICATION</name>
       <version/>
+      <modified>false</modified>
     </component>
     <component type="device" bom-ref="typed-DEVICE">
       <name>dummy DEVICE</name>
       <version/>
+      <modified>false</modified>
     </component>
     <component type="file" bom-ref="typed-FILE">
       <name>dummy FILE</name>
       <version/>
+      <modified>false</modified>
     </component>
     <component type="framework" bom-ref="typed-FRAMEWORK">
       <name>dummy FRAMEWORK</name>
       <version/>
+      <modified>false</modified>
     </component>
     <component type="library" bom-ref="typed-LIBRARY">
       <name>dummy LIBRARY</name>
       <version/>
+      <modified>false</modified>
     </component>
     <component type="operating-system" bom-ref="typed-OPERATING_SYSTEM">
       <name>dummy OPERATING_SYSTEM</name>
       <version/>
+      <modified>false</modified>
     </component>
   </components>
 </bom>

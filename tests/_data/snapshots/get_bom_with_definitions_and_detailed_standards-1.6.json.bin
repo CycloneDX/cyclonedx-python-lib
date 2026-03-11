@@ -1,143 +1,6 @@
 {
-  "definitions": {
-    "standards": [
-      {
-        "bom-ref": "other-standard",
-        "description": "Other description",
-        "externalReferences": [
-          {
-            "type": "website",
-            "url": "https://cyclonedx.org"
-          }
-        ],
-        "levels": [
-          {
-            "bom-ref": "lvl-3",
-            "description": "Level 3 description",
-            "identifier": "LVL-3",
-            "requirements": [
-              "req-3"
-            ],
-            "title": "Level 3"
-          }
-        ],
-        "name": "Other Standard",
-        "owner": "Other Owner",
-        "requirements": [
-          {
-            "bom-ref": "req-3",
-            "descriptions": [
-              "Requirement 3 described here",
-              "and here"
-            ],
-            "identifier": "REQ-3",
-            "openCre": [
-              "CRE:5-6",
-              "CRE:7-8"
-            ],
-            "properties": [
-              {
-                "name": "key3",
-                "value": "val3"
-              }
-            ],
-            "text": "some requirement text",
-            "title": "Requirement 3"
-          }
-        ],
-        "version": "1.0.0"
-      },
-      {
-        "bom-ref": "some-standard",
-        "description": "Some description",
-        "externalReferences": [
-          {
-            "comment": "No comment",
-            "hashes": [
-              {
-                "alg": "SHA-256",
-                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-              }
-            ],
-            "type": "distribution",
-            "url": "https://cyclonedx.org"
-          }
-        ],
-        "levels": [
-          {
-            "bom-ref": "lvl-1",
-            "description": "Level 1 description",
-            "identifier": "LVL-1",
-            "title": "Level 1"
-          },
-          {
-            "bom-ref": "lvl-2",
-            "description": "Level 2 description",
-            "identifier": "LVL-2",
-            "requirements": [
-              "req-1",
-              "req-2"
-            ],
-            "title": "Level 2"
-          }
-        ],
-        "name": "Some Standard",
-        "owner": "Some Owner",
-        "requirements": [
-          {
-            "bom-ref": "req-1",
-            "descriptions": [
-              "Requirement 1 described here",
-              "and here"
-            ],
-            "externalReferences": [
-              {
-                "type": "website",
-                "url": "https://cyclonedx.org"
-              }
-            ],
-            "identifier": "REQ-1",
-            "openCre": [
-              "CRE:1-2"
-            ],
-            "properties": [
-              {
-                "name": "key1",
-                "value": "val1a"
-              },
-              {
-                "name": "key1",
-                "value": "val1b"
-              }
-            ],
-            "text": "some requirement text",
-            "title": "Requirement 1"
-          },
-          {
-            "bom-ref": "req-2",
-            "descriptions": [
-              "Requirement 2 described here"
-            ],
-            "identifier": "REQ-2",
-            "openCre": [
-              "CRE:1-2",
-              "CRE:3-4"
-            ],
-            "parent": "req-1",
-            "properties": [
-              {
-                "name": "key2",
-                "value": "val2"
-              }
-            ],
-            "text": "some requirement text",
-            "title": "Requirement 2"
-          }
-        ],
-        "version": "1.2.3"
-      }
-    ]
-  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
   "metadata": {
     "timestamp": "2023-01-07T13:44:32.312678+00:00"
   },
@@ -151,8 +14,145 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
+  "definitions": {
+    "standards": [
+      {
+        "bom-ref": "other-standard",
+        "name": "Other Standard",
+        "version": "1.0.0",
+        "description": "Other description",
+        "owner": "Other Owner",
+        "requirements": [
+          {
+            "bom-ref": "req-3",
+            "identifier": "REQ-3",
+            "title": "Requirement 3",
+            "text": "some requirement text",
+            "descriptions": [
+              "Requirement 3 described here",
+              "and here"
+            ],
+            "openCre": [
+              "CRE:5-6",
+              "CRE:7-8"
+            ],
+            "properties": [
+              {
+                "name": "key3",
+                "value": "val3"
+              }
+            ]
+          }
+        ],
+        "levels": [
+          {
+            "bom-ref": "lvl-3",
+            "identifier": "LVL-3",
+            "title": "Level 3",
+            "description": "Level 3 description",
+            "requirements": [
+              "req-3"
+            ]
+          }
+        ],
+        "externalReferences": [
+          {
+            "type": "website",
+            "url": "https://cyclonedx.org"
+          }
+        ]
+      },
+      {
+        "bom-ref": "some-standard",
+        "name": "Some Standard",
+        "version": "1.2.3",
+        "description": "Some description",
+        "owner": "Some Owner",
+        "requirements": [
+          {
+            "bom-ref": "req-1",
+            "identifier": "REQ-1",
+            "title": "Requirement 1",
+            "text": "some requirement text",
+            "descriptions": [
+              "Requirement 1 described here",
+              "and here"
+            ],
+            "openCre": [
+              "CRE:1-2"
+            ],
+            "properties": [
+              {
+                "name": "key1",
+                "value": "val1a"
+              },
+              {
+                "name": "key1",
+                "value": "val1b"
+              }
+            ],
+            "externalReferences": [
+              {
+                "type": "website",
+                "url": "https://cyclonedx.org"
+              }
+            ]
+          },
+          {
+            "bom-ref": "req-2",
+            "identifier": "REQ-2",
+            "title": "Requirement 2",
+            "text": "some requirement text",
+            "descriptions": [
+              "Requirement 2 described here"
+            ],
+            "openCre": [
+              "CRE:1-2",
+              "CRE:3-4"
+            ],
+            "parent": "req-1",
+            "properties": [
+              {
+                "name": "key2",
+                "value": "val2"
+              }
+            ]
+          }
+        ],
+        "levels": [
+          {
+            "bom-ref": "lvl-1",
+            "identifier": "LVL-1",
+            "title": "Level 1",
+            "description": "Level 1 description"
+          },
+          {
+            "bom-ref": "lvl-2",
+            "identifier": "LVL-2",
+            "title": "Level 2",
+            "description": "Level 2 description",
+            "requirements": [
+              "req-1",
+              "req-2"
+            ]
+          }
+        ],
+        "externalReferences": [
+          {
+            "type": "distribution",
+            "url": "https://cyclonedx.org",
+            "comment": "No comment",
+            "hashes": [
+              {
+                "alg": "SHA-256",
+                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6"

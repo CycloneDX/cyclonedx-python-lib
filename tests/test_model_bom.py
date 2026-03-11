@@ -66,7 +66,8 @@ class TestDistributionConstraints(TestCase):
         self.assertNotEqual(a, c)
 
     def test_sort(self) -> None:
-        expected_order = [2, 1, 3, 0]
+        # Sort order is alphabetical by TLP value string
+        expected_order = [1, 2, 3, 0]  # AMBER, AMBER_AND_STRICT, CLEAR, RED
         dcs = [
             DistributionConstraints(tlp=TlpClassification.RED),
             DistributionConstraints(tlp=TlpClassification.AMBER),

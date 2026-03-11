@@ -1,6 +1,42 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00",
+    "component": {
+      "name": "app",
+      "type": "application",
+      "bom-ref": "my-app",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        },
+        {
+          "license": {
+            "name": "foo license"
+          }
+        }
+      ]
+    },
+    "licenses": [
+      {
+        "license": {
+          "id": "MIT"
+        }
+      },
+      {
+        "license": {
+          "name": "foo license"
+        }
+      }
+    ]
+  },
   "components": [
     {
+      "name": "comp",
+      "type": "library",
       "bom-ref": "my-compo",
       "licenses": [
         {
@@ -13,9 +49,25 @@
             "name": "foo license"
           }
         }
-      ],
-      "name": "comp",
-      "type": "library"
+      ]
+    }
+  ],
+  "services": [
+    {
+      "name": "serv",
+      "bom-ref": "my-serv",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        },
+        {
+          "license": {
+            "name": "foo license"
+          }
+        }
+      ]
     }
   ],
   "dependencies": [
@@ -29,38 +81,6 @@
       "ref": "my-serv"
     }
   ],
-  "metadata": {
-    "component": {
-      "bom-ref": "my-app",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        },
-        {
-          "license": {
-            "name": "foo license"
-          }
-        }
-      ],
-      "name": "app",
-      "type": "application"
-    },
-    "licenses": [
-      {
-        "license": {
-          "id": "MIT"
-        }
-      },
-      {
-        "license": {
-          "name": "foo license"
-        }
-      }
-    ],
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -71,26 +91,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "services": [
-    {
-      "bom-ref": "my-serv",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        },
-        {
-          "license": {
-            "name": "foo license"
-          }
-        }
-      ],
-      "name": "serv"
-    }
-  ],
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6"

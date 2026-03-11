@@ -1,18 +1,23 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
-      "bom-ref": "dummy-a",
       "name": "dummy",
-      "purl": "pkg:pypi/pathlib2@2.3.5",
       "type": "library",
-      "version": "2.3.5"
+      "bom-ref": "dummy-a",
+      "version": "2.3.5",
+      "purl": "pkg:pypi/pathlib2@2.3.5"
     },
     {
-      "bom-ref": "dummy-b",
       "name": "dummy",
-      "purl": "pkg:pypi/pathlib2@2.3.5?vcs_url=git%2Bhttps://github.com/jazzband/pathlib2.git%405a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6",
       "type": "library",
-      "version": "2.3.5"
+      "bom-ref": "dummy-b",
+      "version": "2.3.5",
+      "purl": "pkg:pypi/pathlib2@2.3.5?vcs_url=git%2Bhttps://github.com/jazzband/pathlib2.git%405a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6"
     }
   ],
   "dependencies": [
@@ -23,9 +28,6 @@
       "ref": "dummy-b"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -36,8 +38,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6"

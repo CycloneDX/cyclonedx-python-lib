@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
 from unittest import TestCase
 from uuid import UUID
 
+import attrs
 from sortedcontainers import SortedSet
 
 from cyclonedx.output import BomRefDiscriminator as _BomRefDiscriminator
@@ -98,7 +99,16 @@ class DeepCompareMixin:
             return {k: self.__deep_dict(v) for k, v in o.items()}
         if isinstance(o, (set, SortedSet)):
             # this method returns dict. `dict` is not hashable, so use `tuple` instead.
-            return tuple(self.__deep_dict(i) for i in sorted(o, key=hash)) + ('%conv:%set',)
+            # Use a stable sort key based on string representation of deep_dict output
+            items = [self.__deep_dict(i) for i in o]
+            # Sort by string representation for stability across Python sessions
+            items.sort(key=lambda x: str(x))
+            return tuple(items) + ('%conv:%set',)
+        # Handle attrs classes (which use slots and don't have __dict__)
+        if attrs.has(type(o)):
+            d = {a.name: self.__deep_dict(getattr(o, a.name)) for a in attrs.fields(type(o))}
+            d['%conv'] = str(type(o))
+            return d
         if hasattr(o, '__dict__'):
             d = {a: self.__deep_dict(v) for a, v in o.__dict__.items() if '__' not in a}
             d['%conv'] = str(type(o))

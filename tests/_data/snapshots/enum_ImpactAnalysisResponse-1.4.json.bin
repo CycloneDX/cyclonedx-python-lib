@@ -1,11 +1,13 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
   "metadata": {
     "timestamp": "2023-01-07T13:44:32.312678+00:00"
   },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "vulnerabilities": [
     {
+      "bom-ref": "dummy",
+      "id": "dummy",
       "analysis": {
         "response": [
           "can_not_fix",
@@ -14,9 +16,7 @@
           "will_not_fix",
           "workaround_available"
         ]
-      },
-      "bom-ref": "dummy",
-      "id": "dummy"
+      }
     }
   ],
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",

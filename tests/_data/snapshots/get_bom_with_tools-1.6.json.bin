@@ -1,8 +1,13 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
   "metadata": {
     "timestamp": "2023-01-07T13:44:32.312678+00:00",
     "tools": [
       {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-python-lib",
+        "version": "TESTING",
         "externalReferences": [
           {
             "type": "build-system",
@@ -36,34 +41,31 @@
             "type": "website",
             "url": "https://github.com/CycloneDX/cyclonedx-python-lib/#readme"
           }
-        ],
-        "name": "cyclonedx-python-lib",
-        "vendor": "CycloneDX",
-        "version": "TESTING"
+        ]
       },
       {
-        "externalReferences": [
-          {
-            "comment": "No comment",
-            "hashes": [
-              {
-                "alg": "SHA-256",
-                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
-              }
-            ],
-            "type": "distribution",
-            "url": "https://cyclonedx.org"
-          }
-        ],
+        "vendor": "example",
+        "name": "test-tool-a",
+        "version": "1.33.7",
         "hashes": [
           {
             "alg": "SHA-256",
             "content": "adbbbe72c8f023b4a2d96a3978f69d94873ab2fef424e0298287c3368519c1a6"
           }
         ],
-        "name": "test-tool-a",
-        "vendor": "example",
-        "version": "1.33.7"
+        "externalReferences": [
+          {
+            "type": "distribution",
+            "url": "https://cyclonedx.org",
+            "comment": "No comment",
+            "hashes": [
+              {
+                "alg": "SHA-256",
+                "content": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "test-tool-b"
@@ -80,8 +82,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6"

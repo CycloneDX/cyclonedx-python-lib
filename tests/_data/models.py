@@ -170,8 +170,8 @@ def get_crypto_properties_algorithm() -> CryptoProperties:
             execution_environment=CryptoExecutionEnvironment.SOFTWARE_PLAIN_RAM,
             implementation_platform=CryptoImplementationPlatform.GENERIC,
             certification_levels=[
-                CryptoCertificationLevel.FIPS140_1_L1,
-                CryptoCertificationLevel.FIPS140_2_L3,
+                CryptoCertificationLevel.FIPS_140_1_L1,
+                CryptoCertificationLevel.FIPS_140_2_L3,
                 CryptoCertificationLevel.OTHER
             ],
             mode=CryptoMode.ECB,

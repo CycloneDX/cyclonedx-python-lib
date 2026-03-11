@@ -15,18 +15,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from ..serialization import ALL_VERSIONS
+from ..schema import SchemaVersion
 from collections.abc import Iterable
 from enum import Enum
 from typing import Any, Optional
 
-import py_serializable as serializable
+import attrs
 from sortedcontainers import SortedSet
 
-from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..serialization import METADATA_KEY_XML_ATTR, METADATA_KEY_XML_SEQUENCE
 from . import XsUri
 
 
-@serializable.serializable_enum
 class IssueClassification(str, Enum):
     """
     This is our internal representation of the enum `issueClassification`.
@@ -39,77 +40,57 @@ class IssueClassification(str, Enum):
     SECURITY = 'security'
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+# Issue classification support by schema version
+ISSUE_CLASSIFICATION_VERSIONS: dict[IssueClassification, set[SchemaVersion]] = {
+    IssueClassification.DEFECT: ALL_VERSIONS,
+    IssueClassification.ENHANCEMENT: ALL_VERSIONS,
+    IssueClassification.SECURITY: ALL_VERSIONS,
+}
+
+
+@attrs.define
 class IssueTypeSource:
     """
-    This is our internal representation ofa source within the IssueType complex type that can be used in multiple
+    This is our internal representation of a source within the IssueType complex type that can be used in multiple
     places within a CycloneDX BOM document.
 
     .. note::
         See the CycloneDX Schema definition:
         https://cyclonedx.org/docs/1.7/json/#components_items_pedigree_patches_items_resolves_items_source
     """
+    name: Optional[str] = attrs.field(default=None)
+    url: Optional[XsUri] = attrs.field(default=None)
 
-    def __init__(
-        self, *,
-        name: Optional[str] = None,
-        url: Optional[XsUri] = None,
-    ) -> None:
-        self.name = name
-        self.url = url
-
-    @property
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def name(self) -> Optional[str]:
-        """
-        The name of the source. For example "National Vulnerability Database", "NVD", and "Apache".
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    def url(self) -> Optional[XsUri]:
-        """
-        Optional url of the issue documentation as provided by the source.
-
-        Returns:
-            `XsUri` if set else `None`
-        """
-        return self._url
-
-    @url.setter
-    def url(self, url: Optional[XsUri]) -> None:
-        self._url = url
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self.name, self.url
-        ))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, IssueTypeSource):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
+    @staticmethod
+    def _cmp(val: Any) -> tuple:
+        """Wrap value for None-safe comparison (None sorts last)."""
+        return (0, val) if val is not None else (1, '')
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueTypeSource):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            return (self._cmp(self.name), self._cmp(self.url)) < (self._cmp(other.name), self._cmp(other.url))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
+        return hash((self.name, self.url))
 
     def __repr__(self) -> str:
-        return f'<IssueTypeSource name={self._name}, url={self.url}>'
+        return f'<IssueTypeSource name={self.name}, url={self.url}>'
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+def _sortedset_factory() -> SortedSet:
+    return SortedSet()
+
+
+def _sortedset_converter(value: Any) -> SortedSet:
+    if value is None:
+        return SortedSet()
+    if isinstance(value, SortedSet):
+        return value
+    return SortedSet(value)
+
+
+@attrs.define
 class IssueType:
     """
     This is our internal representation of an IssueType complex type that can be used in multiple places within
@@ -118,135 +99,45 @@ class IssueType:
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_issueType
     """
+    type: IssueClassification = attrs.field(
+        metadata={METADATA_KEY_XML_ATTR: True}
+    )
+    id: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 1}
+    )
+    name: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 2}
+    )
+    description: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 3}
+    )
+    source: Optional[IssueTypeSource] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 4}
+    )
+    references: 'SortedSet[XsUri]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={METADATA_KEY_XML_SEQUENCE: 5}
+    )
 
-    def __init__(
-        self, *,
-        type: IssueClassification,
-        id: Optional[str] = None,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        source: Optional[IssueTypeSource] = None,
-        references: Optional[Iterable[XsUri]] = None,
-    ) -> None:
-        self.type = type
-        self.id = id
-        self.name = name
-        self.description = description
-        self.source = source
-        self.references = references or []
-
-    @property
-    @serializable.xml_attribute()
-    def type(self) -> IssueClassification:
-        """
-        Specifies the type of issue.
-
-        Returns:
-            `IssueClassification`
-        """
-        return self._type
-
-    @type.setter
-    def type(self, type: IssueClassification) -> None:
-        self._type = type
-
-    @property
-    @serializable.xml_sequence(1)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def id(self) -> Optional[str]:
-        """
-        The identifier of the issue assigned by the source of the issue.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id: Optional[str]) -> None:
-        self._id = id
-
-    @property
-    @serializable.xml_sequence(2)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def name(self) -> Optional[str]:
-        """
-        The name of the issue.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    @serializable.xml_sequence(3)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def description(self) -> Optional[str]:
-        """
-        A description of the issue.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description: Optional[str]) -> None:
-        self._description = description
-
-    @property
-    @serializable.xml_sequence(4)
-    def source(self) -> Optional[IssueTypeSource]:
-        """
-        The source of this issue.
-
-        Returns:
-            `IssueTypeSource` if set else `None`
-        """
-        return self._source
-
-    @source.setter
-    def source(self, source: Optional[IssueTypeSource]) -> None:
-        self._source = source
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'url')
-    @serializable.xml_sequence(5)
-    def references(self) -> 'SortedSet[XsUri]':
-        """
-        Any reference URLs related to this issue.
-
-        Returns:
-            Set of `XsUri`
-        """
-        return self._references
-
-    @references.setter
-    def references(self, references: Iterable[XsUri]) -> None:
-        self._references = SortedSet(references)
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self.type, self.id, self.name, self.description, self.source,
-            _ComparableTuple(self.references)
-        ))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, IssueType):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
+    @staticmethod
+    def _cmp_issue(val: Any) -> tuple:
+        """Wrap value for None-safe comparison (None sorts last)."""
+        return (0, val) if val is not None else (1, '')
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, IssueType):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            c = self._cmp_issue
+            return (self.type, c(self.id), c(self.name), c(self.description), c(self.source), tuple(self.references)) < (
+                other.type, c(other.id), c(other.name), c(other.description), c(other.source), tuple(other.references))
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
+        return hash((self.type, self.id, self.name, self.description, self.source, tuple(self.references)))
 
     def __repr__(self) -> str:
         return f'<IssueType type={self.type}, id={self.id}, name={self.name}>'

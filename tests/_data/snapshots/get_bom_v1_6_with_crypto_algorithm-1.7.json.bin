@@ -1,37 +1,42 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
+      "name": "My Algorithm",
+      "type": "cryptographic-asset",
       "bom-ref": "8182921e-0588-472e-b8f9-9c527c68f067",
+      "version": "1.0",
       "cryptoProperties": {
+        "assetType": "algorithm",
         "algorithmProperties": {
+          "primitive": "kem",
+          "parameterSetIdentifier": "a-parameter-set-id",
+          "curve": "9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
           "certificationLevel": [
             "fips140-1-l1",
             "fips140-2-l3",
             "other"
           ],
-          "classicalSecurityLevel": 2,
+          "mode": "ecb",
+          "padding": "pkcs7",
           "cryptoFunctions": [
             "sign",
             "unknown"
           ],
-          "curve": "9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj",
-          "executionEnvironment": "software-plain-ram",
-          "implementationPlatform": "generic",
-          "mode": "ecb",
-          "nistQuantumSecurityLevel": 2,
-          "padding": "pkcs7",
-          "parameterSetIdentifier": "a-parameter-set-id",
-          "primitive": "kem"
+          "classicalSecurityLevel": 2,
+          "nistQuantumSecurityLevel": 2
         },
-        "assetType": "algorithm",
         "oid": "an-oid-here"
       },
-      "name": "My Algorithm",
       "tags": [
         "algorithm"
-      ],
-      "type": "cryptographic-asset",
-      "version": "1.0"
+      ]
     }
   ],
   "dependencies": [
@@ -39,9 +44,6 @@
       "ref": "8182921e-0588-472e-b8f9-9c527c68f067"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
   "properties": [
     {
       "name": "key1",
@@ -52,8 +54,6 @@
       "value": "val2"
     }
   ],
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7"

@@ -24,30 +24,64 @@ This set of classes represents the data that is possible about known Services.
 """
 
 
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
+from .release_note import ReleaseNotes
+from .license import License, LicenseRepository
+from .dependency import Dependable
+from .contact import OrganizationalEntity
+from .bom_ref import BomRef
+from . import DataClassification, ExternalReference, Property, XsUri
+from ..serialization import (
+    METADATA_KEY_JSON_NAME,
+    METADATA_KEY_VERSIONS,
+    METADATA_KEY_XML_ATTR,
+    METADATA_KEY_XML_NAME,
+    METADATA_KEY_XML_SEQUENCE,
+    VERSIONS_1_3_AND_LATER,
+    VERSIONS_1_4_AND_LATER,
+)
 from collections.abc import Iterable
 from typing import Any, Optional, Union
 
-import py_serializable as serializable
+import attrs
 from sortedcontainers import SortedSet
 
-from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
-from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..schema.schema import (
-    SchemaVersion1Dot3,
-    SchemaVersion1Dot4,
-    SchemaVersion1Dot5,
-    SchemaVersion1Dot6,
-    SchemaVersion1Dot7,
-)
-from . import DataClassification, ExternalReference, Property, XsUri
-from .bom_ref import BomRef
-from .contact import OrganizationalEntity
-from .dependency import Dependable
-from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
-from .release_note import ReleaseNotes
+
+def _sortedset_converter(value: Any) -> SortedSet:
+    """Converter to ensure values are always SortedSet."""
+    if value is None:
+        return SortedSet()
+    if isinstance(value, SortedSet):
+        return value
+    if isinstance(value, Iterable) and not isinstance(value, (str, bytes, dict)):
+        return SortedSet(value)
+    return SortedSet([value])
 
 
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+def _bom_ref_converter(value: Optional[Union[str, BomRef]]) -> BomRef:
+    """Convert string or BomRef to BomRef."""
+    return _bom_ref_from_str(value)
+
+
+def _sortedset_factory() -> SortedSet:
+    return SortedSet()
+
+
+def _license_repository_factory() -> LicenseRepository:
+    return LicenseRepository()
+
+
+def _license_repository_converter(value: Any) -> LicenseRepository:
+    """Convert a value to LicenseRepository."""
+    if value is None:
+        return LicenseRepository()
+    if isinstance(value, LicenseRepository):
+        return value
+    # Convert generators, lists, etc. to LicenseRepository
+    return LicenseRepository(value)
+
+
+@attrs.define
 class Service(Dependable):
     """
     Class that models the `service` complex type in the CycloneDX schema.
@@ -55,335 +89,139 @@ class Service(Dependable):
     .. note::
         See the CycloneDX schema: https://cyclonedx.org/docs/1.7/xml/#type_service
     """
-
-    def __init__(
-        self, *,
-        name: str,
-        bom_ref: Optional[Union[str, BomRef]] = None,
-        provider: Optional[OrganizationalEntity] = None,
-        group: Optional[str] = None,
-        version: Optional[str] = None,
-        description: Optional[str] = None,
-        endpoints: Optional[Iterable[XsUri]] = None,
-        authenticated: Optional[bool] = None,
-        x_trust_boundary: Optional[bool] = None,
-        data: Optional[Iterable[DataClassification]] = None,
-        licenses: Optional[Iterable[License]] = None,
-        external_references: Optional[Iterable[ExternalReference]] = None,
-        properties: Optional[Iterable[Property]] = None,
-        services: Optional[Iterable['Service']] = None,
-        release_notes: Optional[ReleaseNotes] = None,
-    ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref)
-        self.provider = provider
-        self.group = group
-        self.name = name
-        self.version = version
-        self.description = description
-        self.endpoints = endpoints or []
-        self.authenticated = authenticated
-        self.x_trust_boundary = x_trust_boundary
-        self.data = data or []
-        self.licenses = licenses or []
-        self.external_references = external_references or []
-        self.services = services or []
-        self.release_notes = release_notes
-        self.properties = properties or []
-
-    @property
-    @serializable.json_name('bom-ref')
-    @serializable.type_mapping(BomRef)
-    @serializable.xml_attribute()
-    @serializable.xml_name('bom-ref')
-    def bom_ref(self) -> BomRef:
-        """
-        An optional identifier which can be used to reference the service elsewhere in the BOM. Uniqueness is enforced
-        within all elements and children of the root-level bom element.
-
-        Returns:
-           `BomRef` unique identifier for this Service
-        """
-        return self._bom_ref
-
-    @property
-    @serializable.xml_sequence(1)
-    def provider(self) -> Optional[OrganizationalEntity]:
-        """
-        Get the organization that provides the service.
-
-        Returns:
-            `OrganizationalEntity` if set else `None`
-        """
-        return self._provider
-
-    @provider.setter
-    def provider(self, provider: Optional[OrganizationalEntity]) -> None:
-        self._provider = provider
-
-    @property
-    @serializable.xml_sequence(2)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def group(self) -> Optional[str]:
-        """
-        The grouping name, namespace, or identifier. This will often be a shortened, single name of the company or
-        project that produced the service or domain name. Whitespace and special characters should be avoided.
-
-        Returns:
-            `str` if provided else `None`
-        """
-        return self._group
-
-    @group.setter
-    def group(self, group: Optional[str]) -> None:
-        self._group = group
-
-    @property
-    @serializable.xml_sequence(3)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def name(self) -> str:
-        """
-        The name of the service. This will often be a shortened, single name of the service.
-
-        Returns:
-            `str`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: str) -> None:
-        self._name = name
-
-    @property
-    @serializable.xml_sequence(4)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def version(self) -> Optional[str]:
-        """
-        The service version.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version: Optional[str]) -> None:
-        self._version = version
-
-    @property
-    @serializable.xml_sequence(5)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def description(self) -> Optional[str]:
-        """
-        Specifies a description for the service.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description: Optional[str]) -> None:
-        self._description = description
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'endpoint')
-    @serializable.xml_sequence(6)
-    def endpoints(self) -> 'SortedSet[XsUri]':
-        """
-        A list of endpoints URI's this service provides.
-
-        Returns:
-            Set of `XsUri`
-        """
-        return self._endpoints
-
-    @endpoints.setter
-    def endpoints(self, endpoints: Iterable[XsUri]) -> None:
-        self._endpoints = SortedSet(endpoints)
-
-    @property
-    @serializable.xml_sequence(7)
-    def authenticated(self) -> Optional[bool]:
-        """
-        A boolean value indicating if the service requires authentication. A value of true indicates the service
-        requires authentication prior to use.
-
-        A value of false indicates the service does not require authentication.
-
-        Returns:
-            `bool` if set else `None`
-        """
-        return self._authenticated
-
-    @authenticated.setter
-    def authenticated(self, authenticated: Optional[bool]) -> None:
-        self._authenticated = authenticated
-
-    @property
-    @serializable.json_name('x-trust-boundary')
-    @serializable.xml_name('x-trust-boundary')
-    @serializable.xml_sequence(8)
-    def x_trust_boundary(self) -> Optional[bool]:
-        """
-        A boolean value indicating if use of the service crosses a trust zone or boundary. A value of true indicates
-        that by using the service, a trust boundary is crossed.
-
-        A value of false indicates that by using the service, a trust boundary is not crossed.
-
-        Returns:
-            `bool` if set else `None`
-        """
-        return self._x_trust_boundary
-
-    @x_trust_boundary.setter
-    def x_trust_boundary(self, x_trust_boundary: Optional[bool]) -> None:
-        self._x_trust_boundary = x_trust_boundary
-
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(9)
-    # def trust_zone(self) -> ...:
-    #     ... # since CDX1.5
-    #
-    # @trust_zone.setter
-    # def trust_zone(self, ...) -> None:
-    #     ... # since CDX1.5
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
-    @serializable.xml_sequence(10)
-    def data(self) -> 'SortedSet[DataClassification]':
-        """
-        Specifies the data classification.
-
-        Returns:
-            Set of `DataClassification`
-        """
-        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
-        return self._data
-
-    @data.setter
-    def data(self, data: Iterable[DataClassification]) -> None:
-        self._data = SortedSet(data)
-
-    @property
-    @serializable.type_mapping(_LicenseRepositorySerializationHelper)
-    @serializable.xml_sequence(11)
-    def licenses(self) -> LicenseRepository:
-        """
-        A optional list of statements about how this Service is licensed.
-
-        Returns:
-            Set of `LicenseChoice`
-        """
-        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
-        return self._licenses
-
-    @licenses.setter
-    def licenses(self, licenses: Iterable[License]) -> None:
-        self._licenses = LicenseRepository(licenses)
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
-    @serializable.xml_sequence(12)
-    def external_references(self) -> 'SortedSet[ExternalReference]':
-        """
-        Provides the ability to document external references related to the Service.
-
-        Returns:
-            Set of `ExternalReference`
-        """
-        return self._external_references
-
-    @external_references.setter
-    def external_references(self, external_references: Iterable[ExternalReference]) -> None:
-        self._external_references = SortedSet(external_references)
-
-    @property
-    @serializable.view(SchemaVersion1Dot3)
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
-    @serializable.xml_sequence(13)
-    def properties(self) -> 'SortedSet[Property]':
-        """
-        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
-        officially supported in the standard without having to use additional namespaces or create extensions.
-
-        Return:
-            Set of `Property`
-        """
-        return self._properties
-
-    @properties.setter
-    def properties(self, properties: Iterable[Property]) -> None:
-        self._properties = SortedSet(properties)
-
-    @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
-    @serializable.xml_sequence(14)
-    def services(self) -> "SortedSet['Service']":
-        """
-        A list of services included or deployed behind the parent service.
-
-        This is not a dependency tree.
-
-        It provides a way to specify a hierarchical representation of service assemblies.
-
-        Returns:
-            Set of `Service`
-        """
-        return self._services
-
-    @services.setter
-    def services(self, services: Iterable['Service']) -> None:
-        self._services = SortedSet(services)
-
-    @property
-    @serializable.view(SchemaVersion1Dot4)
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(15)
-    def release_notes(self) -> Optional[ReleaseNotes]:
-        """
-        Specifies optional release notes.
-
-        Returns:
-            `ReleaseNotes` or `None`
-        """
-        return self._release_notes
-
-    @release_notes.setter
-    def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
-        self._release_notes = release_notes
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((
-            self.group, self.name, self.version,
-            self.bom_ref.value,
-            self.provider, self.description,
-            self.authenticated, _ComparableTuple(self.data), _ComparableTuple(self.endpoints),
-            _ComparableTuple(self.external_references), _ComparableTuple(self.licenses),
-            _ComparableTuple(self.properties), self.release_notes, _ComparableTuple(self.services),
-            self.x_trust_boundary
-        ))
+    name: str = attrs.field(
+        metadata={METADATA_KEY_XML_SEQUENCE: 3}
+    )
+    bom_ref: BomRef = attrs.field(
+        factory=BomRef,
+        converter=_bom_ref_converter,
+        metadata={
+            METADATA_KEY_JSON_NAME: 'bom-ref',
+            METADATA_KEY_XML_ATTR: True,
+            METADATA_KEY_XML_NAME: 'bom-ref',
+        }
+    )
+    provider: Optional[OrganizationalEntity] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 1}
+    )
+    group: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 2}
+    )
+    version: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 4}
+    )
+    description: Optional[str] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 5}
+    )
+    endpoints: 'SortedSet[XsUri]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={METADATA_KEY_XML_SEQUENCE: 6}
+    )
+    authenticated: Optional[bool] = attrs.field(
+        default=None,
+        metadata={METADATA_KEY_XML_SEQUENCE: 7}
+    )
+    x_trust_boundary: Optional[bool] = attrs.field(
+        default=None,
+        metadata={
+            METADATA_KEY_JSON_NAME: 'x-trust-boundary',
+            METADATA_KEY_XML_NAME: 'x-trust-boundary',
+            METADATA_KEY_XML_SEQUENCE: 8,
+        }
+    )
+    data: 'SortedSet[DataClassification]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={METADATA_KEY_XML_SEQUENCE: 10}
+    )
+    licenses: LicenseRepository = attrs.field(
+        factory=_license_repository_factory,
+        converter=_license_repository_converter,
+        metadata={METADATA_KEY_XML_SEQUENCE: 11}
+    )
+    external_references: 'SortedSet[ExternalReference]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={METADATA_KEY_XML_SEQUENCE: 12}
+    )
+    properties: 'SortedSet[Property]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={
+            METADATA_KEY_VERSIONS: VERSIONS_1_3_AND_LATER,
+            METADATA_KEY_XML_SEQUENCE: 13,
+        }
+    )
+    services: 'SortedSet[Service]' = attrs.field(
+        factory=_sortedset_factory,
+        converter=_sortedset_converter,
+        metadata={METADATA_KEY_XML_SEQUENCE: 14}
+    )
+    release_notes: Optional[ReleaseNotes] = attrs.field(
+        default=None,
+        metadata={
+            METADATA_KEY_VERSIONS: VERSIONS_1_4_AND_LATER,
+            METADATA_KEY_XML_SEQUENCE: 15,
+        }
+    )
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Service):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
+            return (
+                self.group, self.name, self.version, self.bom_ref.value,
+                self.provider, self.description, self.authenticated,
+                tuple(self.data), tuple(self.endpoints), tuple(self.external_references),
+                tuple(self.licenses), tuple(self.properties), self.release_notes,
+                tuple(self.services), self.x_trust_boundary
+            ) == (
+                other.group, other.name, other.version, other.bom_ref.value,
+                other.provider, other.description, other.authenticated,
+                tuple(other.data), tuple(other.endpoints), tuple(other.external_references),
+                tuple(other.licenses), tuple(other.properties), other.release_notes,
+                tuple(other.services), other.x_trust_boundary
+            )
+        return NotImplemented
+
+    @staticmethod
+    def _none_safe(val: Any) -> tuple:
+        """Convert value to tuple for safe comparison (None sorts last)."""
+        return (0, val) if val is not None else (1, '')
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, Service):
-            return self.__comparable_tuple() < other.__comparable_tuple()
+            # Use _none_safe to handle None values in comparisons
+            return (
+                self._none_safe(self.group), self.name, self._none_safe(self.version),
+                self._none_safe(self.bom_ref.value),
+                self._none_safe(self.provider), self._none_safe(self.description),
+                self._none_safe(self.authenticated),
+                tuple(self.data), tuple(self.endpoints), tuple(self.external_references),
+                tuple(self.licenses), tuple(self.properties), self.release_notes,
+                tuple(self.services), self._none_safe(self.x_trust_boundary)
+            ) < (
+                self._none_safe(other.group), other.name, self._none_safe(other.version),
+                self._none_safe(other.bom_ref.value),
+                self._none_safe(other.provider), self._none_safe(other.description),
+                self._none_safe(other.authenticated),
+                tuple(other.data), tuple(other.endpoints), tuple(other.external_references),
+                tuple(other.licenses), tuple(other.properties), other.release_notes,
+                tuple(other.services), self._none_safe(other.x_trust_boundary)
+            )
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
+        return hash((
+            self.group, self.name, self.version, self.bom_ref.value,
+            self.provider, self.description, self.authenticated,
+            tuple(self.data), tuple(self.endpoints), tuple(self.external_references),
+            tuple(self.licenses), tuple(self.properties), self.release_notes,
+            tuple(self.services), self.x_trust_boundary
+        ))
 
     def __repr__(self) -> str:
         return f'<Service bom-ref={self.bom_ref}, group={self.group}, name={self.name}, version={self.version}>'

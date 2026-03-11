@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.2" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac">
   <metadata>
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
   </metadata>
@@ -8,14 +8,8 @@
       <name>dummy</name>
       <version/>
       <externalReferences>
-        <reference type="other">
-          <url>tests/ADVERSARY_MODEL</url>
-        </reference>
         <reference type="advisories">
           <url>tests/ADVISORIES</url>
-        </reference>
-        <reference type="other">
-          <url>tests/ATTESTATION</url>
         </reference>
         <reference type="bom">
           <url>tests/BOM</url>
@@ -26,50 +20,14 @@
         <reference type="build-system">
           <url>tests/BUILD_SYSTEM</url>
         </reference>
-        <reference type="other">
-          <url>tests/CERTIFICATION_REPORT</url>
-        </reference>
         <reference type="chat">
           <url>tests/CHAT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/CITATION</url>
-        </reference>
-        <reference type="other">
-          <url>tests/CODIFIED_INFRASTRUCTURE</url>
-        </reference>
-        <reference type="other">
-          <url>tests/COMPONENT_ANALYSIS_REPORT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/CONFIGURATION</url>
-        </reference>
-        <reference type="other">
-          <url>tests/DIGITAL_SIGNATURE</url>
         </reference>
         <reference type="distribution">
           <url>tests/DISTRIBUTION</url>
         </reference>
-        <reference type="other">
-          <url>tests/DISTRIBUTION_INTAKE</url>
-        </reference>
         <reference type="documentation">
           <url>tests/DOCUMENTATION</url>
-        </reference>
-        <reference type="other">
-          <url>tests/DYNAMIC_ANALYSIS_REPORT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/ELECTRONIC_SIGNATURE</url>
-        </reference>
-        <reference type="other">
-          <url>tests/EVIDENCE</url>
-        </reference>
-        <reference type="other">
-          <url>tests/EXPLOITABILITY_STATEMENT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/FORMULATION</url>
         </reference>
         <reference type="issue-tracker">
           <url>tests/ISSUE_TRACKER</url>
@@ -77,74 +35,20 @@
         <reference type="license">
           <url>tests/LICENSE</url>
         </reference>
-        <reference type="other">
-          <url>tests/LOG</url>
-        </reference>
         <reference type="mailing-list">
           <url>tests/MAILING_LIST</url>
         </reference>
         <reference type="other">
-          <url>tests/MATURITY_REPORT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/MODEL_CARD</url>
-        </reference>
-        <reference type="other">
           <url>tests/OTHER</url>
-        </reference>
-        <reference type="other">
-          <url>tests/PATENT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/PATENT_ASSERTION</url>
-        </reference>
-        <reference type="other">
-          <url>tests/PATENT_FAMILY</url>
-        </reference>
-        <reference type="other">
-          <url>tests/PENTEST_REPORT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/POAM</url>
-        </reference>
-        <reference type="other">
-          <url>tests/QUALITY_METRICS</url>
-        </reference>
-        <reference type="other">
-          <url>tests/RELEASE_NOTES</url>
-        </reference>
-        <reference type="other">
-          <url>tests/RFC_9166</url>
-        </reference>
-        <reference type="other">
-          <url>tests/RISK_ASSESSMENT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/RUNTIME_ANALYSIS_REPORT</url>
-        </reference>
-        <reference type="other">
-          <url>tests/SECURITY_CONTACT</url>
         </reference>
         <reference type="social">
           <url>tests/SOCIAL</url>
         </reference>
-        <reference type="other">
-          <url>tests/SOURCE_DISTRIBUTION</url>
-        </reference>
-        <reference type="other">
-          <url>tests/STATIC_ANALYSIS_REPORT</url>
-        </reference>
         <reference type="support">
           <url>tests/SUPPORT</url>
         </reference>
-        <reference type="other">
-          <url>tests/THREAT_MODEL</url>
-        </reference>
         <reference type="vcs">
           <url>tests/SCM</url>
-        </reference>
-        <reference type="other">
-          <url>tests/VULNERABILITY_ASSERTION</url>
         </reference>
         <reference type="website">
           <url>tests/WEBSITE</url>

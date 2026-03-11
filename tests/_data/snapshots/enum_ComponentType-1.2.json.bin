@@ -1,51 +1,56 @@
 {
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
   "components": [
     {
-      "bom-ref": "typed-APPLICATION",
       "name": "dummy APPLICATION",
       "type": "application",
+      "bom-ref": "typed-APPLICATION",
       "version": ""
     },
     {
-      "bom-ref": "typed-CONTAINER",
       "name": "dummy CONTAINER",
       "type": "container",
+      "bom-ref": "typed-CONTAINER",
       "version": ""
     },
     {
-      "bom-ref": "typed-DEVICE",
       "name": "dummy DEVICE",
       "type": "device",
+      "bom-ref": "typed-DEVICE",
       "version": ""
     },
     {
-      "bom-ref": "typed-FILE",
       "name": "dummy FILE",
       "type": "file",
+      "bom-ref": "typed-FILE",
       "version": ""
     },
     {
-      "bom-ref": "typed-FIRMWARE",
       "name": "dummy FIRMWARE",
       "type": "firmware",
+      "bom-ref": "typed-FIRMWARE",
       "version": ""
     },
     {
-      "bom-ref": "typed-FRAMEWORK",
       "name": "dummy FRAMEWORK",
       "type": "framework",
+      "bom-ref": "typed-FRAMEWORK",
       "version": ""
     },
     {
-      "bom-ref": "typed-LIBRARY",
       "name": "dummy LIBRARY",
       "type": "library",
+      "bom-ref": "typed-LIBRARY",
       "version": ""
     },
     {
-      "bom-ref": "typed-OPERATING_SYSTEM",
       "name": "dummy OPERATING_SYSTEM",
       "type": "operating-system",
+      "bom-ref": "typed-OPERATING_SYSTEM",
       "version": ""
     }
   ],
@@ -75,11 +80,6 @@
       "ref": "typed-OPERATING_SYSTEM"
     }
   ],
-  "metadata": {
-    "timestamp": "2023-01-07T13:44:32.312678+00:00"
-  },
-  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
-  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.2b.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.2"
