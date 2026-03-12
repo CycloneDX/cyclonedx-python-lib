@@ -30,6 +30,7 @@ from sortedcontainers import SortedSet
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from ..schema.deprecation import DeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -294,7 +295,7 @@ class BomMetaData:
             warn(
                 '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
                 'Please use `bom.metadata.component.manufacturer` instead.',
-                DeprecationWarning)
+                DeprecationWarning1Dot6)
         self._manufacture = manufacture
 
     @property

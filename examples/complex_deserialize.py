@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import sys
+import warnings
 from json import loads as json_loads
 from typing import TYPE_CHECKING
 
@@ -24,6 +25,7 @@ from defusedxml import ElementTree as SafeElementTree  # type:ignore[import-unty
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.schema.deprecation import SchemaDeprecationWarning
 from cyclonedx.validation import make_schemabased_validator
 from cyclonedx.validation.json import JsonStrictValidator
 
@@ -154,8 +156,10 @@ try:
     print('JSON valid')
 except MissingOptionalDependencyException as error:
     print('JSON-validation was skipped due to', error)
-bom_from_json = Bom.from_json(  # type: ignore[attr-defined]
-    json_loads(json_data))
+with warnings.catch_warnings():
+    warnings.filterwarnings('ignore', category=SchemaDeprecationWarning)
+    bom_from_json = Bom.from_json(  # type: ignore[attr-defined]
+        json_loads(json_data))
 print('bom_from_json', repr(bom_from_json))
 
 # endregion JSON
@@ -255,8 +259,10 @@ try:
     print('XML valid')
 except MissingOptionalDependencyException as error:
     print('XML-validation was skipped due to', error)
-bom_from_xml = Bom.from_xml(  # type: ignore[attr-defined]
-    SafeElementTree.fromstring(xml_data))
+with warnings.catch_warnings():
+    warnings.filterwarnings('ignore', category=SchemaDeprecationWarning)
+    bom_from_xml = Bom.from_xml(  # type: ignore[attr-defined]
+        SafeElementTree.fromstring(xml_data))
 print('bom_from_xml', repr(bom_from_xml))
 
 # endregion XML
