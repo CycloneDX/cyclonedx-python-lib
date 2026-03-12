@@ -99,6 +99,27 @@ from cyclonedx.model.impact_analysis import (
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
+from cyclonedx.model.model_card import (
+    Approach,
+    Co2Measure,
+    Considerations,
+    EnergyActivity,
+    EnergyConsumption,
+    EnergyMeasure,
+    EnergyProvider,
+    EnergySource,
+    EnvironmentalConsiderations,
+    EthicalConsideration,
+    FairnessAssessment,
+    Graphic,
+    GraphicsCollection,
+    InputOutputMLParameters,
+    MachineLearningApproach,
+    ModelCard,
+    ModelParameters,
+    PerformanceMetric,
+    QuantitativeAnalysis,
+)
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
 from cyclonedx.model.tool import Tool, ToolRepository
@@ -403,6 +424,122 @@ def get_bom_with_component_setuptools_with_release_notes() -> Bom:
     component = get_component_setuptools_simple()
     component.release_notes = get_release_notes()
     return _make_bom(components=[component])
+
+
+def get_bom_v1_5_with_full_model_card() -> Bom:
+    """Single ML component with a fully populated modelCard (schema 1.5+ only)."""
+
+    image_content = base64.b64encode(b'full-model-card-image').decode('utf-8')
+
+    provider = EnergyProvider(
+        bom_ref='mc-energy-provider',
+        description='Primary renewable provider',
+        organization=get_org_entity_1(),
+        energy_source=EnergySource.WIND,
+        energy_provided=EnergyMeasure(value=321.0),
+        external_references=[get_external_reference_1()],
+    )
+
+    env = EnvironmentalConsiderations(
+        energy_consumptions=[
+            EnergyConsumption(
+                activity=EnergyActivity.TRAINING,
+                energy_providers=[provider],
+                activity_energy_cost=EnergyMeasure(value=42.0),
+                co2_cost_equivalent=Co2Measure(value=0.7),
+                co2_cost_offset=Co2Measure(value=0.2),
+                properties=[Property(name='phase', value='pretraining')],
+            )
+        ],
+        properties=[Property(name='footprint', value='low')],
+    )
+
+    model_card = ModelCard(
+        bom_ref='mc-full',
+        model_parameters=ModelParameters(
+            approach=Approach(type=MachineLearningApproach.SUPERVISED),
+            task='text-classification',
+            architecture_family='Transformer',
+            model_architecture='tiny-transformer-v1',
+            inputs=[
+                InputOutputMLParameters(format='text/plain'),
+                InputOutputMLParameters(format='application/json'),
+            ],
+            outputs=[
+                InputOutputMLParameters(format='label'),
+                InputOutputMLParameters(format='confidence-score'),
+            ],
+        ),
+        quantitative_analysis=QuantitativeAnalysis(
+            performance_metrics=[
+                PerformanceMetric(type='f1', value='0.88', slice='en'),
+                PerformanceMetric(type='accuracy', value='0.93', slice='all'),
+            ],
+            graphics=GraphicsCollection(
+                description='Performance plots',
+                collection=[
+                    Graphic(
+                        name='roc-curve',
+                        image=AttachedText(
+                            content=image_content,
+                            content_type='image/png',
+                            encoding=Encoding.BASE_64,
+                        ),
+                    ),
+                    Graphic(
+                        name='pr-curve',
+                        image=AttachedText(
+                            content=image_content,
+                            content_type='image/png',
+                            encoding=Encoding.BASE_64,
+                        ),
+                    ),
+                ],
+            ),
+        ),
+        # Currently users, use_cases, technical_limitations, performance_tradeoffs can only contain one string each
+        # in the xml specification. This will be addressed in spec issue #737.
+        considerations=Considerations(
+            users=['ml-engineer'],
+            use_cases=['spam-detection'],
+            technical_limitations=['may misclassify non-standard language'],
+            performance_tradeoffs=['accuracy-over-speed'],
+            ethical_considerations=[
+                EthicalConsideration(
+                    name='privacy', mitigation_strategy='anonymize inputs and strip PII'
+                ),
+                EthicalConsideration(
+                    name='bias', mitigation_strategy='augment data and monitor drift'
+                ),
+            ],
+            environmental_considerations=env,
+            fairness_assessments=[
+                FairnessAssessment(
+                    group_at_risk='non-native speakers',
+                    benefits='faster responses',
+                    harms='potential false positives',
+                    mitigation_strategy='rebalance dataset and track metrics',
+                ),
+            ],
+        ),
+        properties=[
+            Property(name='release', value='2024-01-01'),
+            Property(name='owner', value='ml-team'),
+        ],
+    )
+
+    component = Component(
+        name='full-model-card-component',
+        version='1.0.0',
+        type=ComponentType.MACHINE_LEARNING_MODEL,
+        bom_ref='ml-card-full',
+        purl=PackageURL(type='pypi', name='full-model-card', version='1.0.0'),
+        model_card=model_card,
+    )
+
+    bom = _make_bom(components=[component])
+    bom.register_dependency(component)
+    return bom
 
 
 def get_bom_with_dependencies_valid() -> Bom:
