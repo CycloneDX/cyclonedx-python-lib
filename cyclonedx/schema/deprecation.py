@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import ABC
-from typing import ClassVar, Optional, Literal
+from typing import ClassVar, Literal, Optional
 from warnings import warn
 
 from . import SchemaVersion
