@@ -15,11 +15,59 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+
+"""
+CycloneDX Schema Deprecation Warnings
+=====================================
+
+This module provides warning classes for deprecated features in CycloneDX schemas.
+Each warning class corresponds to a specific schema version, enabling downstream
+code to catch, filter, or otherwise handle schema-specific deprecation warnings.
+
+Intended Usage
+--------------
+
+Downstream consumers can manage warnings using Python's ``warnings`` module.
+Common scenarios include:
+
+- Filtering by schema version
+- Suppressing warnings in tests or batch processing
+- Logging or reporting deprecation warnings without raising exceptions
+
+Example
+-------
+
+.. code-block:: python
+
+    import warnings
+    from cyclonedx.schema.deprecation import (
+        BaseSchemaDeprecationWarning,
+        SchemaDeprecationWarning1Dot7,
+    )
+
+    # Suppress all CycloneDX schema deprecation warnings
+    warnings.filterwarnings("ignore", category=BaseSchemaDeprecationWarning)
+
+    # Suppress only warnings specific to schema version 1.7
+    warnings.filterwarnings("ignore", category=SchemaDeprecationWarning1Dot7)
+
+Notes
+-----
+
+- All deprecation warnings inherit from :class:`BaseSchemaDeprecationWarning`.
+- The ``SCHEMA_VERSION`` class variable indicates the CycloneDX schema version
+  where the feature became deprecated.
+- These warning classes are designed for downstream **filtering and logging**,
+  not for raising exceptions.
+"""
+
+
 from abc import ABC
 from typing import ClassVar, Literal, Optional
 from warnings import warn
 
 from . import SchemaVersion
+
 
 __all__ = [
     'BaseSchemaDeprecationWarning',
