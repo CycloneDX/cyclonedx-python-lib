@@ -1186,7 +1186,7 @@ class Component(Dependable):
     @author.setter
     def author(self, author: Optional[str]) -> None:
         if author is not None:
-            warn(*DeprecationWarning1Dot6._prepw('@.author', '@.authors` or `@.manufacturer'))
+            DeprecationWarning1Dot6._warn('@.author', '@.authors` or `@.manufacturer')
         self._author = author
 
     @property
@@ -1467,7 +1467,7 @@ class Component(Dependable):
     @modified.setter
     def modified(self, modified: bool) -> None:
         if modified:
-            warn(*DeprecationWarning1Dot3._prepw('@.modified', '@.pedigree'))
+            DeprecationWarning1Dot3._warn('@.modified', '@.pedigree')
         self._modified = modified
 
     @property

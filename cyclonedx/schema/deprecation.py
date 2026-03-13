@@ -17,6 +17,7 @@
 
 from abc import ABC
 from typing import ClassVar, Optional
+from warnings import warn
 
 from . import SchemaVersion
 
@@ -36,19 +37,13 @@ class SchemaDeprecationWarning(DeprecationWarning, ABC):
     SCHEMA_VERSION: ClassVar[SchemaVersion]
 
     @classmethod
-    def _prepw(cls, deprecated: str, instead: Optional[str] = None) -> tuple[str, type[SchemaDeprecationWarning]]:
-        """Prepare the warning message and category for schema deprecations.
-
-        Internal API. Not part of the public interface.
-
-        Intended to be used as:
-
-            warnings.warn(*SchemaDeprecationWarning._prepw("foo", "bar"))
-        """
-        w = f'`{deprecated}` is deprecated from CycloneDX v{cls.SCHEMA_VERSION.to_version()} onwards.'
-        if instead is not None:
-            w += f' Please use `{instead}` instead.'
-        return w, cls
+    def _warn(cls, deprecated: str, instead: Optional[str] = None,
+              *, stacklevel: int = 1) -> None:
+        """Internal API. Not part of the public interface."""
+        msg = f'`{deprecated}` is deprecated from CycloneDX v{cls.SCHEMA_VERSION.to_version()} onwards.'
+        if instead:
+            msg += f' Please use `{instead}` instead.'
+        warn(msg, cls, stacklevel=stacklevel + 1)
 
 
 class DeprecationWarning1Dot7(SchemaDeprecationWarning):

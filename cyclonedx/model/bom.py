@@ -292,7 +292,7 @@ class BomMetaData:
               we should set this data on `.component.manufacturer`.
         """
         if manufacture is not None:
-            warn(*DeprecationWarning1Dot6._prepw('bom.metadata.manufacture', 'bom.metadata.component.manufacturer'))
+            DeprecationWarning1Dot6._warn('bom.metadata.manufacture', 'bom.metadata.component.manufacturer')
         self._manufacture = manufacture
 
     @property

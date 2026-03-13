@@ -241,7 +241,7 @@ class ToolRepository:
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
         if tools:
-            warn(*DeprecationWarning1Dot5._prepw('@.tools', '@.components` and `@.services'))
+            DeprecationWarning1Dot5._warn('@.tools', '@.components` and `@.services')
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
