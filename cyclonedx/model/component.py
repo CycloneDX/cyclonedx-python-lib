@@ -40,10 +40,7 @@ from ..exception.serialization import (
     SerializationOfUnexpectedValueException,
     SerializationOfUnsupportedComponentTypeException,
 )
-from ..schema.deprecation import (
-    SchemaDeprecationWarning1Dot3,
-    SchemaDeprecationWarning1Dot6,
-)
+from ..schema.deprecation import SchemaDeprecationWarning1Dot3, SchemaDeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
