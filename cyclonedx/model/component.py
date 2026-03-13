@@ -1186,8 +1186,7 @@ class Component(Dependable):
     @author.setter
     def author(self, author: Optional[str]) -> None:
         if author is not None:
-            warn('`@.author` is deprecated from CycloneDX v1.6 onwards. '
-                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning1Dot6)
+            warn(*DeprecationWarning1Dot6._prepw('@.author', '@.authors` or `@.manufacturer'))
         self._author = author
 
     @property
@@ -1468,8 +1467,7 @@ class Component(Dependable):
     @modified.setter
     def modified(self, modified: bool) -> None:
         if modified:
-            warn('`@.modified` is deprecated from CycloneDX v1.3 onwards. '
-                 'Please use `@.pedigree` instead.', DeprecationWarning1Dot3)
+            warn(*DeprecationWarning1Dot3._prepw('@.modified', '@.pedigree'))
         self._modified = modified
 
     @property

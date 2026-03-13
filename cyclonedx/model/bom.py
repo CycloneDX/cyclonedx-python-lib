@@ -292,10 +292,7 @@ class BomMetaData:
               we should set this data on `.component.manufacturer`.
         """
         if manufacture is not None:
-            warn(
-                '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
-                'Please use `bom.metadata.component.manufacturer` instead.',
-                DeprecationWarning1Dot6)
+            warn(*DeprecationWarning1Dot6._prepw('bom.metadata.manufacture', 'bom.metadata.component.manufacturer'))
         self._manufacture = manufacture
 
     @property

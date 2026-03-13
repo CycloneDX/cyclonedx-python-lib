@@ -241,9 +241,7 @@ class ToolRepository:
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
         if tools:
-            warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
-                 'Please use `@.components` and `@.services` instead.',
-                 DeprecationWarning1Dot5)
+            warn(*DeprecationWarning1Dot5._prepw('@.tools', '@.components` and `@.services'))
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:

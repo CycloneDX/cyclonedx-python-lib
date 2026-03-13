@@ -15,59 +15,65 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-from abc import ABC, abstractmethod
-from typing import Literal
+from abc import ABC
+from typing import ClassVar, Optional
 
 from . import SchemaVersion
 
+__all__ = [
+    'SchemaDeprecationWarning',
+    'DeprecationWarning1Dot1',
+    'DeprecationWarning1Dot2',
+    'DeprecationWarning1Dot3',
+    'DeprecationWarning1Dot4',
+    'DeprecationWarning1Dot5',
+    'DeprecationWarning1Dot6',
+    'DeprecationWarning1Dot7',
+]
+
 
 class SchemaDeprecationWarning(DeprecationWarning, ABC):
-    @property
-    @abstractmethod
-    def schema_version_enum(self) -> SchemaVersion:
-        ...  # pragma: no cover
+    SCHEMA_VERSION: ClassVar[SchemaVersion]
 
-    def get_schema_version(self) -> str:
-        return self.schema_version_enum.to_version()
+    @classmethod
+    def _prepw(cls, deprecated: str, instead: Optional[str] = None) -> tuple[str, type[SchemaDeprecationWarning]]:
+        """Prepare the warning message and category for schema deprecations.
+
+        Internal API. Not part of the public interface.
+
+        Intended to be used as:
+
+            warnings.warn(*SchemaDeprecationWarning._prepw("foo", "bar"))
+        """
+        w = f'`{deprecated}` is deprecated from CycloneDX v{cls.SCHEMA_VERSION.to_version()} onwards.'
+        if instead is not None:
+            w += f' Please use `{instead}` instead.'
+        return w, cls
 
 
 class DeprecationWarning1Dot7(SchemaDeprecationWarning):
-    @property
-    def schema_version_enum(self) -> Literal[SchemaVersion.V1_7]:
-        return SchemaVersion.V1_7
+    SCHEMA_VERSION = SchemaVersion.V1_7
 
 
 class DeprecationWarning1Dot6(SchemaDeprecationWarning):
-    @property
-    def schema_version_enum(self) -> Literal[SchemaVersion.V1_6]:
-        return SchemaVersion.V1_6
+    SCHEMA_VERSION = SchemaVersion.V1_6
 
 
 class DeprecationWarning1Dot5(SchemaDeprecationWarning):
-    @property
-    def schema_version_enum(self) -> Literal[SchemaVersion.V1_5]:
-        return SchemaVersion.V1_5
+    SCHEMA_VERSION = SchemaVersion.V1_5
 
 
 class DeprecationWarning1Dot4(SchemaDeprecationWarning):
-    @property
-    def schema_version_enum(self) -> Literal[SchemaVersion.V1_4]:
-        return SchemaVersion.V1_4
+    SCHEMA_VERSION = SchemaVersion.V1_4
 
 
 class DeprecationWarning1Dot3(SchemaDeprecationWarning):
-    @property
-    def schema_version_enum(self) -> Literal[SchemaVersion.V1_3]:
-        return SchemaVersion.V1_3
+    SCHEMA_VERSION = SchemaVersion.V1_3
 
 
 class DeprecationWarning1Dot2(SchemaDeprecationWarning):
-    @property
-    def schema_version_enum(self) -> Literal[SchemaVersion.V1_2]:
-        return SchemaVersion.V1_2
+    _schema_version_enum = SchemaVersion.V1_2
 
 
 class DeprecationWarning1Dot1(SchemaDeprecationWarning):
-    @property
-    def schema_version_enum(self) -> Literal[SchemaVersion.V1_1]:
-        return SchemaVersion.V1_1
+    _schema_version_enum = SchemaVersion.V1_1
