@@ -16,7 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import ABC
-from typing import ClassVar, Optional
+from typing import ClassVar, Optional, Literal
 from warnings import warn
 
 from . import SchemaVersion
@@ -49,34 +49,33 @@ class SchemaDeprecationWarning(DeprecationWarning, ABC):
 
 class DeprecationWarning1Dot7(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.7"""
-    SCHEMA_VERSION = SchemaVersion.V1_7
-
+    SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_7]] = SchemaVersion.V1_7
 
 class DeprecationWarning1Dot6(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.6"""
-    SCHEMA_VERSION = SchemaVersion.V1_6
+    SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_6]] = SchemaVersion.V1_6
 
 
 class DeprecationWarning1Dot5(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.5"""
-    SCHEMA_VERSION = SchemaVersion.V1_5
+    SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_5]] = SchemaVersion.V1_5
 
 
 class DeprecationWarning1Dot4(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.4"""
-    SCHEMA_VERSION = SchemaVersion.V1_4
+    SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_4]] = SchemaVersion.V1_4
 
 
 class DeprecationWarning1Dot3(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.3"""
-    SCHEMA_VERSION = SchemaVersion.V1_3
+    SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_3]] = SchemaVersion.V1_3
 
 
 class DeprecationWarning1Dot2(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.2"""
-    _schema_version_enum = SchemaVersion.V1_2
+    SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_2]] = SchemaVersion.V1_2
 
 
 class DeprecationWarning1Dot1(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.1"""
-    _schema_version_enum = SchemaVersion.V1_1
+    SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_1]] = SchemaVersion.V1_1
