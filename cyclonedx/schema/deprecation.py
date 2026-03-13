@@ -43,7 +43,7 @@ class SchemaDeprecationWarning(DeprecationWarning, ABC):
         msg = f'`{deprecated}` is deprecated from CycloneDX v{cls.SCHEMA_VERSION.to_version()} onwards.'
         if instead:
             msg += f' Please use `{instead}` instead.'
-        warn(msg, cls, stacklevel=stacklevel + 1)
+        warn(msg, category=cls, stacklevel=stacklevel + 1)
 
 
 class DeprecationWarning1Dot7(SchemaDeprecationWarning):

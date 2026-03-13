@@ -19,7 +19,6 @@
 from collections.abc import Iterable
 from itertools import chain
 from typing import TYPE_CHECKING, Any, Optional, Union
-from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
