@@ -68,7 +68,6 @@ from warnings import warn
 
 from . import SchemaVersion
 
-
 __all__ = [
     'BaseSchemaDeprecationWarning',
     'SchemaDeprecationWarning1Dot1',
