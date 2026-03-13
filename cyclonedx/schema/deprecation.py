@@ -23,17 +23,17 @@ from . import SchemaVersion
 
 __all__ = [
     'SchemaDeprecationWarning',
-    'DeprecationWarning1Dot1',
-    'DeprecationWarning1Dot2',
-    'DeprecationWarning1Dot3',
-    'DeprecationWarning1Dot4',
-    'DeprecationWarning1Dot5',
-    'DeprecationWarning1Dot6',
-    'DeprecationWarning1Dot7',
+    'SchemaDeprecationWarning1Dot1',
+    'SchemaDeprecationWarning1Dot2',
+    'SchemaDeprecationWarning1Dot3',
+    'SchemaDeprecationWarning1Dot4',
+    'SchemaDeprecationWarning1Dot5',
+    'SchemaDeprecationWarning1Dot6',
+    'SchemaDeprecationWarning1Dot7',
 ]
 
 
-class SchemaDeprecationWarning(DeprecationWarning, ABC):
+class BaseSchemaDeprecationWarning(DeprecationWarning, ABC):
     """Base class for warnings about deprecated schema features."""
 
     SCHEMA_VERSION: ClassVar[SchemaVersion]
@@ -47,36 +47,36 @@ class SchemaDeprecationWarning(DeprecationWarning, ABC):
         warn(msg, category=cls, stacklevel=stacklevel + 1)
 
 
-class DeprecationWarning1Dot7(SchemaDeprecationWarning):
+class SchemaDeprecationWarning1Dot7(BaseSchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.7"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_7]] = SchemaVersion.V1_7
 
 
-class DeprecationWarning1Dot6(SchemaDeprecationWarning):
+class SchemaDeprecationWarning1Dot6(BaseSchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.6"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_6]] = SchemaVersion.V1_6
 
 
-class DeprecationWarning1Dot5(SchemaDeprecationWarning):
+class SchemaDeprecationWarning1Dot5(BaseSchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.5"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_5]] = SchemaVersion.V1_5
 
 
-class DeprecationWarning1Dot4(SchemaDeprecationWarning):
+class SchemaDeprecationWarning1Dot4(BaseSchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.4"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_4]] = SchemaVersion.V1_4
 
 
-class DeprecationWarning1Dot3(SchemaDeprecationWarning):
+class SchemaDeprecationWarning1Dot3(BaseSchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.3"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_3]] = SchemaVersion.V1_3
 
 
-class DeprecationWarning1Dot2(SchemaDeprecationWarning):
+class SchemaDeprecationWarning1Dot2(BaseSchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.2"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_2]] = SchemaVersion.V1_2
 
 
-class DeprecationWarning1Dot1(SchemaDeprecationWarning):
+class SchemaDeprecationWarning1Dot1(BaseSchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.1"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_1]] = SchemaVersion.V1_1

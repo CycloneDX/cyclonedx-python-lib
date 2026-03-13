@@ -30,7 +30,7 @@ from sortedcontainers import SortedSet
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
-from ..schema.deprecation import DeprecationWarning1Dot6
+from ..schema.deprecation import SchemaDeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -292,7 +292,7 @@ class BomMetaData:
               we should set this data on `.component.manufacturer`.
         """
         if manufacture is not None:
-            DeprecationWarning1Dot6._warn('bom.metadata.manufacture', 'bom.metadata.component.manufacturer')
+            SchemaDeprecationWarning1Dot6._warn('bom.metadata.manufacture', 'bom.metadata.component.manufacturer')
         self._manufacture = manufacture
 
     @property
