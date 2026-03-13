@@ -35,11 +35,11 @@ __all__ = [
 
 class SchemaDeprecationWarning(DeprecationWarning, ABC):
     """Base class for warnings about deprecated schema features."""
+
     SCHEMA_VERSION: ClassVar[SchemaVersion]
 
     @classmethod
-    def _warn(cls, deprecated: str, instead: Optional[str] = None,
-              *, stacklevel: int = 1) -> None:
+    def _warn(cls, deprecated: str, instead: Optional[str] = None, *, stacklevel: int = 1) -> None:
         """Internal API. Not part of the public interface."""
         msg = f'`{deprecated}` is deprecated from CycloneDX v{cls.SCHEMA_VERSION.to_version()} onwards.'
         if instead:
@@ -50,6 +50,7 @@ class SchemaDeprecationWarning(DeprecationWarning, ABC):
 class DeprecationWarning1Dot7(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.7"""
     SCHEMA_VERSION: ClassVar[Literal[SchemaVersion.V1_7]] = SchemaVersion.V1_7
+
 
 class DeprecationWarning1Dot6(SchemaDeprecationWarning):
     """Class for warnings about deprecated schema features in CycloneDX 1.6"""
