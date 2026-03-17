@@ -80,7 +80,7 @@ class LicenseType(str, Enum):
 
     .. note::
         See the CycloneDX Schema:
-        https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_license_licensing_licenseTypes
+        https://cyclonedx.org/docs/1.7/json/#metadata_tools_oneOf_i0_components_items_licenses_items_oneOf_i0_license_licensing_licenseTypes
     """
 
     ACADEMIC = 'academic'
@@ -114,7 +114,7 @@ class LicenseEntity:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_license_licensing_licensor
+        https://cyclonedx.org/docs/1.7/json/#metadata_tools_oneOf_i0_components_items_licenses_items_oneOf_i0_license_licensing_licensor
     """
 
     def __init__(
@@ -203,7 +203,7 @@ class Licensing:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_license_licensing
+        https://cyclonedx.org/docs/1.7/json/#metadata_tools_oneOf_i0_components_items_licenses_items_oneOf_i0_license_licensing
     """
 
     def __init__(
