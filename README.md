@@ -17,7 +17,6 @@
 OWASP  [CycloneDX][link_website] is a full‑stack Bill of Materials (BOM) and system‑transparency standard
 that provides deep visibility into software, services, hardware, and AI components, enabling advanced supply‑chain security and cyber‑risk reduction.
 
-
 This Python package provides data models, validators and more,
 to help you create/render/read CycloneDX documents.
 
