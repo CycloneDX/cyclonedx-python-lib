@@ -30,6 +30,35 @@
       "licenses": [
         {
           "license": {
+            "licensing": {
+              "altIds": [
+                "LicenseRef-2",
+                "LicenseRef-academic"
+              ],
+              "expiration": "2026-01-01T00:00:00+00:00",
+              "lastRenewal": "2025-01-01T00:00:00+00:00",
+              "licenseTypes": [
+                "academic",
+                "concurrent-user"
+              ],
+              "licensee": {
+                "organization": {
+                  "name": "My Company"
+                }
+              },
+              "licensor": {
+                "organization": {
+                  "name": "Acme Inc"
+                }
+              },
+              "purchaseOrder": "PO-54321",
+              "purchaser": {
+                "individual": {
+                  "email": "jane.doe@example.com",
+                  "name": "Jane Doe"
+                }
+              }
+            },
             "name": "some additional",
             "text": {
               "content": "this is additional license text",
@@ -39,6 +68,35 @@
         },
         {
           "license": {
+            "licensing": {
+              "altIds": [
+                "LicenseRef-1",
+                "LicenseRef-commercial"
+              ],
+              "expiration": "2025-01-01T00:00:00+00:00",
+              "lastRenewal": "2024-01-01T00:00:00+00:00",
+              "licenseTypes": [
+                "named-user",
+                "perpetual"
+              ],
+              "licensee": {
+                "organization": {
+                  "name": "My Company"
+                }
+              },
+              "licensor": {
+                "organization": {
+                  "name": "Acme Inc"
+                }
+              },
+              "purchaseOrder": "PO-12345",
+              "purchaser": {
+                "individual": {
+                  "email": "john.doe@example.com",
+                  "name": "John Doe"
+                }
+              }
+            },
             "name": "some commercial license",
             "text": {
               "content": "this is a license text",
