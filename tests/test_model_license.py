@@ -22,7 +22,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from cyclonedx.exception.model import MutuallyExclusivePropertiesException
-from cyclonedx.model import AttachedText, XsUri
+from cyclonedx.model import AttachedText, Property, XsUri
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.license import (
     DisjunctiveLicense,
@@ -137,6 +137,24 @@ class TestModelDisjunctiveLicense(TestCase):
         a = DisjunctiveLicense(id='MIT', licensing=Licensing(purchase_order='PO-1'))
         b = DisjunctiveLicense(id='MIT', licensing=Licensing(purchase_order='PO-2'))
         self.assertNotEqual(hash(a), hash(b))
+
+    def test_create_with_properties(self) -> None:
+        properties = [Property(name='key1', value='value1')]
+        license = DisjunctiveLicense(id='MIT', properties=properties)
+        self.assertEqual(1, len(license.properties))
+
+    def test_set_properties(self) -> None:
+        license = DisjunctiveLicense(id='MIT')
+        self.assertEqual(0, len(license.properties))
+        license.properties = [Property(name='key1', value='value1')]
+        self.assertEqual(1, len(license.properties))
+
+    def test_equal_with_properties(self) -> None:
+        a = DisjunctiveLicense(id='MIT', properties=[Property(name='key1', value='value1')])
+        b = DisjunctiveLicense(id='MIT', properties=[Property(name='key1', value='value1')])
+        c = DisjunctiveLicense(id='MIT')
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, c)
 
 
 class TestModelLicenseExpression(TestCase):

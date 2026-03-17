@@ -36,7 +36,7 @@ from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
-from . import AttachedText, XsUri
+from . import AttachedText, Property, XsUri
 from .bom_ref import BomRef
 from .contact import OrganizationalContact, OrganizationalEntity
 
@@ -402,6 +402,7 @@ class DisjunctiveLicense:
         text: Optional[AttachedText] = None, url: Optional[XsUri] = None,
         licensing: Optional[Licensing] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
+        properties: Optional[Iterable[Property]] = None,
     ) -> None:
         if not id and not name:
             raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
@@ -417,6 +418,7 @@ class DisjunctiveLicense:
         self._url = url
         self._licensing = licensing
         self._acknowledgement = acknowledgement
+        self._properties = SortedSet(properties or [])
 
     @property
     @serializable.view(SchemaVersion1Dot5)
@@ -525,17 +527,25 @@ class DisjunctiveLicense:
     def licensing(self, licensing: Optional[Licensing]) -> None:
         self._licensing = licensing
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.view(SchemaVersion1Dot6)
-    # @serializable.xml_sequence(6)
-    # def properties(self) -> ...:
-    #     ...  # TODO since CDX1.5
-    #
-    # @properties.setter
-    # def properties(self, ...) -> None:
-    #     ...  # TODO since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(6)
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
 
     @property
     @serializable.view(SchemaVersion1Dot6)
@@ -571,6 +581,7 @@ class DisjunctiveLicense:
             self._text,
             self._licensing,
             self._bom_ref.value,
+            _ComparableTuple(self._properties),
         ))
 
     def __eq__(self, other: object) -> bool:

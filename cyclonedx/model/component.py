@@ -40,6 +40,7 @@ from ..exception.serialization import (
     SerializationOfUnexpectedValueException,
     SerializationOfUnsupportedComponentTypeException,
 )
+from ..schema.deprecation import SchemaDeprecationWarning1Dot3, SchemaDeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -1185,8 +1186,7 @@ class Component(Dependable):
     @author.setter
     def author(self, author: Optional[str]) -> None:
         if author is not None:
-            warn('`@.author` is deprecated from CycloneDX v1.6 onwards. '
-                 'Please use `@.authors` or `@.manufacturer` instead.', DeprecationWarning)
+            SchemaDeprecationWarning1Dot6._warn('@.author', '@.authors` or `@.manufacturer')
         self._author = author
 
     @property
@@ -1467,8 +1467,7 @@ class Component(Dependable):
     @modified.setter
     def modified(self, modified: bool) -> None:
         if modified:
-            warn('`@.modified` is deprecated from CycloneDX v1.3 onwards. '
-                 'Please use `@.pedigree` instead.', DeprecationWarning)
+            SchemaDeprecationWarning1Dot3._warn('@.modified', '@.pedigree')
         self._modified = modified
 
     @property

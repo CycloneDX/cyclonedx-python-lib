@@ -1126,6 +1126,14 @@ def get_bom_with_licenses() -> Bom:
                                                  expiration=datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
                                              )),
                       ]),
+            Component(name='c-with-license-properties', type=ComponentType.LIBRARY, bom_ref='C4',
+                      licenses=[
+                          DisjunctiveLicense(id='Apache-2.0',
+                                             properties=[Property(name='key1', value='val1'),
+                                                         Property(name='key2', value='val2')]),
+                          DisjunctiveLicense(name='some other license',
+                                             properties=[Property(name='myname', value='proprietary')]),
+                      ]),
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
