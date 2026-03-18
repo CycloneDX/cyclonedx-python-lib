@@ -550,7 +550,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ),
         affects=[
             BomTarget(
-                ref=component.purl.to_string(),
+                ref=str(component.purl),
                 versions=[BomTargetVersionRange(
                     range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]

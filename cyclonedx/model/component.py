@@ -19,7 +19,7 @@ import re
 import sys
 from collections.abc import Iterable
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Protocol, Union
 from warnings import warn
 
 if sys.version_info >= (3, 13):
@@ -33,7 +33,7 @@ from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
-from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException
 from ..exception.serialization import (
     CycloneDxDeserializationException,
@@ -51,7 +51,6 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
     SchemaVersion1Dot7,
 )
-from ..serialization import PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
     ExternalReference,
@@ -950,6 +949,13 @@ class Swhid(serializable.helpers.BaseHelper):
         return self._id
 
 
+
+
+class _StringCastable(Protocol):
+
+    def __str__(self) -> str: ...
+
+
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Component(Dependable):
     """
@@ -996,7 +1002,7 @@ class Component(Dependable):
         hashes: Optional[Iterable[HashType]] = None,
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[str] = None,
-        purl: Optional[PackageURL] = None,
+        purl: Optional[_StringCastable] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
         properties: Optional[Iterable[Property]] = None,
         release_notes: Optional[ReleaseNotes] = None,
@@ -1377,9 +1383,9 @@ class Component(Dependable):
         self._cpe = cpe
 
     @property
-    @serializable.type_mapping(PackageUrlSH)
     @serializable.xml_sequence(15)
-    def purl(self) -> Optional[PackageURL]:
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def purl(self) -> Optional[str]:
         """
         Specifies the package-url (PURL).
 
@@ -1387,13 +1393,13 @@ class Component(Dependable):
         https://github.com/package-url/purl-spec
 
         Returns:
-            `PackageURL` or `None`
+            `str` or `None`
         """
         return self._purl
 
     @purl.setter
-    def purl(self, purl: Optional[PackageURL]) -> None:
-        self._purl = purl
+    def purl(self, purl: Optional[_StringCastable]) -> None:
+        self._purl = None if purl is None else str(purl)
 
     @property
     @serializable.json_name('omniborId')
@@ -1679,7 +1685,7 @@ class Component(Dependable):
         return _ComparableTuple((
             self.type, self.group, self.name, self.version,
             self.bom_ref.value,
-            None if self.purl is None else _ComparablePackageURL(self.purl),
+            self.purl,
             self.swid, self.cpe, _ComparableTuple(self.swhids),
             self.supplier, self.author, self.publisher,
             self.description,
