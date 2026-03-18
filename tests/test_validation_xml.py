@@ -111,3 +111,17 @@ class TestXmlValidator(TestCase):
         self.assertGreater(len(validation_errors), 0)
         for validation_error in validation_errors:
             self.assertIsNotNone(validation_error.data)
+
+    def test_validation_error_has_useful_message_and_path(self) -> None:
+        validator = XmlValidator(SchemaVersion.V1_6)
+        test_data = '<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1"><metadata><timestamp>not-a-date</timestamp></metadata></bom>'
+        try:
+            validation_error = validator.validate_str(test_data)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(validation_error)
+        assert validation_error is not None
+        self.assertTrue(validation_error.message)
+        self.assertTrue(validation_error.path)
+        self.assertNotEqual(str(validation_error.data), str(validation_error))
+
