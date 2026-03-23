@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 
-"""
-Wrapper around pyupgrade to perform a lookup of all *.py/*.pyi files in passed directories
-and pass them to pyupgrade in a single invocation.
-
-Usage: run_pyupgrade.py <pyupgrade-args...> -- <dir...>
-"""
-
 import subprocess  # nosec - subprocess is used to run pyupgrade and not part of published library
 import sys
 from pathlib import Path
 
+HELP=f"""
+Wrapper around pyupgrade to perform a lookup of all *.py/*.pyi files in passed directories
+and pass them to pyupgrade in a single invocation.
+
+Usage: {sys.argv[0]} [pyupgrade-args ...] -- <dir ...>
+"""
+
 if '--' not in sys.argv:
-    print('Usage: run_pyupgrade.py <pyupgrade-args...> -- <dir...>', file=sys.stderr)
+    print(HELP, file=sys.stderr)
     sys.exit(1)
 
 sep = sys.argv.index('--')
@@ -20,8 +20,8 @@ pyupgrade_args = sys.argv[1:sep]
 directories = sys.argv[sep + 1:]
 
 if not directories:
-    print('Error: at least one directory must be specified after --', file=sys.stderr)
-    sys.exit(1)
+    print('Error: at least one directory must be specified after --', '\n', HELP, file=sys.stderr)
+    sys.exit(2)
 
 files = sorted({
     str(file)
