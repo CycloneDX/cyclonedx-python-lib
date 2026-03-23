@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-# Wrapper around pyupgrade to perform a lookup of all *.py/*.pyi files in passed directories
-# and pass them to pyupgrade in a single invocation.
-#
-# Usage: run_pyupgrade.py <pyupgrade-args...> -- <dir...>
+"""
+Wrapper around pyupgrade to perform a lookup of all *.py/*.pyi files in passed directories
+and pass them to pyupgrade in a single invocation.
+
+Usage: run_pyupgrade.py <pyupgrade-args...> -- <dir...>
+"""
 
 import subprocess  # nosec - subprocess is used to run pyupgrade and not part of published library
 import sys
