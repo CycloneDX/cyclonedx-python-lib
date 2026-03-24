@@ -15,8 +15,9 @@
 CycloneDX’s Python Library documentation
 ====================================================
 
-OWASP `CycloneDX`_ is a full-stack Bill of Materials (BOM) standard
-that provides advanced supply chain capabilities for cyber risk reduction.
+OWASP `CycloneDX`_ is a system‑transparency standard
+providing full‑stack Bills of Materials (BOMs) 
+and advanced supply‑chain insights throughout the entire product lifecycle.
 
 This Python package provides data models, validators and more,
 to help you create/render/read CycloneDX documents.
