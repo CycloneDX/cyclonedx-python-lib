@@ -32,6 +32,24 @@
         <expression>Apache-2.0 OR MIT</expression>
       </licenses>
     </component>
+    <component type="library" bom-ref="C4">
+      <name>c-with-license-properties</name>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+          <properties>
+            <property name="key1">val1</property>
+            <property name="key2">val2</property>
+          </properties>
+        </license>
+        <license>
+          <name>some other license</name>
+          <properties>
+            <property name="myname">proprietary</property>
+          </properties>
+        </license>
+      </licenses>
+    </component>
     <component type="library" bom-ref="C3">
       <name>c-with-name</name>
       <licenses>
@@ -80,6 +98,7 @@
     <dependency ref="C1"/>
     <dependency ref="C2"/>
     <dependency ref="C3"/>
+    <dependency ref="C4"/>
     <dependency ref="S1"/>
     <dependency ref="S2"/>
     <dependency ref="S3"/>
