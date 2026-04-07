@@ -236,7 +236,7 @@ jobs:
     name: Publish test coverage
     needs: [ "build-and-test" ]
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: fetch test artifacts
         # see https://github.com/actions/download-artifact
