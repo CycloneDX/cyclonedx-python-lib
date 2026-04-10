@@ -125,14 +125,6 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.release-bot-token.outputs.token }}
-      - name: git config
-        run: |
-          set -xeu
-          git config user.name '${{ steps.release-bot-token.outputs.app-slug }}[bot]'
-          git config user.email '${{ steps.release-bot-user-id.outputs.user-id }}+${{ steps.release-bot-token.outputs.app-slug }}[bot]@users.noreply.github.com'
-          git config commit.signoff true
-          git commit --allow-empty -m 'chore(release): testing'
-          git log -1
 
       - name: Setup python
         # see https://github.com/actions/setup-python
@@ -159,6 +151,8 @@ jobs:
         # see https://github.com/python-semantic-release/python-semantic-release
         uses: python-semantic-release/python-semantic-release@v10.0.2
         with:
+          git_committer_name: ${{ steps.release-bot-token.outputs.app-slug }}[bot]
+          git_committer_email: ${{ steps.release-bot-user-id.outputs.user-id }}+${{ steps.release-bot-token.outputs.app-slug }}[bot]@users.noreply.github.com
           github_token: ${{ steps.release-bot-token.outputs.token }}
           force: ${{ github.event.inputs.release_force }}
           prerelease: ${{ github.event.inputs.prerelease }}
