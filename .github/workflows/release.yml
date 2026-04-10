@@ -113,7 +113,9 @@ jobs:
           private-key: ${{ secrets.CDX_RELEASE_BOT_PRIVATE_KEY }}
       - name: Get GitHub App User ID
         id: release-bot-user-id
-        run: echo "user-id=$(gh api "/users/${{ steps.release-bot-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        run: |
+          set -x
+          echo "user-id=$(gh api "/users/${{ steps.release-bot-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ steps.release-bot-token.outputs.token }}
 
