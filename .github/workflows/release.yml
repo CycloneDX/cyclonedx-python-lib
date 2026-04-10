@@ -103,11 +103,31 @@ jobs:
       id-token: write
       contents: write
     steps:
+      - name: Generate GitHub App Token
+        id: release-bot-token
+        # see https://github.com/actions/create-github-app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-internal-release-bot
+          app-id: 3335294
+          private-key: ${{ secrets.CDX_RELEASE_BOT_PRIVATE_KEY }}
+      - name: Get GitHub App User ID
+        id: release-bot-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.release-bot-token.outputs.token }}
+
       - name: Checkout code
         # see https://github.com/actions/checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ steps.release-bot-token.outputs.token }}
+      - name: git config
+        run: |
+          git config user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+          git config commit.signoff true
 
       - name: Setup python
         # see https://github.com/actions/setup-python
@@ -134,7 +154,7 @@ jobs:
         # see https://github.com/python-semantic-release/python-semantic-release
         uses: python-semantic-release/python-semantic-release@v10.0.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.release-bot-token.outputs.token }}
           force: ${{ github.event.inputs.release_force }}
           prerelease: ${{ github.event.inputs.prerelease }}
           prerelease_token: ${{ github.event.inputs.prerelease_token }}
@@ -151,5 +171,5 @@ jobs:
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#python-semantic-release-publish-action
         uses: python-semantic-release/publish-action@v10
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.release-bot-token.outputs.token }}
           tag: ${{ steps.release.outputs.tag }}
