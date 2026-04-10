@@ -114,7 +114,7 @@ jobs:
       - name: Get GitHub App User ID
         id: release-bot-user-id
         run: |
-          set -x
+          set -xeu
           echo "user-id=$(gh api "/users/${{ steps.release-bot-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ steps.release-bot-token.outputs.token }}
@@ -127,6 +127,7 @@ jobs:
           token: ${{ steps.release-bot-token.outputs.token }}
       - name: git config
         run: |
+          set -xeu
           git config user.name '${{ steps.release-bot-token.outputs.app-slug }}[bot]'
           git config user.email '${{ steps.release-bot-user-id.outputs.user-id }}+${{ steps.release-bot-token.outputs.app-slug }}[bot]@users.noreply.github.com'
           git config commit.signoff true
