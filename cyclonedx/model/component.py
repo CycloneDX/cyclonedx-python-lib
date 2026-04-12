@@ -51,7 +51,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
     SchemaVersion1Dot7,
 )
-from ..serialization import PackageUrl as PackageUrlSH
+from ..serialization import PackageUrl as PackageUrlSH, XmlBoolAttribute as _XmlBoolAttributeSH
 from . import (
     AttachedText,
     ExternalReference,
@@ -993,6 +993,7 @@ class Component(Dependable):
         version: Optional[str] = None,
         description: Optional[str] = None,
         scope: Optional[ComponentScope] = None,
+        is_external: Optional[bool] = None,
         hashes: Optional[Iterable[HashType]] = None,
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[str] = None,
@@ -1026,6 +1027,7 @@ class Component(Dependable):
         self.name = name
         self.description = description
         self.scope = scope
+        self.is_external = is_external
         self.hashes = hashes or []
         self.licenses = licenses or []
         self.copyright = copyright
@@ -1303,6 +1305,29 @@ class Component(Dependable):
     @scope.setter
     def scope(self, scope: Optional[ComponentScope]) -> None:
         self._scope = scope
+
+    @property
+    @serializable.json_name('isExternal')
+    @serializable.xml_name('isExternal')
+    @serializable.xml_attribute()
+    @serializable.type_mapping(_XmlBoolAttributeSH)
+    @serializable.view(SchemaVersion1Dot7)
+    def is_external(self) -> Optional[bool]:
+        """
+        Determine whether this component is external. An external component is one that is not part of an assembly,
+        but is expected to be provided by the environment, regardless of the component's scope. This setting can be
+        useful for distinguishing which components are bundled with the product and which can be relied upon to be
+        present in the deployment environment. This may be set to true for runtime components only. For
+        metadata.component, it must be set to false.
+
+        Returns:
+            `bool` if set else `None`
+        """
+        return self._is_external
+
+    @is_external.setter
+    def is_external(self, is_external: Optional[bool]) -> None:
+        self._is_external = is_external
 
     @property
     @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
@@ -1683,7 +1708,7 @@ class Component(Dependable):
             self.swid, self.cpe, _ComparableTuple(self.swhids),
             self.supplier, self.author, self.publisher,
             self.description,
-            self.mime_type, self.scope, _ComparableTuple(self.hashes),
+            self.mime_type, self.scope, self.is_external, _ComparableTuple(self.hashes),
             _ComparableTuple(self.licenses), self.copyright,
             self.pedigree,
             _ComparableTuple(self.external_references), _ComparableTuple(self.properties),

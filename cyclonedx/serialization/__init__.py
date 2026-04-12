@@ -95,6 +95,63 @@ class UrnUuidHelper(BaseHelper):
             ) from err
 
 
+class XmlBoolAttribute(BaseHelper):
+    """Helper for serializing boolean values as XML attribute-compatible 'true'/'false' strings,
+    while keeping native boolean values for JSON."""
+
+    @classmethod
+    def json_serialize(cls, o: Any) -> Optional[bool]:
+        if o is None:
+            return None
+        if isinstance(o, bool):
+            return o
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-boolean: {o!r}')
+
+    @classmethod
+    def json_deserialize(cls, o: Any) -> Optional[bool]:
+        if o is None:
+            return None
+        if isinstance(o, bool):
+            return o
+        raise CycloneDxDeserializationException(
+            f'Invalid boolean value: {o!r}'
+        )
+
+    @classmethod
+    def xml_serialize(cls, o: Any) -> Optional[str]:
+        if o is None:
+            return None
+        if isinstance(o, bool):
+            return 'true' if o else 'false'
+        raise SerializationOfUnexpectedValueException(
+            f'Attempt to serialize a non-boolean: {o!r}')
+
+    @classmethod
+    def xml_deserialize(cls, o: Any) -> Optional[bool]:
+        if o is None:
+            return None
+        if isinstance(o, bool):
+            return o
+        if isinstance(o, str):
+            o_lower = o.lower()
+            if o_lower in ('1', 'true'):
+                return True
+            if o_lower in ('0', 'false'):
+                return False
+        raise CycloneDxDeserializationException(
+            f'Invalid boolean value: {o!r}'
+        )
+
+    @classmethod
+    def serialize(cls, o: Any) -> Any:
+        return cls.xml_serialize(o)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> Any:
+        return cls.xml_deserialize(o)
+
+
 @deprecated('No public API planned for replacing this,')
 class LicenseRepositoryHelper(_LicenseRepositorySerializationHelper):
     """**DEPRECATED**

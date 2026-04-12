@@ -264,6 +264,45 @@ class TestModelComponent(TestCase):
         expected_components = reorder(components, expected_order)
         self.assertListEqual(sorted_components, expected_components)
 
+    def test_is_external_default_value(self) -> None:
+        c = Component(name='test-component')
+        self.assertIsNone(c.is_external)
+
+    def test_is_external_set_true(self) -> None:
+        c = Component(name='test-component', is_external=True)
+        self.assertTrue(c.is_external)
+
+    def test_is_external_set_false(self) -> None:
+        c = Component(name='test-component', is_external=False)
+        self.assertFalse(c.is_external)
+
+    def test_is_external_equality_same(self) -> None:
+        c1 = Component(name='test-component', is_external=True)
+        c2 = Component(name='test-component', is_external=True)
+        self.assertEqual(c1, c2)
+
+    def test_is_external_equality_different(self) -> None:
+        c1 = Component(name='test-component', is_external=True)
+        c2 = Component(name='test-component', is_external=False)
+        c3 = Component(name='test-component')
+        self.assertNotEqual(c1, c2)
+        self.assertNotEqual(c1, c3)
+        self.assertNotEqual(c2, c3)
+
+    def test_is_external_sorting(self) -> None:
+        # expected sort order: (type, group, name, version, is_external)
+        # ComparableTuple treats None as greater than any value
+        # so order is: False < True < None
+        expected_order = [1, 0, 2]
+        components = [
+            Component(name='component-a', is_external=True),
+            Component(name='component-a', is_external=False),
+            Component(name='component-a'),  # is_external=None
+        ]
+        sorted_components = sorted(components)
+        expected_components = reorder(components, expected_order)
+        self.assertListEqual(sorted_components, expected_components)
+
     def test_nested_components_1(self) -> None:
         comp_b = Component(name='comp_b')
         comp_c = Component(name='comp_c')
