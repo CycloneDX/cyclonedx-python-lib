@@ -108,7 +108,7 @@ jobs:
         # see https://github.com/actions/create-github-app-token
         uses: actions/create-github-app-token@v3
         with:
-          # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-internal-release-bot
+          # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-releases
           app-id: 3335294
           private-key: ${{ secrets.CDX_RELEASE_BOT_PRIVATE_KEY }}
       - name: Get GitHub App User ID
