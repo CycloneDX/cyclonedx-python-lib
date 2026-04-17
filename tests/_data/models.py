@@ -1569,6 +1569,45 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
     bom.register_dependency(component1, [component3])
     return bom
 
+
+def get_bom_for_issue941_nested_dependencies() -> Bom:
+    bom = _make_bom()
+    bom.metadata.component = root_component = Component(
+        name='myApp',
+        type=ComponentType.APPLICATION,
+        bom_ref='myApp'
+    )
+
+    component1 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library1'
+    )
+    bom.components.add(component1)
+
+    component2 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library2'
+    )
+    bom.components.add(component2)
+
+    bom.dependencies.add(
+        Dependency(
+            root_component.bom_ref,
+            dependencies=[
+                Dependency(
+                    component1.bom_ref,
+                    dependencies=[
+                        Dependency(component2.bom_ref)
+                    ]
+                )
+            ]
+        )
+    )
+
+    return bom
+
 # ---
 
 
