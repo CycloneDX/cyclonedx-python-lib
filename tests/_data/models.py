@@ -24,9 +24,6 @@ from inspect import getmembers, isfunction
 from typing import Any, Optional
 from uuid import UUID
 
-# See https://github.com/package-url/packageurl-python/issues/65
-from packageurl import PackageURL
-
 from cyclonedx.builder.this import this_component, this_tool
 from cyclonedx.model import (
     AttachedText,
@@ -482,9 +479,7 @@ def get_bom_with_component_evidence() -> Bom:
     component = Component(
         name='setuptools', version='50.3.2',
         bom_ref='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
-        purl=PackageURL(
-            type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-        ),
+        purl='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
         licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
     )
@@ -550,7 +545,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ),
         affects=[
             BomTarget(
-                ref=component.purl.to_string(),
+                ref=str(component.purl),
                 versions=[BomTargetVersionRange(
                     range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
@@ -845,9 +840,7 @@ def get_component_setuptools_simple(
     return Component(
         name='setuptools', version='50.3.2',
         bom_ref=bom_ref,
-        purl=PackageURL(
-            type='pypi', name='setuptools', version='50.3.2', qualifiers='extension=tar.gz'
-        ),
+        purl='pkg:pypi/setuptools@50.3.2?extension=tar.gz',
         licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
     )
@@ -856,9 +849,7 @@ def get_component_setuptools_simple(
 def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) -> Component:
     return Component(
         name='setuptools', bom_ref=bom_ref or 'pkg:pypi/setuptools?extension=tar.gz',
-        purl=PackageURL(
-            type='pypi', name='setuptools', qualifiers='extension=tar.gz'
-        ),
+        purl='pkg:pypi/setuptools?extension=tar.gz',
         licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
     )
@@ -867,9 +858,7 @@ def get_component_setuptools_simple_no_version(bom_ref: Optional[str] = None) ->
 def get_component_toml_with_hashes_with_references(bom_ref: Optional[str] = None) -> Component:
     return Component(
         name='toml', version='0.10.2', bom_ref=bom_ref or 'pkg:pypi/toml@0.10.2?extension=tar.gz',
-        purl=PackageURL(
-            type='pypi', name='toml', version='0.10.2', qualifiers='extension=tar.gz'
-        ), hashes=[
+        purl='pkg:pypi/toml@0.10.2?extension=tar.gz', hashes=[
             HashType.from_composite_str('sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b')
         ], external_references=[
             get_external_reference_1()
@@ -1365,19 +1354,13 @@ def get_bom_for_issue_598_multiple_components_with_purl_qualifiers() -> Bom:
     return _make_bom(components=[
         Component(
             name='dummy', version='2.3.5', bom_ref='dummy-a',
-            purl=PackageURL(
-                type='pypi', namespace=None, name='pathlib2', version='2.3.5', subpath=None,
-                qualifiers={}
-            )
+            purl='pkg:pypi/pathlib2@2.3.5'
         ),
         Component(
             name='dummy', version='2.3.5', bom_ref='dummy-b',
-            purl=PackageURL(
-                type='pypi', namespace=None, name='pathlib2', version='2.3.5', subpath=None,
-                qualifiers={
-                    'vcs_url': 'git+https://github.com/jazzband/pathlib2.git@5a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6'
-                }
-            )
+            purl='pkg:pypi/pathlib2@2.3.5'
+                 '?vcs_url=git%2Bhttps%3A%2F%2Fgithub.com%2Fjazzband%2Fpathlib2.git'
+                 '%405a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6'
         )
     ])
 
