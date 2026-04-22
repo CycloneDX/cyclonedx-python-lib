@@ -545,7 +545,7 @@ def get_bom_with_component_setuptools_with_vulnerability() -> Bom:
         ),
         affects=[
             BomTarget(
-                ref=str(component.purl),
+                ref=component.purl,
                 versions=[BomTargetVersionRange(
                     range='49.0.0 - 54.0.0', status=ImpactAnalysisAffectedStatus.AFFECTED
                 )]
@@ -1359,7 +1359,7 @@ def get_bom_for_issue_598_multiple_components_with_purl_qualifiers() -> Bom:
         Component(
             name='dummy', version='2.3.5', bom_ref='dummy-b',
             purl='pkg:pypi/pathlib2@2.3.5'
-                 '?vcs_url=git%2Bhttps%3A%2F%2Fgithub.com%2Fjazzband%2Fpathlib2.git'
+                 '?vcs_url=git%2Bhttps:%2F%2Fgithub.com%2Fjazzband%2Fpathlib2.git'
                  '%405a6a88db3cc1d08dbc86fbe15edfb69fb5f5a3d6'
         )
     ])
