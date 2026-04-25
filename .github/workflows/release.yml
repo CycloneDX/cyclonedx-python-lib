@@ -110,7 +110,7 @@ jobs:
       - name: Generate GitHub App Token
         id: release-bot-token
         # see https://github.com/actions/create-github-app-token
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
         with:
           # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-releases
           app-id: 3335294
