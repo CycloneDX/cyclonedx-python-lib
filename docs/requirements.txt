@@ -1,4 +1,4 @@
-m2r2>=0.3.2
+m2r2>=0.3.4
 sphinx>=8,<9
 sphinx-autoapi>=3,<4
 sphinx-rtd-theme>=3,<4
