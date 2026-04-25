@@ -48,16 +48,16 @@ jobs:
     steps:
       - name: Checkout code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
           architecture: 'x64'
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
-        uses: Gr1N/setup-poetry@v9
+        uses: Gr1N/setup-poetry@48b0f77c8c1b1b19cb962f0f00dff7b4be8f81ec # v9
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install dependencies
@@ -70,16 +70,16 @@ jobs:
     steps:
       - name: Checkout code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
           architecture: 'x64'
       - name: Install poetry
         # see https://github.com/marketplace/actions/setup-poetry
-        uses: Gr1N/setup-poetry@v9
+        uses: Gr1N/setup-poetry@48b0f77c8c1b1b19cb962f0f00dff7b4be8f81ec # v9
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Install dependencies
@@ -103,21 +103,38 @@ jobs:
       id-token: write
       contents: write
     steps:
+      - name: Generate GitHub App Token
+        id: release-bot-token
+        # see https://github.com/actions/create-github-app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-releases
+          app-id: 3335294
+          private-key: ${{ secrets.CDX_RELEASE_BOT_PRIVATE_KEY }}
+      - name: Get GitHub App User ID
+        id: release-bot-user-id
+        run: |
+          set -xeu
+          echo "user-id=$(gh api "/users/${{ steps.release-bot-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.release-bot-token.outputs.token }}
+
       - name: Checkout code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
+          token: ${{ steps.release-bot-token.outputs.token }}
 
       - name: Setup python
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
           architecture: 'x64'
       - name: Install and configure Poetry
         # See https://github.com/marketplace/actions/install-poetry-action
-        uses: snok/install-poetry@v1
+        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a # v1
         with:
           version: ${{ env.POETRY_VERSION }}
           virtualenvs-create: true
@@ -132,9 +149,11 @@ jobs:
         id: release
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html
         # see https://github.com/python-semantic-release/python-semantic-release
-        uses: python-semantic-release/python-semantic-release@v10.0.2
+        uses: python-semantic-release/python-semantic-release@1a324000f2251a9e722e77b128bf72712653813f # v10.0.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_committer_name: ${{ steps.release-bot-token.outputs.app-slug }}[bot]
+          git_committer_email: ${{ steps.release-bot-user-id.outputs.user-id }}+${{ steps.release-bot-token.outputs.app-slug }}[bot]@users.noreply.github.com
+          github_token: ${{ steps.release-bot-token.outputs.token }}
           force: ${{ github.event.inputs.release_force }}
           prerelease: ${{ github.event.inputs.prerelease }}
           prerelease_token: ${{ github.event.inputs.prerelease_token }}
@@ -142,14 +161,14 @@ jobs:
       - name: Publish package distributions to PyPI
         if: steps.release.outputs.released == 'true'
         # see https://github.com/pypa/gh-action-pypi-publish
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
         with:
           attestations: true
 
       - name: Publish package distributions to GitHub Releases
         if: steps.release.outputs.released == 'true'
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#python-semantic-release-publish-action
-        uses: python-semantic-release/publish-action@v10
+        uses: python-semantic-release/publish-action@310a9983a0ae878b29f3aac778d7c77c1db27378 # v10
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.release-bot-token.outputs.token }}
           tag: ${{ steps.release.outputs.tag }}
