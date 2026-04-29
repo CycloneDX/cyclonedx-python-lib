@@ -57,8 +57,8 @@ class Xml(BaseSchemaVersion, BaseOutput):
             return
 
         _view = SCHEMA_VERSIONS[self.schema_version_enum]
+        self._prepare()
         bom = self.get_bom()
-        bom.validate()
         xmlns = self.get_target_namespace()
         with BomRefDiscriminator.from_bom(bom):
             self._bom_xml = '<?xml version="1.0" ?>\n' + xml_dumps(  # type:ignore[call-overload]

@@ -68,8 +68,8 @@ class Json(BaseOutput, BaseSchemaVersion):
             'specVersion': self.schema_version.to_version()
         }
         _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
+        self._prepare()
         bom = self.get_bom()
-        bom.validate()
         with BomRefDiscriminator.from_bom(bom):
             bom_json: dict[str, Any] = json_loads(
                 bom.as_json(  # type:ignore[attr-defined]
