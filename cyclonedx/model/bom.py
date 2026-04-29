@@ -19,17 +19,14 @@
 from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
-from itertools import chain
 from typing import TYPE_CHECKING, Optional, Union
 from uuid import UUID, uuid4
-from warnings import warn
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
-from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..schema.deprecation import SchemaDeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -48,7 +45,7 @@ from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
 from .definition import Definitions
 from .dependency import Dependable, Dependency
-from .license import License, LicenseExpression, LicenseRepository, _LicenseRepositorySerializationHelper
+from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
@@ -803,35 +800,6 @@ class Bom:
         """
         # idea: have 'serial_number' be a string, and use it instead of this method
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
-
-    def validate(self) -> bool:
-        """
-        Perform data-model level validations to make sure we have some known data integrity prior to attempting output
-        of this `Bom`
-
-        Returns:
-             `bool`
-
-        .. deprecated:: next
-            Use :class:`cyclonedx.validation.model.ModelValidator` instead.
-        """
-        from ..validation.model import ModelValidator
-        warn('`Bom.validate()` is deprecated. Use `cyclonedx.validation.model.ModelValidator` instead.',
-             category=DeprecationWarning, stacklevel=2)
-
-        # Maintain backward compatibility: perform side effects (normalization)
-        if self.metadata.component:
-            self.register_dependency(target=self.metadata.component)
-        for _c in self.components:
-            self.register_dependency(target=_c)
-        for _s in self.services:
-            self.register_dependency(target=_s)
-
-        errors = ModelValidator().validate(self)
-        first_error = next(iter(errors), None)
-        if first_error:
-            raise first_error.data
-        return True
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
