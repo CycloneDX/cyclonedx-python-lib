@@ -113,16 +113,17 @@ jobs:
         uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
         with:
           # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-releases
-          app-id: 3335294
+          client-id: 3335294
           private-key: ${{ secrets.CDX_RELEASE_BOT_PRIVATE_KEY }}
+          # for `permission-*` see `permissions` above
+          permission-id-token: write
+          permission-contents: write
       - name: Get GitHub App User ID
         id: release-bot-user-id
         env:
           APP_SLUG: ${{ steps.release-bot-token.outputs.app-slug }}
           GH_TOKEN: ${{ steps.release-bot-token.outputs.token }}
-        run: |
-          set -xeu
-          echo "user-id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        run: echo "user-id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
 
       - name: Checkout code
         # see https://github.com/actions/checkout
