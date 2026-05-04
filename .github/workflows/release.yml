@@ -116,7 +116,6 @@ jobs:
           client-id: 3335294
           private-key: ${{ secrets.CDX_RELEASE_BOT_PRIVATE_KEY }}
           # for `permission-*` see `permissions` above
-          permission-id-token: write
           permission-contents: write
       - name: Get GitHub App User ID
         id: release-bot-user-id
