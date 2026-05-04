@@ -2,28 +2,6 @@
 
 <!-- version list -->
 
-## v11.7.1-alpha.2 (2026-05-04)
-
-### Bug Fixes
-
-- Address all zizmor security findings in GitHub Actions workflows
-  ([#969](https://github.com/CycloneDX/cyclonedx-python-lib/pull/969),
-  [`0266714`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0266714c6efb46a0d92c1cbb4b2904aa70f0151e))
-
-### Build System
-
-- Fine-tune permissions
-  ([`00b23a2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/00b23a2f9d1f73d7ef698c04819ba90f089b2f7a))
-
-- Fine-tune permissions
-  ([`b5fb42e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b5fb42e6d2dbef90a73d0b2bfe35a28fdf1ec588))
-
-### Documentation
-
-- Update CDX summary ([#951](https://github.com/CycloneDX/cyclonedx-python-lib/pull/951),
-  [`752b162`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/752b1620a23e319add81c505fe7197a2ae3cca06))
-
-
 ## v11.7.0 (2026-03-17)
 
 ### Documentation
