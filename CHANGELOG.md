@@ -2,28 +2,6 @@
 
 <!-- version list -->
 
-## v11.7.1-alpha.1 (2026-05-04)
-
-### Bug Fixes
-
-- Add persist-credentials: false to release job checkout
-  ([`1a8dae3`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1a8dae399dd97c4829cdd04657b4b7de005ae118))
-
-- Address all zizmor security findings in GitHub Actions workflows
-  ([`5b2cb0b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5b2cb0ba371d402ece0f87ba89d925cb4d42ae5e))
-
-- Pin actions/create-github-app-token to commit hash
-  ([`f959774`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f959774e7308966fab7fbde8f50851ea267a9c0f))
-
-- Revert persist-credentials in release checkout (untested combination)
-  ([`1a42e8e`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/1a42e8ead629c9fedf9e389a1226fee87299af1b))
-
-### Documentation
-
-- Update CDX summary ([#951](https://github.com/CycloneDX/cyclonedx-python-lib/pull/951),
-  [`752b162`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/752b1620a23e319add81c505fe7197a2ae3cca06))
-
-
 ## v11.7.0 (2026-03-17)
 
 ### Documentation
