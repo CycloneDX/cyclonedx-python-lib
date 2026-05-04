@@ -49,6 +49,8 @@ jobs:
       - name: Checkout code
         # see https://github.com/actions/checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
@@ -71,6 +73,8 @@ jobs:
       - name: Checkout code
         # see https://github.com/actions/checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
@@ -106,18 +110,19 @@ jobs:
       - name: Generate GitHub App Token
         id: release-bot-token
         # see https://github.com/actions/create-github-app-token
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
         with:
           # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-releases
           app-id: 3335294
           private-key: ${{ secrets.CDX_RELEASE_BOT_PRIVATE_KEY }}
       - name: Get GitHub App User ID
         id: release-bot-user-id
+        env:
+          APP_SLUG: ${{ steps.release-bot-token.outputs.app-slug }}
+          GH_TOKEN: ${{ steps.release-bot-token.outputs.token }}
         run: |
           set -xeu
-          echo "user-id=$(gh api "/users/${{ steps.release-bot-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ steps.release-bot-token.outputs.token }}
+          echo "user-id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
 
       - name: Checkout code
         # see https://github.com/actions/checkout
@@ -125,6 +130,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.release-bot-token.outputs.token }}
+          persist-credentials: false
 
       - name: Setup python
         # see https://github.com/actions/setup-python
