@@ -186,9 +186,10 @@ class TestEnumEncoding(_EnumTestCase):
     @named_data(*NAMED_OF_SV)
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=(
-            DisjunctiveLicense(name=f'att.encoding: {encoding.name}', text=AttachedText(
-                content=f'att.encoding: {encoding.name}', encoding=encoding
-            )) for encoding in Encoding
+            DisjunctiveLicense(bom_ref='dummy_license',
+                               name=f'att.encoding: {encoding.name}', text=AttachedText(
+                                   content=f'att.encoding: {encoding.name}', encoding=encoding
+                               )) for encoding in Encoding
         ))])
         super()._test_cases_render(bom, of, sv)
 

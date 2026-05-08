@@ -9,9 +9,9 @@
   </metadata>
   <services>
     <service bom-ref="my-specific-bom-ref-for-my-first-service">
-      <provider>
+      <provider bom-ref="OrganizationalEntity_cdx_s1">
         <name>CycloneDX</name>
-        <address>
+        <address bom-ref="PostalAddress_1_s1">
           <country>GB</country>
           <region>England</region>
           <locality>Cheshire</locality>
@@ -19,12 +19,12 @@
         </address>
         <url>https://cyclonedx.org</url>
         <url>https://cyclonedx.org/docs</url>
-        <contact>
+        <contact bom-ref="OrganizationalContact_ano_s1">
           <name>A N Other</name>
           <email>someone@somewhere.tld</email>
           <phone>+44 (0)1234 567890</phone>
         </contact>
-        <contact>
+        <contact bom-ref="OrganizationalContact_ph_s1">
           <name>Paul Horton</name>
           <email>paul.horton@owasp.org</email>
         </contact>
@@ -43,7 +43,7 @@
         <classification flow="outbound">public</classification>
       </data>
       <licenses>
-        <license>
+        <license bom-ref="service_license">
           <name>Commercial</name>
         </license>
       </licenses>

@@ -33,6 +33,9 @@ from ..schema import OutputFormat, SchemaVersion
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
     from ..model.bom_ref import BomRef
+    from ..model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
+    from ..model.definition import Level, Requirement, Standard
+    from ..model.license import License
     from .json import Json as JsonOutputter
     from .xml import Xml as XmlOutputter
 
@@ -170,8 +173,47 @@ class BomRefDiscriminator:
 
     @classmethod
     def from_bom(cls, bom: 'Bom', prefix: str = 'BomRef') -> 'BomRefDiscriminator':
-        return cls(chain(
-            map(lambda c: c.bom_ref, bom._get_all_components()),
-            map(lambda s: s.bom_ref, bom.services),
-            map(lambda v: v.bom_ref, bom.vulnerabilities)
-        ), prefix)
+        """
+        Create an instance containing EVERY ``bom-ref`` in the bom.
+        """
+
+        components = tuple(bom._get_all_components())
+        services = tuple(bom.services)
+        vulnerabilities = tuple(bom.vulnerabilities)
+        orgs: tuple['OrganizationalEntity', ...] = tuple(filter(lambda o: o is not None, chain(  # type:ignore[arg-type]
+            (bom.metadata.manufacture, bom.metadata.manufacturer, bom.metadata.supplier),
+            chain.from_iterable((c.manufacturer, c.supplier,) for c in components),
+            (s.provider for s in services),
+            chain.from_iterable(v.credits.organizations for v in vulnerabilities if v.credits),
+        )))
+        contacts: Iterable['OrganizationalContact'] = chain(
+            bom.metadata.authors,
+            chain.from_iterable(c.authors for c in components),
+            chain.from_iterable(v.credits.individuals for v in vulnerabilities if v.credits),
+            chain.from_iterable(o.contacts for o in orgs),
+        )
+        addresses: Iterable['PostalAddress'] = (o.address for o in orgs if o.address is not None)
+        licenses: Iterable['License'] = chain(
+            bom.metadata.licenses,
+            chain.from_iterable(c.licenses for c in components),
+            chain.from_iterable(c.evidence.licenses for c in components if c.evidence is not None),
+            chain.from_iterable(s.licenses for s in services),
+        )
+        standards: tuple['Standard', ...] = () \
+            if bom.definitions is None \
+            else tuple(bom.definitions.standards)
+        requirements: Iterable['Requirement'] = chain.from_iterable(s.requirements for s in standards)
+        levels: Iterable['Level'] = chain.from_iterable(s.levels for s in standards)
+        relevant_bom_refs: Iterable['BomRef'] = (i.bom_ref for i in chain(
+            components,
+            services,
+            vulnerabilities,
+            orgs,
+            contacts,
+            addresses,
+            licenses,
+            standards,
+            requirements,
+            levels,
+        ))
+        return cls(relevant_bom_refs, prefix)

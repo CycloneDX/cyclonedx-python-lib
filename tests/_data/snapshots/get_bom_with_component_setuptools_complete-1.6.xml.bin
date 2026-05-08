@@ -5,9 +5,9 @@
   </metadata>
   <components>
     <component type="library" bom-ref="my-specific-bom-ref-for-dings">
-      <supplier>
+      <supplier bom-ref="OrganizationalEntity_cdx_my-specific-bom-ref-for-dings">
         <name>CycloneDX</name>
-        <address>
+        <address bom-ref="PostalAddress_1_my-specific-bom-ref-for-dings">
           <country>GB</country>
           <region>England</region>
           <locality>Cheshire</locality>
@@ -15,12 +15,12 @@
         </address>
         <url>https://cyclonedx.org</url>
         <url>https://cyclonedx.org/docs</url>
-        <contact>
+        <contact bom-ref="OrganizationalContact_ano_my-specific-bom-ref-for-dings">
           <name>A N Other</name>
           <email>someone@somewhere.tld</email>
           <phone>+44 (0)1234 567890</phone>
         </contact>
-        <contact>
+        <contact bom-ref="OrganizationalContact_ph_my-specific-bom-ref-for-dings">
           <name>Paul Horton</name>
           <email>paul.horton@owasp.org</email>
         </contact>
@@ -32,7 +32,7 @@
       <description>This component is awesome</description>
       <scope>required</scope>
       <licenses>
-        <license>
+        <license bom-ref="my-specific-bom-ref-for-dings_license">
           <id>MIT</id>
         </license>
       </licenses>
@@ -49,7 +49,7 @@
             <name>setuptools</name>
             <version>50.3.2</version>
             <licenses>
-              <license>
+              <license bom-ref="ccc8d7ee-4b9c-4750-aee0-a72585152291_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -59,7 +59,7 @@
             <author>Test Author</author>
             <name>setuptools</name>
             <licenses>
-              <license>
+              <license bom-ref="8a3893b3-9923-4adb-a1d3-47456636ba0a_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -71,7 +71,7 @@
             <author>Test Author</author>
             <name>setuptools</name>
             <licenses>
-              <license>
+              <license bom-ref="28b2d8ce-def0-446f-a221-58dee0b44acc_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -101,7 +101,7 @@
             <name>setuptools</name>
             <version>50.3.2</version>
             <licenses>
-              <license>
+              <license bom-ref="ded1d73e-1fca-4302-b520-f1bc53979958_license">
                 <id>MIT</id>
               </license>
             </licenses>
@@ -160,7 +160,7 @@
           <name>setuptools</name>
           <version>50.3.2</version>
           <licenses>
-            <license>
+            <license bom-ref="pkg:pypi/setuptools@50.3.2?extension=tar.gz_license">
               <id>MIT</id>
             </license>
           </licenses>

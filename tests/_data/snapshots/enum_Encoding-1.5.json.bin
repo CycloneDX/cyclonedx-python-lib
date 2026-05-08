@@ -5,6 +5,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "dummy_license",
             "name": "att.encoding: BASE_64",
             "text": {
               "content": "att.encoding: BASE_64",

@@ -6,6 +6,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "setuptools_license",
             "id": "MIT"
           }
         }

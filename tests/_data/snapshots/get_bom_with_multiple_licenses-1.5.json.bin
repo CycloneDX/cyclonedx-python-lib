@@ -5,11 +5,13 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "my-compo_license_mit",
             "id": "MIT"
           }
         },
         {
           "license": {
+            "bom-ref": "my-compo_license_foo",
             "name": "foo license"
           }
         }
@@ -35,11 +37,13 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "my-app_license_mit",
             "id": "MIT"
           }
         },
         {
           "license": {
+            "bom-ref": "my-app_license_foo",
             "name": "foo license"
           }
         }
@@ -50,11 +54,13 @@
     "licenses": [
       {
         "license": {
+          "bom-ref": "bom_license_mit",
           "id": "MIT"
         }
       },
       {
         "license": {
+          "bom-ref": "bom_license_foo",
           "name": "foo license"
         }
       }
@@ -78,11 +84,13 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "my-serv_license_mit",
             "id": "MIT"
           }
         },
         {
           "license": {
+            "bom-ref": "my-serv_license_foo",
             "name": "foo license"
           }
         }

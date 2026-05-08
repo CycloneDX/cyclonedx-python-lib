@@ -5,19 +5,19 @@
     <component type="application" bom-ref="my-app">
       <name>app</name>
       <licenses>
-        <license>
+        <license bom-ref="my-app_license_mit">
           <id>MIT</id>
         </license>
-        <license>
+        <license bom-ref="my-app_license_foo">
           <name>foo license</name>
         </license>
       </licenses>
     </component>
     <licenses>
-      <license>
+      <license bom-ref="bom_license_mit">
         <id>MIT</id>
       </license>
-      <license>
+      <license bom-ref="bom_license_foo">
         <name>foo license</name>
       </license>
     </licenses>
@@ -26,10 +26,10 @@
     <component type="library" bom-ref="my-compo">
       <name>comp</name>
       <licenses>
-        <license>
+        <license bom-ref="my-compo_license_mit">
           <id>MIT</id>
         </license>
-        <license>
+        <license bom-ref="my-compo_license_foo">
           <name>foo license</name>
         </license>
       </licenses>
@@ -39,10 +39,10 @@
     <service bom-ref="my-serv">
       <name>serv</name>
       <licenses>
-        <license>
+        <license bom-ref="my-serv_license_mit">
           <id>MIT</id>
         </license>
-        <license>
+        <license bom-ref="my-serv_license_foo">
           <name>foo license</name>
         </license>
       </licenses>
