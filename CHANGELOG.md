@@ -2,6 +2,32 @@
 
 <!-- version list -->
 
+## v11.7.0 (2026-03-17)
+
+### Documentation
+
+- Add comprehensive SBOM validation guide
+  ([#933](https://github.com/CycloneDX/cyclonedx-python-lib/pull/933),
+  [`bf596c0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bf596c0ed1495bf42add39185f460605b0ecd12a))
+
+- Docstrings for schema version classes
+  ([#946](https://github.com/CycloneDX/cyclonedx-python-lib/pull/946),
+  [`6460b71`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6460b71b5189a10819e539f1315a7c05b9b7e40e))
+
+- Modernize RTF setup ([#921](https://github.com/CycloneDX/cyclonedx-python-lib/pull/921),
+  [`af0059d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/af0059d8fb6c9f8cc437f6c210487d131a6f658f))
+
+### Features
+
+- Add properties for licenses according to CycloneDX 1.5
+  ([#947](https://github.com/CycloneDX/cyclonedx-python-lib/pull/947),
+  [`375d209`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/375d209c738473ea2815fc4cb36806563be41e2e))
+
+- Make schema deprecation warnings handle-able
+  ([#945](https://github.com/CycloneDX/cyclonedx-python-lib/pull/945),
+  [`71edacf`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/71edacfaf5c46088d0ca08196b7c858ff39a23b5))
+
+
 ## v11.6.0 (2025-12-02)
 
 ### Documentation
