@@ -127,11 +127,19 @@ class TestOutputXml(TestCase, SnapshotMixin):
                     self.skipTest('MissingOptionalDependencyException')
                 self.assertIsNone(errors, output)
 
+    def test_service_trust_zone_xml_string_is_normalized(self) -> None:
+        bom = Bom(services=[
+            Service(name='svc', bom_ref='svc-ref', trust_zone='internal\tvpc\nzone')
+        ])
+        output = BY_SCHEMA_VERSION[SchemaVersion.V1_7](bom).output_as_string()
+        self.assertIn('<trustZone>internal vpc zone</trustZone>', output)
+
     def test_service_trust_zone_rejected_before_15(self) -> None:
         bom = Bom(services=[
             Service(name='svc', bom_ref='svc-ref', trust_zone='internal-vpc')
         ])
         output = BY_SCHEMA_VERSION[SchemaVersion.V1_4](bom).output_as_string()
+        self.assertEqual(1, output.count('</service>'))
         mutated_output = output.replace(
             '</service>',
             '  <trustZone>internal-vpc</trustZone>\n    </service>',
@@ -143,6 +151,7 @@ class TestOutputXml(TestCase, SnapshotMixin):
         except MissingOptionalDependencyException:
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNotNone(errors)
+        self.assertIn('trustZone', str(errors))
 
 
 @ddt
