@@ -614,7 +614,7 @@ def get_bom_with_services_complex() -> Bom:
                 XsUri('/api/thing/1'),
                 XsUri('/api/thing/2')
             ],
-            authenticated=False, x_trust_boundary=True, data=[
+            authenticated=False, x_trust_boundary=True, trust_zone='internal-vpc', data=[
                 DataClassification(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[DisjunctiveLicense(name='Commercial')],
