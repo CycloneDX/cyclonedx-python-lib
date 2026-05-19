@@ -18,6 +18,7 @@
 
 import re
 from collections.abc import Callable
+from json import dumps, loads
 from typing import Any
 from unittest import TestCase
 from unittest.mock import Mock, patch
@@ -34,6 +35,7 @@ from cyclonedx.exception.model import (
 )
 from cyclonedx.exception.output import FormatNotSupportedException
 from cyclonedx.model.bom import Bom
+from cyclonedx.model.service import Service
 from cyclonedx.output.json import BY_SCHEMA_VERSION, Json
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
@@ -104,6 +106,57 @@ class TestOutputJson(TestCase, SnapshotMixin):
         found = re.findall(r'"bom-ref":\s*"(.*?)"', output)
         self.assertEqual(nr_bomrefs, len(found))
         self.assertCountEqual(set(found), found, 'expected unique items')
+
+    def test_service_trust_zone_by_schema_version(self) -> None:
+        bom = Bom(services=[
+            Service(name='svc', bom_ref='svc-ref', trust_zone='internal-vpc')
+        ])
+        supported_schema_versions = (
+            SchemaVersion.V1_5,
+            SchemaVersion.V1_6,
+            SchemaVersion.V1_7,
+        )
+        unsupported_schema_versions = (
+            SchemaVersion.V1_2,
+            SchemaVersion.V1_3,
+            SchemaVersion.V1_4,
+        )
+        for sv in supported_schema_versions:
+            with self.subTest(schema_version=sv):
+                output = BY_SCHEMA_VERSION[sv](bom).output_as_string()
+                service = loads(output)['services'][0]
+                self.assertEqual('internal-vpc', service['trustZone'])
+                self.assertNotIn('trust_zone', service)
+                try:
+                    errors = JsonStrictValidator(sv).validate_str(output)
+                except MissingOptionalDependencyException:
+                    self.skipTest('MissingOptionalDependencyException')
+                self.assertIsNone(errors, output)
+        for sv in unsupported_schema_versions:
+            with self.subTest(schema_version=sv):
+                output = BY_SCHEMA_VERSION[sv](bom).output_as_string()
+                service = loads(output)['services'][0]
+                self.assertNotIn('trustZone', service)
+                self.assertNotIn('trust_zone', service)
+                try:
+                    errors = JsonStrictValidator(sv).validate_str(output)
+                except MissingOptionalDependencyException:
+                    self.skipTest('MissingOptionalDependencyException')
+                self.assertIsNone(errors, output)
+
+    def test_service_trust_zone_rejected_before_15(self) -> None:
+        bom = Bom(services=[
+            Service(name='svc', bom_ref='svc-ref', trust_zone='internal-vpc')
+        ])
+        output = BY_SCHEMA_VERSION[SchemaVersion.V1_4](bom).output_as_string()
+        data = loads(output)
+        data['services'][0]['trustZone'] = 'internal-vpc'
+        mutated_output = dumps(data)
+        try:
+            errors = JsonStrictValidator(SchemaVersion.V1_4).validate_str(mutated_output)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(errors)
 
 
 @ddt
