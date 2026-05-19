@@ -246,6 +246,7 @@ class Service(Dependable):
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(9)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def trust_zone(self) -> Optional[str]:
         """
         The name of the trust zone the service resides in.
