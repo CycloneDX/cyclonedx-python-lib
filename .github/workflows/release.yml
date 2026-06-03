@@ -110,7 +110,7 @@ jobs:
       - name: Generate GitHub App Token
         id: release-bot-token
         # see https://github.com/actions/create-github-app-token
-        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3  # v3
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3  # v3.1.1
         with:
           # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-releases
           client-id: 3335294
@@ -139,8 +139,8 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
           architecture: 'x64'
       - name: Install and configure Poetry
-        # See https://github.com/marketplace/actions/install-poetry-action
-        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a  # v1
+        # Seehttps://github.com/snok/install-poetry
+        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a  # v1.4.1
         with:
           version: ${{ env.POETRY_VERSION }}
           virtualenvs-create: true
@@ -167,14 +167,14 @@ jobs:
       - name: Publish package distributions to PyPI
         if: steps.release.outputs.released == 'true'
         # see https://github.com/pypa/gh-action-pypi-publish
-        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # v1.14.0
         with:
           attestations: true
 
       - name: Publish package distributions to GitHub Releases
         if: steps.release.outputs.released == 'true'
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#python-semantic-release-publish-action
-        uses: python-semantic-release/publish-action@310a9983a0ae878b29f3aac778d7c77c1db27378  # v10
+        uses: python-semantic-release/publish-action@310a9983a0ae878b29f3aac778d7c77c1db27378  # v10.5.3
         with:
           github_token: ${{ steps.release-bot-token.outputs.token }}
           tag: ${{ steps.release.outputs.tag }}
