@@ -97,7 +97,15 @@ from cyclonedx.model.impact_analysis import (
     ImpactAnalysisState,
 )
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
-from cyclonedx.model.license import DisjunctiveLicense, License, LicenseAcknowledgement, LicenseExpression
+from cyclonedx.model.license import (
+    DisjunctiveLicense,
+    License,
+    LicenseAcknowledgement,
+    LicenseEntity,
+    LicenseExpression,
+    LicenseType,
+    Licensing,
+)
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
@@ -1078,9 +1086,45 @@ def get_bom_with_licenses() -> Bom:
             Component(name='c-with-name', type=ComponentType.LIBRARY, bom_ref='C3',
                       licenses=[
                           DisjunctiveLicense(name='some commercial license',
-                                             text=AttachedText(content='this is a license text')),
+                                             text=AttachedText(content='this is a license text'),
+                                             licensing=Licensing(
+                                                 alt_ids=['LicenseRef-1', 'LicenseRef-commercial'],
+                                                 licensor=LicenseEntity(
+                                                     organization=OrganizationalEntity(name='Acme Inc')
+                                                 ),
+                                                 licensee=LicenseEntity(
+                                                     organization=OrganizationalEntity(name='My Company')
+                                                 ),
+                                                 purchaser=LicenseEntity(
+                                                     individual=OrganizationalContact(name='John Doe',
+                                                                                      email='john.doe@example.com')
+                                                 ),
+                                                 purchase_order='PO-12345',
+                                                 license_types=[LicenseType.PERPETUAL,
+                                                                LicenseType.NAMED_USER],
+                                                 last_renewal=datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                                                 expiration=datetime(2025, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                                             )),
                           DisjunctiveLicense(name='some additional',
-                                             text=AttachedText(content='this is additional license text')),
+                                             text=AttachedText(content='this is additional license text'),
+                                             licensing=Licensing(
+                                                 alt_ids=['LicenseRef-2', 'LicenseRef-academic'],
+                                                 licensor=LicenseEntity(
+                                                     organization=OrganizationalEntity(name='Acme Inc')
+                                                 ),
+                                                 licensee=LicenseEntity(
+                                                     organization=OrganizationalEntity(name='My Company')
+                                                 ),
+                                                 purchaser=LicenseEntity(
+                                                     individual=OrganizationalContact(name='Jane Doe',
+                                                                                      email='jane.doe@example.com')
+                                                 ),
+                                                 purchase_order='PO-54321',
+                                                 license_types=[LicenseType.ACADEMIC,
+                                                                LicenseType.CONCURRENT_USER],
+                                                 last_renewal=datetime(2025, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                                                 expiration=datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                                             )),
                       ]),
             Component(name='c-with-license-properties', type=ComponentType.LIBRARY, bom_ref='C4',
                       licenses=[
