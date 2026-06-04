@@ -4,7 +4,7 @@ some schema for offline use as downloaded via [script](../../../tools/schema-dow
 original sources: <https://github.com/CycloneDX/specification/tree/master/schema>
 
 Currently using version
-[4b3f59453366e27c8073fd24e98bf21ef8892c8e](https://github.com/CycloneDX/specification/commit/4b3f59453366e27c8073fd24e98bf21ef8892c8e)
+[b29bae660048e0ad2fbc5f2972927b442ce951c4](https://github.com/CycloneDX/specification/commit/b29bae660048e0ad2fbc5f2972927b442ce951c4)
 
 | file | note |
 |------|------|
