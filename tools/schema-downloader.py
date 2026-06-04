@@ -21,7 +21,7 @@ import re
 from os.path import dirname, join, realpath
 from urllib.request import urlretrieve
 
-SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/tags/1.7/schema/'
+SOURCE_ROOT = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/tags/1.7.1/schema/'
 SOURCE_ROOT_LATEST = 'https://raw.githubusercontent.com/CycloneDX/specification/refs/heads/master/schema/'
 TARGET_ROOT = realpath(join(dirname(__file__), '..', 'cyclonedx', 'schema', '_res'))
 
