@@ -2,6 +2,24 @@
 
 <!-- version list -->
 
+## v11.8.0 (2026-06-04)
+
+### Documentation
+
+- Update CDX summary ([#951](https://github.com/CycloneDX/cyclonedx-python-lib/pull/951),
+  [`752b162`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/752b1620a23e319add81c505fe7197a2ae3cca06))
+
+### Features
+
+- Add support CycloneDX 1.7.1 & 1.6.2 & 1.5.1
+  ([#985](https://github.com/CycloneDX/cyclonedx-python-lib/pull/985),
+  [`303889b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/303889ba2b47033ae693c1af8bff552664e1910c))
+
+- Pull SPDX license IDs v1.1-3.28.0
+  ([#986](https://github.com/CycloneDX/cyclonedx-python-lib/pull/986),
+  [`42ff044`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/42ff04444fa054d86da2302bc62e1bffd3b397df))
+
+
 ## v11.7.0 (2026-03-17)
 
 ### Documentation
