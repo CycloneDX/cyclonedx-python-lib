@@ -42,3 +42,7 @@ repos:
         entry: poetry run -- tox r -e bandit
         pass_filenames: false
         language: system
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.24.1
+    hooks:
+      - id: zizmor
