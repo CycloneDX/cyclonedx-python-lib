@@ -19,7 +19,6 @@
 from collections.abc import Iterable
 from itertools import chain
 from typing import TYPE_CHECKING, Any, Optional, Union
-from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
@@ -28,6 +27,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema import SchemaVersion
+from ..schema.deprecation import SchemaDeprecationWarning1Dot5
 from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
 from .component import Component
@@ -240,9 +240,7 @@ class ToolRepository:
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
         if tools:
-            warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
-                 'Please use `@.components` and `@.services` instead.',
-                 DeprecationWarning)
+            SchemaDeprecationWarning1Dot5._warn('@.tools', '@.components` and `@.services')
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
