@@ -9,6 +9,16 @@ Find the needed basics here:
 * [how to fork a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
 * [how create a pull request from a fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
 
+
+## Pullrequests
+
+When opening a pull request, use the repository’s pull request template and complete all required fields.  
+Keep each pull request focused on a single topic or problem.
+
+Every pull request must reference an existing issue that it aims to address.  
+If no issue exists for your topic, please create one first using the appropriate issue template, then link your pull request to it.
+
+
 ## Setup
 
 This project uses [poetry]. Have it installed and setup first.
@@ -67,7 +77,7 @@ Please sign off your commits, to show that you agree to publish your changes und
 , and to indicate agreement with [Developer Certificate of Origin (DCO)](https://developercertificate.org/).
 
 ```shell
-git commit --signoff ...
+git commit -s ...
 ```
 
 ## Pre-commit hooks
