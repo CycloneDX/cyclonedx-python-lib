@@ -375,8 +375,10 @@ class Level:
 
     @requirements.setter
     def requirements(self, requirements: Iterable[Union[str, BomRef]]) -> None:
-        self._requirements = SortedSet(map(_bom_ref_from_str,  # type:ignore[arg-type]
-                                           requirements))
+        self._requirements = SortedSet(
+            _bom_ref_from_str(requirement)
+            for requirement in requirements
+        )
 
     def __comparable_tuple(self) -> _ComparableTuple:
         # all properties are optional - so need to compare all, in hope that one is unique

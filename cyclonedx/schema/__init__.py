@@ -73,6 +73,9 @@ class SchemaVersion(Enum):
         """Return as a version string - e.g. `1.4`"""
         return '.'.join(map(str, self.value))
 
+    def __comparable_value(self) -> tuple[int, int]:
+        return self.value
+
     def __ne__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.value != other.value
@@ -80,12 +83,12 @@ class SchemaVersion(Enum):
 
     def __lt__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
-            return self.value < other.value
+            return self.__comparable_value() < other.__comparable_value()
         return NotImplemented  # pragma: no cover
 
     def __le__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
-            return self.value <= other.value
+            return self.__comparable_value() <= other.__comparable_value()
         return NotImplemented  # pragma: no cover
 
     def __eq__(self, other: Any) -> bool:
@@ -95,12 +98,12 @@ class SchemaVersion(Enum):
 
     def __ge__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
-            return self.value >= other.value
+            return self.__comparable_value() >= other.__comparable_value()
         return NotImplemented  # pragma: no cover
 
     def __gt__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
-            return self.value > other.value
+            return self.__comparable_value() > other.__comparable_value()
         return NotImplemented  # pragma: no cover
 
     def __hash__(self) -> int:
