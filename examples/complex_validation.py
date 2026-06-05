@@ -17,12 +17,12 @@
 
 import json
 import sys
-from collections.abc import Iterable
 from typing import TYPE_CHECKING, Optional
 
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation import make_schemabased_validator
+from cyclonedx.validation.json import JsonValidationError
 
 if TYPE_CHECKING:
     from cyclonedx.validation.json import JsonValidator
@@ -103,7 +103,7 @@ else:
         print('JSON validation was skipped:', error)
     else:
         if validation_error:
-            if isinstance(validation_error, Iterable):
+            if not isinstance(validation_error, JsonValidationError):
                 raise TypeError('Expected a single JSON validation error')
             print('Validation failed as expected.')
             print(f'Error Message: {validation_error.data.message}')
