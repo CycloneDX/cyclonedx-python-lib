@@ -104,7 +104,9 @@ else:
     else:
         if validation_error:
             if not isinstance(validation_error, JsonValidationError):
-                raise TypeError('Expected a single JSON validation error')
+                raise TypeError(
+                    f'Expected JsonValidationError, got {type(validation_error).__name__}'
+                )
             print('Validation failed as expected.')
             print(f'Error Message: {validation_error.data.message}')
             print(f'JSON Path:     {validation_error.data.json_path}')
