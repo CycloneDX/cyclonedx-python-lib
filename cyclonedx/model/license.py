@@ -280,7 +280,7 @@ class DisjunctiveLicense:
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class ExpressionDetails:
+class LicenseExpressionDetails:
     """
     This is our internal representation of the ``licenseExpressionDetailedType`` complex type that specifies the details
     and attributes related to a software license identifier within a CycloneDX BOM document.
@@ -334,8 +334,9 @@ class ExpressionDetails:
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
         """
-        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        An identifier which can be used to reference the license elsewhere in the BOM. Every bom-ref MUST be
         unique within the BOM.
+        Value SHOULD not start with the BOM-Link intro 'urn:cdx:' to avoid conflicts with BOM-Links.
 
         Returns:
             `BomRef`
@@ -346,7 +347,7 @@ class ExpressionDetails:
     @serializable.xml_sequence(1)
     def text(self) -> Optional[AttachedText]:
         """
-        Specifies the optional full text of the attachment
+        A way to include the textual content of the license.
 
         Returns:
             `AttachedText` else `None`
@@ -361,8 +362,8 @@ class ExpressionDetails:
     @serializable.xml_sequence(2)
     def url(self) -> Optional[XsUri]:
         """
-        The URL to the attachment file. If the attachment is a license or BOM, an externalReference should also be
-        specified for completeness.
+        The URL to the license file. If specified, a 'license' externalReference should also be specified for
+        completeness.
 
         Returns:
             `XsUri` or `None`
@@ -379,12 +380,12 @@ class ExpressionDetails:
         ))
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, ExpressionDetails):
+        if isinstance(other, LicenseExpressionDetails):
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
     def __lt__(self, other: object) -> bool:
-        if isinstance(other, ExpressionDetails):
+        if isinstance(other, LicenseExpressionDetails):
             return self.__comparable_tuple() < other.__comparable_tuple()
         return NotImplemented
 
@@ -392,7 +393,7 @@ class ExpressionDetails:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<ExpressionDetails bom-ref={self.bom_ref!r}, license_identifier={self.license_identifier}>'
+        return f'<LicenseExpressionDetails bom-ref={self.bom_ref!r}, license_identifier={self.license_identifier}>'
 
 
 @serializable.serializable_class(
@@ -413,7 +414,7 @@ class LicenseExpression:
         self, value: str, *,
         bom_ref: Optional[Union[str, BomRef]] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
-        details: Optional[Iterable[ExpressionDetails]] = None,
+        details: Optional[Iterable[LicenseExpressionDetails]] = None,
     ) -> None:
         self._bom_ref = _bom_ref_from_str(bom_ref)
         self._value = value
@@ -486,17 +487,17 @@ class LicenseExpression:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='details')
     @serializable.xml_sequence(1)
-    def details(self) -> 'SortedSet[ExpressionDetails]':
+    def details(self) -> 'SortedSet[LicenseExpressionDetails]':
         """
         Details for parts of the expression.
 
         Returns:
-            Set of `ExpressionDetails`
+            Set of `LicenseExpressionDetails`
         """
         return self._details
 
     @details.setter
-    def details(self, details: Iterable[ExpressionDetails]) -> None:
+    def details(self, details: Iterable[LicenseExpressionDetails]) -> None:
         self._details = SortedSet(details)
 
     def __comparable_tuple(self) -> _ComparableTuple:
@@ -577,21 +578,19 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             return False
 
     @staticmethod
-    def __serialize_license_expression_details_xml(
+    def __xml_normalize_license_expression_detailed(
         license_expression: LicenseExpression,
         view: Optional[type[serializable.ViewType]],
         xmlns: Optional[str]
     ) -> Element:
         elem: Element = license_expression.as_xml(  # type:ignore[attr-defined]
             view_=view, as_string=False, element_name='expression-detailed', xmlns=xmlns)
-        expression_value = elem.text
-        if expression_value:
-            elem.set(f'{{{xmlns}}}expression' if xmlns else 'expression', expression_value)
-            elem.text = None
+        elem.set(f'{{{xmlns}}}expression' if xmlns else 'expression', license_expression.value)
+        elem.text = None
         return elem
 
     @staticmethod
-    def __deserialize_license_expression_details_xml(
+    def __xml_denormalize_license_expression_detailed(
         li: Element,
         default_ns: Optional[str]
     ) -> LicenseExpression:
@@ -655,7 +654,7 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
             if expression.details and cls.__supports_expression_details(view):
-                elem.append(cls.__serialize_license_expression_details_xml(expression, view, xmlns))
+                elem.append(cls.__xml_normalize_license_expression_detailed(expression, view, xmlns))
             else:
                 if expression.details:
                     warn('LicenseExpression details are not supported in schema versions < 1.7; skipping serialization')
@@ -684,7 +683,7 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
                 repo.add(LicenseExpression.from_xml(  # type:ignore[attr-defined]
                     li, default_ns))
             elif tag == 'expression-detailed':
-                repo.add(cls.__deserialize_license_expression_details_xml(li, default_ns))
+                repo.add(cls.__xml_denormalize_license_expression_detailed(li, default_ns))
             else:
                 raise CycloneDxDeserializationException(f'unexpected: {li!r}')
         return repo

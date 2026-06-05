@@ -22,7 +22,7 @@ from unittest.mock import MagicMock
 
 from cyclonedx.exception.model import MutuallyExclusivePropertiesException
 from cyclonedx.model import AttachedText, Property, XsUri
-from cyclonedx.model.license import DisjunctiveLicense, ExpressionDetails, LicenseExpression
+from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression, LicenseExpressionDetails
 from tests import reorder
 
 
@@ -107,8 +107,8 @@ class TestModelLicenseExpression(TestCase):
 
     def test_create_with_expression_details(self) -> None:
         details = [
-            ExpressionDetails('qux'),
-            ExpressionDetails('baz')
+            LicenseExpressionDetails('qux'),
+            LicenseExpressionDetails('baz')
         ]
         b = LicenseExpression('bar', details=details)
         self.assertListEqual(sorted(details), list(b.details))
@@ -121,8 +121,8 @@ class TestModelLicenseExpression(TestCase):
 
     def test_update_expression_details(self) -> None:
         details = [
-            ExpressionDetails('qux'),
-            ExpressionDetails('baz')
+            LicenseExpressionDetails('qux'),
+            LicenseExpressionDetails('baz')
         ]
         b = LicenseExpression('bar', details=[details[0]])
         b.details.add(details[1])
@@ -140,7 +140,7 @@ class TestModelLicenseExpression(TestCase):
         a = LicenseExpression('foo')
         b = LicenseExpression('foo')
         c = LicenseExpression('bar')
-        d = LicenseExpression('bar', details=[ExpressionDetails('baz')])
+        d = LicenseExpression('bar', details=[LicenseExpressionDetails('baz')])
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
         self.assertNotEqual(a, 'foo')
@@ -162,21 +162,21 @@ class TestModelLicense(TestCase):
         self.assertListEqual(sorted_licenses, expected_licenses)
 
 
-class TestModelExpressionDetails(TestCase):
+class TestModelLicenseExpressionDetails(TestCase):
     def test_equal(self) -> None:
-        a = ExpressionDetails(license_identifier='MIT')
-        b = ExpressionDetails(license_identifier='MIT')
-        c = ExpressionDetails(license_identifier='MIT', text=AttachedText(content='some text'))
+        a = LicenseExpressionDetails(license_identifier='MIT')
+        b = LicenseExpressionDetails(license_identifier='MIT')
+        c = LicenseExpressionDetails(license_identifier='MIT', text=AttachedText(content='some text'))
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
 
     def test_sort(self) -> None:
         expected_order = [0, 3, 2, 1]
         details = [
-            ExpressionDetails(license_identifier='Apache-2.0'),
-            ExpressionDetails(license_identifier='MIT'),
-            ExpressionDetails(license_identifier='MIT'),
-            ExpressionDetails(license_identifier='GPL-3.0'),
+            LicenseExpressionDetails(license_identifier='Apache-2.0'),
+            LicenseExpressionDetails(license_identifier='MIT'),
+            LicenseExpressionDetails(license_identifier='MIT'),
+            LicenseExpressionDetails(license_identifier='GPL-3.0'),
         ]
         expected_details = reorder(details, expected_order)
         shuffle(details)
