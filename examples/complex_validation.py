@@ -22,7 +22,6 @@ from typing import TYPE_CHECKING, Optional
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.validation import make_schemabased_validator
-from cyclonedx.validation.json import JsonValidationError
 
 if TYPE_CHECKING:
     from cyclonedx.validation.json import JsonValidator
@@ -86,11 +85,11 @@ json_validator: 'JsonValidator' = make_schemabased_validator(OutputFormat.JSON, 
 
 # 1. Validate valid SBOM
 try:
-    validation_error = json_validator.validate_str(JSON_SBOM)
+    validation_errors = json_validator.validate_str(JSON_SBOM)
 except MissingOptionalDependencyException as error:
     print('JSON validation was skipped:', error)
 else:
-    if validation_error:
+    if validation_errors:
         print('JSON SBOM is unexpectedly invalid!', file=sys.stderr)
     else:
         print('JSON SBOM is valid')
@@ -98,17 +97,15 @@ else:
     # 2. Validate invalid SBOM and inspect details
     print('\nChecking invalid JSON SBOM...')
     try:
-        validation_error = json_validator.validate_str(INVALID_JSON_SBOM)
+        validation_errors = json_validator.validate_str(INVALID_JSON_SBOM)
     except MissingOptionalDependencyException as error:
         print('JSON validation was skipped:', error)
     else:
-        if validation_error:
-            if not isinstance(validation_error, JsonValidationError):
-                raise TypeError('Expected a single JSON validation error')
+        if validation_errors:
             print('Validation failed as expected.')
-            print(f'Error Message: {validation_error.data.message}')
-            print(f'JSON Path:     {validation_error.data.json_path}')
-            print(f'Invalid Data:  {validation_error.data.instance}')
+            print(f'Error Message: {validation_errors.data.message}')
+            print(f'JSON Path:     {validation_errors.data.json_path}')
+            print(f'Invalid Data:  {validation_errors.data.instance}')
 
 # endregion JSON Validation
 
