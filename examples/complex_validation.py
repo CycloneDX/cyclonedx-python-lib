@@ -103,7 +103,8 @@ else:
         print('JSON validation was skipped:', error)
     else:
         if validation_error:
-            assert not isinstance(validation_error, Iterable)
+            if isinstance(validation_error, Iterable):
+                raise TypeError('Expected a single JSON validation error')
             print('Validation failed as expected.')
             print(f'Error Message: {validation_error.data.message}')
             print(f'JSON Path:     {validation_error.data.json_path}')
