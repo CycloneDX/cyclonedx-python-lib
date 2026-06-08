@@ -1,0 +1,89 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy",
+      "evidence": {
+        "identity": {
+          "field": "name",
+          "methods": [
+            {
+              "confidence": 1.0,
+              "technique": "ast-fingerprint",
+              "value": "AnalysisTechnique: AST_FINGERPRINT"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "attestation",
+              "value": "AnalysisTechnique: ATTESTATION"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "binary-analysis",
+              "value": "AnalysisTechnique: BINARY_ANALYSIS"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "dynamic-analysis",
+              "value": "AnalysisTechnique: DYNAMIC_ANALYSIS"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "filename",
+              "value": "AnalysisTechnique: FILENAME"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "hash-comparison",
+              "value": "AnalysisTechnique: HASH_COMPARISON"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "instrumentation",
+              "value": "AnalysisTechnique: INSTRUMENTATION"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "manifest-analysis",
+              "value": "AnalysisTechnique: MANIFEST_ANALYSIS"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "other",
+              "value": "AnalysisTechnique: OTHER"
+            },
+            {
+              "confidence": 1.0,
+              "technique": "source-code-analysis",
+              "value": "AnalysisTechnique: SOURCE_CODE_ANALYSIS"
+            }
+          ]
+        }
+      },
+      "name": "dummy",
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5"
+}
