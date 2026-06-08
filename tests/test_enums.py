@@ -571,7 +571,8 @@ class TestEnumAnalysisTechnique(_EnumTestCase):
 
     @idata(set(chain(
         dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='evidenceTechnique']"),
-        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties', 'methods', 'items', 'properties', 'technique'),
+        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties',
+                                   'methods', 'items', 'properties', 'technique'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(AnalysisTechnique, value)
