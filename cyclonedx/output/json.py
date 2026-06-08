@@ -18,10 +18,10 @@
 from abc import abstractmethod
 from itertools import chain
 from json import dumps as json_dumps, loads as json_loads
-from typing import TYPE_CHECKING, Any, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Union
 
-from ..contrib.dependency.utils import flatten as flatten_dep
 from ..exception.output import FormatNotSupportedException
+from ..model.dependency import Dependency
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
@@ -61,8 +61,21 @@ class _BomDependencyGraphFlattener():
 
     def flatten(self) -> None:
         self._bom.dependencies = chain.from_iterable(
-            flatten_dep(dep) for dep in self._deps
+            self.__flatten_dep(dep) for dep in self._deps
         )
+
+    @staticmethod
+    def __flatten_dep(dep: Dependency) -> Iterable[Dependency]:
+        if not dep.dependencies:
+            return dep,
+        flat: list[Dependency] = []
+        todos: list[Dependency] = [dep]
+        while todos:
+            todo = todos.pop()
+            if todo.dependencies:
+                flat.append(Dependency(todo.ref, (Dependency(d.ref) for d in todo.dependencies)))
+                todos.extend(todo.dependencies)
+        return flat
 
 
 class Json(BaseOutput, BaseSchemaVersion):
