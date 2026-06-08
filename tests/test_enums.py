@@ -73,6 +73,9 @@ from cyclonedx.model.impact_analysis import (  # isort:skip
 from cyclonedx.model.issue import (  # isort:skip
     IssueClassification,
 )
+from cyclonedx.model.license import (  # isort:skip
+    LicenseAcknowledgement
+)
 from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilityScoreSource,
     VulnerabilitySeverity,
@@ -508,6 +511,26 @@ class TestEnumTlpClassification(_EnumTestCase):
         bom = _make_bom(metadata=BomMetaData(
             distribution_constraints=DistributionConstraints(tlp=TlpClassification.CLEAR)
         ))
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumLicenseAcknowledgement(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='licenseAcknowledgementEnumerationType']"),
+        dp_cases_from_json_schemas('definitions', 'licenseAcknowledgementEnumeration'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(LicenseAcknowledgement, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=(
+                DisjunctiveLicense(name=f'LicenseAcknowledgement: {la.name}',
+                                   acknowledgement=la,
+                ) for la in LicenseAcknowledgement
+        ))])
         super()._test_cases_render(bom, of, sv)
 
 """
