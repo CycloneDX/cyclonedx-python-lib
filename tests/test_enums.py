@@ -541,7 +541,6 @@ class TestEnumLicenseAcknowledgement(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
-
 @ddt
 class TestEnumIdentityField(_EnumTestCase):
 
@@ -597,7 +596,6 @@ class TestEnumAnalysisTechnique(_EnumTestCase):
                 )
             ])
         super()._test_cases_render(bom, of, sv)
-
 
 
 """
