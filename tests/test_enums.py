@@ -545,11 +545,11 @@ class TestEnumLicenseAcknowledgement(_EnumTestCase):
 class TestEnumIdentityField(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='licenseAcknowledgementEnumerationType']"),
-        dp_cases_from_json_schemas('definitions', 'licenseAcknowledgementEnumeration'),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='identityFieldType']"),
+        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties', 'field'),
     )))
     def test_knows_value(self, value: str) -> None:
-        super()._test_knows_value(LicenseAcknowledgement, value)
+        super()._test_knows_value(IdentityField, value)
 
     @named_data(*NAMED_OF_SV)
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
@@ -570,11 +570,11 @@ class TestEnumIdentityField(_EnumTestCase):
 class TestEnumAnalysisTechnique(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='licenseAcknowledgementEnumerationType']"),
-        dp_cases_from_json_schemas('definitions', 'licenseAcknowledgementEnumeration'),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='evidenceTechnique']"),
+        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties', 'methods', 'items', 'properties', 'technique'),
     )))
     def test_knows_value(self, value: str) -> None:
-        super()._test_knows_value(LicenseAcknowledgement, value)
+        super()._test_knows_value(AnalysisTechnique, value)
 
     @named_data(*NAMED_OF_SV)
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
