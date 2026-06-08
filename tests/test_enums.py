@@ -14,13 +14,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+
 import ast
-from os import path
-from  glob import glob
 from collections.abc import Generator, Iterable
 from enum import Enum
+from glob import glob
 from itertools import chain
 from json import load as json_load
+from os import path
 from typing import Any, Optional
 from unittest import TestCase
 from warnings import warn
