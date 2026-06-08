@@ -16,9 +16,11 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import abstractmethod
+from itertools import chain
 from json import dumps as json_dumps, loads as json_loads
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
+from ..contrib.dependency.utils import flatten as flatten_dep
 from ..exception.output import FormatNotSupportedException
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
@@ -37,6 +39,30 @@ from . import BaseOutput, BomRefDiscriminator
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
+
+
+class _BomDependencyGraphFlattener():
+    def __init__(self, bom: 'Bom'):
+        self._bom = bom
+        # do NOT use the getter - see `reset()` for reasons
+        self._deps = self._bom._dependencies
+
+    def __enter__(self) -> None:
+        self.flatten()
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        self.reset()
+
+    def reset(self) -> None:
+        # do NOT use the setter - this would create overhead and most importantly,
+        # and this could cause deduplication of an existing malformed set.
+        # Just access the internal field directly!
+        self._bom._dependencies = self._deps
+
+    def flatten(self) -> None:
+        self._bom.dependencies = chain.from_iterable(
+            flatten_dep(dep) for dep in self._deps
+        )
 
 
 class Json(BaseOutput, BaseSchemaVersion):
@@ -70,10 +96,12 @@ class Json(BaseOutput, BaseSchemaVersion):
         _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
         bom = self.get_bom()
         bom.validate()
+        # utilize contrib.dependency.flatten() somewhere here
         with BomRefDiscriminator.from_bom(bom):
-            bom_json: dict[str, Any] = json_loads(
-                bom.as_json(  # type:ignore[attr-defined]
-                    view_=_view))
+            with _BomDependencyGraphFlattener(bom):
+                bom_json: dict[str, Any] = json_loads(
+                    bom.as_json(  # type:ignore[attr-defined]
+                        view_=_view))
         bom_json.update(_json_core)
         self._bom_json = bom_json
         self.generated = True

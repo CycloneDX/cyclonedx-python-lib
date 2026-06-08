@@ -1590,7 +1590,7 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
     return bom
 
 
-def get_bom_for_issue941_nested_dependencies() -> Bom:
+def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
     bom = _make_bom()
     bom.metadata.component = root_component = Component(
         name='myApp',

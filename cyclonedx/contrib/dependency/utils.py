@@ -19,15 +19,15 @@ from typing import Iterable
 
 from ...model.dependency import Dependency
 
+
 def flatten(dep: Dependency) -> Iterable[Dependency]:
-    if len(dep.dependencies) == 0:
-        return (dep, )
-    flat: list[Dependency] = [Dependency(dep.ref, (Dependency(d.ref) for d in dep.dependencies))]
-    todos: list[Dependency] = list(dep.dependencies)
+    if not dep.dependencies:
+        return dep,
+    flat: list[Dependency] = []
+    todos: list[Dependency] = [dep]
     while todos:
         todo = todos.pop()
         if todo.dependencies:
-            flat.append(Dependency(dep.ref, (Dependency(d.ref) for d in todo.dependencies)))
+            flat.append(Dependency(todo.ref, (Dependency(d.ref) for d in todo.dependencies)))
             todos.extend(todo.dependencies)
     return flat
-

@@ -19,6 +19,12 @@
       "ref": "myApp"
     },
     {
+      "dependsOn": [
+        "some-library2"
+      ],
+      "ref": "some-library1"
+    },
+    {
       "ref": "some-library1"
     },
     {
