@@ -103,15 +103,19 @@
             }
           ],
           "performanceTradeoffs": [
-            "accuracy-over-speed"
+            "accuracy-over-speed",
+            "high-memory-footprint"
           ],
           "technicalLimitations": [
+            "limited to 512 tokens",
             "may misclassify non-standard language"
           ],
           "useCases": [
+            "content-moderation",
             "spam-detection"
           ],
           "users": [
+            "data-scientist",
             "ml-engineer"
           ]
         },

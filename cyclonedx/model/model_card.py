@@ -29,18 +29,13 @@ This set of classes represents the model card types in the CycloneDX standard.
 
 from collections.abc import Iterable
 from enum import Enum
-from json import loads as json_loads  # add this near the top
 from typing import Any, Optional, Union
-from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
-from py_serializable import ViewType
-from py_serializable.helpers import BaseHelper
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import AttachedText, ExternalReference, Property
 from .bom_ref import BomRef
@@ -972,7 +967,6 @@ class EnergyMeasure:
 
     @unit.setter
     def unit(self, unit: str) -> None:
-        # Spec allows only "kWh"
         self._unit = unit
 
     def __comparable_tuple(self) -> _ComparableTuple:
@@ -1034,7 +1028,6 @@ class Co2Measure:
 
     @unit.setter
     def unit(self, unit: str) -> None:
-        # Spec allows only "tCO2eq"
         self._unit = unit
 
     def __comparable_tuple(self) -> _ComparableTuple:
@@ -1514,67 +1507,6 @@ class Considerations:
         )
 
 
-class _ModelCardPropertiesSerializationHelper(BaseHelper):
-    """THIS CLASS IS NON-PUBLIC API
-
-    Handles asymmetric serialization for ModelCard.properties:
-        - JSON: emits a list of property objects.
-        - XML: omits the element entirely (until spec discrepancy is fixed).
-            See: https://github.com/CycloneDX/specification/issues/726
-    """
-
-    # Done this similar to LicenseRepositorySerializationHelper
-    @classmethod
-    def json_normalize(cls, o: Iterable[Property], *,
-                       view: Optional[type[ViewType]],
-                       **__: Any) -> Optional[list[dict[str, Any]]]:
-        # Normalize each Property by parsing its as_json(view_=view) output back into a dict
-        assert view is not None
-        o_list = list(o)
-        if not o_list:
-            return None
-        return [json_loads(p.as_json(view_=view)) for p in o_list]  # type: ignore[attr-defined]
-
-    @classmethod
-    def json_denormalize(cls, o: list[dict[str, Any]], **__: Any) -> SortedSet[Property]:
-        return SortedSet(Property(name=it.get('name', ''), value=it.get('value')) for it in o)
-
-    @classmethod
-    def xml_normalize(cls, o: Iterable[Property], *,
-                      element_name: str,
-                      view: Optional[type[ViewType]],
-                      xmlns: Optional[str],
-                      **__: Any) -> Optional[Element]:
-        # Intentionally omit due to XML spec gap (spec issue #726)
-        return None
-
-    @classmethod
-    def xml_denormalize(cls, o: Optional[Element],
-                        default_ns: Optional[str],
-                        **__: Any) -> SortedSet[Property]:
-        # Accept properties if present even though we currently do not emit them in XML
-        if o is None:
-            return SortedSet()
-
-        ns_prefix = f'{{{default_ns}}}' if default_ns else None
-        properties: list[Property] = []
-
-        for child in o:
-            tag = child.tag
-            if ns_prefix and tag.startswith(ns_prefix):
-                tag = tag[len(ns_prefix):]
-
-            if tag != 'property':
-                raise CycloneDxDeserializationException(f'unexpected: {child!r}')
-
-            properties.append(Property(
-                name=child.attrib.get('name', ''),
-                value=child.text
-            ))
-
-        return SortedSet(properties)
-
-
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ModelCard:
     """Internal representation of CycloneDX `modelCardType`.
@@ -1657,15 +1589,11 @@ class ModelCard:
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
-    @serializable.type_mapping(_ModelCardPropertiesSerializationHelper)
+    @serializable.xml_sequence(4)
+    @serializable.json_name('properties')
+    @serializable.xml_name('properties')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> 'SortedSet[Property]':
-        """
-        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
-        officially supported in the standard without having to use additional namespaces or create extensions.
-
-        Return:
-            Set of `Property`
-        """
         return self._properties
 
     @properties.setter

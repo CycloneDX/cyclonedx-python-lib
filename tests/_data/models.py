@@ -503,13 +503,11 @@ def get_bom_v1_5_with_full_model_card() -> Bom:
                 ],
             ),
         ),
-        # Currently users, use_cases, technical_limitations, performance_tradeoffs can only contain one string each
-        # in the xml specification. This will be addressed in spec issue #737.
         considerations=Considerations(
-            users=['ml-engineer'],
-            use_cases=['spam-detection'],
-            technical_limitations=['may misclassify non-standard language'],
-            performance_tradeoffs=['accuracy-over-speed'],
+            users=['ml-engineer', 'data-scientist'],
+            use_cases=['spam-detection', 'content-moderation'],
+            technical_limitations=['may misclassify non-standard language', 'limited to 512 tokens'],
+            performance_tradeoffs=['accuracy-over-speed', 'high-memory-footprint'],
             ethical_considerations=[
                 EthicalConsideration(
                     name='privacy', mitigation_strategy='anonymize inputs and strip PII'

@@ -62,16 +62,20 @@
         </quantitativeAnalysis>
         <considerations>
           <users>
+            <user>data-scientist</user>
             <user>ml-engineer</user>
           </users>
           <useCases>
+            <useCase>content-moderation</useCase>
             <useCase>spam-detection</useCase>
           </useCases>
           <technicalLimitations>
+            <technicalLimitation>limited to 512 tokens</technicalLimitation>
             <technicalLimitation>may misclassify non-standard language</technicalLimitation>
           </technicalLimitations>
           <performanceTradeoffs>
             <performanceTradeoff>accuracy-over-speed</performanceTradeoff>
+            <performanceTradeoff>high-memory-footprint</performanceTradeoff>
           </performanceTradeoffs>
           <ethicalConsiderations>
             <ethicalConsideration>
@@ -154,6 +158,10 @@
             </fairnessAssessment>
           </fairnessAssessments>
         </considerations>
+        <properties>
+          <property name="owner">ml-team</property>
+          <property name="release">2024-01-01</property>
+        </properties>
       </modelCard>
     </component>
   </components>
