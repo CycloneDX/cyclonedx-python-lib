@@ -24,6 +24,16 @@
       "type": "library"
     },
     {
+      "bom-ref": "C5",
+      "licenses": [
+        {
+          "expression": "GPL-3.0-or-later OR GPL-2.0"
+        }
+      ],
+      "name": "c-with-expression-details",
+      "type": "library"
+    },
+    {
       "bom-ref": "C4",
       "licenses": [
         {
@@ -94,6 +104,9 @@
     },
     {
       "ref": "C4"
+    },
+    {
+      "ref": "C5"
     },
     {
       "ref": "S1"
