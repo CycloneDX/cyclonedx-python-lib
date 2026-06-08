@@ -14,13 +14,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
-
-
+import ast
+from os import path
+from  glob import glob
 from collections.abc import Generator, Iterable
 from enum import Enum
 from itertools import chain
 from json import load as json_load
-from typing import Any
+from typing import Any, Optional
 from unittest import TestCase
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
@@ -508,3 +509,55 @@ class TestEnumTlpClassification(_EnumTestCase):
             distribution_constraints=DistributionConstraints(tlp=TlpClassification.CLEAR)
         ))
         super()._test_cases_render(bom, of, sv)
+
+
+# add new test cases above this line
+
+@ddt
+class TestCaseCompleteness(TestCase):
+    """
+    Test that all defined enum models are covered by a test case in here.
+    """
+
+    __TestCasePrefix = 'TestEnum'
+
+    __defined_enumcases: Optional[tuple[str, ...]] = None
+
+    @classmethod
+    def __get_defined_enumcases(cls) -> tuple[str, ...]:
+        if cls.__defined_enumcases is None:
+            cls.__defined_enumcases = tuple(
+                name for name, obj
+                in globals().items()
+                if isinstance(obj, type)
+                and obj.__module__
+                and obj.__module__ == __name__
+                and issubclass(obj, _EnumTestCase)
+                and not obj is _EnumTestCase
+            )
+        return cls.__defined_enumcases
+
+    @staticmethod
+    def __get_defined_model_enums():
+        models_path = path.join(path.dirname(__file__), '..', 'cyclonedx', 'model')
+        model_files = glob(path.join('**', '*.py'), root_dir=models_path, recursive=True)
+        for model_file in model_files:
+            with open(path.join(models_path, model_file), 'r', encoding='utf-8') as f:
+                tree = ast.parse(f.read(), filename=model_file)
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef):
+                        for base in node.bases:
+                            # Case 1: direct name: "Enum"
+                            if isinstance(base, ast.Name) and base.id == 'Enum':
+                                yield node.name
+                                break
+                            # Case 2: qualified name: "enum.Enum"
+                            if isinstance(base, ast.Attribute) and base.attr == 'Enum':
+                                yield node.name
+                                break
+
+    @idata(__get_defined_model_enums())
+    def test_case_exists(self, enum_name) -> None:
+        self.assertIn(f'{self.__TestCasePrefix}{enum_name}',
+                      self.__get_defined_enumcases(),
+                      f'Missing Test Case for Enum: {enum_name}')
