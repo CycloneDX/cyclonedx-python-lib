@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v11.9.0 (2026-06-08)
+
+### Features
+
+- Add support for license expression details
+  ([#908](https://github.com/CycloneDX/cyclonedx-python-lib/pull/908),
+  [`b502381`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b50238102553dc215b08796ea914072294f69489))
+
+
 ## v11.8.0 (2026-06-04)
 
 ### Documentation
