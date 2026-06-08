@@ -17,6 +17,12 @@
       "name": "some-other-library",
       "type": "library",
       "version": ""
+    },
+    {
+      "bom-ref": "some-library4",
+      "name": "some-other-library",
+      "type": "library",
+      "version": ""
     }
   ],
   "dependencies": [
@@ -35,12 +41,19 @@
     },
     {
       "dependsOn": [
-        "some-library3"
+        "some-library3",
+        "some-library4"
       ],
       "ref": "some-library2"
     },
     {
+      "dependsOn": [
+        "some-library4"
+      ],
       "ref": "some-library3"
+    },
+    {
+      "ref": "some-library4"
     }
   ],
   "metadata": {

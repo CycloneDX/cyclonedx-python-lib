@@ -13,5 +13,9 @@
       <name>some-other-library</name>
       <version/>
     </component>
+    <component type="library" bom-ref="some-library4">
+      <name>some-other-library</name>
+      <version/>
+    </component>
   </components>
 </bom>

@@ -20,18 +20,27 @@
       <name>some-other-library</name>
       <version/>
     </component>
+    <component type="library" bom-ref="some-library4">
+      <name>some-other-library</name>
+      <version/>
+    </component>
   </components>
   <dependencies>
     <dependency ref="myApp">
       <dependency ref="some-library1">
-        <dependency ref="some-library2"/>
+        <dependency ref="some-library2">
+          <dependency ref="some-library3"/>
+        </dependency>
       </dependency>
       <dependency ref="some-library2">
-        <dependency ref="some-library3"/>
+        <dependency ref="some-library4"/>
       </dependency>
     </dependency>
     <dependency ref="some-library1"/>
     <dependency ref="some-library2"/>
-    <dependency ref="some-library3"/>
+    <dependency ref="some-library3">
+      <dependency ref="some-library4"/>
+    </dependency>
+    <dependency ref="some-library4"/>
   </dependencies>
 </bom>
