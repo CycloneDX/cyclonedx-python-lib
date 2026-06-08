@@ -17,6 +17,7 @@
 
 import ast
 from collections.abc import Generator, Iterable
+from decimal import Decimal
 from enum import Enum
 from glob import glob
 from itertools import chain
@@ -34,6 +35,7 @@ from cyclonedx.exception.serialization import SerializationOfUnsupportedComponen
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.component import Component, Patch, Pedigree
+from cyclonedx.model.component_evidence import ComponentEvidence, Identity as CEIdentity, Method as CEMethod
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
@@ -64,6 +66,10 @@ from cyclonedx.model.component import (  # isort:skip
     ComponentScope,
     ComponentType,
     PatchClassification,
+)
+from cyclonedx.model.component_evidence import (  # isort:skip
+    AnalysisTechnique,
+    IdentityField,
 )
 from cyclonedx.model.impact_analysis import (  # isort:skip
     ImpactAnalysisAffectedStatus,
@@ -535,9 +541,67 @@ class TestEnumLicenseAcknowledgement(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
+
+@ddt
+class TestEnumIdentityField(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='licenseAcknowledgementEnumerationType']"),
+        dp_cases_from_json_schemas('definitions', 'licenseAcknowledgementEnumeration'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(LicenseAcknowledgement, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[
+            Component(
+                name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy',
+                evidence=ComponentEvidence(identity=[
+                    CEIdentity(
+                        field=ce_if,
+                        concluded_value=f'{ce_if.name}'
+                    ) for ce_if in IdentityField
+                ]))
+        ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumAnalysisTechnique(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='licenseAcknowledgementEnumerationType']"),
+        dp_cases_from_json_schemas('definitions', 'licenseAcknowledgementEnumeration'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(LicenseAcknowledgement, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy',
+                    evidence=ComponentEvidence(identity=[
+                        CEIdentity(
+                            field=IdentityField.NAME,
+                            methods=[
+                                CEMethod(
+                                    confidence=Decimal(1.0),
+                                    value=f'AnalysisTechnique: {ce_at.name}',
+                                    technique=ce_at,
+                                ) for ce_at in AnalysisTechnique
+                            ])
+                    ])
+                )
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+
 """
 missing:
-- LicenseAcknowledgement
 - CryptoAssetType
 - CryptoPrimitive
 - CryptoExecutionEnvironment
@@ -549,8 +613,6 @@ missing:
 - RelatedCryptoMaterialType
 - RelatedCryptoMaterialState
 - ProtocolPropertiesType
-- IdentityField
-- AnalysisTechnique
 """
 
 # add new test cases above this line
