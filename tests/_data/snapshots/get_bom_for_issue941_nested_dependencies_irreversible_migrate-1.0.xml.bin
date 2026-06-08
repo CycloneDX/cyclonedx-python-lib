@@ -11,5 +11,10 @@
       <version/>
       <modified>false</modified>
     </component>
+    <component type="library">
+      <name>some-other-library</name>
+      <version/>
+      <modified>false</modified>
+    </component>
   </components>
 </bom>

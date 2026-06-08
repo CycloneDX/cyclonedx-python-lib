@@ -9,5 +9,9 @@
       <name>some-library</name>
       <version/>
     </component>
+    <component type="library" bom-ref="some-library3">
+      <name>some-other-library</name>
+      <version/>
+    </component>
   </components>
 </bom>

@@ -9,12 +9,18 @@
       "bom-ref": "some-library2",
       "name": "some-library",
       "type": "library"
+    },
+    {
+      "bom-ref": "some-library3",
+      "name": "some-other-library",
+      "type": "library"
     }
   ],
   "dependencies": [
     {
       "dependsOn": [
-        "some-library1"
+        "some-library1",
+        "some-library2"
       ],
       "ref": "myApp"
     },
@@ -25,10 +31,13 @@
       "ref": "some-library1"
     },
     {
-      "ref": "some-library1"
+      "dependsOn": [
+        "some-library3"
+      ],
+      "ref": "some-library2"
     },
     {
-      "ref": "some-library2"
+      "ref": "some-library3"
     }
   ],
   "metadata": {

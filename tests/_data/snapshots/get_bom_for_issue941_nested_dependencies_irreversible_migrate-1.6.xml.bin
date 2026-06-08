@@ -13,15 +13,22 @@
     <component type="library" bom-ref="some-library2">
       <name>some-library</name>
     </component>
+    <component type="library" bom-ref="some-library3">
+      <name>some-other-library</name>
+    </component>
   </components>
   <dependencies>
     <dependency ref="myApp">
       <dependency ref="some-library1">
         <dependency ref="some-library2"/>
       </dependency>
+      <dependency ref="some-library2">
+        <dependency ref="some-library3"/>
+      </dependency>
     </dependency>
     <dependency ref="some-library1"/>
     <dependency ref="some-library2"/>
+    <dependency ref="some-library3"/>
   </dependencies>
   <properties>
     <property name="key1">val1</property>

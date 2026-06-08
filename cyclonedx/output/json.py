@@ -38,10 +38,10 @@ from ..schema.schema import (
 from . import BaseOutput, BomRefDiscriminator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ..model.bom import Bom
+    from ..model.bom import Bom, BomRef
 
 
-class _BomDependencyGraphFlattener:
+class _BomDependencyGraphFlatMerger:
     """
     !!! THIS CLASS IS INTERNAL.
     Everything might change without any notice.
@@ -53,7 +53,7 @@ class _BomDependencyGraphFlattener:
         self._deps = self._bom._dependencies
 
     def __enter__(self) -> None:
-        self.flatten()
+        self.flatten_merge()
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.reset()
@@ -64,10 +64,20 @@ class _BomDependencyGraphFlattener:
         # Just access the internal field directly!
         self._bom._dependencies = self._deps
 
-    def flatten(self) -> None:
-        self._bom.dependencies = chain.from_iterable(
+    def flatten_merge(self) -> None:
+        self._bom.dependencies = self.__merge_deps(chain.from_iterable(
             self.__flatten_dep(dep) for dep in self._deps
-        )
+        ))
+
+    @staticmethod
+    def __merge_deps(deps: Iterable[Dependency]) -> Iterable[Dependency]:
+        merged: dict[BomRef, Dependency] = {}
+        for dep in deps:
+            if m := merged.get(dep.ref):
+                m.dependencies.update(dep.dependencies)
+            else:
+                merged[dep.ref] = Dependency(dep.ref, dep.dependencies)
+        return merged.values()
 
     @staticmethod
     def __flatten_dep(dep: Dependency) -> Iterable[Dependency]:
@@ -116,7 +126,7 @@ class Json(BaseOutput, BaseSchemaVersion):
         bom.validate()
         # utilize contrib.dependency.flatten() somewhere here
         with BomRefDiscriminator.from_bom(bom):
-            with _BomDependencyGraphFlattener(bom):
+            with _BomDependencyGraphFlatMerger(bom):
                 bom_json: dict[str, Any] = json_loads(
                     bom.as_json(  # type:ignore[attr-defined]
                         view_=_view))

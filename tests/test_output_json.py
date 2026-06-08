@@ -118,9 +118,9 @@ class TestFunctionalBySchemaVersion(TestCase):
         self.assertIs(outputter.output_format, OutputFormat.JSON)
 
 
-class TestBomDependencyGraphFlattener(TestCase):
+class TestBomDependencyGraphFlatMerger(TestCase):
     def test_discriminate_and_reset_with(self) -> None:
-        ... # TODO
+        ...  # TODO
 
     def test_discriminate_and_reset_manually(self) -> None:
-        ... # TODO
+        ...  # TODO
