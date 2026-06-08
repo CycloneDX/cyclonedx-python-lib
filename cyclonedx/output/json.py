@@ -41,7 +41,12 @@ if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
 
 
-class _BomDependencyGraphFlattener():
+class _BomDependencyGraphFlattener:
+    """
+    !!! THIS CLASS IS INTERNAL.
+    Everything might change without any notice.
+    """
+
     def __init__(self, bom: 'Bom'):
         self._bom = bom
         # do NOT use the getter - see `reset()` for reasons
@@ -54,7 +59,7 @@ class _BomDependencyGraphFlattener():
         self.reset()
 
     def reset(self) -> None:
-        # do NOT use the setter - this would create overhead and most importantly,
+        # Do NOT use the setter - this would create overhead and most importantly,
         # and this could cause deduplication of an existing malformed set.
         # Just access the internal field directly!
         self._bom._dependencies = self._deps
