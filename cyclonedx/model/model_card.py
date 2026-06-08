@@ -389,12 +389,12 @@ class PerformanceMetric:
         self, *,
         type: Optional[str] = None,
         value: Optional[str] = None,
-        slice: Optional[str] = None,
+        slice_: Optional[str] = None,
         confidence_interval: Optional[ConfidenceInterval] = None,
     ) -> None:
         self.type = type
         self.value = value
-        self.slice = slice
+        self.slice_ = slice_
         self.confidence_interval = confidence_interval
 
     @property
@@ -431,12 +431,12 @@ class PerformanceMetric:
     @serializable.json_name('slice')
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_name('slice')
-    def slice(self) -> Optional[str]:
+    def slice_(self) -> Optional[str]:
         return self._slice
 
-    @slice.setter
-    def slice(self, slice: Optional[str]) -> None:
-        self._slice = slice
+    @slice_.setter
+    def slice_(self, slice_: Optional[str]) -> None:
+        self._slice = slice_
 
     @property
     @serializable.view(SchemaVersion1Dot5)
@@ -453,7 +453,7 @@ class PerformanceMetric:
         self._confidence_interval = confidence_interval
 
     def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((self.type, self.value, self.slice, self.confidence_interval))
+        return _ComparableTuple((self.type, self.value, self.slice_, self.confidence_interval))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, PerformanceMetric):
@@ -1159,6 +1159,7 @@ class EnergyProvider:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(5)
+    @serializable.json_name('externalReferences')
     @serializable.xml_name('externalReferences')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     def external_references(self) -> 'SortedSet[ExternalReference]':

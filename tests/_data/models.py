@@ -478,8 +478,8 @@ def get_bom_v1_5_with_full_model_card() -> Bom:
         ),
         quantitative_analysis=QuantitativeAnalysis(
             performance_metrics=[
-                PerformanceMetric(type='f1', value='0.88', slice='en'),
-                PerformanceMetric(type='accuracy', value='0.93', slice='all'),
+                PerformanceMetric(type='f1', value='0.88', slice_='en'),
+                PerformanceMetric(type='accuracy', value='0.93', slice_='all'),
             ],
             graphics=GraphicsCollection(
                 description='Performance plots',

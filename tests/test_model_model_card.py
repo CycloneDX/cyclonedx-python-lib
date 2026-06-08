@@ -180,7 +180,7 @@ class TestModelCardOnComponent(TestCase):
             performance_metrics=[
                 PerformanceMetric(
                     type='f1', value='0.88',
-                    slice='en',
+                    slice_='en',
                     confidence_interval=None,
                 ),
                 PerformanceMetric(
