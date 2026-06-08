@@ -528,11 +528,12 @@ class TestEnumLicenseAcknowledgement(_EnumTestCase):
     @named_data(*NAMED_OF_SV)
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=(
-                DisjunctiveLicense(name=f'LicenseAcknowledgement: {la.name}',
-                                   acknowledgement=la,
-                ) for la in LicenseAcknowledgement
+            DisjunctiveLicense(name=f'LicenseAcknowledgement: {la.name}',
+                               acknowledgement=la,
+                               ) for la in LicenseAcknowledgement
         ))])
         super()._test_cases_render(bom, of, sv)
+
 
 """
 missing:
@@ -553,6 +554,7 @@ missing:
 """
 
 # add new test cases above this line
+
 
 @ddt
 class TestCaseCompleteness(TestCase):
