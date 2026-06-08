@@ -510,6 +510,23 @@ class TestEnumTlpClassification(_EnumTestCase):
         ))
         super()._test_cases_render(bom, of, sv)
 
+"""
+missing:
+- LicenseAcknowledgement
+- CryptoAssetType
+- CryptoPrimitive
+- CryptoExecutionEnvironment
+- CryptoImplementationPlatform
+- CryptoCertificationLevel
+- CryptoMode
+- CryptoPadding
+- CryptoFunction
+- RelatedCryptoMaterialType
+- RelatedCryptoMaterialState
+- ProtocolPropertiesType
+- IdentityField
+- AnalysisTechnique
+"""
 
 # add new test cases above this line
 
