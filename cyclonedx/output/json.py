@@ -19,6 +19,7 @@ from abc import abstractmethod
 from json import dumps as json_dumps, loads as json_loads
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
+from ..contrib.bom.utils import BomRefDiscriminator
 from ..exception.output import FormatNotSupportedException
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
@@ -33,7 +34,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
     SchemaVersion1Dot7,
 )
-from . import BaseOutput, BomRefDiscriminator
+from . import BaseOutput
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
