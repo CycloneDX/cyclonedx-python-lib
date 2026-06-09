@@ -1637,7 +1637,7 @@ def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
                                    dependencies=[
                                        Dependency(component3.bom_ref)
                                    ]
-                        ),
+                                   ),
                     ]
                 ),
                 Dependency(
@@ -1654,7 +1654,7 @@ def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
                    dependencies=[
                        Dependency(component4.bom_ref)
                    ]
-        )
+                   )
     )
 
     return bom

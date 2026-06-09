@@ -16,12 +16,11 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from abc import abstractmethod
-from itertools import chain
 from json import dumps as json_dumps, loads as json_loads
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
+from ..contrib.bom.utils import BomDependencyGraphFlatMerger
 from ..exception.output import FormatNotSupportedException
-from ..model.dependency import Dependency
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
@@ -39,58 +38,6 @@ from . import BaseOutput, BomRefDiscriminator
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom, BomRef
-
-
-class _BomDependencyGraphFlatMerger:
-    """
-    !!! THIS CLASS IS INTERNAL.
-    Everything might change without any notice.
-    """
-
-    def __init__(self, bom: 'Bom'):
-        self._bom = bom
-        # do NOT use the getter - see `reset()` for reasons
-        self._deps = self._bom._dependencies
-
-    def __enter__(self) -> None:
-        self.flatten_merge()
-
-    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
-        self.reset()
-
-    def reset(self) -> None:
-        # Do NOT use the setter - this would create overhead and most importantly,
-        # and this could cause deduplication of an existing malformed set.
-        # Just access the internal field directly!
-        self._bom._dependencies = self._deps
-
-    def flatten_merge(self) -> None:
-        self._bom.dependencies = self._merge_deps(chain.from_iterable(
-            self._flatten_dep(dep) for dep in self._deps
-        ))
-
-    @staticmethod
-    def _merge_deps(deps: Iterable[Dependency]) -> Iterable[Dependency]:
-        merged: dict[BomRef, Dependency] = {}
-        for dep in deps:
-            if m := merged.get(dep.ref):
-                m.dependencies.update(dep.dependencies)
-            else:
-                merged[dep.ref] = Dependency(dep.ref, dep.dependencies)
-        return merged.values()
-
-    @staticmethod
-    def _flatten_dep(dep: Dependency) -> Iterable[Dependency]:
-        if not dep.dependencies:
-            return dep,
-        flat: list[Dependency] = []
-        todos: list[Dependency] = [dep]
-        while todos:
-            todo = todos.pop()
-            if todo.dependencies:
-                flat.append(Dependency(todo.ref, (Dependency(d.ref) for d in todo.dependencies)))
-                todos.extend(todo.dependencies)
-        return flat
 
 
 class Json(BaseOutput, BaseSchemaVersion):
@@ -126,7 +73,7 @@ class Json(BaseOutput, BaseSchemaVersion):
         bom.validate()
         # utilize contrib.dependency.flatten() somewhere here
         with BomRefDiscriminator.from_bom(bom):
-            with _BomDependencyGraphFlatMerger(bom):
+            with BomDependencyGraphFlatMerger(bom):
                 bom_json: dict[str, Any] = json_loads(
                     bom.as_json(  # type:ignore[attr-defined]
                         view_=_view))
