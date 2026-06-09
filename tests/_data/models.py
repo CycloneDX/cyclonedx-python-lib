@@ -107,6 +107,14 @@ from cyclonedx.model.license import (
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
+from cyclonedx.model.signature import (
+    JsfAlgorithm,
+    JsfKeyType,
+    JsfPublicKey,
+    JsfSignatureChain,
+    JsfSignatureSigners,
+    JsfSimpleSignature,
+)
 from cyclonedx.model.tool import Tool, ToolRepository
 from cyclonedx.model.vulnerability import (
     BomTarget,
@@ -1589,6 +1597,67 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
     bom.register_dependency(component1, [component3])
     return bom
 
+
+def get_bom_with_signatures() -> Bom:
+    # Tests JSF signature support on Bom, Component, and Service (JSON-only, CDX >= 1.4)
+    simple_sig = JsfSimpleSignature(
+        algorithm=JsfAlgorithm.ES256.value,
+        value='MEQCIAJ9DECTPNuqwdWHlHO3EB1jYVnjW7HZ0T7x3QIDO4OMfAIgTFz5kl3Zl7nBP4r2TovMnbJo3ij6JTANcFAQQVEBZQ==',
+        key_id='test-key-1',
+    )
+    multi_sig = JsfSignatureSigners(
+        signers=[
+            JsfSimpleSignature(
+                algorithm=JsfAlgorithm.RS256.value,
+                value='AABBCC==',
+                public_key=JsfPublicKey(
+                    kty=JsfKeyType.RSA,
+                    n='sQ3MDBw==',
+                    e='AQAB',
+                ),
+            ),
+            JsfSimpleSignature(
+                algorithm=JsfAlgorithm.ES384.value,
+                value='DDEEFF==',
+                certificate_path=['MIICpDCCAYwCCQDU'],
+                excludes=['signature'],
+            ),
+        ]
+    )
+    bom = _make_bom(
+        components=[
+            Component(
+                name='acme-library',
+                version='1.2.3',
+                type=ComponentType.LIBRARY,
+                bom_ref='acme-library',
+                signature=simple_sig,
+            )
+        ],
+        services=[
+            Service(
+                name='acme-service',
+                bom_ref='acme-service',
+                signature=JsfSignatureChain(
+                    chain=[
+                        JsfSimpleSignature(
+                            algorithm=JsfAlgorithm.ED25519.value,
+                            value='xyzSig==',
+                        )
+                    ]
+                ),
+            )
+        ],
+        signature=multi_sig,
+    )
+    bom.metadata.component = Component(
+        name='my-app',
+        version='0.1.0',
+        type=ComponentType.APPLICATION,
+        bom_ref='my-app',
+    )
+    return bom
+
 # ---
 
 
@@ -1638,4 +1707,11 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_distribution_constraints,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
+    get_bom_with_signatures,
+}
+
+all_get_bom_funct_no_xml_roundtrip = {
+    # BOMs that contain JSON-only fields (e.g. JSF signatures) that cannot survive an XML roundtrip.
+    # These are excluded from test_deserialize_xml's assertBomDeepEqual comparison.
+    get_bom_with_signatures,
 }
