@@ -159,14 +159,14 @@ class ModelParameters:
     """`modelParameters` block within `modelCard`."""
 
     def __init__(
-            self, *,
-            approach: Optional[Approach] = None,
-            task: Optional[str] = None,
-            architecture_family: Optional[str] = None,
-            model_architecture: Optional[str] = None,
-            datasets: Optional[Iterable[Any]] = None,  # Unsupported placeholder until #913 lands.
-            inputs: Optional[Iterable[InputOutputMLParameters]] = None,
-            outputs: Optional[Iterable[InputOutputMLParameters]] = None,
+        self, *,
+        approach: Optional[Approach] = None,
+        task: Optional[str] = None,
+        architecture_family: Optional[str] = None,
+        model_architecture: Optional[str] = None,
+        datasets: Optional[Iterable[Any]] = None,  # Unsupported placeholder until #913 lands.
+        inputs: Optional[Iterable[InputOutputMLParameters]] = None,
+        outputs: Optional[Iterable[InputOutputMLParameters]] = None,
     ) -> None:
         self.approach = approach
         self.task = task
@@ -1519,12 +1519,12 @@ class ModelCard:
     """
 
     def __init__(
-            self, *,
-            bom_ref: Optional[Union[str, BomRef]] = None,
-            model_parameters: Optional[ModelParameters] = None,
-            quantitative_analysis: Optional[QuantitativeAnalysis] = None,
-            considerations: Optional[Considerations] = None,
-            properties: Optional[Iterable[Property]] = None,
+        self, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        model_parameters: Optional[ModelParameters] = None,
+        quantitative_analysis: Optional[QuantitativeAnalysis] = None,
+        considerations: Optional[Considerations] = None,
+        properties: Optional[Iterable[Property]] = None,
     ) -> None:
         self._bom_ref = _bom_ref_from_str(bom_ref) if bom_ref is not None else _bom_ref_from_str(None)
         self.model_parameters = model_parameters
