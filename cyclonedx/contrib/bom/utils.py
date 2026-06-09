@@ -15,6 +15,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+"""Component related utilities"""
+
+__all__ = ['BomRefDiscriminator']
+
 from collections.abc import Iterable
 from itertools import chain
 from random import random
