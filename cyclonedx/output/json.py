@@ -65,12 +65,12 @@ class _BomDependencyGraphFlatMerger:
         self._bom._dependencies = self._deps
 
     def flatten_merge(self) -> None:
-        self._bom.dependencies = self.__merge_deps(chain.from_iterable(
-            self.__flatten_dep(dep) for dep in self._deps
+        self._bom.dependencies = self._merge_deps(chain.from_iterable(
+            self._flatten_dep(dep) for dep in self._deps
         ))
 
     @staticmethod
-    def __merge_deps(deps: Iterable[Dependency]) -> Iterable[Dependency]:
+    def _merge_deps(deps: Iterable[Dependency]) -> Iterable[Dependency]:
         merged: dict[BomRef, Dependency] = {}
         for dep in deps:
             if m := merged.get(dep.ref):
@@ -80,7 +80,7 @@ class _BomDependencyGraphFlatMerger:
         return merged.values()
 
     @staticmethod
-    def __flatten_dep(dep: Dependency) -> Iterable[Dependency]:
+    def _flatten_dep(dep: Dependency) -> Iterable[Dependency]:
         if not dep.dependencies:
             return dep,
         flat: list[Dependency] = []
