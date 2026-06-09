@@ -32,9 +32,8 @@ if sys.version_info >= (3, 13):
 else:
     from typing_extensions import deprecated
 
-from ..schema import OutputFormat, SchemaVersion
-
 from ..contrib.bom.utils import BomRefDiscriminator as _BomRefDiscriminator
+from ..schema import OutputFormat, SchemaVersion
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
@@ -144,6 +143,7 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
     return klass(bom)
 
 # region deprecated re-export
+
 
 @deprecated('Deprecated re-export location - see docstring of "BomRefDiscriminator" for details.')
 class BomRefDiscriminator(_BomRefDiscriminator):
