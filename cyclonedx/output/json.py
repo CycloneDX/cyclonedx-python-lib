@@ -37,7 +37,7 @@ from ..schema.schema import (
 from . import BaseOutput, BomRefDiscriminator
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ..model.bom import Bom, BomRef
+    from ..model.bom import Bom
 
 
 class Json(BaseOutput, BaseSchemaVersion):

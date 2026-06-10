@@ -30,7 +30,8 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class BomDependencyGraphFlatMerger:
-    def __init__(self, bom: 'Bom'):
+
+    def __init__(self, bom: 'Bom') -> None:
         self._bom = bom
         # do NOT use the getter - see `reset()` for reasons
         self._deps = self._bom._dependencies
