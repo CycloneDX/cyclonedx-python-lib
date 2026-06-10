@@ -17,6 +17,7 @@
 
 
 from collections.abc import Callable
+from io import StringIO
 from json import loads as json_loads
 from os.path import join
 from typing import Any
@@ -27,6 +28,9 @@ from ddt import data, ddt, named_data
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
+from cyclonedx.model.service import Service
+from cyclonedx.output.json import BY_SCHEMA_VERSION as JSON_BY_SCHEMA_VERSION
+from cyclonedx.output.xml import BY_SCHEMA_VERSION as XML_BY_SCHEMA_VERSION
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
 from tests._data.models import (
@@ -129,6 +133,31 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
             json = json_loads(f.read())
         bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
         self.assertIsNotNone(bom)
+
+    def test_service_trust_zone_from_json(self) -> None:
+        bom = Bom.from_json({
+            'bomFormat': 'CycloneDX',
+            'specVersion': '1.7',
+            'version': 1,
+            'services': [
+                {
+                    'bom-ref': 'svc-ref',
+                    'name': 'svc',
+                    'trustZone': 'internal-vpc',
+                }
+            ],
+        })
+        self.assertEqual('internal-vpc', next(iter(bom.services)).trust_zone)
+
+    def test_service_trust_zone_json_to_xml_roundtrip(self) -> None:
+        bom = Bom(services=[
+            Service(name='svc', bom_ref='svc-ref', trust_zone='internal-vpc')
+        ])
+        json_text = JSON_BY_SCHEMA_VERSION[SchemaVersion.V1_7](bom).output_as_string()
+        json_bom = Bom.from_json(json_loads(json_text))
+        xml_text = XML_BY_SCHEMA_VERSION[SchemaVersion.V1_7](json_bom).output_as_string()
+        xml_bom = Bom.from_xml(StringIO(xml_text))
+        self.assertEqual('internal-vpc', next(iter(xml_bom.services)).trust_zone)
 
     def test_component_evidence_identity(self) -> None:
         json_file = join(OWN_DATA_DIRECTORY, 'json',
