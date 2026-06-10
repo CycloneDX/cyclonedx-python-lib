@@ -20,15 +20,55 @@ from unittest import TestCase
 
 from cyclonedx.contrib.bom.utils import BomDependencyGraphFlatMerger
 from cyclonedx.model.bom import Bom
+from cyclonedx.model.bom_ref import BomRef
+from cyclonedx.model.dependency import Dependency
+
 
 class TestBomDependencyGraphFlatMerger(TestCase):
+
     def test_flatten_merge_and_reset_manually(self) -> None:
-        bom = Bom()
+        root_bom_ref = BomRef('root_bom_ref')
+        component1_bom_ref = BomRef('component1_bom_ref')
+        component2_bom_ref = BomRef('component2_bom_ref')
+        component3_bom_ref = BomRef() # unassigned value
+        component4_bom_ref = BomRef() # unassigned value
+        bom = Bom(dependencies=[
+            Dependency(
+                root_bom_ref,
+                dependencies=[
+                    Dependency(
+                        component1_bom_ref,
+                        dependencies=[
+                            Dependency(
+                                component2_bom_ref,
+                               dependencies=[
+                                   Dependency(component3_bom_ref),
+                               ]
+                           ),
+                        ]
+                    ),
+                    Dependency(
+                        component2_bom_ref,
+                        dependencies=[
+                            Dependency(component4_bom_ref),
+                        ]
+                    ),
+                ]
+            ),
+            Dependency(
+               component3_bom_ref,
+               dependencies=[
+                   Dependency(component4_bom_ref),
+               ]
+           ),
+        ])
+        dependencies = bom.dependencies
         merger = BomDependencyGraphFlatMerger(bom)
         merger.flatten_merge()
         # TODO: assert dependencies flattened
         merger.reset()
-        # TODO: assert dependencies resetted
+        self.assertIs(dependencies, bom.dependencies)
+        # TODO: assert dependencies is unaltered
 
     def test_flatten_merge_and_reset_with(self) -> None:
         bom = Bom()
