@@ -20,10 +20,8 @@
 __all__ = ['BomDependencyGraphFlatMerger']
 
 from collections.abc import Iterable
-from itertools import chain
 from typing import TYPE_CHECKING, Any
 
-from ...model import bom_ref
 from ...model.dependency import Dependency
 
 if TYPE_CHECKING:  # pragma: no cover
