@@ -117,10 +117,3 @@ class TestFunctionalBySchemaVersion(TestCase):
         self.assertIs(outputter.schema_version, sv)
         self.assertIs(outputter.output_format, OutputFormat.JSON)
 
-
-class TestBomDependencyGraphFlatMerger(TestCase):
-    def test_discriminate_and_reset_with(self) -> None:
-        ...  # TODO
-
-    def test_discriminate_and_reset_manually(self) -> None:
-        ...  # TODO
