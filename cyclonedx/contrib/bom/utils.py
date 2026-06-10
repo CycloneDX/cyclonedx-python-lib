@@ -25,7 +25,8 @@ from random import random
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ...model.bom import Bom, BomRef
+    from ...model.bom import Bom
+    from ...model.bom_ref import BomRef
 
 
 class BomRefDiscriminator:

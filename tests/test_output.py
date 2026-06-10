@@ -23,7 +23,6 @@ from unittest.mock import Mock
 from ddt import data, ddt, named_data, unpack
 
 from cyclonedx.model.bom import Bom
-from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 
