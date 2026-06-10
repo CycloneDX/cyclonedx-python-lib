@@ -60,7 +60,7 @@ class BomRefDiscriminator:
 
     def reset(self) -> None:
         """
-        Reset BomRef's values to the initial state.
+        Set BomRefs' values to the initial state.
         """
         for bomref, original_value in self._bomrefs:
             bomref.value = original_value
