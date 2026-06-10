@@ -30,6 +30,9 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class BomRefDiscriminator:
+    """
+    Utility to give BomRefs unique values.
+    """
 
     def __init__(self, bomrefs: Iterable['BomRef'], prefix: str = 'BomRef') -> None:
         # do not use dict/set here, different BomRefs with same value have same hash and would shadow each other
@@ -43,6 +46,10 @@ class BomRefDiscriminator:
         self.reset()
 
     def discriminate(self) -> None:
+        """
+        Check BomRefs' values for uniqueness.
+        Duplications will be assigned a unique value.
+        """
         known_values = []
         for bomref, _ in self._bomrefs:
             value = bomref.value
@@ -52,6 +59,9 @@ class BomRefDiscriminator:
             known_values.append(value)
 
     def reset(self) -> None:
+        """
+        Reset BomRef's values to the initial state.
+        """
         for bomref, original_value in self._bomrefs:
             bomref.value = original_value
 
