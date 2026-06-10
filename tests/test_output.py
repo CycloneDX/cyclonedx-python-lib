@@ -53,7 +53,8 @@ class TestTestGetInstance(TestCase):
 
 class TestBomRefDiscriminator(TestCase):
     """
-    system under test is deprecated: BomRefDiscriminator
+    System under test `BomRefDiscriminator` is a deprecated re-export.
+    We keep the old tests untouched, to assert old behavior.
     """
 
     def test_discriminate_and_reset_with(self) -> None:
