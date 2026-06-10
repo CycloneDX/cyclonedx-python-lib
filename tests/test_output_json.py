@@ -116,4 +116,3 @@ class TestFunctionalBySchemaVersion(TestCase):
         outputter = outputter_class(Mock(spec=Bom))
         self.assertIs(outputter.schema_version, sv)
         self.assertIs(outputter.output_format, OutputFormat.JSON)
-

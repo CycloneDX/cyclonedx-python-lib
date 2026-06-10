@@ -70,7 +70,7 @@ class BomDependencyGraphFlatMerger:
         while todos:
             todo = todos.pop()
             if (todo_id := id(todo)) in seen:
-                pass # continue
+                pass  # continue
             seen.append(todo_id)
             ds = flat.setdefault(todo.ref, [])
             if todo_deps := todo.dependencies:
@@ -81,4 +81,3 @@ class BomDependencyGraphFlatMerger:
             for br, ds
             in flat.items()
         )
-
