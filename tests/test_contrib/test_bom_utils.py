@@ -33,41 +33,41 @@ class TestBomDependencyGraphFlatMerger(TestCase):
         component3_bom_ref = BomRef() # unassigned value
         component4_bom_ref = BomRef() # unassigned value
         bom = Bom(dependencies=[
-            Dependency(
+            root_bom_dep := Dependency(
                 root_bom_ref,
                 dependencies=[
-                    Dependency(
+                    component1_bom_dep := Dependency(
                         component1_bom_ref,
                         dependencies=[
-                            Dependency(
+                            component2_bom_dep := Dependency(
                                 component2_bom_ref,
                                dependencies=[
-                                   Dependency(component3_bom_ref),
+                                   component3_bom_dep := Dependency(component3_bom_ref),
                                ]
                            ),
                         ]
                     ),
-                    Dependency(
+                    component2_bom_dep2 := Dependency(
                         component2_bom_ref,
                         dependencies=[
-                            Dependency(component4_bom_ref),
+                            component4_bom_dep := Dependency(component4_bom_ref),
                         ]
                     ),
                 ]
             ),
-            Dependency(
+            component3_bom_dep2 := Dependency(
                component3_bom_ref,
                dependencies=[
-                   Dependency(component4_bom_ref),
+                   component4_bom_dep2 := Dependency(component4_bom_ref),
                ]
            ),
         ])
-        dependencies = bom.dependencies
+        bom_dependencies = bom.dependencies
         merger = BomDependencyGraphFlatMerger(bom)
         merger.flatten_merge()
         # TODO: assert dependencies flattened
         merger.reset()
-        self.assertIs(dependencies, bom.dependencies)
+        self.assertIs(bom_dependencies, bom.dependencies)
         # TODO: assert dependencies is unaltered
 
     def test_flatten_merge_and_reset_with(self) -> None:
