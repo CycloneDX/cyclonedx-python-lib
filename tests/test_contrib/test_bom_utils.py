@@ -44,6 +44,5 @@ class TestBomRefDiscriminator(TestCase):
         self.assertEqual(bomref1.value, bomref2.value, 'init')
         with discr:
             self.assertNotEqual(bomref1.value, bomref2.value, 'should be discriminated')
-        discr.reset()
         self.assertEqual('djdlkfjdslkf', bomref1.value)
         self.assertEqual('djdlkfjdslkf', bomref2.value)
