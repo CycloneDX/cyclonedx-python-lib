@@ -147,7 +147,7 @@ def make_outputter(bom: 'Bom', output_format: OutputFormat, schema_version: Sche
 
 @deprecated('Deprecated re-export location - see docstring of "BomRefDiscriminator" for details.')
 class BomRefDiscriminator(_BomRefDiscriminator):
-    """Deprecated — Alias of :class:`cyclonedx.contrib.license.factories.LicenseFactory`.
+    """Deprecated — Alias of :class:`cyclonedx.contrib.bom.utils.BomRefDiscriminator`.
 
     .. deprecated:: next
         This re-export location is deprecated.
