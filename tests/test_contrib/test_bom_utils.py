@@ -19,10 +19,20 @@
 from unittest import TestCase
 
 from cyclonedx.contrib.bom.utils import BomDependencyGraphFlatMerger
+from cyclonedx.model.bom import Bom
 
 class TestBomDependencyGraphFlatMerger(TestCase):
-    def test_discriminate_and_reset_with(self) -> None:
-        ...  # TODO
+    def test_flatten_merge_and_reset_manually(self) -> None:
+        bom = Bom()
+        merger = BomDependencyGraphFlatMerger(bom)
+        merger.flatten_merge()
+        # TODO: assert dependencies flattened
+        merger.reset()
+        # TODO: assert dependencies resetted
 
-    def test_discriminate_and_reset_manually(self) -> None:
-        ...  # TODO
+    def test_flatten_merge_and_reset_with(self) -> None:
+        bom = Bom()
+        merger = BomDependencyGraphFlatMerger(bom)
+        with merger:
+            pass # TODO: assert dependencies flattened
+        # TODO: assert dependencies resetted
