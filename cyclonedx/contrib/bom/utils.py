@@ -31,6 +31,9 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class BomDependencyGraphFlatMerger:
+    """
+
+    """
 
     def __init__(self, bom: 'Bom') -> None:
         self._bom = bom
@@ -43,16 +46,23 @@ class BomDependencyGraphFlatMerger:
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.reset()
 
-    def reset(self) -> None:
-        # Do NOT use the setter - this would create overhead and most importantly,
-        # and this could cause deduplication of an existing malformed set.
-        # Just access the internal field directly!
-        self._bom._dependencies = self._deps
-
     def flatten_merge(self) -> None:
+        """
+        Flatten and merge all of Bom's dependencies.
+        """
         self._bom.dependencies = self._merge_deps(chain.from_iterable(
             self._flatten_dep(dep) for dep in self._deps
         ))
+
+    def reset(self) -> None:
+        """
+        Reset Bom's dependencies to the initial state.
+        """
+        # Do NOT use the setter - this would create overhead,
+        # and - most importantly - this could cause deduplication of an existing malformed set.
+        # Just access the internal field directly!
+        self._bom._dependencies = self._deps
+
 
     @staticmethod
     def _merge_deps(deps: Iterable[Dependency]) -> Iterable[Dependency]:

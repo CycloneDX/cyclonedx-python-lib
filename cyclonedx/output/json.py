@@ -71,7 +71,6 @@ class Json(BaseOutput, BaseSchemaVersion):
         _view = SCHEMA_VERSIONS.get(self.schema_version_enum)
         bom = self.get_bom()
         bom.validate()
-        # utilize contrib.dependency.flatten() somewhere here
         with BomRefDiscriminator.from_bom(bom):
             with BomDependencyGraphFlatMerger(bom):
                 bom_json: dict[str, Any] = json_loads(
