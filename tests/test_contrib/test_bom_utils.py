@@ -24,7 +24,7 @@ from cyclonedx.model.bom_ref import BomRef
 
 class TestBomRefDiscriminator(TestCase):
 
-    def test_discriminate_and_reset_with(self) -> None:
+    def test_discriminate_and_reset_manually(self) -> None:
         bomref1 = BomRef('djdlkfjdslkf')
         bomref2 = BomRef('djdlkfjdslkf')
         self.assertEqual(bomref1.value, bomref2.value, 'blank')
@@ -36,7 +36,7 @@ class TestBomRefDiscriminator(TestCase):
         self.assertEqual('djdlkfjdslkf', bomref1.value)
         self.assertEqual('djdlkfjdslkf', bomref2.value)
 
-    def test_discriminate_and_reset_manually(self) -> None:
+    def test_discriminate_and_reset_with(self) -> None:
         bomref1 = BomRef('djdlkfjdslkf')
         bomref2 = BomRef('djdlkfjdslkf')
         self.assertEqual(bomref1.value, bomref2.value, 'blank')
