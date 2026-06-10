@@ -31,7 +31,12 @@ if TYPE_CHECKING:  # pragma: no cover
 
 class BomRefDiscriminator:
     """
-    Utility to give BomRefs unique values.
+    Ensure that a collection of BomRef objects has unique, non‑empty values.
+
+    The discriminator inspects the provided BomRef instances and assigns new,
+    automatically generated identifiers to any BomRef whose value is missing
+    or duplicates another. Original values are preserved so they can be
+    restored later via `reset()` or by using this class as a context manager.
     """
 
     def __init__(self, bomrefs: Iterable['BomRef'], prefix: str = 'BomRef') -> None:
@@ -47,8 +52,10 @@ class BomRefDiscriminator:
 
     def discriminate(self) -> None:
         """
-        Check BomRefs' values for uniqueness.
-        Duplications will be assigned a unique value.
+        Enforce uniqueness across all BomRef values.
+
+        Any BomRef whose value is `None` or duplicates a previously encountered
+        value is assigned a newly generated unique identifier.
         """
         known_values = []
         for bomref, _ in self._bomrefs:
@@ -60,7 +67,7 @@ class BomRefDiscriminator:
 
     def reset(self) -> None:
         """
-        Set BomRefs' values to the initial state.
+        Restore all BomRef values to their original state.
         """
         for bomref, original_value in self._bomrefs:
             bomref.value = original_value
@@ -70,6 +77,14 @@ class BomRefDiscriminator:
 
     @classmethod
     def from_bom(cls, bom: 'Bom', prefix: str = 'BomRef') -> 'BomRefDiscriminator':
+        """
+        Create a discriminator for all BomRefs contained within a BOM.
+
+        This includes BomRefs from
+        - components
+        - services
+        - vulnerabilities
+        """
         return cls(chain(
             map(lambda c: c.bom_ref, bom._get_all_components()),
             map(lambda s: s.bom_ref, bom.services),
