@@ -56,13 +56,13 @@ class BomDependencyGraphFlatMerger:
 
     @staticmethod
     def _merge_deps(deps: Iterable[Dependency]) -> Iterable[Dependency]:
-        merged: dict[BomRef, Dependency] = {}
+        uniques: dict[BomRef, Dependency] = {}
         for dep in deps:
-            if m := merged.get(dep.ref):
-                m.dependencies.update(dep.dependencies)
+            if (unique := uniques.get(dep.ref)) is not None:
+                unique.dependencies.update(dep.dependencies)
             else:
-                merged[dep.ref] = Dependency(dep.ref, dep.dependencies)
-        return merged.values()
+                uniques[dep.ref] = Dependency(dep.ref, dep.dependencies)
+        return uniques.values()
 
     @staticmethod
     def _flatten_dep(dep: Dependency) -> Iterable[Dependency]:
