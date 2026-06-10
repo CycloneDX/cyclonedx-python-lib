@@ -30,8 +30,9 @@ class TestBomDependencyGraphFlatMerger(TestCase):
         root_bom_ref = BomRef('root_bom_ref')
         component1_bom_ref = BomRef('component1_bom_ref')
         component2_bom_ref = BomRef('component2_bom_ref')
-        component3_bom_ref = BomRef() # unassigned value
-        component4_bom_ref = BomRef() # unassigned value
+        component3_bom_ref = BomRef('component3_bom_ref')
+        component4_bom_ref = BomRef('component4_bom_ref')
+        component5_bom_ref = BomRef('component5_bom_ref')
         bom = Bom(dependencies=[
             root_bom_dep := Dependency(
                 root_bom_ref,
@@ -41,10 +42,10 @@ class TestBomDependencyGraphFlatMerger(TestCase):
                         dependencies=[
                             component2_bom_dep := Dependency(
                                 component2_bom_ref,
-                               dependencies=[
-                                   component3_bom_dep := Dependency(component3_bom_ref),
-                               ]
-                           ),
+                                dependencies=[
+                                    component3_bom_dep := Dependency(component3_bom_ref),
+                                ]
+                            ),
                         ]
                     ),
                     component2_bom_dep2 := Dependency(
@@ -56,19 +57,41 @@ class TestBomDependencyGraphFlatMerger(TestCase):
                 ]
             ),
             component3_bom_dep2 := Dependency(
-               component3_bom_ref,
-               dependencies=[
-                   component4_bom_dep2 := Dependency(component4_bom_ref),
-               ]
-           ),
+                component3_bom_ref,
+                dependencies=[
+                    component4_bom_dep2 := Dependency(component4_bom_ref),
+                ]
+            ),
+            Dependency(component5_bom_ref, (
+                component1_bom_dep,
+                component2_bom_dep,
+                component2_bom_dep2,
+                component3_bom_dep,
+                component3_bom_dep2,
+                component4_bom_dep,
+                component4_bom_dep2
+            ))
         ])
         bom_dependencies = bom.dependencies
         merger = BomDependencyGraphFlatMerger(bom)
         merger.flatten_merge()
-        # TODO: assert dependencies flattened
+        self.assertEqual(5, len(bom.dependencies), 'not expected len()')
+        self.assertSetEqual({
+            Dependency(root_bom_ref, (Dependency(component1_bom_ref), Dependency(component2_bom_ref))),
+            Dependency(component1_bom_ref, (Dependency(component2_bom_ref), )),
+            Dependency(component2_bom_ref, (Dependency(component3_bom_ref), Dependency(component4_bom_ref), )),
+            Dependency(component3_bom_ref, (Dependency(component4_bom_ref), )),
+            Dependency(component4_bom_ref),
+            Dependency(component5_bom_ref, (
+                Dependency(component1_bom_ref),
+                Dependency(component2_bom_ref),
+                Dependency(component3_bom_ref),
+                Dependency(component4_bom_ref),
+            )),
+        }, bom.dependencies)
         merger.reset()
         self.assertIs(bom_dependencies, bom.dependencies)
-        # TODO: assert dependencies is unaltered
+        self.assertSetEqual(bom_dependencies, bom.dependencies)
 
     def test_flatten_merge_and_reset_with(self) -> None:
         bom = Bom()

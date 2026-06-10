@@ -23,6 +23,7 @@ from collections.abc import Iterable
 from itertools import chain
 from typing import TYPE_CHECKING, Any
 
+from ...model import bom_ref
 from ...model.dependency import Dependency
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -50,9 +51,7 @@ class BomDependencyGraphFlatMerger:
         """
         Flatten and merge all of Bom's dependencies.
         """
-        self._bom.dependencies = self._merge_deps(chain.from_iterable(
-            self._flatten_dep(dep) for dep in self._deps
-        ))
+        self._bom.dependencies = self._flatten_merge(self._deps)
 
     def reset(self) -> None:
         """
@@ -63,26 +62,23 @@ class BomDependencyGraphFlatMerger:
         # Just access the internal field directly!
         self._bom._dependencies = self._deps
 
-
     @staticmethod
-    def _merge_deps(deps: Iterable[Dependency]) -> Iterable[Dependency]:
-        uniques: dict[BomRef, Dependency] = {}
-        for dep in deps:
-            if (unique := uniques.get(dep.ref)) is not None:
-                unique.dependencies.update(dep.dependencies)
-            else:
-                uniques[dep.ref] = Dependency(dep.ref, dep.dependencies)
-        return uniques.values()
-
-    @staticmethod
-    def _flatten_dep(dep: Dependency) -> Iterable[Dependency]:
-        if not dep.dependencies:
-            return dep,
-        flat: list[Dependency] = []
-        todos: list[Dependency] = [dep]
+    def _flatten_merge(deps: Iterable[Dependency]) -> Iterable[Dependency]:
+        flat: dict[BomRef, set[BomRef]] = {}
+        todos = list(deps)
+        seen: list[int] = []
         while todos:
             todo = todos.pop()
-            if todo.dependencies:
-                flat.append(Dependency(todo.ref, (Dependency(d.ref) for d in todo.dependencies)))
-                todos.extend(todo.dependencies)
-        return flat
+            if (todo_id := id(todo)) in seen:
+                pass # continue
+            seen.append(todo_id)
+            ds = flat.setdefault(todo.ref, set())
+            if todo_deps := todo.dependencies:
+                ds.update(d.ref for d in todo_deps)
+                todos.extend(todo_deps)
+        return (
+            Dependency(br, (Dependency(d) for d in ds))
+            for br, ds
+            in flat.items()
+        )
+
