@@ -31,12 +31,14 @@ if TYPE_CHECKING:  # pragma: no cover
 
 class BomRefDiscriminator:
     """
-    Ensure that a collection of :class:`cyclonedx.model.bom_ref.BomRef` objects has unique, non‑empty values.
+    Ensure that a collection of BomRef objects
+    has unique, non‑empty :attr:`cyclonedx.model.bom_ref.BomRef.value`.
 
-    The discriminator inspects the provided BomRef instances and assigns new,
-    automatically generated identifiers to any BomRef whose value is missing
-    or duplicates another.
-    Original values are preserved so they can be restored later via :meth:`reset()` or by using this class as a context manager.
+    The discriminator inspects each provided BomRef and assigns a newly
+    generated identifier to any instance whose ``value`` is missing or
+    duplicates an earlier one.
+    All original values are preserved and can be restored via :meth:`reset()`
+    or by using this class as a context manager.
     """
 
     def __init__(self, bomrefs: Iterable['BomRef'], prefix: str = 'BomRef') -> None:
@@ -53,11 +55,11 @@ class BomRefDiscriminator:
 
     def discriminate(self) -> None:
         """
-        Enforce uniqueness across all :attr:`cyclonedx.model.bom_ref.BomRef.value`.
+        Enforce uniqueness across all
+        :attr:`cyclonedx.model.bom_ref.BomRef.value`s.
 
-        .. note::
-           Any BomRef whose value is ``None`` or duplicates a previously encountered
-           value is assigned a newly generated unique identifier.
+        Any BomRef whose ``value`` is ``None`` or duplicates a previously
+        encountered value is assigned a newly generated unique identifier.
         """
         known_values = []
         for bomref, _ in self._bomrefs:
@@ -69,7 +71,8 @@ class BomRefDiscriminator:
 
     def reset(self) -> None:
         """
-        Restore all :attr:`cyclonedx.model.bom_ref.BomRef.value` to their original state.
+        Restore all :attr:`cyclonedx.model.bom_ref.BomRef.value`s to
+        their original state.
         """
         for bomref, original_value in self._bomrefs:
             bomref.value = original_value
@@ -80,12 +83,13 @@ class BomRefDiscriminator:
     @classmethod
     def from_bom(cls, bom: 'Bom', prefix: str = 'BomRef') -> 'BomRefDiscriminator':
         """
-        Create a discriminator for all BomRefs contained within a BOM.
+        Create a discriminator for all :class:`cyclonedx.model.bom_ref.BomRefs`
+        contained within a Bom.
 
         This includes BomRefs from
-          * components
-          * services
-          * vulnerabilities
+          * :attr:`cyclonedx.model.bom.Bom.components`
+          * :attr:`cyclonedx.model.bom.Bom.services`
+          * :attr:`cyclonedx.model.bom.Bom.vulnerabilities`
         """
         return cls(chain(
             map(lambda c: c.bom_ref, bom._get_all_components()),
