@@ -96,7 +96,11 @@ class BomRefDiscriminator:
 
 class BomDependencyGraphFlatMerger:
     """
+    Context‑manager utility that temporarily flattens and merges all
+    :attr:`cyclonedx.model.bom.Bom.dependencies`.
 
+    When used in a ``with`` block, the :class:`cyclonedx.model.bom.Bom`'s dependency graph
+    is replaced with a flattened version and automatically restored afterward.
     """
 
     def __init__(self, bom: 'Bom') -> None:
@@ -112,17 +116,26 @@ class BomDependencyGraphFlatMerger:
 
     def flatten_merge(self) -> None:
         """
-        Flatten and merge all of Bom's dependencies.
+        Flatten and merge all :attr:`cyclonedx.model.bom.Bom.dependencies`.
+
+        This computes a non‑recursive, deduplicated representation of the
+        dependency graph and assigns it to :class:`cyclonedx.model.bom.Bom`.
+
+        .. note::
+           This does not alter the dependency graph, but assigns a new one to the Bom.
         """
         self._bom.dependencies = self._flatten_merge(self._deps)
 
     def reset(self) -> None:
         """
-        Reset Bom's dependencies to the initial state.
+        Restore the :class:`cyclonedx.model.bom.Bom`'s  dependency graph to the original.
+
+        .. note::
+           This does not alter the dependency graph, but assigns the original one to the Bom.
         """
-        # Do NOT use the setter - this would create overhead,
-        # and - most importantly - this could cause deduplication of an existing malformed set.
-        # Just access the internal field directly!
+        # NOTE: not using the setter, which would create overhead,
+        #       and - most importantly - this could cause deduplication of an existing malformed set.
+        #       Just access the internal field directly!
         self._bom._dependencies = self._deps
 
     @staticmethod
