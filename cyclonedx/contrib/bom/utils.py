@@ -151,7 +151,7 @@ class BomDependencyGraphFlatMerger:
 
     @staticmethod
     def _flatten_merge(deps: Iterable[Dependency]) -> Iterable[Dependency]:
-        flat: dict[BomRef, list[BomRef]] = {}
+        flat: dict['BomRef', list['BomRef']] = {}
         todos = list(deps)
         seen: list[int] = []
         while todos:
