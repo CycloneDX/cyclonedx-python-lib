@@ -107,7 +107,7 @@ class BomDependencyGraphFlatMerger:
 
     def __init__(self, bom: 'Bom') -> None:
         self._bom = bom
-        # do NOT use the getter - see `reset()` for reasons
+        # NOTE: do not use the getter - see `reset()` for reasons.
         self._deps = self._bom._dependencies
 
     def __enter__(self) -> None:
