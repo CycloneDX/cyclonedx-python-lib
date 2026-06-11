@@ -99,8 +99,10 @@ class BomDependencyGraphFlatMerger:
     Context‑manager utility that temporarily flattens and merges all
     :attr:`cyclonedx.model.bom.Bom.dependencies`.
 
-    When used in a ``with`` block, the :class:`cyclonedx.model.bom.Bom`'s dependency graph
-    is replaced with a flattened version and automatically restored afterward.
+    When used as a context manager, the :class:`cyclonedx.model.bom.Bom`'s
+    dependency graph is replaced with a flattened, merged representation
+    for the duration of the ``with`` block and automatically restored
+    afterward.
     """
 
     def __init__(self, bom: 'Bom') -> None:
@@ -118,20 +120,23 @@ class BomDependencyGraphFlatMerger:
         """
         Flatten and merge all :attr:`cyclonedx.model.bom.Bom.dependencies`.
 
-        This computes a non‑recursive, deduplicated representation of the
-        dependency graph and assigns it to :class:`cyclonedx.model.bom.Bom`.
+        This produces a non‑recursive, merged representation of the entire
+        dependency graph and assigns it to the Bom.
 
         .. note::
-           This does not alter the dependency graph, but assigns a new one to the Bom.
+           The original dependency graph is not modified. A new, flattened
+           dependency structure is assigned to the Bom.
         """
         self._bom.dependencies = self._flatten_merge(self._deps)
 
     def reset(self) -> None:
         """
-        Restore the :class:`cyclonedx.model.bom.Bom`'s  dependency graph to the original.
+        Restore the :class:`cyclonedx.model.bom.Bom`'s dependency graph to
+        its original state.
 
         .. note::
-           This does not alter the dependency graph, but assigns the original one to the Bom.
+           This does not modify the dependency graph. It simply reassigns
+           the original dependency collection back to the Bom.
         """
         # NOTE: not using the setter, which would create overhead,
         #       and - most importantly - this could cause deduplication of an existing malformed set.
