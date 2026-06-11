@@ -97,7 +97,7 @@ class BomRefDiscriminator:
           * :attr:`cyclonedx.model.bom.Bom.vulnerabilities`
         """
         return cls(chain(
-            (c.bom_ref for c in  bom._get_all_components()),
+            (c.bom_ref for c in bom._get_all_components()),
             (s.bom_ref for s in bom.services),
             (v.bom_ref for v in bom.vulnerabilities),
         ), prefix)
