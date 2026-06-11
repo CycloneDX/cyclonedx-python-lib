@@ -15,12 +15,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-
+import ast
 from collections.abc import Generator, Iterable
+from decimal import Decimal
 from enum import Enum
+from glob import glob
 from itertools import chain
 from json import load as json_load
-from typing import Any
+from os import path
+from typing import Any, Optional
 from unittest import TestCase
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
@@ -32,6 +35,7 @@ from cyclonedx.exception.serialization import SerializationOfUnsupportedComponen
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.component import Component, Patch, Pedigree
+from cyclonedx.model.component_evidence import ComponentEvidence, Identity as CEIdentity, Method as CEMethod
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
@@ -63,6 +67,10 @@ from cyclonedx.model.component import (  # isort:skip
     ComponentType,
     PatchClassification,
 )
+from cyclonedx.model.component_evidence import (  # isort:skip
+    AnalysisTechnique,
+    IdentityField,
+)
 from cyclonedx.model.impact_analysis import (  # isort:skip
     ImpactAnalysisAffectedStatus,
     ImpactAnalysisJustification,
@@ -71,6 +79,9 @@ from cyclonedx.model.impact_analysis import (  # isort:skip
 )
 from cyclonedx.model.issue import (  # isort:skip
     IssueClassification,
+)
+from cyclonedx.model.license import (  # isort:skip
+    LicenseAcknowledgement
 )
 from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilityScoreSource,
@@ -508,3 +519,149 @@ class TestEnumTlpClassification(_EnumTestCase):
             distribution_constraints=DistributionConstraints(tlp=TlpClassification.CLEAR)
         ))
         super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumLicenseAcknowledgement(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='licenseAcknowledgementEnumerationType']"),
+        dp_cases_from_json_schemas('definitions', 'licenseAcknowledgementEnumeration'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(LicenseAcknowledgement, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=(
+            DisjunctiveLicense(name=f'LicenseAcknowledgement: {la.name}',
+                               acknowledgement=la,
+                               ) for la in LicenseAcknowledgement
+        ))])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumIdentityField(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='identityFieldType']"),
+        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties', 'field'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(IdentityField, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[
+            Component(
+                name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy',
+                evidence=ComponentEvidence(identity=[
+                    CEIdentity(
+                        field=ce_if,
+                        concluded_value=f'{ce_if.name}'
+                    ) for ce_if in IdentityField
+                ]))
+        ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumAnalysisTechnique(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='evidenceTechnique']"),
+        dp_cases_from_json_schemas('definitions', 'componentIdentityEvidence', 'properties',
+                                   'methods', 'items', 'properties', 'technique'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(AnalysisTechnique, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy',
+                    evidence=ComponentEvidence(identity=[
+                        CEIdentity(
+                            field=IdentityField.NAME,
+                            methods=[
+                                CEMethod(
+                                    confidence=Decimal(1.0),
+                                    value=f'AnalysisTechnique: {ce_at.name}',
+                                    technique=ce_at,
+                                ) for ce_at in AnalysisTechnique
+                            ])
+                    ])
+                )
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+"""
+missing:
+- CryptoAssetType
+- CryptoPrimitive
+- CryptoExecutionEnvironment
+- CryptoImplementationPlatform
+- CryptoCertificationLevel
+- CryptoMode
+- CryptoPadding
+- CryptoFunction
+- RelatedCryptoMaterialType
+- RelatedCryptoMaterialState
+- ProtocolPropertiesType
+"""
+
+# add new test cases above this line
+
+
+@ddt
+class TestCaseCompleteness(TestCase):
+    """
+    Test that all defined enum models are covered by a test case in here.
+    """
+
+    __TestCasePrefix = 'TestEnum'
+
+    __defined_enumcases: Optional[tuple[str, ...]] = None
+
+    @classmethod
+    def __get_defined_enumcases(cls) -> tuple[str, ...]:
+        if cls.__defined_enumcases is None:
+            cls.__defined_enumcases = tuple(
+                name for name, obj
+                in globals().items()
+                if isinstance(obj, type)
+                and obj.__module__
+                and obj.__module__ == __name__
+                and issubclass(obj, _EnumTestCase)
+                and not obj is _EnumTestCase
+            )
+        return cls.__defined_enumcases
+
+    @staticmethod
+    def __get_defined_model_enums():
+        models_path = path.join(path.dirname(__file__), '..', 'cyclonedx', 'model')
+        model_files = glob(path.join('**', '*.py'), root_dir=models_path, recursive=True)
+        for model_file in model_files:
+            with open(path.join(models_path, model_file), 'r', encoding='utf-8') as f:
+                tree = ast.parse(f.read(), filename=model_file)
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef):
+                        for base in node.bases:
+                            # Case 1: direct name: "Enum"
+                            if isinstance(base, ast.Name) and base.id == 'Enum':
+                                yield node.name
+                                break
+                            # Case 2: qualified name: "enum.Enum"
+                            if isinstance(base, ast.Attribute) and base.attr == 'Enum':
+                                yield node.name
+                                break
+
+    @idata(__get_defined_model_enums())
+    def test_case_exists(self, enum_name) -> None:
+        self.assertIn(f'{self.__TestCasePrefix}{enum_name}',
+                      self.__get_defined_enumcases(),
+                      f'Missing Test Case for Enum: {enum_name}')
