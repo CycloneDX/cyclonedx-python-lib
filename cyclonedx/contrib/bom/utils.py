@@ -153,12 +153,12 @@ class BomDependencyGraphFlatMerger:
     def _flatten_merge(deps: Iterable[Dependency]) -> Iterable[Dependency]:
         flat: dict[BomRef, list[BomRef]] = {}
         todos = list(deps)
-        seen: list[int] = []
+        seen: set[int] = set()
         while todos:
             todo = todos.pop()
             if (todo_id := id(todo)) in seen:
                 continue
-            seen.append(todo_id)
+            seen.add(todo_id)
             ds = flat.setdefault(todo.ref, [])
             if todo_deps := todo.dependencies:
                 ds.extend(d.ref for d in todo_deps)
