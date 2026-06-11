@@ -19,7 +19,7 @@ from abc import abstractmethod
 from json import dumps as json_dumps, loads as json_loads
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
-from ..contrib.bom.utils import BomRefDiscriminator
+from ..contrib.bom.utils import BomDependencyGraphFlatMerger, BomRefDiscriminator
 from ..exception.output import FormatNotSupportedException
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
@@ -72,9 +72,10 @@ class Json(BaseOutput, BaseSchemaVersion):
         bom = self.get_bom()
         bom.validate()
         with BomRefDiscriminator.from_bom(bom):
-            bom_json: dict[str, Any] = json_loads(
-                bom.as_json(  # type:ignore[attr-defined]
-                    view_=_view))
+            with BomDependencyGraphFlatMerger(bom):
+                bom_json: dict[str, Any] = json_loads(
+                    bom.as_json(  # type:ignore[attr-defined]
+                        view_=_view))
         bom_json.update(_json_core)
         self._bom_json = bom_json
         self.generated = True
