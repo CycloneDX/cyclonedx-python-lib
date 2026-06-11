@@ -18,8 +18,10 @@
 
 from unittest import TestCase
 
-from cyclonedx.contrib.bom.utils import BomRefDiscriminator
+from cyclonedx.contrib.bom.utils import BomDependencyGraphFlatMerger, BomRefDiscriminator
+from cyclonedx.model.bom import Bom
 from cyclonedx.model.bom_ref import BomRef
+from cyclonedx.model.dependency import Dependency
 
 
 class TestBomRefDiscriminator(TestCase):
@@ -46,3 +48,143 @@ class TestBomRefDiscriminator(TestCase):
             self.assertNotEqual(bomref1.value, bomref2.value, 'should be discriminated')
         self.assertEqual('djdlkfjdslkf', bomref1.value)
         self.assertEqual('djdlkfjdslkf', bomref2.value)
+
+
+class TestBomDependencyGraphFlatMerger(TestCase):
+
+    def test_flatten_merge_and_reset_manually(self) -> None:
+        root_bom_ref = BomRef('root_bom_ref')
+        component1_bom_ref = BomRef('component1_bom_ref')
+        component2_bom_ref = BomRef('component2_bom_ref')
+        component3_bom_ref = BomRef('component3_bom_ref')
+        component4_bom_ref = BomRef('component4_bom_ref')
+        component5_bom_ref = BomRef('component5_bom_ref')
+        bom = Bom(dependencies=[
+            Dependency(
+                root_bom_ref,
+                dependencies=[
+                    component1_bom_dep := Dependency(
+                        component1_bom_ref,
+                        dependencies=[
+                            component2_bom_dep := Dependency(
+                                component2_bom_ref,
+                                dependencies=[
+                                    component3_bom_dep := Dependency(component3_bom_ref),
+                                ]
+                            ),
+                        ]
+                    ),
+                    component2_bom_dep2 := Dependency(
+                        component2_bom_ref,
+                        dependencies=[
+                            component4_bom_dep := Dependency(component4_bom_ref),
+                        ]
+                    ),
+                ]
+            ),
+            component3_bom_dep2 := Dependency(
+                component3_bom_ref,
+                dependencies=[
+                    component4_bom_dep2 := Dependency(component4_bom_ref),
+                ]
+            ),
+            Dependency(component5_bom_ref, (
+                component1_bom_dep,
+                component2_bom_dep,
+                component2_bom_dep2,
+                component3_bom_dep,
+                component3_bom_dep2,
+                component4_bom_dep,
+                component4_bom_dep2,
+                Dependency(root_bom_ref)
+            ))
+        ])
+        bom_dependencies = bom.dependencies
+        merger = BomDependencyGraphFlatMerger(bom)
+        merger.flatten_merge()
+        self.assertEqual(6, len(bom.dependencies), 'not expected len()')
+        self.assertSetEqual({
+            Dependency(root_bom_ref, (Dependency(component1_bom_ref), Dependency(component2_bom_ref))),
+            Dependency(component1_bom_ref, (Dependency(component2_bom_ref), )),
+            Dependency(component2_bom_ref, (Dependency(component3_bom_ref), Dependency(component4_bom_ref), )),
+            Dependency(component3_bom_ref, (Dependency(component4_bom_ref), )),
+            Dependency(component4_bom_ref),
+            Dependency(component5_bom_ref, (
+                Dependency(root_bom_ref),
+                Dependency(component1_bom_ref),
+                Dependency(component2_bom_ref),
+                Dependency(component3_bom_ref),
+                Dependency(component4_bom_ref),
+            )),
+        }, bom.dependencies)
+        merger.reset()
+        self.assertIs(bom_dependencies, bom.dependencies)
+        self.assertSetEqual(bom_dependencies, bom.dependencies)
+
+    def test_flatten_merge_and_reset_with(self) -> None:
+        root_bom_ref = BomRef('root_bom_ref')
+        component1_bom_ref = BomRef('component1_bom_ref')
+        component2_bom_ref = BomRef('component2_bom_ref')
+        component3_bom_ref = BomRef('component3_bom_ref')
+        component4_bom_ref = BomRef('component4_bom_ref')
+        component5_bom_ref = BomRef('component5_bom_ref')
+        bom = Bom(dependencies=[
+            Dependency(
+                root_bom_ref,
+                dependencies=[
+                    component1_bom_dep := Dependency(
+                        component1_bom_ref,
+                        dependencies=[
+                            component2_bom_dep := Dependency(
+                                component2_bom_ref,
+                                dependencies=[
+                                    component3_bom_dep := Dependency(component3_bom_ref),
+                                ]
+                            ),
+                        ]
+                    ),
+                    component2_bom_dep2 := Dependency(
+                        component2_bom_ref,
+                        dependencies=[
+                            component4_bom_dep := Dependency(component4_bom_ref),
+                        ]
+                    ),
+                ]
+            ),
+            component3_bom_dep2 := Dependency(
+                component3_bom_ref,
+                dependencies=[
+                    component4_bom_dep2 := Dependency(component4_bom_ref),
+                ]
+            ),
+            Dependency(component5_bom_ref, (
+                Dependency(root_bom_ref),
+                component1_bom_dep,
+                component2_bom_dep,
+                component2_bom_dep2,
+                component3_bom_dep,
+                component3_bom_dep2,
+                component4_bom_dep,
+                component4_bom_dep2,
+            ))
+        ])
+        bom_dependencies = bom.dependencies
+        merger = BomDependencyGraphFlatMerger(bom)
+        with merger:
+            self.assertEqual(6, len(bom.dependencies), 'not expected len()')
+            self.assertSetEqual({
+                Dependency(root_bom_ref, (Dependency(component1_bom_ref), Dependency(component2_bom_ref))),
+                Dependency(component1_bom_ref, (Dependency(component2_bom_ref), )),
+                Dependency(component2_bom_ref, (Dependency(component3_bom_ref), Dependency(component4_bom_ref), )),
+                Dependency(component3_bom_ref, (Dependency(component4_bom_ref), )),
+                Dependency(component4_bom_ref),
+                Dependency(component5_bom_ref, (
+                    Dependency(root_bom_ref),
+                    Dependency(component1_bom_ref),
+                    Dependency(component2_bom_ref),
+                    Dependency(component3_bom_ref),
+                    Dependency(component4_bom_ref),
+                )),
+            }, bom.dependencies)
+        self.assertIs(bom_dependencies, bom.dependencies)
+        self.assertSetEqual(bom_dependencies, bom.dependencies)

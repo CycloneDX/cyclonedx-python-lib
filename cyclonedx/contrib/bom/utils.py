@@ -17,12 +17,14 @@
 
 """Bom related utilities"""
 
-__all__ = ['BomRefDiscriminator']
+__all__ = ['BomRefDiscriminator', 'BomDependencyGraphFlatMerger']
 
 from collections.abc import Iterable
 from itertools import chain
 from random import random
 from typing import TYPE_CHECKING, Any
+
+from ...model.dependency import Dependency
 
 if TYPE_CHECKING:  # pragma: no cover
     from ...model.bom import Bom
@@ -96,3 +98,73 @@ class BomRefDiscriminator:
             map(lambda s: s.bom_ref, bom.services),
             map(lambda v: v.bom_ref, bom.vulnerabilities)
         ), prefix)
+
+
+class BomDependencyGraphFlatMerger:
+    """
+    Context‑manager utility that temporarily flattens and merges all
+    :attr:`cyclonedx.model.bom.Bom.dependencies`.
+
+    When used as a context manager, the :class:`cyclonedx.model.bom.Bom`'s
+    dependency graph is replaced with a flattened, merged representation
+    for the duration of the ``with`` block and automatically restored
+    afterward.
+    """
+
+    def __init__(self, bom: 'Bom') -> None:
+        self._bom = bom
+        # NOTE: do not use the getter - see `reset()` for reasons.
+        self._deps = self._bom._dependencies
+
+    def __enter__(self) -> None:
+        self.flatten_merge()
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        self.reset()
+
+    def flatten_merge(self) -> None:
+        """
+        Flatten and merge all :attr:`cyclonedx.model.bom.Bom.dependencies`.
+
+        This produces a non‑recursive, merged representation of the entire
+        dependency graph and assigns it to the Bom.
+
+        .. note::
+           The original dependency graph is not modified. A new, flattened
+           dependency structure is assigned to the Bom.
+        """
+        self._bom.dependencies = self._flatten_merge(self._deps)
+
+    def reset(self) -> None:
+        """
+        Restore the :class:`cyclonedx.model.bom.Bom`'s dependency graph to
+        its original state.
+
+        .. note::
+           This does not modify the dependency graph. It simply reassigns
+           the original dependency collection back to the Bom.
+        """
+        # NOTE: not using the setter, which would create overhead,
+        #       and - most importantly - this could cause deduplication of an existing malformed set.
+        #       Just access the internal field directly!
+        self._bom._dependencies = self._deps
+
+    @staticmethod
+    def _flatten_merge(deps: Iterable[Dependency]) -> Iterable[Dependency]:
+        flat: dict[BomRef, list[BomRef]] = {}
+        todos = list(deps)
+        seen: list[int] = []
+        while todos:
+            todo = todos.pop()
+            if (todo_id := id(todo)) in seen:
+                continue
+            seen.append(todo_id)
+            ds = flat.setdefault(todo.ref, [])
+            if todo_deps := todo.dependencies:
+                ds.extend(d.ref for d in todo_deps)
+                todos.extend(todo_deps)
+        return (
+            Dependency(br, (Dependency(d) for d in ds))
+            for br, ds
+            in flat.items()
+        )
