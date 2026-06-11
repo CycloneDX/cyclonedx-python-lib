@@ -18,10 +18,36 @@
 
 from unittest import TestCase
 
-from cyclonedx.contrib.bom.utils import BomDependencyGraphFlatMerger
+from cyclonedx.contrib.bom.utils import BomDependencyGraphFlatMerger, BomRefDiscriminator
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.dependency import Dependency
+
+
+class TestBomRefDiscriminator(TestCase):
+
+    def test_discriminate_and_reset_manually(self) -> None:
+        bomref1 = BomRef('djdlkfjdslkf')
+        bomref2 = BomRef('djdlkfjdslkf')
+        self.assertEqual(bomref1.value, bomref2.value, 'blank')
+        discr = BomRefDiscriminator([bomref1, bomref2])
+        self.assertEqual(bomref1.value, bomref2.value, 'init')
+        discr.discriminate()
+        self.assertNotEqual(bomref1.value, bomref2.value, 'should be discriminated')
+        discr.reset()
+        self.assertEqual('djdlkfjdslkf', bomref1.value)
+        self.assertEqual('djdlkfjdslkf', bomref2.value)
+
+    def test_discriminate_and_reset_with(self) -> None:
+        bomref1 = BomRef('djdlkfjdslkf')
+        bomref2 = BomRef('djdlkfjdslkf')
+        self.assertEqual(bomref1.value, bomref2.value, 'blank')
+        discr = BomRefDiscriminator([bomref1, bomref2])
+        self.assertEqual(bomref1.value, bomref2.value, 'init')
+        with discr:
+            self.assertNotEqual(bomref1.value, bomref2.value, 'should be discriminated')
+        self.assertEqual('djdlkfjdslkf', bomref1.value)
+        self.assertEqual('djdlkfjdslkf', bomref2.value)
 
 
 class TestBomDependencyGraphFlatMerger(TestCase):
