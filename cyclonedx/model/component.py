@@ -27,13 +27,11 @@ if sys.version_info >= (3, 13):
 else:
     from typing_extensions import deprecated
 
-# See https://github.com/package-url/packageurl-python/issues/65
 import py_serializable as serializable
-from packageurl import PackageURL
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
-from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
+from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException
 from ..exception.serialization import (
     CycloneDxDeserializationException,
@@ -51,7 +49,6 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
     SchemaVersion1Dot7,
 )
-from ..serialization import PackageUrl as PackageUrlSH
 from . import (
     AttachedText,
     ExternalReference,
@@ -974,11 +971,10 @@ class Component(Dependable):
         component = ComponentBuilder().make_for_file(absolute_file_path, name=path_for_bom)
         sha1_hash = next((h.content for h in component.hashes if h.alg is HashAlgorithm.SHA_1), None)
         assert sha1_hash is not None
-        component.version = f'0.0.0-{sha1_hash[0:12]}'
-        component.purl = PackageURL(  # DEPRECATED: a file has no PURL!
-            type='generic', name=path_for_bom if path_for_bom else absolute_file_path,
-            version=f'0.0.0-{sha1_hash[0:12]}'
-        )
+        version = f'0.0.0-{sha1_hash[0:12]}'
+        name = path_for_bom if path_for_bom else absolute_file_path
+        component.version = version
+        component.purl = f'pkg:generic/{name}@{version}'  # DEPRECATED: a file has no PURL!
         return component
 
     def __init__(
@@ -996,7 +992,7 @@ class Component(Dependable):
         hashes: Optional[Iterable[HashType]] = None,
         licenses: Optional[Iterable[License]] = None,
         copyright: Optional[str] = None,
-        purl: Optional[PackageURL] = None,
+        purl: Optional[str] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
         properties: Optional[Iterable[Property]] = None,
         release_notes: Optional[ReleaseNotes] = None,
@@ -1377,9 +1373,9 @@ class Component(Dependable):
         self._cpe = cpe
 
     @property
-    @serializable.type_mapping(PackageUrlSH)
     @serializable.xml_sequence(15)
-    def purl(self) -> Optional[PackageURL]:
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def purl(self) -> Optional[str]:
         """
         Specifies the package-url (PURL).
 
@@ -1387,12 +1383,12 @@ class Component(Dependable):
         https://github.com/package-url/purl-spec
 
         Returns:
-            `PackageURL` or `None`
+            `str` or `None`
         """
         return self._purl
 
     @purl.setter
-    def purl(self, purl: Optional[PackageURL]) -> None:
+    def purl(self, purl: Optional[str]) -> None:
         self._purl = purl
 
     @property
@@ -1679,7 +1675,7 @@ class Component(Dependable):
         return _ComparableTuple((
             self.type, self.group, self.name, self.version,
             self.bom_ref.value,
-            None if self.purl is None else _ComparablePackageURL(self.purl),
+            self.purl,
             self.swid, self.cpe, _ComparableTuple(self.swhids),
             self.supplier, self.author, self.publisher,
             self.description,
