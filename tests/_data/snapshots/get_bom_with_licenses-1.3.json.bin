@@ -26,6 +26,24 @@
       "version": ""
     },
     {
+      "bom-ref": "C4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        },
+        {
+          "license": {
+            "name": "some other license"
+          }
+        }
+      ],
+      "name": "c-with-license-properties",
+      "type": "library",
+      "version": ""
+    },
+    {
       "bom-ref": "C3",
       "licenses": [
         {
@@ -61,6 +79,9 @@
     },
     {
       "ref": "C3"
+    },
+    {
+      "ref": "C4"
     },
     {
       "ref": "S1"

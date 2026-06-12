@@ -19,7 +19,6 @@
 from collections.abc import Iterable
 from itertools import chain
 from typing import TYPE_CHECKING, Any, Optional, Union
-from warnings import warn
 from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
@@ -28,7 +27,8 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..schema import SchemaVersion
-from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6
+from ..schema.deprecation import SchemaDeprecationWarning1Dot5
+from ..schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import ExternalReference, HashType, _HashTypeRepositorySerializationHelper
 from .component import Component
 from .service import Service
@@ -37,7 +37,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from py_serializable import ObjectMetadataLibrary, ViewType
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Tool:
     """
     This is our internal representation of the `toolType` complex type within the CycloneDX standard.
@@ -48,7 +48,7 @@ class Tool:
     In fact, this library will try to provide a compatibility layer if needed.
 
     .. note::
-        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.6/#type_toolType
+        See the CycloneDX Schema for toolType: https://cyclonedx.org/docs/1.7/xml/#type_toolType
     """
 
     def __init__(
@@ -133,6 +133,7 @@ class Tool:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(5)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -239,9 +240,7 @@ class ToolRepository:
     @tools.setter
     def tools(self, tools: Iterable[Tool]) -> None:
         if tools:
-            warn('`@.tools` is deprecated from CycloneDX v1.5 onwards. '
-                 'Please use `@.components` and `@.services` instead.',
-                 DeprecationWarning)
+            SchemaDeprecationWarning1Dot5._warn('@.tools', '@.components` and `@.services')
         self._tools = SortedSet(tools)
 
     def __len__(self) -> int:
@@ -265,6 +264,11 @@ class ToolRepository:
         if isinstance(other, ToolRepository):
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, ToolRepository):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())

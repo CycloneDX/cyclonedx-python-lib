@@ -51,7 +51,7 @@ class XmlValidationError(ValidationError):
     @classmethod
     def _make_from_xle(cls, e: '_XmlLogEntry') -> 'XmlValidationError':
         """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
-        return cls(e.message)  # TODO: shorten and more useful message? maybe there is a massage formatter?
+        return cls(e, message=e.message, path=(e.path,) if e.path else ())
 
 
 class _BaseXmlValidator(BaseSchemabasedValidator, ABC):

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom serialNumber="urn:uuid:7ac088d1-71c4-4f6a-acd8-255fac95704e" version="1" xmlns="http://cyclonedx.org/schema/bom/1.4">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4"
+     serialNumber="urn:uuid:7ac088d1-71c4-4f6a-acd8-255fac95704e"
+     version="1"
+ >
   <metadata>
     <timestamp>2022-10-17T17:26:52Z</timestamp>
     <tools>
@@ -462,12 +465,12 @@
       <group>net.sourceforge.jtds</group>
       <name>jtds</name>
       <version>1.2.2</version>
-      <description>TDS is an open source 100% pure Java (type 4) JDBC 3.0 driver 
+      <description>TDS is an open source 100% pure Java (type 4) JDBC 3.0 driver
   for Microsoft SQL Server (6.5, 7, 2000 and 2005) and Sybase (10, 11, 12, 15).
-  jTDS is based on FreeTDS and is currently the fastest production-ready JDBC 
+  jTDS is based on FreeTDS and is currently the fastest production-ready JDBC
   driver for SQL Server and Sybase. jTDS is 100% JDBC 3.0 compatible, supporting
-  forward-only and scrollable/updateable ResultSets, concurrent (completely 
-  independent) Statements and implementing all the DatabaseMetaData and 
+  forward-only and scrollable/updateable ResultSets, concurrent (completely
+  independent) Statements and implementing all the DatabaseMetaData and
   ResultSetMetaData  methods.</description>
       <scope>optional</scope>
       <hashes>

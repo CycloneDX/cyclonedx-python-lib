@@ -35,16 +35,18 @@ from tests._data.models import (
     all_get_bom_funct_with_incomplete_deps,
 )
 
+_LATEST_SCHEMA = SchemaVersion.V1_7
+
 
 @ddt
 class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
 
     @named_data(*all_get_bom_funct_valid_immut,
                 *all_get_bom_funct_valid_reversible_migrate)
-    @patch('cyclonedx.builder.this.__ThisVersion', 'TESTING')
+    @patch('cyclonedx.contrib.this.builders.__ThisVersion', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
-        snapshot_name = mksname(get_bom, SchemaVersion.V1_6, OutputFormat.JSON)
+        snapshot_name = mksname(get_bom, _LATEST_SCHEMA, OutputFormat.JSON)
         expected = get_bom()
         json = json_loads(self.readSnapshot(snapshot_name))
         bom = Bom.from_json(json)
@@ -123,6 +125,27 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         json_file = join(OWN_DATA_DIRECTORY, 'json',
                          SchemaVersion.V1_6.to_version(),
                          'issue690.json')
+        with open(json_file) as f:
+            json = json_loads(f.read())
+        bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
+        self.assertIsNotNone(bom)
+
+    def test_component_evidence_identity(self) -> None:
+        json_file = join(OWN_DATA_DIRECTORY, 'json',
+                         SchemaVersion.V1_6.to_version(),
+                         'component_evidence_identity.json')
+        with open(json_file) as f:
+            json = json_loads(f.read())
+        bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
+        self.assertIsNotNone(bom)
+
+    def test_pr899(self) -> None:
+        """real world case from PR#899
+        see https://github.com/CycloneDX/cyclonedx-python-lib/pull/899
+        """
+        json_file = join(OWN_DATA_DIRECTORY, 'json',
+                         SchemaVersion.V1_6.to_version(),
+                         'pr899.json')
         with open(json_file) as f:
             json = json_loads(f.read())
         bom: Bom = Bom.from_json(json)  # <<< is expected to not crash

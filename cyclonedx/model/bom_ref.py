@@ -28,7 +28,7 @@ if TYPE_CHECKING:  # pragma: no cover
     _T_BR = TypeVar('_T_BR', bound='BomRef')
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class BomRef(serializable.helpers.BaseHelper):
     """
     An identifier that can be used to reference objects elsewhere in the BOM.

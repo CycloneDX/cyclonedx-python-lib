@@ -31,6 +31,7 @@ def _dp_files() -> Generator:
                 yield file
     yield _res.SPDX_JSON
     yield _res.SPDX_XML
+    yield _res.CRYPTOGRAPHY_DEFS
     yield _res.JSF
 
 

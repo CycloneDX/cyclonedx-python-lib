@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6"
+     xmlns:foo="http://example.com/foo"
+>
+    <components>
+        <component type="library"
+                   foo:my-prop="my-value"
+        >
+            <name>example</name>
+            <version>15.8.0</version>
+        </component>
+    </components>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <!-- copy-pasted from https://github.com/CycloneDX/cyclonedx-python-lib/issues/850 -->
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+            <Reference URI="">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestValue>tSHVo7UgCxvvmFusf+2UzjhxXa2PyvLHaIvyNlB/yp8=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>
+            gep3n58O7GLUk/jwmOda8HlwkiqA40CRhJYgoJbMJ6xZphfn7s/JHDByeptXvbolB6nVw5qAQ/mKCAkh0x7NGzWwSWypmpysK3zuUZuMihTSizd+kclwCJYamQ0l4Lqqp13Ii/6C8N56vlbci9P3NwOVC910Jj6GAFj2Ci4zCNz0tstpu7cDE2/okRR4jBzisOpr2FCaHWUfkZUiGm7ueCg/T+v2Z0HM8qcG//+iMlvHcb5yXKUObDvW8CYsMzNW0Zdhs/qf6WkPpp6QBeWxVB+5QUfMZ+F0fP3fRaerjwh6mGkOVl7QODHcIcp153yX8JxU+c0ndRacNywPBGmxTQ==
+        </SignatureValue>
+    </Signature>
+</bom>

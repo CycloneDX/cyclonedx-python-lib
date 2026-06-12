@@ -47,13 +47,13 @@ class _DependencyRepositorySerializationHelper(serializable.helpers.BaseHelper):
         return dependencies
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Dependency:
     """
     Models a Dependency within a BOM.
 
     .. note::
-        See https://cyclonedx.org/docs/1.6/xml/#type_dependencyType
+        See https://cyclonedx.org/docs/1.7/xml/#type_dependencyType
     """
 
     def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:

@@ -2,6 +2,140 @@
 
 <!-- version list -->
 
+## v11.7.0 (2026-03-17)
+
+### Documentation
+
+- Add comprehensive SBOM validation guide
+  ([#933](https://github.com/CycloneDX/cyclonedx-python-lib/pull/933),
+  [`bf596c0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bf596c0ed1495bf42add39185f460605b0ecd12a))
+
+- Docstrings for schema version classes
+  ([#946](https://github.com/CycloneDX/cyclonedx-python-lib/pull/946),
+  [`6460b71`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6460b71b5189a10819e539f1315a7c05b9b7e40e))
+
+- Modernize RTF setup ([#921](https://github.com/CycloneDX/cyclonedx-python-lib/pull/921),
+  [`af0059d`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/af0059d8fb6c9f8cc437f6c210487d131a6f658f))
+
+### Features
+
+- Add properties for licenses according to CycloneDX 1.5
+  ([#947](https://github.com/CycloneDX/cyclonedx-python-lib/pull/947),
+  [`375d209`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/375d209c738473ea2815fc4cb36806563be41e2e))
+
+- Make schema deprecation warnings handle-able
+  ([#945](https://github.com/CycloneDX/cyclonedx-python-lib/pull/945),
+  [`71edacf`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/71edacfaf5c46088d0ca08196b7c858ff39a23b5))
+
+
+## v11.6.0 (2025-12-02)
+
+### Documentation
+
+- Update 1.7 ([#920](https://github.com/CycloneDX/cyclonedx-python-lib/pull/920),
+  [`7e6771b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7e6771b0c1166d384ee438460e45794914937b6e))
+
+### Features
+
+- Moved non‑standard implementations to Contrib area
+  ([#916](https://github.com/CycloneDX/cyclonedx-python-lib/pull/916),
+  [`15a9023`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/15a902374bc6507788853a854256d3570ab250a7))
+
+
+## v11.5.0 (2025-10-31)
+
+### Features
+
+- Add support for DistributionConstraints in BOM metadata
+  ([#906](https://github.com/CycloneDX/cyclonedx-python-lib/pull/906),
+  [`70adb7c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/70adb7ccceb1296f197c70c95a2f01dc130cc6ae))
+
+- Add support for properties in external references
+  ([#907](https://github.com/CycloneDX/cyclonedx-python-lib/pull/907),
+  [`73e7c1a`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/73e7c1a5ddb8935730c896739348cb808d05fa18))
+
+
+## v11.4.0 (2025-10-23)
+
+### Features
+
+- Add support for CycloneDX 1.7 (basics)
+  ([#902](https://github.com/CycloneDX/cyclonedx-python-lib/pull/902),
+  [`f35b9ee`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f35b9eed0803f70882e30616f6fb3c0a4e212651))
+
+
+## v11.3.0 (2025-10-22)
+
+### Bug Fixes
+
+- Implement `__lt__` for models still missing it
+  ([#899](https://github.com/CycloneDX/cyclonedx-python-lib/pull/899),
+  [`bebda4f`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bebda4fe34e9aa6149c032fd1aa41eb39cd57124))
+
+### Features
+
+- Deserialize single `ComponentEvidence.identity`
+  ([#900](https://github.com/CycloneDX/cyclonedx-python-lib/pull/900),
+  [`9425c67`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9425c67557a3f547c64cd740e19b112196146577))
+
+
+## v11.2.0 (2025-10-15)
+
+### Documentation
+
+- Add Changelog to project urls
+  ([`d8a24b7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d8a24b788d10dac65ec579c106c6a421b9644b76))
+
+### Features
+
+- Support Python 3.14 ([#897](https://github.com/CycloneDX/cyclonedx-python-lib/pull/897),
+  [`267672b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/267672b637c23ebb7f69ccf7c1109f2b874f4b96))
+
+
+## v11.1.0 (2025-09-09)
+
+### Documentation
+
+- Shorten lines
+  ([`5621705`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/5621705fef98e0d5a510af22f8ece16c8f2f1e76))
+
+- Update CDX spec links ([#858](https://github.com/CycloneDX/cyclonedx-python-lib/pull/858),
+  [`ba0b5c0`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ba0b5c092cd4c5761e3b00e808506e7ba71de3a8))
+
+- Update linked CDX spec ([#860](https://github.com/CycloneDX/cyclonedx-python-lib/pull/860),
+  [`0ecdaa8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0ecdaa8eff200dce74e1fee8202807ab273b6971))
+
+- Update linked XML spec ([#857](https://github.com/CycloneDX/cyclonedx-python-lib/pull/857),
+  [`ea627ec`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/ea627ec8fa3e8e19a2a8f4a618c9b084922e025f))
+
+### Features
+
+- Add BomRefs for known models according to CycloneDX 1.5
+  ([#859](https://github.com/CycloneDX/cyclonedx-python-lib/pull/859),
+  [`0898cf7`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/0898cf76f1ad97a49cb438fe2130a86a59f8c150))
+
+- Updating SPDX license list to 3.27.0
+  ([#885](https://github.com/CycloneDX/cyclonedx-python-lib/pull/885),
+  [`876a364`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/876a36416d4ea82ec493893c89d9ac0bb6e0d95f))
+
+
+## v11.0.0 (2025-07-21)
+
+### Features
+
+- Ignore unknown properties when deserializing
+  ([#853](https://github.com/CycloneDX/cyclonedx-python-lib/pull/853),
+  [`4842828`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/4842828031771cf62b1e17abe0123a1d4c137bd1))
+
+
+## v10.5.0 (2025-07-20)
+
+### Features
+
+- Use only nonGPL dependencies ([#854](https://github.com/CycloneDX/cyclonedx-python-lib/pull/854),
+  [`9c14ee6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9c14ee606b5537e8f12f6925a8fca5475a331012))
+
+
 ## v10.4.1 (2025-07-08)
 
 ### Bug Fixes

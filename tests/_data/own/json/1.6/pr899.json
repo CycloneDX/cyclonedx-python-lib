@@ -1,0 +1,170 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:57ef9d7a-89f4-4822-928f-e06e22cacfc3",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2025-09-08T12:45:24Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.6.0",
+          "authors": [
+            {
+              "name": "OWASP Foundation"
+            }
+          ],
+          "publisher": "OWASP Foundation",
+          "group": "@cyclonedx",
+          "name": "cdxgen",
+          "version": "11.6.0",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.6.0"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "bom-ref": "pkg:npm/redacted@1.0.0",
+      "group": "",
+      "name": "redacted",
+      "version": "1.0.0",
+      "description": "redacted",
+      "licenses": [
+        {
+          "license": {
+            "id": "Unlicense",
+            "url": "https://opensource.org/licenses/Unlicense"
+          }
+        }
+      ],
+      "purl": "pkg:npm/redacted@1.0.0"
+    }
+  },
+  "components": [
+    {
+      "type": "application",
+      "bom-ref": "pkg:npm/redacted@1.0.0",
+      "group": "",
+      "name": "redacted",
+      "version": "1.0.0",
+      "description": "redacted.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Unlicense",
+            "url": "https://opensource.org/licenses/Unlicense"
+          }
+        }
+      ],
+      "purl": "pkg:npm/redacted@1.0.0"
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/jsonwebtoken@9.0.2",
+      "group": "",
+      "name": "jsonwebtoken",
+      "version": "9.0.2",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "3d1a7aeaf27ceb9492a8e960a92f21ba34f953800e80c7e1af0608b8885f29aa12099722aeb980490afc097edc520f9132287e860ce7ae3a7df68f96e2924b1d"
+        }
+      ],
+      "purl": "pkg:npm/jsonwebtoken@9.0.2",
+      "properties": [
+        {
+          "name": "SrcFile",
+          "value": "package-lock.json"
+        },
+        {
+          "name": "ResolvedUrl",
+          "value": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-9.0.2.tgz"
+        },
+        {
+          "name": "ImportedModules",
+          "value": "jsonwebtoken"
+        }
+      ],
+      "evidence": {
+        "identity": {
+          "field": "purl",
+          "confidence": 1,
+          "concludedValue": "package-lock.json",
+          "methods": [
+            {
+              "technique": "manifest-analysis",
+              "confidence": 1,
+              "value": "package-lock.json"
+            }
+          ]
+        },
+        "occurrences": [
+          {
+            "location": "handlers/AuthenticationHandler.js#1"
+          }
+        ]
+      },
+      "tags": [
+        "registry"
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/jsonwebtoken@9.0.2",
+      "group": "",
+      "name": "jsonwebtoken",
+      "version": "9.0.2",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "3d1a7aeaf27ceb9492a8e960a92f21ba34f953800e80c7e1af0608b8885f29aa12099722aeb980490afc097edc520f9132287e860ce7ae3a7df68f96e2924b1d"
+        }
+      ],
+      "purl": "pkg:npm/jsonwebtoken@9.0.2",
+      "properties": [
+        {
+          "name": "SrcFile",
+          "value": "package-lock.json"
+        },
+        {
+          "name": "ResolvedUrl",
+          "value": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-9.0.2.tgz"
+        },
+        {
+          "name": "ImportedModules",
+          "value": "jsonwebtoken"
+        }
+      ],
+      "evidence": {
+        "identity": {
+          "field": "purl",
+          "confidence": 1,
+          "concludedValue": "package-lock.json",
+          "methods": [
+            {
+              "technique": "manifest-analysis",
+              "confidence": 1,
+              "value": "package-lock.json"
+            }
+          ]
+        },
+        "occurrences": [
+          {
+            "location": "authorize.js#4"
+          }
+        ]
+      },
+      "tags": [
+        "registry"
+      ]
+    }
+  ],
+  "dependencies": [
+  ],
+  "compositions": [
+  ]
+}

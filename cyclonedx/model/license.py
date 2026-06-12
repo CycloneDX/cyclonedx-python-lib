@@ -20,6 +20,7 @@
 License related things
 """
 
+from collections.abc import Iterable
 from enum import Enum
 from json import loads as json_loads
 from typing import TYPE_CHECKING, Any, Optional, Union
@@ -29,11 +30,13 @@ from xml.etree.ElementTree import Element  # nosec B405
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
+from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
-from ..schema.schema import SchemaVersion1Dot6
-from . import AttachedText, XsUri
+from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
+from . import AttachedText, Property, XsUri
+from .bom_ref import BomRef
 
 
 @serializable.serializable_enum
@@ -47,7 +50,7 @@ class LicenseAcknowledgement(str, Enum):
 
     .. note::
         See the CycloneDX Schema for hashType:
-        https://cyclonedx.org/docs/1.6/#type_licenseAcknowledgementEnumerationType
+        https://cyclonedx.org/docs/1.7/xml/#type_licenseAcknowledgementEnumerationType
     """
 
     CONCLUDED = 'concluded'
@@ -57,24 +60,33 @@ class LicenseAcknowledgement(str, Enum):
 # In an error, the name of the enum was `LicenseExpressionAcknowledgement`.
 # Even though this was changed, there might be some downstream usage of this symbol, so we keep it around ...
 LicenseExpressionAcknowledgement = LicenseAcknowledgement
-"""Deprecated alias for :class:`LicenseAcknowledgement`"""
+"""Deprecated — Alias for :class:`LicenseAcknowledgement`
+
+.. deprecated:: next Import `LicenseAcknowledgement` instead.
+    The exported original symbol itself is NOT deprecated - only this import path.
+"""
 
 
-@serializable.serializable_class(name='license')
+@serializable.serializable_class(
+    name='license',
+    ignore_unknown_during_deserialization=True
+)
 class DisjunctiveLicense:
     """
     This is our internal representation of `licenseType` complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/json/#components_items_licenses
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_licenseType
     """
 
     def __init__(
         self, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
         id: Optional[str] = None, name: Optional[str] = None,
         text: Optional[AttachedText] = None, url: Optional[XsUri] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
+        properties: Optional[Iterable[Property]] = None,
     ) -> None:
         if not id and not name:
             raise MutuallyExclusivePropertiesException('Either `id` or `name` MUST be supplied')
@@ -83,11 +95,31 @@ class DisjunctiveLicense:
                 'Both `id` and `name` have been supplied - `name` will be ignored!',
                 category=RuntimeWarning, stacklevel=1
             )
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self._id = id
         self._name = name if not id else None
         self._text = text
         self._url = url
         self._acknowledgement = acknowledgement
+        self._properties = SortedSet(properties or [])
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
 
     @property
     @serializable.xml_sequence(1)
@@ -97,7 +129,7 @@ class DisjunctiveLicense:
 
         .. note::
           See the list of expected values:
-          https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_license_id
+          https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_license_id
 
         Returns:
             `str` or `None`
@@ -171,30 +203,29 @@ class DisjunctiveLicense:
     # def licensing(self, ...) -> None:
     #     ...  # TODO since CDX1.5
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.view(SchemaVersion1Dot6)
-    # @serializable.xml_sequence(6)
-    # def properties(self) -> ...:
-    #     ...  # TODO since CDX1.5
-    #
-    # @licensing.setter
-    # def properties(self, ...) -> None:
-    #     ...  # TODO since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    @serializable.xml_sequence(6)
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
 
-    # @property
-    # @serializable.json_name('bom-ref')
-    # @serializable.type_mapping(BomRefHelper)
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.view(SchemaVersion1Dot6)
-    # @serializable.xml_attribute()
-    # @serializable.xml_name('bom-ref')
-    # def bom_ref(self) -> BomRef:
-    #     ...  # TODO since CDX1.5
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable[Property]) -> None:
+        self._properties = SortedSet(properties)
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
         """
@@ -224,6 +255,8 @@ class DisjunctiveLicense:
             self._id, self._name,
             self._url,
             self._text,
+            self._bom_ref.value,
+            _ComparableTuple(self._properties),
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -245,7 +278,10 @@ class DisjunctiveLicense:
         return f'<License id={self._id!r}, name={self._name!r}>'
 
 
-@serializable.serializable_class(name='expression')
+@serializable.serializable_class(
+    name='expression',
+    ignore_unknown_during_deserialization=True
+)
 class LicenseExpression:
     """
     This is our internal representation of `licenseType`'s  expression type that can be used in multiple places within
@@ -253,15 +289,35 @@ class LicenseExpression:
 
     .. note::
         See the CycloneDX Schema definition:
-        https://cyclonedx.org/docs/1.6/json/#components_items_licenses_items_expression
+        https://cyclonedx.org/docs/1.7/json/#components_items_licenses_items_expression
     """
 
     def __init__(
         self, value: str, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
     ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self._value = value
         self._acknowledgement = acknowledgement
+
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    @serializable.json_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An optional identifier which can be used to reference the component elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
 
     @property
     @serializable.xml_name('.')
@@ -280,18 +336,9 @@ class LicenseExpression:
     def value(self, value: str) -> None:
         self._value = value
 
-    # @property
-    # @serializable.json_name('bom-ref')
-    # @serializable.type_mapping(BomRefHelper)
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.view(SchemaVersion1Dot6)
-    # @serializable.xml_attribute()
-    # @serializable.xml_name('bom-ref')
-    # def bom_ref(self) -> BomRef:
-    #     ...  # TODO since CDX1.5
-
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     def acknowledgement(self) -> Optional[LicenseAcknowledgement]:
         """
@@ -319,6 +366,7 @@ class LicenseExpression:
         return _ComparableTuple((
             self._acknowledgement,
             self._value,
+            self._bom_ref.value,
         ))
 
     def __hash__(self) -> int:

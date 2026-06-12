@@ -23,6 +23,7 @@ from a `cyclonedx.parser.BaseParser` implementation.
 """
 
 import re
+import sys
 from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
@@ -34,11 +35,16 @@ from uuid import UUID
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
+
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
-from ..exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
+from ..exception.model import InvalidLocaleTypeException, InvalidUriException
 from ..exception.serialization import CycloneDxDeserializationException, SerializationOfUnexpectedValueException
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -48,6 +54,7 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
 )
 from .bom_ref import BomRef
 
@@ -60,7 +67,7 @@ class DataFlow(str, Enum):
     This is our internal representation of the dataFlowType simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_dataFlowType
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.7/xml/#type_dataFlowType
     """
     INBOUND = 'inbound'
     OUTBOUND = 'outbound'
@@ -78,7 +85,7 @@ class DataClassification:
 
     .. note::
         See the CycloneDX Schema for dataClassificationType:
-        https://cyclonedx.org/docs/1.6/xml/#type_dataClassificationType
+        https://cyclonedx.org/docs/1.7/xml/#type_dataClassificationType
     """
 
     def __init__(
@@ -157,7 +164,7 @@ class Encoding(str, Enum):
     This is our internal representation of the encoding simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/#type_encoding
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.7/xml/#type_encoding
     """
     BASE_64 = 'base64'
 
@@ -168,7 +175,7 @@ class AttachedText:
     This is our internal representation of the `attachedTextType` complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_attachedTextType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_attachedTextType
     """
 
     DEFAULT_CONTENT_TYPE = 'text/plain'
@@ -261,7 +268,7 @@ class HashAlgorithm(str, Enum):
     This is our internal representation of the hashAlg simple type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/#type_hashAlg
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.7/xml/#type_hashAlg
     """
     # see `_HashTypeRepositorySerializationHelper.__CASES` for view/case map
     BLAKE2B_256 = 'BLAKE2b-256'  # Only supported in >= 1.2
@@ -276,6 +283,8 @@ class HashAlgorithm(str, Enum):
     SHA3_256 = 'SHA3-256'
     SHA3_384 = 'SHA3-384'  # Only supported in >= 1.2
     SHA3_512 = 'SHA3-512'
+    STREEBOG_256 = 'Streebog-256'  # Only supported in >= 1.7
+    STREEBOG_512 = 'Streebog-512'  # Only supported in >= 1.7
 
 
 class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
@@ -303,6 +312,10 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
     __CASES[SchemaVersion1Dot4] = __CASES[SchemaVersion1Dot3]
     __CASES[SchemaVersion1Dot5] = __CASES[SchemaVersion1Dot4]
     __CASES[SchemaVersion1Dot6] = __CASES[SchemaVersion1Dot5]
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        HashAlgorithm.STREEBOG_256,
+        HashAlgorithm.STREEBOG_512,
+    }
 
     @classmethod
     def __prep(cls, hts: Iterable['HashType'], view: type[serializable.ViewType]) -> Generator['HashType', None, None]:
@@ -359,120 +372,43 @@ class _HashTypeRepositorySerializationHelper(serializable.helpers.BaseHelper):
         ]
 
 
-_MAP_HASHLIB: dict[str, HashAlgorithm] = {
-    # from hashlib.algorithms_guaranteed
-    'md5': HashAlgorithm.MD5,
-    'sha1': HashAlgorithm.SHA_1,
-    # sha224:
-    'sha256': HashAlgorithm.SHA_256,
-    'sha384': HashAlgorithm.SHA_384,
-    'sha512': HashAlgorithm.SHA_512,
-    # blake2b:
-    # blake2s:
-    # sha3_224:
-    'sha3_256': HashAlgorithm.SHA3_256,
-    'sha3_384': HashAlgorithm.SHA3_384,
-    'sha3_512': HashAlgorithm.SHA3_512,
-    # shake_128:
-    # shake_256:
-}
-
-
 @serializable.serializable_class
 class HashType:
     """
     This is our internal representation of the hashType complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.6/#type_hashType
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_hashType
     """
 
     @staticmethod
+    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory().from_hashlib_alg() instead')
     def from_hashlib_alg(hashlib_alg: str, content: str) -> 'HashType':
-        """
+        """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_hashlib_alg`.
+
         Attempts to convert a hashlib-algorithm to our internal model classes.
 
-        Args:
-             hashlib_alg:
-                Hash algorith - like it is used by `hashlib`.
-                Example: `sha256`.
-
-            content:
-                Hash value.
-
-        Raises:
-            `UnknownHashTypeException` if the algorithm of hash cannot be determined.
-
-        Returns:
-            An instance of `HashType`.
+        .. deprecated:: next
+            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory().from_hashlib_alg()`` instead.
         """
-        alg = _MAP_HASHLIB.get(hashlib_alg.lower())
-        if alg is None:
-            raise UnknownHashTypeException(f'Unable to determine hash alg for {hashlib_alg!r}')
-        return HashType(alg=alg, content=content)
+        from ..contrib.hash.factories import HashTypeFactory
+
+        return HashTypeFactory().from_hashlib_alg(hashlib_alg, content)
 
     @staticmethod
+    @deprecated('Deprecated - use cyclonedx.contrib.hash.factories.HashTypeFactory().from_composite_str() instead')
     def from_composite_str(composite_hash: str) -> 'HashType':
-        """
+        """Deprecated — Alias of :func:`cyclonedx.contrib.hash.factories.HashTypeFactory.from_composite_str`.
+
         Attempts to convert a string which includes both the Hash Algorithm and Hash Value and represent using our
         internal model classes.
 
-        Args:
-             composite_hash:
-                Composite Hash string of the format `HASH_ALGORITHM`:`HASH_VALUE`.
-                Example: `sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b`.
-
-                Valid case insensitive prefixes are:
-                `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `blake2b256`, `blake2b384`, `blake2b512`,
-                `blake2256`, `blake2384`, `blake2512`, `sha3-256`, `sha3-384`, `sha3-512`,
-                `blake3`.
-
-        Raises:
-            `UnknownHashTypeException` if the type of hash cannot be determined.
-
-        Returns:
-            An instance of `HashType`.
+        .. deprecated:: next
+            Use ``cyclonedx.contrib.hash.factories.HashTypeFactory().from_composite_str()`` instead.
         """
-        parts = composite_hash.split(':')
+        from ..contrib.hash.factories import HashTypeFactory
 
-        algorithm_prefix = parts[0].lower()
-        if algorithm_prefix == 'md5':
-            return HashType(
-                alg=HashAlgorithm.MD5,
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:4] == 'sha3':
-            return HashType(
-                alg=getattr(HashAlgorithm, f'SHA3_{algorithm_prefix[5:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix == 'sha1':
-            return HashType(
-                alg=HashAlgorithm.SHA_1,
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:3] == 'sha':
-            # This is actually SHA2...
-            return HashType(
-                alg=getattr(HashAlgorithm, f'SHA_{algorithm_prefix[3:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:7] == 'blake2b':
-            return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[7:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:6] == 'blake2':
-            return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[6:]}'),
-                content=parts[1].lower()
-            )
-        elif algorithm_prefix[0:6] == 'blake3':
-            return HashType(
-                alg=HashAlgorithm.BLAKE3,
-                content=parts[1].lower()
-            )
-        raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
+        return HashTypeFactory().from_composite_str(composite_hash)
 
     def __init__(
         self, *,
@@ -541,7 +477,7 @@ class ExternalReferenceType(str, Enum):
     Enum object that defines the permissible 'types' for an External Reference according to the CycloneDX schema.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_externalReferenceType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_externalReferenceType
     """
     # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
     ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
@@ -552,6 +488,7 @@ class ExternalReferenceType(str, Enum):
     BUILD_SYSTEM = 'build-system'
     CERTIFICATION_REPORT = 'certification-report'  # Only supported in >= 1.5
     CHAT = 'chat'
+    CITATION = 'citation'  # Only supported in >= 1.7
     CODIFIED_INFRASTRUCTURE = 'codified-infrastructure'  # Only supported in >= 1.5
     COMPONENT_ANALYSIS_REPORT = 'component-analysis-report'  # Only supported in >= 1.5
     CONFIGURATION = 'configuration'  # Only supported in >= 1.5
@@ -570,6 +507,9 @@ class ExternalReferenceType(str, Enum):
     MAILING_LIST = 'mailing-list'
     MATURITY_REPORT = 'maturity-report'  # Only supported in >= 1.5
     MODEL_CARD = 'model-card'  # Only supported in >= 1.5
+    PATENT = 'patent'  # Only supported in >= 1.7
+    PATENT_ASSERTION = 'patent-assertion'  # Only supported in >= 1.7
+    PATENT_FAMILY = 'patent-family'  # Only supported in >= 1.7
     PENTEST_REPORT = 'pentest-report'  # Only supported in >= 1.5
     POAM = 'poam'  # Only supported in >= 1.5
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
@@ -648,6 +588,12 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
         ExternalReferenceType.DIGITAL_SIGNATURE,
         ExternalReferenceType.RFC_9166,
     }
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        ExternalReferenceType.CITATION,
+        ExternalReferenceType.PATENT,
+        ExternalReferenceType.PATENT_ASSERTION,
+        ExternalReferenceType.PATENT_FAMILY,
+    }
 
     @classmethod
     def __normalize(cls, extref: ExternalReferenceType, view: type[serializable.ViewType]) -> str:
@@ -676,7 +622,7 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
         return ExternalReferenceType(o)
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class XsUri(serializable.helpers.BaseHelper):
     """
     Helper class that allows us to perform validation on data strings that are defined as xs:anyURI
@@ -802,14 +748,14 @@ class XsUri(serializable.helpers.BaseHelper):
         return self._uri.startswith(_BOM_LINK_PREFIX)
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ExternalReference:
     """
     This is our internal representation of an ExternalReference complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_externalReference
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_externalReference
     """
 
     def __init__(
@@ -818,11 +764,13 @@ class ExternalReference:
         url: XsUri,
         comment: Optional[str] = None,
         hashes: Optional[Iterable[HashType]] = None,
+        properties: Optional[Iterable['Property']] = None,
     ) -> None:
         self.url = url
         self.comment = comment
         self.type = type
         self.hashes = hashes or []
+        self.properties = properties or []
 
     @property
     @serializable.xml_sequence(1)
@@ -877,6 +825,7 @@ class ExternalReference:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(_HashTypeRepositorySerializationHelper)
     def hashes(self) -> 'SortedSet[HashType]':
         """
@@ -891,10 +840,27 @@ class ExternalReference:
     def hashes(self, hashes: Iterable[HashType]) -> None:
         self._hashes = SortedSet(hashes)
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
+    def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a key/value store. This provides flexibility to include data not
+        officially supported in the standard without having to use additional namespaces or create extensions.
+
+        Return:
+            Set of `Property`
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties: Iterable['Property']) -> None:
+        self._properties = SortedSet(properties)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self._type, self._url, self._comment,
-            _ComparableTuple(self._hashes)
+            _ComparableTuple(self._hashes), _ComparableTuple(self.properties),
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -914,14 +880,14 @@ class ExternalReference:
         return f'<ExternalReference {self.type.name}, {self.url}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Property:
     """
     This is our internal representation of `propertyType` complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_propertyType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_propertyType
 
     Specifies an individual property with a name and value.
     """
@@ -989,14 +955,14 @@ class Property:
         return f'<Property name={self.name}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class NoteText:
     """
     This is our internal representation of the Note.text complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_releaseNotesType
     """
 
     DEFAULT_CONTENT_TYPE: str = 'text/plain'
@@ -1081,14 +1047,14 @@ class NoteText:
         return f'<NoteText content_type={self.content_type}, encoding={self.encoding}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Note:
     """
     This is our internal representation of the Note complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_releaseNotesType
 
     @todo: Replace ``NoteText`` with ``AttachedText``?
     """
@@ -1166,13 +1132,13 @@ class Note:
         return f'<Note id={id(self)}, locale={self.locale}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class IdentifiableAction:
     """
     This is our internal representation of the `identifiableActionType` complex type.
 
     .. note::
-        See the CycloneDX specification: https://cyclonedx.org/docs/1.6/xml/#type_identifiableActionType
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.7/xml/#type_identifiableActionType
     """
 
     def __init__(
@@ -1252,13 +1218,13 @@ class IdentifiableAction:
         return f'<IdentifiableAction name={self.name}, email={self.email}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Copyright:
     """
     This is our internal representation of the `copyrightsType` complex type.
 
     .. note::
-        See the CycloneDX specification: https://cyclonedx.org/docs/1.6/xml/#type_copyrightsType
+        See the CycloneDX specification: https://cyclonedx.org/docs/1.7/xml/#type_copyrightsType
     """
 
     def __init__(

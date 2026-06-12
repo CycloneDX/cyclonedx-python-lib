@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import sys
+import warnings
 from json import loads as json_loads
 from typing import TYPE_CHECKING
 
@@ -24,6 +25,7 @@ from defusedxml import ElementTree as SafeElementTree  # type:ignore[import-unty
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.schema.deprecation import BaseSchemaDeprecationWarning
 from cyclonedx.validation import make_schemabased_validator
 from cyclonedx.validation.json import JsonStrictValidator
 
@@ -33,9 +35,9 @@ if TYPE_CHECKING:
 # region JSON
 
 json_data = """{
-  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.6",
+  "specVersion": "1.7",
   "serialNumber": "urn:uuid:88fabcfa-7529-4ba2-8256-29bec0c03900",
   "version": 1,
   "metadata": {
@@ -145,7 +147,7 @@ json_data = """{
     }
   ]
 }"""
-my_json_validator = JsonStrictValidator(SchemaVersion.V1_6)
+my_json_validator = JsonStrictValidator(SchemaVersion.V1_7)
 try:
     json_validation_errors = my_json_validator.validate_str(json_data)
     if json_validation_errors:
@@ -154,8 +156,10 @@ try:
     print('JSON valid')
 except MissingOptionalDependencyException as error:
     print('JSON-validation was skipped due to', error)
-bom_from_json = Bom.from_json(  # type: ignore[attr-defined]
-    json_loads(json_data))
+with warnings.catch_warnings():
+    warnings.filterwarnings('ignore', category=BaseSchemaDeprecationWarning)
+    bom_from_json = Bom.from_json(  # type: ignore[attr-defined]
+        json_loads(json_data))
 print('bom_from_json', repr(bom_from_json))
 
 # endregion JSON
@@ -165,7 +169,7 @@ print('', '=' * 30, '', sep='\n')
 # endregion XML
 
 xml_data = """<?xml version="1.0" ?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.6"
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7"
   serialNumber="urn:uuid:88fabcfa-7529-4ba2-8256-29bec0c03900"
   version="1"
 >
@@ -246,7 +250,7 @@ xml_data = """<?xml version="1.0" ?>
     </dependency>
   </dependencies>
 </bom>"""
-my_xml_validator: 'XmlValidator' = make_schemabased_validator(OutputFormat.XML, SchemaVersion.V1_6)
+my_xml_validator: 'XmlValidator' = make_schemabased_validator(OutputFormat.XML, SchemaVersion.V1_7)
 try:
     xml_validation_errors = my_xml_validator.validate_str(xml_data)
     if xml_validation_errors:
@@ -255,8 +259,10 @@ try:
     print('XML valid')
 except MissingOptionalDependencyException as error:
     print('XML-validation was skipped due to', error)
-bom_from_xml = Bom.from_xml(  # type: ignore[attr-defined]
-    SafeElementTree.fromstring(xml_data))
+with warnings.catch_warnings():
+    warnings.filterwarnings('ignore', category=BaseSchemaDeprecationWarning)
+    bom_from_xml = Bom.from_xml(  # type: ignore[attr-defined]
+        SafeElementTree.fromstring(xml_data))
 print('bom_from_xml', repr(bom_from_xml))
 
 # endregion XML

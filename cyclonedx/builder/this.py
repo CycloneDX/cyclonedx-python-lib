@@ -15,69 +15,51 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-"""Representation of this very python library."""
+"""Representation of this very python library.
 
-__all__ = ['this_component', 'this_tool', ]
+.. deprecated:: next
+"""
 
-from .. import __version__ as __ThisVersion  # noqa: N812
-from ..model import ExternalReference, ExternalReferenceType, XsUri
-from ..model.component import Component, ComponentType
-from ..model.license import DisjunctiveLicense, LicenseAcknowledgement
-from ..model.tool import Tool
+__all__ = ['this_component', 'this_tool']
 
-# !!! keep this file in sync with `pyproject.toml`
+import sys
+from typing import TYPE_CHECKING
 
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
 
-def this_component() -> Component:
-    """Representation of this very python library as a :class:`Component`."""
-    return Component(
-        type=ComponentType.LIBRARY,
-        group='CycloneDX',
-        name='cyclonedx-python-lib',
-        version=__ThisVersion or 'UNKNOWN',
-        description='Python library for CycloneDX',
-        licenses=(DisjunctiveLicense(id='Apache-2.0',
-                                     acknowledgement=LicenseAcknowledgement.DECLARED),),
-        external_references=(
-            # let's assume this is not a fork
-            ExternalReference(
-                type=ExternalReferenceType.WEBSITE,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/#readme')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.DOCUMENTATION,
-                url=XsUri('https://cyclonedx-python-library.readthedocs.io/')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.VCS,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.BUILD_SYSTEM,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/actions')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.ISSUE_TRACKER,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/issues')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.LICENSE,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/LICENSE')
-            ),
-            ExternalReference(
-                type=ExternalReferenceType.RELEASE_NOTES,
-                url=XsUri('https://github.com/CycloneDX/cyclonedx-python-lib/blob/main/CHANGELOG.md')
-            ),
-            # we cannot assert where the lib was fetched from, but we can give a hint
-            ExternalReference(
-                type=ExternalReferenceType.DISTRIBUTION,
-                url=XsUri('https://pypi.org/project/cyclonedx-python-lib/')
-            ),
-        ),
-        # to be extended...
-    )
+from ..contrib.this.builders import this_component as _this_component, this_tool as _this_tool
+
+# region deprecated re-export
+
+if TYPE_CHECKING:
+    from ..model.component import Component
+    from ..model.tool import Tool
 
 
-def this_tool() -> Tool:
-    """Representation of this very python library as a :class:`Tool`."""
-    return Tool.from_component(this_component())
+@deprecated('Deprecated re-export location - see docstring of "this_component" for details.')
+def this_component() -> 'Component':
+    """Deprecated — Alias of :func:`cyclonedx.contrib.this.builders.this_component`.
+
+    .. deprecated:: next
+        This re-export location is deprecated.
+        Use ``from cyclonedx.contrib.this.builders import this_component`` instead.
+        The exported symbol itself is NOT deprecated — only this import path.
+    """
+    return _this_component()
+
+
+@deprecated('Deprecated re-export location - see docstring of "this_tool" for details.')
+def this_tool() -> 'Tool':
+    """Deprecated — Alias of :func:`cyclonedx.contrib.this.builders.this_tool`.
+
+    .. deprecated:: next
+        This re-export location is deprecated.
+        Use ``from cyclonedx.contrib.this.builders import this_tool`` instead.
+        The exported symbol itself is NOT deprecated — only this import path.
+    """
+    return _this_tool()
+
+# endregion deprecated re-export

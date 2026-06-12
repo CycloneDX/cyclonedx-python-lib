@@ -35,7 +35,7 @@ if TYPE_CHECKING:  # pragma: no cover
     _T_CreId = TypeVar('_T_CreId', bound='CreId')
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class CreId(serializable.helpers.BaseHelper):
     """
     Helper class that allows us to perform validation on data strings that must conform to
@@ -89,10 +89,14 @@ class CreId(serializable.helpers.BaseHelper):
         return self._id
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Requirement:
     """
     A requirement comprising a standard.
+
+    .. note::
+        See the CycloneDX Schema for hashType:
+        https://cyclonedx.org/docs/1.7/json/#definitions_standards_items_requirements
     """
 
     def __init__(
@@ -282,10 +286,13 @@ class Requirement:
             f'title={self.title}, text={self.text}, parent={self.parent}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Level:
     """
     Level of compliance for a standard.
+
+    .. note::
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/json/#definitions_standards_items_levels
     """
 
     def __init__(
@@ -397,11 +404,14 @@ class Level:
             f'title={self.title}, description={self.description}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Standard:
     """
     A standard of regulations, industry or organizational-specific standards, maturity models, best practices,
     or any other requirements.
+
+    .. note::
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_standard
     """
 
     def __init__(
@@ -574,10 +584,16 @@ class Standard:
             f'description={self.description}, owner={self.owner}>'
 
 
-@serializable.serializable_class(name='definitions')
+@serializable.serializable_class(
+    name='definitions',
+    ignore_unknown_during_deserialization=True
+)
 class Definitions:
     """
     The repository for definitions
+
+    .. note::
+        See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_definitionsType
     """
 
     def __init__(

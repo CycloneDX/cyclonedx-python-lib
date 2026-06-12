@@ -33,6 +33,9 @@
           <url>tests/CHAT</url>
         </reference>
         <reference type="other">
+          <url>tests/CITATION</url>
+        </reference>
+        <reference type="other">
           <url>tests/CODIFIED_INFRASTRUCTURE</url>
         </reference>
         <reference type="other">
@@ -88,6 +91,15 @@
         </reference>
         <reference type="other">
           <url>tests/OTHER</url>
+        </reference>
+        <reference type="other">
+          <url>tests/PATENT</url>
+        </reference>
+        <reference type="other">
+          <url>tests/PATENT_ASSERTION</url>
+        </reference>
+        <reference type="other">
+          <url>tests/PATENT_FAMILY</url>
         </reference>
         <reference type="other">
           <url>tests/PENTEST_REPORT</url>

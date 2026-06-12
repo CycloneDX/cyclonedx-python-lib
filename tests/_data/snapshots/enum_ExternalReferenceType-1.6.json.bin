@@ -36,6 +36,10 @@
           "url": "tests/CHAT"
         },
         {
+          "type": "other",
+          "url": "tests/CITATION"
+        },
+        {
           "type": "codified-infrastructure",
           "url": "tests/CODIFIED_INFRASTRUCTURE"
         },
@@ -110,6 +114,18 @@
         {
           "type": "other",
           "url": "tests/OTHER"
+        },
+        {
+          "type": "other",
+          "url": "tests/PATENT"
+        },
+        {
+          "type": "other",
+          "url": "tests/PATENT_ASSERTION"
+        },
+        {
+          "type": "other",
+          "url": "tests/PATENT_FAMILY"
         },
         {
           "type": "pentest-report",

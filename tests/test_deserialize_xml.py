@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from collections.abc import Callable
+from os.path import join
 from typing import Any
 from unittest import TestCase
 from unittest.mock import patch
@@ -24,12 +25,14 @@ from ddt import ddt, named_data
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from tests import DeepCompareMixin, SnapshotMixin, mksname
+from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
 from tests._data.models import (
     all_get_bom_funct_valid_immut,
     all_get_bom_funct_valid_reversible_migrate,
     all_get_bom_funct_with_incomplete_deps,
 )
+
+_LATEST_SCHEMA = SchemaVersion.V1_7
 
 
 @ddt
@@ -37,12 +40,20 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
 
     @named_data(*all_get_bom_funct_valid_immut,
                 *all_get_bom_funct_valid_reversible_migrate)
-    @patch('cyclonedx.builder.this.__ThisVersion', 'TESTING')
+    @patch('cyclonedx.contrib.this.builders.__ThisVersion', 'TESTING')
     def test_prepared(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
         # only latest schema will have all data populated in serialized form
-        snapshot_name = mksname(get_bom, SchemaVersion.V1_6, OutputFormat.XML)
+        snapshot_name = mksname(get_bom, _LATEST_SCHEMA, OutputFormat.XML)
         expected = get_bom()
         with open(self.getSnapshotFile(snapshot_name)) as s:
             bom = Bom.from_xml(s)
         self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
+
+    def test_component_evidence_identity(self) -> None:
+        xml_file = join(OWN_DATA_DIRECTORY, 'xml',
+                        SchemaVersion.V1_6.to_version(),
+                        'component_evidence_identity.xml')
+        with open(xml_file) as f:
+            bom: Bom = Bom.from_xml(f)  # <<< is expected to not crash
+        self.assertIsNotNone(bom)

@@ -32,21 +32,22 @@ class IssueClassification(str, Enum):
     This is our internal representation of the enum `issueClassification`.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueClassification
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_issueClassification
     """
     DEFECT = 'defect'
     ENHANCEMENT = 'enhancement'
     SECURITY = 'security'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class IssueTypeSource:
     """
     This is our internal representation ofa source within the IssueType complex type that can be used in multiple
     places within a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueType
+        See the CycloneDX Schema definition:
+        https://cyclonedx.org/docs/1.7/json/#components_items_pedigree_patches_items_resolves_items_source
     """
 
     def __init__(
@@ -108,14 +109,14 @@ class IssueTypeSource:
         return f'<IssueTypeSource name={self._name}, url={self.url}>'
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class IssueType:
     """
     This is our internal representation of an IssueType complex type that can be used in multiple places within
     a CycloneDX BOM document.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/xml/#type_issueType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_issueType
     """
 
     def __init__(

@@ -113,6 +113,32 @@ class TestJsonValidator(TestCase):
             self.assertIsNotNone(validation_error.data)
 
 
+
+    def test_validation_error_has_useful_message_and_path(self) -> None:
+        validator = JsonValidator(SchemaVersion.V1_6)
+        test_data = '{"bomFormat": "CycloneDX", "specVersion": "1.6", "version": 1, "metadata": {"timestamp": true}}'
+        try:
+            validation_error = validator.validate_str(test_data)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(validation_error)
+        assert validation_error is not None
+        self.assertTrue(validation_error.message)
+        self.assertEqual(('metadata', 'timestamp'), validation_error.path)
+        self.assertNotEqual(str(validation_error.data), str(validation_error))
+
+    def test_validation_error_prefers_nested_context_message(self) -> None:
+        validator = JsonValidator(SchemaVersion.V1_6)
+        test_data = '{"bomFormat": "CycloneDX", "specVersion": "1.6", "version": 1, "components": [{"type": "library", "name": "demo", "version": 1}]}'
+        try:
+            validation_error = validator.validate_str(test_data)
+        except MissingOptionalDependencyException:
+            self.skipTest('MissingOptionalDependencyException')
+        self.assertIsNotNone(validation_error)
+        assert validation_error is not None
+        self.assertEqual(('components', 0, 'version'), validation_error.path)
+        self.assertIn('is not of type', validation_error.message)
+
 @ddt
 class TestJsonStrictValidator(TestCase):
 

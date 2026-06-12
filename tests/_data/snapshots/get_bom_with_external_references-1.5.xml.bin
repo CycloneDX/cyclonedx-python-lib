@@ -11,6 +11,9 @@
         <hash alg="SHA-256">806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b</hash>
       </hashes>
     </reference>
+    <reference type="vcs">
+      <url>https://cyclonedx.org</url>
+    </reference>
     <reference type="website">
       <url>https://cyclonedx.org</url>
     </reference>

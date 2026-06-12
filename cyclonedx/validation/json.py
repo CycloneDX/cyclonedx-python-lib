@@ -30,7 +30,13 @@ if TYPE_CHECKING:  # pragma: no cover
     from ..schema import SchemaVersion
 
 from ..exception import MissingOptionalDependencyException
-from ..schema._res import BOM_JSON as _S_BOM, BOM_JSON_STRICT as _S_BOM_STRICT, JSF as _S_JSF, SPDX_JSON as _S_SPDX
+from ..schema._res import (
+    BOM_JSON as _S_BOM,
+    BOM_JSON_STRICT as _S_BOM_STRICT,
+    CRYPTOGRAPHY_DEFS as _S_CDEFS,
+    JSF as _S_JSF,
+    SPDX_JSON as _S_SPDX,
+)
 from . import BaseSchemabasedValidator, SchemabasedValidator, ValidationError
 
 _missing_deps_error: Optional[tuple[MissingOptionalDependencyException, ImportError]] = None
@@ -51,9 +57,23 @@ except ImportError as err:
 
 class JsonValidationError(ValidationError):
     @classmethod
+    def __get_most_relevant_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonSchemaValidationError':
+        if not e.context:
+            return e
+        # nested `context` errors generally provide more useful details than
+        # generic parent messages, e.g. for oneOf/anyOf checks.
+        child = max(e.context, key=lambda ce: len(ce.absolute_path))
+        return cls.__get_most_relevant_jsve(child)
+
+    @classmethod
     def _make_from_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonValidationError':
         """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
-        return cls(e.message)  # TODO: shorten and more useful message? maybe there is a massage formatter?
+        useful = cls.__get_most_relevant_jsve(e)
+        return cls(
+            e,
+            message=useful.message,
+            path=tuple(useful.absolute_path)
+        )
 
 
 class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
@@ -124,9 +144,11 @@ class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
         @staticmethod
         def __make_validator_registry() -> Registry[Any]:
             schema_prefix = 'http://cyclonedx.org/schema/'
-            with open(_S_SPDX) as spdx, open(_S_JSF) as jsf:
+            with open(_S_SPDX) as spdx, open(_S_JSF) as jsf, open(_S_CDEFS) as cdefs:
                 return Registry().with_resources([
                     (f'{schema_prefix}spdx.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(spdx.read()))),
+                    (f'{schema_prefix}cryptography-defs.SNAPSHOT.schema.json',
+                     DRAFT7.create_resource(json_loads(cdefs.read()))),
                     (f'{schema_prefix}jsf-0.82.SNAPSHOT.schema.json', DRAFT7.create_resource(json_loads(jsf.read()))),
                 ])
 

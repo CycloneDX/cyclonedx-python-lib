@@ -27,13 +27,13 @@ from ..model import Note, Property, XsUri
 from ..model.issue import IssueType
 
 
-@serializable.serializable_class
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ReleaseNotes:
     """
     This is our internal representation of a `releaseNotesType` for a Component in a BOM.
 
     .. note::
-        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.6/#type_releaseNotesType
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_releaseNotesType
     """
 
     def __init__(
@@ -249,6 +249,11 @@ class ReleaseNotes:
         if isinstance(other, ReleaseNotes):
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, ReleaseNotes):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
 
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())

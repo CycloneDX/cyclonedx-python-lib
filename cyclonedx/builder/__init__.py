@@ -17,4 +17,6 @@
 
 """
 Builders used in this library.
+
+.. deprecated:: next
 """

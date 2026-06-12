@@ -1,0 +1,48 @@
+{
+  "components": [
+    {
+      "bom-ref": "1f4ed1e4-582a-4fa0-8c38-1b4facc16972",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtension": "csr",
+          "certificateFormat": "pem",
+          "issuerName": "Cloudflare Inc ECC CA-3",
+          "notValidAfter": "2024-05-19T00:59:59.999999+00:00",
+          "notValidBefore": "2023-05-19T01:00:00+00:00",
+          "subjectName": "cyclonedx.org"
+        },
+        "oid": "an-oid-here"
+      },
+      "name": "My Certificate",
+      "tags": [
+        "certificate"
+      ],
+      "type": "cryptographic-asset",
+      "version": "1.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "1f4ed1e4-582a-4fa0-8c38-1b4facc16972"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

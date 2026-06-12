@@ -18,6 +18,7 @@
 
 from collections.abc import Generator, Iterable
 from datetime import datetime
+from enum import Enum
 from itertools import chain
 from typing import TYPE_CHECKING, Optional, Union
 from uuid import UUID, uuid4
@@ -29,6 +30,7 @@ from sortedcontainers import SortedSet
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
 from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
+from ..schema.deprecation import SchemaDeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
     SchemaVersion1Dot1,
@@ -37,6 +39,7 @@ from ..schema.schema import (
     SchemaVersion1Dot4,
     SchemaVersion1Dot5,
     SchemaVersion1Dot6,
+    SchemaVersion1Dot7,
 )
 from ..serialization import UrnUuidHelper
 from . import _BOM_LINK_PREFIX, ExternalReference, Property
@@ -55,13 +58,88 @@ if TYPE_CHECKING:  # pragma: no cover
     from packageurl import PackageURL
 
 
-@serializable.serializable_class
+@serializable.serializable_enum
+class TlpClassification(str, Enum):
+    """
+    Enum object that defines the Traffic Light Protocol (TLP) classification that controls the sharing and distribution
+    of the data that the BOM describes.
+
+    .. note::
+        Introduced in CycloneDX v1.7
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_tlpClassificationType
+    """
+
+    CLEAR = 'CLEAR'
+    GREEN = 'GREEN'
+    AMBER = 'AMBER'
+    AMBER_AND_STRICT = 'AMBER_AND_STRICT'
+    RED = 'RED'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class DistributionConstraints:
+    """
+    Our internal representation of the `distributionConstraints` complex type.
+    Conditions and constraints governing the sharing and distribution of the data or components described by this BOM.
+
+    .. note::
+        Introduced in CycloneDX v1.7
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_metadata
+    """
+
+    def __init__(
+        self, *,
+        tlp: Optional[TlpClassification] = None,
+    ) -> None:
+        self.tlp = tlp or TlpClassification.CLEAR
+
+    @property
+    @serializable.xml_sequence(0)
+    def tlp(self) -> TlpClassification:
+        """
+        The Traffic Light Protocol (TLP) classification that controls the sharing and distribution of the data that the
+        BOM describes.
+
+        Returns:
+            `TlpClassification` enum value
+        """
+        return self._tlp
+
+    @tlp.setter
+    def tlp(self, tlp: TlpClassification) -> None:
+        self._tlp = tlp
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(self.tlp)
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, DistributionConstraints):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, DistributionConstraints):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<DistributionConstraints tlp={self.tlp}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class BomMetaData:
     """
     This is our internal representation of the metadata complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/#type_metadata
+        See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.7/xml/#type_metadata
     """
 
     def __init__(
@@ -75,6 +153,7 @@ class BomMetaData:
         timestamp: Optional[datetime] = None,
         manufacturer: Optional[OrganizationalEntity] = None,
         lifecycles: Optional[Iterable[Lifecycle]] = None,
+        distribution_constraints: Optional[DistributionConstraints] = None,
         # Deprecated as of v1.6
         manufacture: Optional[OrganizationalEntity] = None,
     ) -> None:
@@ -87,6 +166,7 @@ class BomMetaData:
         self.properties = properties or []
         self.manufacturer = manufacturer
         self.lifecycles = lifecycles or []
+        self.distribution_constraints = distribution_constraints
         # deprecated properties below
         self.manufacture = manufacture
 
@@ -109,6 +189,7 @@ class BomMetaData:
     @property
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(_LifecycleRepositoryHelper)
     @serializable.xml_sequence(2)
     def lifecycles(self) -> LifecycleRepository:
@@ -193,6 +274,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(6)
     def manufacture(self) -> Optional[OrganizationalEntity]:
         """
@@ -210,14 +292,12 @@ class BomMetaData:
               we should set this data on `.component.manufacturer`.
         """
         if manufacture is not None:
-            warn(
-                '`bom.metadata.manufacture` is deprecated from CycloneDX v1.6 onwards. '
-                'Please use `bom.metadata.component.manufacturer` instead.',
-                DeprecationWarning)
+            SchemaDeprecationWarning1Dot6._warn('bom.metadata.manufacture', 'bom.metadata.component.manufacturer')
         self._manufacture = manufacture
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(7)
     def manufacturer(self) -> Optional[OrganizationalEntity]:
         """
@@ -256,6 +336,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.type_mapping(_LicenseRepositorySerializationHelper)
     @serializable.xml_sequence(9)
     def licenses(self) -> LicenseRepository:
@@ -276,6 +357,7 @@ class BomMetaData:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(10)
     def properties(self) -> 'SortedSet[Property]':
@@ -295,10 +377,27 @@ class BomMetaData:
     def properties(self, properties: Iterable[Property]) -> None:
         self._properties = SortedSet(properties)
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(11)
+    def distribution_constraints(self) -> Optional[DistributionConstraints]:
+        """
+        Conditions and constraints governing the sharing and distribution of the data or components described by this
+        BOM.
+
+        Returns:
+            `DistributionConstraints` or `None`
+        """
+        return self._distribution_constraints
+
+    @distribution_constraints.setter
+    def distribution_constraints(self, distribution_constraints: Optional[DistributionConstraints]) -> None:
+        self._distribution_constraints = distribution_constraints
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             _ComparableTuple(self.authors), self.component, _ComparableTuple(self.licenses), self.manufacture,
-            _ComparableTuple(self.properties),
+            _ComparableTuple(self.properties), self.distribution_constraints,
             _ComparableTuple(self.lifecycles), self.supplier, self.timestamp, self.tools, self.manufacturer
         ))
 
@@ -307,6 +406,11 @@ class BomMetaData:
             return self.__comparable_tuple() == other.__comparable_tuple()
         return False
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, BomMetaData):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
@@ -314,7 +418,12 @@ class BomMetaData:
         return f'<BomMetaData timestamp={self.timestamp}, component={self.component}>'
 
 
-@serializable.serializable_class(ignore_during_deserialization=['$schema', 'bom_format', 'spec_version'])
+@serializable.serializable_class(
+    ignore_during_deserialization={
+        '$schema', 'bom_format', 'spec_version',  # JSON-implementation's format hints
+    },
+    ignore_unknown_during_deserialization=True
+)
 class Bom:
     """
     This is our internal representation of a bill-of-materials (BOM).
@@ -361,6 +470,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_attribute()
     def serial_number(self) -> UUID:
         """
@@ -391,6 +501,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(10)
     def metadata(self) -> BomMetaData:
         """
@@ -400,7 +511,7 @@ class Bom:
             Metadata object instance for this Bom.
 
         .. note::
-            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.6/#type_metadata
+            See the CycloneDX Schema for Bom metadata: https://cyclonedx.org/docs/1.7/xml/#type_metadata
         """
         return self._metadata
 
@@ -432,6 +543,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'service')
     @serializable.xml_sequence(30)
     def services(self) -> 'SortedSet[Service]':
@@ -454,6 +566,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     @serializable.xml_sequence(40)
     def external_references(self) -> 'SortedSet[ExternalReference]':
@@ -475,6 +588,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'dependency')
     @serializable.xml_sequence(50)
     def dependencies(self) -> 'SortedSet[Dependency]':
@@ -502,6 +616,7 @@ class Bom:
     # @serializable.view(SchemaVersion1Dot4) @todo: Update py-serializable to support view by OutputFormat filtering
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     @serializable.xml_sequence(70)
     def properties(self) -> 'SortedSet[Property]':
@@ -524,6 +639,7 @@ class Bom:
     @serializable.view(SchemaVersion1Dot4)
     @serializable.view(SchemaVersion1Dot5)
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'vulnerability')
     @serializable.xml_sequence(80)
     def vulnerabilities(self) -> 'SortedSet[Vulnerability]':
@@ -563,6 +679,7 @@ class Bom:
 
     @property
     @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(110)
     def definitions(self) -> Optional[Definitions]:
         """
@@ -587,6 +704,8 @@ class Bom:
 
         Returns:
             `Component` or `None`
+
+        .. deprecated:: next
         """
         if purl:
             found = [x for x in self.components if x.purl == purl]
@@ -601,6 +720,8 @@ class Bom:
 
         Returns:
             URN formatted UUID that uniquely identified this Bom instance.
+
+        .. deprecated:: next
         """
         return self.serial_number.urn
 
@@ -614,6 +735,8 @@ class Bom:
 
         Returns:
             `bool` - `True` if the supplied Component is part of this Bom, `False` otherwise.
+
+        .. deprecated:: next
         """
         return component in self.components
 
@@ -632,8 +755,10 @@ class Bom:
 
         Returns:
             `SortedSet` of `Vulnerability`
-        """
 
+        .. deprecated:: next
+            Deprecated without any replacement.
+        """
         vulnerabilities: SortedSet[Vulnerability] = SortedSet()
         for v in self.vulnerabilities:
             for target in v.affects:
@@ -647,6 +772,9 @@ class Bom:
 
         Returns:
             `bool` - `True` if this Bom has at least one Vulnerability, `False` otherwise.
+
+        .. deprecated:: next
+            Deprecated without any replacement.
         """
         return bool(self.vulnerabilities)
 
@@ -669,6 +797,11 @@ class Bom:
                 self.register_dependency(target=_d2, depends_on=None)
 
     def urn(self) -> str:
+        """
+        .. deprecated:: next
+            Deprecated without any replacement.
+        """
+        # idea: have 'serial_number' be a string, and use it instead of this method
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
 
     def validate(self) -> bool:
@@ -678,7 +811,11 @@ class Bom:
 
         Returns:
              `bool`
+
+        .. deprecated:: next
+            Deprecated without any replacement.
         """
+        # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
         # 0. Make sure all Dependable have a Dependency entry
         if self.metadata.component:
             self.register_dependency(target=self.metadata.component)

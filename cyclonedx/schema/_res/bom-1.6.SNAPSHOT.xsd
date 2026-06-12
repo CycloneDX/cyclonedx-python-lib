@@ -76,7 +76,7 @@ limitations under the License.
     <xs:simpleType name="versionRangeType">
         <xs:annotation>
             <xs:documentation xml:lang="en"><![CDATA[
-                A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/purl-spec/VERSION-RANGE-SPEC.rst
+                A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/vers-spec
 
                 Example values:
                 - "vers:cargo/9.0.14"
@@ -2672,7 +2672,7 @@ limitations under the License.
             <xs:element name="copyright" type="bom:copyrightsType" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        opyright evidence captures intellectual property assertions, providing evidence of possible ownership and legal protection.
+                        Copyright evidence captures intellectual property assertions, providing evidence of possible ownership and legal protection.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -2715,7 +2715,7 @@ limitations under the License.
         <xs:sequence minOccurs="0" maxOccurs="unbounded">
             <xs:element name="aggregate" type="bom:aggregateType" default="not_specified">
                 <xs:annotation>
-                    <xs:documentation>Specifies an aggregate type that describe how complete a relationship is.</xs:documentation>
+                    <xs:documentation>Specifies an aggregate type that describes how complete a relationship is.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="assemblies" minOccurs="0" maxOccurs="1">
@@ -2810,12 +2810,12 @@ limitations under the License.
             </xs:enumeration>
             <xs:enumeration value="incomplete_first_party_proprietary_only">
                 <xs:annotation>
-                    <xs:documentation>The relationship is incomplete. Only relationships for third-party components, services, or their dependencies are represented, limited specifically to those that are proprietary.</xs:documentation>
+                    <xs:documentation>The relationship is incomplete. Only relationships for first-party components, services, or their dependencies are represented, limited specifically to those that are proprietary.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="incomplete_first_party_opensource_only">
                 <xs:annotation>
-                    <xs:documentation>The relationship is incomplete. Only relationships for third-party components, services, or their dependencies are represented, limited specifically to those that are opensource.</xs:documentation>
+                    <xs:documentation>The relationship is incomplete. Only relationships for first-party components, services, or their dependencies are represented, limited specifically to those that are opensource.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="incomplete_third_party_only">
@@ -4475,7 +4475,7 @@ limitations under the License.
                                                                 </xs:element>
                                                                 <xs:element name="range" type="bom:versionRangeType" minOccurs="1" maxOccurs="1">
                                                                     <xs:annotation>
-                                                                        <xs:documentation>A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/purl-spec/VERSION-RANGE-SPEC.rst</xs:documentation>
+                                                                        <xs:documentation>A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/vers-spec</xs:documentation>
                                                                     </xs:annotation>
                                                                 </xs:element>
                                                             </xs:choice>

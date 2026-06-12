@@ -30,11 +30,14 @@ Supported CycloneDX Schema Versions
 
 This library supports the following schema versions:
 
+* 1.7 (XML, JSON) - the latest supported schema version
+* 1.6 (XML, JSON)
+* 1.5 (XML, JSON)
+* 1.4 (XML, JSON)
+* 1.3 (XML, JSON)
+* 1.2 (XML, JSON)
 * 1.0 (XML) - `(note, 1.1 schema version has no support for JSON)`
 * 1.1 (XML) - `(note, 1.1 schema version has no support for JSON)`
-* 1.2 (XML, JSON)
-* 1.3 (XML, JSON)
-* 1.4 (XML, JSON) - the latest supported schema version
 
 Outputting to JSON
 ------------------
@@ -46,16 +49,16 @@ as a ``str``.
 
     from cyclonedx.output import make_outputter, BaseOutput, OutputFormat, SchemaVersion
 
-    outputter: BaseOutput = make_outputter(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_6)
+    outputter: BaseOutput = make_outputter(bom=bom, output_format=OutputFormat.JSON, schema_version=SchemaVersion.V1_7)
     bom_json: str = outputter.output_as_string()
 
 Alternatively, if the output format and schema version are constants, you can use the predefined format+schema combined outputs:
 
 .. code-block:: python
 
-    from cyclonedx.output.json import JsonV1Dot6
+    from cyclonedx.output.json import JsonV1Dot7
 
-    outputter = JsonV1Dot6(bom=bom)
+    outputter = JsonV1Dot7(bom=bom)
     bom_json: str = outputter.output_as_string()
 
 

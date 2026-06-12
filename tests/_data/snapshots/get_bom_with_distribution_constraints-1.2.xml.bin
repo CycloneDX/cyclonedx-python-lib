@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+    <component type="application" bom-ref="my-app">
+      <name>app</name>
+      <version/>
+    </component>
+  </metadata>
+  <dependencies>
+    <dependency ref="my-app"/>
+  </dependencies>
+</bom>

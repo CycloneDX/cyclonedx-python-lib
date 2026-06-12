@@ -42,7 +42,7 @@ from cyclonedx.model import (
     Property,
     XsUri,
 )
-from cyclonedx.model.bom import Bom, BomMetaData
+from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
     Commit,
@@ -582,12 +582,13 @@ def get_bom_just_complete_metadata() -> Bom:
     )]
     bom.metadata.lifecycles = [PredefinedLifecycle(LifecyclePhase.BUILD)]
     bom.metadata.properties = get_properties_1()
+    bom.metadata.distribution_constraints = DistributionConstraints(tlp=TlpClassification.GREEN)
     return bom
 
 
 def get_bom_with_external_references() -> Bom:
     bom = _make_bom(external_references=[
-        get_external_reference_1(), get_external_reference_2()
+        get_external_reference_1(), get_external_reference_2(), get_external_reference_with_properties()
     ])
     return bom
 
@@ -895,6 +896,17 @@ def get_external_reference_2() -> ExternalReference:
     )
 
 
+def get_external_reference_with_properties() -> ExternalReference:
+    return ExternalReference(
+        type=ExternalReferenceType.VCS,
+        url=XsUri('https://cyclonedx.org'),
+        properties=[
+            Property(name='property_1', value='value_1'),
+            Property(name='property_2', value='value_2')
+        ]
+    )
+
+
 def get_issue_1() -> IssueType:
     return IssueType(
         type=IssueClassification.SECURITY, id='CVE-2021-44228', name='Apache Log3Shell',
@@ -1069,6 +1081,14 @@ def get_bom_with_licenses() -> Bom:
                                              text=AttachedText(content='this is a license text')),
                           DisjunctiveLicense(name='some additional',
                                              text=AttachedText(content='this is additional license text')),
+                      ]),
+            Component(name='c-with-license-properties', type=ComponentType.LIBRARY, bom_ref='C4',
+                      licenses=[
+                          DisjunctiveLicense(id='Apache-2.0',
+                                             properties=[Property(name='key1', value='val1'),
+                                                         Property(name='key2', value='val2')]),
+                          DisjunctiveLicense(name='some other license',
+                                             properties=[Property(name='myname', value='proprietary')]),
                       ]),
         ],
         services=[
@@ -1403,6 +1423,17 @@ def get_bom_with_lifecycles() -> Bom:
     )
 
 
+def get_bom_with_distribution_constraints() -> Bom:
+    return _make_bom(
+        metadata=BomMetaData(
+            distribution_constraints=DistributionConstraints(
+                tlp=TlpClassification.AMBER_AND_STRICT
+            ),
+            component=Component(name='app', type=ComponentType.APPLICATION, bom_ref='my-app'),
+        )
+    )
+
+
 def get_bom_with_definitions_standards() -> Bom:
     """
     Returns a BOM with definitions and standards only.
@@ -1584,6 +1615,7 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_component_setuptools_with_v16_fields,
     get_bom_for_issue_630_empty_property,
     get_bom_with_lifecycles,
+    get_bom_with_distribution_constraints,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
 }
