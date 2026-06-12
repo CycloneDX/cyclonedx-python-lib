@@ -19,17 +19,14 @@
 from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
-from itertools import chain
 from typing import TYPE_CHECKING, Optional, Union
 from uuid import UUID, uuid4
-from warnings import warn
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
-from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..schema.deprecation import SchemaDeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -48,7 +45,7 @@ from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
 from .definition import Definitions
 from .dependency import Dependable, Dependency
-from .license import License, LicenseExpression, LicenseRepository, _LicenseRepositorySerializationHelper
+from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
@@ -803,67 +800,6 @@ class Bom:
         """
         # idea: have 'serial_number' be a string, and use it instead of this method
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
-
-    def validate(self) -> bool:
-        """
-        Perform data-model level validations to make sure we have some known data integrity prior to attempting output
-        of this `Bom`
-
-        Returns:
-             `bool`
-
-        .. deprecated:: next
-            Deprecated without any replacement.
-        """
-        # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
-        # 0. Make sure all Dependable have a Dependency entry
-        if self.metadata.component:
-            self.register_dependency(target=self.metadata.component)
-        for _c in self.components:
-            self.register_dependency(target=_c)
-        for _s in self.services:
-            self.register_dependency(target=_s)
-
-        # 1. Make sure dependencies are all in this Bom.
-        component_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
-            map(lambda s: s.bom_ref, self.services))
-        dependency_bom_refs = set(chain(
-            (d.ref for d in self.dependencies),
-            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies)
-        ))
-        dependency_diff = dependency_bom_refs - component_bom_refs
-        if len(dependency_diff) > 0:
-            raise UnknownComponentDependencyException(
-                'One or more Components have Dependency references to Components/Services that are not known in this '
-                f'BOM. They are: {dependency_diff}')
-
-        # 2. if root component is set and there are other components: dependencies should exist for the Component
-        # this BOM is describing
-        if self.metadata.component and len(self.components) > 0 and not any(map(
-            lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type:ignore[union-attr]
-            self.dependencies
-        )):
-            warn(
-                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
-                'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
-                '"root" Component to complete the Dependency Graph data.',
-                category=UserWarning, stacklevel=1
-            )
-
-        # 3. If a LicenseExpression is set, then there must be no other license.
-        # see https://github.com/CycloneDX/specification/pull/205
-        elem: Union[BomMetaData, Component, Service]
-        for elem in chain(  # type:ignore[assignment]
-            [self.metadata],
-            self.metadata.component.get_all_nested_components(include_self=True) if self.metadata.component else [],
-            chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
-            self.services
-        ):
-            if len(elem.licenses) > 1 and any(isinstance(li, LicenseExpression) for li in elem.licenses):
-                raise LicenseExpressionAlongWithOthersException(
-                    f'Found LicenseExpression along with others licenses in: {elem!r}')
-
-        return True
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((

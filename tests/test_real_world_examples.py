@@ -23,6 +23,7 @@ from typing import Any
 from unittest.mock import patch
 
 from cyclonedx.model.bom import Bom
+from cyclonedx.validation.model import ModelValidationErrorSeverity, ModelValidator
 from tests import OWN_DATA_DIRECTORY
 
 
@@ -44,7 +45,9 @@ class TestDeserializeRealWorldExamples(unittest.TestCase):
             json = json_loads(input_json.read())
         bom = Bom.from_json(json)
         self.assertEqual(4, len(bom.components))
-        bom.validate()
+        errors = [e for e in ModelValidator().validate(bom)
+                  if e.severity is ModelValidationErrorSeverity.ERROR]
+        self.assertFalse(errors)
 
     def test_regression_issue753(self, *_: Any, **__: Any) -> None:
         # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/753
@@ -52,7 +55,9 @@ class TestDeserializeRealWorldExamples(unittest.TestCase):
             json = json_loads(input_json.read())
         bom = Bom.from_json(json)
         self.assertEqual(2, len(bom.components))
-        bom.validate()
+        errors = [e for e in ModelValidator().validate(bom)
+                  if e.severity is ModelValidationErrorSeverity.ERROR]
+        self.assertFalse(errors)
 
     def test_regression_issue_850(self, *_: Any, **__: Any) -> None:
         # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/850
