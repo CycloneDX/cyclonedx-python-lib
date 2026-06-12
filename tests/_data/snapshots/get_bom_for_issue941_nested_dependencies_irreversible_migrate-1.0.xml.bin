@@ -2,27 +2,22 @@
 <bom xmlns="http://cyclonedx.org/schema/bom/1.0" version="1">
   <components>
     <component type="library">
-      <name>c-with-SPDX</name>
+      <name>some-library</name>
       <version/>
       <modified>false</modified>
     </component>
     <component type="library">
-      <name>c-with-expression</name>
+      <name>some-library</name>
       <version/>
       <modified>false</modified>
     </component>
     <component type="library">
-      <name>c-with-expression-details</name>
+      <name>some-other-library</name>
       <version/>
       <modified>false</modified>
     </component>
     <component type="library">
-      <name>c-with-license-properties</name>
-      <version/>
-      <modified>false</modified>
-    </component>
-    <component type="library">
-      <name>c-with-name</name>
+      <name>some-other-library</name>
       <version/>
       <modified>false</modified>
     </component>

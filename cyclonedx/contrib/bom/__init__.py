@@ -15,11 +15,4 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
-
-"""
-Python library for CycloneDX
-"""
-
-# !! version is managed by semantic_release
-# do not use typing here, or else `semantic_release` might have issues finding the variable
-__version__ = "11.10.0"  # noqa:Q000
+"""Bom related functionality"""

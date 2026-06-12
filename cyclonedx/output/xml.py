@@ -20,6 +20,7 @@ from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 from xml.dom.minidom import parseString as dom_parseString  # nosec B408
 from xml.etree.ElementTree import Element as XmlElement, tostring as xml_dumps  # nosec B405
 
+from ..contrib.bom.utils import BomRefDiscriminator
 from ..schema import OutputFormat, SchemaVersion
 from ..schema.schema import (
     SCHEMA_VERSIONS,
@@ -33,7 +34,7 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
     SchemaVersion1Dot7,
 )
-from . import BaseOutput, BomRefDiscriminator
+from . import BaseOutput
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom

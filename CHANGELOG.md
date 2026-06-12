@@ -2,6 +2,50 @@
 
 <!-- version list -->
 
+## v11.10.0 (2026-06-11)
+
+### Bug Fixes
+
+- Lossless flattening of dependency graph during JSON serialization
+  ([#993](https://github.com/CycloneDX/cyclonedx-python-lib/pull/993),
+  [`d0e10ca`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d0e10ca147dfece8bd7c76b104d7579255879679))
+
+- Typing in `contrib.bom.utils.BomDependencyGraphFlatMerger`
+  ([#998](https://github.com/CycloneDX/cyclonedx-python-lib/pull/998),
+  [`988a937`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/988a9372a676358b29e67573c9f39d94121824bc))
+
+### Documentation
+
+- Improve docs of `contrib.bom.utils.BomRefDiscriminator`
+  ([#996](https://github.com/CycloneDX/cyclonedx-python-lib/pull/996),
+  [`9beaf5c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/9beaf5c6b35a8739727572c0e351063849d876fc))
+
+### Features
+
+- Add `contrib.bom.utils.BomDependencyGraphFlatMerger`
+  ([#997](https://github.com/CycloneDX/cyclonedx-python-lib/pull/997),
+  [`78b8d8b`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/78b8d8b94b26df14d0194b3d44a5db8a76f1fa47))
+
+- Move `output.BomRefDiscriminator` to `contrib.bom.utils.BomRefDiscriminator`
+  ([#995](https://github.com/CycloneDX/cyclonedx-python-lib/pull/995),
+  [`3bb87aa`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3bb87aabbc421aabac307305217c7975e63b43eb))
+
+### Performance Improvements
+
+- `contrib.bom.utils.bomdependencygraphflatmerger._flatten_merge`
+  ([#999](https://github.com/CycloneDX/cyclonedx-python-lib/pull/999),
+  [`a8579b8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/a8579b87f7e121ebbec16b9f05bdb3b4de11e71c))
+
+
+## v11.9.0 (2026-06-08)
+
+### Features
+
+- Add support for license expression details
+  ([#908](https://github.com/CycloneDX/cyclonedx-python-lib/pull/908),
+  [`b502381`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/b50238102553dc215b08796ea914072294f69489))
+
+
 ## v11.8.0 (2026-06-04)
 
 ### Documentation
