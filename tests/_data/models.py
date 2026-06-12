@@ -599,6 +599,11 @@ def get_bom_with_external_references() -> Bom:
     return bom
 
 
+def get_bom_with_external_component_1_7() -> Bom:
+    bom = _make_bom(components=[get_component_external()])
+    return bom
+
+
 def get_bom_with_services_simple() -> Bom:
     bom = _make_bom(services=[
         Service(name='my-first-service', bom_ref='my-specific-bom-ref-for-my-first-service'),
@@ -856,6 +861,16 @@ def get_component_setuptools_simple(
         ),
         licenses=[DisjunctiveLicense(id='MIT')],
         author='Test Author'
+    )
+
+
+def get_component_external() -> Component:
+    return Component(
+        name='external-lib', version='1.0.0',
+        type=ComponentType.LIBRARY,
+        is_external=True,
+        scope=ComponentScope.REQUIRED,
+        bom_ref='external-lib-1.0.0',
     )
 
 
@@ -1703,6 +1718,7 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_licenses,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
+    get_bom_with_external_component_1_7,
     get_bom_for_issue_598_multiple_components_with_purl_qualifiers,
     get_bom_with_component_setuptools_with_v16_fields,
     get_bom_for_issue_630_empty_property,
