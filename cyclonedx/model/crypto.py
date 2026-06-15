@@ -197,6 +197,8 @@ class CryptoCertificationLevel(str, Enum):
 
 @serializable.serializable_enum
 class CryptoMode(str, Enum):
+    # TODO: rename to `CryptoAlgorithmMode`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.mode ENUM type
     within the CycloneDX standard.
