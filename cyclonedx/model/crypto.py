@@ -93,6 +93,8 @@ class CryptoPrimitive(str, Enum):
 
 @serializable.serializable_enum
 class CryptoExecutionEnvironment(str, Enum):
+    # TODO: rename to `CryptoAlgorithmExecutionEnvironment`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.executionEnvironment ENUM type
     within the CycloneDX standard.
