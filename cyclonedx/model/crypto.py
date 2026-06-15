@@ -117,6 +117,8 @@ class CryptoExecutionEnvironment(str, Enum):
 
 @serializable.serializable_enum
 class CryptoImplementationPlatform(str, Enum):
+    # TODO: rename to `CryptoAlgorithmImplementationPlatform`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.implementationPlatform ENUM type
     within the CycloneDX standard.
