@@ -1,0 +1,488 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CIP:CC_EAL1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal1"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL1_PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal1+"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL1_PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal2"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL2_PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal2+"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL2_PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal3"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL3_PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal3+"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL3_PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal4"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL4_PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal4+"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL4_PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal5"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL5_PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal5+"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL5_PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL6",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal6"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL6",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL6_PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal6+"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL6_PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL7",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal7"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL7",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CC_EAL7_PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "cc-eal7+"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: CC_EAL7_PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_1_L1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-1-l1"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_1_L1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_1_L2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-1-l2"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_1_L2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_1_L3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-1-l3"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_1_L3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_1_L4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-1-l4"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_1_L4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_2_L1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-2-l1"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_2_L1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_2_L2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-2-l2"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_2_L2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_2_L3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-2-l3"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_2_L3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_2_L4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-2-l4"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_2_L4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_3_L1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-3-l1"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_3_L1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_3_L2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-3-l2"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_3_L2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_3_L3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-3-l3"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_3_L3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:FIPS140_3_L4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "fips140-3-l4"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: FIPS140_3_L4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:NONE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "none"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: NONE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:OTHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "other"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:UNKNOWN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "certificationLevel": [
+            "unknown"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoCertificationLevel: UNKNOWN",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CIP:CC_EAL1"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL1_PLUS"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL2"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL2_PLUS"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL3"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL3_PLUS"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL4"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL4_PLUS"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL5"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL5_PLUS"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL6"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL6_PLUS"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL7"
+    },
+    {
+      "ref": "dummy-CIP:CC_EAL7_PLUS"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_1_L1"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_1_L2"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_1_L3"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_1_L4"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_2_L1"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_2_L2"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_2_L3"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_2_L4"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_3_L1"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_3_L2"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_3_L3"
+    },
+    {
+      "ref": "dummy-CIP:FIPS140_3_L4"
+    },
+    {
+      "ref": "dummy-CIP:NONE"
+    },
+    {
+      "ref": "dummy-CIP:OTHER"
+    },
+    {
+      "ref": "dummy-CIP:UNKNOWN"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

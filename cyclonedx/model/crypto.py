@@ -136,7 +136,7 @@ class CryptoImplementationPlatform(str, Enum):
     ARMV8_M = 'armv8-m'
     ARMV9_A = 'armv9-a'
     ARMV9_M = 'armv9-m'
-    GENERIC = 'generic'
+    GENERIC = 'generic'  # TODO: move down
     PPC64 = 'ppc64'
     PPC64LE = 'ppc64le'
     S390X = 's390x'
@@ -149,6 +149,8 @@ class CryptoImplementationPlatform(str, Enum):
 
 @serializable.serializable_enum
 class CryptoCertificationLevel(str, Enum):
+    # TODO: move to `CryptoAlgorithmCertificationLevel`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.certificationLevel ENUM type
     within the CycloneDX standard.
