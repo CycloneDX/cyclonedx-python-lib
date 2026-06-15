@@ -43,6 +43,18 @@ from .contact import OrganizationalEntity
 
 
 @serializable.serializable_enum
+class Co2MeasureUnit(str, Enum):
+    """Unit of CO2. Currently only tCO2eq is defined by CycloneDX 1.6+."""
+    TCO2EQ = 'tCO2eq'
+
+
+@serializable.serializable_enum
+class EnergyMeasureUnit(str, Enum):
+    """Unit of energy. Currently only kWh is defined by CycloneDX 1.6+."""
+    KWH = 'kWh'
+
+
+@serializable.serializable_enum
 class MachineLearningApproach(str, Enum):
     """Enumeration for `machineLearningApproachType`.
 
@@ -942,7 +954,7 @@ class EnergyActivity(str, Enum):
 class EnergyMeasure:
     """A measure of energy. Schema `energyMeasure` (1.6+): value + unit (kWh)."""
 
-    def __init__(self, *, value: float, unit: str = 'kWh') -> None:
+    def __init__(self, *, value: float, unit: EnergyMeasureUnit = EnergyMeasureUnit.KWH) -> None:
         self.value = value
         self.unit = unit
 
@@ -961,12 +973,11 @@ class EnergyMeasure:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def unit(self) -> str:
+    def unit(self) -> EnergyMeasureUnit:
         return self._unit
 
     @unit.setter
-    def unit(self, unit: str) -> None:
+    def unit(self, unit: EnergyMeasureUnit) -> None:
         self._unit = unit
 
     def __comparable_tuple(self) -> _ComparableTuple:
@@ -1003,7 +1014,7 @@ class EnergyMeasure:
 class Co2Measure:
     """A measure of CO2. Schema `co2Measure` (1.6+): value + unit (tCO2eq)."""
 
-    def __init__(self, *, value: float, unit: str = 'tCO2eq') -> None:
+    def __init__(self, *, value: float, unit: Co2MeasureUnit = Co2MeasureUnit.TCO2EQ) -> None:
         self.value = value
         self.unit = unit
 
@@ -1022,12 +1033,11 @@ class Co2Measure:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def unit(self) -> str:
+    def unit(self) -> Co2MeasureUnit:
         return self._unit
 
     @unit.setter
-    def unit(self, unit: str) -> None:
+    def unit(self, unit: Co2MeasureUnit) -> None:
         self._unit = unit
 
     def __comparable_tuple(self) -> _ComparableTuple:
