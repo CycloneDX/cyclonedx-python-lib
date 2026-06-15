@@ -1,0 +1,234 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CP:AE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "ae"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: AE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:BLOCK_CIPHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "block-cipher"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: BLOCK_CIPHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:COMBINER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "combiner"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: COMBINER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:DRBG",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "drbg"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: DRBG",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:HASH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "hash"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: HASH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:KDF",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "kdf"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: KDF",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:KEM",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "kem"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: KEM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:KEY_AGREE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "key-agree"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: KEY_AGREE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:MAC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "mac"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: MAC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:OTHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "other"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:PKE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "pke"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: PKE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:SIGNATURE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "signature"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: SIGNATURE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:STREAM_CIPHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "stream-cipher"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: STREAM_CIPHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:UNKNOWN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "unknown"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: UNKNOWN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:XOF",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "xof"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: XOF",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CP:AE"
+    },
+    {
+      "ref": "dummy-CP:BLOCK_CIPHER"
+    },
+    {
+      "ref": "dummy-CP:COMBINER"
+    },
+    {
+      "ref": "dummy-CP:DRBG"
+    },
+    {
+      "ref": "dummy-CP:HASH"
+    },
+    {
+      "ref": "dummy-CP:KDF"
+    },
+    {
+      "ref": "dummy-CP:KEM"
+    },
+    {
+      "ref": "dummy-CP:KEY_AGREE"
+    },
+    {
+      "ref": "dummy-CP:MAC"
+    },
+    {
+      "ref": "dummy-CP:OTHER"
+    },
+    {
+      "ref": "dummy-CP:PKE"
+    },
+    {
+      "ref": "dummy-CP:SIGNATURE"
+    },
+    {
+      "ref": "dummy-CP:STREAM_CIPHER"
+    },
+    {
+      "ref": "dummy-CP:UNKNOWN"
+    },
+    {
+      "ref": "dummy-CP:XOF"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}
