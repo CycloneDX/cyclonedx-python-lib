@@ -36,7 +36,7 @@ from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.component_evidence import ComponentEvidence, Identity as CEIdentity, Method as CEMethod
-from cyclonedx.model.crypto import CryptoProperties
+from cyclonedx.model.crypto import CryptoProperties, AlgorithmProperties
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
@@ -636,13 +636,43 @@ class TestEnumCryptoAssetType(_EnumTestCase):
         bom = _make_bom(
             components=[
                 Component(
-                    name=f'CryptoAssetType: {cat.name}', type=ComponentType.CRYPTOGRAPHIC_ASSET, bom_ref=f'dummy-CAT:{cat.name}',
-                     crypto_properties=CryptoProperties(
+                    name=f'CryptoAssetType: {cat.name}', bom_ref=f'dummy-CAT:{cat.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
                         asset_type=cat
                     )
                 ) for cat in CryptoAssetType
             ])
         super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumCryptoPrimitive(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='primitive']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'primitive'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(CryptoPrimitive, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'CryptoPrimitive: {cp.name}', bom_ref=f'dummy-CP:{cp.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.ALGORITHM,
+                        algorithm_properties=AlgorithmProperties(
+                            primitive=cp
+                        )
+                    )
+                ) for cp in CryptoPrimitive
+            ])
+        super()._test_cases_render(bom, of, sv)
+
 
 """
 @ddt
@@ -667,8 +697,6 @@ class TestEnum...(_EnumTestCase):
 
 """
 missing:
-- CryptoAssetType
-- CryptoPrimitive
 - CryptoExecutionEnvironment
 - CryptoImplementationPlatform
 - CryptoCertificationLevel

@@ -59,6 +59,8 @@ class CryptoAssetType(str, Enum):
 
 @serializable.serializable_enum
 class CryptoPrimitive(str, Enum):
+    # TODO: rename to `CryptoAlgorithmPrimitive`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.primitive ENUM type within the
     CycloneDX standard.
@@ -83,6 +85,7 @@ class CryptoPrimitive(str, Enum):
     SIGNATURE = 'signature'
     STREAM_CIPHER = 'stream-cipher'
     XOF = 'xof'
+    # TODO: add `key-wrap` - since CDX1.7key-wrap
 
     OTHER = 'other'
     UNKNOWN = 'unknown'
