@@ -1,0 +1,150 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CIP:CBC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "cbc"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: CBC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CCM",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "ccm"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: CCM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CFB",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "cfb"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: CFB",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:CTR",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "ctr"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: CTR",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:ECB",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "ecb"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: ECB",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:GCM",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "gcm"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: GCM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:OFB",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "ofb"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: OFB",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:OTHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "other"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:UNKNOWN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "mode": "unknown"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoMode: UNKNOWN",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CIP:CBC"
+    },
+    {
+      "ref": "dummy-CIP:CCM"
+    },
+    {
+      "ref": "dummy-CIP:CFB"
+    },
+    {
+      "ref": "dummy-CIP:CTR"
+    },
+    {
+      "ref": "dummy-CIP:ECB"
+    },
+    {
+      "ref": "dummy-CIP:GCM"
+    },
+    {
+      "ref": "dummy-CIP:OFB"
+    },
+    {
+      "ref": "dummy-CIP:OTHER"
+    },
+    {
+      "ref": "dummy-CIP:UNKNOWN"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

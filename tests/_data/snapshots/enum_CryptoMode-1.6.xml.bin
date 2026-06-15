@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:CBC">
+      <name>CryptoMode: CBC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>cbc</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:CCM">
+      <name>CryptoMode: CCM</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>ccm</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:CFB">
+      <name>CryptoMode: CFB</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>cfb</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:CTR">
+      <name>CryptoMode: CTR</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>ctr</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:ECB">
+      <name>CryptoMode: ECB</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>ecb</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:GCM">
+      <name>CryptoMode: GCM</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>gcm</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:OFB">
+      <name>CryptoMode: OFB</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>ofb</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:OTHER">
+      <name>CryptoMode: OTHER</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>other</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:UNKNOWN">
+      <name>CryptoMode: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <mode>unknown</mode>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CIP:CBC"/>
+    <dependency ref="dummy-CIP:CCM"/>
+    <dependency ref="dummy-CIP:CFB"/>
+    <dependency ref="dummy-CIP:CTR"/>
+    <dependency ref="dummy-CIP:ECB"/>
+    <dependency ref="dummy-CIP:GCM"/>
+    <dependency ref="dummy-CIP:OFB"/>
+    <dependency ref="dummy-CIP:OTHER"/>
+    <dependency ref="dummy-CIP:UNKNOWN"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
