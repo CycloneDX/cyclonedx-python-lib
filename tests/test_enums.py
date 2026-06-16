@@ -816,6 +816,34 @@ class TestEnumCryptoPadding(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
+@ddt
+class TestEnumCryptoFunction(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='cryptoFunctions']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='cryptoFunction']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'cryptoFunctions', 'items'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(CryptoFunction, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'CryptoFunction: {cf.name}', bom_ref=f'dummy-CF:{cf.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.ALGORITHM,
+                        algorithm_properties=AlgorithmProperties(
+                            crypto_functions=[cf]
+                        )
+                    )
+                ) for cf in CryptoFunction
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
 """
 @ddt
 class TestEnum...(_EnumTestCase):
@@ -839,8 +867,6 @@ class TestEnum...(_EnumTestCase):
 
 """
 missing:
-- CryptoPadding
-- CryptoFunction
 - RelatedCryptoMaterialType
 - RelatedCryptoMaterialState
 - ProtocolPropertiesType
