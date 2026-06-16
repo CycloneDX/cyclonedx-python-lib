@@ -746,7 +746,7 @@ class TestEnumCryptoCertificationLevel (_EnumTestCase):
         bom = _make_bom(
             components=[
                 Component(
-                    name=f'CryptoCertificationLevel: {ccl.name}', bom_ref=f'dummy-CIP:{ccl.name}',
+                    name=f'CryptoCertificationLevel: {ccl.name}', bom_ref=f'dummy-CCL:{ccl.name}',
                     type=ComponentType.CRYPTOGRAPHIC_ASSET,
                     crypto_properties=CryptoProperties(
                         asset_type=CryptoAssetType.ALGORITHM,
@@ -775,7 +775,7 @@ class TestEnumCryptoMode(_EnumTestCase):
         bom = _make_bom(
             components=[
                 Component(
-                    name=f'CryptoMode: {cm.name}', bom_ref=f'dummy-CIP:{cm.name}',
+                    name=f'CryptoMode: {cm.name}', bom_ref=f'dummy-CM:{cm.name}',
                     type=ComponentType.CRYPTOGRAPHIC_ASSET,
                     crypto_properties=CryptoProperties(
                         asset_type=CryptoAssetType.ALGORITHM,

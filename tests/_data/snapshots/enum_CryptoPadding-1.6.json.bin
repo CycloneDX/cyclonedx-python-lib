@@ -1,0 +1,122 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CP:OAEP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "padding": "oaep"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPadding: OAEP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:OTHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "padding": "other"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPadding: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:PKCS1V15",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "padding": "pkcs1v15"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPadding: PKCS1V15",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:PKCS5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "padding": "pkcs5"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPadding: PKCS5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:PKCS7",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "padding": "pkcs7"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPadding: PKCS7",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:RAW",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "padding": "raw"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPadding: RAW",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CP:UNKNOWN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "padding": "unknown"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPadding: UNKNOWN",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CP:OAEP"
+    },
+    {
+      "ref": "dummy-CP:OTHER"
+    },
+    {
+      "ref": "dummy-CP:PKCS1V15"
+    },
+    {
+      "ref": "dummy-CP:PKCS5"
+    },
+    {
+      "ref": "dummy-CP:PKCS7"
+    },
+    {
+      "ref": "dummy-CP:RAW"
+    },
+    {
+      "ref": "dummy-CP:UNKNOWN"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}
