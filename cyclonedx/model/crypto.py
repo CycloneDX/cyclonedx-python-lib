@@ -224,6 +224,8 @@ class CryptoMode(str, Enum):
 
 @serializable.serializable_enum
 class CryptoPadding(str, Enum):
+    # TODO: rename to `CryptoAlgorithmPadding`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.padding ENUM type
     within the CycloneDX standard.

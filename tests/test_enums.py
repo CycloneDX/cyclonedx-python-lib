@@ -788,6 +788,34 @@ class TestEnumCryptoMode(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
+@ddt
+class TestEnumCryptoPadding(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='padding']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'padding'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(CryptoPadding, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'CryptoPadding: {cp.name}', bom_ref=f'dummy-CP:{cp.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.ALGORITHM,
+                        algorithm_properties=AlgorithmProperties(
+                            padding=cp
+                        )
+                    )
+                ) for cp in CryptoPadding
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
 """
 @ddt
 class TestEnum...(_EnumTestCase):
