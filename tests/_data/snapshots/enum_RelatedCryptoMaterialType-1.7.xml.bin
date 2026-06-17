@@ -1,0 +1,204 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:ADDITIONAL_DATA">
+      <name>RelatedCryptoMaterialType: ADDITIONAL_DATA</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>additional-data</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:CIPHERTEXT">
+      <name>RelatedCryptoMaterialType: CIPHERTEXT</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>ciphertext</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:CREDENTIAL">
+      <name>RelatedCryptoMaterialType: CREDENTIAL</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>credential</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:DIGEST">
+      <name>RelatedCryptoMaterialType: DIGEST</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>digest</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:INITIALIZATION_VECTOR">
+      <name>RelatedCryptoMaterialType: INITIALIZATION_VECTOR</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>initialization-vector</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:KEY">
+      <name>RelatedCryptoMaterialType: KEY</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>key</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:NONCE">
+      <name>RelatedCryptoMaterialType: NONCE</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>nonce</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:OTHER">
+      <name>RelatedCryptoMaterialType: OTHER</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>other</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:PASSWORD">
+      <name>RelatedCryptoMaterialType: PASSWORD</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>password</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:PRIVATE_KEY">
+      <name>RelatedCryptoMaterialType: PRIVATE_KEY</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>private-key</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:PUBLIC_KEY">
+      <name>RelatedCryptoMaterialType: PUBLIC_KEY</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>public-key</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:SALT">
+      <name>RelatedCryptoMaterialType: SALT</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>salt</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:SECRET_KEY">
+      <name>RelatedCryptoMaterialType: SECRET_KEY</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>secret-key</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:SEED">
+      <name>RelatedCryptoMaterialType: SEED</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>seed</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:SHARED_SECRET">
+      <name>RelatedCryptoMaterialType: SHARED_SECRET</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>shared-secret</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:SIGNATURE">
+      <name>RelatedCryptoMaterialType: SIGNATURE</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>signature</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:TAG">
+      <name>RelatedCryptoMaterialType: TAG</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>tag</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:TOKEN">
+      <name>RelatedCryptoMaterialType: TOKEN</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>token</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMT:UNKNOWN">
+      <name>RelatedCryptoMaterialType: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <type>unknown</type>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-RCMT:ADDITIONAL_DATA"/>
+    <dependency ref="dummy-RCMT:CIPHERTEXT"/>
+    <dependency ref="dummy-RCMT:CREDENTIAL"/>
+    <dependency ref="dummy-RCMT:DIGEST"/>
+    <dependency ref="dummy-RCMT:INITIALIZATION_VECTOR"/>
+    <dependency ref="dummy-RCMT:KEY"/>
+    <dependency ref="dummy-RCMT:NONCE"/>
+    <dependency ref="dummy-RCMT:OTHER"/>
+    <dependency ref="dummy-RCMT:PASSWORD"/>
+    <dependency ref="dummy-RCMT:PRIVATE_KEY"/>
+    <dependency ref="dummy-RCMT:PUBLIC_KEY"/>
+    <dependency ref="dummy-RCMT:SALT"/>
+    <dependency ref="dummy-RCMT:SECRET_KEY"/>
+    <dependency ref="dummy-RCMT:SEED"/>
+    <dependency ref="dummy-RCMT:SHARED_SECRET"/>
+    <dependency ref="dummy-RCMT:SIGNATURE"/>
+    <dependency ref="dummy-RCMT:TAG"/>
+    <dependency ref="dummy-RCMT:TOKEN"/>
+    <dependency ref="dummy-RCMT:UNKNOWN"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
