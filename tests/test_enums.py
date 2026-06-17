@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import ast
+import sys
 from collections.abc import Generator, Iterable
 from decimal import Decimal
 from enum import Enum
@@ -24,7 +25,7 @@ from itertools import chain
 from json import load as json_load
 from os import path
 from typing import Any, Optional
-from unittest import TestCase
+from unittest import TestCase, skipIf
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
@@ -980,6 +981,7 @@ class TestEnumProtocolPropertiesType(_EnumTestCase):
 # add new test cases above this line
 
 
+@skipIf(sys.version_info < (3, 10), "Requires Python 3.10+")
 @ddt
 class TestCaseCompleteness(TestCase):
     """
@@ -1023,9 +1025,7 @@ class TestCaseCompleteness(TestCase):
                                 yield node.name
                                 break
 
-    @idata(
-        __get_defined_model_enums.__func__()  # py39 compat
-    )
+    @idata(__get_defined_model_enums())
     def test_case_exists(self, enum_name: str) -> None:
         self.assertIn(f'{self.__TestCasePrefix}{enum_name}',
                       self.__get_defined_enumcases(),
