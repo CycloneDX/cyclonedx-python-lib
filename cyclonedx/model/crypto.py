@@ -1197,6 +1197,7 @@ class _ProtocolPropertiesTypeSerializationHelper(serializable.helpers.BaseHelper
         ProtocolPropertiesType.DTLS,
         ProtocolPropertiesType.EAP_AKA,
         ProtocolPropertiesType.EAP_AKA_PRIME,
+        ProtocolPropertiesType.FIVEG_AKA,
         ProtocolPropertiesType.PRINS,
         ProtocolPropertiesType.QUIC,
     }
