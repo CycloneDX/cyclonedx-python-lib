@@ -20,19 +20,22 @@ from unittest import TestCase
 from cyclonedx.exception.model import InvalidValueException
 from cyclonedx.model.signature import (
     JsfAlgorithm,
+    JsfEcCurve,
     JsfKeyType,
+    JsfOkpCurve,
     JsfPublicKey,
     JsfSignature,
     JsfSignatureChain,
     JsfSignatureSigners,
     JsfSimpleSignature,
+    _JsfSignatureSerializationHelper,
 )
 
 
 class TestJsfPublicKey(TestCase):
 
     def test_ec_public_key(self) -> None:
-        pk = JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')
+        pk = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def')
         self.assertEqual(pk.kty, JsfKeyType.EC)
         self.assertEqual(pk.crv, 'P-256')
         self.assertEqual(pk.x, 'abc')
@@ -41,7 +44,7 @@ class TestJsfPublicKey(TestCase):
         self.assertIsNone(pk.e)
 
     def test_okp_public_key(self) -> None:
-        pk = JsfPublicKey(kty=JsfKeyType.OKP, crv='Ed25519', x='xyz')
+        pk = JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED25519, x='xyz')
         self.assertEqual(pk.kty, JsfKeyType.OKP)
         self.assertEqual(pk.crv, 'Ed25519')
         self.assertEqual(pk.x, 'xyz')
@@ -59,22 +62,22 @@ class TestJsfPublicKey(TestCase):
         self.assertIsNone(pk.y)
 
     def test_equality(self) -> None:
-        pk1 = JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')
-        pk2 = JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')
+        pk1 = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def')
+        pk2 = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def')
         pk3 = JsfPublicKey(kty=JsfKeyType.RSA, n='n', e='e')
         self.assertEqual(pk1, pk2)
         self.assertNotEqual(pk1, pk3)
 
     def test_hash_stable(self) -> None:
-        pk1 = JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')
-        pk2 = JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')
+        pk1 = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def')
+        pk2 = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def')
         self.assertEqual(hash(pk1), hash(pk2))
 
     def test_sorting(self) -> None:
         pks = [
             JsfPublicKey(kty=JsfKeyType.RSA, n='n', e='e'),
-            JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def'),
-            JsfPublicKey(kty=JsfKeyType.OKP, crv='Ed25519', x='xyz'),
+            JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def'),
+            JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED25519, x='xyz'),
         ]
         sorted_pks = sorted(pks)
         self.assertEqual(len(sorted_pks), 3)
@@ -86,12 +89,12 @@ class TestJsfPublicKey(TestCase):
 
     def test_ec_validation_missing_x(self) -> None:
         with self.assertRaises(InvalidValueException) as cm:
-            JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', y='def')
+            JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, y='def')
         self.assertIn('EC', str(cm.exception))
 
     def test_ec_validation_missing_y(self) -> None:
         with self.assertRaises(InvalidValueException) as cm:
-            JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc')
+            JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc')
         self.assertIn('EC', str(cm.exception))
 
     def test_okp_validation_missing_crv(self) -> None:
@@ -101,7 +104,7 @@ class TestJsfPublicKey(TestCase):
 
     def test_okp_validation_missing_x(self) -> None:
         with self.assertRaises(InvalidValueException) as cm:
-            JsfPublicKey(kty=JsfKeyType.OKP, crv='Ed25519')
+            JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED25519)
         self.assertIn('OKP', str(cm.exception))
 
     def test_rsa_validation_missing_n(self) -> None:
@@ -115,9 +118,80 @@ class TestJsfPublicKey(TestCase):
         self.assertIn('RSA', str(cm.exception))
 
     def test_repr(self) -> None:
-        pk = JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')
+        pk = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def')
         self.assertIn('JsfPublicKey', repr(pk))
         self.assertIn('EC', repr(pk))
+
+    def test_ec_crv_string_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')  # type: ignore[arg-type]
+
+    def test_okp_crv_string_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfPublicKey(kty=JsfKeyType.OKP, crv='Ed25519', x='xyz')  # type: ignore[arg-type]
+
+    def test_ec_crv_enum_accepted(self) -> None:
+        pk = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_384, x='abc', y='def')
+        self.assertEqual(pk.crv, JsfEcCurve.P_384)
+
+    def test_okp_crv_enum_accepted(self) -> None:
+        pk = JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED448, x='xyz')
+        self.assertEqual(pk.crv, JsfOkpCurve.ED448)
+
+    def test_ec_crv_wrong_type_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfPublicKey(kty=JsfKeyType.EC, crv=JsfOkpCurve.ED25519, x='abc', y='def')  # type: ignore[arg-type]
+
+    def test_okp_crv_wrong_type_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfEcCurve.P_256, x='xyz')  # type: ignore[arg-type]
+
+    def test_ec_validation_with_n_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def', n='modulus')
+        self.assertIn('EC', str(cm.exception))
+
+    def test_ec_validation_with_e_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def', e='exponent')
+        self.assertIn('EC', str(cm.exception))
+
+    def test_okp_validation_with_y_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED25519, x='xyz', y='not-valid')
+        self.assertIn('OKP', str(cm.exception))
+
+    def test_okp_validation_with_n_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED25519, x='xyz', n='modulus')
+        self.assertIn('OKP', str(cm.exception))
+
+    def test_okp_validation_with_e_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED25519, x='xyz', e='exponent')
+        self.assertIn('OKP', str(cm.exception))
+
+    def test_rsa_validation_with_crv_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.RSA, n='modulus', e='exponent', crv=JsfEcCurve.P_256)
+        self.assertIn('RSA', str(cm.exception))
+
+    def test_rsa_validation_with_x_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.RSA, n='modulus', e='exponent', x='abc')
+        self.assertIn('RSA', str(cm.exception))
+
+    def test_rsa_validation_with_y_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException) as cm:
+            JsfPublicKey(kty=JsfKeyType.RSA, n='modulus', e='exponent', y='def')
+        self.assertIn('RSA', str(cm.exception))
+
+    def test_crv_serialized_as_string_value(self) -> None:
+        pk = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_521, x='abc', y='def')
+        d = pk._as_dict()
+        self.assertEqual(d['crv'], 'P-521')
+        self.assertIsInstance(d['crv'], str)
+        self.assertNotIsInstance(d['crv'], JsfEcCurve)
 
 
 class TestJsfSimpleSignature(TestCase):
@@ -133,7 +207,7 @@ class TestJsfSimpleSignature(TestCase):
         self.assertEqual(sig.excludes, [])
 
     def test_full(self) -> None:
-        pk = JsfPublicKey(kty=JsfKeyType.EC, crv='P-256', x='abc', y='def')
+        pk = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def')
         sig = JsfSimpleSignature(
             algorithm=JsfAlgorithm.ES256,
             value='sig-value',
@@ -155,6 +229,27 @@ class TestJsfSimpleSignature(TestCase):
         sig = JsfSimpleSignature(algorithm='https://example.com/algo', value='v')
         self.assertIsInstance(sig.algorithm, str)
         self.assertNotIsInstance(sig.algorithm, JsfAlgorithm)
+
+    def test_proprietary_algorithm_non_uri_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfSimpleSignature(algorithm='not-a-uri', value='v')
+
+    def test_proprietary_algorithm_urn_accepted(self) -> None:
+        sig = JsfSimpleSignature(algorithm='urn:example:my-algo', value='v')
+        self.assertEqual(sig.algorithm, 'urn:example:my-algo')
+
+    def test_algorithm_enum_roundtrip(self) -> None:
+        sig = JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='AABBCC==')
+        d = sig._as_dict()
+        self.assertEqual(d['algorithm'], 'RS256')
+        restored = JsfSimpleSignature._from_dict(d)
+        self.assertIsInstance(restored.algorithm, JsfAlgorithm)
+        self.assertEqual(restored.algorithm, JsfAlgorithm.RS256)
+
+    def test_algorithm_serialized_as_value_string(self) -> None:
+        sig = JsfSimpleSignature(algorithm=JsfAlgorithm.ED25519, value='v')
+        d = sig._as_dict()
+        self.assertEqual(d['algorithm'], 'Ed25519')
 
     def test_equality(self) -> None:
         sig1 = JsfSimpleSignature(algorithm=JsfAlgorithm.ES256, value='v')
@@ -232,6 +327,10 @@ class TestJsfSignatureSigners(TestCase):
         self.assertIn('JsfSignatureSigners', repr(sig))
         self.assertIn('1', repr(sig))
 
+    def test_empty_signers_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfSignatureSigners(signers=[])
+
 
 class TestJsfSignatureChain(TestCase):
     """Tests for JsfSignatureChain (signaturechain mode)."""
@@ -277,6 +376,10 @@ class TestJsfSignatureChain(TestCase):
         sig = JsfSignatureChain(chain=[s])
         self.assertIn('JsfSignatureChain', repr(sig))
         self.assertIn('1', repr(sig))
+
+    def test_empty_chain_rejected(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfSignatureChain(chain=[])
 
 
 class TestJsfSignatureBaseClass(TestCase):
@@ -336,3 +439,60 @@ class TestJsfKeyType(TestCase):
 
     def test_all_key_types_count(self) -> None:
         self.assertEqual(len(JsfKeyType), 3)
+
+
+class TestJsfEcCurve(TestCase):
+
+    def test_enum_values(self) -> None:
+        self.assertEqual(JsfEcCurve.P_256.value, 'P-256')
+        self.assertEqual(JsfEcCurve.P_384.value, 'P-384')
+        self.assertEqual(JsfEcCurve.P_521.value, 'P-521')
+
+    def test_all_curves_count(self) -> None:
+        self.assertEqual(len(JsfEcCurve), 3)
+
+
+class TestJsfOkpCurve(TestCase):
+
+    def test_enum_values(self) -> None:
+        self.assertEqual(JsfOkpCurve.ED25519.value, 'Ed25519')
+        self.assertEqual(JsfOkpCurve.ED448.value, 'Ed448')
+
+    def test_all_curves_count(self) -> None:
+        self.assertEqual(len(JsfOkpCurve), 2)
+
+
+class TestJsfSignatureXmlBehavior(TestCase):
+    """Verify that JSF signatures silently produce no XML output."""
+
+    def test_xml_normalize_returns_none(self) -> None:
+        sig = JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='AABBCC==')
+        result = _JsfSignatureSerializationHelper.xml_normalize(
+            sig, element_name='signature', view=None, xmlns=None
+        )
+        self.assertIsNone(result)
+
+    def test_xml_denormalize_returns_none(self) -> None:
+        from xml.etree.ElementTree import Element  # nosec B405
+        result = _JsfSignatureSerializationHelper.xml_denormalize(
+            Element('signature'), default_ns=None
+        )
+        self.assertIsNone(result)
+
+    def test_xml_normalize_signers_returns_none(self) -> None:
+        sig = JsfSignatureSigners(signers=[
+            JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='AABBCC==')
+        ])
+        result = _JsfSignatureSerializationHelper.xml_normalize(
+            sig, element_name='signature', view=None, xmlns=None
+        )
+        self.assertIsNone(result)
+
+    def test_xml_normalize_chain_returns_none(self) -> None:
+        sig = JsfSignatureChain(chain=[
+            JsfSimpleSignature(algorithm=JsfAlgorithm.ED25519, value='xyzSig==')
+        ])
+        result = _JsfSignatureSerializationHelper.xml_normalize(
+            sig, element_name='signature', view=None, xmlns=None
+        )
+        self.assertIsNone(result)

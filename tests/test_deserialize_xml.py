@@ -27,7 +27,7 @@ from cyclonedx.model.bom import Bom
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
 from tests._data.models import (
-    all_get_bom_funct_no_xml_roundtrip,
+    all_get_bom_funct_no_xml_roundtrip_immut,
     all_get_bom_funct_valid_immut,
     all_get_bom_funct_valid_reversible_migrate,
     all_get_bom_funct_with_incomplete_deps,
@@ -48,12 +48,17 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
         expected = get_bom()
         with open(self.getSnapshotFile(snapshot_name)) as s:
             bom = Bom.from_xml(s)
-        if get_bom in all_get_bom_funct_no_xml_roundtrip:
-            # BOMs with JSON-only fields (e.g. JSF signatures) cannot fully roundtrip through XML.
-            # Only verify that XML deserialization succeeds without error.
-            return
         self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
+
+    @named_data(*all_get_bom_funct_no_xml_roundtrip_immut)
+    @patch('cyclonedx.contrib.this.builders.__ThisVersion', 'TESTING')
+    def test_no_xml_roundtrip(self, get_bom: Callable[[], Bom], *_: Any, **__: Any) -> None:
+        # JSON-only fields (e.g. JSF signatures) are silently dropped during XML serialization.
+        # Verify only that deserialization of the XML snapshot succeeds without error.
+        snapshot_name = mksname(get_bom, _LATEST_SCHEMA, OutputFormat.XML)
+        with open(self.getSnapshotFile(snapshot_name)) as s:
+            Bom.from_xml(s)
 
     def test_component_evidence_identity(self) -> None:
         xml_file = join(OWN_DATA_DIRECTORY, 'xml',
