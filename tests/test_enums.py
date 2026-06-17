@@ -1009,7 +1009,7 @@ class TestCaseCompleteness(TestCase):
         models_path = path.join(path.dirname(__file__), '..', 'cyclonedx', 'model')
         model_files = glob(path.join('**', '*.py'), root_dir=models_path, recursive=True)
         for model_file in model_files:
-            with open(path.join(models_path, model_file), 'r', encoding='utf-8') as f:
+            with open(path.join(models_path, model_file), encoding='utf-8') as f:
                 tree = ast.parse(f.read(), filename=model_file)
                 for node in ast.walk(tree):
                     if isinstance(node, ast.ClassDef):
