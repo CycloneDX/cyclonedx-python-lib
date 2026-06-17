@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CEE:HARDWARE">
+      <name>CryptoExecutionEnvironment: HARDWARE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <executionEnvironment>hardware</executionEnvironment>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEE:OTHER">
+      <name>CryptoExecutionEnvironment: OTHER</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <executionEnvironment>other</executionEnvironment>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEE:SOFTWARE_ENCRYPTED_RAM">
+      <name>CryptoExecutionEnvironment: SOFTWARE_ENCRYPTED_RAM</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <executionEnvironment>software-encrypted-ram</executionEnvironment>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEE:SOFTWARE_PLAIN_RAM">
+      <name>CryptoExecutionEnvironment: SOFTWARE_PLAIN_RAM</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <executionEnvironment>software-plain-ram</executionEnvironment>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEE:SOFTWARE_TEE">
+      <name>CryptoExecutionEnvironment: SOFTWARE_TEE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <executionEnvironment>software-tee</executionEnvironment>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEE:UNKNOWN">
+      <name>CryptoExecutionEnvironment: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <executionEnvironment>unknown</executionEnvironment>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CEE:HARDWARE"/>
+    <dependency ref="dummy-CEE:OTHER"/>
+    <dependency ref="dummy-CEE:SOFTWARE_ENCRYPTED_RAM"/>
+    <dependency ref="dummy-CEE:SOFTWARE_PLAIN_RAM"/>
+    <dependency ref="dummy-CEE:SOFTWARE_TEE"/>
+    <dependency ref="dummy-CEE:UNKNOWN"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

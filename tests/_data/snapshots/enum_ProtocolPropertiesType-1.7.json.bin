@@ -1,0 +1,220 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-PPT:DTLS",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "dtls"
+        }
+      },
+      "name": "ProtocolPropertiesType: DTLS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:EAP_AKA",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "eap-aka"
+        }
+      },
+      "name": "ProtocolPropertiesType: EAP_AKA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:EAP_AKA_PRIME",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "eap-aka-prime"
+        }
+      },
+      "name": "ProtocolPropertiesType: EAP_AKA_PRIME",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:FIVEG_AKA",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "5g-aka"
+        }
+      },
+      "name": "ProtocolPropertiesType: FIVEG_AKA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:IKE",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ike"
+        }
+      },
+      "name": "ProtocolPropertiesType: IKE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:IPSEC",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ipsec"
+        }
+      },
+      "name": "ProtocolPropertiesType: IPSEC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:OTHER",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "other"
+        }
+      },
+      "name": "ProtocolPropertiesType: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:PRINS",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "prins"
+        }
+      },
+      "name": "ProtocolPropertiesType: PRINS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:QUIC",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "quic"
+        }
+      },
+      "name": "ProtocolPropertiesType: QUIC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:SSH",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ssh"
+        }
+      },
+      "name": "ProtocolPropertiesType: SSH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:SSTP",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "sstp"
+        }
+      },
+      "name": "ProtocolPropertiesType: SSTP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:TLS",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls"
+        }
+      },
+      "name": "ProtocolPropertiesType: TLS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:UNKNOWN",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "unknown"
+        }
+      },
+      "name": "ProtocolPropertiesType: UNKNOWN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:WPA",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "wpa"
+        }
+      },
+      "name": "ProtocolPropertiesType: WPA",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-PPT:DTLS"
+    },
+    {
+      "ref": "dummy-PPT:EAP_AKA"
+    },
+    {
+      "ref": "dummy-PPT:EAP_AKA_PRIME"
+    },
+    {
+      "ref": "dummy-PPT:FIVEG_AKA"
+    },
+    {
+      "ref": "dummy-PPT:IKE"
+    },
+    {
+      "ref": "dummy-PPT:IPSEC"
+    },
+    {
+      "ref": "dummy-PPT:OTHER"
+    },
+    {
+      "ref": "dummy-PPT:PRINS"
+    },
+    {
+      "ref": "dummy-PPT:QUIC"
+    },
+    {
+      "ref": "dummy-PPT:SSH"
+    },
+    {
+      "ref": "dummy-PPT:SSTP"
+    },
+    {
+      "ref": "dummy-PPT:TLS"
+    },
+    {
+      "ref": "dummy-PPT:UNKNOWN"
+    },
+    {
+      "ref": "dummy-PPT:WPA"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}
