@@ -80,15 +80,69 @@ class CryptoPrimitive(str, Enum):
     KDF = 'kdf'
     KEM = 'kem'
     KEY_AGREE = 'key-agree'
+    KEY_WRAP = 'key-wrap' # since CDX1.7key-wrap
     MAC = 'mac'
     PKE = 'pke'
     SIGNATURE = 'signature'
     STREAM_CIPHER = 'stream-cipher'
     XOF = 'xof'
-    # TODO: add `key-wrap` - since CDX1.7key-wrap
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
+
+
+
+class _CryptoPrimitiveSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: dict[type[serializable.ViewType], frozenset[CryptoPrimitive]] = dict()
+    __CASES[SchemaVersion1Dot6] = frozenset({
+        CryptoPrimitive.AE,
+        CryptoPrimitive.BLOCK_CIPHER,
+        CryptoPrimitive.COMBINER,
+        CryptoPrimitive.DRBG,
+        CryptoPrimitive.HASH,
+        CryptoPrimitive.KDF,
+        CryptoPrimitive.KEM,
+        CryptoPrimitive.KEY_AGREE,
+        CryptoPrimitive.MAC,
+        CryptoPrimitive.PKE,
+        CryptoPrimitive.SIGNATURE,
+        CryptoPrimitive.STREAM_CIPHER,
+        CryptoPrimitive.XOF,
+        CryptoPrimitive.OTHER,
+        CryptoPrimitive.UNKNOWN,
+    })
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        CryptoPrimitive.KEY_WRAP,
+    }
+
+    @classmethod
+    def __normalize(cls, cp: CryptoPrimitive, view: type[serializable.ViewType]) -> str:
+        return (
+            cp
+            if cp in cls.__CASES.get(view, ())
+            else CryptoPrimitive.OTHER
+        ).value
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[type[serializable.ViewType]],
+                      **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> CryptoPrimitive:
+        return CryptoPrimitive(o)
+
 
 
 @serializable.serializable_enum
@@ -110,7 +164,7 @@ class CryptoExecutionEnvironment(str, Enum):
     SOFTWARE_ENCRYPTED_RAM = 'software-encrypted-ram'
     SOFTWARE_PLAIN_RAM = 'software-plain-ram'
     SOFTWARE_TEE = 'software-tee'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -142,7 +196,7 @@ class CryptoImplementationPlatform(str, Enum):
     S390X = 's390x'
     X86_32 = 'x86_32'
     X86_64 = 'x86_64'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -163,7 +217,7 @@ class CryptoCertificationLevel(str, Enum):
     """
 
     NONE = 'none'
-
+    # --
     FIPS140_1_L1 = 'fips140-1-l1'
     FIPS140_1_L2 = 'fips140-1-l2'
     FIPS140_1_L3 = 'fips140-1-l3'
@@ -190,7 +244,7 @@ class CryptoCertificationLevel(str, Enum):
     CC_EAL6_PLUS = 'cc-eal6+'
     CC_EAL7 = 'cc-eal7'
     CC_EAL7_PLUS = 'cc-eal7+'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -217,7 +271,7 @@ class CryptoMode(str, Enum):
     ECB = 'ecb'
     GCM = 'gcm'
     OFB = 'ofb'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -242,7 +296,7 @@ class CryptoPadding(str, Enum):
     PKCS1V15 = 'pkcs1v15'
     OAEP = 'oaep'
     RAW = 'raw'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -271,7 +325,7 @@ class CryptoFunction(str, Enum):
     SIGN = 'sign'
     TAG = 'tag'
     VERIFY = 'verify'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -316,6 +370,7 @@ class AlgorithmProperties:
         self.nist_quantum_security_level = nist_quantum_security_level
 
     @property
+    @serializable.type_mapping(_CryptoPrimitiveSerializationHelper)
     @serializable.xml_sequence(1)
     def primitive(self) -> Optional[CryptoPrimitive]:
         """

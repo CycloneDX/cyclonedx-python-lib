@@ -1,7 +1,7 @@
 {
   "components": [
     {
-      "bom-ref": "dummy-CIP:CBC",
+      "bom-ref": "dummy-CM:CBC",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "cbc"
@@ -12,7 +12,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CCM",
+      "bom-ref": "dummy-CM:CCM",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "ccm"
@@ -23,7 +23,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CFB",
+      "bom-ref": "dummy-CM:CFB",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "cfb"
@@ -34,7 +34,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CTR",
+      "bom-ref": "dummy-CM:CTR",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "ctr"
@@ -45,7 +45,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:ECB",
+      "bom-ref": "dummy-CM:ECB",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "ecb"
@@ -56,7 +56,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:GCM",
+      "bom-ref": "dummy-CM:GCM",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "gcm"
@@ -67,7 +67,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:OFB",
+      "bom-ref": "dummy-CM:OFB",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "ofb"
@@ -78,7 +78,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:OTHER",
+      "bom-ref": "dummy-CM:OTHER",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "other"
@@ -89,7 +89,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:UNKNOWN",
+      "bom-ref": "dummy-CM:UNKNOWN",
       "cryptoProperties": {
         "algorithmProperties": {
           "mode": "unknown"
@@ -102,31 +102,31 @@
   ],
   "dependencies": [
     {
-      "ref": "dummy-CIP:CBC"
+      "ref": "dummy-CM:CBC"
     },
     {
-      "ref": "dummy-CIP:CCM"
+      "ref": "dummy-CM:CCM"
     },
     {
-      "ref": "dummy-CIP:CFB"
+      "ref": "dummy-CM:CFB"
     },
     {
-      "ref": "dummy-CIP:CTR"
+      "ref": "dummy-CM:CTR"
     },
     {
-      "ref": "dummy-CIP:ECB"
+      "ref": "dummy-CM:ECB"
     },
     {
-      "ref": "dummy-CIP:GCM"
+      "ref": "dummy-CM:GCM"
     },
     {
-      "ref": "dummy-CIP:OFB"
+      "ref": "dummy-CM:OFB"
     },
     {
-      "ref": "dummy-CIP:OTHER"
+      "ref": "dummy-CM:OTHER"
     },
     {
-      "ref": "dummy-CIP:UNKNOWN"
+      "ref": "dummy-CM:UNKNOWN"
     }
   ],
   "metadata": {

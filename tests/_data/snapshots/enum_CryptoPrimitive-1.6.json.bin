@@ -89,6 +89,17 @@
       "type": "cryptographic-asset"
     },
     {
+      "bom-ref": "dummy-CP:KEY_WRAP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "primitive": "other"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoPrimitive: KEY_WRAP",
+      "type": "cryptographic-asset"
+    },
+    {
       "bom-ref": "dummy-CP:MAC",
       "cryptoProperties": {
         "algorithmProperties": {
@@ -190,6 +201,9 @@
     },
     {
       "ref": "dummy-CP:KEY_AGREE"
+    },
+    {
+      "ref": "dummy-CP:KEY_WRAP"
     },
     {
       "ref": "dummy-CP:MAC"

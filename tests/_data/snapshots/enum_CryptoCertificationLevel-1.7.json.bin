@@ -1,7 +1,7 @@
 {
   "components": [
     {
-      "bom-ref": "dummy-CIP:CC_EAL1",
+      "bom-ref": "dummy-CCL:CC_EAL1",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -14,7 +14,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL1_PLUS",
+      "bom-ref": "dummy-CCL:CC_EAL1_PLUS",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -27,7 +27,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL2",
+      "bom-ref": "dummy-CCL:CC_EAL2",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -40,7 +40,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL2_PLUS",
+      "bom-ref": "dummy-CCL:CC_EAL2_PLUS",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -53,7 +53,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL3",
+      "bom-ref": "dummy-CCL:CC_EAL3",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -66,7 +66,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL3_PLUS",
+      "bom-ref": "dummy-CCL:CC_EAL3_PLUS",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -79,7 +79,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL4",
+      "bom-ref": "dummy-CCL:CC_EAL4",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -92,7 +92,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL4_PLUS",
+      "bom-ref": "dummy-CCL:CC_EAL4_PLUS",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -105,7 +105,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL5",
+      "bom-ref": "dummy-CCL:CC_EAL5",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -118,7 +118,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL5_PLUS",
+      "bom-ref": "dummy-CCL:CC_EAL5_PLUS",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -131,7 +131,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL6",
+      "bom-ref": "dummy-CCL:CC_EAL6",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -144,7 +144,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL6_PLUS",
+      "bom-ref": "dummy-CCL:CC_EAL6_PLUS",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -157,7 +157,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL7",
+      "bom-ref": "dummy-CCL:CC_EAL7",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -170,7 +170,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:CC_EAL7_PLUS",
+      "bom-ref": "dummy-CCL:CC_EAL7_PLUS",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -183,7 +183,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_1_L1",
+      "bom-ref": "dummy-CCL:FIPS140_1_L1",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -196,7 +196,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_1_L2",
+      "bom-ref": "dummy-CCL:FIPS140_1_L2",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -209,7 +209,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_1_L3",
+      "bom-ref": "dummy-CCL:FIPS140_1_L3",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -222,7 +222,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_1_L4",
+      "bom-ref": "dummy-CCL:FIPS140_1_L4",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -235,7 +235,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_2_L1",
+      "bom-ref": "dummy-CCL:FIPS140_2_L1",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -248,7 +248,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_2_L2",
+      "bom-ref": "dummy-CCL:FIPS140_2_L2",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -261,7 +261,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_2_L3",
+      "bom-ref": "dummy-CCL:FIPS140_2_L3",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -274,7 +274,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_2_L4",
+      "bom-ref": "dummy-CCL:FIPS140_2_L4",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -287,7 +287,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_3_L1",
+      "bom-ref": "dummy-CCL:FIPS140_3_L1",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -300,7 +300,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_3_L2",
+      "bom-ref": "dummy-CCL:FIPS140_3_L2",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -313,7 +313,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_3_L3",
+      "bom-ref": "dummy-CCL:FIPS140_3_L3",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -326,7 +326,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:FIPS140_3_L4",
+      "bom-ref": "dummy-CCL:FIPS140_3_L4",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -339,7 +339,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:NONE",
+      "bom-ref": "dummy-CCL:NONE",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -352,7 +352,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:OTHER",
+      "bom-ref": "dummy-CCL:OTHER",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -365,7 +365,7 @@
       "type": "cryptographic-asset"
     },
     {
-      "bom-ref": "dummy-CIP:UNKNOWN",
+      "bom-ref": "dummy-CCL:UNKNOWN",
       "cryptoProperties": {
         "algorithmProperties": {
           "certificationLevel": [
@@ -380,91 +380,91 @@
   ],
   "dependencies": [
     {
-      "ref": "dummy-CIP:CC_EAL1"
+      "ref": "dummy-CCL:CC_EAL1"
     },
     {
-      "ref": "dummy-CIP:CC_EAL1_PLUS"
+      "ref": "dummy-CCL:CC_EAL1_PLUS"
     },
     {
-      "ref": "dummy-CIP:CC_EAL2"
+      "ref": "dummy-CCL:CC_EAL2"
     },
     {
-      "ref": "dummy-CIP:CC_EAL2_PLUS"
+      "ref": "dummy-CCL:CC_EAL2_PLUS"
     },
     {
-      "ref": "dummy-CIP:CC_EAL3"
+      "ref": "dummy-CCL:CC_EAL3"
     },
     {
-      "ref": "dummy-CIP:CC_EAL3_PLUS"
+      "ref": "dummy-CCL:CC_EAL3_PLUS"
     },
     {
-      "ref": "dummy-CIP:CC_EAL4"
+      "ref": "dummy-CCL:CC_EAL4"
     },
     {
-      "ref": "dummy-CIP:CC_EAL4_PLUS"
+      "ref": "dummy-CCL:CC_EAL4_PLUS"
     },
     {
-      "ref": "dummy-CIP:CC_EAL5"
+      "ref": "dummy-CCL:CC_EAL5"
     },
     {
-      "ref": "dummy-CIP:CC_EAL5_PLUS"
+      "ref": "dummy-CCL:CC_EAL5_PLUS"
     },
     {
-      "ref": "dummy-CIP:CC_EAL6"
+      "ref": "dummy-CCL:CC_EAL6"
     },
     {
-      "ref": "dummy-CIP:CC_EAL6_PLUS"
+      "ref": "dummy-CCL:CC_EAL6_PLUS"
     },
     {
-      "ref": "dummy-CIP:CC_EAL7"
+      "ref": "dummy-CCL:CC_EAL7"
     },
     {
-      "ref": "dummy-CIP:CC_EAL7_PLUS"
+      "ref": "dummy-CCL:CC_EAL7_PLUS"
     },
     {
-      "ref": "dummy-CIP:FIPS140_1_L1"
+      "ref": "dummy-CCL:FIPS140_1_L1"
     },
     {
-      "ref": "dummy-CIP:FIPS140_1_L2"
+      "ref": "dummy-CCL:FIPS140_1_L2"
     },
     {
-      "ref": "dummy-CIP:FIPS140_1_L3"
+      "ref": "dummy-CCL:FIPS140_1_L3"
     },
     {
-      "ref": "dummy-CIP:FIPS140_1_L4"
+      "ref": "dummy-CCL:FIPS140_1_L4"
     },
     {
-      "ref": "dummy-CIP:FIPS140_2_L1"
+      "ref": "dummy-CCL:FIPS140_2_L1"
     },
     {
-      "ref": "dummy-CIP:FIPS140_2_L2"
+      "ref": "dummy-CCL:FIPS140_2_L2"
     },
     {
-      "ref": "dummy-CIP:FIPS140_2_L3"
+      "ref": "dummy-CCL:FIPS140_2_L3"
     },
     {
-      "ref": "dummy-CIP:FIPS140_2_L4"
+      "ref": "dummy-CCL:FIPS140_2_L4"
     },
     {
-      "ref": "dummy-CIP:FIPS140_3_L1"
+      "ref": "dummy-CCL:FIPS140_3_L1"
     },
     {
-      "ref": "dummy-CIP:FIPS140_3_L2"
+      "ref": "dummy-CCL:FIPS140_3_L2"
     },
     {
-      "ref": "dummy-CIP:FIPS140_3_L3"
+      "ref": "dummy-CCL:FIPS140_3_L3"
     },
     {
-      "ref": "dummy-CIP:FIPS140_3_L4"
+      "ref": "dummy-CCL:FIPS140_3_L4"
     },
     {
-      "ref": "dummy-CIP:NONE"
+      "ref": "dummy-CCL:NONE"
     },
     {
-      "ref": "dummy-CIP:OTHER"
+      "ref": "dummy-CCL:OTHER"
     },
     {
-      "ref": "dummy-CIP:UNKNOWN"
+      "ref": "dummy-CCL:UNKNOWN"
     }
   ],
   "metadata": {

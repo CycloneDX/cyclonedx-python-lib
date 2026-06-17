@@ -76,6 +76,15 @@
         </algorithmProperties>
       </cryptoProperties>
     </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:KEY_WRAP">
+      <name>CryptoPrimitive: KEY_WRAP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <primitive>key-wrap</primitive>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
     <component type="cryptographic-asset" bom-ref="dummy-CP:MAC">
       <name>CryptoPrimitive: MAC</name>
       <cryptoProperties>
@@ -149,6 +158,7 @@
     <dependency ref="dummy-CP:KDF"/>
     <dependency ref="dummy-CP:KEM"/>
     <dependency ref="dummy-CP:KEY_AGREE"/>
+    <dependency ref="dummy-CP:KEY_WRAP"/>
     <dependency ref="dummy-CP:MAC"/>
     <dependency ref="dummy-CP:OTHER"/>
     <dependency ref="dummy-CP:PKE"/>
