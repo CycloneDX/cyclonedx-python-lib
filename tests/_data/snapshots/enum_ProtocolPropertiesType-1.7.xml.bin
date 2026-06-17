@@ -1,0 +1,94 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:IKE">
+      <name>ProtocolPropertiesType: IKE</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>ike</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:IPSEC">
+      <name>ProtocolPropertiesType: IPSEC</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>ipsec</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:OTHER">
+      <name>ProtocolPropertiesType: OTHER</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>other</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:SSH">
+      <name>ProtocolPropertiesType: SSH</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>ssh</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:SSTP">
+      <name>ProtocolPropertiesType: SSTP</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>sstp</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:TLS">
+      <name>ProtocolPropertiesType: TLS</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>tls</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:UNKNOWN">
+      <name>ProtocolPropertiesType: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>unknown</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:WPA">
+      <name>ProtocolPropertiesType: WPA</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>wpa</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-PPT:IKE"/>
+    <dependency ref="dummy-PPT:IPSEC"/>
+    <dependency ref="dummy-PPT:OTHER"/>
+    <dependency ref="dummy-PPT:SSH"/>
+    <dependency ref="dummy-PPT:SSTP"/>
+    <dependency ref="dummy-PPT:TLS"/>
+    <dependency ref="dummy-PPT:UNKNOWN"/>
+    <dependency ref="dummy-PPT:WPA"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

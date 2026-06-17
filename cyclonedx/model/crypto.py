@@ -1115,6 +1115,12 @@ class ProtocolPropertiesType(str, Enum):
     SSTP = 'sstp'
     TLS = 'tls'
     WPA = 'wpa'
+    # TODO: add 'eap-aka-prime'
+    # TODO: add '5g-aka'
+    # TODO: add 'dtls'
+    # TODO: add 'quic'
+    # TODO: add 'eap-aka'
+    # TODO: add 'prins'
 
     OTHER = 'other'
     UNKNOWN = 'unknown'

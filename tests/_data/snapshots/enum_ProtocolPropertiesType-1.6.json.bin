@@ -1,0 +1,136 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-PPT:IKE",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ike"
+        }
+      },
+      "name": "ProtocolPropertiesType: IKE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:IPSEC",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ipsec"
+        }
+      },
+      "name": "ProtocolPropertiesType: IPSEC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:OTHER",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "other"
+        }
+      },
+      "name": "ProtocolPropertiesType: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:SSH",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "ssh"
+        }
+      },
+      "name": "ProtocolPropertiesType: SSH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:SSTP",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "sstp"
+        }
+      },
+      "name": "ProtocolPropertiesType: SSTP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:TLS",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls"
+        }
+      },
+      "name": "ProtocolPropertiesType: TLS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:UNKNOWN",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "unknown"
+        }
+      },
+      "name": "ProtocolPropertiesType: UNKNOWN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:WPA",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "wpa"
+        }
+      },
+      "name": "ProtocolPropertiesType: WPA",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-PPT:IKE"
+    },
+    {
+      "ref": "dummy-PPT:IPSEC"
+    },
+    {
+      "ref": "dummy-PPT:OTHER"
+    },
+    {
+      "ref": "dummy-PPT:SSH"
+    },
+    {
+      "ref": "dummy-PPT:SSTP"
+    },
+    {
+      "ref": "dummy-PPT:TLS"
+    },
+    {
+      "ref": "dummy-PPT:UNKNOWN"
+    },
+    {
+      "ref": "dummy-PPT:WPA"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

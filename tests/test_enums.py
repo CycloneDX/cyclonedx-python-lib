@@ -36,7 +36,7 @@ from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.component_evidence import ComponentEvidence, Identity as CEIdentity, Method as CEMethod
-from cyclonedx.model.crypto import CryptoProperties, AlgorithmProperties, RelatedCryptoMaterialProperties
+from cyclonedx.model.crypto import CryptoProperties, AlgorithmProperties, RelatedCryptoMaterialProperties, ProtocolProperties
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
@@ -901,33 +901,34 @@ class TestEnumRelatedCryptoMaterialState(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
-
-"""
 @ddt
-class TestEnum...(_EnumTestCase):
+class TestEnumProtocolPropertiesType(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='...']"),
-        dp_cases_from_json_schemas('definitions', '...'),
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='protocolProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='type']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'protocolProperties', 'properties', 'type'),
     )))
     def test_knows_value(self, value: str) -> None:
-        super()._test_knows_value(..., value)
+        super()._test_knows_value(ProtocolPropertiesType, value)
 
     @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
-                ...
+                Component(
+                    name=f'ProtocolPropertiesType: {ppt.name}', bom_ref=f'dummy-PPT:{ppt.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.PROTOCOL,
+                        protocol_properties=ProtocolProperties(
+                            type=ppt
+                        )
+                    )
+                ) for ppt in ProtocolPropertiesType
             ])
         super()._test_cases_render(bom, of, sv)
 
-"""
 
-"""
-missing:
-- RelatedCryptoMaterialState
-- ProtocolPropertiesType
-"""
 
 # add new test cases above this line
 
