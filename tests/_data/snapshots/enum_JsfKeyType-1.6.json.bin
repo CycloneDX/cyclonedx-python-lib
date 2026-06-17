@@ -1,0 +1,76 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-JKT:EC",
+      "name": "JsfKeyType: EC",
+      "signature": {
+        "algorithm": "ES256",
+        "value": "DDEEFF==",
+        "publicKey": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "abc",
+          "y": "def"
+        }
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JKT:OKP",
+      "name": "JsfKeyType: OKP",
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "GGHHII==",
+        "publicKey": {
+          "kty": "OKP",
+          "crv": "Ed25519",
+          "x": "xyz"
+        }
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JKT:RSA",
+      "name": "JsfKeyType: RSA",
+      "signature": {
+        "algorithm": "RS256",
+        "value": "AABBCC==",
+        "publicKey": {
+          "kty": "RSA",
+          "n": "sQ3MDBw==",
+          "e": "AQAB"
+        }
+      },
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-JKT:EC"
+    },
+    {
+      "ref": "dummy-JKT:OKP"
+    },
+    {
+      "ref": "dummy-JKT:RSA"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

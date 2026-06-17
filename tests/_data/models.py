@@ -107,6 +107,14 @@ from cyclonedx.model.license import (
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
 from cyclonedx.model.service import Service
+from cyclonedx.model.signature import (
+    JsfAlgorithm,
+    JsfKeyType,
+    JsfPublicKey,
+    JsfSignatureChain,
+    JsfSignatureSigners,
+    JsfSimpleSignature,
+)
 from cyclonedx.model.tool import Tool, ToolRepository
 from cyclonedx.model.vulnerability import (
     BomTarget,
@@ -1590,6 +1598,67 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
     return bom
 
 
+def get_bom_with_signatures() -> Bom:
+    # Tests JSF signature support on Bom, Component, and Service (JSON-only, CDX >= 1.4)
+    simple_sig = JsfSimpleSignature(
+        algorithm=JsfAlgorithm.ES256,
+        value='MEQCIAJ9DECTPNuqwdWHlHO3EB1jYVnjW7HZ0T7x3QIDO4OMfAIgTFz5kl3Zl7nBP4r2TovMnbJo3ij6JTANcFAQQVEBZQ==',
+        key_id='test-key-1',
+    )
+    multi_sig = JsfSignatureSigners(
+        signers=[
+            JsfSimpleSignature(
+                algorithm=JsfAlgorithm.RS256,
+                value='AABBCC==',
+                public_key=JsfPublicKey(
+                    kty=JsfKeyType.RSA,
+                    n='sQ3MDBw==',
+                    e='AQAB',
+                ),
+            ),
+            JsfSimpleSignature(
+                algorithm=JsfAlgorithm.ES384,
+                value='DDEEFF==',
+                certificate_path=['MIICpDCCAYwCCQDU'],
+                excludes=['signature'],
+            ),
+        ]
+    )
+    bom = _make_bom(
+        components=[
+            Component(
+                name='acme-library',
+                version='1.2.3',
+                type=ComponentType.LIBRARY,
+                bom_ref='acme-library',
+                signature=simple_sig,
+            )
+        ],
+        services=[
+            Service(
+                name='acme-service',
+                bom_ref='acme-service',
+                signature=JsfSignatureChain(
+                    chain=[
+                        JsfSimpleSignature(
+                            algorithm=JsfAlgorithm.ED25519,
+                            value='xyzSig==',
+                        )
+                    ]
+                ),
+            )
+        ],
+        signature=multi_sig,
+    )
+    bom.metadata.component = Component(
+        name='my-app',
+        version='0.1.0',
+        type=ComponentType.APPLICATION,
+        bom_ref='my-app',
+    )
+    return bom
+
+
 def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
     bom = _make_bom()
     bom.metadata.component = root_component = Component(
@@ -1669,9 +1738,21 @@ all_get_bom_funct_valid = tuple(
     if n.startswith('get_bom_') and not n.endswith('_invalid')
 )
 
+all_get_bom_funct_no_xml_roundtrip: frozenset = frozenset({
+    # BOMs that contain JSON-only fields (e.g. JSF signatures).
+    # These are excluded from test_deserialize_xml's test_prepared assertBomDeepEqual comparison.
+    # Use all_get_bom_funct_no_xml_roundtrip_immut for @named_data.
+    get_bom_with_signatures,
+})
+
+all_get_bom_funct_no_xml_roundtrip_immut = tuple(
+    (f.__name__, f) for f in sorted(all_get_bom_funct_no_xml_roundtrip, key=lambda f: f.__name__)
+)
+
 all_get_bom_funct_valid_immut = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid') and not n.endswith('_migrate')
+    and f not in all_get_bom_funct_no_xml_roundtrip
 )
 
 all_get_bom_funct_valid_reversible_migrate = tuple(
@@ -1710,4 +1791,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_distribution_constraints,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
+    get_bom_with_signatures,
 }

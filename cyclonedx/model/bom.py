@@ -51,6 +51,7 @@ from .dependency import Dependable, Dependency
 from .license import License, LicenseExpression, LicenseRepository, _LicenseRepositorySerializationHelper
 from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
+from .signature import JsfSignature, _JsfSignatureSerializationHelper
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
 from .vulnerability import Vulnerability
 
@@ -444,6 +445,7 @@ class Bom:
         vulnerabilities: Optional[Iterable[Vulnerability]] = None,
         properties: Optional[Iterable[Property]] = None,
         definitions: Optional[Definitions] = None,
+        signature: Optional[JsfSignature] = None,
     ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
@@ -461,6 +463,7 @@ class Bom:
         self.dependencies = dependencies or []
         self.properties = properties or []
         self.definitions = definitions or Definitions()
+        self.signature = signature
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -694,6 +697,31 @@ class Bom:
     def definitions(self, definitions: Definitions) -> None:
         self._definitions = definitions
 
+    @property
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.type_mapping(_JsfSignatureSerializationHelper)
+    def signature(self) -> Optional[JsfSignature]:
+        """
+        Enveloped signature in JSON Signature Format (JSF).
+
+        .. note::
+            JSON-only. There is no XSD/XML equivalent in any CycloneDX schema version.
+
+        .. note::
+            Introduced in CycloneDX v1.4
+
+        Returns:
+            `JsfSignature` if set else `None`
+        """
+        return self._signature
+
+    @signature.setter
+    def signature(self, signature: Optional[JsfSignature]) -> None:
+        self._signature = signature
+
     def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
         """
         Get a Component already in the Bom by its PURL
@@ -871,7 +899,7 @@ class Bom:
                 self.components), _ComparableTuple(self.services),
             _ComparableTuple(self.external_references), _ComparableTuple(
                 self.dependencies), _ComparableTuple(self.properties),
-            _ComparableTuple(self.vulnerabilities),
+            _ComparableTuple(self.vulnerabilities), self.signature,
         ))
 
     def __eq__(self, other: object) -> bool:
