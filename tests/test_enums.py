@@ -57,7 +57,7 @@ from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
 from cyclonedx.validation import make_schemabased_validator
-from tests import SnapshotMixin
+from tests import PROJECT_LIB_MODELS_DIRECTORY, SnapshotMixin
 from tests._data.models import _make_bom
 
 # region SUT: all the enums
@@ -1006,10 +1006,9 @@ class TestCaseCompleteness(TestCase):
 
     @staticmethod
     def __get_defined_model_enums() -> Generator[tuple[str, str], None, None]:
-        models_path = path.abspath(path.join(path.dirname(__file__), '..', 'cyclonedx', 'model'))
-        model_files = glob(path.join(models_path, '**', '*.py'), recursive=True)
+        model_files = glob(path.join(PROJECT_LIB_MODELS_DIRECTORY, '**', '*.py'), recursive=True)
         for model_file in model_files:
-            model_file_rel = path.relpath(model_file, models_path)
+            model_file_rel = path.relpath(model_file, PROJECT_LIB_MODELS_DIRECTORY)
             with open(model_file, encoding='utf-8') as f:
                 tree = ast.parse(f.read(), filename=model_file)
                 for node in ast.walk(tree):
