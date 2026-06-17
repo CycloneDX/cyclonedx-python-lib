@@ -1005,10 +1005,11 @@ class TestCaseCompleteness(TestCase):
         return cls.__defined_enumcases
 
     @staticmethod
-    def __get_defined_model_enums() -> Generator[str, None, None]:
+    def __get_defined_model_enums() -> Generator[tuple[str, str], None, None]:
         models_path = path.abspath(path.join(path.dirname(__file__), '..', 'cyclonedx', 'model'))
         model_files = glob(path.join(models_path, '**', '*.py'), recursive=True)
         for model_file in model_files:
+            model_file_rel = path.relpath(model_file, models_path)
             with open(model_file, encoding='utf-8') as f:
                 tree = ast.parse(f.read(), filename=model_file)
                 for node in ast.walk(tree):
@@ -1016,17 +1017,18 @@ class TestCaseCompleteness(TestCase):
                         for base in node.bases:
                             # Case 1: direct name: "Enum"
                             if isinstance(base, ast.Name) and base.id == 'Enum':
-                                yield node.name
+                                yield model_file_rel, node.name
                                 break
                             # Case 2: qualified name: "enum.Enum"
                             if isinstance(base, ast.Attribute) and base.attr == 'Enum':
-                                yield node.name
+                                yield model_file_rel, node.name
                                 break
 
     @idata(
         __get_defined_model_enums.__func__()  # py3.9 compat
     )
-    def test_case_exists(self, enum_name: str) -> None:
+    def test_case_exists(self, defined_model_enums: tuple[str, str]) -> None:
+        model_file_rel, enum_name = defined_model_enums
         self.assertIn(f'{self.__TestCasePrefix}{enum_name}',
                       self.__get_defined_enumcases(),
-                      f'Missing Test Case for Enum: {enum_name}')
+                      f'Missing Test Case for Enum {enum_name!r} from File {model_file_rel!r}')
