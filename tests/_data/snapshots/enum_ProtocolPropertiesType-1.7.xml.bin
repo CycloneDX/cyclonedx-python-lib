@@ -4,6 +4,42 @@
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
   </metadata>
   <components>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:DTLS">
+      <name>ProtocolPropertiesType: DTLS</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>dtls</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:EAP_AKA">
+      <name>ProtocolPropertiesType: EAP_AKA</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>eap-aka</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:EAP_AKA_PRIME">
+      <name>ProtocolPropertiesType: EAP_AKA_PRIME</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>eap-aka-prime</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:FIVEG_AKA">
+      <name>ProtocolPropertiesType: FIVEG_AKA</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>other</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
     <component type="cryptographic-asset" bom-ref="dummy-PPT:IKE">
       <name>ProtocolPropertiesType: IKE</name>
       <cryptoProperties>
@@ -28,6 +64,24 @@
         <assetType>protocol</assetType>
         <protocolProperties>
           <type>other</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:PRINS">
+      <name>ProtocolPropertiesType: PRINS</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>prins</type>
+        </protocolProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-PPT:QUIC">
+      <name>ProtocolPropertiesType: QUIC</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+        <protocolProperties>
+          <type>quic</type>
         </protocolProperties>
       </cryptoProperties>
     </component>
@@ -78,9 +132,15 @@
     </component>
   </components>
   <dependencies>
+    <dependency ref="dummy-PPT:DTLS"/>
+    <dependency ref="dummy-PPT:EAP_AKA"/>
+    <dependency ref="dummy-PPT:EAP_AKA_PRIME"/>
+    <dependency ref="dummy-PPT:FIVEG_AKA"/>
     <dependency ref="dummy-PPT:IKE"/>
     <dependency ref="dummy-PPT:IPSEC"/>
     <dependency ref="dummy-PPT:OTHER"/>
+    <dependency ref="dummy-PPT:PRINS"/>
+    <dependency ref="dummy-PPT:QUIC"/>
     <dependency ref="dummy-PPT:SSH"/>
     <dependency ref="dummy-PPT:SSTP"/>
     <dependency ref="dummy-PPT:TLS"/>

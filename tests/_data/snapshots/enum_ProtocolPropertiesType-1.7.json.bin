@@ -1,6 +1,50 @@
 {
   "components": [
     {
+      "bom-ref": "dummy-PPT:DTLS",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "dtls"
+        }
+      },
+      "name": "ProtocolPropertiesType: DTLS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:EAP_AKA",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "eap-aka"
+        }
+      },
+      "name": "ProtocolPropertiesType: EAP_AKA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:EAP_AKA_PRIME",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "eap-aka-prime"
+        }
+      },
+      "name": "ProtocolPropertiesType: EAP_AKA_PRIME",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:FIVEG_AKA",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "other"
+        }
+      },
+      "name": "ProtocolPropertiesType: FIVEG_AKA",
+      "type": "cryptographic-asset"
+    },
+    {
       "bom-ref": "dummy-PPT:IKE",
       "cryptoProperties": {
         "assetType": "protocol",
@@ -31,6 +75,28 @@
         }
       },
       "name": "ProtocolPropertiesType: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:PRINS",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "prins"
+        }
+      },
+      "name": "ProtocolPropertiesType: PRINS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-PPT:QUIC",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "quic"
+        }
+      },
+      "name": "ProtocolPropertiesType: QUIC",
       "type": "cryptographic-asset"
     },
     {
@@ -91,6 +157,18 @@
   ],
   "dependencies": [
     {
+      "ref": "dummy-PPT:DTLS"
+    },
+    {
+      "ref": "dummy-PPT:EAP_AKA"
+    },
+    {
+      "ref": "dummy-PPT:EAP_AKA_PRIME"
+    },
+    {
+      "ref": "dummy-PPT:FIVEG_AKA"
+    },
+    {
       "ref": "dummy-PPT:IKE"
     },
     {
@@ -98,6 +176,12 @@
     },
     {
       "ref": "dummy-PPT:OTHER"
+    },
+    {
+      "ref": "dummy-PPT:PRINS"
+    },
+    {
+      "ref": "dummy-PPT:QUIC"
     },
     {
       "ref": "dummy-PPT:SSH"

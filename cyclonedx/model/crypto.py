@@ -80,7 +80,7 @@ class CryptoPrimitive(str, Enum):
     KDF = 'kdf'
     KEM = 'kem'
     KEY_AGREE = 'key-agree'
-    KEY_WRAP = 'key-wrap' # since CDX1.7key-wrap
+    KEY_WRAP = 'key-wrap' # since CDX1.7
     MAC = 'mac'
     PKE = 'pke'
     SIGNATURE = 'signature'
@@ -190,13 +190,13 @@ class CryptoImplementationPlatform(str, Enum):
     ARMV8_M = 'armv8-m'
     ARMV9_A = 'armv9-a'
     ARMV9_M = 'armv9-m'
-    GENERIC = 'generic'  # TODO: move down
     PPC64 = 'ppc64'
     PPC64LE = 'ppc64le'
     S390X = 's390x'
     X86_32 = 'x86_32'
     X86_64 = 'x86_64'
     # --
+    GENERIC = 'generic'
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -799,7 +799,7 @@ class RelatedCryptoMaterialType(str, Enum):
     SIGNATURE = 'signature'
     TAG = 'tag'
     TOKEN = 'token'  # nosec
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -1164,21 +1164,70 @@ class ProtocolPropertiesType(str, Enum):
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_cryptoPropertiesType
     """
 
+    DTLS = 'dtls'  # since CDX1.7
+    EAP_AKA ='eap-aka' # since CDX1.7
+    EAP_AKA_PRIME ='eap-aka-prime' # since CDX1.7
+    FIVEG_AKA = '5g-aka'  # since CDX1.7
     IKE = 'ike'
     IPSEC = 'ipsec'
+    PRINS = 'prins' # since CDX1.7
+    QUIC = 'quic' # since CDX1.7
     SSH = 'ssh'
     SSTP = 'sstp'
     TLS = 'tls'
     WPA = 'wpa'
-    # TODO: add 'eap-aka-prime'
-    # TODO: add '5g-aka'
-    # TODO: add 'dtls'
-    # TODO: add 'quic'
-    # TODO: add 'eap-aka'
-    # TODO: add 'prins'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
+
+
+class _ProtocolPropertiesTypeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: dict[type[serializable.ViewType], frozenset[ProtocolPropertiesType]] = dict()
+    __CASES[SchemaVersion1Dot6] = frozenset({
+        ProtocolPropertiesType.IKE,
+        ProtocolPropertiesType.IPSEC,
+        ProtocolPropertiesType.SSH,
+        ProtocolPropertiesType.SSTP,
+        ProtocolPropertiesType.TLS,
+        ProtocolPropertiesType.WPA,
+        ProtocolPropertiesType.OTHER,
+        ProtocolPropertiesType.UNKNOWN,
+    })
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        ProtocolPropertiesType.DTLS,
+        ProtocolPropertiesType.EAP_AKA,
+        ProtocolPropertiesType.EAP_AKA_PRIME,
+        ProtocolPropertiesType.PRINS,
+        ProtocolPropertiesType.QUIC,
+    }
+
+    @classmethod
+    def __normalize(cls, ppt: ProtocolPropertiesType, view: type[serializable.ViewType]) -> str:
+        return (
+            ppt
+            if ppt in cls.__CASES.get(view, ())
+            else ProtocolPropertiesType.OTHER
+        ).value
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[type[serializable.ViewType]],
+                      **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ProtocolPropertiesType:
+        return ProtocolPropertiesType(o)
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
@@ -1450,6 +1499,7 @@ class ProtocolProperties:
         self.crypto_refs = crypto_refs or []
 
     @property
+    @serializable.type_mapping(_ProtocolPropertiesTypeSerializationHelper)
     @serializable.xml_sequence(10)
     def type(self) -> Optional[ProtocolPropertiesType]:
         """
