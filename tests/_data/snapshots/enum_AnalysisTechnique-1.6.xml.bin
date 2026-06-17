@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="dummy">
+      <name>dummy</name>
+      <evidence>
+        <identity>
+          <field>name</field>
+          <methods>
+            <method>
+              <technique>ast-fingerprint</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: AST_FINGERPRINT</value>
+            </method>
+            <method>
+              <technique>attestation</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: ATTESTATION</value>
+            </method>
+            <method>
+              <technique>binary-analysis</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: BINARY_ANALYSIS</value>
+            </method>
+            <method>
+              <technique>dynamic-analysis</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: DYNAMIC_ANALYSIS</value>
+            </method>
+            <method>
+              <technique>filename</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: FILENAME</value>
+            </method>
+            <method>
+              <technique>hash-comparison</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: HASH_COMPARISON</value>
+            </method>
+            <method>
+              <technique>instrumentation</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: INSTRUMENTATION</value>
+            </method>
+            <method>
+              <technique>manifest-analysis</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: MANIFEST_ANALYSIS</value>
+            </method>
+            <method>
+              <technique>other</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: OTHER</value>
+            </method>
+            <method>
+              <technique>source-code-analysis</technique>
+              <confidence>1</confidence>
+              <value>AnalysisTechnique: SOURCE_CODE_ANALYSIS</value>
+            </method>
+          </methods>
+        </identity>
+      </evidence>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

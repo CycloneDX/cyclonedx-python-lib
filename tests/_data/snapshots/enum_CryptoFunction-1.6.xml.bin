@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:DECAPSULATE">
+      <name>CryptoFunction: DECAPSULATE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>decapsulate</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:DECRYPT">
+      <name>CryptoFunction: DECRYPT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>decrypt</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:DIGEST">
+      <name>CryptoFunction: DIGEST</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>digest</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:ENCAPSULATE">
+      <name>CryptoFunction: ENCAPSULATE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>encapsulate</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:ENCRYPT">
+      <name>CryptoFunction: ENCRYPT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>encrypt</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:GENERATE">
+      <name>CryptoFunction: GENERATE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>generate</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:KEYDERIVE">
+      <name>CryptoFunction: KEYDERIVE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>keyderive</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:KEYGEN">
+      <name>CryptoFunction: KEYGEN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>keygen</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:OTHER">
+      <name>CryptoFunction: OTHER</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>other</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:SIGN">
+      <name>CryptoFunction: SIGN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>sign</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:TAG">
+      <name>CryptoFunction: TAG</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>tag</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:UNKNOWN">
+      <name>CryptoFunction: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>unknown</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CF:VERIFY">
+      <name>CryptoFunction: VERIFY</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <cryptoFunctions>
+            <cryptoFunction>verify</cryptoFunction>
+          </cryptoFunctions>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CF:DECAPSULATE"/>
+    <dependency ref="dummy-CF:DECRYPT"/>
+    <dependency ref="dummy-CF:DIGEST"/>
+    <dependency ref="dummy-CF:ENCAPSULATE"/>
+    <dependency ref="dummy-CF:ENCRYPT"/>
+    <dependency ref="dummy-CF:GENERATE"/>
+    <dependency ref="dummy-CF:KEYDERIVE"/>
+    <dependency ref="dummy-CF:KEYGEN"/>
+    <dependency ref="dummy-CF:OTHER"/>
+    <dependency ref="dummy-CF:SIGN"/>
+    <dependency ref="dummy-CF:TAG"/>
+    <dependency ref="dummy-CF:UNKNOWN"/>
+    <dependency ref="dummy-CF:VERIFY"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
