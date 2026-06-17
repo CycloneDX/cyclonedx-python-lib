@@ -59,8 +59,6 @@ class CryptoAssetType(str, Enum):
 
 @serializable.serializable_enum
 class CryptoPrimitive(str, Enum):
-    # TODO: rename to `CryptoAlgorithmPrimitive`
-
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.primitive ENUM type within the
     CycloneDX standard.
