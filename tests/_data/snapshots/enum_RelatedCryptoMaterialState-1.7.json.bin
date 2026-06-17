@@ -1,0 +1,108 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-RCMS:ACTIVE",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "state": "active"
+        }
+      },
+      "name": "RelatedCryptoMaterialState: ACTIVE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMS:COMPROMISED",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "state": "compromised"
+        }
+      },
+      "name": "RelatedCryptoMaterialState: COMPROMISED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMS:DEACTIVATED",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "state": "deactivated"
+        }
+      },
+      "name": "RelatedCryptoMaterialState: DEACTIVATED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMS:DESTROYED",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "state": "destroyed"
+        }
+      },
+      "name": "RelatedCryptoMaterialState: DESTROYED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMS:PRE_ACTIVATION",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "state": "pre-activation"
+        }
+      },
+      "name": "RelatedCryptoMaterialState: PRE_ACTIVATION",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMS:SUSPENDED",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "state": "suspended"
+        }
+      },
+      "name": "RelatedCryptoMaterialState: SUSPENDED",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-RCMS:ACTIVE"
+    },
+    {
+      "ref": "dummy-RCMS:COMPROMISED"
+    },
+    {
+      "ref": "dummy-RCMS:DEACTIVATED"
+    },
+    {
+      "ref": "dummy-RCMS:DESTROYED"
+    },
+    {
+      "ref": "dummy-RCMS:PRE_ACTIVATION"
+    },
+    {
+      "ref": "dummy-RCMS:SUSPENDED"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

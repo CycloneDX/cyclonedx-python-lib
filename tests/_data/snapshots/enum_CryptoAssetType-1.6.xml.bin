@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CAT:ALGORITHM">
+      <name>CryptoAssetType: ALGORITHM</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAT:CERTIFICATE">
+      <name>CryptoAssetType: CERTIFICATE</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAT:PROTOCOL">
+      <name>CryptoAssetType: PROTOCOL</name>
+      <cryptoProperties>
+        <assetType>protocol</assetType>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAT:RELATED_CRYPTO_MATERIAL">
+      <name>CryptoAssetType: RELATED_CRYPTO_MATERIAL</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CAT:ALGORITHM"/>
+    <dependency ref="dummy-CAT:CERTIFICATE"/>
+    <dependency ref="dummy-CAT:PROTOCOL"/>
+    <dependency ref="dummy-CAT:RELATED_CRYPTO_MATERIAL"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

@@ -59,6 +59,8 @@ class CryptoAssetType(str, Enum):
 
 @serializable.serializable_enum
 class CryptoPrimitive(str, Enum):
+    # TODO: rename to `CryptoAlgorithmPrimitive`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.primitive ENUM type within the
     CycloneDX standard.
@@ -143,6 +145,8 @@ class _CryptoPrimitiveSerializationHelper(serializable.helpers.BaseHelper):
 
 @serializable.serializable_enum
 class CryptoExecutionEnvironment(str, Enum):
+    # TODO: rename to `CryptoAlgorithmExecutionEnvironment`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.executionEnvironment ENUM type
     within the CycloneDX standard.
@@ -158,13 +162,15 @@ class CryptoExecutionEnvironment(str, Enum):
     SOFTWARE_ENCRYPTED_RAM = 'software-encrypted-ram'
     SOFTWARE_PLAIN_RAM = 'software-plain-ram'
     SOFTWARE_TEE = 'software-tee'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoImplementationPlatform(str, Enum):
+    # TODO: rename to `CryptoAlgorithmImplementationPlatform`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.implementationPlatform ENUM type
     within the CycloneDX standard.
@@ -182,19 +188,21 @@ class CryptoImplementationPlatform(str, Enum):
     ARMV8_M = 'armv8-m'
     ARMV9_A = 'armv9-a'
     ARMV9_M = 'armv9-m'
-    GENERIC = 'generic'
     PPC64 = 'ppc64'
     PPC64LE = 'ppc64le'
     S390X = 's390x'
     X86_32 = 'x86_32'
     X86_64 = 'x86_64'
-
+    # --
+    GENERIC = 'generic'
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoCertificationLevel(str, Enum):
+    # TODO: rename to `CryptoAlgorithmCertificationLevel`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.certificationLevel ENUM type
     within the CycloneDX standard.
@@ -207,7 +215,7 @@ class CryptoCertificationLevel(str, Enum):
     """
 
     NONE = 'none'
-
+    # --
     FIPS140_1_L1 = 'fips140-1-l1'
     FIPS140_1_L2 = 'fips140-1-l2'
     FIPS140_1_L3 = 'fips140-1-l3'
@@ -234,13 +242,15 @@ class CryptoCertificationLevel(str, Enum):
     CC_EAL6_PLUS = 'cc-eal6+'
     CC_EAL7 = 'cc-eal7'
     CC_EAL7_PLUS = 'cc-eal7+'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoMode(str, Enum):
+    # TODO: rename to `CryptoAlgorithmMode`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.mode ENUM type
     within the CycloneDX standard.
@@ -259,13 +269,15 @@ class CryptoMode(str, Enum):
     ECB = 'ecb'
     GCM = 'gcm'
     OFB = 'ofb'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoPadding(str, Enum):
+    # TODO: rename to `CryptoAlgorithmPadding`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.padding ENUM type
     within the CycloneDX standard.
@@ -282,7 +294,7 @@ class CryptoPadding(str, Enum):
     PKCS1V15 = 'pkcs1v15'
     OAEP = 'oaep'
     RAW = 'raw'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -311,7 +323,7 @@ class CryptoFunction(str, Enum):
     SIGN = 'sign'
     TAG = 'tag'
     VERIFY = 'verify'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -785,7 +797,7 @@ class RelatedCryptoMaterialType(str, Enum):
     SIGNATURE = 'signature'
     TAG = 'tag'
     TOKEN = 'token'  # nosec
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
