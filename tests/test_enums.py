@@ -873,6 +873,35 @@ class TestEnumRelatedCryptoMaterialType(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
+@ddt
+class TestEnumRelatedCryptoMaterialState(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='relatedCryptoMaterialProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='state']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'relatedCryptoMaterialProperties', 'properties', 'state'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(RelatedCryptoMaterialState, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'RelatedCryptoMaterialState: {rcms.name}', bom_ref=f'dummy-RCMS:{rcms.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.RELATED_CRYPTO_MATERIAL,
+                        related_crypto_material_properties=RelatedCryptoMaterialProperties(
+                            state=rcms
+                        )
+                    )
+                ) for rcms in RelatedCryptoMaterialState
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+
 """
 @ddt
 class TestEnum...(_EnumTestCase):
