@@ -16,7 +16,6 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 import ast
-import sys
 from collections.abc import Generator, Iterable
 from decimal import Decimal
 from enum import Enum
@@ -25,7 +24,7 @@ from itertools import chain
 from json import load as json_load
 from os import path
 from typing import Any, Optional
-from unittest import TestCase, skipIf
+from unittest import TestCase
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
 
@@ -981,7 +980,6 @@ class TestEnumProtocolPropertiesType(_EnumTestCase):
 # add new test cases above this line
 
 
-@skipIf(sys.version_info < (3, 10), 'Requires Python 3.10+')
 @ddt
 class TestCaseCompleteness(TestCase):
     """
@@ -1008,10 +1006,10 @@ class TestCaseCompleteness(TestCase):
 
     @staticmethod
     def __get_defined_model_enums() -> Generator[str, None, None]:
-        models_path = path.join(path.dirname(__file__), '..', 'cyclonedx', 'model')
-        model_files = glob(path.join('**', '*.py'), root_dir=models_path, recursive=True)
+        models_path = path.abspath(path.join(path.dirname(__file__), '..', 'cyclonedx', 'model'))
+        model_files = glob(path.join(models_path, '**', '*.py'), recursive=True)
         for model_file in model_files:
-            with open(path.join(models_path, model_file), encoding='utf-8') as f:
+            with open(model_file, encoding='utf-8') as f:
                 tree = ast.parse(f.read(), filename=model_file)
                 for node in ast.walk(tree):
                     if isinstance(node, ast.ClassDef):
@@ -1025,7 +1023,9 @@ class TestCaseCompleteness(TestCase):
                                 yield node.name
                                 break
 
-    @idata(__get_defined_model_enums())
+    @idata(
+        __get_defined_model_enums.__func__()  # py3.9 compat
+    )
     def test_case_exists(self, enum_name: str) -> None:
         self.assertIn(f'{self.__TestCasePrefix}{enum_name}',
                       self.__get_defined_enumcases(),
