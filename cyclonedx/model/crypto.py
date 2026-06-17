@@ -201,7 +201,7 @@ class CryptoImplementationPlatform(str, Enum):
 
 @serializable.serializable_enum
 class CryptoCertificationLevel(str, Enum):
-    # TODO: move to `CryptoAlgorithmCertificationLevel`
+    # TODO: rename to `CryptoAlgorithmCertificationLevel`
 
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.certificationLevel ENUM type
