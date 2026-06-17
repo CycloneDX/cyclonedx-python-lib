@@ -981,7 +981,7 @@ class TestEnumProtocolPropertiesType(_EnumTestCase):
 # add new test cases above this line
 
 
-@skipIf(sys.version_info < (3, 10), "Requires Python 3.10+")
+@skipIf(sys.version_info < (3, 10), 'Requires Python 3.10+')
 @ddt
 class TestCaseCompleteness(TestCase):
     """
