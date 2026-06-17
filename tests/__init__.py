@@ -25,7 +25,7 @@ from uuid import UUID
 
 from sortedcontainers import SortedSet
 
-from cyclonedx.output import BomRefDiscriminator as _BomRefDiscriminator
+from cyclonedx.contrib.bom.utils import BomRefDiscriminator as _BomRefDiscriminator
 from cyclonedx.schema import OutputFormat, SchemaVersion
 
 if TYPE_CHECKING:
@@ -33,6 +33,11 @@ if TYPE_CHECKING:
     from cyclonedx.model.dependency import Dependency
 
 _T = TypeVar('_T')
+
+
+PROJECT_ROOT_DIRECTORY = path.abspath(path.join(path.dirname(__file__), '..'))
+PROJECT_LIB_DIRECTORY = path.join(PROJECT_ROOT_DIRECTORY, 'cyclonedx')
+PROJECT_LIB_MODELS_DIRECTORY = path.join(PROJECT_LIB_DIRECTORY, 'model')
 
 _TESTDATA_DIRECTORY = path.join(path.dirname(__file__), '_data')
 
@@ -199,5 +204,5 @@ def load_pyproject() -> dict[str, Any]:
         from tomllib import load as toml_load
     else:
         from tomli import load as toml_load
-    with open(path.join(path.dirname(__file__), '..', 'pyproject.toml'), 'rb') as f:
+    with open(path.join(PROJECT_ROOT_DIRECTORY, 'pyproject.toml'), 'rb') as f:
         return toml_load(f)

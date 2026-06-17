@@ -1,0 +1,220 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CIP:ARMV7_A",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "armv7-a"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: ARMV7_A",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:ARMV7_M",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "armv7-m"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: ARMV7_M",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:ARMV8_A",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "armv8-a"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: ARMV8_A",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:ARMV8_M",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "armv8-m"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: ARMV8_M",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:ARMV9_A",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "armv9-a"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: ARMV9_A",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:ARMV9_M",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "armv9-m"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: ARMV9_M",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:GENERIC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "generic"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: GENERIC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:OTHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "other"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:PPC64",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "ppc64"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: PPC64",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:PPC64LE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "ppc64le"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: PPC64LE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:S390X",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "s390x"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: S390X",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:UNKNOWN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "unknown"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: UNKNOWN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:X86_32",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "x86_32"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: X86_32",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CIP:X86_64",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "implementationPlatform": "x86_64"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoImplementationPlatform: X86_64",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CIP:ARMV7_A"
+    },
+    {
+      "ref": "dummy-CIP:ARMV7_M"
+    },
+    {
+      "ref": "dummy-CIP:ARMV8_A"
+    },
+    {
+      "ref": "dummy-CIP:ARMV8_M"
+    },
+    {
+      "ref": "dummy-CIP:ARMV9_A"
+    },
+    {
+      "ref": "dummy-CIP:ARMV9_M"
+    },
+    {
+      "ref": "dummy-CIP:GENERIC"
+    },
+    {
+      "ref": "dummy-CIP:OTHER"
+    },
+    {
+      "ref": "dummy-CIP:PPC64"
+    },
+    {
+      "ref": "dummy-CIP:PPC64LE"
+    },
+    {
+      "ref": "dummy-CIP:S390X"
+    },
+    {
+      "ref": "dummy-CIP:UNKNOWN"
+    },
+    {
+      "ref": "dummy-CIP:X86_32"
+    },
+    {
+      "ref": "dummy-CIP:X86_64"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

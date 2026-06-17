@@ -59,6 +59,8 @@ class CryptoAssetType(str, Enum):
 
 @serializable.serializable_enum
 class CryptoPrimitive(str, Enum):
+    # TODO: rename to `CryptoAlgorithmPrimitive`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.primitive ENUM type within the
     CycloneDX standard.
@@ -78,18 +80,73 @@ class CryptoPrimitive(str, Enum):
     KDF = 'kdf'
     KEM = 'kem'
     KEY_AGREE = 'key-agree'
+    KEY_WRAP = 'key-wrap'  # since CDX1.7
     MAC = 'mac'
     PKE = 'pke'
     SIGNATURE = 'signature'
     STREAM_CIPHER = 'stream-cipher'
     XOF = 'xof'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
+class _CryptoPrimitiveSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: dict[type[serializable.ViewType], frozenset[CryptoPrimitive]] = dict()
+    __CASES[SchemaVersion1Dot6] = frozenset({
+        CryptoPrimitive.AE,
+        CryptoPrimitive.BLOCK_CIPHER,
+        CryptoPrimitive.COMBINER,
+        CryptoPrimitive.DRBG,
+        CryptoPrimitive.HASH,
+        CryptoPrimitive.KDF,
+        CryptoPrimitive.KEM,
+        CryptoPrimitive.KEY_AGREE,
+        CryptoPrimitive.MAC,
+        CryptoPrimitive.PKE,
+        CryptoPrimitive.SIGNATURE,
+        CryptoPrimitive.STREAM_CIPHER,
+        CryptoPrimitive.XOF,
+        CryptoPrimitive.OTHER,
+        CryptoPrimitive.UNKNOWN,
+    })
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        CryptoPrimitive.KEY_WRAP,
+    }
+
+    @classmethod
+    def __normalize(cls, cp: CryptoPrimitive, view: type[serializable.ViewType]) -> str:
+        return (
+            cp
+            if cp in cls.__CASES.get(view, ())
+            else CryptoPrimitive.OTHER
+        ).value
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[type[serializable.ViewType]],
+                      **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> CryptoPrimitive:
+        return CryptoPrimitive(o)
+
+
 @serializable.serializable_enum
 class CryptoExecutionEnvironment(str, Enum):
+    # TODO: rename to `CryptoAlgorithmExecutionEnvironment`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.executionEnvironment ENUM type
     within the CycloneDX standard.
@@ -105,13 +162,15 @@ class CryptoExecutionEnvironment(str, Enum):
     SOFTWARE_ENCRYPTED_RAM = 'software-encrypted-ram'
     SOFTWARE_PLAIN_RAM = 'software-plain-ram'
     SOFTWARE_TEE = 'software-tee'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoImplementationPlatform(str, Enum):
+    # TODO: rename to `CryptoAlgorithmImplementationPlatform`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.implementationPlatform ENUM type
     within the CycloneDX standard.
@@ -129,19 +188,21 @@ class CryptoImplementationPlatform(str, Enum):
     ARMV8_M = 'armv8-m'
     ARMV9_A = 'armv9-a'
     ARMV9_M = 'armv9-m'
-    GENERIC = 'generic'
     PPC64 = 'ppc64'
     PPC64LE = 'ppc64le'
     S390X = 's390x'
     X86_32 = 'x86_32'
     X86_64 = 'x86_64'
-
+    # --
+    GENERIC = 'generic'
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoCertificationLevel(str, Enum):
+    # TODO: rename to `CryptoAlgorithmCertificationLevel`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.certificationLevel ENUM type
     within the CycloneDX standard.
@@ -154,7 +215,7 @@ class CryptoCertificationLevel(str, Enum):
     """
 
     NONE = 'none'
-
+    # --
     FIPS140_1_L1 = 'fips140-1-l1'
     FIPS140_1_L2 = 'fips140-1-l2'
     FIPS140_1_L3 = 'fips140-1-l3'
@@ -181,13 +242,15 @@ class CryptoCertificationLevel(str, Enum):
     CC_EAL6_PLUS = 'cc-eal6+'
     CC_EAL7 = 'cc-eal7'
     CC_EAL7_PLUS = 'cc-eal7+'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoMode(str, Enum):
+    # TODO: rename to `CryptoAlgorithmMode`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.mode ENUM type
     within the CycloneDX standard.
@@ -206,13 +269,15 @@ class CryptoMode(str, Enum):
     ECB = 'ecb'
     GCM = 'gcm'
     OFB = 'ofb'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
 
 @serializable.serializable_enum
 class CryptoPadding(str, Enum):
+    # TODO: rename to `CryptoAlgorithmPadding`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.padding ENUM type
     within the CycloneDX standard.
@@ -229,7 +294,7 @@ class CryptoPadding(str, Enum):
     PKCS1V15 = 'pkcs1v15'
     OAEP = 'oaep'
     RAW = 'raw'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -258,7 +323,7 @@ class CryptoFunction(str, Enum):
     SIGN = 'sign'
     TAG = 'tag'
     VERIFY = 'verify'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -303,6 +368,7 @@ class AlgorithmProperties:
         self.nist_quantum_security_level = nist_quantum_security_level
 
     @property
+    @serializable.type_mapping(_CryptoPrimitiveSerializationHelper)
     @serializable.xml_sequence(1)
     def primitive(self) -> Optional[CryptoPrimitive]:
         """
@@ -731,7 +797,7 @@ class RelatedCryptoMaterialType(str, Enum):
     SIGNATURE = 'signature'
     TAG = 'tag'
     TOKEN = 'token'  # nosec
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
 
@@ -1096,15 +1162,71 @@ class ProtocolPropertiesType(str, Enum):
         See the CycloneDX Schema for hashType: https://cyclonedx.org/docs/1.7/xml/#type_cryptoPropertiesType
     """
 
+    DTLS = 'dtls'  # since CDX1.7
+    EAP_AKA = 'eap-aka'  # since CDX1.7
+    EAP_AKA_PRIME = 'eap-aka-prime'  # since CDX1.7
+    FIVEG_AKA = '5g-aka'  # since CDX1.7
     IKE = 'ike'
     IPSEC = 'ipsec'
+    PRINS = 'prins'  # since CDX1.7
+    QUIC = 'quic'  # since CDX1.7
     SSH = 'ssh'
     SSTP = 'sstp'
     TLS = 'tls'
     WPA = 'wpa'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
+
+
+class _ProtocolPropertiesTypeSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: dict[type[serializable.ViewType], frozenset[ProtocolPropertiesType]] = dict()
+    __CASES[SchemaVersion1Dot6] = frozenset({
+        ProtocolPropertiesType.IKE,
+        ProtocolPropertiesType.IPSEC,
+        ProtocolPropertiesType.SSH,
+        ProtocolPropertiesType.SSTP,
+        ProtocolPropertiesType.TLS,
+        ProtocolPropertiesType.WPA,
+        ProtocolPropertiesType.OTHER,
+        ProtocolPropertiesType.UNKNOWN,
+    })
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        ProtocolPropertiesType.DTLS,
+        ProtocolPropertiesType.EAP_AKA,
+        ProtocolPropertiesType.EAP_AKA_PRIME,
+        ProtocolPropertiesType.FIVEG_AKA,
+        ProtocolPropertiesType.PRINS,
+        ProtocolPropertiesType.QUIC,
+    }
+
+    @classmethod
+    def __normalize(cls, ppt: ProtocolPropertiesType, view: type[serializable.ViewType]) -> str:
+        return (
+            ppt
+            if ppt in cls.__CASES.get(view, ())
+            else ProtocolPropertiesType.OTHER
+        ).value
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[type[serializable.ViewType]],
+                      **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> ProtocolPropertiesType:
+        return ProtocolPropertiesType(o)
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
@@ -1376,6 +1498,7 @@ class ProtocolProperties:
         self.crypto_refs = crypto_refs or []
 
     @property
+    @serializable.type_mapping(_ProtocolPropertiesTypeSerializationHelper)
     @serializable.xml_sequence(10)
     def type(self) -> Optional[ProtocolPropertiesType]:
         """
