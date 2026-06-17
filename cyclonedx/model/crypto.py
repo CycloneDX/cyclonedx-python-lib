@@ -80,7 +80,7 @@ class CryptoPrimitive(str, Enum):
     KDF = 'kdf'
     KEM = 'kem'
     KEY_AGREE = 'key-agree'
-    KEY_WRAP = 'key-wrap' # since CDX1.7
+    KEY_WRAP = 'key-wrap'  # since CDX1.7
     MAC = 'mac'
     PKE = 'pke'
     SIGNATURE = 'signature'
@@ -89,7 +89,6 @@ class CryptoPrimitive(str, Enum):
     # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
-
 
 
 class _CryptoPrimitiveSerializationHelper(serializable.helpers.BaseHelper):
@@ -142,7 +141,6 @@ class _CryptoPrimitiveSerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def deserialize(cls, o: Any) -> CryptoPrimitive:
         return CryptoPrimitive(o)
-
 
 
 @serializable.serializable_enum
@@ -1165,13 +1163,13 @@ class ProtocolPropertiesType(str, Enum):
     """
 
     DTLS = 'dtls'  # since CDX1.7
-    EAP_AKA ='eap-aka' # since CDX1.7
-    EAP_AKA_PRIME ='eap-aka-prime' # since CDX1.7
+    EAP_AKA = 'eap-aka'  # since CDX1.7
+    EAP_AKA_PRIME = 'eap-aka-prime'  # since CDX1.7
     FIVEG_AKA = '5g-aka'  # since CDX1.7
     IKE = 'ike'
     IPSEC = 'ipsec'
-    PRINS = 'prins' # since CDX1.7
-    QUIC = 'quic' # since CDX1.7
+    PRINS = 'prins'  # since CDX1.7
+    QUIC = 'quic'  # since CDX1.7
     SSH = 'ssh'
     SSTP = 'sstp'
     TLS = 'tls'

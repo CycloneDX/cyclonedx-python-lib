@@ -36,7 +36,12 @@ from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.component_evidence import ComponentEvidence, Identity as CEIdentity, Method as CEMethod
-from cyclonedx.model.crypto import CryptoProperties, AlgorithmProperties, RelatedCryptoMaterialProperties, ProtocolProperties
+from cyclonedx.model.crypto import (
+    AlgorithmProperties,
+    CryptoProperties,
+    ProtocolProperties,
+    RelatedCryptoMaterialProperties,
+)
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
@@ -89,17 +94,17 @@ from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilitySeverity,
 )
 from cyclonedx.model.crypto import (  # isort:skip
-  CryptoAssetType,
-  CryptoPrimitive,
-  CryptoExecutionEnvironment,
-  CryptoImplementationPlatform,
-  CryptoCertificationLevel,
-  CryptoMode,
-  CryptoPadding,
-  CryptoFunction,
-  RelatedCryptoMaterialType,
-  RelatedCryptoMaterialState,
-  ProtocolPropertiesType,
+    CryptoAssetType,
+    CryptoCertificationLevel,
+    CryptoExecutionEnvironment,
+    CryptoFunction,
+    CryptoImplementationPlatform,
+    CryptoMode,
+    CryptoPadding,
+    CryptoPrimitive,
+    ProtocolPropertiesType,
+    RelatedCryptoMaterialState,
+    RelatedCryptoMaterialType,
 )
 
 # endregion SUT
@@ -123,6 +128,7 @@ def dp_cases_from_xml_schemas(xpath: str) -> set[str]:
     if len(cases) == 0:
         raise ValueError(f'no values for xpath: {xpath!r}')
     return cases
+
 
 def dp_cases_from_json_schema(sf: str, jsonpointer: Iterable[str]) -> Generator[str, None, None]:
     with open(sf) as sfh:
@@ -513,7 +519,8 @@ class TestEnumLifecyclePhase(_EnumTestCase):
 
     @idata(set(chain(
         dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='lifecyclePhaseType']"),
-        dp_cases_from_json_schemas('definitions', 'metadata', 'properties', 'lifecycles', 'items', 'oneOf', 0, 'properties', 'phase'),
+        dp_cases_from_json_schemas('definitions', 'metadata', 'properties', 'lifecycles',
+                                   'items', 'oneOf', 0, 'properties', 'phase'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(LifecyclePhase, value)
@@ -621,17 +628,20 @@ class TestEnumAnalysisTechnique(_EnumTestCase):
             ])
         super()._test_cases_render(bom, of, sv)
 
+
 @ddt
 class TestEnumCryptoAssetType(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='assetType']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='assetType']/{SCHEMA_NS}simpleType"),
         dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'assetType'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoAssetType, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -650,13 +660,17 @@ class TestEnumCryptoAssetType(_EnumTestCase):
 class TestEnumCryptoPrimitive(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='primitive']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'primitive'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='primitive']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'algorithmProperties', 'properties', 'primitive'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoPrimitive, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -678,13 +692,17 @@ class TestEnumCryptoPrimitive(_EnumTestCase):
 class TestEnumCryptoExecutionEnvironment(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='executionEnvironment']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions',   'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'executionEnvironment'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='executionEnvironment']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'algorithmProperties', 'properties', 'executionEnvironment'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoExecutionEnvironment, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -702,22 +720,25 @@ class TestEnumCryptoExecutionEnvironment(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
-
 @ddt
 class TestEnumCryptoImplementationPlatform (_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='implementationPlatform']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'implementationPlatform'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='implementationPlatform']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'algorithmProperties', 'properties', 'implementationPlatform'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoImplementationPlatform, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
-              Component(
+                Component(
                     name=f'CryptoImplementationPlatform: {cip.name}', bom_ref=f'dummy-CIP:{cip.name}',
                     type=ComponentType.CRYPTOGRAPHIC_ASSET,
                     crypto_properties=CryptoProperties(
@@ -735,13 +756,17 @@ class TestEnumCryptoImplementationPlatform (_EnumTestCase):
 class TestEnumCryptoCertificationLevel (_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='certificationLevel']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'certificationLevel', 'items'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='certificationLevel']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'algorithmProperties', 'properties', 'certificationLevel', 'items'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoCertificationLevel, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -759,18 +784,21 @@ class TestEnumCryptoCertificationLevel (_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
-
 @ddt
 class TestEnumCryptoMode(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='mode']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'mode'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType"
+            f"/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='mode']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'algorithmProperties', 'properties', 'mode'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoMode, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -792,13 +820,17 @@ class TestEnumCryptoMode(_EnumTestCase):
 class TestEnumCryptoPadding(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='padding']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'padding'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='padding']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'algorithmProperties', 'properties', 'padding'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoPadding, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -820,13 +852,18 @@ class TestEnumCryptoPadding(_EnumTestCase):
 class TestEnumCryptoFunction(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='cryptoFunctions']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='cryptoFunction']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'algorithmProperties', 'properties', 'cryptoFunctions', 'items'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='algorithmProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='cryptoFunctions']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='cryptoFunction']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'algorithmProperties', 'properties', 'cryptoFunctions', 'items'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(CryptoFunction, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -844,18 +881,21 @@ class TestEnumCryptoFunction(_EnumTestCase):
         super()._test_cases_render(bom, of, sv)
 
 
-
 @ddt
 class TestEnumRelatedCryptoMaterialType(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='relatedCryptoMaterialProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='type']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'relatedCryptoMaterialProperties', 'properties', 'type'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='relatedCryptoMaterialProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='type']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'relatedCryptoMaterialProperties', 'properties', 'type'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(RelatedCryptoMaterialType, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -877,13 +917,17 @@ class TestEnumRelatedCryptoMaterialType(_EnumTestCase):
 class TestEnumRelatedCryptoMaterialState(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='relatedCryptoMaterialProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='state']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'relatedCryptoMaterialProperties', 'properties', 'state'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='relatedCryptoMaterialProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='state']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'relatedCryptoMaterialProperties', 'properties', 'state'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(RelatedCryptoMaterialState, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -905,13 +949,17 @@ class TestEnumRelatedCryptoMaterialState(_EnumTestCase):
 class TestEnumProtocolPropertiesType(_EnumTestCase):
 
     @idata(set(chain(
-        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='protocolProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence/{SCHEMA_NS}element[@name='type']/{SCHEMA_NS}simpleType"),
-        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties', 'protocolProperties', 'properties', 'type'),
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='cryptoPropertiesType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='protocolProperties']/{SCHEMA_NS}complexType/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='type']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'cryptoProperties', 'properties',
+                                   'protocolProperties', 'properties', 'type'),
     )))
     def test_knows_value(self, value: str) -> None:
         super()._test_knows_value(ProtocolPropertiesType, value)
 
-    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6 ))
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(
             components=[
@@ -927,7 +975,6 @@ class TestEnumProtocolPropertiesType(_EnumTestCase):
                 ) for ppt in ProtocolPropertiesType
             ])
         super()._test_cases_render(bom, of, sv)
-
 
 
 # add new test cases above this line
