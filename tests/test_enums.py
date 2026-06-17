@@ -1000,12 +1000,12 @@ class TestCaseCompleteness(TestCase):
                 and obj.__module__
                 and obj.__module__ == __name__
                 and issubclass(obj, _EnumTestCase)
-                and not obj is _EnumTestCase
+                and obj is not _EnumTestCase
             )
         return cls.__defined_enumcases
 
     @staticmethod
-    def __get_defined_model_enums():
+    def __get_defined_model_enums() -> Generator[str, None, None]:
         models_path = path.join(path.dirname(__file__), '..', 'cyclonedx', 'model')
         model_files = glob(path.join('**', '*.py'), root_dir=models_path, recursive=True)
         for model_file in model_files:
@@ -1024,7 +1024,7 @@ class TestCaseCompleteness(TestCase):
                                 break
 
     @idata(__get_defined_model_enums())
-    def test_case_exists(self, enum_name) -> None:
+    def test_case_exists(self, enum_name: str) -> None:
         self.assertIn(f'{self.__TestCasePrefix}{enum_name}',
                       self.__get_defined_enumcases(),
                       f'Missing Test Case for Enum: {enum_name}')
