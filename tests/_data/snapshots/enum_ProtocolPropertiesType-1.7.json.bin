@@ -38,7 +38,7 @@
       "cryptoProperties": {
         "assetType": "protocol",
         "protocolProperties": {
-          "type": "other"
+          "type": "5g-aka"
         }
       },
       "name": "ProtocolPropertiesType: FIVEG_AKA",
