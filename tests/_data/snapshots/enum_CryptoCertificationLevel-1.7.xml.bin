@@ -1,0 +1,304 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL1">
+      <name>CryptoCertificationLevel: CC_EAL1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal1</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL1_PLUS">
+      <name>CryptoCertificationLevel: CC_EAL1_PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal1+</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL2">
+      <name>CryptoCertificationLevel: CC_EAL2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal2</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL2_PLUS">
+      <name>CryptoCertificationLevel: CC_EAL2_PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal2+</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL3">
+      <name>CryptoCertificationLevel: CC_EAL3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal3</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL3_PLUS">
+      <name>CryptoCertificationLevel: CC_EAL3_PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal3+</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL4">
+      <name>CryptoCertificationLevel: CC_EAL4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal4</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL4_PLUS">
+      <name>CryptoCertificationLevel: CC_EAL4_PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal4+</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL5">
+      <name>CryptoCertificationLevel: CC_EAL5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal5</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL5_PLUS">
+      <name>CryptoCertificationLevel: CC_EAL5_PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal5+</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL6">
+      <name>CryptoCertificationLevel: CC_EAL6</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal6</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL6_PLUS">
+      <name>CryptoCertificationLevel: CC_EAL6_PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal6+</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL7">
+      <name>CryptoCertificationLevel: CC_EAL7</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal7</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:CC_EAL7_PLUS">
+      <name>CryptoCertificationLevel: CC_EAL7_PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>cc-eal7+</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_1_L1">
+      <name>CryptoCertificationLevel: FIPS140_1_L1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-1-l1</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_1_L2">
+      <name>CryptoCertificationLevel: FIPS140_1_L2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-1-l2</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_1_L3">
+      <name>CryptoCertificationLevel: FIPS140_1_L3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-1-l3</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_1_L4">
+      <name>CryptoCertificationLevel: FIPS140_1_L4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-1-l4</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_2_L1">
+      <name>CryptoCertificationLevel: FIPS140_2_L1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-2-l1</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_2_L2">
+      <name>CryptoCertificationLevel: FIPS140_2_L2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-2-l2</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_2_L3">
+      <name>CryptoCertificationLevel: FIPS140_2_L3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-2-l3</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_2_L4">
+      <name>CryptoCertificationLevel: FIPS140_2_L4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-2-l4</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_3_L1">
+      <name>CryptoCertificationLevel: FIPS140_3_L1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-3-l1</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_3_L2">
+      <name>CryptoCertificationLevel: FIPS140_3_L2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-3-l2</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_3_L3">
+      <name>CryptoCertificationLevel: FIPS140_3_L3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-3-l3</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:FIPS140_3_L4">
+      <name>CryptoCertificationLevel: FIPS140_3_L4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>fips140-3-l4</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:NONE">
+      <name>CryptoCertificationLevel: NONE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>none</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:OTHER">
+      <name>CryptoCertificationLevel: OTHER</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>other</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCL:UNKNOWN">
+      <name>CryptoCertificationLevel: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <certificationLevel>unknown</certificationLevel>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CCL:CC_EAL1"/>
+    <dependency ref="dummy-CCL:CC_EAL1_PLUS"/>
+    <dependency ref="dummy-CCL:CC_EAL2"/>
+    <dependency ref="dummy-CCL:CC_EAL2_PLUS"/>
+    <dependency ref="dummy-CCL:CC_EAL3"/>
+    <dependency ref="dummy-CCL:CC_EAL3_PLUS"/>
+    <dependency ref="dummy-CCL:CC_EAL4"/>
+    <dependency ref="dummy-CCL:CC_EAL4_PLUS"/>
+    <dependency ref="dummy-CCL:CC_EAL5"/>
+    <dependency ref="dummy-CCL:CC_EAL5_PLUS"/>
+    <dependency ref="dummy-CCL:CC_EAL6"/>
+    <dependency ref="dummy-CCL:CC_EAL6_PLUS"/>
+    <dependency ref="dummy-CCL:CC_EAL7"/>
+    <dependency ref="dummy-CCL:CC_EAL7_PLUS"/>
+    <dependency ref="dummy-CCL:FIPS140_1_L1"/>
+    <dependency ref="dummy-CCL:FIPS140_1_L2"/>
+    <dependency ref="dummy-CCL:FIPS140_1_L3"/>
+    <dependency ref="dummy-CCL:FIPS140_1_L4"/>
+    <dependency ref="dummy-CCL:FIPS140_2_L1"/>
+    <dependency ref="dummy-CCL:FIPS140_2_L2"/>
+    <dependency ref="dummy-CCL:FIPS140_2_L3"/>
+    <dependency ref="dummy-CCL:FIPS140_2_L4"/>
+    <dependency ref="dummy-CCL:FIPS140_3_L1"/>
+    <dependency ref="dummy-CCL:FIPS140_3_L2"/>
+    <dependency ref="dummy-CCL:FIPS140_3_L3"/>
+    <dependency ref="dummy-CCL:FIPS140_3_L4"/>
+    <dependency ref="dummy-CCL:NONE"/>
+    <dependency ref="dummy-CCL:OTHER"/>
+    <dependency ref="dummy-CCL:UNKNOWN"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

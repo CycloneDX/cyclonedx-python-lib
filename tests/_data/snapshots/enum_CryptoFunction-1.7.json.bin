@@ -1,0 +1,232 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CF:DECAPSULATE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "decapsulate"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: DECAPSULATE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:DECRYPT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "decrypt"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: DECRYPT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:DIGEST",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "digest"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: DIGEST",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:ENCAPSULATE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "encapsulate"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: ENCAPSULATE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:ENCRYPT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "encrypt"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: ENCRYPT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:GENERATE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "generate"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: GENERATE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:KEYDERIVE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "keyderive"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: KEYDERIVE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:KEYGEN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "keygen"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: KEYGEN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:OTHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "other"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:SIGN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "sign"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: SIGN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:TAG",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "tag"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: TAG",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:UNKNOWN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "unknown"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: UNKNOWN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CF:VERIFY",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "cryptoFunctions": [
+            "verify"
+          ]
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoFunction: VERIFY",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CF:DECAPSULATE"
+    },
+    {
+      "ref": "dummy-CF:DECRYPT"
+    },
+    {
+      "ref": "dummy-CF:DIGEST"
+    },
+    {
+      "ref": "dummy-CF:ENCAPSULATE"
+    },
+    {
+      "ref": "dummy-CF:ENCRYPT"
+    },
+    {
+      "ref": "dummy-CF:GENERATE"
+    },
+    {
+      "ref": "dummy-CF:KEYDERIVE"
+    },
+    {
+      "ref": "dummy-CF:KEYGEN"
+    },
+    {
+      "ref": "dummy-CF:OTHER"
+    },
+    {
+      "ref": "dummy-CF:SIGN"
+    },
+    {
+      "ref": "dummy-CF:TAG"
+    },
+    {
+      "ref": "dummy-CF:UNKNOWN"
+    },
+    {
+      "ref": "dummy-CF:VERIFY"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}
