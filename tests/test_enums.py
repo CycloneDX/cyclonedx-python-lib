@@ -1023,7 +1023,9 @@ class TestCaseCompleteness(TestCase):
                                 yield node.name
                                 break
 
-    @idata(__get_defined_model_enums())
+    @idata(
+        __get_defined_model_enums.__func__()  # py39 compat
+    )
     def test_case_exists(self, enum_name: str) -> None:
         self.assertIn(f'{self.__TestCasePrefix}{enum_name}',
                       self.__get_defined_enumcases(),
