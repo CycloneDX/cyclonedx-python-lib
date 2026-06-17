@@ -59,6 +59,8 @@ class CryptoAssetType(str, Enum):
 
 @serializable.serializable_enum
 class CryptoPrimitive(str, Enum):
+    # TODO: rename to `CryptoAlgorithmPrimitive`
+
     """
     This is our internal representation of the cryptoPropertiesType.algorithmProperties.primitive ENUM type within the
     CycloneDX standard.
@@ -78,14 +80,67 @@ class CryptoPrimitive(str, Enum):
     KDF = 'kdf'
     KEM = 'kem'
     KEY_AGREE = 'key-agree'
+    KEY_WRAP = 'key-wrap'  # since CDX1.7
     MAC = 'mac'
     PKE = 'pke'
     SIGNATURE = 'signature'
     STREAM_CIPHER = 'stream-cipher'
     XOF = 'xof'
-
+    # --
     OTHER = 'other'
     UNKNOWN = 'unknown'
+
+
+class _CryptoPrimitiveSerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    __CASES: dict[type[serializable.ViewType], frozenset[CryptoPrimitive]] = dict()
+    __CASES[SchemaVersion1Dot6] = frozenset({
+        CryptoPrimitive.AE,
+        CryptoPrimitive.BLOCK_CIPHER,
+        CryptoPrimitive.COMBINER,
+        CryptoPrimitive.DRBG,
+        CryptoPrimitive.HASH,
+        CryptoPrimitive.KDF,
+        CryptoPrimitive.KEM,
+        CryptoPrimitive.KEY_AGREE,
+        CryptoPrimitive.MAC,
+        CryptoPrimitive.PKE,
+        CryptoPrimitive.SIGNATURE,
+        CryptoPrimitive.STREAM_CIPHER,
+        CryptoPrimitive.XOF,
+        CryptoPrimitive.OTHER,
+        CryptoPrimitive.UNKNOWN,
+    })
+    __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
+        CryptoPrimitive.KEY_WRAP,
+    }
+
+    @classmethod
+    def __normalize(cls, cp: CryptoPrimitive, view: type[serializable.ViewType]) -> str:
+        return (
+            cp
+            if cp in cls.__CASES.get(view, ())
+            else CryptoPrimitive.OTHER
+        ).value
+
+    @classmethod
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def xml_normalize(cls, o: Any, *,
+                      view: Optional[type[serializable.ViewType]],
+                      **__: Any) -> str:
+        assert view is not None
+        return cls.__normalize(o, view)
+
+    @classmethod
+    def deserialize(cls, o: Any) -> CryptoPrimitive:
+        return CryptoPrimitive(o)
 
 
 @serializable.serializable_enum
@@ -303,6 +358,7 @@ class AlgorithmProperties:
         self.nist_quantum_security_level = nist_quantum_security_level
 
     @property
+    @serializable.type_mapping(_CryptoPrimitiveSerializationHelper)
     @serializable.xml_sequence(1)
     def primitive(self) -> Optional[CryptoPrimitive]:
         """
