@@ -36,6 +36,7 @@ from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.component_evidence import ComponentEvidence, Identity as CEIdentity, Method as CEMethod
+from cyclonedx.model.contact import OrganizationalEntity
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
     CryptoProperties,
@@ -45,6 +46,17 @@ from cyclonedx.model.crypto import (
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
+from cyclonedx.model.model_card import (
+    Approach,
+    Co2Measure,
+    Considerations,
+    EnergyConsumption,
+    EnergyMeasure,
+    EnergyProvider,
+    EnvironmentalConsiderations,
+    ModelCard,
+    ModelParameters,
+)
 from cyclonedx.model.service import DataClassification, Service
 from cyclonedx.model.vulnerability import (
     BomTarget,
@@ -105,6 +117,13 @@ from cyclonedx.model.crypto import (  # isort:skip
     ProtocolPropertiesType,
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
+)
+from cyclonedx.model.model_card import (  # isort:skip
+    Co2MeasureUnit,
+    EnergyActivity,
+    EnergyMeasureUnit,
+    EnergySource,
+    MachineLearningApproach,
 )
 
 # endregion SUT
@@ -973,6 +992,199 @@ class TestEnumProtocolPropertiesType(_EnumTestCase):
                         )
                     )
                 ) for ppt in ProtocolPropertiesType
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumMachineLearningApproach(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='machineLearningApproachType']"),
+        dp_cases_from_json_schemas('definitions', 'modelCard', 'properties', 'modelParameters',
+                                   'properties', 'approach', 'properties', 'type'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(MachineLearningApproach, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_5))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'MachineLearningApproach: {mla.name}', bom_ref=f'dummy-MLA:{mla.name}',
+                    type=ComponentType.MACHINE_LEARNING_MODEL,
+                    model_card=ModelCard(
+                        model_parameters=ModelParameters(
+                            approach=Approach(type=mla)
+                        )
+                    )
+                ) for mla in MachineLearningApproach
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumEnergyActivity(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='energyConsumptionType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='activity']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'energyConsumption', 'properties', 'activity'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(EnergyActivity, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'EnergyActivity: {ea.name}', bom_ref=f'dummy-EA:{ea.name}',
+                    type=ComponentType.MACHINE_LEARNING_MODEL,
+                    model_card=ModelCard(
+                        considerations=Considerations(
+                            environmental_considerations=EnvironmentalConsiderations(
+                                energy_consumptions=[
+                                    EnergyConsumption(
+                                        activity=ea,
+                                        energy_providers=[EnergyProvider(
+                                            organization=OrganizationalEntity(name='test-org'),
+                                            energy_source=EnergySource.SOLAR,
+                                            energy_provided=EnergyMeasure(value=1.0),
+                                        )],
+                                        activity_energy_cost=EnergyMeasure(value=1.0),
+                                    )
+                                ]
+                            )
+                        )
+                    )
+                ) for ea in EnergyActivity
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumEnergySource(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='energyProviderType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='energySource']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'energyProvider', 'properties', 'energySource'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(EnergySource, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'EnergySource: {es.name}', bom_ref=f'dummy-ES:{es.name}',
+                    type=ComponentType.MACHINE_LEARNING_MODEL,
+                    model_card=ModelCard(
+                        considerations=Considerations(
+                            environmental_considerations=EnvironmentalConsiderations(
+                                energy_consumptions=[
+                                    EnergyConsumption(
+                                        activity=EnergyActivity.TRAINING,
+                                        energy_providers=[EnergyProvider(
+                                            organization=OrganizationalEntity(name='test-org'),
+                                            energy_source=es,
+                                            energy_provided=EnergyMeasure(value=1.0),
+                                        )],
+                                        activity_energy_cost=EnergyMeasure(value=1.0),
+                                    )
+                                ]
+                            )
+                        )
+                    )
+                ) for es in EnergySource
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumEnergyMeasureUnit(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='energyMeasureType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='unit']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'energyMeasure', 'properties', 'unit'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(EnergyMeasureUnit, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'EnergyMeasureUnit: {emu.name}', bom_ref=f'dummy-EMU:{emu.name}',
+                    type=ComponentType.MACHINE_LEARNING_MODEL,
+                    model_card=ModelCard(
+                        considerations=Considerations(
+                            environmental_considerations=EnvironmentalConsiderations(
+                                energy_consumptions=[
+                                    EnergyConsumption(
+                                        activity=EnergyActivity.TRAINING,
+                                        energy_providers=[EnergyProvider(
+                                            organization=OrganizationalEntity(name='test-org'),
+                                            energy_source=EnergySource.SOLAR,
+                                            energy_provided=EnergyMeasure(value=1.0, unit=emu),
+                                        )],
+                                        activity_energy_cost=EnergyMeasure(value=1.0, unit=emu),
+                                    )
+                                ]
+                            )
+                        )
+                    )
+                ) for emu in EnergyMeasureUnit
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumCo2MeasureUnit(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(
+            f"./{SCHEMA_NS}complexType[@name='co2MeasureType']/{SCHEMA_NS}sequence"
+            f"/{SCHEMA_NS}element[@name='unit']/{SCHEMA_NS}simpleType"),
+        dp_cases_from_json_schemas('definitions', 'co2Measure', 'properties', 'unit'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(Co2MeasureUnit, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_6))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'Co2MeasureUnit: {cmu.name}', bom_ref=f'dummy-CMU:{cmu.name}',
+                    type=ComponentType.MACHINE_LEARNING_MODEL,
+                    model_card=ModelCard(
+                        considerations=Considerations(
+                            environmental_considerations=EnvironmentalConsiderations(
+                                energy_consumptions=[
+                                    EnergyConsumption(
+                                        activity=EnergyActivity.TRAINING,
+                                        energy_providers=[EnergyProvider(
+                                            organization=OrganizationalEntity(name='test-org'),
+                                            energy_source=EnergySource.SOLAR,
+                                            energy_provided=EnergyMeasure(value=1.0),
+                                        )],
+                                        activity_energy_cost=EnergyMeasure(value=1.0),
+                                        co2_cost_equivalent=Co2Measure(value=1.0, unit=cmu),
+                                    )
+                                ]
+                            )
+                        )
+                    )
+                ) for cmu in Co2MeasureUnit
             ])
         super()._test_cases_render(bom, of, sv)
 
