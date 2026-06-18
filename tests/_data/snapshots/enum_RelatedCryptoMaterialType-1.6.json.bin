@@ -1,0 +1,290 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-RCMT:ADDITIONAL_DATA",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "additional-data"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: ADDITIONAL_DATA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:CIPHERTEXT",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "ciphertext"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: CIPHERTEXT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:CREDENTIAL",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "credential"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: CREDENTIAL",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:DIGEST",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "digest"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: DIGEST",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:INITIALIZATION_VECTOR",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "initialization-vector"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: INITIALIZATION_VECTOR",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:KEY",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "key"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: KEY",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:NONCE",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "nonce"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: NONCE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:OTHER",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "other"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:PASSWORD",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "password"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: PASSWORD",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:PRIVATE_KEY",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "private-key"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: PRIVATE_KEY",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:PUBLIC_KEY",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: PUBLIC_KEY",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:SALT",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "salt"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: SALT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:SECRET_KEY",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "secret-key"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: SECRET_KEY",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:SEED",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "seed"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: SEED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:SHARED_SECRET",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "shared-secret"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: SHARED_SECRET",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:SIGNATURE",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "signature"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: SIGNATURE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:TAG",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "tag"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: TAG",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:TOKEN",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "token"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: TOKEN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-RCMT:UNKNOWN",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "unknown"
+        }
+      },
+      "name": "RelatedCryptoMaterialType: UNKNOWN",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-RCMT:ADDITIONAL_DATA"
+    },
+    {
+      "ref": "dummy-RCMT:CIPHERTEXT"
+    },
+    {
+      "ref": "dummy-RCMT:CREDENTIAL"
+    },
+    {
+      "ref": "dummy-RCMT:DIGEST"
+    },
+    {
+      "ref": "dummy-RCMT:INITIALIZATION_VECTOR"
+    },
+    {
+      "ref": "dummy-RCMT:KEY"
+    },
+    {
+      "ref": "dummy-RCMT:NONCE"
+    },
+    {
+      "ref": "dummy-RCMT:OTHER"
+    },
+    {
+      "ref": "dummy-RCMT:PASSWORD"
+    },
+    {
+      "ref": "dummy-RCMT:PRIVATE_KEY"
+    },
+    {
+      "ref": "dummy-RCMT:PUBLIC_KEY"
+    },
+    {
+      "ref": "dummy-RCMT:SALT"
+    },
+    {
+      "ref": "dummy-RCMT:SECRET_KEY"
+    },
+    {
+      "ref": "dummy-RCMT:SEED"
+    },
+    {
+      "ref": "dummy-RCMT:SHARED_SECRET"
+    },
+    {
+      "ref": "dummy-RCMT:SIGNATURE"
+    },
+    {
+      "ref": "dummy-RCMT:TAG"
+    },
+    {
+      "ref": "dummy-RCMT:TOKEN"
+    },
+    {
+      "ref": "dummy-RCMT:UNKNOWN"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

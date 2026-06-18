@@ -103,7 +103,8 @@ from cyclonedx.model.license import (
     LicenseAcknowledgement,
     LicenseEntity,
     LicenseExpression,
-    LicenseType,
+	LicenseExpressionDetails,
+	LicenseType,
     Licensing,
 )
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
@@ -1069,6 +1070,15 @@ def get_vulnerability_source_owasp() -> VulnerabilitySource:
 
 
 def get_bom_with_licenses() -> Bom:
+    expression_details = [
+        LicenseExpressionDetails(license_identifier='GPL-3.0-or-later',
+                                 url=XsUri('https://www.apache.org/licenses/LICENSE-2.0.txt'),
+                                 text=AttachedText(content='specific GPL-3.0-or-later license text')),
+        LicenseExpressionDetails(license_identifier='GPL-2.0',
+                                 bom_ref='some-bomref-1234',
+                                 text=AttachedText(content='specific GPL-2.0 license text')),
+    ]
+
     return _make_bom(
         metadata=BomMetaData(
             licenses=[DisjunctiveLicense(id='CC-BY-1.0')],
@@ -1134,6 +1144,11 @@ def get_bom_with_licenses() -> Bom:
                           DisjunctiveLicense(name='some other license',
                                              properties=[Property(name='myname', value='proprietary')]),
                       ]),
+            Component(name='c-with-expression-details', type=ComponentType.LIBRARY, bom_ref='C5',
+                      licenses=[LicenseExpression(value='GPL-3.0-or-later OR GPL-2.0',
+                                                  details=expression_details,
+                                                  acknowledgement=LicenseAcknowledgement.DECLARED
+                                                  )]),
         ],
         services=[
             Service(name='s-with-expression', bom_ref='S1',
@@ -1611,6 +1626,78 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
     )
     bom.components.add(component3)
     bom.register_dependency(component1, [component3])
+    return bom
+
+
+def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
+    bom = _make_bom()
+    bom.metadata.component = root_component = Component(
+        name='myApp',
+        type=ComponentType.APPLICATION,
+        bom_ref='myApp'
+    )
+
+    component1 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library1'
+    )
+    bom.components.add(component1)
+
+    component2 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-library',
+        bom_ref='some-library2'
+    )
+    bom.components.add(component2)
+
+    component3 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-other-library',
+        bom_ref='some-library3'
+    )
+    bom.components.add(component3)
+
+    component4 = Component(
+        type=ComponentType.LIBRARY,
+        name='some-other-library',
+        bom_ref='some-library4'
+    )
+    bom.components.add(component4)
+
+    bom.dependencies.add(
+        Dependency(
+            root_component.bom_ref,
+            dependencies=[
+                Dependency(
+                    component1.bom_ref,
+                    dependencies=[
+                        Dependency(
+                            component2.bom_ref,
+                            dependencies=[
+                                Dependency(component3.bom_ref),
+                            ]
+                        ),
+                    ]
+                ),
+                Dependency(
+                    component2.bom_ref,
+                    dependencies=[
+                        Dependency(component4.bom_ref),
+                    ]
+                ),
+            ]
+        )
+    )
+    bom.dependencies.add(
+        Dependency(
+            component3.bom_ref,
+            dependencies=[
+                Dependency(component4.bom_ref),
+            ]
+        )
+    )
+
     return bom
 
 # ---

@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:OAEP">
+      <name>CryptoPadding: OAEP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <padding>oaep</padding>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:OTHER">
+      <name>CryptoPadding: OTHER</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <padding>other</padding>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:PKCS1V15">
+      <name>CryptoPadding: PKCS1V15</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <padding>pkcs1v15</padding>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:PKCS5">
+      <name>CryptoPadding: PKCS5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <padding>pkcs5</padding>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:PKCS7">
+      <name>CryptoPadding: PKCS7</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <padding>pkcs7</padding>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:RAW">
+      <name>CryptoPadding: RAW</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <padding>raw</padding>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CP:UNKNOWN">
+      <name>CryptoPadding: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <padding>unknown</padding>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CP:OAEP"/>
+    <dependency ref="dummy-CP:OTHER"/>
+    <dependency ref="dummy-CP:PKCS1V15"/>
+    <dependency ref="dummy-CP:PKCS5"/>
+    <dependency ref="dummy-CP:PKCS7"/>
+    <dependency ref="dummy-CP:RAW"/>
+    <dependency ref="dummy-CP:UNKNOWN"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

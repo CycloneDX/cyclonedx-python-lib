@@ -35,6 +35,7 @@ from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import MutuallyExclusivePropertiesException
 from ..exception.serialization import CycloneDxDeserializationException
+from ..schema import SchemaVersion
 from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import AttachedText, Property, XsUri
 from .bom_ref import BomRef
@@ -603,6 +604,123 @@ class DisjunctiveLicense:
         return f'<License id={self._id!r}, name={self._name!r}>'
 
 
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class LicenseExpressionDetails:
+    """
+    This is our internal representation of the ``licenseExpressionDetailedType`` complex type that specifies the details
+    and attributes related to a software license identifier within a CycloneDX BOM document.
+
+    .. note::
+        Introduced in CycloneDX v1.7
+
+
+    .. note::
+        See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_licenseExpressionDetailedType
+    """
+
+    def __init__(
+        self, license_identifier: str, *,
+        bom_ref: Optional[Union[str, BomRef]] = None,
+        text: Optional[AttachedText] = None,
+        url: Optional[XsUri] = None,
+    ) -> None:
+        self._bom_ref = _bom_ref_from_str(bom_ref)
+        self.license_identifier = license_identifier
+        self.text = text
+        self.url = url
+
+    @property
+    @serializable.xml_name('license-identifier')
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    @serializable.xml_attribute()
+    def license_identifier(self) -> str:
+        """
+        A valid SPDX license identifier. Refer to https://spdx.org/specifications for syntax requirements.
+        This field serves as the primary key, which uniquely identifies each record.
+
+        Example values:
+         - "Apache-2.0",
+         - "GPL-3.0-only WITH Classpath-exception-2.0"
+         - "LicenseRef-my-custom-license"
+
+        Returns:
+            `str`
+        """
+        return self._license_identifier
+
+    @license_identifier.setter
+    def license_identifier(self, license_identifier: str) -> None:
+        self._license_identifier = license_identifier
+
+    @property
+    @serializable.json_name('bom-ref')
+    @serializable.type_mapping(BomRef)
+    @serializable.xml_attribute()
+    @serializable.xml_name('bom-ref')
+    def bom_ref(self) -> BomRef:
+        """
+        An identifier which can be used to reference the license elsewhere in the BOM. Every bom-ref MUST be
+        unique within the BOM.
+        Value SHOULD not start with the BOM-Link intro 'urn:cdx:' to avoid conflicts with BOM-Links.
+
+        Returns:
+            `BomRef`
+        """
+        return self._bom_ref
+
+    @property
+    @serializable.xml_sequence(1)
+    def text(self) -> Optional[AttachedText]:
+        """
+        A way to include the textual content of the license.
+
+        Returns:
+            `AttachedText` else `None`
+        """
+        return self._text
+
+    @text.setter
+    def text(self, text: Optional[AttachedText]) -> None:
+        self._text = text
+
+    @property
+    @serializable.xml_sequence(2)
+    def url(self) -> Optional[XsUri]:
+        """
+        The URL to the license file. If specified, a 'license' externalReference should also be specified for
+        completeness.
+
+        Returns:
+            `XsUri` or `None`
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url: Optional[XsUri]) -> None:
+        self._url = url
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.bom_ref.value, self.license_identifier, self.url, self.text,
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, LicenseExpressionDetails):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, LicenseExpressionDetails):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<LicenseExpressionDetails bom-ref={self.bom_ref!r}, license_identifier={self.license_identifier}>'
+
+
 @serializable.serializable_class(
     name='expression',
     ignore_unknown_during_deserialization=True
@@ -621,10 +739,12 @@ class LicenseExpression:
         self, value: str, *,
         bom_ref: Optional[Union[str, BomRef]] = None,
         acknowledgement: Optional[LicenseAcknowledgement] = None,
+        details: Optional[Iterable[LicenseExpressionDetails]] = None,
     ) -> None:
         self._bom_ref = _bom_ref_from_str(bom_ref)
         self._value = value
         self._acknowledgement = acknowledgement
+        self.details = details or []
 
     @property
     @serializable.view(SchemaVersion1Dot5)
@@ -687,11 +807,30 @@ class LicenseExpression:
     def acknowledgement(self, acknowledgement: Optional[LicenseAcknowledgement]) -> None:
         self._acknowledgement = acknowledgement
 
+    @property
+    @serializable.json_name('expressionDetails')
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='details')
+    @serializable.xml_sequence(1)
+    def details(self) -> 'SortedSet[LicenseExpressionDetails]':
+        """
+        Details for parts of the expression.
+
+        Returns:
+            Set of `LicenseExpressionDetails`
+        """
+        return self._details
+
+    @details.setter
+    def details(self, details: Iterable[LicenseExpressionDetails]) -> None:
+        self._details = SortedSet(details)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self._acknowledgement,
             self._value,
             self._bom_ref.value,
+            _ComparableTuple(self.details),
         ))
 
     def __hash__(self) -> int:
@@ -756,6 +895,38 @@ else:
 class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
+    @staticmethod
+    def __supports_expression_details(view: Any) -> bool:
+        try:
+            return view is not None and view().schema_version_enum >= SchemaVersion.V1_7
+        except Exception:  # pragma: no cover
+            return False
+
+    @staticmethod
+    def __xml_normalize_license_expression_detailed(
+        license_expression: LicenseExpression,
+        view: Optional[type[serializable.ViewType]],
+        xmlns: Optional[str]
+    ) -> Element:
+        elem: Element = license_expression.as_xml(  # type:ignore[attr-defined]
+            view_=view, as_string=False, element_name='expression-detailed', xmlns=xmlns)
+        elem.set(f'{{{xmlns}}}expression' if xmlns else 'expression', license_expression.value)
+        elem.text = None
+        return elem
+
+    @staticmethod
+    def __xml_denormalize_license_expression_detailed(
+        li: Element,
+        default_ns: Optional[str]
+    ) -> LicenseExpression:
+        expression_value = li.get('expression')
+        if not expression_value:
+            raise CycloneDxDeserializationException(f'unexpected content: {li!r}')
+        license_expression: LicenseExpression = LicenseExpression.from_xml(  # type:ignore[attr-defined]
+            li, default_ns)
+        license_expression.value = expression_value
+        return license_expression
+
     @classmethod
     def json_normalize(cls, o: LicenseRepository, *,
                        view: Optional[type[serializable.ViewType]],
@@ -807,8 +978,13 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             # mixed license expression and license? this is an invalid constellation according to schema!
             # see https://github.com/CycloneDX/specification/pull/205
             # but models need to allow it for backwards compatibility with JSON CDX < 1.5
-            elem.append(expression.as_xml(  # type:ignore[attr-defined]
-                view_=view, as_string=False, element_name='expression', xmlns=xmlns))
+            if expression.details and cls.__supports_expression_details(view):
+                elem.append(cls.__xml_normalize_license_expression_detailed(expression, view, xmlns))
+            else:
+                if expression.details:
+                    warn('LicenseExpression details are not supported in schema versions < 1.7; skipping serialization')
+                elem.append(expression.as_xml(  # type:ignore[attr-defined]
+                    view_=view, as_string=False, element_name='expression', xmlns=xmlns))
         else:
             elem.extend(
                 li.as_xml(  # type:ignore[attr-defined]
@@ -831,6 +1007,8 @@ class _LicenseRepositorySerializationHelper(serializable.helpers.BaseHelper):
             elif tag == 'expression':
                 repo.add(LicenseExpression.from_xml(  # type:ignore[attr-defined]
                     li, default_ns))
+            elif tag == 'expression-detailed':
+                repo.add(cls.__xml_denormalize_license_expression_detailed(li, default_ns))
             else:
                 raise CycloneDxDeserializationException(f'unexpected: {li!r}')
         return repo
