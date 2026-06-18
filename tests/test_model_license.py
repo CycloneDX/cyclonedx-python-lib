@@ -87,10 +87,6 @@ class TestModelDisjunctiveLicense(TestCase):
         self.assertEqual('foo', license.id)
         self.assertEqual(None, license.name)
 
-    def test_licensing_none_by_default(self) -> None:
-        license = DisjunctiveLicense(id='MIT')
-        self.assertIsNone(license.licensing)
-
     def test_equal(self) -> None:
         a = DisjunctiveLicense(id='foo', name='bar')
         b = DisjunctiveLicense(id='foo', name='bar')
@@ -98,16 +94,6 @@ class TestModelDisjunctiveLicense(TestCase):
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
         self.assertNotEqual(a, 'foo')
-
-    def test_equal_different_licensing(self) -> None:
-        a = DisjunctiveLicense(id='MIT', licensing=Licensing(purchase_order='PO-1'))
-        b = DisjunctiveLicense(id='MIT', licensing=Licensing(purchase_order='PO-2'))
-        self.assertNotEqual(a, b)
-
-    def test_equal_different_acknowledgement(self) -> None:
-        a = DisjunctiveLicense(id='MIT', acknowledgement=LicenseAcknowledgement.DECLARED)
-        b = DisjunctiveLicense(id='MIT', acknowledgement=LicenseAcknowledgement.CONCLUDED)
-        self.assertNotEqual(a, b)
 
     def test_create_with_properties(self) -> None:
         properties = [Property(name='key1', value='value1')]
@@ -127,6 +113,41 @@ class TestModelDisjunctiveLicense(TestCase):
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
 
+    def test_create_with_licensing(self) -> None:
+        licensing = Licensing(
+            purchase_order='PO-123',
+            license_types=[LicenseType.SUBSCRIPTION],
+            licensor=LicenseEntity(organization=OrganizationalEntity(name='Acme Inc')),
+            licensee=LicenseEntity(individual=OrganizationalContact(name='Jane Doe')),
+        )
+        dl = DisjunctiveLicense(name='Commercial', licensing=licensing)
+        self.assertIs(licensing, dl.licensing)
+
+    def test_licensing_none_by_default(self) -> None:
+        license = DisjunctiveLicense(id='MIT')
+        self.assertIsNone(license.licensing)
+
+    def test_equal_with_licensing(self) -> None:
+        licensing = Licensing(
+            purchase_order='PO-1',
+            licensor=LicenseEntity(organization=OrganizationalEntity(name='Acme Inc')),
+            licensee=LicenseEntity(individual=OrganizationalContact(name='Bob')),
+            purchaser=LicenseEntity(organization=OrganizationalEntity(name='BuyCo')),
+            last_renewal=datetime(2022, 1, 1, tzinfo=timezone.utc),
+            expiration=datetime(2023, 1, 1, tzinfo=timezone.utc),
+        )
+        a = DisjunctiveLicense(name='foo', licensing=licensing)
+        b = DisjunctiveLicense(name='foo', licensing=licensing)
+        c = DisjunctiveLicense(name='foo')
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, c)
+
+    def test_equal_with_acknowledgement(self) -> None:
+        a = DisjunctiveLicense(id='MIT', acknowledgement=LicenseAcknowledgement.DECLARED)
+        b = DisjunctiveLicense(id='MIT', acknowledgement=LicenseAcknowledgement.CONCLUDED)
+        c = DisjunctiveLicense(id='MIT')
+        self.assertNotEqual(a, b)
+        self.assertEqual(a, c)
 
 class TestModelLicenseExpression(TestCase):
     def test_create(self) -> None:
@@ -179,6 +200,40 @@ class TestModelLicenseExpression(TestCase):
         b = LicenseExpression('MIT', acknowledgement=LicenseAcknowledgement.CONCLUDED)
         self.assertNotEqual(a, b)
 
+class TestModelLicense(TestCase):
+    def test_sort_mixed(self) -> None:
+        expected_order = [1, 2, 0]
+        licenses = [
+            DisjunctiveLicense(name='my license'),
+            LicenseExpression(value='MIT or Apache-2.0'),
+            DisjunctiveLicense(id='MIT'),
+        ]
+        expected_licenses = reorder(licenses, expected_order)
+        shuffle(licenses)
+        sorted_licenses = sorted(licenses)
+        self.assertListEqual(sorted_licenses, expected_licenses)
+
+class TestModelLicenseExpressionDetails(TestCase):
+    def test_equal(self) -> None:
+        a = LicenseExpressionDetails(license_identifier='MIT')
+        b = LicenseExpressionDetails(license_identifier='MIT')
+        c = LicenseExpressionDetails(license_identifier='MIT', text=AttachedText(content='some text'))
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, c)
+
+    def test_sort(self) -> None:
+        expected_order = [0, 3, 2, 1]
+        details = [
+            LicenseExpressionDetails(license_identifier='Apache-2.0'),
+            LicenseExpressionDetails(license_identifier='MIT'),
+            LicenseExpressionDetails(license_identifier='MIT'),
+            LicenseExpressionDetails(license_identifier='GPL-3.0'),
+        ]
+        expected_details = reorder(details, expected_order)
+        shuffle(details)
+        sorted_details = sorted(details)
+        self.assertListEqual(sorted_details, expected_details)
+
 class TestModelLicenseEntity(TestCase):
     def test_create_with_organization(self) -> None:
         org = OrganizationalEntity(name='Acme Inc')
@@ -199,17 +254,55 @@ class TestModelLicenseEntity(TestCase):
     def test_throws_when_both_provided(self) -> None:
         with self.assertRaises(MutuallyExclusivePropertiesException):
             LicenseEntity(
-                organization=OrganizationalEntity(name='Acme'),
+                organization=OrganizationalEntity(name='Acme Inc'),
                 individual=OrganizationalContact(name='John')
             )
 
     def test_equal(self) -> None:
-        a = LicenseEntity(organization=OrganizationalEntity(name='Acme'))
-        b = LicenseEntity(organization=OrganizationalEntity(name='Acme'))
-        c = LicenseEntity(individual=OrganizationalContact(name='John'))
+        a = LicenseEntity(organization=OrganizationalEntity(name='Acme Inc'))
+        b = LicenseEntity(organization=OrganizationalEntity(name='Acme Inc'))
+        c = LicenseEntity(organization=OrganizationalEntity(name='Acme'))
+        d = LicenseEntity(individual=OrganizationalContact(name='John'))
+        e = LicenseEntity(individual=OrganizationalContact(name='John'))
+        f = LicenseEntity(individual=OrganizationalContact(name='Jane'))
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
-        self.assertNotEqual(a, 'foo')
+        self.assertNotEqual(a, d)
+        self.assertEqual(d, e)
+        self.assertNotEqual(d, f)
+
+    def test_set_organization_clears_individual(self) -> None:
+        holder = LicenseEntity(individual=OrganizationalContact(name='John'))
+        org = OrganizationalEntity(name='Acme Inc')
+        holder.organization = org
+        self.assertIs(org, holder.organization)
+        self.assertIsNone(holder.individual)
+
+    def test_set_individual_clears_organization(self) -> None:
+        holder = LicenseEntity(organization=OrganizationalEntity(name='Acme Inc'))
+        contact = OrganizationalContact(name='John')
+        holder.individual = contact
+        self.assertIs(contact, holder.individual)
+        self.assertIsNone(holder.organization)
+
+    def test_set_organization_none_keeps_individual(self) -> None:
+        contact = OrganizationalContact(name='John')
+        holder = LicenseEntity(individual=contact)
+        holder.organization = None
+        self.assertIsNone(holder.organization)
+        self.assertIs(contact, holder.individual)
+
+    def test_set_individual_none_keeps_organization(self) -> None:
+        org = OrganizationalEntity(name='Acme Inc')
+        holder = LicenseEntity(organization=org)
+        holder.individual = None
+        self.assertIsNone(holder.individual)
+        self.assertIs(org, holder.organization)
+
+    def test_sort(self) -> None:
+        a = LicenseEntity(organization=OrganizationalEntity(name='Acme Inc'))
+        b = LicenseEntity(organization=OrganizationalEntity(name='Beta Co'))
+        self.assertListEqual([a, b], sorted([b, a]))
 
 class TestModelLicensing(TestCase):
     def test_create_minimal(self) -> None:
@@ -274,11 +367,10 @@ class TestModelLicensing(TestCase):
         c = Licensing(purchase_order='PO-2')
         self.assertEqual(a, b)
         self.assertNotEqual(a, c)
-        self.assertNotEqual(a, 'foo')
 
     def test_equal_different_licensor(self) -> None:
-        a = Licensing(licensor=LicenseEntity(organization=OrganizationalEntity(name='Acme')))
-        b = Licensing(licensor=LicenseEntity(organization=OrganizationalEntity(name='Other')))
+        a = Licensing(licensor=LicenseEntity(organization=OrganizationalEntity(name='Acme Inc')))
+        b = Licensing(licensor=LicenseEntity(organization=OrganizationalEntity(name='Other Co')))
         self.assertNotEqual(a, b)
 
     def test_equal_different_licensee(self) -> None:
@@ -302,67 +394,17 @@ class TestModelLicensing(TestCase):
         )
         self.assertNotEqual(a, b)
 
-class TestModelDisjunctiveLicenseWithLicensing(TestCase):
-    def test_create_with_licensing(self) -> None:
-        licensing = Licensing(
-            purchase_order='PO-123',
-            license_types=[LicenseType.SUBSCRIPTION],
-            licensor=LicenseEntity(organization=OrganizationalEntity(name='Acme Inc')),
-            licensee=LicenseEntity(individual=OrganizationalContact(name='Jane Doe')),
-        )
-        dl = DisjunctiveLicense(name='Commercial', licensing=licensing)
-        self.assertIs(licensing, dl.licensing)
+    def test_equal_different_alt_ids(self) -> None:
+        a = Licensing(alt_ids=['acme'])
+        b = Licensing(alt_ids=['other'])
+        self.assertNotEqual(a, b)
 
-    def test_licensing_none_by_default(self) -> None:
-        dl = DisjunctiveLicense(id='MIT')
-        self.assertIsNone(dl.licensing)
+    def test_equal_different_purchase_order(self) -> None:
+        a = Licensing(purchase_order='PO-1')
+        b = Licensing(purchase_order='PO-2')
+        self.assertNotEqual(a, b)
 
-    def test_equal_with_licensing(self) -> None:
-        licensing = Licensing(
-            purchase_order='PO-1',
-            licensor=LicenseEntity(organization=OrganizationalEntity(name='Acme')),
-            licensee=LicenseEntity(individual=OrganizationalContact(name='Bob')),
-            purchaser=LicenseEntity(organization=OrganizationalEntity(name='BuyCo')),
-            last_renewal=datetime(2022, 1, 1, tzinfo=timezone.utc),
-            expiration=datetime(2023, 1, 1, tzinfo=timezone.utc),
-        )
-        a = DisjunctiveLicense(name='foo', licensing=licensing)
-        b = DisjunctiveLicense(name='foo', licensing=licensing)
-        c = DisjunctiveLicense(name='foo')
-        self.assertEqual(a, b)
-        self.assertNotEqual(a, c)
-
-class TestModelLicense(TestCase):
-    def test_sort_mixed(self) -> None:
-        expected_order = [1, 2, 0]
-        licenses = [
-            DisjunctiveLicense(name='my license'),
-            LicenseExpression(value='MIT or Apache-2.0'),
-            DisjunctiveLicense(id='MIT'),
-        ]
-        expected_licenses = reorder(licenses, expected_order)
-        shuffle(licenses)
-        sorted_licenses = sorted(licenses)
-        self.assertListEqual(sorted_licenses, expected_licenses)
-
-
-class TestModelLicenseExpressionDetails(TestCase):
-    def test_equal(self) -> None:
-        a = LicenseExpressionDetails(license_identifier='MIT')
-        b = LicenseExpressionDetails(license_identifier='MIT')
-        c = LicenseExpressionDetails(license_identifier='MIT', text=AttachedText(content='some text'))
-        self.assertEqual(a, b)
-        self.assertNotEqual(a, c)
-
-    def test_sort(self) -> None:
-        expected_order = [0, 3, 2, 1]
-        details = [
-            LicenseExpressionDetails(license_identifier='Apache-2.0'),
-            LicenseExpressionDetails(license_identifier='MIT'),
-            LicenseExpressionDetails(license_identifier='MIT'),
-            LicenseExpressionDetails(license_identifier='GPL-3.0'),
-        ]
-        expected_details = reorder(details, expected_order)
-        shuffle(details)
-        sorted_details = sorted(details)
-        self.assertListEqual(sorted_details, expected_details)
+    def test_equal_different_license_types(self) -> None:
+        a = Licensing(license_types=[LicenseType.SUBSCRIPTION])
+        b = Licensing(license_types=[LicenseType.PERPETUAL])
+        self.assertNotEqual(a, b)
