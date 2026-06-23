@@ -329,6 +329,25 @@ class TestBom(TestCase):
             for dd in d2:
                 self.assertIn(dd.bom_ref, bom_dep.dependencies_as_bom_refs())
 
+    def test_regression_issue_1006(self) -> None:
+        """regression test for issue #1006
+
+        ``Bom.validate()`` must register a Dependency entry for the metadata
+        component and every component/service, without quadratic behaviour.
+        see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1006
+        """
+        n = 100
+        bom = Bom(metadata=BomMetaData(component=Component(name='root', bom_ref='root')))
+        for i in range(n):
+            bom.components.add(Component(name=f'c{i}', bom_ref=f'ref-{i}'))
+        with self.assertWarns(expected_warning=UserWarning):
+            bom.validate()
+        registered = {d.ref.value for d in bom.dependencies}
+        self.assertEqual(len(registered), n + 1)
+        self.assertIn('root', registered)
+        for i in range(n):
+            self.assertIn(f'ref-{i}', registered)
+
     def test_regression_issue_539(self) -> None:
         """regression test for issue #539
         see https://github.com/CycloneDX/cyclonedx-python-lib/issues/539

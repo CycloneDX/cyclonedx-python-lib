@@ -816,13 +816,20 @@ class Bom:
             Deprecated without any replacement.
         """
         # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
-        # 0. Make sure all Dependable have a Dependency entry
-        if self.metadata.component:
-            self.register_dependency(target=self.metadata.component)
-        for _c in self.components:
-            self.register_dependency(target=_c)
-        for _s in self.services:
-            self.register_dependency(target=_s)
+        # 0. Make sure all Dependable have a Dependency entry.
+        #    Resolve "already registered" via a set of refs (O(1) per lookup)
+        #    rather than the linear scan in register_dependency(); otherwise this
+        #    loop is O(n^2) and dominates serialization time for large BOMs.
+        #    see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1006
+        _registered_refs = {_d.ref for _d in self._dependencies}
+        for _dependable in chain(
+            (self.metadata.component,) if self.metadata.component else (),
+            self.components,
+            self.services,
+        ):
+            if _dependable.bom_ref not in _registered_refs:
+                self._dependencies.add(Dependency(ref=_dependable.bom_ref))
+                _registered_refs.add(_dependable.bom_ref)
 
         # 1. Make sure dependencies are all in this Bom.
         component_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
