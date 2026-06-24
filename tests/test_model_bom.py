@@ -18,6 +18,7 @@ import warnings
 from collections.abc import Callable
 from random import shuffle
 from unittest import TestCase
+from unittest.mock import patch
 from uuid import uuid4
 
 from ddt import ddt, named_data
@@ -347,6 +348,41 @@ class TestBom(TestCase):
         self.assertIn('root', registered)
         for i in range(n):
             self.assertIn(f'ref-{i}', registered)
+
+    def test_regression_issue_1006_scales_linearly(self) -> None:
+        """regression test for issue #1006 -- guards the *complexity*.
+
+        The previous implementation located an existing dependency entry with a
+        linear scan in ``register_dependency()``, called once per component by
+        ``validate()`` -- making the pass O(n^2). This guards against that
+        regression without relying on wall-clock timing (flaky in CI): it counts
+        the ``BomRef`` equality comparisons performed during ``validate()`` for
+        ``n`` and ``2n`` components. A quadratic implementation roughly
+        quadruples the comparisons when the input doubles, a linear one only
+        roughly doubles them (measured: linear ~1.6k -> ~3.7k, ratio ~2.2;
+        quadratic ~22k -> ~84k, ratio ~3.9).
+        see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1006
+        """
+        def _comparisons_for(n: int) -> int:
+            bom = Bom(metadata=BomMetaData(component=Component(name='root', bom_ref='root')))
+            for i in range(n):
+                bom.components.add(Component(name=f'c{i}', bom_ref=f'ref-{i}'))
+            count = 0
+            original_eq = BomRef.__eq__
+
+            def _counting_eq(self: BomRef, other: object) -> bool:
+                nonlocal count
+                count += 1
+                return original_eq(self, other)
+            with patch.object(BomRef, '__eq__', _counting_eq):
+                bom.validate()
+            return count
+
+        base = _comparisons_for(200)
+        doubled = _comparisons_for(400)
+        # linear => ratio ~2; quadratic => ratio ~4. Generous headroom; the
+        # constant +10 keeps it robust if `base` is ever near zero.
+        self.assertLess(doubled, base * 3 + 10)
 
     def test_regression_issue_539(self) -> None:
         """regression test for issue #539
