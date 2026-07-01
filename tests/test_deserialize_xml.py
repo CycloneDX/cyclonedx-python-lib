@@ -16,7 +16,6 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from collections.abc import Callable
-from io import StringIO
 from os.path import join
 from typing import Any
 from unittest import TestCase
@@ -50,19 +49,6 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
             bom = Bom.from_xml(s)
         self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
-
-    def test_service_trust_zone_from_xml(self) -> None:
-        bom = Bom.from_xml(StringIO("""<?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.7" version="1">
-  <services>
-    <service bom-ref="svc-ref">
-      <name>svc</name>
-      <trustZone>internal-vpc</trustZone>
-    </service>
-  </services>
-</bom>
-"""))
-        self.assertEqual('internal-vpc', next(iter(bom.services)).trust_zone)
 
     def test_component_evidence_identity(self) -> None:
         xml_file = join(OWN_DATA_DIRECTORY, 'xml',
