@@ -11,8 +11,10 @@
         <assetType>algorithm</assetType>
         <algorithmProperties>
           <primitive>kem</primitive>
+          <algorithmFamily>ML-KEM</algorithmFamily>
           <parameterSetIdentifier>a-parameter-set-id</parameterSetIdentifier>
           <curve>9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj</curve>
+          <ellipticCurve>nist/P-256</ellipticCurve>
           <executionEnvironment>software-plain-ram</executionEnvironment>
           <implementationPlatform>generic</implementationPlatform>
           <certificationLevel>fips140-1-l1</certificationLevel>
