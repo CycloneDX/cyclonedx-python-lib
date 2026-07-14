@@ -22,6 +22,7 @@
           <securedBy>
             <mechanism>hard-work</mechanism>
           </securedBy>
+          <fingerprint alg="SHA-256">bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</fingerprint>
         </relatedCryptoMaterialProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>
