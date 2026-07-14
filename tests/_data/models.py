@@ -207,7 +207,8 @@ def get_crypto_properties_certificate() -> CryptoProperties:
             signature_algorithm_ref=None,
             subject_public_key_ref=None,
             certificate_format='pem',
-            certificate_extension='csr'
+            certificate_extension='csr',
+            certificate_file_extension='pem',
         ),
         oid='an-oid-here'
     )

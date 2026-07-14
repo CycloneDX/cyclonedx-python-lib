@@ -6,6 +6,7 @@
         "assetType": "certificate",
         "certificateProperties": {
           "certificateExtension": "csr",
+          "certificateFileExtension": "pem",
           "certificateFormat": "pem",
           "issuerName": "Cloudflare Inc ECC CA-3",
           "notValidAfter": "2024-05-19T00:59:59.999999+00:00",
