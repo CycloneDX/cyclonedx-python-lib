@@ -28,6 +28,11 @@
             <state>active</state>
             <reason>certificate is in use</reason>
           </certificateState>
+          <creationDate>2023-05-18T12:00:00+00:00</creationDate>
+          <activationDate>2023-05-19T01:00:00+00:00</activationDate>
+          <deactivationDate>2024-05-18T12:00:00+00:00</deactivationDate>
+          <revocationDate>2024-05-18T13:00:00+00:00</revocationDate>
+          <destructionDate>2024-05-18T14:00:00+00:00</destructionDate>
         </certificateProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>

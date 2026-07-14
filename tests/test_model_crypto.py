@@ -15,6 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from datetime import datetime, timezone
 from json import loads as json_loads
 from unittest import TestCase
 from xml.etree.ElementTree import fromstring as xml_fromstring
@@ -53,6 +54,34 @@ class TestModelAlgorithmProperties(TestCase):
 
 
 class TestModelCertificateProperties(TestCase):
+
+    def test_lifecycle_dates_are_gated_ordered_and_round_trip(self) -> None:
+        properties = CertificateProperties(
+            creation_date=datetime(2023, 5, 18, 12, 0, tzinfo=timezone.utc),
+            activation_date=datetime(2023, 5, 19, 1, 0, tzinfo=timezone.utc),
+            deactivation_date=datetime(2024, 5, 18, 12, 0, tzinfo=timezone.utc),
+            revocation_date=datetime(2024, 5, 18, 13, 0, tzinfo=timezone.utc),
+            destruction_date=datetime(2024, 5, 18, 14, 0, tzinfo=timezone.utc),
+        )
+
+        lifecycle_names = [
+            'creationDate',
+            'activationDate',
+            'deactivationDate',
+            'revocationDate',
+            'destructionDate',
+        ]
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertTrue(all(name not in json_v1_6 for name in lifecycle_names))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(lifecycle_names, [child.tag for child in xml_v1_7])
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
 
     def test_certificate_states_are_gated_deterministic_and_round_trip(self) -> None:
         predefined = CertificatePredefinedState(

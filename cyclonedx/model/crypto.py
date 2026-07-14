@@ -769,6 +769,11 @@ class CertificateProperties:
         certificate_file_extension: Optional[str] = None,
         fingerprint: Optional[HashType] = None,
         certificate_states: Optional[Iterable[_CertificateState]] = None,
+        creation_date: Optional[datetime] = None,
+        activation_date: Optional[datetime] = None,
+        deactivation_date: Optional[datetime] = None,
+        revocation_date: Optional[datetime] = None,
+        destruction_date: Optional[datetime] = None,
     ) -> None:
         self.serial_number = serial_number
         self.subject_name = subject_name
@@ -782,6 +787,11 @@ class CertificateProperties:
         self.certificate_file_extension = certificate_file_extension
         self.fingerprint = fingerprint
         self.certificate_states = certificate_states or []
+        self.creation_date = creation_date
+        self.activation_date = activation_date
+        self.deactivation_date = deactivation_date
+        self.revocation_date = revocation_date
+        self.destruction_date = destruction_date
 
     @property
     @serializable.view(SchemaVersion1Dot7)
@@ -953,11 +963,72 @@ class CertificateProperties:
     def certificate_states(self, certificate_states: Iterable[_CertificateState]) -> None:
         self._certificate_states = SortedSet(certificate_states)
 
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(130)
+    def creation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was created."""
+        return self._creation_date
+
+    @creation_date.setter
+    def creation_date(self, creation_date: Optional[datetime]) -> None:
+        self._creation_date = creation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(140)
+    def activation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate became active."""
+        return self._activation_date
+
+    @activation_date.setter
+    def activation_date(self, activation_date: Optional[datetime]) -> None:
+        self._activation_date = activation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(150)
+    def deactivation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was deactivated."""
+        return self._deactivation_date
+
+    @deactivation_date.setter
+    def deactivation_date(self, deactivation_date: Optional[datetime]) -> None:
+        self._deactivation_date = deactivation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(160)
+    def revocation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was revoked."""
+        return self._revocation_date
+
+    @revocation_date.setter
+    def revocation_date(self, revocation_date: Optional[datetime]) -> None:
+        self._revocation_date = revocation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(170)
+    def destruction_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was destroyed."""
+        return self._destruction_date
+
+    @destruction_date.setter
+    def destruction_date(self, destruction_date: Optional[datetime]) -> None:
+        self._destruction_date = destruction_date
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
             self.certificate_format, self.certificate_extension, self.certificate_file_extension, self.fingerprint,
-            _ComparableTuple(self.certificate_states),
+            _ComparableTuple(self.certificate_states), self.creation_date, self.activation_date,
+            self.deactivation_date, self.revocation_date, self.destruction_date,
         ))
 
     def __eq__(self, other: object) -> bool:
