@@ -23,6 +23,9 @@ from cyclonedx.model import HashAlgorithm, HashType
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
+    CertificateCustomState,
+    CertificateLifecycleState,
+    CertificatePredefinedState,
     CertificateProperties,
     CryptoPrimitive,
     Ikev2TransformTypes,
@@ -50,6 +53,39 @@ class TestModelAlgorithmProperties(TestCase):
 
 
 class TestModelCertificateProperties(TestCase):
+
+    def test_certificate_states_are_gated_deterministic_and_round_trip(self) -> None:
+        predefined = CertificatePredefinedState(
+            state=CertificateLifecycleState.ACTIVE,
+            reason='in use',
+        )
+        custom = CertificateCustomState(
+            name='pending-rotation',
+            description='custom state',
+            reason='scheduled maintenance',
+        )
+        properties = CertificateProperties(certificate_states=[predefined, custom])
+
+        self.assertEqual([custom, predefined], list(properties.certificate_states))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+        self.assertNotIn('certificateState', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        from_json = CertificateProperties.from_json(json_v1_7)
+        self.assertEqual(properties, from_json)
+        self.assertEqual(
+            {CertificateCustomState, CertificatePredefinedState},
+            {type(state) for state in from_json.certificate_states},
+        )
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        from_xml = CertificateProperties.from_xml(xml_v1_7)
+        self.assertEqual(properties, from_xml)
+        self.assertEqual(
+            {CertificateCustomState, CertificatePredefinedState},
+            {type(state) for state in from_xml.certificate_states},
+        )
 
     def test_fingerprint_version_gating_comparison_and_round_trip(self) -> None:
         fingerprint = HashType(alg=HashAlgorithm.SHA_256, content='a' * 64)

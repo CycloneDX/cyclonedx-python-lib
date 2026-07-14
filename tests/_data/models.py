@@ -71,6 +71,9 @@ from cyclonedx.model.component_evidence import (
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
+    CertificateCustomState,
+    CertificateLifecycleState,
+    CertificatePredefinedState,
     CertificateProperties,
     CryptoAssetType,
     CryptoCertificationLevel,
@@ -211,6 +214,17 @@ def get_crypto_properties_certificate() -> CryptoProperties:
             certificate_extension='csr',
             certificate_file_extension='pem',
             fingerprint=HashType(alg=HashAlgorithm.SHA_256, content='a' * 64),
+            certificate_states=[
+                CertificatePredefinedState(
+                    state=CertificateLifecycleState.ACTIVE,
+                    reason='certificate is in use',
+                ),
+                CertificateCustomState(
+                    name='pending-rotation',
+                    description='The certificate is waiting to be rotated.',
+                    reason='scheduled maintenance',
+                ),
+            ],
         ),
         oid='an-oid-here'
     )

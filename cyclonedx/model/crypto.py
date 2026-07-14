@@ -29,12 +29,14 @@ from collections.abc import Iterable
 from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
+from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidNistQuantumSecurityLevelException, InvalidRelatedCryptoMaterialSizeException
+from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
 from . import HashType
 from .bom_ref import BomRef
@@ -587,6 +589,158 @@ class AlgorithmProperties:
         return f'<AlgorithmProperties primitive={self.primitive}, execution_environment={self.execution_environment}>'
 
 
+@serializable.serializable_enum
+class CertificateLifecycleState(str, Enum):
+    """A pre-defined state in the certificate lifecycle."""
+
+    PRE_ACTIVATION = 'pre-activation'
+    ACTIVE = 'active'
+    SUSPENDED = 'suspended'
+    DEACTIVATED = 'deactivated'
+    REVOKED = 'revoked'
+    DESTROYED = 'destroyed'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class _CertificateState:
+    """Non-public common type and deserialization discriminator for certificate states."""
+
+    @classmethod
+    def from_json(cls, data: dict[str, Any]) -> '_CertificateState':
+        if 'state' in data:
+            return CertificatePredefinedState.from_json(data)
+        if 'name' in data:
+            return CertificateCustomState.from_json(data)
+        raise CycloneDxDeserializationException(f'unexpected certificate state: {data!r}')
+
+    @classmethod
+    def from_xml(cls, data: Element, default_namespace: Optional[str] = None) -> '_CertificateState':
+        child_names = {child.tag.rsplit('}', 1)[-1] for child in data}
+        if 'state' in child_names:
+            return CertificatePredefinedState.from_xml(data, default_namespace)
+        if 'name' in child_names:
+            return CertificateCustomState.from_xml(data, default_namespace)
+        raise CycloneDxDeserializationException(f'unexpected certificate state: {data!r}')
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        raise NotImplementedError()
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, _CertificateState) and self._comparable_tuple() == other._comparable_tuple()
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, _CertificateState):
+            return self._comparable_tuple() < other._comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._comparable_tuple())
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificatePredefinedState(_CertificateState):
+    """A standardized certificate lifecycle state with an optional reason."""
+
+    def __init__(self, *, state: CertificateLifecycleState, reason: Optional[str] = None) -> None:
+        self.state = state
+        self.reason = reason
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def state(self) -> CertificateLifecycleState:
+        return self._state
+
+    @state.setter
+    def state(self, state: CertificateLifecycleState) -> None:
+        self._state = state
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def reason(self) -> Optional[str]:
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason: Optional[str]) -> None:
+        self._reason = reason
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('predefined', self.state, self.reason))
+
+    def __repr__(self) -> str:
+        return f'<CertificatePredefinedState state={self.state!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateCustomState(_CertificateState):
+    """An application-defined certificate lifecycle state."""
+
+    def __init__(self, *, name: str, description: Optional[str] = None, reason: Optional[str] = None) -> None:
+        self.name = name
+        self.description = description
+        self.reason = reason
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, name: str) -> None:
+        self._name = name
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @description.setter
+    def description(self, description: Optional[str]) -> None:
+        self._description = description
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(30)
+    def reason(self) -> Optional[str]:
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason: Optional[str]) -> None:
+        self._reason = reason
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('custom', self.name, self.description, self.reason))
+
+    def __repr__(self) -> str:
+        return f'<CertificateCustomState name={self.name!r}>'
+
+
+def _certificate_state_from_json(cls: type[_CertificateState], data: dict[str, Any]) -> _CertificateState:
+    if 'state' in data:
+        return CertificatePredefinedState.from_json(data)
+    if 'name' in data:
+        return CertificateCustomState.from_json(data)
+    raise CycloneDxDeserializationException(f'unexpected certificate state: {data!r}')
+
+
+def _certificate_state_from_xml(
+    cls: type[_CertificateState], data: Element, default_namespace: Optional[str] = None
+) -> _CertificateState:
+    child_names = {child.tag.rsplit('}', 1)[-1] for child in data}
+    if 'state' in child_names:
+        return CertificatePredefinedState.from_xml(data, default_namespace)
+    if 'name' in child_names:
+        return CertificateCustomState.from_xml(data, default_namespace)
+    raise CycloneDxDeserializationException(f'unexpected certificate state: {data!r}')
+
+
+_CertificateState.from_json = classmethod(_certificate_state_from_json)  # type:ignore[assignment]
+_CertificateState.from_xml = classmethod(_certificate_state_from_xml)  # type:ignore[assignment]
+
+
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class CertificateProperties:
     """
@@ -614,6 +768,7 @@ class CertificateProperties:
         certificate_extension: Optional[str] = None,
         certificate_file_extension: Optional[str] = None,
         fingerprint: Optional[HashType] = None,
+        certificate_states: Optional[Iterable[_CertificateState]] = None,
     ) -> None:
         self.serial_number = serial_number
         self.subject_name = subject_name
@@ -626,6 +781,7 @@ class CertificateProperties:
         self.certificate_extension = certificate_extension
         self.certificate_file_extension = certificate_file_extension
         self.fingerprint = fingerprint
+        self.certificate_states = certificate_states or []
 
     @property
     @serializable.view(SchemaVersion1Dot7)
@@ -784,10 +940,24 @@ class CertificateProperties:
     def fingerprint(self, fingerprint: Optional[HashType]) -> None:
         self._fingerprint = fingerprint
 
+    @property
+    @serializable.json_name('certificateState')
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'certificateState')
+    @serializable.xml_sequence(120)
+    def certificate_states(self) -> 'SortedSet[_CertificateState]':
+        """The lifecycle states associated with the certificate."""
+        return self._certificate_states
+
+    @certificate_states.setter
+    def certificate_states(self, certificate_states: Iterable[_CertificateState]) -> None:
+        self._certificate_states = SortedSet(certificate_states)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
             self.certificate_format, self.certificate_extension, self.certificate_file_extension, self.fingerprint,
+            _ComparableTuple(self.certificate_states),
         ))
 
     def __eq__(self, other: object) -> bool:

@@ -8,6 +8,17 @@
           "certificateExtension": "csr",
           "certificateFileExtension": "pem",
           "certificateFormat": "pem",
+          "certificateState": [
+            {
+              "description": "The certificate is waiting to be rotated.",
+              "name": "pending-rotation",
+              "reason": "scheduled maintenance"
+            },
+            {
+              "reason": "certificate is in use",
+              "state": "active"
+            }
+          ],
           "fingerprint": {
             "alg": "SHA-256",
             "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

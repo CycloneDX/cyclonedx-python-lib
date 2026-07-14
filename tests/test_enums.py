@@ -23,7 +23,7 @@ from glob import glob
 from itertools import chain
 from json import load as json_load
 from os import path
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from unittest import TestCase
 from warnings import warn
 from xml.etree.ElementTree import parse as xml_parse  # nosec B405
@@ -94,6 +94,9 @@ from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilitySeverity,
 )
 from cyclonedx.model.crypto import (  # isort:skip
+    CertificateLifecycleState,
+    CertificatePredefinedState,
+    CertificateProperties,
     CryptoAssetType,
     CryptoCertificationLevel,
     CryptoExecutionEnvironment,
@@ -130,7 +133,7 @@ def dp_cases_from_xml_schemas(xpath: str) -> set[str]:
     return cases
 
 
-def dp_cases_from_json_schema(sf: str, jsonpointer: Iterable[str]) -> Generator[str, None, None]:
+def dp_cases_from_json_schema(sf: str, jsonpointer: Iterable[Union[str, int]]) -> Generator[str, None, None]:
     with open(sf) as sfh:
         data = json_load(sfh)
     try:
@@ -142,7 +145,7 @@ def dp_cases_from_json_schema(sf: str, jsonpointer: Iterable[str]) -> Generator[
     yield from data['enum']
 
 
-def dp_cases_from_json_schemas(*jsonpointer: str) -> set[str]:
+def dp_cases_from_json_schemas(*jsonpointer: Union[str, int]) -> set[str]:
     cases: set[str] = set()
     for sf in SCHEMA_JSON.values():
         if sf is None:
@@ -878,6 +881,35 @@ class TestEnumCryptoFunction(_EnumTestCase):
                     )
                 ) for cf in CryptoFunction
             ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumCertificateLifecycleState(_EnumTestCase):
+
+    @idata(dp_cases_from_json_schemas(
+        'definitions', 'cryptoProperties', 'properties', 'certificateProperties', 'properties',
+        'certificateState', 'items', 'oneOf', 0, 'properties', 'state'
+    ))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(CertificateLifecycleState, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] is SchemaVersion.V1_7))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'CertificateLifecycleState: {state.name}', bom_ref=f'dummy-CLS:{state.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.CERTIFICATE,
+                        certificate_properties=CertificateProperties(
+                            certificate_states=[CertificatePredefinedState(state=state)]
+                        ),
+                    ),
+                ) for state in CertificateLifecycleState
+            ]
+        )
         super()._test_cases_render(bom, of, sv)
 
 
