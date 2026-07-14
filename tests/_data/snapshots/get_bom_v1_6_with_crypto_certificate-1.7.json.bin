@@ -40,9 +40,21 @@
           "issuerName": "Cloudflare Inc ECC CA-3",
           "notValidAfter": "2024-05-19T00:59:59.999999+00:00",
           "notValidBefore": "2023-05-19T01:00:00+00:00",
+          "relatedCryptographicAssets": [
+            {
+              "ref": "signature-algorithm",
+              "type": "algorithm"
+            },
+            {
+              "ref": "subject-public-key",
+              "type": "publicKey"
+            }
+          ],
           "revocationDate": "2024-05-18T13:00:00+00:00",
           "serialNumber": "3942447fac867ae5cdb3229b658f4d48",
-          "subjectName": "cyclonedx.org"
+          "signatureAlgorithmRef": "signature-algorithm",
+          "subjectName": "cyclonedx.org",
+          "subjectPublicKeyRef": "subject-public-key"
         },
         "oid": "an-oid-here"
       },

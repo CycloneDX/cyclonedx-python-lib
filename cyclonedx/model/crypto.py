@@ -893,6 +893,53 @@ _CertificateExtension.from_xml = classmethod(_certificate_extension_from_xml)  #
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class RelatedCryptographicAsset:
+    """A typed reference to another cryptographic asset."""
+
+    def __init__(self, *, type: Optional[str] = None, ref: Optional[BomRef] = None) -> None:
+        self.type = type
+        self.ref = ref
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def type(self) -> Optional[str]:
+        return self._type
+
+    @type.setter
+    def type(self, type: Optional[str]) -> None:
+        self._type = type
+
+    @property
+    @serializable.type_mapping(BomRef)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def ref(self) -> Optional[BomRef]:
+        return self._ref
+
+    @ref.setter
+    def ref(self, ref: Optional[BomRef]) -> None:
+        self._ref = ref
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.type, self.ref))
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, RelatedCryptographicAsset) and self.__comparable_tuple() == other.__comparable_tuple()
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, RelatedCryptographicAsset):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<RelatedCryptographicAsset type={self.type!r}, ref={self.ref!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class CertificateProperties:
     """
     This is our internal representation of the `cryptoPropertiesType.certificateProperties` complex type within
@@ -926,6 +973,7 @@ class CertificateProperties:
         revocation_date: Optional[datetime] = None,
         destruction_date: Optional[datetime] = None,
         certificate_extensions: Optional[Iterable[_CertificateExtension]] = None,
+        related_cryptographic_assets: Optional[Iterable[RelatedCryptographicAsset]] = None,
     ) -> None:
         self.serial_number = serial_number
         self.subject_name = subject_name
@@ -945,6 +993,7 @@ class CertificateProperties:
         self.revocation_date = revocation_date
         self.destruction_date = destruction_date
         self.certificate_extensions = certificate_extensions or []
+        self.related_cryptographic_assets = related_cryptographic_assets or []
 
     @property
     @serializable.view(SchemaVersion1Dot7)
@@ -1188,19 +1237,32 @@ class CertificateProperties:
     def certificate_extensions(self, certificate_extensions: Iterable[_CertificateExtension]) -> None:
         self._certificate_extensions = SortedSet(certificate_extensions)
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'relatedCryptographicAsset')
+    @serializable.xml_sequence(190)
+    def related_cryptographic_assets(self) -> 'SortedSet[RelatedCryptographicAsset]':
+        """Cryptographic assets related to this certificate."""
+        return self._related_cryptographic_assets
+
+    @related_cryptographic_assets.setter
+    def related_cryptographic_assets(
+        self, related_cryptographic_assets: Iterable[RelatedCryptographicAsset]
+    ) -> None:
+        self._related_cryptographic_assets = SortedSet(related_cryptographic_assets)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
-            self.certificate_format, self.certificate_extension, self.certificate_file_extension, self.fingerprint,
+            self.signature_algorithm_ref, self.subject_public_key_ref, self.certificate_format,
+            self.certificate_extension, self.certificate_file_extension, self.fingerprint,
             _ComparableTuple(self.certificate_states), self.creation_date, self.activation_date,
             self.deactivation_date, self.revocation_date, self.destruction_date,
-            _ComparableTuple(self.certificate_extensions),
+            _ComparableTuple(self.certificate_extensions), _ComparableTuple(self.related_cryptographic_assets),
         ))
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, CertificateProperties):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
+        return isinstance(other, CertificateProperties) and self.__comparable_tuple() == other.__comparable_tuple()
 
     def __lt__(self, other: object) -> bool:
         if isinstance(other, CertificateProperties):
@@ -1375,6 +1437,7 @@ class RelatedCryptoMaterialProperties:
         format: Optional[str] = None,
         secured_by: Optional[RelatedCryptoMaterialSecuredBy] = None,
         fingerprint: Optional[HashType] = None,
+        related_cryptographic_assets: Optional[Iterable[RelatedCryptographicAsset]] = None,
     ) -> None:
         self.type = type
         self.id = id
@@ -1389,6 +1452,7 @@ class RelatedCryptoMaterialProperties:
         self.format = format
         self.secured_by = secured_by
         self.fingerprint = fingerprint
+        self.related_cryptographic_assets = related_cryptographic_assets or []
 
     @property
     @serializable.xml_sequence(10)
@@ -1586,11 +1650,25 @@ class RelatedCryptoMaterialProperties:
     def fingerprint(self, fingerprint: Optional[HashType]) -> None:
         self._fingerprint = fingerprint
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'relatedCryptographicAsset')
+    @serializable.xml_sequence(140)
+    def related_cryptographic_assets(self) -> 'SortedSet[RelatedCryptographicAsset]':
+        """Cryptographic assets related to this material."""
+        return self._related_cryptographic_assets
+
+    @related_cryptographic_assets.setter
+    def related_cryptographic_assets(
+        self, related_cryptographic_assets: Iterable[RelatedCryptographicAsset]
+    ) -> None:
+        self._related_cryptographic_assets = SortedSet(related_cryptographic_assets)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.type, self.id, self.state, self.algorithm_ref, self.creation_date, self.activation_date,
             self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by,
-            self.fingerprint,
+            self.fingerprint, _ComparableTuple(self.related_cryptographic_assets),
         ))
 
     def __eq__(self, other: object) -> bool:

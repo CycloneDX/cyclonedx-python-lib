@@ -90,6 +90,7 @@ from cyclonedx.model.crypto import (
     ProtocolProperties,
     ProtocolPropertiesCipherSuite,
     ProtocolPropertiesType,
+    RelatedCryptographicAsset,
     RelatedCryptoMaterialProperties,
     RelatedCryptoMaterialSecuredBy,
     RelatedCryptoMaterialState,
@@ -211,8 +212,8 @@ def get_crypto_properties_certificate() -> CryptoProperties:
                                       tzinfo=timezone.utc),
             not_valid_after=datetime(year=2024, month=5, day=19, hour=0, minute=59, second=59, microsecond=999999,
                                      tzinfo=timezone.utc),
-            signature_algorithm_ref=None,
-            subject_public_key_ref=None,
+            signature_algorithm_ref=BomRef('signature-algorithm'),
+            subject_public_key_ref=BomRef('subject-public-key'),
             certificate_format='pem',
             certificate_extension='csr',
             certificate_file_extension='pem',
@@ -242,6 +243,10 @@ def get_crypto_properties_certificate() -> CryptoProperties:
                     custom_extension_name='1.2.3.4.5',
                     custom_extension_value='custom-value',
                 ),
+            ],
+            related_cryptographic_assets=[
+                RelatedCryptographicAsset(type='algorithm', ref=BomRef('signature-algorithm')),
+                RelatedCryptographicAsset(type='publicKey', ref=BomRef('subject-public-key')),
             ],
         ),
         oid='an-oid-here'
@@ -304,7 +309,7 @@ def get_crypto_properties_related_material() -> CryptoProperties:
             type=RelatedCryptoMaterialType.DIGEST,
             id='some-identifier',
             state=RelatedCryptoMaterialState.ACTIVE,
-            algorithm_ref=None,
+            algorithm_ref=BomRef('material-algorithm'),
             creation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
                                    tzinfo=timezone.utc),
             activation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
@@ -317,9 +322,12 @@ def get_crypto_properties_related_material() -> CryptoProperties:
             format='a-format',
             secured_by=RelatedCryptoMaterialSecuredBy(
                 mechanism='hard-work',
-                algorithm_ref=None
+                algorithm_ref=BomRef('securing-algorithm'),
             ),
             fingerprint=HashType(alg=HashAlgorithm.SHA_256, content='b' * 64),
+            related_cryptographic_assets=[
+                RelatedCryptographicAsset(type='algorithm', ref=BomRef('material-algorithm')),
+            ],
         ),
         oid='an-oid-here'
     )

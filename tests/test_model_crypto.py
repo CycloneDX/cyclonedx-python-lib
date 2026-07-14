@@ -35,6 +35,7 @@ from cyclonedx.model.crypto import (
     Ikev2TransformTypes,
     ProtocolProperties,
     ProtocolPropertiesType,
+    RelatedCryptographicAsset,
     RelatedCryptoMaterialProperties,
     RelatedCryptoMaterialSecuredBy,
     RelatedCryptoMaterialType,
@@ -57,6 +58,40 @@ class TestModelAlgorithmProperties(TestCase):
 
 
 class TestModelCertificateProperties(TestCase):
+
+    def test_related_assets_are_gated_deterministic_and_preserve_deprecated_refs(self) -> None:
+        algorithm = RelatedCryptographicAsset(type='algorithm', ref=BomRef('signature'))
+        public_key = RelatedCryptographicAsset(type='publicKey', ref=BomRef('public-key'))
+        properties = CertificateProperties(
+            signature_algorithm_ref=BomRef('signature'),
+            subject_public_key_ref=BomRef('public-key'),
+            related_cryptographic_assets=[public_key, algorithm],
+        )
+
+        self.assertEqual([algorithm, public_key], list(properties.related_cryptographic_assets))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('relatedCryptographicAssets', json_v1_6)
+        self.assertEqual('signature', json_v1_6['signatureAlgorithmRef'])
+        self.assertEqual('public-key', json_v1_6['subjectPublicKeyRef'])
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual('signature', json_v1_7['signatureAlgorithmRef'])
+        self.assertEqual('public-key', json_v1_7['subjectPublicKeyRef'])
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
+
+    def test_related_cryptographic_asset_comparison_and_hashing(self) -> None:
+        first = RelatedCryptographicAsset(type='algorithm', ref=BomRef('a'))
+        second = RelatedCryptographicAsset(type='publicKey', ref=BomRef('b'))
+
+        self.assertNotEqual(first, second)
+        self.assertNotEqual(hash(first), hash(second))
+        self.assertEqual([first, second], sorted([second, first]))
 
     def test_certificate_extensions_are_gated_deterministic_and_round_trip(self) -> None:
         common = CertificateCommonExtension(
@@ -229,6 +264,34 @@ class TestModelRelatedCryptoMaterialSecuredBy(TestCase):
 
 
 class TestModelRelatedCryptoMaterialProperties(TestCase):
+
+    def test_related_assets_are_gated_deterministic_and_preserve_deprecated_refs(self) -> None:
+        related_asset = RelatedCryptographicAsset(type='algorithm', ref=BomRef('material-algorithm'))
+        properties = RelatedCryptoMaterialProperties(
+            algorithm_ref=BomRef('material-algorithm'),
+            secured_by=RelatedCryptoMaterialSecuredBy(
+                mechanism='HSM',
+                algorithm_ref=BomRef('securing-algorithm'),
+            ),
+            related_cryptographic_assets=[related_asset],
+        )
+
+        self.assertEqual([related_asset], list(properties.related_cryptographic_assets))
+        self.assertNotEqual(properties, RelatedCryptoMaterialProperties())
+        self.assertNotEqual(hash(properties), hash(RelatedCryptoMaterialProperties()))
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('relatedCryptographicAssets', json_v1_6)
+        self.assertEqual('material-algorithm', json_v1_6['algorithmRef'])
+        self.assertEqual('securing-algorithm', json_v1_6['securedBy']['algorithmRef'])
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual('material-algorithm', json_v1_7['algorithmRef'])
+        self.assertEqual('securing-algorithm', json_v1_7['securedBy']['algorithmRef'])
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_xml(xml_v1_7))
 
     def test_fingerprint_version_gating_comparison_and_round_trip(self) -> None:
         fingerprint = HashType(alg=HashAlgorithm.SHA_256, content='b' * 64)
