@@ -17,6 +17,7 @@
           <notValidAfter>2024-05-19T00:59:59.999999+00:00</notValidAfter>
           <certificateFormat>pem</certificateFormat>
           <certificateExtension>csr</certificateExtension>
+          <certificateFileExtension>pem</certificateFileExtension>
         </certificateProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>

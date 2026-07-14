@@ -611,6 +611,7 @@ class CertificateProperties:
         subject_public_key_ref: Optional[BomRef] = None,
         certificate_format: Optional[str] = None,
         certificate_extension: Optional[str] = None,
+        certificate_file_extension: Optional[str] = None,
     ) -> None:
         self.serial_number = serial_number
         self.subject_name = subject_name
@@ -621,6 +622,7 @@ class CertificateProperties:
         self.subject_public_key_ref = subject_public_key_ref
         self.certificate_format = certificate_format
         self.certificate_extension = certificate_extension
+        self.certificate_file_extension = certificate_file_extension
 
     @property
     @serializable.view(SchemaVersion1Dot7)
@@ -757,10 +759,21 @@ class CertificateProperties:
     def certificate_extension(self, certificate_extension: Optional[str]) -> None:
         self._certificate_extension = certificate_extension
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(100)
+    def certificate_file_extension(self) -> Optional[str]:
+        """The preferred file extension for the certificate."""
+        return self._certificate_file_extension
+
+    @certificate_file_extension.setter
+    def certificate_file_extension(self, certificate_file_extension: Optional[str]) -> None:
+        self._certificate_file_extension = certificate_file_extension
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
-            self.certificate_format, self.certificate_extension
+            self.certificate_format, self.certificate_extension, self.certificate_file_extension,
         ))
 
     def __eq__(self, other: object) -> bool:

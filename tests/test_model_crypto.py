@@ -50,6 +50,23 @@ class TestModelAlgorithmProperties(TestCase):
 
 class TestModelCertificateProperties(TestCase):
 
+    def test_certificate_file_extension_preserves_deprecated_extension(self) -> None:
+        properties = CertificateProperties(
+            certificate_extension='crt',
+            certificate_file_extension='pem',
+        )
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual('crt', json_v1_6['certificateExtension'])
+        self.assertNotIn('certificateFileExtension', json_v1_6)
+        self.assertEqual('crt', json_v1_7['certificateExtension'])
+        self.assertEqual('pem', json_v1_7['certificateFileExtension'])
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
+
     def test_serial_number_construction_and_comparison(self) -> None:
         first = CertificateProperties(serial_number='1')
         second = CertificateProperties(serial_number='2')
