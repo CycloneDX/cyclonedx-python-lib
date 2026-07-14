@@ -15,7 +15,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from json import loads as json_loads
 from unittest import TestCase
+from xml.etree.ElementTree import fromstring as xml_fromstring
 
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.crypto import (
@@ -29,6 +31,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialSecuredBy,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
 
 
 class TestModelAlgorithmProperties(TestCase):
@@ -46,6 +49,27 @@ class TestModelAlgorithmProperties(TestCase):
 
 
 class TestModelCertificateProperties(TestCase):
+
+    def test_serial_number_construction_and_comparison(self) -> None:
+        first = CertificateProperties(serial_number='1')
+        second = CertificateProperties(serial_number='2')
+
+        self.assertEqual('1', first.serial_number)
+        self.assertNotEqual(first, second)
+        self.assertNotEqual(hash(first), hash(second))
+        self.assertEqual([first, second], sorted([second, first]))
+
+    def test_serial_number_version_gating_and_round_trip(self) -> None:
+        properties = CertificateProperties(serial_number='3942447fac867ae5cdb3229b658f4d48')
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertNotIn('serialNumber', json_v1_6)
+        self.assertEqual(properties.serial_number, json_v1_7['serialNumber'])
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
 
     def test_certificate_properties_sorting(self) -> None:
         """Test that CertificateProperties instances can be sorted without triggering TypeError"""

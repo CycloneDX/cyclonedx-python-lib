@@ -602,6 +602,7 @@ class CertificateProperties:
 
     def __init__(
         self, *,
+        serial_number: Optional[str] = None,
         subject_name: Optional[str] = None,
         issuer_name: Optional[str] = None,
         not_valid_before: Optional[datetime] = None,
@@ -611,6 +612,7 @@ class CertificateProperties:
         certificate_format: Optional[str] = None,
         certificate_extension: Optional[str] = None,
     ) -> None:
+        self.serial_number = serial_number
         self.subject_name = subject_name
         self.issuer_name = issuer_name
         self.not_valid_before = not_valid_before
@@ -621,7 +623,18 @@ class CertificateProperties:
         self.certificate_extension = certificate_extension
 
     @property
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(10)
+    def serial_number(self) -> Optional[str]:
+        """The unique serial number assigned to the certificate by its issuer."""
+        return self._serial_number
+
+    @serial_number.setter
+    def serial_number(self, serial_number: Optional[str]) -> None:
+        self._serial_number = serial_number
+
+    @property
+    @serializable.xml_sequence(20)
     def subject_name(self) -> Optional[str]:
         """
         The subject name for the certificate.
@@ -636,7 +649,7 @@ class CertificateProperties:
         self._subject_name = subject_name
 
     @property
-    @serializable.xml_sequence(20)
+    @serializable.xml_sequence(30)
     def issuer_name(self) -> Optional[str]:
         """
         The issuer name for the certificate.
@@ -652,7 +665,7 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
-    @serializable.xml_sequence(30)
+    @serializable.xml_sequence(40)
     def not_valid_before(self) -> Optional[datetime]:
         """
         The date and time according to ISO-8601 standard from which the certificate is valid.
@@ -668,7 +681,7 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
-    @serializable.xml_sequence(40)
+    @serializable.xml_sequence(50)
     def not_valid_after(self) -> Optional[datetime]:
         """
         The date and time according to ISO-8601 standard from which the certificate is not valid anymore.
@@ -684,7 +697,7 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(BomRef)
-    @serializable.xml_sequence(50)
+    @serializable.xml_sequence(60)
     def signature_algorithm_ref(self) -> Optional[BomRef]:
         """
         The bom-ref to signature algorithm used by the certificate.
@@ -700,7 +713,7 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(BomRef)
-    @serializable.xml_sequence(60)
+    @serializable.xml_sequence(70)
     def subject_public_key_ref(self) -> Optional[BomRef]:
         """
         The bom-ref to the public key of the subject.
@@ -715,7 +728,7 @@ class CertificateProperties:
         self._subject_public_key_ref = subject_public_key_ref
 
     @property
-    @serializable.xml_sequence(70)
+    @serializable.xml_sequence(80)
     def certificate_format(self) -> Optional[str]:
         """
         The format of the certificate. Examples include X.509, PEM, DER, and CVC.
@@ -730,7 +743,7 @@ class CertificateProperties:
         self._certificate_format = certificate_format
 
     @property
-    @serializable.xml_sequence(80)
+    @serializable.xml_sequence(90)
     def certificate_extension(self) -> Optional[str]:
         """
         The file extension of the certificate. Examples include crt, pem, cer, der, and p12.
@@ -746,7 +759,7 @@ class CertificateProperties:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
+            self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
             self.certificate_format, self.certificate_extension
         ))
 

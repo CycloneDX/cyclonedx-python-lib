@@ -10,6 +10,7 @@
       <cryptoProperties>
         <assetType>certificate</assetType>
         <certificateProperties>
+          <serialNumber>3942447fac867ae5cdb3229b658f4d48</serialNumber>
           <subjectName>cyclonedx.org</subjectName>
           <issuerName>Cloudflare Inc ECC CA-3</issuerName>
           <notValidBefore>2023-05-19T01:00:00+00:00</notValidBefore>

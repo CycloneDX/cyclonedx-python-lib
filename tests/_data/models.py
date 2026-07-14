@@ -197,6 +197,7 @@ def get_crypto_properties_certificate() -> CryptoProperties:
     return CryptoProperties(
         asset_type=CryptoAssetType.CERTIFICATE,
         certificate_properties=CertificateProperties(
+            serial_number='3942447fac867ae5cdb3229b658f4d48',
             subject_name='cyclonedx.org',
             issuer_name='Cloudflare Inc ECC CA-3',
             not_valid_before=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
