@@ -1,0 +1,108 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CEE:HARDWARE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "executionEnvironment": "hardware"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoExecutionEnvironment: HARDWARE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEE:OTHER",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "executionEnvironment": "other"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoExecutionEnvironment: OTHER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEE:SOFTWARE_ENCRYPTED_RAM",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "executionEnvironment": "software-encrypted-ram"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoExecutionEnvironment: SOFTWARE_ENCRYPTED_RAM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEE:SOFTWARE_PLAIN_RAM",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "executionEnvironment": "software-plain-ram"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoExecutionEnvironment: SOFTWARE_PLAIN_RAM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEE:SOFTWARE_TEE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "executionEnvironment": "software-tee"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoExecutionEnvironment: SOFTWARE_TEE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEE:UNKNOWN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "executionEnvironment": "unknown"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoExecutionEnvironment: UNKNOWN",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CEE:HARDWARE"
+    },
+    {
+      "ref": "dummy-CEE:OTHER"
+    },
+    {
+      "ref": "dummy-CEE:SOFTWARE_ENCRYPTED_RAM"
+    },
+    {
+      "ref": "dummy-CEE:SOFTWARE_PLAIN_RAM"
+    },
+    {
+      "ref": "dummy-CEE:SOFTWARE_TEE"
+    },
+    {
+      "ref": "dummy-CEE:UNKNOWN"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMS:ACTIVE">
+      <name>RelatedCryptoMaterialState: ACTIVE</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <state>active</state>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMS:COMPROMISED">
+      <name>RelatedCryptoMaterialState: COMPROMISED</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <state>compromised</state>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMS:DEACTIVATED">
+      <name>RelatedCryptoMaterialState: DEACTIVATED</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <state>deactivated</state>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMS:DESTROYED">
+      <name>RelatedCryptoMaterialState: DESTROYED</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <state>destroyed</state>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMS:PRE_ACTIVATION">
+      <name>RelatedCryptoMaterialState: PRE_ACTIVATION</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <state>pre-activation</state>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-RCMS:SUSPENDED">
+      <name>RelatedCryptoMaterialState: SUSPENDED</name>
+      <cryptoProperties>
+        <assetType>related-crypto-material</assetType>
+        <relatedCryptoMaterialProperties>
+          <state>suspended</state>
+        </relatedCryptoMaterialProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-RCMS:ACTIVE"/>
+    <dependency ref="dummy-RCMS:COMPROMISED"/>
+    <dependency ref="dummy-RCMS:DEACTIVATED"/>
+    <dependency ref="dummy-RCMS:DESTROYED"/>
+    <dependency ref="dummy-RCMS:PRE_ACTIVATION"/>
+    <dependency ref="dummy-RCMS:SUSPENDED"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

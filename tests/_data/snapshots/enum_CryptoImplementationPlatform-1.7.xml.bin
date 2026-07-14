@@ -1,0 +1,154 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:ARMV7_A">
+      <name>CryptoImplementationPlatform: ARMV7_A</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>armv7-a</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:ARMV7_M">
+      <name>CryptoImplementationPlatform: ARMV7_M</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>armv7-m</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:ARMV8_A">
+      <name>CryptoImplementationPlatform: ARMV8_A</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>armv8-a</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:ARMV8_M">
+      <name>CryptoImplementationPlatform: ARMV8_M</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>armv8-m</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:ARMV9_A">
+      <name>CryptoImplementationPlatform: ARMV9_A</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>armv9-a</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:ARMV9_M">
+      <name>CryptoImplementationPlatform: ARMV9_M</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>armv9-m</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:GENERIC">
+      <name>CryptoImplementationPlatform: GENERIC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>generic</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:OTHER">
+      <name>CryptoImplementationPlatform: OTHER</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>other</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:PPC64">
+      <name>CryptoImplementationPlatform: PPC64</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>ppc64</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:PPC64LE">
+      <name>CryptoImplementationPlatform: PPC64LE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>ppc64le</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:S390X">
+      <name>CryptoImplementationPlatform: S390X</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>s390x</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:UNKNOWN">
+      <name>CryptoImplementationPlatform: UNKNOWN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>unknown</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:X86_32">
+      <name>CryptoImplementationPlatform: X86_32</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>x86_32</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CIP:X86_64">
+      <name>CryptoImplementationPlatform: X86_64</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <implementationPlatform>x86_64</implementationPlatform>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CIP:ARMV7_A"/>
+    <dependency ref="dummy-CIP:ARMV7_M"/>
+    <dependency ref="dummy-CIP:ARMV8_A"/>
+    <dependency ref="dummy-CIP:ARMV8_M"/>
+    <dependency ref="dummy-CIP:ARMV9_A"/>
+    <dependency ref="dummy-CIP:ARMV9_M"/>
+    <dependency ref="dummy-CIP:GENERIC"/>
+    <dependency ref="dummy-CIP:OTHER"/>
+    <dependency ref="dummy-CIP:PPC64"/>
+    <dependency ref="dummy-CIP:PPC64LE"/>
+    <dependency ref="dummy-CIP:S390X"/>
+    <dependency ref="dummy-CIP:UNKNOWN"/>
+    <dependency ref="dummy-CIP:X86_32"/>
+    <dependency ref="dummy-CIP:X86_64"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

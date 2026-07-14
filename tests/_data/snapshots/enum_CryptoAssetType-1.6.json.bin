@@ -1,0 +1,68 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CAT:ALGORITHM",
+      "cryptoProperties": {
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAssetType: ALGORITHM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAT:CERTIFICATE",
+      "cryptoProperties": {
+        "assetType": "certificate"
+      },
+      "name": "CryptoAssetType: CERTIFICATE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAT:PROTOCOL",
+      "cryptoProperties": {
+        "assetType": "protocol"
+      },
+      "name": "CryptoAssetType: PROTOCOL",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAT:RELATED_CRYPTO_MATERIAL",
+      "cryptoProperties": {
+        "assetType": "related-crypto-material"
+      },
+      "name": "CryptoAssetType: RELATED_CRYPTO_MATERIAL",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CAT:ALGORITHM"
+    },
+    {
+      "ref": "dummy-CAT:CERTIFICATE"
+    },
+    {
+      "ref": "dummy-CAT:PROTOCOL"
+    },
+    {
+      "ref": "dummy-CAT:RELATED_CRYPTO_MATERIAL"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

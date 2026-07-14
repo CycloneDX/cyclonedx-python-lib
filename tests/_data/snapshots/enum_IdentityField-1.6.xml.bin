@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="dummy">
+      <name>dummy</name>
+      <evidence>
+        <identity>
+          <field>cpe</field>
+          <concludedValue>CPE</concludedValue>
+        </identity>
+        <identity>
+          <field>group</field>
+          <concludedValue>GROUP</concludedValue>
+        </identity>
+        <identity>
+          <field>hash</field>
+          <concludedValue>HASH</concludedValue>
+        </identity>
+        <identity>
+          <field>name</field>
+          <concludedValue>NAME</concludedValue>
+        </identity>
+        <identity>
+          <field>omniborId</field>
+          <concludedValue>OMNIBOR_ID</concludedValue>
+        </identity>
+        <identity>
+          <field>purl</field>
+          <concludedValue>PURL</concludedValue>
+        </identity>
+        <identity>
+          <field>swhid</field>
+          <concludedValue>SWHID</concludedValue>
+        </identity>
+        <identity>
+          <field>swid</field>
+          <concludedValue>SWID</concludedValue>
+        </identity>
+        <identity>
+          <field>version</field>
+          <concludedValue>VERSION</concludedValue>
+        </identity>
+      </evidence>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
