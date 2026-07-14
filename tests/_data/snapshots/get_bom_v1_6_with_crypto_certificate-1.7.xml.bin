@@ -19,6 +19,15 @@
           <certificateExtension>csr</certificateExtension>
           <certificateFileExtension>pem</certificateFileExtension>
           <fingerprint alg="SHA-256">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</fingerprint>
+          <certificateState>
+            <name>pending-rotation</name>
+            <description>The certificate is waiting to be rotated.</description>
+            <reason>scheduled maintenance</reason>
+          </certificateState>
+          <certificateState>
+            <state>active</state>
+            <reason>certificate is in use</reason>
+          </certificateState>
         </certificateProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>
