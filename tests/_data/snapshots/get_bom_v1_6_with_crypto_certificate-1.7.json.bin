@@ -5,6 +5,7 @@
       "cryptoProperties": {
         "assetType": "certificate",
         "certificateProperties": {
+          "activationDate": "2023-05-19T01:00:00+00:00",
           "certificateExtension": "csr",
           "certificateFileExtension": "pem",
           "certificateFormat": "pem",
@@ -19,6 +20,9 @@
               "state": "active"
             }
           ],
+          "creationDate": "2023-05-18T12:00:00+00:00",
+          "deactivationDate": "2024-05-18T12:00:00+00:00",
+          "destructionDate": "2024-05-18T14:00:00+00:00",
           "fingerprint": {
             "alg": "SHA-256",
             "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -26,6 +30,7 @@
           "issuerName": "Cloudflare Inc ECC CA-3",
           "notValidAfter": "2024-05-19T00:59:59.999999+00:00",
           "notValidBefore": "2023-05-19T01:00:00+00:00",
+          "revocationDate": "2024-05-18T13:00:00+00:00",
           "serialNumber": "3942447fac867ae5cdb3229b658f4d48",
           "subjectName": "cyclonedx.org"
         },

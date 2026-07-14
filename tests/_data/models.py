@@ -225,6 +225,11 @@ def get_crypto_properties_certificate() -> CryptoProperties:
                     reason='scheduled maintenance',
                 ),
             ],
+            creation_date=datetime(2023, 5, 18, 12, 0, tzinfo=timezone.utc),
+            activation_date=datetime(2023, 5, 19, 1, 0, tzinfo=timezone.utc),
+            deactivation_date=datetime(2024, 5, 18, 12, 0, tzinfo=timezone.utc),
+            revocation_date=datetime(2024, 5, 18, 13, 0, tzinfo=timezone.utc),
+            destruction_date=datetime(2024, 5, 18, 14, 0, tzinfo=timezone.utc),
         ),
         oid='an-oid-here'
     )
