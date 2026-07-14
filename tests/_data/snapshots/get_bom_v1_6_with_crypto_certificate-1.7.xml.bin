@@ -18,6 +18,7 @@
           <certificateFormat>pem</certificateFormat>
           <certificateExtension>csr</certificateExtension>
           <certificateFileExtension>pem</certificateFileExtension>
+          <fingerprint alg="SHA-256">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</fingerprint>
         </certificateProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>

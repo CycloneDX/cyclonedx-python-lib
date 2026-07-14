@@ -19,6 +19,7 @@ from json import loads as json_loads
 from unittest import TestCase
 from xml.etree.ElementTree import fromstring as xml_fromstring
 
+from cyclonedx.model import HashAlgorithm, HashType
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
@@ -49,6 +50,19 @@ class TestModelAlgorithmProperties(TestCase):
 
 
 class TestModelCertificateProperties(TestCase):
+
+    def test_fingerprint_version_gating_comparison_and_round_trip(self) -> None:
+        fingerprint = HashType(alg=HashAlgorithm.SHA_256, content='a' * 64)
+        properties = CertificateProperties(fingerprint=fingerprint)
+
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+        self.assertNotIn('fingerprint', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
 
     def test_certificate_file_extension_preserves_deprecated_extension(self) -> None:
         properties = CertificateProperties(
@@ -115,6 +129,19 @@ class TestModelRelatedCryptoMaterialSecuredBy(TestCase):
 
 
 class TestModelRelatedCryptoMaterialProperties(TestCase):
+
+    def test_fingerprint_version_gating_comparison_and_round_trip(self) -> None:
+        fingerprint = HashType(alg=HashAlgorithm.SHA_256, content='b' * 64)
+        properties = RelatedCryptoMaterialProperties(fingerprint=fingerprint)
+
+        self.assertNotEqual(properties, RelatedCryptoMaterialProperties())
+        self.assertNotEqual(hash(properties), hash(RelatedCryptoMaterialProperties()))
+        self.assertNotIn('fingerprint', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_json(json_v1_7))
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_xml(xml_v1_7))
 
     def test_related_crypto_material_properties_sorting(self) -> None:
         """Test that RelatedCryptoMaterialProperties instances can be sorted without triggering TypeError"""

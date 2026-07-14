@@ -36,6 +36,7 @@ from sortedcontainers import SortedSet
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidNistQuantumSecurityLevelException, InvalidRelatedCryptoMaterialSizeException
 from ..schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
+from . import HashType
 from .bom_ref import BomRef
 
 
@@ -612,6 +613,7 @@ class CertificateProperties:
         certificate_format: Optional[str] = None,
         certificate_extension: Optional[str] = None,
         certificate_file_extension: Optional[str] = None,
+        fingerprint: Optional[HashType] = None,
     ) -> None:
         self.serial_number = serial_number
         self.subject_name = subject_name
@@ -623,6 +625,7 @@ class CertificateProperties:
         self.certificate_format = certificate_format
         self.certificate_extension = certificate_extension
         self.certificate_file_extension = certificate_file_extension
+        self.fingerprint = fingerprint
 
     @property
     @serializable.view(SchemaVersion1Dot7)
@@ -770,10 +773,21 @@ class CertificateProperties:
     def certificate_file_extension(self, certificate_file_extension: Optional[str]) -> None:
         self._certificate_file_extension = certificate_file_extension
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(110)
+    def fingerprint(self) -> Optional[HashType]:
+        """A cryptographic hash of the certificate."""
+        return self._fingerprint
+
+    @fingerprint.setter
+    def fingerprint(self, fingerprint: Optional[HashType]) -> None:
+        self._fingerprint = fingerprint
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
-            self.certificate_format, self.certificate_extension, self.certificate_file_extension,
+            self.certificate_format, self.certificate_extension, self.certificate_file_extension, self.fingerprint,
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -953,6 +967,7 @@ class RelatedCryptoMaterialProperties:
         size: Optional[int] = None,
         format: Optional[str] = None,
         secured_by: Optional[RelatedCryptoMaterialSecuredBy] = None,
+        fingerprint: Optional[HashType] = None,
     ) -> None:
         self.type = type
         self.id = id
@@ -966,6 +981,7 @@ class RelatedCryptoMaterialProperties:
         self.size = size
         self.format = format
         self.secured_by = secured_by
+        self.fingerprint = fingerprint
 
     @property
     @serializable.xml_sequence(10)
@@ -1152,10 +1168,22 @@ class RelatedCryptoMaterialProperties:
     def secured_by(self, secured_by: Optional[RelatedCryptoMaterialSecuredBy]) -> None:
         self._secured_by = secured_by
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(130)
+    def fingerprint(self) -> Optional[HashType]:
+        """A cryptographic hash of the related material."""
+        return self._fingerprint
+
+    @fingerprint.setter
+    def fingerprint(self, fingerprint: Optional[HashType]) -> None:
+        self._fingerprint = fingerprint
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.type, self.id, self.state, self.algorithm_ref, self.creation_date, self.activation_date,
-            self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by
+            self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by,
+            self.fingerprint,
         ))
 
     def __eq__(self, other: object) -> bool:

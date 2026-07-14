@@ -36,6 +36,7 @@ from cyclonedx.model import (
     Encoding,
     ExternalReference,
     ExternalReferenceType,
+    HashAlgorithm,
     HashType,
     Note,
     NoteText,
@@ -209,6 +210,7 @@ def get_crypto_properties_certificate() -> CryptoProperties:
             certificate_format='pem',
             certificate_extension='csr',
             certificate_file_extension='pem',
+            fingerprint=HashType(alg=HashAlgorithm.SHA_256, content='a' * 64),
         ),
         oid='an-oid-here'
     )
@@ -284,7 +286,8 @@ def get_crypto_properties_related_material() -> CryptoProperties:
             secured_by=RelatedCryptoMaterialSecuredBy(
                 mechanism='hard-work',
                 algorithm_ref=None
-            )
+            ),
+            fingerprint=HashType(alg=HashAlgorithm.SHA_256, content='b' * 64),
         ),
         oid='an-oid-here'
     )
