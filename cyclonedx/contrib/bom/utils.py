@@ -17,7 +17,10 @@
 
 """Bom related utilities"""
 
-__all__ = ['BomRefDiscriminator', 'BomDependencyGraphFlatMerger']
+__all__ = [
+    'BomRefDiscriminator',
+    'BomDependencyGraphFlatMerger',
+]
 
 from collections.abc import Iterable
 from itertools import chain
@@ -94,9 +97,9 @@ class BomRefDiscriminator:
           * :attr:`cyclonedx.model.bom.Bom.vulnerabilities`
         """
         return cls(chain(
-            map(lambda c: c.bom_ref, bom._get_all_components()),
-            map(lambda s: s.bom_ref, bom.services),
-            map(lambda v: v.bom_ref, bom.vulnerabilities)
+            (c.bom_ref for c in bom._get_all_components()),
+            (s.bom_ref for s in bom.services),
+            (v.bom_ref for v in bom.vulnerabilities),
         ), prefix)
 
 
@@ -153,7 +156,7 @@ class BomDependencyGraphFlatMerger:
     def _flatten_merge(deps: Iterable[Dependency]) -> Iterable[Dependency]:
         flat: dict['BomRef', list['BomRef']] = {}
         todos = list(deps)
-        seen: set[int] = set()
+        seen = set()
         while todos:
             todo = todos.pop()
             if (todo_id := id(todo)) in seen:

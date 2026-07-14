@@ -2,6 +2,25 @@
 
 <!-- version list -->
 
+## v11.11.0 (2026-06-17)
+
+### Bug Fixes
+
+- Protocolpropertiestype enum case `5g-aka` for CycloneDX 1.7
+  ([#1004](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1004),
+  [`bc97e1c`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/bc97e1c8fe08ff9b8895bb7908bec70bdaa815f0))
+
+### Features
+
+- `cryptoprimitive` enum cases for CycloneDX 1.7
+  ([#1002](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1002),
+  [`788ced1`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/788ced146d2954669e88bf6d5af1054771245b27))
+
+- `protocolpropertiestype` enum cases for CycloneDX 1.7
+  ([#1003](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1003),
+  [`f9223d8`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/f9223d8441af02a880feb1170e6549207ef551f3))
+
+
 ## v11.10.0 (2026-06-11)
 
 ### Bug Fixes
