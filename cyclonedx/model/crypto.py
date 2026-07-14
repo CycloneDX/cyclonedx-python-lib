@@ -741,6 +741,157 @@ _CertificateState.from_json = classmethod(_certificate_state_from_json)  # type:
 _CertificateState.from_xml = classmethod(_certificate_state_from_xml)  # type:ignore[assignment]
 
 
+@serializable.serializable_enum
+class CertificateCommonExtensionName(str, Enum):
+    """Names of common X.509 certificate extensions supported by CycloneDX 1.7."""
+
+    BASIC_CONSTRAINTS = 'basicConstraints'
+    KEY_USAGE = 'keyUsage'
+    EXTENDED_KEY_USAGE = 'extendedKeyUsage'
+    SUBJECT_ALTERNATIVE_NAME = 'subjectAlternativeName'
+    AUTHORITY_KEY_IDENTIFIER = 'authorityKeyIdentifier'
+    SUBJECT_KEY_IDENTIFIER = 'subjectKeyIdentifier'
+    AUTHORITY_INFORMATION_ACCESS = 'authorityInformationAccess'
+    CERTIFICATE_POLICIES = 'certificatePolicies'
+    CRL_DISTRIBUTION_POINTS = 'crlDistributionPoints'
+    SIGNED_CERTIFICATE_TIMESTAMP = 'signedCertificateTimestamp'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class _CertificateExtension:
+    """Non-public common type and deserialization discriminator for certificate extensions."""
+
+    @classmethod
+    def from_json(cls, data: dict[str, Any]) -> '_CertificateExtension':
+        if 'commonExtensionName' in data:
+            return CertificateCommonExtension.from_json(data)
+        if 'customExtensionName' in data:
+            return CertificateCustomExtension.from_json(data)
+        raise CycloneDxDeserializationException(f'unexpected certificate extension: {data!r}')
+
+    @classmethod
+    def from_xml(cls, data: Element, default_namespace: Optional[str] = None) -> '_CertificateExtension':
+        child_names = {child.tag.rsplit('}', 1)[-1] for child in data}
+        if 'commonExtensionName' in child_names:
+            return CertificateCommonExtension.from_xml(data, default_namespace)
+        if 'customExtensionName' in child_names:
+            return CertificateCustomExtension.from_xml(data, default_namespace)
+        raise CycloneDxDeserializationException(f'unexpected certificate extension: {data!r}')
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        raise NotImplementedError()
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, _CertificateExtension) and self._comparable_tuple() == other._comparable_tuple()
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, _CertificateExtension):
+            return self._comparable_tuple() < other._comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._comparable_tuple())
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateCommonExtension(_CertificateExtension):
+    """A standardized certificate extension and its value."""
+
+    def __init__(
+        self, *,
+        common_extension_name: CertificateCommonExtensionName,
+        common_extension_value: str,
+    ) -> None:
+        self.common_extension_name = common_extension_name
+        self.common_extension_value = common_extension_value
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def common_extension_name(self) -> CertificateCommonExtensionName:
+        return self._common_extension_name
+
+    @common_extension_name.setter
+    def common_extension_name(self, common_extension_name: CertificateCommonExtensionName) -> None:
+        self._common_extension_name = common_extension_name
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def common_extension_value(self) -> str:
+        return self._common_extension_value
+
+    @common_extension_value.setter
+    def common_extension_value(self, common_extension_value: str) -> None:
+        self._common_extension_value = common_extension_value
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('common', self.common_extension_name, self.common_extension_value))
+
+    def __repr__(self) -> str:
+        return f'<CertificateCommonExtension name={self.common_extension_name!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateCustomExtension(_CertificateExtension):
+    """An application- or vendor-defined certificate extension."""
+
+    def __init__(self, *, custom_extension_name: str, custom_extension_value: Optional[str] = None) -> None:
+        self.custom_extension_name = custom_extension_name
+        self.custom_extension_value = custom_extension_value
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def custom_extension_name(self) -> str:
+        return self._custom_extension_name
+
+    @custom_extension_name.setter
+    def custom_extension_name(self, custom_extension_name: str) -> None:
+        self._custom_extension_name = custom_extension_name
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def custom_extension_value(self) -> Optional[str]:
+        return self._custom_extension_value
+
+    @custom_extension_value.setter
+    def custom_extension_value(self, custom_extension_value: Optional[str]) -> None:
+        self._custom_extension_value = custom_extension_value
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('custom', self.custom_extension_name, self.custom_extension_value))
+
+    def __repr__(self) -> str:
+        return f'<CertificateCustomExtension name={self.custom_extension_name!r}>'
+
+
+def _certificate_extension_from_json(
+    cls: type[_CertificateExtension], data: dict[str, Any]
+) -> _CertificateExtension:
+    if 'commonExtensionName' in data:
+        return CertificateCommonExtension.from_json(data)
+    if 'customExtensionName' in data:
+        return CertificateCustomExtension.from_json(data)
+    raise CycloneDxDeserializationException(f'unexpected certificate extension: {data!r}')
+
+
+def _certificate_extension_from_xml(
+    cls: type[_CertificateExtension], data: Element, default_namespace: Optional[str] = None
+) -> _CertificateExtension:
+    child_names = {child.tag.rsplit('}', 1)[-1] for child in data}
+    if 'commonExtensionName' in child_names:
+        return CertificateCommonExtension.from_xml(data, default_namespace)
+    if 'customExtensionName' in child_names:
+        return CertificateCustomExtension.from_xml(data, default_namespace)
+    raise CycloneDxDeserializationException(f'unexpected certificate extension: {data!r}')
+
+
+_CertificateExtension.from_json = classmethod(_certificate_extension_from_json)  # type:ignore[assignment]
+_CertificateExtension.from_xml = classmethod(_certificate_extension_from_xml)  # type:ignore[assignment]
+
+
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class CertificateProperties:
     """
@@ -774,6 +925,7 @@ class CertificateProperties:
         deactivation_date: Optional[datetime] = None,
         revocation_date: Optional[datetime] = None,
         destruction_date: Optional[datetime] = None,
+        certificate_extensions: Optional[Iterable[_CertificateExtension]] = None,
     ) -> None:
         self.serial_number = serial_number
         self.subject_name = subject_name
@@ -792,6 +944,7 @@ class CertificateProperties:
         self.deactivation_date = deactivation_date
         self.revocation_date = revocation_date
         self.destruction_date = destruction_date
+        self.certificate_extensions = certificate_extensions or []
 
     @property
     @serializable.view(SchemaVersion1Dot7)
@@ -1023,12 +1176,25 @@ class CertificateProperties:
     def destruction_date(self, destruction_date: Optional[datetime]) -> None:
         self._destruction_date = destruction_date
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'certificateExtension')
+    @serializable.xml_sequence(180)
+    def certificate_extensions(self) -> 'SortedSet[_CertificateExtension]':
+        """The X.509 extensions associated with the certificate."""
+        return self._certificate_extensions
+
+    @certificate_extensions.setter
+    def certificate_extensions(self, certificate_extensions: Iterable[_CertificateExtension]) -> None:
+        self._certificate_extensions = SortedSet(certificate_extensions)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
             self.certificate_format, self.certificate_extension, self.certificate_file_extension, self.fingerprint,
             _ComparableTuple(self.certificate_states), self.creation_date, self.activation_date,
             self.deactivation_date, self.revocation_date, self.destruction_date,
+            _ComparableTuple(self.certificate_extensions),
         ))
 
     def __eq__(self, other: object) -> bool:

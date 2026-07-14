@@ -7,6 +7,16 @@
         "certificateProperties": {
           "activationDate": "2023-05-19T01:00:00+00:00",
           "certificateExtension": "csr",
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "keyUsage",
+              "commonExtensionValue": "digitalSignature"
+            },
+            {
+              "customExtensionName": "1.2.3.4.5",
+              "customExtensionValue": "custom-value"
+            }
+          ],
           "certificateFileExtension": "pem",
           "certificateFormat": "pem",
           "certificateState": [
