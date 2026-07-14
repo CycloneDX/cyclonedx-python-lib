@@ -71,6 +71,9 @@ from cyclonedx.model.component_evidence import (
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
+    CertificateCommonExtension,
+    CertificateCommonExtensionName,
+    CertificateCustomExtension,
     CertificateCustomState,
     CertificateLifecycleState,
     CertificatePredefinedState,
@@ -230,6 +233,16 @@ def get_crypto_properties_certificate() -> CryptoProperties:
             deactivation_date=datetime(2024, 5, 18, 12, 0, tzinfo=timezone.utc),
             revocation_date=datetime(2024, 5, 18, 13, 0, tzinfo=timezone.utc),
             destruction_date=datetime(2024, 5, 18, 14, 0, tzinfo=timezone.utc),
+            certificate_extensions=[
+                CertificateCommonExtension(
+                    common_extension_name=CertificateCommonExtensionName.KEY_USAGE,
+                    common_extension_value='digitalSignature',
+                ),
+                CertificateCustomExtension(
+                    custom_extension_name='1.2.3.4.5',
+                    custom_extension_value='custom-value',
+                ),
+            ],
         ),
         oid='an-oid-here'
     )

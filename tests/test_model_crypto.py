@@ -20,14 +20,20 @@ from json import loads as json_loads
 from unittest import TestCase
 from xml.etree.ElementTree import fromstring as xml_fromstring
 
+from cyclonedx.exception.serialization import CycloneDxDeserializationException
 from cyclonedx.model import HashAlgorithm, HashType
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
+    CertificateCommonExtension,
+    CertificateCommonExtensionName,
+    CertificateCustomExtension,
     CertificateCustomState,
+    CertificateExtension,
     CertificateLifecycleState,
     CertificatePredefinedState,
     CertificateProperties,
+    CertificateState,
     CryptoPrimitive,
     Ikev2TransformTypes,
     ProtocolProperties,
@@ -54,6 +60,72 @@ class TestModelAlgorithmProperties(TestCase):
 
 
 class TestModelCertificateProperties(TestCase):
+
+    def test_certificate_extensions_are_gated_deterministic_and_round_trip(self) -> None:
+        common = CertificateCommonExtension(
+            common_extension_name=CertificateCommonExtensionName.KEY_USAGE,
+            common_extension_value='digitalSignature',
+        )
+        custom = CertificateCustomExtension(
+            custom_extension_name='1.2.3.4.5',
+            custom_extension_value='custom-value',
+        )
+        properties = CertificateProperties(certificate_extensions=[custom, common])
+
+        self.assertEqual([common, custom], list(properties.certificate_extensions))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+        self.assertNotIn('certificateExtensions', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        from_json = CertificateProperties.from_json(json_v1_7)
+        self.assertEqual(properties, from_json)
+        self.assertEqual(
+            {CertificateCommonExtension, CertificateCustomExtension},
+            {type(extension) for extension in from_json.certificate_extensions},
+        )
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        from_xml = CertificateProperties.from_xml(xml_v1_7)
+        self.assertEqual(properties, from_xml)
+        self.assertEqual(
+            {CertificateCommonExtension, CertificateCustomExtension},
+            {type(extension) for extension in from_xml.certificate_extensions},
+        )
+
+    def test_public_certificate_bases_dispatch_to_concrete_variants(self) -> None:
+        for base, variants in (
+            (CertificateState, [
+                CertificatePredefinedState(state=CertificateLifecycleState.ACTIVE),
+                CertificateCustomState(name='pending-rotation'),
+            ]),
+            (CertificateExtension, [
+                CertificateCommonExtension(
+                    common_extension_name=CertificateCommonExtensionName.KEY_USAGE,
+                    common_extension_value='digitalSignature',
+                ),
+                CertificateCustomExtension(custom_extension_name='1.2.3.4.5'),
+            ]),
+        ):
+            for variant in variants:
+                with self.subTest(variant=variant):
+                    from_json = base.from_json(json_loads(variant.as_json(view_=SchemaVersion1Dot7)))
+                    self.assertIs(type(from_json), type(variant))
+                    self.assertEqual(variant, from_json)
+                    for namespace in (None, 'http://cyclonedx.org/schema/bom/1.7'):
+                        with self.subTest(namespace=namespace):
+                            xml = xml_fromstring(variant.as_xml(view_=SchemaVersion1Dot7, xmlns=namespace))
+                            from_xml = base.from_xml(xml, namespace)
+                            self.assertIs(type(from_xml), type(variant))
+                            self.assertEqual(variant, from_xml)
+
+    def test_public_certificate_bases_reject_missing_discriminators(self) -> None:
+        for base in (CertificateState, CertificateExtension):
+            with self.subTest(base=base):
+                with self.assertRaises(CycloneDxDeserializationException):
+                    base.from_json({})
+                with self.assertRaises(CycloneDxDeserializationException):
+                    base.from_xml(xml_fromstring('<item/>'))
 
     def test_lifecycle_dates_are_gated_ordered_and_round_trip(self) -> None:
         properties = CertificateProperties(

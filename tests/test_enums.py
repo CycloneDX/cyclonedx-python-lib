@@ -94,6 +94,8 @@ from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilitySeverity,
 )
 from cyclonedx.model.crypto import (  # isort:skip
+    CertificateCommonExtension,
+    CertificateCommonExtensionName,
     CertificateLifecycleState,
     CertificatePredefinedState,
     CertificateProperties,
@@ -908,6 +910,39 @@ class TestEnumCertificateLifecycleState(_EnumTestCase):
                         ),
                     ),
                 ) for state in CertificateLifecycleState
+            ]
+        )
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumCertificateCommonExtensionName(_EnumTestCase):
+
+    @idata(dp_cases_from_json_schemas(
+        'definitions', 'cryptoProperties', 'properties', 'certificateProperties', 'properties',
+        'certificateExtensions', 'items', 'oneOf', 0, 'properties', 'commonExtensionName'
+    ))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(CertificateCommonExtensionName, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] is SchemaVersion.V1_7))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'CertificateCommonExtensionName: {extension.name}',
+                    bom_ref=f'dummy-CCEN:{extension.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.CERTIFICATE,
+                        certificate_properties=CertificateProperties(
+                            certificate_extensions=[CertificateCommonExtension(
+                                common_extension_name=extension,
+                                common_extension_value=extension.value,
+                            )]
+                        ),
+                    ),
+                ) for extension in CertificateCommonExtensionName
             ]
         )
         super()._test_cases_render(bom, of, sv)
