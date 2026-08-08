@@ -98,6 +98,7 @@ pep8-naming = "0.15.1"
 isort = "6.1.0"
 autopep8 = "2.3.2"
 mypy = "1.19.1"
+pyright = "1.1.410"
 tomli = { version = "2.4.1", python = "<3.11" }
 tox = "4.30.3"
 xmldiff = "2.7.0"
@@ -158,3 +159,10 @@ prerelease_token = "alpha"
 
 [tool.deptry]
 extend_exclude = ["docs", "examples", "package_aliases", "tools"]
+
+[tool.pyright]
+include = ["cyclonedx", "examples"]
+stubPath = "typings"
+pythonVersion = "3.9"
+typeCheckingMode = "basic"
+reportRedeclaration = "none"
