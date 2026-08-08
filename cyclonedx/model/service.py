@@ -45,6 +45,7 @@ from .contact import OrganizationalEntity
 from .dependency import Dependable
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .release_note import ReleaseNotes
+from .signature import JsfSignature, _JsfSignatureSerializationHelper
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
@@ -73,6 +74,7 @@ class Service(Dependable):
         properties: Optional[Iterable[Property]] = None,
         services: Optional[Iterable['Service']] = None,
         release_notes: Optional[ReleaseNotes] = None,
+        signature: Optional[JsfSignature] = None,
     ) -> None:
         self._bom_ref = _bom_ref_from_str(bom_ref)
         self.provider = provider
@@ -89,6 +91,7 @@ class Service(Dependable):
         self.services = services or []
         self.release_notes = release_notes
         self.properties = properties or []
+        self.signature = signature
 
     @property
     @serializable.json_name('bom-ref')
@@ -361,6 +364,31 @@ class Service(Dependable):
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
+    @property
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.type_mapping(_JsfSignatureSerializationHelper)
+    def signature(self) -> Optional[JsfSignature]:
+        """
+        Enveloped signature in JSON Signature Format (JSF).
+
+        .. note::
+            JSON-only. There is no XSD/XML equivalent in any CycloneDX schema version.
+
+        .. note::
+            Introduced in CycloneDX v1.4
+
+        Returns:
+            `JsfSignature` if set else `None`
+        """
+        return self._signature
+
+    @signature.setter
+    def signature(self, signature: Optional[JsfSignature]) -> None:
+        self._signature = signature
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.group, self.name, self.version,
@@ -369,7 +397,7 @@ class Service(Dependable):
             self.authenticated, _ComparableTuple(self.data), _ComparableTuple(self.endpoints),
             _ComparableTuple(self.external_references), _ComparableTuple(self.licenses),
             _ComparableTuple(self.properties), self.release_notes, _ComparableTuple(self.services),
-            self.x_trust_boundary
+            self.x_trust_boundary, self.signature
         ))
 
     def __eq__(self, other: object) -> bool:

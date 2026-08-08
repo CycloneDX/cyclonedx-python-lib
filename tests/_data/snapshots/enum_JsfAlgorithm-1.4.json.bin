@@ -1,0 +1,182 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-JA:ED25519",
+      "name": "JsfAlgorithm: ED25519",
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:ED448",
+      "name": "JsfAlgorithm: ED448",
+      "signature": {
+        "algorithm": "Ed448",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:ES256",
+      "name": "JsfAlgorithm: ES256",
+      "signature": {
+        "algorithm": "ES256",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:ES384",
+      "name": "JsfAlgorithm: ES384",
+      "signature": {
+        "algorithm": "ES384",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:ES512",
+      "name": "JsfAlgorithm: ES512",
+      "signature": {
+        "algorithm": "ES512",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:HS256",
+      "name": "JsfAlgorithm: HS256",
+      "signature": {
+        "algorithm": "HS256",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:HS384",
+      "name": "JsfAlgorithm: HS384",
+      "signature": {
+        "algorithm": "HS384",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:HS512",
+      "name": "JsfAlgorithm: HS512",
+      "signature": {
+        "algorithm": "HS512",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:PS256",
+      "name": "JsfAlgorithm: PS256",
+      "signature": {
+        "algorithm": "PS256",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:PS384",
+      "name": "JsfAlgorithm: PS384",
+      "signature": {
+        "algorithm": "PS384",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:PS512",
+      "name": "JsfAlgorithm: PS512",
+      "signature": {
+        "algorithm": "PS512",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:RS256",
+      "name": "JsfAlgorithm: RS256",
+      "signature": {
+        "algorithm": "RS256",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:RS384",
+      "name": "JsfAlgorithm: RS384",
+      "signature": {
+        "algorithm": "RS384",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JA:RS512",
+      "name": "JsfAlgorithm: RS512",
+      "signature": {
+        "algorithm": "RS512",
+        "value": "AABBCC=="
+      },
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-JA:ED25519"
+    },
+    {
+      "ref": "dummy-JA:ED448"
+    },
+    {
+      "ref": "dummy-JA:ES256"
+    },
+    {
+      "ref": "dummy-JA:ES384"
+    },
+    {
+      "ref": "dummy-JA:ES512"
+    },
+    {
+      "ref": "dummy-JA:HS256"
+    },
+    {
+      "ref": "dummy-JA:HS384"
+    },
+    {
+      "ref": "dummy-JA:HS512"
+    },
+    {
+      "ref": "dummy-JA:PS256"
+    },
+    {
+      "ref": "dummy-JA:PS384"
+    },
+    {
+      "ref": "dummy-JA:PS512"
+    },
+    {
+      "ref": "dummy-JA:RS256"
+    },
+    {
+      "ref": "dummy-JA:RS384"
+    },
+    {
+      "ref": "dummy-JA:RS512"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4"
+}
