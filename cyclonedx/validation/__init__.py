@@ -29,22 +29,28 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class ValidationError:
-    """Validation failed with this specific error.
-
-    Use :attr:`~data` to access the content.
-    """
+    """Validation failed with this specific error."""
 
     data: Any
     """Raw error data from one of the underlying validation methods."""
 
-    def __init__(self, data: Any) -> None:
+    message: str
+    """Human-readable error message suitable for end-user presentation."""
+
+    path: tuple[Union[str, int], ...]
+    """Path to the offending value in the document, if known."""
+
+    def __init__(self, data: Any, *, message: Optional[str] = None,
+                 path: Iterable[Union[str, int]] = ()) -> None:
         self.data = data
+        self.message = str(data) if message is None else message
+        self.path = tuple(path)
 
     def __repr__(self) -> str:
-        return repr(self.data)
+        return f'{self.__class__.__name__}(message={self.message!r}, path={self.path!r})'
 
     def __str__(self) -> str:
-        return str(self.data)
+        return self.message
 
 
 class SchemabasedValidator(Protocol):

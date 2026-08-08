@@ -47,12 +47,27 @@ except ImportError as err:
     ), err
 
 
+_MAX_MESSAGE_LEN = 256  # chars to keep from a message before truncating
+
+
+def _shorten_xml_message(message: str) -> str:
+    """Cap an lxml error message at ``_MAX_MESSAGE_LEN`` characters.
+
+    lxml embeds the full enumeration set in ``[facet 'enumeration']`` messages
+    (e.g. the ~800-entry SPDX licence ID list), producing multi-kilobyte
+    single-line strings.  We hard-cap and append ``…`` so callers can safely
+    log or display the message.
+    """
+    if len(message) > _MAX_MESSAGE_LEN:
+        return message[:_MAX_MESSAGE_LEN] + '…'
+    return message
+
+
 class XmlValidationError(ValidationError):
     @classmethod
     def _make_from_xle(cls, e: '_XmlLogEntry') -> 'XmlValidationError':
         """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
-        # in preparation for https://github.com/CycloneDX/cyclonedx-python-lib/pull/836
-        return cls(e)
+        return cls(e, message=_shorten_xml_message(e.message), path=(e.path,) if e.path else ())
 
 
 class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
