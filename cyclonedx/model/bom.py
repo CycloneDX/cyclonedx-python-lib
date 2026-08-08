@@ -20,7 +20,7 @@ from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
 from itertools import chain
-from typing import TYPE_CHECKING, Optional, Union
+from typing import Optional, Union
 from uuid import UUID, uuid4
 from warnings import warn
 
@@ -53,9 +53,6 @@ from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelpe
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
 from .vulnerability import Vulnerability
-
-if TYPE_CHECKING:  # pragma: no cover
-    from packageurl import PackageURL
 
 
 @serializable.serializable_enum
@@ -694,13 +691,13 @@ class Bom:
     def definitions(self, definitions: Definitions) -> None:
         self._definitions = definitions
 
-    def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
+    def get_component_by_purl(self, purl: Optional[str]) -> Optional[Component]:
         """
         Get a Component already in the Bom by its PURL
 
         Args:
              purl:
-                An instance of `packageurl.PackageURL` to look and find `Component`.
+                A PURL string to look and find `Component`.
 
         Returns:
             `Component` or `None`

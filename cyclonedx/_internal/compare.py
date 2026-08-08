@@ -22,10 +22,7 @@ Everything might change without any notice.
 """
 
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, Optional
-
-if TYPE_CHECKING:  # pragma: no cover
-    from packageurl import PackageURL
+from typing import Any, Optional
 
 
 class ComparableTuple(tuple[Optional[Any], ...]):
@@ -65,18 +62,3 @@ class ComparableDict(ComparableTuple):
 
     def __new__(cls, d: dict[Any, Any]) -> 'ComparableDict':
         return super().__new__(cls, sorted(d.items()))
-
-
-class ComparablePackageURL(ComparableTuple):
-    """
-    Allows comparison of PackageURL, allowing for qualifiers.
-    """
-
-    def __new__(cls, p: 'PackageURL') -> 'ComparablePackageURL':
-        return super().__new__(cls, (
-            p.type,
-            p.namespace,
-            p.version,
-            ComparableDict(p.qualifiers) if isinstance(p.qualifiers, dict) else p.qualifiers,
-            p.subpath
-        ))
