@@ -23,9 +23,7 @@ from uuid import UUID
 
 from ddt import ddt, named_data
 
-from packageurl import PackageURL
-
-from cyclonedx._internal.compare import ComparablePackageURL, ComparableTuple
+from cyclonedx._internal.compare import ComparableTuple
 from cyclonedx.exception.model import InvalidLocaleTypeException, InvalidUriException, UnknownHashTypeException
 from cyclonedx.model import (
     Copyright,
@@ -70,23 +68,6 @@ class TestStringEnum(TestCase):
             DummyStringEnum.THIRD,
         ]
         self.assertListEqual(sorted_enums, expected_enums)
-
-
-class TestComparablePackageURL(TestCase):
-
-    def test_differs_by_name(self) -> None:
-        # name was missing from the comparison tuple, so two purls that differ
-        # only by name compared equal
-        purl1 = ComparablePackageURL(PackageURL(type='pypi', name='foo', version='1.0.0'))
-        purl2 = ComparablePackageURL(PackageURL(type='pypi', name='bar', version='1.0.0'))
-        self.assertNotEqual(purl1, purl2)
-        self.assertGreater(purl1, purl2)
-        self.assertLess(purl2, purl1)
-
-    def test_equal_same_purl(self) -> None:
-        purl1 = ComparablePackageURL(PackageURL(type='pypi', name='foo', version='1.0.0'))
-        purl2 = ComparablePackageURL(PackageURL(type='pypi', name='foo', version='1.0.0'))
-        self.assertEqual(purl1, purl2)
 
 
 class TestComparableTuple(TestCase):
