@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v11.11.1 (2026-08-10)
+
+### Bug Fixes
+
+- Comparablepackageurl includes `name`
+  ([#1022](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1022),
+  [`d718ac2`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/d718ac2391095851e6e5e2e75988e7dfb79494a4))
+
+
 ## v11.11.0 (2026-06-17)
 
 ### Bug Fixes
