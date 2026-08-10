@@ -76,6 +76,7 @@ class ComparablePackageURL(ComparableTuple):
         return super().__new__(cls, (
             p.type,
             p.namespace,
+            p.name,
             p.version,
             ComparableDict(p.qualifiers) if isinstance(p.qualifiers, dict) else p.qualifiers,
             p.subpath
