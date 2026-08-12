@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v11.11.2 (2026-08-12)
+
+### Bug Fixes
+
+- Encode paths when loading XML schemas
+  ([#1028](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1028),
+  [`17a0136`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/17a0136138ceca96383f484f158f5d4de414a9ec))
+
+
 ## v11.11.1 (2026-08-10)
 
 ### Bug Fixes
