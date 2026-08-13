@@ -2029,12 +2029,14 @@ class ProtocolProperties:
         cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
         ikev2_transform_types: Optional[Ikev2TransformTypes] = None,
         crypto_refs: Optional[Iterable[BomRef]] = None,
+        related_cryptographic_assets: Optional[Iterable[RelatedCryptographicAsset]] = None,
     ) -> None:
         self.type = type
         self.version = version
         self.cipher_suites = cipher_suites or []
         self.ikev2_transform_types = ikev2_transform_types
         self.crypto_refs = crypto_refs or []
+        self.related_cryptographic_assets = related_cryptographic_assets or []
 
     @property
     @serializable.type_mapping(_ProtocolPropertiesTypeSerializationHelper)
@@ -2101,6 +2103,7 @@ class ProtocolProperties:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'cryptoRef')
     @serializable.json_name('cryptoRefArray')
+    @serializable.xml_sequence(50)
     def crypto_refs(self) -> 'SortedSet[BomRef]':
         """
         A list of protocol-related cryptographic assets.
@@ -2114,13 +2117,29 @@ class ProtocolProperties:
     def crypto_refs(self, crypto_refs: Iterable[BomRef]) -> None:
         self._crypto_refs = SortedSet(crypto_refs)
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.json_name('relatedCryptographicAssets')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'relatedCryptographicAsset')
+    @serializable.xml_sequence(60)
+    def related_cryptographic_assets(self) -> 'SortedSet[RelatedCryptographicAsset]':
+        """Cryptographic assets related to this protocol."""
+        return self._related_cryptographic_assets
+
+    @related_cryptographic_assets.setter
+    def related_cryptographic_assets(
+        self, related_cryptographic_assets: Iterable[RelatedCryptographicAsset]
+    ) -> None:
+        self._related_cryptographic_assets = SortedSet(related_cryptographic_assets)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.type,
             self.version,
             _ComparableTuple(self.cipher_suites),
             self.ikev2_transform_types,
-            _ComparableTuple(self.crypto_refs)
+            _ComparableTuple(self.crypto_refs),
+            _ComparableTuple(self.related_cryptographic_assets),
         ))
 
     def __eq__(self, other: object) -> bool:

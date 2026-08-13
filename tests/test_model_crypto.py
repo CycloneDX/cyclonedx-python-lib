@@ -18,7 +18,7 @@
 from datetime import datetime, timezone
 from json import loads as json_loads
 from unittest import TestCase
-from xml.etree.ElementTree import fromstring as xml_fromstring
+from xml.etree.ElementTree import Element, fromstring as _xml_fromstring  # nosec B405
 
 from cyclonedx.model import HashAlgorithm, HashType
 from cyclonedx.model.bom_ref import BomRef
@@ -41,6 +41,10 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialType,
 )
 from cyclonedx.schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
+
+
+def xml_fromstring(data: str) -> Element:
+    return _xml_fromstring(data)  # nosec B314
 
 
 class TestModelAlgorithmProperties(TestCase):
@@ -354,6 +358,37 @@ class TestModelIkev2TransformTypes(TestCase):
 
 
 class TestModelProtocolProperties(TestCase):
+
+    def test_related_assets_are_gated_deterministic_and_preserve_deprecated_refs(self) -> None:
+        algorithm = RelatedCryptographicAsset(type='algorithm', ref=BomRef('algorithm'))
+        public_key = RelatedCryptographicAsset(type='publicKey', ref=BomRef('public-key'))
+        properties = ProtocolProperties(
+            crypto_refs=[BomRef('legacy')],
+            related_cryptographic_assets=[public_key, algorithm],
+        )
+
+        self.assertEqual([algorithm, public_key], list(properties.related_cryptographic_assets))
+        self.assertNotEqual(properties, ProtocolProperties())
+        self.assertNotEqual(hash(properties), hash(ProtocolProperties()))
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('relatedCryptographicAssets', json_v1_6)
+        self.assertEqual(['legacy'], json_v1_6['cryptoRefArray'])
+
+        xml_v1_6 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot6))
+        self.assertIsNone(xml_v1_6.find('relatedCryptographicAssets'))
+        self.assertEqual(['legacy'], [element.text for element in xml_v1_6.findall('cryptoRef')])
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(['legacy'], json_v1_7['cryptoRefArray'])
+        self.assertEqual(properties, ProtocolProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(
+            ['cryptoRef', 'relatedCryptographicAssets'],
+            [element.tag for element in xml_v1_7],
+        )
+        self.assertEqual(properties, ProtocolProperties.from_xml(xml_v1_7))
 
     def test_protocol_properties_sorting(self) -> None:
         """Test that ProtocolProperties instances can be sorted without triggering TypeError"""
