@@ -67,6 +67,7 @@ class Service(Dependable):
         endpoints: Optional[Iterable[XsUri]] = None,
         authenticated: Optional[bool] = None,
         x_trust_boundary: Optional[bool] = None,
+        trust_zone: Optional[str] = None,
         data: Optional[Iterable[DataClassification]] = None,
         licenses: Optional[Iterable[License]] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
@@ -83,6 +84,7 @@ class Service(Dependable):
         self.endpoints = endpoints or []
         self.authenticated = authenticated
         self.x_trust_boundary = x_trust_boundary
+        self.trust_zone = trust_zone
         self.data = data or []
         self.licenses = licenses or []
         self.external_references = external_references or []
@@ -239,16 +241,25 @@ class Service(Dependable):
     def x_trust_boundary(self, x_trust_boundary: Optional[bool]) -> None:
         self._x_trust_boundary = x_trust_boundary
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(9)
-    # def trust_zone(self) -> ...:
-    #     ... # since CDX1.5
-    #
-    # @trust_zone.setter
-    # def trust_zone(self, ...) -> None:
-    #     ... # since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(9)
+    def trust_zone(self) -> Optional[str]:
+        """
+        The name of the trust zone the service resides in.
+
+        Supported from CycloneDX v1.5 onwards.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._trust_zone
+
+    @trust_zone.setter
+    def trust_zone(self, trust_zone: Optional[str]) -> None:
+        self._trust_zone = trust_zone
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
@@ -369,7 +380,7 @@ class Service(Dependable):
             self.authenticated, _ComparableTuple(self.data), _ComparableTuple(self.endpoints),
             _ComparableTuple(self.external_references), _ComparableTuple(self.licenses),
             _ComparableTuple(self.properties), self.release_notes, _ComparableTuple(self.services),
-            self.x_trust_boundary
+            self.x_trust_boundary, self.trust_zone
         ))
 
     def __eq__(self, other: object) -> bool:
