@@ -32,6 +32,7 @@ from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.tool import Tool
 from cyclonedx.output.json import JsonV1Dot7
+from cyclonedx.validation.model import ModelValidationErrorSeverity, ModelValidator
 from tests import reorder
 from tests._data.models import (
     get_bom_component_licenses_invalid,
@@ -254,7 +255,9 @@ class TestBom(TestCase):
         bom = get_bom_for_issue_275_components()
         self.assertIsInstance(bom.metadata.component, Component)
         self.assertEqual(2, len(bom.components))
-        bom.validate()
+        errors = [e for e in ModelValidator().validate(bom)
+                  if e.severity is ModelValidationErrorSeverity.ERROR]
+        self.assertFalse(errors)
 
     @named_data(
         ['metadata_licenses', get_bom_metadata_licenses_invalid],
@@ -266,8 +269,8 @@ class TestBom(TestCase):
     )
     def test_validate_with_invalid_license_constellation_throws(self, get_bom: Callable[[], Bom]) -> None:
         bom = get_bom()
-        with self.assertRaises(LicenseExpressionAlongWithOthersException):
-            bom.validate()
+        error_types = [type(e.data) for e in ModelValidator().validate(bom)]
+        self.assertIn(LicenseExpressionAlongWithOthersException, error_types)
 
     # def test_bom_nested_services_issue_275(self) -> None:
     #    """regression test for issue #275
