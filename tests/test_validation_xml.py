@@ -18,13 +18,17 @@
 from collections.abc import Generator
 from glob import iglob
 from itertools import chain
-from os.path import join
+from os.path import basename, dirname, join
+from shutil import copytree
+from tempfile import TemporaryDirectory
 from unittest import TestCase
+from unittest.mock import patch
 
 from ddt import ddt, idata, unpack
 
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.schema._res import BOM_XML
 from cyclonedx.validation.xml import XmlValidator
 from tests import OWN_DATA_DIRECTORY, SCHEMA_TESTDATA_DIRECTORY, DpTuple
 
@@ -50,6 +54,23 @@ def _dp_sv_own(valid: bool) -> Generator:
 
 @ddt
 class TestXmlValidator(TestCase):
+
+    def test_validate_schema_from_path_with_fragment_character(self) -> None:
+        schema_version = SchemaVersion.V1_6
+        schema_file = BOM_XML[schema_version]
+        self.assertIsNotNone(schema_file)
+
+        with TemporaryDirectory(prefix='cyclonedx#') as temp_directory:
+            schema_directory = join(temp_directory, 'schemas')
+            copytree(dirname(schema_file), schema_directory)
+            copied_schema_file = join(schema_directory, basename(schema_file))
+
+            with patch.dict('cyclonedx.validation.xml._S_BOM', {schema_version: copied_schema_file}):
+                validation_error = XmlValidator(schema_version).validate_str(
+                    '<bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1"/>'
+                )
+
+        self.assertIsNone(validation_error)
 
     @idata(sv for sv in SchemaVersion if sv not in UNSUPPORTED_SCHEMA_VERSIONS)
     def test_validator_as_expected(self, schema_version: SchemaVersion) -> None:
