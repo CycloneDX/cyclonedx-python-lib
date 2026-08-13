@@ -134,6 +134,8 @@ class XmlBoolAttribute(BaseHelper):
         if isinstance(o, bool):
             return o
         if isinstance(o, str):
+            # Per spec https://www.w3.org/TR/xmlschema-2/#boolean
+            # An instance of a datatype that is defined as boolean can have the following legal literals {true, false, 1, 0}.
             o_lower = o.lower()
             if o_lower in ('1', 'true'):
                 return True
