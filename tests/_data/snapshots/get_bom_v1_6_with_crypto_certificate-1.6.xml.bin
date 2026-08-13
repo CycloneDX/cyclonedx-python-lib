@@ -14,6 +14,8 @@
           <issuerName>Cloudflare Inc ECC CA-3</issuerName>
           <notValidBefore>2023-05-19T01:00:00+00:00</notValidBefore>
           <notValidAfter>2024-05-19T00:59:59.999999+00:00</notValidAfter>
+          <signatureAlgorithmRef>signature-algorithm</signatureAlgorithmRef>
+          <subjectPublicKeyRef>subject-public-key</subjectPublicKeyRef>
           <certificateFormat>pem</certificateFormat>
           <certificateExtension>csr</certificateExtension>
         </certificateProperties>
