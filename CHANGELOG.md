@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v11.12.0 (2026-08-13)
+
+### Features
+
+- Add isExternal property to Component for CycloneDX v1.7
+  ([#959](https://github.com/CycloneDX/cyclonedx-python-lib/pull/959),
+  [`6993dea`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/6993dea6b84a9bf0627f959bed48d0fb5339e293))
+
+
 ## v11.11.2 (2026-08-12)
 
 ### Bug Fixes
