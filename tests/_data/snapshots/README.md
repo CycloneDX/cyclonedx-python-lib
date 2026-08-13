@@ -32,5 +32,6 @@ As a shortcut just run:
 CDX_TEST_RECREATE_SNAPSHOTS=1 poetry run tox -e py
 ```
 
-Only commit snapshots that belong to the model change. Since snapshots are
-compared byte-for-byte, do not reformat them manually.
+Only commit snapshots that belong to the model change. Snapshot tests compare
+the serialized text with the stored fixture using exact string equality, so do
+not reformat snapshots manually.
