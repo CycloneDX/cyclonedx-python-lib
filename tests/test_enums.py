@@ -55,7 +55,7 @@ from cyclonedx.model.vulnerability import (
 )
 from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
+from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML, CRYPTOGRAPHY_DEFS
 from cyclonedx.validation import make_schemabased_validator
 from tests import PROJECT_LIB_MODELS_DIRECTORY, SnapshotMixin
 from tests._data.models import _make_bom
@@ -94,6 +94,7 @@ from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilitySeverity,
 )
 from cyclonedx.model.crypto import (  # isort:skip
+    CryptoAlgorithmFamily,
     CryptoAssetType,
     CryptoCertificationLevel,
     CryptoExecutionEnvironment,
@@ -102,6 +103,7 @@ from cyclonedx.model.crypto import (  # isort:skip
     CryptoMode,
     CryptoPadding,
     CryptoPrimitive,
+    CryptoEllipticCurve,
     ProtocolPropertiesType,
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
@@ -653,6 +655,58 @@ class TestEnumCryptoAssetType(_EnumTestCase):
                     )
                 ) for cat in CryptoAssetType
             ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumCryptoAlgorithmFamily(_EnumTestCase):
+
+    @idata(set(dp_cases_from_json_schema(
+        CRYPTOGRAPHY_DEFS, ('definitions', 'algorithmFamiliesEnum')
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(CryptoAlgorithmFamily, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] is SchemaVersion.V1_7))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'CryptoAlgorithmFamily: {family.name}', bom_ref=f'dummy-CAF:{family.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.ALGORITHM,
+                        algorithm_properties=AlgorithmProperties(algorithm_family=family),
+                    ),
+                ) for family in CryptoAlgorithmFamily
+            ]
+        )
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumCryptoEllipticCurve(_EnumTestCase):
+
+    @idata(set(dp_cases_from_json_schema(
+        CRYPTOGRAPHY_DEFS, ('definitions', 'ellipticCurvesEnum')
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(CryptoEllipticCurve, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] is SchemaVersion.V1_7))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'CryptoEllipticCurve: {curve.name}', bom_ref=f'dummy-CEC:{curve.name}',
+                    type=ComponentType.CRYPTOGRAPHIC_ASSET,
+                    crypto_properties=CryptoProperties(
+                        asset_type=CryptoAssetType.ALGORITHM,
+                        algorithm_properties=AlgorithmProperties(elliptic_curve=curve),
+                    ),
+                ) for curve in CryptoEllipticCurve
+            ]
+        )
         super()._test_cases_render(bom, of, sv)
 
 

@@ -1,0 +1,1326 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CAF:A5_1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "A5/1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: A5_1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:A5_2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "A5/2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: A5_2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:AES",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "AES"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: AES",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ARGON2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Argon2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ARGON2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ARIA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ARIA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ARIA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ASCON",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Ascon"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ASCON",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:BCRYPT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "bcrypt"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: BCRYPT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:BLAKE2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "BLAKE2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: BLAKE2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:BLAKE3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "BLAKE3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: BLAKE3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:BLOWFISH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Blowfish"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: BLOWFISH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:BLS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "BLS"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: BLS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CAMELLIA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "CAMELLIA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CAMELLIA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CAST5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "CAST5"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CAST5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CAST6",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "CAST6"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CAST6",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CHACHA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ChaCha"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CHACHA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CHACHA20",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ChaCha20"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CHACHA20",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CMAC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "CMAC"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CMAC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CMEA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "CMEA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CMEA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:CTR_DRBG",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "CTR_DRBG"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: CTR_DRBG",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:DES",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "DES"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: DES",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:DSA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "DSA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: DSA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ECDH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ECDH"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ECDH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ECDSA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ECDSA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ECDSA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ECIES",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ECIES"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ECIES",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:EDDSA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "EdDSA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: EDDSA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ELGAMAL",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ElGamal"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ELGAMAL",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:FFDH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "FFDH"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: FFDH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:FORTUNA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Fortuna"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: FORTUNA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:GOST",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "GOST"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: GOST",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:HASH_DRBG",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Hash_DRBG"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: HASH_DRBG",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:HC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "HC"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: HC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:HKDF",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "HKDF"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: HKDF",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:HMAC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "HMAC"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: HMAC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:HMAC_DRBG",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "HMAC_DRBG"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: HMAC_DRBG",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:HPKE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "HPKE"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: HPKE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:IDEA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "IDEA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: IDEA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:IKE_PRF",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "IKE-PRF"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: IKE_PRF",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:J_PAKE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "J-PAKE"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: J_PAKE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:LMS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "LMS"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: LMS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:MD2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "MD2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: MD2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:MD4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "MD4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: MD4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:MD5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "MD5"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: MD5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:MILENAGE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "MILENAGE"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: MILENAGE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ML_DSA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ML-DSA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ML_DSA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ML_KEM",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ML-KEM"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ML_KEM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:MQV",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "MQV"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: MQV",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:OPAQUE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "OPAQUE"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: OPAQUE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:PBES1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "PBES1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: PBES1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:PBES2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "PBES2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: PBES2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:PBKDF1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "PBKDF1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: PBKDF1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:PBKDF2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "PBKDF2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: PBKDF2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:PBMAC1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "PBMAC1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: PBMAC1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:POLY1305",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Poly1305"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: POLY1305",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RABBIT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RABBIT"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RABBIT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RC2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RC2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RC2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RC4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RC4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RC4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RC5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RC5"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RC5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RC6",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RC6"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RC6",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RIPEMD",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RIPEMD"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RIPEMD",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RSAES_OAEP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RSAES-OAEP"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RSAES_OAEP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RSAES_PKCS1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RSAES-PKCS1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RSAES_PKCS1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RSASSA_PKCS1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RSASSA-PKCS1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RSASSA_PKCS1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:RSASSA_PSS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "RSASSA-PSS"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: RSASSA_PSS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SALSA20",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Salsa20"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SALSA20",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SCRYPT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "scrypt"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SCRYPT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SEED",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SEED"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SEED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SERPENT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Serpent"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SERPENT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SHA_1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SHA-1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SHA_1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SHA_2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SHA-2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SHA_2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SHA_3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SHA-3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SHA_3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SIPHASH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SipHash"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SIPHASH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SKIPJACK",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Skipjack"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SKIPJACK",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SLH_DSA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SLH-DSA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SLH_DSA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SM2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SM2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SM2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SM3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SM3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SM3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SM4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SM4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SM4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SM9",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SM9"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SM9",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SNOW3G",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SNOW3G"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SNOW3G",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SP800_108",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SP800-108"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SP800_108",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SPAKE2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SPAKE2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SPAKE2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SPAKE2PLUS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SPAKE2PLUS"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SPAKE2PLUS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:SRP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "SRP"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: SRP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:THREEGPP_XOR",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "3GPP-XOR"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: THREEGPP_XOR",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:TRIPLE_DES",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "3DES"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: TRIPLE_DES",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:TUAK",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "TUAK"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: TUAK",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:TWOFISH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Twofish"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: TWOFISH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:UMAC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "UMAC"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: UMAC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:WHIRLPOOL",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Whirlpool"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: WHIRLPOOL",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:X3DH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "X3DH"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: X3DH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:XMSS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "XMSS"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: XMSS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:YARROW",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "Yarrow"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: YARROW",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:YESCRYPT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "yescrypt"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: YESCRYPT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CAF:ZUC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "algorithmFamily": "ZUC"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoAlgorithmFamily: ZUC",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CAF:A5_1"
+    },
+    {
+      "ref": "dummy-CAF:A5_2"
+    },
+    {
+      "ref": "dummy-CAF:AES"
+    },
+    {
+      "ref": "dummy-CAF:ARGON2"
+    },
+    {
+      "ref": "dummy-CAF:ARIA"
+    },
+    {
+      "ref": "dummy-CAF:ASCON"
+    },
+    {
+      "ref": "dummy-CAF:BCRYPT"
+    },
+    {
+      "ref": "dummy-CAF:BLAKE2"
+    },
+    {
+      "ref": "dummy-CAF:BLAKE3"
+    },
+    {
+      "ref": "dummy-CAF:BLOWFISH"
+    },
+    {
+      "ref": "dummy-CAF:BLS"
+    },
+    {
+      "ref": "dummy-CAF:CAMELLIA"
+    },
+    {
+      "ref": "dummy-CAF:CAST5"
+    },
+    {
+      "ref": "dummy-CAF:CAST6"
+    },
+    {
+      "ref": "dummy-CAF:CHACHA"
+    },
+    {
+      "ref": "dummy-CAF:CHACHA20"
+    },
+    {
+      "ref": "dummy-CAF:CMAC"
+    },
+    {
+      "ref": "dummy-CAF:CMEA"
+    },
+    {
+      "ref": "dummy-CAF:CTR_DRBG"
+    },
+    {
+      "ref": "dummy-CAF:DES"
+    },
+    {
+      "ref": "dummy-CAF:DSA"
+    },
+    {
+      "ref": "dummy-CAF:ECDH"
+    },
+    {
+      "ref": "dummy-CAF:ECDSA"
+    },
+    {
+      "ref": "dummy-CAF:ECIES"
+    },
+    {
+      "ref": "dummy-CAF:EDDSA"
+    },
+    {
+      "ref": "dummy-CAF:ELGAMAL"
+    },
+    {
+      "ref": "dummy-CAF:FFDH"
+    },
+    {
+      "ref": "dummy-CAF:FORTUNA"
+    },
+    {
+      "ref": "dummy-CAF:GOST"
+    },
+    {
+      "ref": "dummy-CAF:HASH_DRBG"
+    },
+    {
+      "ref": "dummy-CAF:HC"
+    },
+    {
+      "ref": "dummy-CAF:HKDF"
+    },
+    {
+      "ref": "dummy-CAF:HMAC"
+    },
+    {
+      "ref": "dummy-CAF:HMAC_DRBG"
+    },
+    {
+      "ref": "dummy-CAF:HPKE"
+    },
+    {
+      "ref": "dummy-CAF:IDEA"
+    },
+    {
+      "ref": "dummy-CAF:IKE_PRF"
+    },
+    {
+      "ref": "dummy-CAF:J_PAKE"
+    },
+    {
+      "ref": "dummy-CAF:LMS"
+    },
+    {
+      "ref": "dummy-CAF:MD2"
+    },
+    {
+      "ref": "dummy-CAF:MD4"
+    },
+    {
+      "ref": "dummy-CAF:MD5"
+    },
+    {
+      "ref": "dummy-CAF:MILENAGE"
+    },
+    {
+      "ref": "dummy-CAF:ML_DSA"
+    },
+    {
+      "ref": "dummy-CAF:ML_KEM"
+    },
+    {
+      "ref": "dummy-CAF:MQV"
+    },
+    {
+      "ref": "dummy-CAF:OPAQUE"
+    },
+    {
+      "ref": "dummy-CAF:PBES1"
+    },
+    {
+      "ref": "dummy-CAF:PBES2"
+    },
+    {
+      "ref": "dummy-CAF:PBKDF1"
+    },
+    {
+      "ref": "dummy-CAF:PBKDF2"
+    },
+    {
+      "ref": "dummy-CAF:PBMAC1"
+    },
+    {
+      "ref": "dummy-CAF:POLY1305"
+    },
+    {
+      "ref": "dummy-CAF:RABBIT"
+    },
+    {
+      "ref": "dummy-CAF:RC2"
+    },
+    {
+      "ref": "dummy-CAF:RC4"
+    },
+    {
+      "ref": "dummy-CAF:RC5"
+    },
+    {
+      "ref": "dummy-CAF:RC6"
+    },
+    {
+      "ref": "dummy-CAF:RIPEMD"
+    },
+    {
+      "ref": "dummy-CAF:RSAES_OAEP"
+    },
+    {
+      "ref": "dummy-CAF:RSAES_PKCS1"
+    },
+    {
+      "ref": "dummy-CAF:RSASSA_PKCS1"
+    },
+    {
+      "ref": "dummy-CAF:RSASSA_PSS"
+    },
+    {
+      "ref": "dummy-CAF:SALSA20"
+    },
+    {
+      "ref": "dummy-CAF:SCRYPT"
+    },
+    {
+      "ref": "dummy-CAF:SEED"
+    },
+    {
+      "ref": "dummy-CAF:SERPENT"
+    },
+    {
+      "ref": "dummy-CAF:SHA_1"
+    },
+    {
+      "ref": "dummy-CAF:SHA_2"
+    },
+    {
+      "ref": "dummy-CAF:SHA_3"
+    },
+    {
+      "ref": "dummy-CAF:SIPHASH"
+    },
+    {
+      "ref": "dummy-CAF:SKIPJACK"
+    },
+    {
+      "ref": "dummy-CAF:SLH_DSA"
+    },
+    {
+      "ref": "dummy-CAF:SM2"
+    },
+    {
+      "ref": "dummy-CAF:SM3"
+    },
+    {
+      "ref": "dummy-CAF:SM4"
+    },
+    {
+      "ref": "dummy-CAF:SM9"
+    },
+    {
+      "ref": "dummy-CAF:SNOW3G"
+    },
+    {
+      "ref": "dummy-CAF:SP800_108"
+    },
+    {
+      "ref": "dummy-CAF:SPAKE2"
+    },
+    {
+      "ref": "dummy-CAF:SPAKE2PLUS"
+    },
+    {
+      "ref": "dummy-CAF:SRP"
+    },
+    {
+      "ref": "dummy-CAF:THREEGPP_XOR"
+    },
+    {
+      "ref": "dummy-CAF:TRIPLE_DES"
+    },
+    {
+      "ref": "dummy-CAF:TUAK"
+    },
+    {
+      "ref": "dummy-CAF:TWOFISH"
+    },
+    {
+      "ref": "dummy-CAF:UMAC"
+    },
+    {
+      "ref": "dummy-CAF:WHIRLPOOL"
+    },
+    {
+      "ref": "dummy-CAF:X3DH"
+    },
+    {
+      "ref": "dummy-CAF:XMSS"
+    },
+    {
+      "ref": "dummy-CAF:YARROW"
+    },
+    {
+      "ref": "dummy-CAF:YESCRYPT"
+    },
+    {
+      "ref": "dummy-CAF:ZUC"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}
