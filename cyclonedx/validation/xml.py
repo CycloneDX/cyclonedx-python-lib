@@ -20,6 +20,7 @@ __all__ = ['XmlValidator', 'XmlValidationError']
 
 from abc import ABC
 from collections.abc import Iterable
+from pathlib import Path
 from typing import TYPE_CHECKING, Literal, Optional, Union, overload
 
 from ..exception import MissingOptionalDependencyException
@@ -125,7 +126,7 @@ class _BaseXmlValidator(BaseSchemabasedValidator, ABC):
                 schema_file = self._schema_file
                 if schema_file is None:
                     raise NotImplementedError('missing schema file')
-                self.__validator = XMLSchema(file=schema_file)
+                self.__validator = XMLSchema(file=Path(schema_file).absolute().as_uri())
             return self.__validator
 
 
