@@ -103,8 +103,8 @@ from cyclonedx.model.license import (
     LicenseAcknowledgement,
     LicenseEntity,
     LicenseExpression,
-	LicenseExpressionDetails,
-	LicenseType,
+    LicenseExpressionDetails,
+    LicenseType,
     Licensing,
 )
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle

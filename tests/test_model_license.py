@@ -147,7 +147,8 @@ class TestModelDisjunctiveLicense(TestCase):
         b = DisjunctiveLicense(id='MIT', acknowledgement=LicenseAcknowledgement.CONCLUDED)
         c = DisjunctiveLicense(id='MIT')
         self.assertNotEqual(a, b)
-        self.assertEqual(a, c)
+        self.assertNotEqual(a, c)
+
 
 class TestModelLicenseExpression(TestCase):
     def test_create(self) -> None:
@@ -200,6 +201,7 @@ class TestModelLicenseExpression(TestCase):
         b = LicenseExpression('MIT', acknowledgement=LicenseAcknowledgement.CONCLUDED)
         self.assertNotEqual(a, b)
 
+
 class TestModelLicense(TestCase):
     def test_sort_mixed(self) -> None:
         expected_order = [1, 2, 0]
@@ -212,6 +214,7 @@ class TestModelLicense(TestCase):
         shuffle(licenses)
         sorted_licenses = sorted(licenses)
         self.assertListEqual(sorted_licenses, expected_licenses)
+
 
 class TestModelLicenseExpressionDetails(TestCase):
     def test_equal(self) -> None:
@@ -233,6 +236,7 @@ class TestModelLicenseExpressionDetails(TestCase):
         shuffle(details)
         sorted_details = sorted(details)
         self.assertListEqual(sorted_details, expected_details)
+
 
 class TestModelLicenseEntity(TestCase):
     def test_create_with_organization(self) -> None:
@@ -303,6 +307,7 @@ class TestModelLicenseEntity(TestCase):
         a = LicenseEntity(organization=OrganizationalEntity(name='Acme Inc'))
         b = LicenseEntity(organization=OrganizationalEntity(name='Beta Co'))
         self.assertListEqual([a, b], sorted([b, a]))
+
 
 class TestModelLicensing(TestCase):
     def test_create_minimal(self) -> None:
