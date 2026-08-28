@@ -44,7 +44,7 @@ from ..schema.schema import (
 from ..serialization import UrnUuidHelper
 from . import _BOM_LINK_PREFIX, ExternalReference, Property
 from .bom_ref import BomRef
-from .component import Component
+from .component import Component, _ComponentValidationHelper
 from .contact import OrganizationalContact, OrganizationalEntity
 from .definition import Definitions
 from .dependency import Dependable, Dependency
@@ -863,6 +863,18 @@ class Bom:
             if len(elem.licenses) > 1 and any(isinstance(li, LicenseExpression) for li in elem.licenses):
                 raise LicenseExpressionAlongWithOthersException(
                     f'Found LicenseExpression along with others licenses in: {elem!r}')
+
+        # 4. Validates that each component conforms to CycloneDX 1.7 constraints:
+        # - root component may not have is_external=true
+        # - version and version_range are mutually exclusive
+        # - version_range requires is_external=true
+        if self.metadata.component and self.metadata.component.is_external:
+            warn(
+                f'The Component this BOM is describing {self.metadata.component.purl} must not have is_external=true.',
+                category=UserWarning, stacklevel=1
+            )
+        for _c in self._get_all_components():
+            _ComponentValidationHelper.validate(_c)
 
         return True
 
