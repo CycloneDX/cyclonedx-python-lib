@@ -1573,6 +1573,29 @@ def get_bom_with_definitions_and_detailed_standards() -> Bom:
         ]))
 
 
+def get_bom_with_provides() -> Bom:
+    bom = _make_bom()
+    bom.metadata.component = root_component = Component(name='app A', bom_ref='A', type=ComponentType.APPLICATION)
+    bom.components.add(
+        c1 := Component(name='device B', bom_ref='B', type=ComponentType.DEVICE))
+    bom.components.add(
+        c2 := Component(name='device C', bom_ref='C', type=ComponentType.DEVICE))
+    bom.dependencies = [
+        Dependency(
+            ref=c2.bom_ref
+        ),
+        Dependency(
+            ref=c1.bom_ref,
+            provides=[Dependency(ref=c2.bom_ref)]
+        ),
+        Dependency(
+            ref=root_component.bom_ref,
+            dependencies=[Dependency(ref=c2.bom_ref)]
+        ),
+    ]
+    return bom
+
+
 def get_bom_for_issue540_duplicate_components() -> Bom:
     # tests https://github.com/CycloneDX/cyclonedx-python-lib/issues/540
     bom = _make_bom()
@@ -1716,6 +1739,7 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_services_complex,
     get_bom_with_services_simple,
     get_bom_with_licenses,
+    get_bom_with_provides,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
     get_bom_with_external_component_1_7,
