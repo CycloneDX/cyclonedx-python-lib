@@ -16,6 +16,9 @@ Serialization and deserialization tests share BOM factories from
    complete dependency graph in the returned BOM.
 4. Re-create the snapshots, review the changed files, then run the tests again
    without snapshot re-creation enabled.
+5. For version-specific fixtures, prefix the name with the target schema version
+   tag (e.g. `get_bom_v1_5_*`). The test runner uses `is_valid_for_schema_version()`
+   to ensure such models are only evaluated against applicable schema versions.
 
 The output tests serialize each discovered model for the applicable schema
 versions, validate the generated JSON and XML, and compare it with the stored
