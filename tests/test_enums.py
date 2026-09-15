@@ -46,6 +46,7 @@ from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
 from cyclonedx.model.service import DataClassification, Service
+from cyclonedx.model.signature import JsfPublicKey, JsfSimpleSignature
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
@@ -55,7 +56,7 @@ from cyclonedx.model.vulnerability import (
 )
 from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML
+from cyclonedx.schema._res import BOM_JSON as SCHEMA_JSON, BOM_XML as SCHEMA_XML, JSF as SCHEMA_JSF
 from cyclonedx.validation import make_schemabased_validator
 from tests import PROJECT_LIB_MODELS_DIRECTORY, SnapshotMixin
 from tests._data.models import _make_bom
@@ -106,6 +107,12 @@ from cyclonedx.model.crypto import (  # isort:skip
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.model.signature import (  # isort:skip
+    JsfAlgorithm,
+    JsfEcCurve,
+    JsfKeyType,
+    JsfOkpCurve,
+)
 
 # endregion SUT
 
@@ -151,6 +158,30 @@ def dp_cases_from_json_schemas(*jsonpointer: str) -> set[str]:
     if len(cases) == 0:
         raise ValueError(f'no values for jsonpointer: {jsonpointer!r}')
     return cases
+
+
+def dp_cases_from_jsf_algorithm() -> set[str]:
+    with open(SCHEMA_JSF) as sfh:
+        data = json_load(sfh)
+    return set(data['definitions']['signer']['properties']['algorithm']['oneOf'][0]['enum'])
+
+
+def dp_cases_from_jsf_keytype() -> set[str]:
+    with open(SCHEMA_JSF) as sfh:
+        data = json_load(sfh)
+    return set(data['definitions']['keyType']['enum'])
+
+
+def dp_cases_from_jsf_ec_crv() -> set[str]:
+    with open(SCHEMA_JSF) as sfh:
+        data = json_load(sfh)
+    return set(data['definitions']['publicKey']['allOf'][0]['then']['properties']['crv']['enum'])
+
+
+def dp_cases_from_jsf_okp_crv() -> set[str]:
+    with open(SCHEMA_JSF) as sfh:
+        data = json_load(sfh)
+    return set(data['definitions']['publicKey']['allOf'][1]['then']['properties']['crv']['enum'])
 
 
 UNSUPPORTED_OF_SV = frozenset([
@@ -973,6 +1004,119 @@ class TestEnumProtocolPropertiesType(_EnumTestCase):
                         )
                     )
                 ) for ppt in ProtocolPropertiesType
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumJsfAlgorithm(_EnumTestCase):
+
+    @idata(dp_cases_from_jsf_algorithm())
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(JsfAlgorithm, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[1] == OutputFormat.JSON and d[2] >= SchemaVersion.V1_4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'JsfAlgorithm: {alg.name}', bom_ref=f'dummy-JA:{alg.name}',
+                    type=ComponentType.LIBRARY,
+                    signature=JsfSimpleSignature(
+                        algorithm=alg,
+                        value='AABBCC==',
+                    ),
+                ) for alg in JsfAlgorithm
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumJsfKeyType(_EnumTestCase):
+
+    @idata(dp_cases_from_jsf_keytype())
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(JsfKeyType, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[1] == OutputFormat.JSON and d[2] >= SchemaVersion.V1_4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name='JsfKeyType: EC', bom_ref='dummy-JKT:EC',
+                    type=ComponentType.LIBRARY,
+                    signature=JsfSimpleSignature(
+                        algorithm=JsfAlgorithm.ES256,
+                        value='DDEEFF==',
+                        public_key=JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='abc', y='def'),
+                    ),
+                ),
+                Component(
+                    name='JsfKeyType: OKP', bom_ref='dummy-JKT:OKP',
+                    type=ComponentType.LIBRARY,
+                    signature=JsfSimpleSignature(
+                        algorithm=JsfAlgorithm.ED25519,
+                        value='GGHHII==',
+                        public_key=JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED25519, x='xyz'),
+                    ),
+                ),
+                Component(
+                    name='JsfKeyType: RSA', bom_ref='dummy-JKT:RSA',
+                    type=ComponentType.LIBRARY,
+                    signature=JsfSimpleSignature(
+                        algorithm=JsfAlgorithm.RS256,
+                        value='AABBCC==',
+                        public_key=JsfPublicKey(kty=JsfKeyType.RSA, n='sQ3MDBw==', e='AQAB'),
+                    ),
+                ),
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumJsfEcCurve(_EnumTestCase):
+
+    @idata(dp_cases_from_jsf_ec_crv())
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(JsfEcCurve, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[1] == OutputFormat.JSON and d[2] >= SchemaVersion.V1_4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'JsfEcCurve: {crv.name}', bom_ref=f'dummy-JEC:{crv.name}',
+                    type=ComponentType.LIBRARY,
+                    signature=JsfSimpleSignature(
+                        algorithm=JsfAlgorithm.ES256,
+                        value='AABBCC==',
+                        public_key=JsfPublicKey(kty=JsfKeyType.EC, crv=crv, x='abc', y='def'),
+                    ),
+                ) for crv in JsfEcCurve
+            ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumJsfOkpCurve(_EnumTestCase):
+
+    @idata(dp_cases_from_jsf_okp_crv())
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(JsfOkpCurve, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[1] == OutputFormat.JSON and d[2] >= SchemaVersion.V1_4))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(
+            components=[
+                Component(
+                    name=f'JsfOkpCurve: {crv.name}', bom_ref=f'dummy-JOC:{crv.name}',
+                    type=ComponentType.LIBRARY,
+                    signature=JsfSimpleSignature(
+                        algorithm=JsfAlgorithm.ED25519,
+                        value='AABBCC==',
+                        public_key=JsfPublicKey(kty=JsfKeyType.OKP, crv=crv, x='xyz'),
+                    ),
+                ) for crv in JsfOkpCurve
             ])
         super()._test_cases_render(bom, of, sv)
 

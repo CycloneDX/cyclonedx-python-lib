@@ -1,0 +1,48 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-JOC:ED25519",
+      "name": "JsfOkpCurve: ED25519",
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "AABBCC==",
+        "publicKey": {
+          "kty": "OKP",
+          "crv": "Ed25519",
+          "x": "xyz"
+        }
+      },
+      "type": "library"
+    },
+    {
+      "bom-ref": "dummy-JOC:ED448",
+      "name": "JsfOkpCurve: ED448",
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "AABBCC==",
+        "publicKey": {
+          "kty": "OKP",
+          "crv": "Ed448",
+          "x": "xyz"
+        }
+      },
+      "type": "library"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-JOC:ED25519"
+    },
+    {
+      "ref": "dummy-JOC:ED448"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4"
+}
