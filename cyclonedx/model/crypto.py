@@ -144,6 +144,357 @@ class _CryptoPrimitiveSerializationHelper(serializable.helpers.BaseHelper):
 
 
 @serializable.serializable_enum
+class CryptoAlgorithmFamily(str, Enum):
+    """Algorithm family identifiers defined by the CycloneDX 1.7 cryptography schema."""
+
+    TRIPLE_DES = '3DES'
+    THREEGPP_XOR = '3GPP-XOR'
+    A5_1 = 'A5/1'
+    A5_2 = 'A5/2'
+    AES = 'AES'
+    ARIA = 'ARIA'
+    ARGON2 = 'Argon2'
+    ASCON = 'Ascon'
+    BLAKE2 = 'BLAKE2'
+    BLAKE3 = 'BLAKE3'
+    BLS = 'BLS'
+    BLOWFISH = 'Blowfish'
+    CAMELLIA = 'CAMELLIA'
+    CAST5 = 'CAST5'
+    CAST6 = 'CAST6'
+    CMAC = 'CMAC'
+    CMEA = 'CMEA'
+    CTR_DRBG = 'CTR_DRBG'
+    CHACHA = 'ChaCha'
+    CHACHA20 = 'ChaCha20'
+    DES = 'DES'
+    DSA = 'DSA'
+    ECDH = 'ECDH'
+    ECDSA = 'ECDSA'
+    ECIES = 'ECIES'
+    EDDSA = 'EdDSA'
+    ELGAMAL = 'ElGamal'
+    FFDH = 'FFDH'
+    FORTUNA = 'Fortuna'
+    GOST = 'GOST'
+    HC = 'HC'
+    HKDF = 'HKDF'
+    HMAC = 'HMAC'
+    HMAC_DRBG = 'HMAC_DRBG'
+    HPKE = 'HPKE'
+    HASH_DRBG = 'Hash_DRBG'
+    IDEA = 'IDEA'
+    IKE_PRF = 'IKE-PRF'
+    J_PAKE = 'J-PAKE'
+    LMS = 'LMS'
+    MD2 = 'MD2'
+    MD4 = 'MD4'
+    MD5 = 'MD5'
+    MILENAGE = 'MILENAGE'
+    ML_DSA = 'ML-DSA'
+    ML_KEM = 'ML-KEM'
+    MQV = 'MQV'
+    OPAQUE = 'OPAQUE'
+    PBES1 = 'PBES1'
+    PBES2 = 'PBES2'
+    PBKDF1 = 'PBKDF1'
+    PBKDF2 = 'PBKDF2'
+    PBMAC1 = 'PBMAC1'
+    POLY1305 = 'Poly1305'
+    RABBIT = 'RABBIT'
+    RC2 = 'RC2'
+    RC4 = 'RC4'
+    RC5 = 'RC5'
+    RC6 = 'RC6'
+    RIPEMD = 'RIPEMD'
+    RSAES_OAEP = 'RSAES-OAEP'
+    RSAES_PKCS1 = 'RSAES-PKCS1'
+    RSASSA_PKCS1 = 'RSASSA-PKCS1'
+    RSASSA_PSS = 'RSASSA-PSS'
+    SEED = 'SEED'
+    SHA_1 = 'SHA-1'
+    SHA_2 = 'SHA-2'
+    SHA_3 = 'SHA-3'
+    SLH_DSA = 'SLH-DSA'
+    SM2 = 'SM2'
+    SM3 = 'SM3'
+    SM4 = 'SM4'
+    SM9 = 'SM9'
+    SNOW3G = 'SNOW3G'
+    SP800_108 = 'SP800-108'
+    SPAKE2 = 'SPAKE2'
+    SPAKE2PLUS = 'SPAKE2PLUS'
+    SRP = 'SRP'
+    SALSA20 = 'Salsa20'
+    SERPENT = 'Serpent'
+    SIPHASH = 'SipHash'
+    SKIPJACK = 'Skipjack'
+    TUAK = 'TUAK'
+    TWOFISH = 'Twofish'
+    UMAC = 'UMAC'
+    WHIRLPOOL = 'Whirlpool'
+    X3DH = 'X3DH'
+    XMSS = 'XMSS'
+    YARROW = 'Yarrow'
+    ZUC = 'ZUC'
+    BCRYPT = 'bcrypt'
+    SCRYPT = 'scrypt'
+    YESCRYPT = 'yescrypt'
+
+
+@serializable.serializable_enum
+class CryptoEllipticCurve(str, Enum):
+    """Elliptic curve identifiers defined by the CycloneDX 1.7 cryptography schema."""
+
+    ANSSI_FRP256V1 = 'anssi/FRP256v1'
+    BLS_BLS12_377 = 'bls/BLS12-377'
+    BLS_BLS12_381 = 'bls/BLS12-381'
+    BLS_BLS12_446 = 'bls/BLS12-446'
+    BLS_BLS12_455 = 'bls/BLS12-455'
+    BLS_BLS12_638 = 'bls/BLS12-638'
+    BLS_BLS24_477 = 'bls/BLS24-477'
+    BLS_BANDERSNATCH = 'bls/Bandersnatch'
+    BN_BN158 = 'bn/bn158'
+    BN_BN190 = 'bn/bn190'
+    BN_BN222 = 'bn/bn222'
+    BN_BN254 = 'bn/bn254'
+    BN_BN286 = 'bn/bn286'
+    BN_BN318 = 'bn/bn318'
+    BN_BN350 = 'bn/bn350'
+    BN_BN382 = 'bn/bn382'
+    BN_BN414 = 'bn/bn414'
+    BN_BN446 = 'bn/bn446'
+    BN_BN478 = 'bn/bn478'
+    BN_BN510 = 'bn/bn510'
+    BN_BN542 = 'bn/bn542'
+    BN_BN574 = 'bn/bn574'
+    BN_BN606 = 'bn/bn606'
+    BN_BN638 = 'bn/bn638'
+    BRAINPOOL_BRAINPOOLP160R1 = 'brainpool/brainpoolP160r1'
+    BRAINPOOL_BRAINPOOLP160T1 = 'brainpool/brainpoolP160t1'
+    BRAINPOOL_BRAINPOOLP192R1 = 'brainpool/brainpoolP192r1'
+    BRAINPOOL_BRAINPOOLP192T1 = 'brainpool/brainpoolP192t1'
+    BRAINPOOL_BRAINPOOLP224R1 = 'brainpool/brainpoolP224r1'
+    BRAINPOOL_BRAINPOOLP224T1 = 'brainpool/brainpoolP224t1'
+    BRAINPOOL_BRAINPOOLP256R1 = 'brainpool/brainpoolP256r1'
+    BRAINPOOL_BRAINPOOLP256T1 = 'brainpool/brainpoolP256t1'
+    BRAINPOOL_BRAINPOOLP320R1 = 'brainpool/brainpoolP320r1'
+    BRAINPOOL_BRAINPOOLP320T1 = 'brainpool/brainpoolP320t1'
+    BRAINPOOL_BRAINPOOLP384R1 = 'brainpool/brainpoolP384r1'
+    BRAINPOOL_BRAINPOOLP384T1 = 'brainpool/brainpoolP384t1'
+    BRAINPOOL_BRAINPOOLP512R1 = 'brainpool/brainpoolP512r1'
+    BRAINPOOL_BRAINPOOLP512T1 = 'brainpool/brainpoolP512t1'
+    GOST_GOST256 = 'gost/gost256'
+    GOST_GOST512 = 'gost/gost512'
+    GOST_ID_GOSTR3410_2001_CRYPTOPRO_A_PARAMSET = 'gost/id-GostR3410-2001-CryptoPro-A-ParamSet'
+    GOST_ID_GOSTR3410_2001_CRYPTOPRO_B_PARAMSET = 'gost/id-GostR3410-2001-CryptoPro-B-ParamSet'
+    GOST_ID_GOSTR3410_2001_CRYPTOPRO_C_PARAMSET = 'gost/id-GostR3410-2001-CryptoPro-C-ParamSet'
+    GOST_ID_TC26_GOST_3410_12_512_PARAMSETA = 'gost/id-tc26-gost-3410-12-512-paramSetA'
+    GOST_ID_TC26_GOST_3410_12_512_PARAMSETB = 'gost/id-tc26-gost-3410-12-512-paramSetB'
+    GOST_ID_TC26_GOST_3410_2012_256_PARAMSETA = 'gost/id-tc26-gost-3410-2012-256-paramSetA'
+    GOST_ID_TC26_GOST_3410_2012_512_PARAMSETC = 'gost/id-tc26-gost-3410-2012-512-paramSetC'
+    MNT_MNT1 = 'mnt/mnt1'
+    MNT_MNT2_1 = 'mnt/mnt2/1'
+    MNT_MNT2_2 = 'mnt/mnt2/2'
+    MNT_MNT3_1 = 'mnt/mnt3/1'
+    MNT_MNT3_2 = 'mnt/mnt3/2'
+    MNT_MNT3_3 = 'mnt/mnt3/3'
+    MNT_MNT4 = 'mnt/mnt4'
+    MNT_MNT5_1 = 'mnt/mnt5/1'
+    MNT_MNT5_2 = 'mnt/mnt5/2'
+    MNT_MNT5_3 = 'mnt/mnt5/3'
+    NIST_B_163 = 'nist/B-163'
+    NIST_B_233 = 'nist/B-233'
+    NIST_B_283 = 'nist/B-283'
+    NIST_B_409 = 'nist/B-409'
+    NIST_B_571 = 'nist/B-571'
+    NIST_K_163 = 'nist/K-163'
+    NIST_K_233 = 'nist/K-233'
+    NIST_K_283 = 'nist/K-283'
+    NIST_K_409 = 'nist/K-409'
+    NIST_K_571 = 'nist/K-571'
+    NIST_P_192 = 'nist/P-192'
+    NIST_P_224 = 'nist/P-224'
+    NIST_P_256 = 'nist/P-256'
+    NIST_P_384 = 'nist/P-384'
+    NIST_P_521 = 'nist/P-521'
+    NUMS_ED_254_MONT = 'nums/ed-254-mont'
+    NUMS_ED_255_MERS = 'nums/ed-255-mers'
+    NUMS_ED_256_MONT = 'nums/ed-256-mont'
+    NUMS_ED_382_MONT = 'nums/ed-382-mont'
+    NUMS_ED_383_MERS = 'nums/ed-383-mers'
+    NUMS_ED_384_MONT = 'nums/ed-384-mont'
+    NUMS_ED_510_MONT = 'nums/ed-510-mont'
+    NUMS_ED_511_MERS = 'nums/ed-511-mers'
+    NUMS_ED_512_MONT = 'nums/ed-512-mont'
+    NUMS_NUMSP256D1 = 'nums/numsp256d1'
+    NUMS_NUMSP256T1 = 'nums/numsp256t1'
+    NUMS_NUMSP384D1 = 'nums/numsp384d1'
+    NUMS_NUMSP384T1 = 'nums/numsp384t1'
+    NUMS_NUMSP512D1 = 'nums/numsp512d1'
+    NUMS_NUMSP512T1 = 'nums/numsp512t1'
+    NUMS_W_254_MONT = 'nums/w-254-mont'
+    NUMS_W_255_MERS = 'nums/w-255-mers'
+    NUMS_W_256_MONT = 'nums/w-256-mont'
+    NUMS_W_382_MONT = 'nums/w-382-mont'
+    NUMS_W_383_MERS = 'nums/w-383-mers'
+    NUMS_W_384_MONT = 'nums/w-384-mont'
+    NUMS_W_510_MONT = 'nums/w-510-mont'
+    NUMS_W_511_MERS = 'nums/w-511-mers'
+    NUMS_W_512_MONT = 'nums/w-512-mont'
+    OAKLEY_192_BIT_RANDOM_ECP_GROUP = 'oakley/192-bit Random ECP Group'
+    OAKLEY_224_BIT_RANDOM_ECP_GROUP = 'oakley/224-bit Random ECP Group'
+    OAKLEY_256_BIT_RANDOM_ECP_GROUP = 'oakley/256-bit Random ECP Group'
+    OAKLEY_384_BIT_RANDOM_ECP_GROUP = 'oakley/384-bit Random ECP Group'
+    OAKLEY_521_BIT_RANDOM_ECP_GROUP = 'oakley/521-bit Random ECP Group'
+    OAKLEY_OAKLEY_GROUP_3 = 'oakley/Oakley Group 3'
+    OAKLEY_OAKLEY_GROUP_4 = 'oakley/Oakley Group 4'
+    OSCAA_SM2 = 'oscaa/SM2'
+    OTHER_BADA55_R_256 = 'other/BADA55-R-256'
+    OTHER_BADA55_VPR_224 = 'other/BADA55-VPR-224'
+    OTHER_BADA55_VPR2_224 = 'other/BADA55-VPR2-224'
+    OTHER_BADA55_VR_224 = 'other/BADA55-VR-224'
+    OTHER_BADA55_VR_256 = 'other/BADA55-VR-256'
+    OTHER_BADA55_VR_384 = 'other/BADA55-VR-384'
+    OTHER_CURVE1174 = 'other/Curve1174'
+    OTHER_CURVE22103 = 'other/Curve22103'
+    OTHER_CURVE25519 = 'other/Curve25519'
+    OTHER_CURVE383187 = 'other/Curve383187'
+    OTHER_CURVE41417 = 'other/Curve41417'
+    OTHER_CURVE4417 = 'other/Curve4417'
+    OTHER_CURVE448 = 'other/Curve448'
+    OTHER_CURVE67254 = 'other/Curve67254'
+    OTHER_E_222 = 'other/E-222'
+    OTHER_E_382 = 'other/E-382'
+    OTHER_E_521 = 'other/E-521'
+    OTHER_ED25519 = 'other/Ed25519'
+    OTHER_ED448 = 'other/Ed448'
+    OTHER_ED448_GOLDILOCKS = 'other/Ed448-Goldilocks'
+    OTHER_FOURQ = 'other/FourQ'
+    OTHER_FP224BN = 'other/Fp224BN'
+    OTHER_FP254BNA = 'other/Fp254BNa'
+    OTHER_FP254BNB = 'other/Fp254BNb'
+    OTHER_FP254N2BNA = 'other/Fp254n2BNa'
+    OTHER_FP256BN = 'other/Fp256BN'
+    OTHER_FP384BN = 'other/Fp384BN'
+    OTHER_FP512BN = 'other/Fp512BN'
+    OTHER_JUBJUB = 'other/JubJub'
+    OTHER_M_221 = 'other/M-221'
+    OTHER_M_383 = 'other/M-383'
+    OTHER_M_511 = 'other/M-511'
+    OTHER_MDC201601 = 'other/MDC201601'
+    OTHER_PALLAS = 'other/Pallas'
+    OTHER_TOM_256 = 'other/Tom-256'
+    OTHER_TOM_384 = 'other/Tom-384'
+    OTHER_TOM_521 = 'other/Tom-521'
+    OTHER_TWEEDLEDEE = 'other/Tweedledee'
+    OTHER_TWEEDLEDUM = 'other/Tweedledum'
+    OTHER_VESTA = 'other/Vesta'
+    OTHER_SSC_160 = 'other/ssc-160'
+    OTHER_SSC_192 = 'other/ssc-192'
+    OTHER_SSC_224 = 'other/ssc-224'
+    OTHER_SSC_256 = 'other/ssc-256'
+    OTHER_SSC_288 = 'other/ssc-288'
+    OTHER_SSC_320 = 'other/ssc-320'
+    OTHER_SSC_384 = 'other/ssc-384'
+    OTHER_SSC_512 = 'other/ssc-512'
+    SECG_SECP112R1 = 'secg/secp112r1'
+    SECG_SECP112R2 = 'secg/secp112r2'
+    SECG_SECP128R1 = 'secg/secp128r1'
+    SECG_SECP128R2 = 'secg/secp128r2'
+    SECG_SECP160K1 = 'secg/secp160k1'
+    SECG_SECP160R1 = 'secg/secp160r1'
+    SECG_SECP160R2 = 'secg/secp160r2'
+    SECG_SECP192K1 = 'secg/secp192k1'
+    SECG_SECP192R1 = 'secg/secp192r1'
+    SECG_SECP224K1 = 'secg/secp224k1'
+    SECG_SECP224R1 = 'secg/secp224r1'
+    SECG_SECP256K1 = 'secg/secp256k1'
+    SECG_SECP256R1 = 'secg/secp256r1'
+    SECG_SECP384R1 = 'secg/secp384r1'
+    SECG_SECP521R1 = 'secg/secp521r1'
+    SECG_SECT113R1 = 'secg/sect113r1'
+    SECG_SECT113R2 = 'secg/sect113r2'
+    SECG_SECT131R1 = 'secg/sect131r1'
+    SECG_SECT131R2 = 'secg/sect131r2'
+    SECG_SECT163K1 = 'secg/sect163k1'
+    SECG_SECT163R1 = 'secg/sect163r1'
+    SECG_SECT163R2 = 'secg/sect163r2'
+    SECG_SECT193R1 = 'secg/sect193r1'
+    SECG_SECT193R2 = 'secg/sect193r2'
+    SECG_SECT233K1 = 'secg/sect233k1'
+    SECG_SECT233R1 = 'secg/sect233r1'
+    SECG_SECT239K1 = 'secg/sect239k1'
+    SECG_SECT283K1 = 'secg/sect283k1'
+    SECG_SECT283R1 = 'secg/sect283r1'
+    SECG_SECT409K1 = 'secg/sect409k1'
+    SECG_SECT409R1 = 'secg/sect409r1'
+    SECG_SECT571K1 = 'secg/sect571k1'
+    SECG_SECT571R1 = 'secg/sect571r1'
+    WTLS_WAP_WSG_IDM_ECID_WTLS1 = 'wtls/wap-wsg-idm-ecid-wtls1'
+    WTLS_WAP_WSG_IDM_ECID_WTLS10 = 'wtls/wap-wsg-idm-ecid-wtls10'
+    WTLS_WAP_WSG_IDM_ECID_WTLS11 = 'wtls/wap-wsg-idm-ecid-wtls11'
+    WTLS_WAP_WSG_IDM_ECID_WTLS12 = 'wtls/wap-wsg-idm-ecid-wtls12'
+    WTLS_WAP_WSG_IDM_ECID_WTLS3 = 'wtls/wap-wsg-idm-ecid-wtls3'
+    WTLS_WAP_WSG_IDM_ECID_WTLS4 = 'wtls/wap-wsg-idm-ecid-wtls4'
+    WTLS_WAP_WSG_IDM_ECID_WTLS5 = 'wtls/wap-wsg-idm-ecid-wtls5'
+    WTLS_WAP_WSG_IDM_ECID_WTLS6 = 'wtls/wap-wsg-idm-ecid-wtls6'
+    WTLS_WAP_WSG_IDM_ECID_WTLS7 = 'wtls/wap-wsg-idm-ecid-wtls7'
+    WTLS_WAP_WSG_IDM_ECID_WTLS8 = 'wtls/wap-wsg-idm-ecid-wtls8'
+    WTLS_WAP_WSG_IDM_ECID_WTLS9 = 'wtls/wap-wsg-idm-ecid-wtls9'
+    X962_C2ONB191V4 = 'x962/c2onb191v4'
+    X962_C2ONB191V5 = 'x962/c2onb191v5'
+    X962_C2ONB239V4 = 'x962/c2onb239v4'
+    X962_C2ONB239V5 = 'x962/c2onb239v5'
+    X962_C2PNB163V1 = 'x962/c2pnb163v1'
+    X962_C2PNB163V2 = 'x962/c2pnb163v2'
+    X962_C2PNB163V3 = 'x962/c2pnb163v3'
+    X962_C2PNB176W1 = 'x962/c2pnb176w1'
+    X962_C2PNB208W1 = 'x962/c2pnb208w1'
+    X962_C2PNB272W1 = 'x962/c2pnb272w1'
+    X962_C2PNB304W1 = 'x962/c2pnb304w1'
+    X962_C2PNB368W1 = 'x962/c2pnb368w1'
+    X962_C2TNB191V1 = 'x962/c2tnb191v1'
+    X962_C2TNB191V2 = 'x962/c2tnb191v2'
+    X962_C2TNB191V3 = 'x962/c2tnb191v3'
+    X962_C2TNB239V1 = 'x962/c2tnb239v1'
+    X962_C2TNB239V2 = 'x962/c2tnb239v2'
+    X962_C2TNB239V3 = 'x962/c2tnb239v3'
+    X962_C2TNB359V1 = 'x962/c2tnb359v1'
+    X962_C2TNB431R1 = 'x962/c2tnb431r1'
+    X962_PRIME192V1 = 'x962/prime192v1'
+    X962_PRIME192V2 = 'x962/prime192v2'
+    X962_PRIME192V3 = 'x962/prime192v3'
+    X962_PRIME239V1 = 'x962/prime239v1'
+    X962_PRIME239V2 = 'x962/prime239v2'
+    X962_PRIME239V3 = 'x962/prime239v3'
+    X962_PRIME256V1 = 'x962/prime256v1'
+    X963_ANSIP160K1 = 'x963/ansip160k1'
+    X963_ANSIP160R1 = 'x963/ansip160r1'
+    X963_ANSIP160R2 = 'x963/ansip160r2'
+    X963_ANSIP192K1 = 'x963/ansip192k1'
+    X963_ANSIP224K1 = 'x963/ansip224k1'
+    X963_ANSIP224R1 = 'x963/ansip224r1'
+    X963_ANSIP256K1 = 'x963/ansip256k1'
+    X963_ANSIP384R1 = 'x963/ansip384r1'
+    X963_ANSIP521R1 = 'x963/ansip521r1'
+    X963_ANSIT163K1 = 'x963/ansit163k1'
+    X963_ANSIT163R1 = 'x963/ansit163r1'
+    X963_ANSIT163R2 = 'x963/ansit163r2'
+    X963_ANSIT193R1 = 'x963/ansit193r1'
+    X963_ANSIT193R2 = 'x963/ansit193r2'
+    X963_ANSIT233K1 = 'x963/ansit233k1'
+    X963_ANSIT233R1 = 'x963/ansit233r1'
+    X963_ANSIT239K1 = 'x963/ansit239k1'
+    X963_ANSIT283K1 = 'x963/ansit283k1'
+    X963_ANSIT283R1 = 'x963/ansit283r1'
+    X963_ANSIT409K1 = 'x963/ansit409k1'
+    X963_ANSIT409R1 = 'x963/ansit409r1'
+    X963_ANSIT571K1 = 'x963/ansit571k1'
+    X963_ANSIT571R1 = 'x963/ansit571r1'
+
+
+@serializable.serializable_enum
 class CryptoExecutionEnvironment(str, Enum):
     # TODO: rename to `CryptoAlgorithmExecutionEnvironment`
 
@@ -344,8 +695,10 @@ class AlgorithmProperties:
     def __init__(
         self, *,
         primitive: Optional[CryptoPrimitive] = None,
+        algorithm_family: Optional[CryptoAlgorithmFamily] = None,
         parameter_set_identifier: Optional[str] = None,
         curve: Optional[str] = None,
+        elliptic_curve: Optional[CryptoEllipticCurve] = None,
         execution_environment: Optional[CryptoExecutionEnvironment] = None,
         implementation_platform: Optional[CryptoImplementationPlatform] = None,
         certification_levels: Optional[Iterable[CryptoCertificationLevel]] = None,
@@ -356,8 +709,10 @@ class AlgorithmProperties:
         nist_quantum_security_level: Optional[int] = None,
     ) -> None:
         self.primitive = primitive
+        self.algorithm_family = algorithm_family
         self.parameter_set_identifier = parameter_set_identifier
         self.curve = curve
+        self.elliptic_curve = elliptic_curve
         self.execution_environment = execution_environment
         self.implementation_platform = implementation_platform
         self.certification_levels = certification_levels or []
@@ -392,7 +747,18 @@ class AlgorithmProperties:
         self._primitive = primitive
 
     @property
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
+    def algorithm_family(self) -> Optional[CryptoAlgorithmFamily]:
+        """The standardized family identifier for the algorithm."""
+        return self._algorithm_family
+
+    @algorithm_family.setter
+    def algorithm_family(self, algorithm_family: Optional[CryptoAlgorithmFamily]) -> None:
+        self._algorithm_family = algorithm_family
+
+    @property
+    @serializable.xml_sequence(3)
     def parameter_set_identifier(self) -> Optional[str]:
         """
         An identifier for the parameter set of the cryptographic algorithm. Examples: in AES128, '128' identifies the
@@ -409,7 +775,7 @@ class AlgorithmProperties:
         self._parameter_set_identifier = parameter_set_identifier
 
     @property
-    @serializable.xml_sequence(3)
+    @serializable.xml_sequence(4)
     def curve(self) -> Optional[str]:
         """
         The specific underlying Elliptic Curve (EC) definition employed which is an indicator of the level of security
@@ -427,7 +793,18 @@ class AlgorithmProperties:
         self._curve = curve
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(5)
+    def elliptic_curve(self) -> Optional[CryptoEllipticCurve]:
+        """The standardized identifier of the elliptic curve used by the algorithm."""
+        return self._elliptic_curve
+
+    @elliptic_curve.setter
+    def elliptic_curve(self, elliptic_curve: Optional[CryptoEllipticCurve]) -> None:
+        self._elliptic_curve = elliptic_curve
+
+    @property
+    @serializable.xml_sequence(6)
     def execution_environment(self) -> Optional[CryptoExecutionEnvironment]:
         """
         The target and execution environment in which the algorithm is implemented in.
@@ -442,7 +819,7 @@ class AlgorithmProperties:
         self._execution_environment = execution_environment
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.xml_sequence(7)
     def implementation_platform(self) -> Optional[CryptoImplementationPlatform]:
         """
         The target platform for which the algorithm is implemented. The implementation can be 'generic', running on
@@ -462,7 +839,7 @@ class AlgorithmProperties:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='certificationLevel')
-    @serializable.xml_sequence(5)
+    @serializable.xml_sequence(8)
     def certification_levels(self) -> 'SortedSet[CryptoCertificationLevel]':
         """
         The certification that the implementation of the cryptographic algorithm has received, if any. Certifications
@@ -478,7 +855,7 @@ class AlgorithmProperties:
         self._certification_levels = SortedSet(certification_levels)
 
     @property
-    @serializable.xml_sequence(6)
+    @serializable.xml_sequence(9)
     def mode(self) -> Optional[CryptoMode]:
         """
         The mode of operation in which the cryptographic algorithm (block cipher) is used.
@@ -493,7 +870,7 @@ class AlgorithmProperties:
         self._mode = mode
 
     @property
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(10)
     def padding(self) -> Optional[CryptoPadding]:
         """
         The padding scheme that is used for the cryptographic algorithm.
@@ -509,7 +886,7 @@ class AlgorithmProperties:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, child_name='cryptoFunction')
-    @serializable.xml_sequence(9)
+    @serializable.xml_sequence(11)
     def crypto_functions(self) -> 'SortedSet[CryptoFunction]':
         """
         The cryptographic functions implemented by the cryptographic algorithm.
@@ -524,7 +901,7 @@ class AlgorithmProperties:
         self._crypto_functions = SortedSet(crypto_functions)
 
     @property
-    @serializable.xml_sequence(10)
+    @serializable.xml_sequence(12)
     def classical_security_level(self) -> Optional[int]:
         """
         The classical security level that a cryptographic algorithm provides (in bits).
@@ -539,7 +916,7 @@ class AlgorithmProperties:
         self._classical_security_level = classical_security_level
 
     @property
-    @serializable.xml_sequence(11)
+    @serializable.xml_sequence(13)
     def nist_quantum_security_level(self) -> Optional[int]:
         """
         The NIST security strength category as defined in
@@ -564,9 +941,10 @@ class AlgorithmProperties:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
-            self.implementation_platform, _ComparableTuple(self.certification_levels), self.mode, self.padding,
-            _ComparableTuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,
+            self.primitive, self.algorithm_family, self.parameter_set_identifier, self.curve, self.elliptic_curve,
+            self.execution_environment, self.implementation_platform, _ComparableTuple(self.certification_levels),
+            self.mode, self.padding, _ComparableTuple(self.crypto_functions), self.classical_security_level,
+            self.nist_quantum_security_level,
         ))
 
     def __eq__(self, other: object) -> bool:

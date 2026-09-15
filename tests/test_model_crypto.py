@@ -15,12 +15,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from json import loads as json_loads
 from unittest import TestCase
 
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
     CertificateProperties,
+    CryptoAlgorithmFamily,
+    CryptoEllipticCurve,
     CryptoPrimitive,
     Ikev2TransformTypes,
     ProtocolProperties,
@@ -29,6 +32,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialSecuredBy,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
 
 
 class TestModelAlgorithmProperties(TestCase):
@@ -134,3 +138,22 @@ class TestModelProtocolProperties(TestCase):
         proto_list = [proto3, proto1, proto2]
         sorted_protos = sorted(proto_list)
         self.assertEqual(len(sorted_protos), 3)
+
+
+class TestModelAlgorithmPropertiesV17(TestCase):
+
+    def test_new_algorithm_identifiers_and_legacy_curve(self) -> None:
+        properties = AlgorithmProperties(
+            algorithm_family=CryptoAlgorithmFamily.AES,
+            curve='legacy-curve',
+            elliptic_curve=CryptoEllipticCurve.NIST_P_256,
+        )
+        data_1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual('AES', data_1_7['algorithmFamily'])
+        self.assertEqual('nist/P-256', data_1_7['ellipticCurve'])
+        self.assertEqual('legacy-curve', data_1_7['curve'])
+
+        data_1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('algorithmFamily', data_1_6)
+        self.assertNotIn('ellipticCurve', data_1_6)
+        self.assertEqual('legacy-curve', data_1_6['curve'])

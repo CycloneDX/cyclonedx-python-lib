@@ -1,0 +1,2474 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:ANSSI_FRP256V1">
+      <name>CryptoEllipticCurve: ANSSI_FRP256V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>anssi/FRP256v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BLS_BANDERSNATCH">
+      <name>CryptoEllipticCurve: BLS_BANDERSNATCH</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bls/Bandersnatch</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BLS_BLS12_377">
+      <name>CryptoEllipticCurve: BLS_BLS12_377</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bls/BLS12-377</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BLS_BLS12_381">
+      <name>CryptoEllipticCurve: BLS_BLS12_381</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bls/BLS12-381</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BLS_BLS12_446">
+      <name>CryptoEllipticCurve: BLS_BLS12_446</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bls/BLS12-446</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BLS_BLS12_455">
+      <name>CryptoEllipticCurve: BLS_BLS12_455</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bls/BLS12-455</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BLS_BLS12_638">
+      <name>CryptoEllipticCurve: BLS_BLS12_638</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bls/BLS12-638</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BLS_BLS24_477">
+      <name>CryptoEllipticCurve: BLS_BLS24_477</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bls/BLS24-477</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN158">
+      <name>CryptoEllipticCurve: BN_BN158</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn158</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN190">
+      <name>CryptoEllipticCurve: BN_BN190</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn190</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN222">
+      <name>CryptoEllipticCurve: BN_BN222</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn222</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN254">
+      <name>CryptoEllipticCurve: BN_BN254</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn254</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN286">
+      <name>CryptoEllipticCurve: BN_BN286</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn286</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN318">
+      <name>CryptoEllipticCurve: BN_BN318</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn318</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN350">
+      <name>CryptoEllipticCurve: BN_BN350</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn350</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN382">
+      <name>CryptoEllipticCurve: BN_BN382</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn382</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN414">
+      <name>CryptoEllipticCurve: BN_BN414</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn414</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN446">
+      <name>CryptoEllipticCurve: BN_BN446</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn446</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN478">
+      <name>CryptoEllipticCurve: BN_BN478</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn478</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN510">
+      <name>CryptoEllipticCurve: BN_BN510</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn510</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN542">
+      <name>CryptoEllipticCurve: BN_BN542</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn542</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN574">
+      <name>CryptoEllipticCurve: BN_BN574</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn574</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN606">
+      <name>CryptoEllipticCurve: BN_BN606</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn606</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BN_BN638">
+      <name>CryptoEllipticCurve: BN_BN638</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>bn/bn638</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP160R1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP160R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP160r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP160T1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP160T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP160t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP192R1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP192R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP192r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP192T1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP192T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP192t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP224R1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP224R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP224r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP224T1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP224T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP224t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP256R1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP256R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP256r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP256T1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP256T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP256t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP320R1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP320R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP320r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP320T1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP320T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP320t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP384R1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP384R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP384r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP384T1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP384T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP384t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP512R1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP512R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP512r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:BRAINPOOL_BRAINPOOLP512T1">
+      <name>CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP512T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>brainpool/brainpoolP512t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_GOST256">
+      <name>CryptoEllipticCurve: GOST_GOST256</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/gost256</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_GOST512">
+      <name>CryptoEllipticCurve: GOST_GOST512</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/gost512</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_A_PARAMSET">
+      <name>CryptoEllipticCurve: GOST_ID_GOSTR3410_2001_CRYPTOPRO_A_PARAMSET</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/id-GostR3410-2001-CryptoPro-A-ParamSet</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_B_PARAMSET">
+      <name>CryptoEllipticCurve: GOST_ID_GOSTR3410_2001_CRYPTOPRO_B_PARAMSET</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/id-GostR3410-2001-CryptoPro-B-ParamSet</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_C_PARAMSET">
+      <name>CryptoEllipticCurve: GOST_ID_GOSTR3410_2001_CRYPTOPRO_C_PARAMSET</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/id-GostR3410-2001-CryptoPro-C-ParamSet</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETA">
+      <name>CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_12_512_PARAMSETA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/id-tc26-gost-3410-12-512-paramSetA</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETB">
+      <name>CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_12_512_PARAMSETB</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/id-tc26-gost-3410-12-512-paramSetB</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_ID_TC26_GOST_3410_2012_256_PARAMSETA">
+      <name>CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_2012_256_PARAMSETA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/id-tc26-gost-3410-2012-256-paramSetA</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:GOST_ID_TC26_GOST_3410_2012_512_PARAMSETC">
+      <name>CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_2012_512_PARAMSETC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>gost/id-tc26-gost-3410-2012-512-paramSetC</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT1">
+      <name>CryptoEllipticCurve: MNT_MNT1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT2_1">
+      <name>CryptoEllipticCurve: MNT_MNT2_1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt2/1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT2_2">
+      <name>CryptoEllipticCurve: MNT_MNT2_2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt2/2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT3_1">
+      <name>CryptoEllipticCurve: MNT_MNT3_1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt3/1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT3_2">
+      <name>CryptoEllipticCurve: MNT_MNT3_2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt3/2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT3_3">
+      <name>CryptoEllipticCurve: MNT_MNT3_3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt3/3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT4">
+      <name>CryptoEllipticCurve: MNT_MNT4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt4</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT5_1">
+      <name>CryptoEllipticCurve: MNT_MNT5_1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt5/1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT5_2">
+      <name>CryptoEllipticCurve: MNT_MNT5_2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt5/2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:MNT_MNT5_3">
+      <name>CryptoEllipticCurve: MNT_MNT5_3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>mnt/mnt5/3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_B_163">
+      <name>CryptoEllipticCurve: NIST_B_163</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/B-163</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_B_233">
+      <name>CryptoEllipticCurve: NIST_B_233</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/B-233</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_B_283">
+      <name>CryptoEllipticCurve: NIST_B_283</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/B-283</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_B_409">
+      <name>CryptoEllipticCurve: NIST_B_409</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/B-409</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_B_571">
+      <name>CryptoEllipticCurve: NIST_B_571</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/B-571</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_K_163">
+      <name>CryptoEllipticCurve: NIST_K_163</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/K-163</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_K_233">
+      <name>CryptoEllipticCurve: NIST_K_233</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/K-233</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_K_283">
+      <name>CryptoEllipticCurve: NIST_K_283</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/K-283</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_K_409">
+      <name>CryptoEllipticCurve: NIST_K_409</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/K-409</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_K_571">
+      <name>CryptoEllipticCurve: NIST_K_571</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/K-571</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_P_192">
+      <name>CryptoEllipticCurve: NIST_P_192</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/P-192</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_P_224">
+      <name>CryptoEllipticCurve: NIST_P_224</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/P-224</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_P_256">
+      <name>CryptoEllipticCurve: NIST_P_256</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/P-256</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_P_384">
+      <name>CryptoEllipticCurve: NIST_P_384</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/P-384</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NIST_P_521">
+      <name>CryptoEllipticCurve: NIST_P_521</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nist/P-521</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_254_MONT">
+      <name>CryptoEllipticCurve: NUMS_ED_254_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-254-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_255_MERS">
+      <name>CryptoEllipticCurve: NUMS_ED_255_MERS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-255-mers</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_256_MONT">
+      <name>CryptoEllipticCurve: NUMS_ED_256_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-256-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_382_MONT">
+      <name>CryptoEllipticCurve: NUMS_ED_382_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-382-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_383_MERS">
+      <name>CryptoEllipticCurve: NUMS_ED_383_MERS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-383-mers</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_384_MONT">
+      <name>CryptoEllipticCurve: NUMS_ED_384_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-384-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_510_MONT">
+      <name>CryptoEllipticCurve: NUMS_ED_510_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-510-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_511_MERS">
+      <name>CryptoEllipticCurve: NUMS_ED_511_MERS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-511-mers</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_ED_512_MONT">
+      <name>CryptoEllipticCurve: NUMS_ED_512_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/ed-512-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_NUMSP256D1">
+      <name>CryptoEllipticCurve: NUMS_NUMSP256D1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/numsp256d1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_NUMSP256T1">
+      <name>CryptoEllipticCurve: NUMS_NUMSP256T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/numsp256t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_NUMSP384D1">
+      <name>CryptoEllipticCurve: NUMS_NUMSP384D1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/numsp384d1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_NUMSP384T1">
+      <name>CryptoEllipticCurve: NUMS_NUMSP384T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/numsp384t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_NUMSP512D1">
+      <name>CryptoEllipticCurve: NUMS_NUMSP512D1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/numsp512d1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_NUMSP512T1">
+      <name>CryptoEllipticCurve: NUMS_NUMSP512T1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/numsp512t1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_254_MONT">
+      <name>CryptoEllipticCurve: NUMS_W_254_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-254-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_255_MERS">
+      <name>CryptoEllipticCurve: NUMS_W_255_MERS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-255-mers</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_256_MONT">
+      <name>CryptoEllipticCurve: NUMS_W_256_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-256-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_382_MONT">
+      <name>CryptoEllipticCurve: NUMS_W_382_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-382-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_383_MERS">
+      <name>CryptoEllipticCurve: NUMS_W_383_MERS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-383-mers</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_384_MONT">
+      <name>CryptoEllipticCurve: NUMS_W_384_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-384-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_510_MONT">
+      <name>CryptoEllipticCurve: NUMS_W_510_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-510-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_511_MERS">
+      <name>CryptoEllipticCurve: NUMS_W_511_MERS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-511-mers</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:NUMS_W_512_MONT">
+      <name>CryptoEllipticCurve: NUMS_W_512_MONT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>nums/w-512-mont</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OAKLEY_192_BIT_RANDOM_ECP_GROUP">
+      <name>CryptoEllipticCurve: OAKLEY_192_BIT_RANDOM_ECP_GROUP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oakley/192-bit Random ECP Group</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OAKLEY_224_BIT_RANDOM_ECP_GROUP">
+      <name>CryptoEllipticCurve: OAKLEY_224_BIT_RANDOM_ECP_GROUP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oakley/224-bit Random ECP Group</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OAKLEY_256_BIT_RANDOM_ECP_GROUP">
+      <name>CryptoEllipticCurve: OAKLEY_256_BIT_RANDOM_ECP_GROUP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oakley/256-bit Random ECP Group</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OAKLEY_384_BIT_RANDOM_ECP_GROUP">
+      <name>CryptoEllipticCurve: OAKLEY_384_BIT_RANDOM_ECP_GROUP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oakley/384-bit Random ECP Group</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OAKLEY_521_BIT_RANDOM_ECP_GROUP">
+      <name>CryptoEllipticCurve: OAKLEY_521_BIT_RANDOM_ECP_GROUP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oakley/521-bit Random ECP Group</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OAKLEY_OAKLEY_GROUP_3">
+      <name>CryptoEllipticCurve: OAKLEY_OAKLEY_GROUP_3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oakley/Oakley Group 3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OAKLEY_OAKLEY_GROUP_4">
+      <name>CryptoEllipticCurve: OAKLEY_OAKLEY_GROUP_4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oakley/Oakley Group 4</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OSCAA_SM2">
+      <name>CryptoEllipticCurve: OSCAA_SM2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>oscaa/SM2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_BADA55_R_256">
+      <name>CryptoEllipticCurve: OTHER_BADA55_R_256</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/BADA55-R-256</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_BADA55_VPR2_224">
+      <name>CryptoEllipticCurve: OTHER_BADA55_VPR2_224</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/BADA55-VPR2-224</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_BADA55_VPR_224">
+      <name>CryptoEllipticCurve: OTHER_BADA55_VPR_224</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/BADA55-VPR-224</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_BADA55_VR_224">
+      <name>CryptoEllipticCurve: OTHER_BADA55_VR_224</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/BADA55-VR-224</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_BADA55_VR_256">
+      <name>CryptoEllipticCurve: OTHER_BADA55_VR_256</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/BADA55-VR-256</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_BADA55_VR_384">
+      <name>CryptoEllipticCurve: OTHER_BADA55_VR_384</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/BADA55-VR-384</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE1174">
+      <name>CryptoEllipticCurve: OTHER_CURVE1174</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve1174</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE22103">
+      <name>CryptoEllipticCurve: OTHER_CURVE22103</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve22103</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE25519">
+      <name>CryptoEllipticCurve: OTHER_CURVE25519</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve25519</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE383187">
+      <name>CryptoEllipticCurve: OTHER_CURVE383187</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve383187</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE41417">
+      <name>CryptoEllipticCurve: OTHER_CURVE41417</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve41417</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE4417">
+      <name>CryptoEllipticCurve: OTHER_CURVE4417</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve4417</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE448">
+      <name>CryptoEllipticCurve: OTHER_CURVE448</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve448</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_CURVE67254">
+      <name>CryptoEllipticCurve: OTHER_CURVE67254</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Curve67254</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_ED25519">
+      <name>CryptoEllipticCurve: OTHER_ED25519</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Ed25519</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_ED448">
+      <name>CryptoEllipticCurve: OTHER_ED448</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Ed448</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_ED448_GOLDILOCKS">
+      <name>CryptoEllipticCurve: OTHER_ED448_GOLDILOCKS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Ed448-Goldilocks</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_E_222">
+      <name>CryptoEllipticCurve: OTHER_E_222</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/E-222</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_E_382">
+      <name>CryptoEllipticCurve: OTHER_E_382</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/E-382</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_E_521">
+      <name>CryptoEllipticCurve: OTHER_E_521</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/E-521</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FOURQ">
+      <name>CryptoEllipticCurve: OTHER_FOURQ</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/FourQ</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FP224BN">
+      <name>CryptoEllipticCurve: OTHER_FP224BN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Fp224BN</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FP254BNA">
+      <name>CryptoEllipticCurve: OTHER_FP254BNA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Fp254BNa</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FP254BNB">
+      <name>CryptoEllipticCurve: OTHER_FP254BNB</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Fp254BNb</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FP254N2BNA">
+      <name>CryptoEllipticCurve: OTHER_FP254N2BNA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Fp254n2BNa</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FP256BN">
+      <name>CryptoEllipticCurve: OTHER_FP256BN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Fp256BN</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FP384BN">
+      <name>CryptoEllipticCurve: OTHER_FP384BN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Fp384BN</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_FP512BN">
+      <name>CryptoEllipticCurve: OTHER_FP512BN</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Fp512BN</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_JUBJUB">
+      <name>CryptoEllipticCurve: OTHER_JUBJUB</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/JubJub</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_MDC201601">
+      <name>CryptoEllipticCurve: OTHER_MDC201601</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/MDC201601</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_M_221">
+      <name>CryptoEllipticCurve: OTHER_M_221</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/M-221</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_M_383">
+      <name>CryptoEllipticCurve: OTHER_M_383</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/M-383</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_M_511">
+      <name>CryptoEllipticCurve: OTHER_M_511</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/M-511</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_PALLAS">
+      <name>CryptoEllipticCurve: OTHER_PALLAS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Pallas</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_160">
+      <name>CryptoEllipticCurve: OTHER_SSC_160</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-160</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_192">
+      <name>CryptoEllipticCurve: OTHER_SSC_192</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-192</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_224">
+      <name>CryptoEllipticCurve: OTHER_SSC_224</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-224</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_256">
+      <name>CryptoEllipticCurve: OTHER_SSC_256</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-256</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_288">
+      <name>CryptoEllipticCurve: OTHER_SSC_288</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-288</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_320">
+      <name>CryptoEllipticCurve: OTHER_SSC_320</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-320</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_384">
+      <name>CryptoEllipticCurve: OTHER_SSC_384</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-384</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_SSC_512">
+      <name>CryptoEllipticCurve: OTHER_SSC_512</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/ssc-512</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_TOM_256">
+      <name>CryptoEllipticCurve: OTHER_TOM_256</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Tom-256</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_TOM_384">
+      <name>CryptoEllipticCurve: OTHER_TOM_384</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Tom-384</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_TOM_521">
+      <name>CryptoEllipticCurve: OTHER_TOM_521</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Tom-521</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_TWEEDLEDEE">
+      <name>CryptoEllipticCurve: OTHER_TWEEDLEDEE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Tweedledee</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_TWEEDLEDUM">
+      <name>CryptoEllipticCurve: OTHER_TWEEDLEDUM</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Tweedledum</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:OTHER_VESTA">
+      <name>CryptoEllipticCurve: OTHER_VESTA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>other/Vesta</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP112R1">
+      <name>CryptoEllipticCurve: SECG_SECP112R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp112r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP112R2">
+      <name>CryptoEllipticCurve: SECG_SECP112R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp112r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP128R1">
+      <name>CryptoEllipticCurve: SECG_SECP128R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp128r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP128R2">
+      <name>CryptoEllipticCurve: SECG_SECP128R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp128r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP160K1">
+      <name>CryptoEllipticCurve: SECG_SECP160K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp160k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP160R1">
+      <name>CryptoEllipticCurve: SECG_SECP160R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp160r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP160R2">
+      <name>CryptoEllipticCurve: SECG_SECP160R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp160r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP192K1">
+      <name>CryptoEllipticCurve: SECG_SECP192K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp192k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP192R1">
+      <name>CryptoEllipticCurve: SECG_SECP192R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp192r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP224K1">
+      <name>CryptoEllipticCurve: SECG_SECP224K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp224k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP224R1">
+      <name>CryptoEllipticCurve: SECG_SECP224R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp224r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP256K1">
+      <name>CryptoEllipticCurve: SECG_SECP256K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp256k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP256R1">
+      <name>CryptoEllipticCurve: SECG_SECP256R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp256r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP384R1">
+      <name>CryptoEllipticCurve: SECG_SECP384R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp384r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECP521R1">
+      <name>CryptoEllipticCurve: SECG_SECP521R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/secp521r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT113R1">
+      <name>CryptoEllipticCurve: SECG_SECT113R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect113r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT113R2">
+      <name>CryptoEllipticCurve: SECG_SECT113R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect113r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT131R1">
+      <name>CryptoEllipticCurve: SECG_SECT131R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect131r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT131R2">
+      <name>CryptoEllipticCurve: SECG_SECT131R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect131r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT163K1">
+      <name>CryptoEllipticCurve: SECG_SECT163K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect163k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT163R1">
+      <name>CryptoEllipticCurve: SECG_SECT163R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect163r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT163R2">
+      <name>CryptoEllipticCurve: SECG_SECT163R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect163r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT193R1">
+      <name>CryptoEllipticCurve: SECG_SECT193R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect193r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT193R2">
+      <name>CryptoEllipticCurve: SECG_SECT193R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect193r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT233K1">
+      <name>CryptoEllipticCurve: SECG_SECT233K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect233k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT233R1">
+      <name>CryptoEllipticCurve: SECG_SECT233R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect233r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT239K1">
+      <name>CryptoEllipticCurve: SECG_SECT239K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect239k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT283K1">
+      <name>CryptoEllipticCurve: SECG_SECT283K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect283k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT283R1">
+      <name>CryptoEllipticCurve: SECG_SECT283R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect283r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT409K1">
+      <name>CryptoEllipticCurve: SECG_SECT409K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect409k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT409R1">
+      <name>CryptoEllipticCurve: SECG_SECT409R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect409r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT571K1">
+      <name>CryptoEllipticCurve: SECG_SECT571K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect571k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:SECG_SECT571R1">
+      <name>CryptoEllipticCurve: SECG_SECT571R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>secg/sect571r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS1">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS10">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS10</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls10</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS11">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS11</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls11</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS12">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS12</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls12</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS3">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS4">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls4</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS5">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls5</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS6">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS6</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls6</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS7">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS7</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls7</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS8">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS8</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls8</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS9">
+      <name>CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS9</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>wtls/wap-wsg-idm-ecid-wtls9</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2ONB191V4">
+      <name>CryptoEllipticCurve: X962_C2ONB191V4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2onb191v4</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2ONB191V5">
+      <name>CryptoEllipticCurve: X962_C2ONB191V5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2onb191v5</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2ONB239V4">
+      <name>CryptoEllipticCurve: X962_C2ONB239V4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2onb239v4</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2ONB239V5">
+      <name>CryptoEllipticCurve: X962_C2ONB239V5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2onb239v5</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB163V1">
+      <name>CryptoEllipticCurve: X962_C2PNB163V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb163v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB163V2">
+      <name>CryptoEllipticCurve: X962_C2PNB163V2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb163v2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB163V3">
+      <name>CryptoEllipticCurve: X962_C2PNB163V3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb163v3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB176W1">
+      <name>CryptoEllipticCurve: X962_C2PNB176W1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb176w1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB208W1">
+      <name>CryptoEllipticCurve: X962_C2PNB208W1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb208w1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB272W1">
+      <name>CryptoEllipticCurve: X962_C2PNB272W1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb272w1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB304W1">
+      <name>CryptoEllipticCurve: X962_C2PNB304W1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb304w1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2PNB368W1">
+      <name>CryptoEllipticCurve: X962_C2PNB368W1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2pnb368w1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB191V1">
+      <name>CryptoEllipticCurve: X962_C2TNB191V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb191v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB191V2">
+      <name>CryptoEllipticCurve: X962_C2TNB191V2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb191v2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB191V3">
+      <name>CryptoEllipticCurve: X962_C2TNB191V3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb191v3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB239V1">
+      <name>CryptoEllipticCurve: X962_C2TNB239V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb239v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB239V2">
+      <name>CryptoEllipticCurve: X962_C2TNB239V2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb239v2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB239V3">
+      <name>CryptoEllipticCurve: X962_C2TNB239V3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb239v3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB359V1">
+      <name>CryptoEllipticCurve: X962_C2TNB359V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb359v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_C2TNB431R1">
+      <name>CryptoEllipticCurve: X962_C2TNB431R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/c2tnb431r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_PRIME192V1">
+      <name>CryptoEllipticCurve: X962_PRIME192V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/prime192v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_PRIME192V2">
+      <name>CryptoEllipticCurve: X962_PRIME192V2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/prime192v2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_PRIME192V3">
+      <name>CryptoEllipticCurve: X962_PRIME192V3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/prime192v3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_PRIME239V1">
+      <name>CryptoEllipticCurve: X962_PRIME239V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/prime239v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_PRIME239V2">
+      <name>CryptoEllipticCurve: X962_PRIME239V2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/prime239v2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_PRIME239V3">
+      <name>CryptoEllipticCurve: X962_PRIME239V3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/prime239v3</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X962_PRIME256V1">
+      <name>CryptoEllipticCurve: X962_PRIME256V1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x962/prime256v1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP160K1">
+      <name>CryptoEllipticCurve: X963_ANSIP160K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip160k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP160R1">
+      <name>CryptoEllipticCurve: X963_ANSIP160R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip160r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP160R2">
+      <name>CryptoEllipticCurve: X963_ANSIP160R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip160r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP192K1">
+      <name>CryptoEllipticCurve: X963_ANSIP192K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip192k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP224K1">
+      <name>CryptoEllipticCurve: X963_ANSIP224K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip224k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP224R1">
+      <name>CryptoEllipticCurve: X963_ANSIP224R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip224r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP256K1">
+      <name>CryptoEllipticCurve: X963_ANSIP256K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip256k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP384R1">
+      <name>CryptoEllipticCurve: X963_ANSIP384R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip384r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIP521R1">
+      <name>CryptoEllipticCurve: X963_ANSIP521R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansip521r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT163K1">
+      <name>CryptoEllipticCurve: X963_ANSIT163K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit163k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT163R1">
+      <name>CryptoEllipticCurve: X963_ANSIT163R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit163r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT163R2">
+      <name>CryptoEllipticCurve: X963_ANSIT163R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit163r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT193R1">
+      <name>CryptoEllipticCurve: X963_ANSIT193R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit193r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT193R2">
+      <name>CryptoEllipticCurve: X963_ANSIT193R2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit193r2</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT233K1">
+      <name>CryptoEllipticCurve: X963_ANSIT233K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit233k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT233R1">
+      <name>CryptoEllipticCurve: X963_ANSIT233R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit233r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT239K1">
+      <name>CryptoEllipticCurve: X963_ANSIT239K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit239k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT283K1">
+      <name>CryptoEllipticCurve: X963_ANSIT283K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit283k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT283R1">
+      <name>CryptoEllipticCurve: X963_ANSIT283R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit283r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT409K1">
+      <name>CryptoEllipticCurve: X963_ANSIT409K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit409k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT409R1">
+      <name>CryptoEllipticCurve: X963_ANSIT409R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit409r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT571K1">
+      <name>CryptoEllipticCurve: X963_ANSIT571K1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit571k1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CEC:X963_ANSIT571R1">
+      <name>CryptoEllipticCurve: X963_ANSIT571R1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <ellipticCurve>x963/ansit571r1</ellipticCurve>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CEC:ANSSI_FRP256V1"/>
+    <dependency ref="dummy-CEC:BLS_BANDERSNATCH"/>
+    <dependency ref="dummy-CEC:BLS_BLS12_377"/>
+    <dependency ref="dummy-CEC:BLS_BLS12_381"/>
+    <dependency ref="dummy-CEC:BLS_BLS12_446"/>
+    <dependency ref="dummy-CEC:BLS_BLS12_455"/>
+    <dependency ref="dummy-CEC:BLS_BLS12_638"/>
+    <dependency ref="dummy-CEC:BLS_BLS24_477"/>
+    <dependency ref="dummy-CEC:BN_BN158"/>
+    <dependency ref="dummy-CEC:BN_BN190"/>
+    <dependency ref="dummy-CEC:BN_BN222"/>
+    <dependency ref="dummy-CEC:BN_BN254"/>
+    <dependency ref="dummy-CEC:BN_BN286"/>
+    <dependency ref="dummy-CEC:BN_BN318"/>
+    <dependency ref="dummy-CEC:BN_BN350"/>
+    <dependency ref="dummy-CEC:BN_BN382"/>
+    <dependency ref="dummy-CEC:BN_BN414"/>
+    <dependency ref="dummy-CEC:BN_BN446"/>
+    <dependency ref="dummy-CEC:BN_BN478"/>
+    <dependency ref="dummy-CEC:BN_BN510"/>
+    <dependency ref="dummy-CEC:BN_BN542"/>
+    <dependency ref="dummy-CEC:BN_BN574"/>
+    <dependency ref="dummy-CEC:BN_BN606"/>
+    <dependency ref="dummy-CEC:BN_BN638"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP160R1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP160T1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP192R1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP192T1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP224R1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP224T1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP256R1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP256T1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP320R1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP320T1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP384R1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP384T1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP512R1"/>
+    <dependency ref="dummy-CEC:BRAINPOOL_BRAINPOOLP512T1"/>
+    <dependency ref="dummy-CEC:GOST_GOST256"/>
+    <dependency ref="dummy-CEC:GOST_GOST512"/>
+    <dependency ref="dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_A_PARAMSET"/>
+    <dependency ref="dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_B_PARAMSET"/>
+    <dependency ref="dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_C_PARAMSET"/>
+    <dependency ref="dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETA"/>
+    <dependency ref="dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETB"/>
+    <dependency ref="dummy-CEC:GOST_ID_TC26_GOST_3410_2012_256_PARAMSETA"/>
+    <dependency ref="dummy-CEC:GOST_ID_TC26_GOST_3410_2012_512_PARAMSETC"/>
+    <dependency ref="dummy-CEC:MNT_MNT1"/>
+    <dependency ref="dummy-CEC:MNT_MNT2_1"/>
+    <dependency ref="dummy-CEC:MNT_MNT2_2"/>
+    <dependency ref="dummy-CEC:MNT_MNT3_1"/>
+    <dependency ref="dummy-CEC:MNT_MNT3_2"/>
+    <dependency ref="dummy-CEC:MNT_MNT3_3"/>
+    <dependency ref="dummy-CEC:MNT_MNT4"/>
+    <dependency ref="dummy-CEC:MNT_MNT5_1"/>
+    <dependency ref="dummy-CEC:MNT_MNT5_2"/>
+    <dependency ref="dummy-CEC:MNT_MNT5_3"/>
+    <dependency ref="dummy-CEC:NIST_B_163"/>
+    <dependency ref="dummy-CEC:NIST_B_233"/>
+    <dependency ref="dummy-CEC:NIST_B_283"/>
+    <dependency ref="dummy-CEC:NIST_B_409"/>
+    <dependency ref="dummy-CEC:NIST_B_571"/>
+    <dependency ref="dummy-CEC:NIST_K_163"/>
+    <dependency ref="dummy-CEC:NIST_K_233"/>
+    <dependency ref="dummy-CEC:NIST_K_283"/>
+    <dependency ref="dummy-CEC:NIST_K_409"/>
+    <dependency ref="dummy-CEC:NIST_K_571"/>
+    <dependency ref="dummy-CEC:NIST_P_192"/>
+    <dependency ref="dummy-CEC:NIST_P_224"/>
+    <dependency ref="dummy-CEC:NIST_P_256"/>
+    <dependency ref="dummy-CEC:NIST_P_384"/>
+    <dependency ref="dummy-CEC:NIST_P_521"/>
+    <dependency ref="dummy-CEC:NUMS_ED_254_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_ED_255_MERS"/>
+    <dependency ref="dummy-CEC:NUMS_ED_256_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_ED_382_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_ED_383_MERS"/>
+    <dependency ref="dummy-CEC:NUMS_ED_384_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_ED_510_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_ED_511_MERS"/>
+    <dependency ref="dummy-CEC:NUMS_ED_512_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_NUMSP256D1"/>
+    <dependency ref="dummy-CEC:NUMS_NUMSP256T1"/>
+    <dependency ref="dummy-CEC:NUMS_NUMSP384D1"/>
+    <dependency ref="dummy-CEC:NUMS_NUMSP384T1"/>
+    <dependency ref="dummy-CEC:NUMS_NUMSP512D1"/>
+    <dependency ref="dummy-CEC:NUMS_NUMSP512T1"/>
+    <dependency ref="dummy-CEC:NUMS_W_254_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_W_255_MERS"/>
+    <dependency ref="dummy-CEC:NUMS_W_256_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_W_382_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_W_383_MERS"/>
+    <dependency ref="dummy-CEC:NUMS_W_384_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_W_510_MONT"/>
+    <dependency ref="dummy-CEC:NUMS_W_511_MERS"/>
+    <dependency ref="dummy-CEC:NUMS_W_512_MONT"/>
+    <dependency ref="dummy-CEC:OAKLEY_192_BIT_RANDOM_ECP_GROUP"/>
+    <dependency ref="dummy-CEC:OAKLEY_224_BIT_RANDOM_ECP_GROUP"/>
+    <dependency ref="dummy-CEC:OAKLEY_256_BIT_RANDOM_ECP_GROUP"/>
+    <dependency ref="dummy-CEC:OAKLEY_384_BIT_RANDOM_ECP_GROUP"/>
+    <dependency ref="dummy-CEC:OAKLEY_521_BIT_RANDOM_ECP_GROUP"/>
+    <dependency ref="dummy-CEC:OAKLEY_OAKLEY_GROUP_3"/>
+    <dependency ref="dummy-CEC:OAKLEY_OAKLEY_GROUP_4"/>
+    <dependency ref="dummy-CEC:OSCAA_SM2"/>
+    <dependency ref="dummy-CEC:OTHER_BADA55_R_256"/>
+    <dependency ref="dummy-CEC:OTHER_BADA55_VPR2_224"/>
+    <dependency ref="dummy-CEC:OTHER_BADA55_VPR_224"/>
+    <dependency ref="dummy-CEC:OTHER_BADA55_VR_224"/>
+    <dependency ref="dummy-CEC:OTHER_BADA55_VR_256"/>
+    <dependency ref="dummy-CEC:OTHER_BADA55_VR_384"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE1174"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE22103"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE25519"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE383187"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE41417"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE4417"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE448"/>
+    <dependency ref="dummy-CEC:OTHER_CURVE67254"/>
+    <dependency ref="dummy-CEC:OTHER_ED25519"/>
+    <dependency ref="dummy-CEC:OTHER_ED448"/>
+    <dependency ref="dummy-CEC:OTHER_ED448_GOLDILOCKS"/>
+    <dependency ref="dummy-CEC:OTHER_E_222"/>
+    <dependency ref="dummy-CEC:OTHER_E_382"/>
+    <dependency ref="dummy-CEC:OTHER_E_521"/>
+    <dependency ref="dummy-CEC:OTHER_FOURQ"/>
+    <dependency ref="dummy-CEC:OTHER_FP224BN"/>
+    <dependency ref="dummy-CEC:OTHER_FP254BNA"/>
+    <dependency ref="dummy-CEC:OTHER_FP254BNB"/>
+    <dependency ref="dummy-CEC:OTHER_FP254N2BNA"/>
+    <dependency ref="dummy-CEC:OTHER_FP256BN"/>
+    <dependency ref="dummy-CEC:OTHER_FP384BN"/>
+    <dependency ref="dummy-CEC:OTHER_FP512BN"/>
+    <dependency ref="dummy-CEC:OTHER_JUBJUB"/>
+    <dependency ref="dummy-CEC:OTHER_MDC201601"/>
+    <dependency ref="dummy-CEC:OTHER_M_221"/>
+    <dependency ref="dummy-CEC:OTHER_M_383"/>
+    <dependency ref="dummy-CEC:OTHER_M_511"/>
+    <dependency ref="dummy-CEC:OTHER_PALLAS"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_160"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_192"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_224"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_256"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_288"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_320"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_384"/>
+    <dependency ref="dummy-CEC:OTHER_SSC_512"/>
+    <dependency ref="dummy-CEC:OTHER_TOM_256"/>
+    <dependency ref="dummy-CEC:OTHER_TOM_384"/>
+    <dependency ref="dummy-CEC:OTHER_TOM_521"/>
+    <dependency ref="dummy-CEC:OTHER_TWEEDLEDEE"/>
+    <dependency ref="dummy-CEC:OTHER_TWEEDLEDUM"/>
+    <dependency ref="dummy-CEC:OTHER_VESTA"/>
+    <dependency ref="dummy-CEC:SECG_SECP112R1"/>
+    <dependency ref="dummy-CEC:SECG_SECP112R2"/>
+    <dependency ref="dummy-CEC:SECG_SECP128R1"/>
+    <dependency ref="dummy-CEC:SECG_SECP128R2"/>
+    <dependency ref="dummy-CEC:SECG_SECP160K1"/>
+    <dependency ref="dummy-CEC:SECG_SECP160R1"/>
+    <dependency ref="dummy-CEC:SECG_SECP160R2"/>
+    <dependency ref="dummy-CEC:SECG_SECP192K1"/>
+    <dependency ref="dummy-CEC:SECG_SECP192R1"/>
+    <dependency ref="dummy-CEC:SECG_SECP224K1"/>
+    <dependency ref="dummy-CEC:SECG_SECP224R1"/>
+    <dependency ref="dummy-CEC:SECG_SECP256K1"/>
+    <dependency ref="dummy-CEC:SECG_SECP256R1"/>
+    <dependency ref="dummy-CEC:SECG_SECP384R1"/>
+    <dependency ref="dummy-CEC:SECG_SECP521R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT113R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT113R2"/>
+    <dependency ref="dummy-CEC:SECG_SECT131R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT131R2"/>
+    <dependency ref="dummy-CEC:SECG_SECT163K1"/>
+    <dependency ref="dummy-CEC:SECG_SECT163R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT163R2"/>
+    <dependency ref="dummy-CEC:SECG_SECT193R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT193R2"/>
+    <dependency ref="dummy-CEC:SECG_SECT233K1"/>
+    <dependency ref="dummy-CEC:SECG_SECT233R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT239K1"/>
+    <dependency ref="dummy-CEC:SECG_SECT283K1"/>
+    <dependency ref="dummy-CEC:SECG_SECT283R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT409K1"/>
+    <dependency ref="dummy-CEC:SECG_SECT409R1"/>
+    <dependency ref="dummy-CEC:SECG_SECT571K1"/>
+    <dependency ref="dummy-CEC:SECG_SECT571R1"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS1"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS10"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS11"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS12"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS3"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS4"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS5"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS6"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS7"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS8"/>
+    <dependency ref="dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS9"/>
+    <dependency ref="dummy-CEC:X962_C2ONB191V4"/>
+    <dependency ref="dummy-CEC:X962_C2ONB191V5"/>
+    <dependency ref="dummy-CEC:X962_C2ONB239V4"/>
+    <dependency ref="dummy-CEC:X962_C2ONB239V5"/>
+    <dependency ref="dummy-CEC:X962_C2PNB163V1"/>
+    <dependency ref="dummy-CEC:X962_C2PNB163V2"/>
+    <dependency ref="dummy-CEC:X962_C2PNB163V3"/>
+    <dependency ref="dummy-CEC:X962_C2PNB176W1"/>
+    <dependency ref="dummy-CEC:X962_C2PNB208W1"/>
+    <dependency ref="dummy-CEC:X962_C2PNB272W1"/>
+    <dependency ref="dummy-CEC:X962_C2PNB304W1"/>
+    <dependency ref="dummy-CEC:X962_C2PNB368W1"/>
+    <dependency ref="dummy-CEC:X962_C2TNB191V1"/>
+    <dependency ref="dummy-CEC:X962_C2TNB191V2"/>
+    <dependency ref="dummy-CEC:X962_C2TNB191V3"/>
+    <dependency ref="dummy-CEC:X962_C2TNB239V1"/>
+    <dependency ref="dummy-CEC:X962_C2TNB239V2"/>
+    <dependency ref="dummy-CEC:X962_C2TNB239V3"/>
+    <dependency ref="dummy-CEC:X962_C2TNB359V1"/>
+    <dependency ref="dummy-CEC:X962_C2TNB431R1"/>
+    <dependency ref="dummy-CEC:X962_PRIME192V1"/>
+    <dependency ref="dummy-CEC:X962_PRIME192V2"/>
+    <dependency ref="dummy-CEC:X962_PRIME192V3"/>
+    <dependency ref="dummy-CEC:X962_PRIME239V1"/>
+    <dependency ref="dummy-CEC:X962_PRIME239V2"/>
+    <dependency ref="dummy-CEC:X962_PRIME239V3"/>
+    <dependency ref="dummy-CEC:X962_PRIME256V1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP160K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP160R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP160R2"/>
+    <dependency ref="dummy-CEC:X963_ANSIP192K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP224K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP224R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP256K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP384R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIP521R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT163K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT163R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT163R2"/>
+    <dependency ref="dummy-CEC:X963_ANSIT193R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT193R2"/>
+    <dependency ref="dummy-CEC:X963_ANSIT233K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT233R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT239K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT283K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT283R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT409K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT409R1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT571K1"/>
+    <dependency ref="dummy-CEC:X963_ANSIT571R1"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

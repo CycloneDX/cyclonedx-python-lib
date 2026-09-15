@@ -1,0 +1,944 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:A5_1">
+      <name>CryptoAlgorithmFamily: A5_1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>A5/1</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:A5_2">
+      <name>CryptoAlgorithmFamily: A5_2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>A5/2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:AES">
+      <name>CryptoAlgorithmFamily: AES</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>AES</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ARGON2">
+      <name>CryptoAlgorithmFamily: ARGON2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Argon2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ARIA">
+      <name>CryptoAlgorithmFamily: ARIA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ARIA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ASCON">
+      <name>CryptoAlgorithmFamily: ASCON</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Ascon</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:BCRYPT">
+      <name>CryptoAlgorithmFamily: BCRYPT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>bcrypt</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:BLAKE2">
+      <name>CryptoAlgorithmFamily: BLAKE2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>BLAKE2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:BLAKE3">
+      <name>CryptoAlgorithmFamily: BLAKE3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>BLAKE3</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:BLOWFISH">
+      <name>CryptoAlgorithmFamily: BLOWFISH</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Blowfish</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:BLS">
+      <name>CryptoAlgorithmFamily: BLS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>BLS</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CAMELLIA">
+      <name>CryptoAlgorithmFamily: CAMELLIA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>CAMELLIA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CAST5">
+      <name>CryptoAlgorithmFamily: CAST5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>CAST5</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CAST6">
+      <name>CryptoAlgorithmFamily: CAST6</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>CAST6</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CHACHA">
+      <name>CryptoAlgorithmFamily: CHACHA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ChaCha</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CHACHA20">
+      <name>CryptoAlgorithmFamily: CHACHA20</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ChaCha20</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CMAC">
+      <name>CryptoAlgorithmFamily: CMAC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>CMAC</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CMEA">
+      <name>CryptoAlgorithmFamily: CMEA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>CMEA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:CTR_DRBG">
+      <name>CryptoAlgorithmFamily: CTR_DRBG</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>CTR_DRBG</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:DES">
+      <name>CryptoAlgorithmFamily: DES</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>DES</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:DSA">
+      <name>CryptoAlgorithmFamily: DSA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>DSA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ECDH">
+      <name>CryptoAlgorithmFamily: ECDH</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ECDH</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ECDSA">
+      <name>CryptoAlgorithmFamily: ECDSA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ECDSA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ECIES">
+      <name>CryptoAlgorithmFamily: ECIES</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ECIES</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:EDDSA">
+      <name>CryptoAlgorithmFamily: EDDSA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>EdDSA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ELGAMAL">
+      <name>CryptoAlgorithmFamily: ELGAMAL</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ElGamal</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:FFDH">
+      <name>CryptoAlgorithmFamily: FFDH</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>FFDH</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:FORTUNA">
+      <name>CryptoAlgorithmFamily: FORTUNA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Fortuna</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:GOST">
+      <name>CryptoAlgorithmFamily: GOST</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>GOST</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:HASH_DRBG">
+      <name>CryptoAlgorithmFamily: HASH_DRBG</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Hash_DRBG</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:HC">
+      <name>CryptoAlgorithmFamily: HC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>HC</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:HKDF">
+      <name>CryptoAlgorithmFamily: HKDF</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>HKDF</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:HMAC">
+      <name>CryptoAlgorithmFamily: HMAC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>HMAC</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:HMAC_DRBG">
+      <name>CryptoAlgorithmFamily: HMAC_DRBG</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>HMAC_DRBG</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:HPKE">
+      <name>CryptoAlgorithmFamily: HPKE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>HPKE</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:IDEA">
+      <name>CryptoAlgorithmFamily: IDEA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>IDEA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:IKE_PRF">
+      <name>CryptoAlgorithmFamily: IKE_PRF</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>IKE-PRF</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:J_PAKE">
+      <name>CryptoAlgorithmFamily: J_PAKE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>J-PAKE</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:LMS">
+      <name>CryptoAlgorithmFamily: LMS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>LMS</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:MD2">
+      <name>CryptoAlgorithmFamily: MD2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>MD2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:MD4">
+      <name>CryptoAlgorithmFamily: MD4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>MD4</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:MD5">
+      <name>CryptoAlgorithmFamily: MD5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>MD5</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:MILENAGE">
+      <name>CryptoAlgorithmFamily: MILENAGE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>MILENAGE</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ML_DSA">
+      <name>CryptoAlgorithmFamily: ML_DSA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ML-DSA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ML_KEM">
+      <name>CryptoAlgorithmFamily: ML_KEM</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ML-KEM</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:MQV">
+      <name>CryptoAlgorithmFamily: MQV</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>MQV</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:OPAQUE">
+      <name>CryptoAlgorithmFamily: OPAQUE</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>OPAQUE</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:PBES1">
+      <name>CryptoAlgorithmFamily: PBES1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>PBES1</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:PBES2">
+      <name>CryptoAlgorithmFamily: PBES2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>PBES2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:PBKDF1">
+      <name>CryptoAlgorithmFamily: PBKDF1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>PBKDF1</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:PBKDF2">
+      <name>CryptoAlgorithmFamily: PBKDF2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>PBKDF2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:PBMAC1">
+      <name>CryptoAlgorithmFamily: PBMAC1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>PBMAC1</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:POLY1305">
+      <name>CryptoAlgorithmFamily: POLY1305</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Poly1305</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RABBIT">
+      <name>CryptoAlgorithmFamily: RABBIT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RABBIT</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RC2">
+      <name>CryptoAlgorithmFamily: RC2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RC2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RC4">
+      <name>CryptoAlgorithmFamily: RC4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RC4</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RC5">
+      <name>CryptoAlgorithmFamily: RC5</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RC5</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RC6">
+      <name>CryptoAlgorithmFamily: RC6</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RC6</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RIPEMD">
+      <name>CryptoAlgorithmFamily: RIPEMD</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RIPEMD</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RSAES_OAEP">
+      <name>CryptoAlgorithmFamily: RSAES_OAEP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RSAES-OAEP</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RSAES_PKCS1">
+      <name>CryptoAlgorithmFamily: RSAES_PKCS1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RSAES-PKCS1</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RSASSA_PKCS1">
+      <name>CryptoAlgorithmFamily: RSASSA_PKCS1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RSASSA-PKCS1</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:RSASSA_PSS">
+      <name>CryptoAlgorithmFamily: RSASSA_PSS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>RSASSA-PSS</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SALSA20">
+      <name>CryptoAlgorithmFamily: SALSA20</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Salsa20</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SCRYPT">
+      <name>CryptoAlgorithmFamily: SCRYPT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>scrypt</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SEED">
+      <name>CryptoAlgorithmFamily: SEED</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SEED</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SERPENT">
+      <name>CryptoAlgorithmFamily: SERPENT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Serpent</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SHA_1">
+      <name>CryptoAlgorithmFamily: SHA_1</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SHA-1</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SHA_2">
+      <name>CryptoAlgorithmFamily: SHA_2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SHA-2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SHA_3">
+      <name>CryptoAlgorithmFamily: SHA_3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SHA-3</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SIPHASH">
+      <name>CryptoAlgorithmFamily: SIPHASH</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SipHash</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SKIPJACK">
+      <name>CryptoAlgorithmFamily: SKIPJACK</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Skipjack</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SLH_DSA">
+      <name>CryptoAlgorithmFamily: SLH_DSA</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SLH-DSA</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SM2">
+      <name>CryptoAlgorithmFamily: SM2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SM2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SM3">
+      <name>CryptoAlgorithmFamily: SM3</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SM3</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SM4">
+      <name>CryptoAlgorithmFamily: SM4</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SM4</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SM9">
+      <name>CryptoAlgorithmFamily: SM9</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SM9</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SNOW3G">
+      <name>CryptoAlgorithmFamily: SNOW3G</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SNOW3G</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SP800_108">
+      <name>CryptoAlgorithmFamily: SP800_108</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SP800-108</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SPAKE2">
+      <name>CryptoAlgorithmFamily: SPAKE2</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SPAKE2</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SPAKE2PLUS">
+      <name>CryptoAlgorithmFamily: SPAKE2PLUS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SPAKE2PLUS</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:SRP">
+      <name>CryptoAlgorithmFamily: SRP</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>SRP</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:THREEGPP_XOR">
+      <name>CryptoAlgorithmFamily: THREEGPP_XOR</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>3GPP-XOR</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:TRIPLE_DES">
+      <name>CryptoAlgorithmFamily: TRIPLE_DES</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>3DES</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:TUAK">
+      <name>CryptoAlgorithmFamily: TUAK</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>TUAK</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:TWOFISH">
+      <name>CryptoAlgorithmFamily: TWOFISH</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Twofish</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:UMAC">
+      <name>CryptoAlgorithmFamily: UMAC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>UMAC</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:WHIRLPOOL">
+      <name>CryptoAlgorithmFamily: WHIRLPOOL</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Whirlpool</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:X3DH">
+      <name>CryptoAlgorithmFamily: X3DH</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>X3DH</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:XMSS">
+      <name>CryptoAlgorithmFamily: XMSS</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>XMSS</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:YARROW">
+      <name>CryptoAlgorithmFamily: YARROW</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>Yarrow</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:YESCRYPT">
+      <name>CryptoAlgorithmFamily: YESCRYPT</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>yescrypt</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CAF:ZUC">
+      <name>CryptoAlgorithmFamily: ZUC</name>
+      <cryptoProperties>
+        <assetType>algorithm</assetType>
+        <algorithmProperties>
+          <algorithmFamily>ZUC</algorithmFamily>
+        </algorithmProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CAF:A5_1"/>
+    <dependency ref="dummy-CAF:A5_2"/>
+    <dependency ref="dummy-CAF:AES"/>
+    <dependency ref="dummy-CAF:ARGON2"/>
+    <dependency ref="dummy-CAF:ARIA"/>
+    <dependency ref="dummy-CAF:ASCON"/>
+    <dependency ref="dummy-CAF:BCRYPT"/>
+    <dependency ref="dummy-CAF:BLAKE2"/>
+    <dependency ref="dummy-CAF:BLAKE3"/>
+    <dependency ref="dummy-CAF:BLOWFISH"/>
+    <dependency ref="dummy-CAF:BLS"/>
+    <dependency ref="dummy-CAF:CAMELLIA"/>
+    <dependency ref="dummy-CAF:CAST5"/>
+    <dependency ref="dummy-CAF:CAST6"/>
+    <dependency ref="dummy-CAF:CHACHA"/>
+    <dependency ref="dummy-CAF:CHACHA20"/>
+    <dependency ref="dummy-CAF:CMAC"/>
+    <dependency ref="dummy-CAF:CMEA"/>
+    <dependency ref="dummy-CAF:CTR_DRBG"/>
+    <dependency ref="dummy-CAF:DES"/>
+    <dependency ref="dummy-CAF:DSA"/>
+    <dependency ref="dummy-CAF:ECDH"/>
+    <dependency ref="dummy-CAF:ECDSA"/>
+    <dependency ref="dummy-CAF:ECIES"/>
+    <dependency ref="dummy-CAF:EDDSA"/>
+    <dependency ref="dummy-CAF:ELGAMAL"/>
+    <dependency ref="dummy-CAF:FFDH"/>
+    <dependency ref="dummy-CAF:FORTUNA"/>
+    <dependency ref="dummy-CAF:GOST"/>
+    <dependency ref="dummy-CAF:HASH_DRBG"/>
+    <dependency ref="dummy-CAF:HC"/>
+    <dependency ref="dummy-CAF:HKDF"/>
+    <dependency ref="dummy-CAF:HMAC"/>
+    <dependency ref="dummy-CAF:HMAC_DRBG"/>
+    <dependency ref="dummy-CAF:HPKE"/>
+    <dependency ref="dummy-CAF:IDEA"/>
+    <dependency ref="dummy-CAF:IKE_PRF"/>
+    <dependency ref="dummy-CAF:J_PAKE"/>
+    <dependency ref="dummy-CAF:LMS"/>
+    <dependency ref="dummy-CAF:MD2"/>
+    <dependency ref="dummy-CAF:MD4"/>
+    <dependency ref="dummy-CAF:MD5"/>
+    <dependency ref="dummy-CAF:MILENAGE"/>
+    <dependency ref="dummy-CAF:ML_DSA"/>
+    <dependency ref="dummy-CAF:ML_KEM"/>
+    <dependency ref="dummy-CAF:MQV"/>
+    <dependency ref="dummy-CAF:OPAQUE"/>
+    <dependency ref="dummy-CAF:PBES1"/>
+    <dependency ref="dummy-CAF:PBES2"/>
+    <dependency ref="dummy-CAF:PBKDF1"/>
+    <dependency ref="dummy-CAF:PBKDF2"/>
+    <dependency ref="dummy-CAF:PBMAC1"/>
+    <dependency ref="dummy-CAF:POLY1305"/>
+    <dependency ref="dummy-CAF:RABBIT"/>
+    <dependency ref="dummy-CAF:RC2"/>
+    <dependency ref="dummy-CAF:RC4"/>
+    <dependency ref="dummy-CAF:RC5"/>
+    <dependency ref="dummy-CAF:RC6"/>
+    <dependency ref="dummy-CAF:RIPEMD"/>
+    <dependency ref="dummy-CAF:RSAES_OAEP"/>
+    <dependency ref="dummy-CAF:RSAES_PKCS1"/>
+    <dependency ref="dummy-CAF:RSASSA_PKCS1"/>
+    <dependency ref="dummy-CAF:RSASSA_PSS"/>
+    <dependency ref="dummy-CAF:SALSA20"/>
+    <dependency ref="dummy-CAF:SCRYPT"/>
+    <dependency ref="dummy-CAF:SEED"/>
+    <dependency ref="dummy-CAF:SERPENT"/>
+    <dependency ref="dummy-CAF:SHA_1"/>
+    <dependency ref="dummy-CAF:SHA_2"/>
+    <dependency ref="dummy-CAF:SHA_3"/>
+    <dependency ref="dummy-CAF:SIPHASH"/>
+    <dependency ref="dummy-CAF:SKIPJACK"/>
+    <dependency ref="dummy-CAF:SLH_DSA"/>
+    <dependency ref="dummy-CAF:SM2"/>
+    <dependency ref="dummy-CAF:SM3"/>
+    <dependency ref="dummy-CAF:SM4"/>
+    <dependency ref="dummy-CAF:SM9"/>
+    <dependency ref="dummy-CAF:SNOW3G"/>
+    <dependency ref="dummy-CAF:SP800_108"/>
+    <dependency ref="dummy-CAF:SPAKE2"/>
+    <dependency ref="dummy-CAF:SPAKE2PLUS"/>
+    <dependency ref="dummy-CAF:SRP"/>
+    <dependency ref="dummy-CAF:THREEGPP_XOR"/>
+    <dependency ref="dummy-CAF:TRIPLE_DES"/>
+    <dependency ref="dummy-CAF:TUAK"/>
+    <dependency ref="dummy-CAF:TWOFISH"/>
+    <dependency ref="dummy-CAF:UMAC"/>
+    <dependency ref="dummy-CAF:WHIRLPOOL"/>
+    <dependency ref="dummy-CAF:X3DH"/>
+    <dependency ref="dummy-CAF:XMSS"/>
+    <dependency ref="dummy-CAF:YARROW"/>
+    <dependency ref="dummy-CAF:YESCRYPT"/>
+    <dependency ref="dummy-CAF:ZUC"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

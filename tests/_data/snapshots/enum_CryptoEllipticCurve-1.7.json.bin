@@ -1,0 +1,3468 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CEC:ANSSI_FRP256V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "anssi/FRP256v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: ANSSI_FRP256V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BLS_BANDERSNATCH",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bls/Bandersnatch"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BLS_BANDERSNATCH",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BLS_BLS12_377",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bls/BLS12-377"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BLS_BLS12_377",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BLS_BLS12_381",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bls/BLS12-381"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BLS_BLS12_381",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BLS_BLS12_446",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bls/BLS12-446"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BLS_BLS12_446",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BLS_BLS12_455",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bls/BLS12-455"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BLS_BLS12_455",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BLS_BLS12_638",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bls/BLS12-638"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BLS_BLS12_638",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BLS_BLS24_477",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bls/BLS24-477"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BLS_BLS24_477",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN158",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn158"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN158",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN190",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn190"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN190",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN222",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn222"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN222",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN254",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn254"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN254",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN286",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn286"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN286",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN318",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn318"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN318",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN350",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn350"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN350",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN382",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn382"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN382",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN414",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn414"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN414",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN446",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn446"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN446",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN478",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn478"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN478",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN510",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn510"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN510",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN542",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn542"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN542",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN574",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn574"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN574",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN606",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn606"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN606",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BN_BN638",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "bn/bn638"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BN_BN638",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP160R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP160r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP160R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP160T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP160t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP160T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP192R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP192r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP192R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP192T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP192t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP192T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP224R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP224r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP224R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP224T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP224t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP224T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP256R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP256r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP256R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP256T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP256t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP256T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP320R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP320r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP320R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP320T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP320t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP320T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP384R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP384r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP384R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP384T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP384t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP384T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP512R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP512r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP512R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP512T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "brainpool/brainpoolP512t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: BRAINPOOL_BRAINPOOLP512T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_GOST256",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/gost256"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_GOST256",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_GOST512",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/gost512"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_GOST512",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_A_PARAMSET",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/id-GostR3410-2001-CryptoPro-A-ParamSet"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_ID_GOSTR3410_2001_CRYPTOPRO_A_PARAMSET",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_B_PARAMSET",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/id-GostR3410-2001-CryptoPro-B-ParamSet"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_ID_GOSTR3410_2001_CRYPTOPRO_B_PARAMSET",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_C_PARAMSET",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/id-GostR3410-2001-CryptoPro-C-ParamSet"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_ID_GOSTR3410_2001_CRYPTOPRO_C_PARAMSET",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/id-tc26-gost-3410-12-512-paramSetA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_12_512_PARAMSETA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETB",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/id-tc26-gost-3410-12-512-paramSetB"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_12_512_PARAMSETB",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_2012_256_PARAMSETA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/id-tc26-gost-3410-2012-256-paramSetA"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_2012_256_PARAMSETA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_2012_512_PARAMSETC",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "gost/id-tc26-gost-3410-2012-512-paramSetC"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: GOST_ID_TC26_GOST_3410_2012_512_PARAMSETC",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT2_1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt2/1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT2_1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT2_2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt2/2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT2_2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT3_1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt3/1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT3_1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT3_2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt3/2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT3_2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT3_3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt3/3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT3_3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT5_1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt5/1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT5_1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT5_2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt5/2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT5_2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:MNT_MNT5_3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "mnt/mnt5/3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: MNT_MNT5_3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_B_163",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/B-163"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_B_163",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_B_233",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/B-233"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_B_233",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_B_283",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/B-283"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_B_283",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_B_409",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/B-409"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_B_409",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_B_571",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/B-571"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_B_571",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_K_163",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/K-163"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_K_163",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_K_233",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/K-233"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_K_233",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_K_283",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/K-283"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_K_283",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_K_409",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/K-409"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_K_409",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_K_571",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/K-571"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_K_571",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_P_192",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/P-192"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_P_192",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_P_224",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/P-224"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_P_224",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_P_256",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/P-256"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_P_256",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_P_384",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/P-384"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_P_384",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NIST_P_521",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nist/P-521"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NIST_P_521",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_254_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-254-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_254_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_255_MERS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-255-mers"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_255_MERS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_256_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-256-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_256_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_382_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-382-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_382_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_383_MERS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-383-mers"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_383_MERS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_384_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-384-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_384_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_510_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-510-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_510_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_511_MERS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-511-mers"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_511_MERS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_ED_512_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/ed-512-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_ED_512_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_NUMSP256D1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/numsp256d1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_NUMSP256D1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_NUMSP256T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/numsp256t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_NUMSP256T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_NUMSP384D1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/numsp384d1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_NUMSP384D1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_NUMSP384T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/numsp384t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_NUMSP384T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_NUMSP512D1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/numsp512d1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_NUMSP512D1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_NUMSP512T1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/numsp512t1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_NUMSP512T1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_254_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-254-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_254_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_255_MERS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-255-mers"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_255_MERS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_256_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-256-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_256_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_382_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-382-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_382_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_383_MERS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-383-mers"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_383_MERS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_384_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-384-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_384_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_510_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-510-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_510_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_511_MERS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-511-mers"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_511_MERS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:NUMS_W_512_MONT",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "nums/w-512-mont"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: NUMS_W_512_MONT",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OAKLEY_192_BIT_RANDOM_ECP_GROUP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oakley/192-bit Random ECP Group"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OAKLEY_192_BIT_RANDOM_ECP_GROUP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OAKLEY_224_BIT_RANDOM_ECP_GROUP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oakley/224-bit Random ECP Group"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OAKLEY_224_BIT_RANDOM_ECP_GROUP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OAKLEY_256_BIT_RANDOM_ECP_GROUP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oakley/256-bit Random ECP Group"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OAKLEY_256_BIT_RANDOM_ECP_GROUP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OAKLEY_384_BIT_RANDOM_ECP_GROUP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oakley/384-bit Random ECP Group"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OAKLEY_384_BIT_RANDOM_ECP_GROUP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OAKLEY_521_BIT_RANDOM_ECP_GROUP",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oakley/521-bit Random ECP Group"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OAKLEY_521_BIT_RANDOM_ECP_GROUP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OAKLEY_OAKLEY_GROUP_3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oakley/Oakley Group 3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OAKLEY_OAKLEY_GROUP_3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OAKLEY_OAKLEY_GROUP_4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oakley/Oakley Group 4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OAKLEY_OAKLEY_GROUP_4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OSCAA_SM2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "oscaa/SM2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OSCAA_SM2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_BADA55_R_256",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/BADA55-R-256"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_BADA55_R_256",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_BADA55_VPR2_224",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/BADA55-VPR2-224"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_BADA55_VPR2_224",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_BADA55_VPR_224",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/BADA55-VPR-224"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_BADA55_VPR_224",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_BADA55_VR_224",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/BADA55-VR-224"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_BADA55_VR_224",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_BADA55_VR_256",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/BADA55-VR-256"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_BADA55_VR_256",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_BADA55_VR_384",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/BADA55-VR-384"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_BADA55_VR_384",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE1174",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve1174"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE1174",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE22103",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve22103"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE22103",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE25519",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve25519"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE25519",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE383187",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve383187"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE383187",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE41417",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve41417"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE41417",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE4417",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve4417"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE4417",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE448",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve448"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE448",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_CURVE67254",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Curve67254"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_CURVE67254",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_ED25519",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Ed25519"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_ED25519",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_ED448",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Ed448"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_ED448",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_ED448_GOLDILOCKS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Ed448-Goldilocks"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_ED448_GOLDILOCKS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_E_222",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/E-222"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_E_222",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_E_382",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/E-382"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_E_382",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_E_521",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/E-521"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_E_521",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FOURQ",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/FourQ"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FOURQ",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FP224BN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Fp224BN"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FP224BN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FP254BNA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Fp254BNa"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FP254BNA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FP254BNB",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Fp254BNb"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FP254BNB",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FP254N2BNA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Fp254n2BNa"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FP254N2BNA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FP256BN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Fp256BN"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FP256BN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FP384BN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Fp384BN"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FP384BN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_FP512BN",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Fp512BN"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_FP512BN",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_JUBJUB",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/JubJub"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_JUBJUB",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_MDC201601",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/MDC201601"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_MDC201601",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_M_221",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/M-221"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_M_221",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_M_383",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/M-383"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_M_383",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_M_511",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/M-511"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_M_511",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_PALLAS",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Pallas"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_PALLAS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_160",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-160"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_160",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_192",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-192"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_192",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_224",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-224"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_224",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_256",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-256"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_256",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_288",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-288"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_288",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_320",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-320"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_320",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_384",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-384"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_384",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_SSC_512",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/ssc-512"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_SSC_512",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_TOM_256",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Tom-256"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_TOM_256",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_TOM_384",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Tom-384"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_TOM_384",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_TOM_521",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Tom-521"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_TOM_521",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_TWEEDLEDEE",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Tweedledee"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_TWEEDLEDEE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_TWEEDLEDUM",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Tweedledum"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_TWEEDLEDUM",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:OTHER_VESTA",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "other/Vesta"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: OTHER_VESTA",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP112R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp112r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP112R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP112R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp112r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP112R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP128R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp128r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP128R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP128R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp128r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP128R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP160K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp160k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP160K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP160R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp160r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP160R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP160R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp160r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP160R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP192K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp192k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP192K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP192R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp192r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP192R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP224K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp224k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP224K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP224R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp224r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP224R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP256K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp256k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP256K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP256R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp256r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP256R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP384R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp384r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP384R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECP521R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/secp521r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECP521R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT113R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect113r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT113R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT113R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect113r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT113R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT131R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect131r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT131R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT131R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect131r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT131R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT163K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect163k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT163K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT163R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect163r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT163R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT163R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect163r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT163R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT193R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect193r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT193R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT193R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect193r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT193R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT233K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect233k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT233K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT233R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect233r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT233R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT239K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect239k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT239K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT283K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect283k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT283K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT283R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect283r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT283R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT409K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect409k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT409K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT409R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect409r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT409R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT571K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect571k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT571K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:SECG_SECT571R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "secg/sect571r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: SECG_SECT571R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS10",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls10"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS10",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS11",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls11"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS11",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS12",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls12"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS12",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls5"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS6",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls6"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS6",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS7",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls7"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS7",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS8",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls8"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS8",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS9",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "wtls/wap-wsg-idm-ecid-wtls9"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: WTLS_WAP_WSG_IDM_ECID_WTLS9",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2ONB191V4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2onb191v4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2ONB191V4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2ONB191V5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2onb191v5"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2ONB191V5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2ONB239V4",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2onb239v4"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2ONB239V4",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2ONB239V5",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2onb239v5"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2ONB239V5",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB163V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb163v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB163V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB163V2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb163v2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB163V2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB163V3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb163v3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB163V3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB176W1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb176w1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB176W1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB208W1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb208w1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB208W1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB272W1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb272w1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB272W1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB304W1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb304w1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB304W1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2PNB368W1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2pnb368w1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2PNB368W1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB191V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb191v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB191V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB191V2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb191v2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB191V2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB191V3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb191v3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB191V3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB239V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb239v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB239V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB239V2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb239v2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB239V2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB239V3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb239v3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB239V3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB359V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb359v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB359V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_C2TNB431R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/c2tnb431r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_C2TNB431R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_PRIME192V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/prime192v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_PRIME192V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_PRIME192V2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/prime192v2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_PRIME192V2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_PRIME192V3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/prime192v3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_PRIME192V3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_PRIME239V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/prime239v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_PRIME239V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_PRIME239V2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/prime239v2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_PRIME239V2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_PRIME239V3",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/prime239v3"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_PRIME239V3",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X962_PRIME256V1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x962/prime256v1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X962_PRIME256V1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP160K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip160k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP160K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP160R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip160r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP160R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP160R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip160r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP160R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP192K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip192k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP192K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP224K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip224k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP224K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP224R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip224r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP224R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP256K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip256k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP256K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP384R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip384r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP384R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIP521R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansip521r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIP521R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT163K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit163k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT163K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT163R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit163r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT163R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT163R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit163r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT163R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT193R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit193r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT193R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT193R2",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit193r2"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT193R2",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT233K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit233k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT233K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT233R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit233r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT233R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT239K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit239k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT239K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT283K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit283k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT283K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT283R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit283r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT283R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT409K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit409k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT409K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT409R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit409r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT409R1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT571K1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit571k1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT571K1",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CEC:X963_ANSIT571R1",
+      "cryptoProperties": {
+        "algorithmProperties": {
+          "ellipticCurve": "x963/ansit571r1"
+        },
+        "assetType": "algorithm"
+      },
+      "name": "CryptoEllipticCurve: X963_ANSIT571R1",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CEC:ANSSI_FRP256V1"
+    },
+    {
+      "ref": "dummy-CEC:BLS_BANDERSNATCH"
+    },
+    {
+      "ref": "dummy-CEC:BLS_BLS12_377"
+    },
+    {
+      "ref": "dummy-CEC:BLS_BLS12_381"
+    },
+    {
+      "ref": "dummy-CEC:BLS_BLS12_446"
+    },
+    {
+      "ref": "dummy-CEC:BLS_BLS12_455"
+    },
+    {
+      "ref": "dummy-CEC:BLS_BLS12_638"
+    },
+    {
+      "ref": "dummy-CEC:BLS_BLS24_477"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN158"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN190"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN222"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN254"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN286"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN318"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN350"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN382"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN414"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN446"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN478"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN510"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN542"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN574"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN606"
+    },
+    {
+      "ref": "dummy-CEC:BN_BN638"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP160R1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP160T1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP192R1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP192T1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP224R1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP224T1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP256R1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP256T1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP320R1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP320T1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP384R1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP384T1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP512R1"
+    },
+    {
+      "ref": "dummy-CEC:BRAINPOOL_BRAINPOOLP512T1"
+    },
+    {
+      "ref": "dummy-CEC:GOST_GOST256"
+    },
+    {
+      "ref": "dummy-CEC:GOST_GOST512"
+    },
+    {
+      "ref": "dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_A_PARAMSET"
+    },
+    {
+      "ref": "dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_B_PARAMSET"
+    },
+    {
+      "ref": "dummy-CEC:GOST_ID_GOSTR3410_2001_CRYPTOPRO_C_PARAMSET"
+    },
+    {
+      "ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETA"
+    },
+    {
+      "ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_12_512_PARAMSETB"
+    },
+    {
+      "ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_2012_256_PARAMSETA"
+    },
+    {
+      "ref": "dummy-CEC:GOST_ID_TC26_GOST_3410_2012_512_PARAMSETC"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT1"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT2_1"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT2_2"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT3_1"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT3_2"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT3_3"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT4"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT5_1"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT5_2"
+    },
+    {
+      "ref": "dummy-CEC:MNT_MNT5_3"
+    },
+    {
+      "ref": "dummy-CEC:NIST_B_163"
+    },
+    {
+      "ref": "dummy-CEC:NIST_B_233"
+    },
+    {
+      "ref": "dummy-CEC:NIST_B_283"
+    },
+    {
+      "ref": "dummy-CEC:NIST_B_409"
+    },
+    {
+      "ref": "dummy-CEC:NIST_B_571"
+    },
+    {
+      "ref": "dummy-CEC:NIST_K_163"
+    },
+    {
+      "ref": "dummy-CEC:NIST_K_233"
+    },
+    {
+      "ref": "dummy-CEC:NIST_K_283"
+    },
+    {
+      "ref": "dummy-CEC:NIST_K_409"
+    },
+    {
+      "ref": "dummy-CEC:NIST_K_571"
+    },
+    {
+      "ref": "dummy-CEC:NIST_P_192"
+    },
+    {
+      "ref": "dummy-CEC:NIST_P_224"
+    },
+    {
+      "ref": "dummy-CEC:NIST_P_256"
+    },
+    {
+      "ref": "dummy-CEC:NIST_P_384"
+    },
+    {
+      "ref": "dummy-CEC:NIST_P_521"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_254_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_255_MERS"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_256_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_382_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_383_MERS"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_384_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_510_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_511_MERS"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_ED_512_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_NUMSP256D1"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_NUMSP256T1"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_NUMSP384D1"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_NUMSP384T1"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_NUMSP512D1"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_NUMSP512T1"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_254_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_255_MERS"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_256_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_382_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_383_MERS"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_384_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_510_MONT"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_511_MERS"
+    },
+    {
+      "ref": "dummy-CEC:NUMS_W_512_MONT"
+    },
+    {
+      "ref": "dummy-CEC:OAKLEY_192_BIT_RANDOM_ECP_GROUP"
+    },
+    {
+      "ref": "dummy-CEC:OAKLEY_224_BIT_RANDOM_ECP_GROUP"
+    },
+    {
+      "ref": "dummy-CEC:OAKLEY_256_BIT_RANDOM_ECP_GROUP"
+    },
+    {
+      "ref": "dummy-CEC:OAKLEY_384_BIT_RANDOM_ECP_GROUP"
+    },
+    {
+      "ref": "dummy-CEC:OAKLEY_521_BIT_RANDOM_ECP_GROUP"
+    },
+    {
+      "ref": "dummy-CEC:OAKLEY_OAKLEY_GROUP_3"
+    },
+    {
+      "ref": "dummy-CEC:OAKLEY_OAKLEY_GROUP_4"
+    },
+    {
+      "ref": "dummy-CEC:OSCAA_SM2"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_BADA55_R_256"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_BADA55_VPR2_224"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_BADA55_VPR_224"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_BADA55_VR_224"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_BADA55_VR_256"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_BADA55_VR_384"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE1174"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE22103"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE25519"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE383187"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE41417"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE4417"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE448"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_CURVE67254"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_ED25519"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_ED448"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_ED448_GOLDILOCKS"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_E_222"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_E_382"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_E_521"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FOURQ"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FP224BN"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FP254BNA"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FP254BNB"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FP254N2BNA"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FP256BN"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FP384BN"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_FP512BN"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_JUBJUB"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_MDC201601"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_M_221"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_M_383"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_M_511"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_PALLAS"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_160"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_192"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_224"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_256"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_288"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_320"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_384"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_SSC_512"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_TOM_256"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_TOM_384"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_TOM_521"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_TWEEDLEDEE"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_TWEEDLEDUM"
+    },
+    {
+      "ref": "dummy-CEC:OTHER_VESTA"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP112R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP112R2"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP128R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP128R2"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP160K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP160R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP160R2"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP192K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP192R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP224K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP224R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP256K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP256R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP384R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECP521R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT113R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT113R2"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT131R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT131R2"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT163K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT163R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT163R2"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT193R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT193R2"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT233K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT233R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT239K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT283K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT283R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT409K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT409R1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT571K1"
+    },
+    {
+      "ref": "dummy-CEC:SECG_SECT571R1"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS1"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS10"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS11"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS12"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS3"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS4"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS5"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS6"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS7"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS8"
+    },
+    {
+      "ref": "dummy-CEC:WTLS_WAP_WSG_IDM_ECID_WTLS9"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2ONB191V4"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2ONB191V5"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2ONB239V4"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2ONB239V5"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB163V1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB163V2"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB163V3"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB176W1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB208W1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB272W1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB304W1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2PNB368W1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB191V1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB191V2"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB191V3"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB239V1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB239V2"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB239V3"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB359V1"
+    },
+    {
+      "ref": "dummy-CEC:X962_C2TNB431R1"
+    },
+    {
+      "ref": "dummy-CEC:X962_PRIME192V1"
+    },
+    {
+      "ref": "dummy-CEC:X962_PRIME192V2"
+    },
+    {
+      "ref": "dummy-CEC:X962_PRIME192V3"
+    },
+    {
+      "ref": "dummy-CEC:X962_PRIME239V1"
+    },
+    {
+      "ref": "dummy-CEC:X962_PRIME239V2"
+    },
+    {
+      "ref": "dummy-CEC:X962_PRIME239V3"
+    },
+    {
+      "ref": "dummy-CEC:X962_PRIME256V1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP160K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP160R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP160R2"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP192K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP224K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP224R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP256K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP384R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIP521R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT163K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT163R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT163R2"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT193R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT193R2"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT233K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT233R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT239K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT283K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT283R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT409K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT409R1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT571K1"
+    },
+    {
+      "ref": "dummy-CEC:X963_ANSIT571R1"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}
