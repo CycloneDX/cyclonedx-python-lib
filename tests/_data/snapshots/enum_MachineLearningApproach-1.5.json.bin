@@ -1,0 +1,99 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-MLA:REINFORCEMENT_LEARNING",
+      "modelCard": {
+        "modelParameters": {
+          "approach": {
+            "type": "reinforcement-learning"
+          }
+        }
+      },
+      "name": "MachineLearningApproach: REINFORCEMENT_LEARNING",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-MLA:SELF_SUPERVISED",
+      "modelCard": {
+        "modelParameters": {
+          "approach": {
+            "type": "self-supervised"
+          }
+        }
+      },
+      "name": "MachineLearningApproach: SELF_SUPERVISED",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-MLA:SEMI_SUPERVISED",
+      "modelCard": {
+        "modelParameters": {
+          "approach": {
+            "type": "semi-supervised"
+          }
+        }
+      },
+      "name": "MachineLearningApproach: SEMI_SUPERVISED",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-MLA:SUPERVISED",
+      "modelCard": {
+        "modelParameters": {
+          "approach": {
+            "type": "supervised"
+          }
+        }
+      },
+      "name": "MachineLearningApproach: SUPERVISED",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-MLA:UNSUPERVISED",
+      "modelCard": {
+        "modelParameters": {
+          "approach": {
+            "type": "unsupervised"
+          }
+        }
+      },
+      "name": "MachineLearningApproach: UNSUPERVISED",
+      "type": "machine-learning-model"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-MLA:REINFORCEMENT_LEARNING"
+    },
+    {
+      "ref": "dummy-MLA:SELF_SUPERVISED"
+    },
+    {
+      "ref": "dummy-MLA:SEMI_SUPERVISED"
+    },
+    {
+      "ref": "dummy-MLA:SUPERVISED"
+    },
+    {
+      "ref": "dummy-MLA:UNSUPERVISED"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5"
+}
