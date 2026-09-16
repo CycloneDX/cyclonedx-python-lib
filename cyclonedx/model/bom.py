@@ -708,9 +708,10 @@ class Bom:
         .. deprecated:: next
         """
         if purl:
-            found = [x for x in self.components if x.purl == purl]
-            if len(found) == 1:
-                return found[0]
+            gen = (x for x in self.components if x.purl == purl)
+            first = next(gen, None)
+            if first and next(gen, None) is None:
+                return first
 
         return None
 
@@ -742,9 +743,9 @@ class Bom:
 
     def _get_all_components(self) -> Generator[Component, None, None]:
         if self.metadata.component:
-            yield from self.metadata.component.get_all_nested_components(include_self=True)
+            yield from self.metadata.component.iter_all_nested_components(include_self=True)
         for c in self.components:
-            yield from c.get_all_nested_components(include_self=True)
+            yield from c.iter_all_nested_components(include_self=True)
 
     def get_vulnerabilities_for_bom_ref(self, bom_ref: BomRef) -> 'SortedSet[Vulnerability]':
         """
@@ -855,8 +856,8 @@ class Bom:
         elem: Union[BomMetaData, Component, Service]
         for elem in chain(  # type:ignore[assignment]
             [self.metadata],
-            self.metadata.component.get_all_nested_components(include_self=True) if self.metadata.component else [],
-            chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
+            self.metadata.component.iter_all_nested_components(include_self=True) if self.metadata.component else [],
+            chain.from_iterable(c.iter_all_nested_components(include_self=True) for c in self.components),
             self.services
         ):
             if len(elem.licenses) > 1 and any(isinstance(li, LicenseExpression) for li in elem.licenses):

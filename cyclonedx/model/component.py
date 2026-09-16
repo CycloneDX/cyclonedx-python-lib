@@ -17,7 +17,7 @@
 
 import re
 import sys
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from enum import Enum
 from typing import Any, Optional, Union
 from warnings import warn
@@ -1684,19 +1684,29 @@ class Component(Dependable):
     def tags(self, tags: Iterable[str]) -> None:
         self._tags = SortedSet(tags)
 
-    def get_all_nested_components(self, include_self: bool = False) -> set['Component']:
-        components = set()
-        if include_self:
-            components.add(self)
+    def iter_all_nested_components(self, include_self: bool = False) -> Iterator['Component']:
+        """
+        Iterate over this component and all its nested components (assemblies), recursively.
 
-        stack = list(self.components)
+        Components are deduplicated by object identity — NOT by equality.
+        This never calls the (costly) ``Component.__hash__``/``__eq__``,
+        which makes it dramatically faster than :func:`get_all_nested_components`
+        for large component trees. Safe against cyclic component graphs.
+
+        Order of iteration is not guaranteed.
+        """
+        seen: dict[int, 'Component'] = {}
+        stack: list['Component'] = [self] if include_self else list(self.components)
         while stack:
             current = stack.pop()
-            if current not in components:
-                components.add(current)
+            current_id = id(current)
+            if current_id not in seen:
+                seen[current_id] = current
                 stack.extend(current.components)
+        return iter(seen.values())
 
-        return components
+    def get_all_nested_components(self, include_self: bool = False) -> set['Component']:
+        return set(self.iter_all_nested_components(include_self=include_self))
 
     def get_pypi_url(self) -> str:
         if self.version:
