@@ -708,9 +708,10 @@ class Bom:
         .. deprecated:: next
         """
         if purl:
-            found = [x for x in self.components if x.purl == purl]
-            if len(found) == 1:
-                return found[0]
+            gen = (x for x in self.components if x.purl == purl)
+            first = next(gen, None)
+            if first and next(gen, None) is None:
+                return first
 
         return None
 
