@@ -784,6 +784,7 @@ class Bom:
         depends_on: Optional[Iterable[Dependable]] = None,
         provides: Optional[Iterable[Dependable]] = None,
     ) -> None:
+        provides = tuple(provides or ())
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
         if _d:
             # Dependency Target already registered - but it might have new dependencies to add
