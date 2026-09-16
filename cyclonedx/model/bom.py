@@ -19,7 +19,6 @@
 from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
-from itertools import chain
 from typing import TYPE_CHECKING, Optional, Union
 from uuid import UUID, uuid4
 from warnings import warn
@@ -805,7 +804,7 @@ class Bom:
         # idea: have 'serial_number' be a string, and use it instead of this method
         return f'{_BOM_LINK_PREFIX}{self.serial_number}/{self.version}'
 
-    def validate(self) -> bool:
+    def validate(self) -> bool:  # noqa: C901
         """
         Perform data-model level validations to make sure we have some known data integrity prior to attempting output
         of this `Bom`
@@ -818,20 +817,25 @@ class Bom:
         """
         # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
         # 0. Make sure all Dependable have a Dependency entry
-        if self.metadata.component:
+        # Cache existing refs to avoid registering dependencies unnecessarily
+        existing_refs = {d.ref for d in self.dependencies}
+
+        if self.metadata.component and self.metadata.component.bom_ref not in existing_refs:
             self.register_dependency(target=self.metadata.component)
         for _c in self.components:
-            self.register_dependency(target=_c)
+            if _c.bom_ref not in existing_refs:
+                self.register_dependency(target=_c)
         for _s in self.services:
-            self.register_dependency(target=_s)
+            if _s.bom_ref not in existing_refs:
+                self.register_dependency(target=_s)
 
         # 1. Make sure dependencies are all in this Bom.
-        component_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
-            map(lambda s: s.bom_ref, self.services))
-        dependency_bom_refs = set(chain(
-            (d.ref for d in self.dependencies),
-            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies)
-        ))
+        component_bom_refs = {c.bom_ref for c in self._get_all_components()}
+        component_bom_refs.update(s.bom_ref for s in self.services)
+        dependency_bom_refs = set()
+        for d in self.dependencies:
+            dependency_bom_refs.add(d.ref)
+            dependency_bom_refs.update(d.dependencies_as_bom_refs())
         dependency_diff = dependency_bom_refs - component_bom_refs
         if len(dependency_diff) > 0:
             raise UnknownComponentDependencyException(
@@ -840,26 +844,27 @@ class Bom:
 
         # 2. if root component is set and there are other components: dependencies should exist for the Component
         # this BOM is describing
-        if self.metadata.component and len(self.components) > 0 and not any(map(
-            lambda d: d.ref == self.metadata.component.bom_ref and len(d.dependencies) > 0,  # type:ignore[union-attr]
-            self.dependencies
-        )):
-            warn(
-                f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
-                'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
-                '"root" Component to complete the Dependency Graph data.',
-                category=UserWarning, stacklevel=1
-            )
+        if self.metadata.component and self.components:
+            has_deps = any(d.ref == self.metadata.component.bom_ref and d.dependencies for d in self.dependencies)
+            if not has_deps:
+                warn(
+                    f'The Component this BOM is describing {self.metadata.component.purl} has no defined dependencies '
+                    'which means the Dependency Graph is incomplete - you should add direct dependencies to this '
+                    '"root" Component to complete the Dependency Graph data.',
+                    category=UserWarning, stacklevel=1
+                )
 
         # 3. If a LicenseExpression is set, then there must be no other license.
         # see https://github.com/CycloneDX/specification/pull/205
+        elems: list[Union[BomMetaData, Component, Service]] = [self.metadata]
+        if self.metadata.component:
+            elems.extend(self.metadata.component.get_all_nested_components(include_self=True))
+        for c in self.components:
+            elems.extend(c.get_all_nested_components(include_self=True))
+        elems.extend(self.services)
+
         elem: Union[BomMetaData, Component, Service]
-        for elem in chain(  # type:ignore[assignment]
-            [self.metadata],
-            self.metadata.component.get_all_nested_components(include_self=True) if self.metadata.component else [],
-            chain.from_iterable(c.get_all_nested_components(include_self=True) for c in self.components),
-            self.services
-        ):
+        for elem in elems:
             if len(elem.licenses) > 1 and any(isinstance(li, LicenseExpression) for li in elem.licenses):
                 raise LicenseExpressionAlongWithOthersException(
                     f'Found LicenseExpression along with others licenses in: {elem!r}')
