@@ -1739,7 +1739,6 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_services_complex,
     get_bom_with_services_simple,
     get_bom_with_licenses,
-    get_bom_with_provides,
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
     get_bom_with_external_component_1_7,

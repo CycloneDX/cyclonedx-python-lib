@@ -785,14 +785,23 @@ class Bom:
         depends_on: Optional[Iterable[Dependable]] = None,
         provides: Optional[Iterable[Dependable]] = None,
     ) -> None:
+        depends_on = tuple(depends_on or ())
         provides = tuple(provides or ())
         _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
         if _d:
+            # We use `del` by object identity to avoid ValueError from `SortedSet.discard`.
+            # Empty `BomRef` elements violate strict weak ordering which breaks `_list.remove`.
+            for i, dep in enumerate(self._dependencies):
+                if dep is _d:
+                    del self._dependencies[i]  # type: ignore[attr-defined]
+                    break
+
             # Dependency Target already registered - but it might have new dependencies to add
             if depends_on:
-                _d.dependencies.update(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on))
+                _d.dependencies.update(map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on))
             if provides:
-                _d.provides.update(map(lambda _p: Dependency(ref=_p.bom_ref), provides))
+                _d.provides.update(map(lambda _prov: Dependency(ref=_prov.bom_ref), provides))
+            self._dependencies.add(_d)
         else:
             # First time we are seeing this target as a Dependency
             self._dependencies.add(Dependency(

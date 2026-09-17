@@ -66,8 +66,15 @@ class TestDependency(TestCase):
         # Deps with different provides should sort deterministically
         ref_a = BomRef(value='0b049d09-64c0-4490-a0f5-c84d9aacf857')
         ref_b = BomRef(value='be2c6502-7e9a-47db-9a66-e34f729810a3')
-        dep_a = Dependency(ref=ref_a, provides=[Dependency(ref=ref_b)])
-        dep_b = Dependency(ref=ref_b)
-        sorted_result = sorted([dep_b, dep_a])
-        self.assertEqual(sorted_result[0].ref, ref_a)
-        self.assertEqual(sorted_result[1].ref, ref_b)
+        ref_c = BomRef(value='c5b16954-5264-4bf8-af08-251f2d6b38c2')
+        dep_with_b = Dependency(ref=ref_a, provides=[Dependency(ref=ref_b)])
+        dep_with_c = Dependency(ref=ref_a, provides=[Dependency(ref=ref_c)])
+        dep_without = Dependency(ref=ref_a)
+
+        sorted_result = sorted([dep_with_c, dep_without, dep_with_b])
+
+        # ComparableTuple sorts longer tuples BEFORE shorter tuples!
+        # And within same length, 'be2c...' < 'c5b1...'
+        self.assertEqual(sorted_result[0], dep_with_b)
+        self.assertEqual(sorted_result[1], dep_with_c)
+        self.assertEqual(sorted_result[2], dep_without)
