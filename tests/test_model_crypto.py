@@ -15,20 +15,36 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from datetime import datetime, timezone
+from json import loads as json_loads
 from unittest import TestCase
+from xml.etree.ElementTree import Element, fromstring as _xml_fromstring  # nosec B405
 
+from cyclonedx.model import HashAlgorithm, HashType
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
+    CertificateCommonExtension,
+    CertificateCommonExtensionName,
+    CertificateCustomExtension,
+    CertificateCustomState,
+    CertificateLifecycleState,
+    CertificatePredefinedState,
     CertificateProperties,
     CryptoPrimitive,
     Ikev2TransformTypes,
     ProtocolProperties,
     ProtocolPropertiesType,
+    RelatedCryptographicAsset,
     RelatedCryptoMaterialProperties,
     RelatedCryptoMaterialSecuredBy,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
+
+
+def xml_fromstring(data: str) -> Element:
+    return _xml_fromstring(data)  # nosec B314
 
 
 class TestModelAlgorithmProperties(TestCase):
@@ -46,6 +62,184 @@ class TestModelAlgorithmProperties(TestCase):
 
 
 class TestModelCertificateProperties(TestCase):
+
+    def test_related_assets_are_gated_deterministic_and_preserve_deprecated_refs(self) -> None:
+        algorithm = RelatedCryptographicAsset(type='algorithm', ref=BomRef('signature'))
+        public_key = RelatedCryptographicAsset(type='publicKey', ref=BomRef('public-key'))
+        properties = CertificateProperties(
+            signature_algorithm_ref=BomRef('signature'),
+            subject_public_key_ref=BomRef('public-key'),
+            related_cryptographic_assets=[public_key, algorithm],
+        )
+
+        self.assertEqual([algorithm, public_key], list(properties.related_cryptographic_assets))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('relatedCryptographicAssets', json_v1_6)
+        self.assertEqual('signature', json_v1_6['signatureAlgorithmRef'])
+        self.assertEqual('public-key', json_v1_6['subjectPublicKeyRef'])
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual('signature', json_v1_7['signatureAlgorithmRef'])
+        self.assertEqual('public-key', json_v1_7['subjectPublicKeyRef'])
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
+
+    def test_related_cryptographic_asset_comparison_and_hashing(self) -> None:
+        first = RelatedCryptographicAsset(type='algorithm', ref=BomRef('a'))
+        second = RelatedCryptographicAsset(type='publicKey', ref=BomRef('b'))
+
+        self.assertNotEqual(first, second)
+        self.assertNotEqual(hash(first), hash(second))
+        self.assertEqual([first, second], sorted([second, first]))
+
+    def test_certificate_extensions_are_gated_deterministic_and_round_trip(self) -> None:
+        common = CertificateCommonExtension(
+            common_extension_name=CertificateCommonExtensionName.KEY_USAGE,
+            common_extension_value='digitalSignature',
+        )
+        custom = CertificateCustomExtension(
+            custom_extension_name='1.2.3.4.5',
+            custom_extension_value='custom-value',
+        )
+        properties = CertificateProperties(certificate_extensions=[custom, common])
+
+        self.assertEqual([common, custom], list(properties.certificate_extensions))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+        self.assertNotIn('certificateExtensions', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        from_json = CertificateProperties.from_json(json_v1_7)
+        self.assertEqual(properties, from_json)
+        self.assertEqual(
+            {CertificateCommonExtension, CertificateCustomExtension},
+            {type(extension) for extension in from_json.certificate_extensions},
+        )
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        from_xml = CertificateProperties.from_xml(xml_v1_7)
+        self.assertEqual(properties, from_xml)
+        self.assertEqual(
+            {CertificateCommonExtension, CertificateCustomExtension},
+            {type(extension) for extension in from_xml.certificate_extensions},
+        )
+
+    def test_lifecycle_dates_are_gated_ordered_and_round_trip(self) -> None:
+        properties = CertificateProperties(
+            creation_date=datetime(2023, 5, 18, 12, 0, tzinfo=timezone.utc),
+            activation_date=datetime(2023, 5, 19, 1, 0, tzinfo=timezone.utc),
+            deactivation_date=datetime(2024, 5, 18, 12, 0, tzinfo=timezone.utc),
+            revocation_date=datetime(2024, 5, 18, 13, 0, tzinfo=timezone.utc),
+            destruction_date=datetime(2024, 5, 18, 14, 0, tzinfo=timezone.utc),
+        )
+
+        lifecycle_names = [
+            'creationDate',
+            'activationDate',
+            'deactivationDate',
+            'revocationDate',
+            'destructionDate',
+        ]
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertTrue(all(name not in json_v1_6 for name in lifecycle_names))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(lifecycle_names, [child.tag for child in xml_v1_7])
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
+
+    def test_certificate_states_are_gated_deterministic_and_round_trip(self) -> None:
+        predefined = CertificatePredefinedState(
+            state=CertificateLifecycleState.ACTIVE,
+            reason='in use',
+        )
+        custom = CertificateCustomState(
+            name='pending-rotation',
+            description='custom state',
+            reason='scheduled maintenance',
+        )
+        properties = CertificateProperties(certificate_states=[predefined, custom])
+
+        self.assertEqual([custom, predefined], list(properties.certificate_states))
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+        self.assertNotIn('certificateState', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        from_json = CertificateProperties.from_json(json_v1_7)
+        self.assertEqual(properties, from_json)
+        self.assertEqual(
+            {CertificateCustomState, CertificatePredefinedState},
+            {type(state) for state in from_json.certificate_states},
+        )
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        from_xml = CertificateProperties.from_xml(xml_v1_7)
+        self.assertEqual(properties, from_xml)
+        self.assertEqual(
+            {CertificateCustomState, CertificatePredefinedState},
+            {type(state) for state in from_xml.certificate_states},
+        )
+
+    def test_fingerprint_version_gating_comparison_and_round_trip(self) -> None:
+        fingerprint = HashType(alg=HashAlgorithm.SHA_256, content='a' * 64)
+        properties = CertificateProperties(fingerprint=fingerprint)
+
+        self.assertNotEqual(properties, CertificateProperties())
+        self.assertNotEqual(hash(properties), hash(CertificateProperties()))
+        self.assertNotIn('fingerprint', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
+
+    def test_certificate_file_extension_preserves_deprecated_extension(self) -> None:
+        properties = CertificateProperties(
+            certificate_extension='crt',
+            certificate_file_extension='pem',
+        )
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual('crt', json_v1_6['certificateExtension'])
+        self.assertNotIn('certificateFileExtension', json_v1_6)
+        self.assertEqual('crt', json_v1_7['certificateExtension'])
+        self.assertEqual('pem', json_v1_7['certificateFileExtension'])
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
+
+    def test_serial_number_construction_and_comparison(self) -> None:
+        first = CertificateProperties(serial_number='1')
+        second = CertificateProperties(serial_number='2')
+
+        self.assertEqual('1', first.serial_number)
+        self.assertNotEqual(first, second)
+        self.assertNotEqual(hash(first), hash(second))
+        self.assertEqual([first, second], sorted([second, first]))
+
+    def test_serial_number_version_gating_and_round_trip(self) -> None:
+        properties = CertificateProperties(serial_number='3942447fac867ae5cdb3229b658f4d48')
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertNotIn('serialNumber', json_v1_6)
+        self.assertEqual(properties.serial_number, json_v1_7['serialNumber'])
+        self.assertEqual(properties, CertificateProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, CertificateProperties.from_xml(xml_v1_7))
 
     def test_certificate_properties_sorting(self) -> None:
         """Test that CertificateProperties instances can be sorted without triggering TypeError"""
@@ -74,6 +268,47 @@ class TestModelRelatedCryptoMaterialSecuredBy(TestCase):
 
 
 class TestModelRelatedCryptoMaterialProperties(TestCase):
+
+    def test_related_assets_are_gated_deterministic_and_preserve_deprecated_refs(self) -> None:
+        related_asset = RelatedCryptographicAsset(type='algorithm', ref=BomRef('material-algorithm'))
+        properties = RelatedCryptoMaterialProperties(
+            algorithm_ref=BomRef('material-algorithm'),
+            secured_by=RelatedCryptoMaterialSecuredBy(
+                mechanism='HSM',
+                algorithm_ref=BomRef('securing-algorithm'),
+            ),
+            related_cryptographic_assets=[related_asset],
+        )
+
+        self.assertEqual([related_asset], list(properties.related_cryptographic_assets))
+        self.assertNotEqual(properties, RelatedCryptoMaterialProperties())
+        self.assertNotEqual(hash(properties), hash(RelatedCryptoMaterialProperties()))
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('relatedCryptographicAssets', json_v1_6)
+        self.assertEqual('material-algorithm', json_v1_6['algorithmRef'])
+        self.assertEqual('securing-algorithm', json_v1_6['securedBy']['algorithmRef'])
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual('material-algorithm', json_v1_7['algorithmRef'])
+        self.assertEqual('securing-algorithm', json_v1_7['securedBy']['algorithmRef'])
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_xml(xml_v1_7))
+
+    def test_fingerprint_version_gating_comparison_and_round_trip(self) -> None:
+        fingerprint = HashType(alg=HashAlgorithm.SHA_256, content='b' * 64)
+        properties = RelatedCryptoMaterialProperties(fingerprint=fingerprint)
+
+        self.assertNotEqual(properties, RelatedCryptoMaterialProperties())
+        self.assertNotEqual(hash(properties), hash(RelatedCryptoMaterialProperties()))
+        self.assertNotIn('fingerprint', json_loads(properties.as_json(view_=SchemaVersion1Dot6)))
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_json(json_v1_7))
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(properties, RelatedCryptoMaterialProperties.from_xml(xml_v1_7))
 
     def test_related_crypto_material_properties_sorting(self) -> None:
         """Test that RelatedCryptoMaterialProperties instances can be sorted without triggering TypeError"""
@@ -123,6 +358,37 @@ class TestModelIkev2TransformTypes(TestCase):
 
 
 class TestModelProtocolProperties(TestCase):
+
+    def test_related_assets_are_gated_deterministic_and_preserve_deprecated_refs(self) -> None:
+        algorithm = RelatedCryptographicAsset(type='algorithm', ref=BomRef('algorithm'))
+        public_key = RelatedCryptographicAsset(type='publicKey', ref=BomRef('public-key'))
+        properties = ProtocolProperties(
+            crypto_refs=[BomRef('legacy')],
+            related_cryptographic_assets=[public_key, algorithm],
+        )
+
+        self.assertEqual([algorithm, public_key], list(properties.related_cryptographic_assets))
+        self.assertNotEqual(properties, ProtocolProperties())
+        self.assertNotEqual(hash(properties), hash(ProtocolProperties()))
+
+        json_v1_6 = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('relatedCryptographicAssets', json_v1_6)
+        self.assertEqual(['legacy'], json_v1_6['cryptoRefArray'])
+
+        xml_v1_6 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot6))
+        self.assertIsNone(xml_v1_6.find('relatedCryptographicAssets'))
+        self.assertEqual(['legacy'], [element.text for element in xml_v1_6.findall('cryptoRef')])
+
+        json_v1_7 = json_loads(properties.as_json(view_=SchemaVersion1Dot7))
+        self.assertEqual(['legacy'], json_v1_7['cryptoRefArray'])
+        self.assertEqual(properties, ProtocolProperties.from_json(json_v1_7))
+
+        xml_v1_7 = xml_fromstring(properties.as_xml(view_=SchemaVersion1Dot7))
+        self.assertEqual(
+            ['cryptoRef', 'relatedCryptographicAssets'],
+            [element.tag for element in xml_v1_7],
+        )
+        self.assertEqual(properties, ProtocolProperties.from_xml(xml_v1_7))
 
     def test_protocol_properties_sorting(self) -> None:
         """Test that ProtocolProperties instances can be sorted without triggering TypeError"""

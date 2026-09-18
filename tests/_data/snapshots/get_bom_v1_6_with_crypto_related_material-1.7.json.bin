@@ -7,11 +7,23 @@
         "oid": "an-oid-here",
         "relatedCryptoMaterialProperties": {
           "activationDate": "2023-05-19T01:00:00+00:00",
+          "algorithmRef": "material-algorithm",
           "creationDate": "2023-05-19T01:00:00+00:00",
           "expirationDate": "2024-05-19T00:59:59.999999+00:00",
+          "fingerprint": {
+            "alg": "SHA-256",
+            "content": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
           "format": "a-format",
           "id": "some-identifier",
+          "relatedCryptographicAssets": [
+            {
+              "ref": "material-algorithm",
+              "type": "algorithm"
+            }
+          ],
           "securedBy": {
+            "algorithmRef": "securing-algorithm",
             "mechanism": "hard-work"
           },
           "size": 32,

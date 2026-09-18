@@ -36,6 +36,7 @@ from cyclonedx.model import (
     Encoding,
     ExternalReference,
     ExternalReferenceType,
+    HashAlgorithm,
     HashType,
     Note,
     NoteText,
@@ -70,6 +71,12 @@ from cyclonedx.model.component_evidence import (
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
+    CertificateCommonExtension,
+    CertificateCommonExtensionName,
+    CertificateCustomExtension,
+    CertificateCustomState,
+    CertificateLifecycleState,
+    CertificatePredefinedState,
     CertificateProperties,
     CryptoAssetType,
     CryptoCertificationLevel,
@@ -83,6 +90,7 @@ from cyclonedx.model.crypto import (
     ProtocolProperties,
     ProtocolPropertiesCipherSuite,
     ProtocolPropertiesType,
+    RelatedCryptographicAsset,
     RelatedCryptoMaterialProperties,
     RelatedCryptoMaterialSecuredBy,
     RelatedCryptoMaterialState,
@@ -197,16 +205,49 @@ def get_crypto_properties_certificate() -> CryptoProperties:
     return CryptoProperties(
         asset_type=CryptoAssetType.CERTIFICATE,
         certificate_properties=CertificateProperties(
+            serial_number='3942447fac867ae5cdb3229b658f4d48',
             subject_name='cyclonedx.org',
             issuer_name='Cloudflare Inc ECC CA-3',
             not_valid_before=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
                                       tzinfo=timezone.utc),
             not_valid_after=datetime(year=2024, month=5, day=19, hour=0, minute=59, second=59, microsecond=999999,
                                      tzinfo=timezone.utc),
-            signature_algorithm_ref=None,
-            subject_public_key_ref=None,
+            signature_algorithm_ref=BomRef('signature-algorithm'),
+            subject_public_key_ref=BomRef('subject-public-key'),
             certificate_format='pem',
-            certificate_extension='csr'
+            certificate_extension='csr',
+            certificate_file_extension='pem',
+            fingerprint=HashType(alg=HashAlgorithm.SHA_256, content='a' * 64),
+            certificate_states=[
+                CertificatePredefinedState(
+                    state=CertificateLifecycleState.ACTIVE,
+                    reason='certificate is in use',
+                ),
+                CertificateCustomState(
+                    name='pending-rotation',
+                    description='The certificate is waiting to be rotated.',
+                    reason='scheduled maintenance',
+                ),
+            ],
+            creation_date=datetime(2023, 5, 18, 12, 0, tzinfo=timezone.utc),
+            activation_date=datetime(2023, 5, 19, 1, 0, tzinfo=timezone.utc),
+            deactivation_date=datetime(2024, 5, 18, 12, 0, tzinfo=timezone.utc),
+            revocation_date=datetime(2024, 5, 18, 13, 0, tzinfo=timezone.utc),
+            destruction_date=datetime(2024, 5, 18, 14, 0, tzinfo=timezone.utc),
+            certificate_extensions=[
+                CertificateCommonExtension(
+                    common_extension_name=CertificateCommonExtensionName.KEY_USAGE,
+                    common_extension_value='digitalSignature',
+                ),
+                CertificateCustomExtension(
+                    custom_extension_name='1.2.3.4.5',
+                    custom_extension_value='custom-value',
+                ),
+            ],
+            related_cryptographic_assets=[
+                RelatedCryptographicAsset(type='algorithm', ref=BomRef('signature-algorithm')),
+                RelatedCryptographicAsset(type='publicKey', ref=BomRef('subject-public-key')),
+            ],
         ),
         oid='an-oid-here'
     )
@@ -268,7 +309,7 @@ def get_crypto_properties_related_material() -> CryptoProperties:
             type=RelatedCryptoMaterialType.DIGEST,
             id='some-identifier',
             state=RelatedCryptoMaterialState.ACTIVE,
-            algorithm_ref=None,
+            algorithm_ref=BomRef('material-algorithm'),
             creation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
                                    tzinfo=timezone.utc),
             activation_date=datetime(year=2023, month=5, day=19, hour=1, minute=0, second=0, microsecond=0,
@@ -281,8 +322,12 @@ def get_crypto_properties_related_material() -> CryptoProperties:
             format='a-format',
             secured_by=RelatedCryptoMaterialSecuredBy(
                 mechanism='hard-work',
-                algorithm_ref=None
-            )
+                algorithm_ref=BomRef('securing-algorithm'),
+            ),
+            fingerprint=HashType(alg=HashAlgorithm.SHA_256, content='b' * 64),
+            related_cryptographic_assets=[
+                RelatedCryptographicAsset(type='algorithm', ref=BomRef('material-algorithm')),
+            ],
         ),
         oid='an-oid-here'
     )
