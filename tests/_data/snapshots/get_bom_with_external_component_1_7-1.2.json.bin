@@ -6,11 +6,31 @@
       "scope": "required",
       "type": "library",
       "version": "1.0.0"
+    },
+    {
+      "bom-ref": "external-lib",
+      "name": "external-lib",
+      "scope": "required",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "external-lib-with-range",
+      "name": "external-lib",
+      "scope": "required",
+      "type": "library",
+      "version": ""
     }
   ],
   "dependencies": [
     {
+      "ref": "external-lib"
+    },
+    {
       "ref": "external-lib-1.0.0"
+    },
+    {
+      "ref": "external-lib-with-range"
     }
   ],
   "metadata": {

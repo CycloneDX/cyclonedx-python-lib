@@ -7,5 +7,17 @@
       <scope>required</scope>
       <modified>false</modified>
     </component>
+    <component type="library">
+      <name>external-lib</name>
+      <version/>
+      <scope>required</scope>
+      <modified>false</modified>
+    </component>
+    <component type="library">
+      <name>external-lib</name>
+      <version/>
+      <scope>required</scope>
+      <modified>false</modified>
+    </component>
   </components>
 </bom>

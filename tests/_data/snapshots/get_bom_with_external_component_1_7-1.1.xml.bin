@@ -6,5 +6,15 @@
       <version>1.0.0</version>
       <scope>required</scope>
     </component>
+    <component type="library" bom-ref="external-lib">
+      <name>external-lib</name>
+      <version/>
+      <scope>required</scope>
+    </component>
+    <component type="library" bom-ref="external-lib-with-range">
+      <name>external-lib</name>
+      <version/>
+      <scope>required</scope>
+    </component>
   </components>
 </bom>

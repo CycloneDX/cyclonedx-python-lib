@@ -29,6 +29,7 @@ from cyclonedx.exception.model import (
     InvalidOmniBorIdException,
     InvalidSwhidException,
     LicenseExpressionAlongWithOthersException,
+    MutuallyExclusivePropertiesException,
     UnknownComponentDependencyException,
 )
 from cyclonedx.model.bom import Bom
@@ -81,6 +82,7 @@ class TestOutputXml(TestCase, SnapshotMixin):
             LicenseExpressionAlongWithOthersException,
             InvalidOmniBorIdException,
             InvalidSwhidException,
+            MutuallyExclusivePropertiesException,
             UnknownComponentDependencyException,
         )):
             return None  # expected
