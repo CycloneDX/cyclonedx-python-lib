@@ -40,7 +40,73 @@
       <authenticated>false</authenticated>
       <x-trust-boundary>true</x-trust-boundary>
       <data>
-        <classification flow="outbound">public</classification>
+        <dataflow name="Credit card reporting" description="Credit card information exchanged between the web app and the database">
+          <classification flow="outbound">public</classification>
+          <governance>
+            <custodians>
+              <custodian>
+                <organization>
+                  <name>CycloneDX</name>
+                  <address>
+                    <country>GB</country>
+                    <region>England</region>
+                    <locality>Cheshire</locality>
+                    <streetAddress>100 Main Street</streetAddress>
+                  </address>
+                  <url>https://cyclonedx.org</url>
+                  <url>https://cyclonedx.org/docs</url>
+                  <contact>
+                    <name>A N Other</name>
+                    <email>someone@somewhere.tld</email>
+                    <phone>+44 (0)1234 567890</phone>
+                  </contact>
+                  <contact>
+                    <name>Paul Horton</name>
+                    <email>paul.horton@owasp.org</email>
+                  </contact>
+                </organization>
+              </custodian>
+            </custodians>
+            <stewards>
+              <steward>
+                <individual>
+                  <name>Paul Horton</name>
+                  <email>paul.horton@owasp.org</email>
+                </individual>
+              </steward>
+            </stewards>
+            <owners>
+              <owner>
+                <organization>
+                  <name>CycloneDX</name>
+                  <address>
+                    <country>GB</country>
+                    <region>England</region>
+                    <locality>Cheshire</locality>
+                    <streetAddress>100 Main Street</streetAddress>
+                  </address>
+                  <url>https://cyclonedx.org</url>
+                  <url>https://cyclonedx.org/docs</url>
+                  <contact>
+                    <name>A N Other</name>
+                    <email>someone@somewhere.tld</email>
+                    <phone>+44 (0)1234 567890</phone>
+                  </contact>
+                  <contact>
+                    <name>Paul Horton</name>
+                    <email>paul.horton@owasp.org</email>
+                  </contact>
+                </organization>
+              </owner>
+            </owners>
+          </governance>
+          <source>
+            <url>https://0.0.0.0/source</url>
+          </source>
+          <destination>
+            <url>https://0.0.0.0/destination</url>
+          </destination>
+        </dataflow>
       </data>
       <licenses>
         <license>

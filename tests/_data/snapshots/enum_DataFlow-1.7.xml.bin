@@ -7,10 +7,18 @@
     <service bom-ref="dummy">
       <name>dummy</name>
       <data>
-        <classification flow="bi-directional">BI_DIRECTIONAL</classification>
-        <classification flow="inbound">INBOUND</classification>
-        <classification flow="outbound">OUTBOUND</classification>
-        <classification flow="unknown">UNKNOWN</classification>
+        <dataflow>
+          <classification flow="bi-directional">BI_DIRECTIONAL</classification>
+        </dataflow>
+        <dataflow>
+          <classification flow="inbound">INBOUND</classification>
+        </dataflow>
+        <dataflow>
+          <classification flow="outbound">OUTBOUND</classification>
+        </dataflow>
+        <dataflow>
+          <classification flow="unknown">UNKNOWN</classification>
+        </dataflow>
       </data>
     </service>
   </services>

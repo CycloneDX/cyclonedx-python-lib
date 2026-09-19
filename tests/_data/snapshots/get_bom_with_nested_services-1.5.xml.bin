@@ -34,7 +34,9 @@
       <authenticated>false</authenticated>
       <x-trust-boundary>true</x-trust-boundary>
       <data>
-        <classification flow="outbound">public</classification>
+        <dataflow>
+          <classification flow="outbound">public</classification>
+        </dataflow>
       </data>
       <licenses>
         <license>

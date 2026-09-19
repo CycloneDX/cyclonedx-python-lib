@@ -36,8 +36,82 @@
       "bom-ref": "my-specific-bom-ref-for-my-first-service",
       "data": [
         {
+          "flow": "outbound",
           "classification": "public",
-          "flow": "outbound"
+          "name": "Credit card reporting",
+          "description": "Credit card information exchanged between the web app and the database",
+          "governance": {
+            "custodians": [
+              {
+                "organization": {
+                  "address": {
+                    "country": "GB",
+                    "locality": "Cheshire",
+                    "region": "England",
+                    "streetAddress": "100 Main Street"
+                  },
+                  "contact": [
+                    {
+                      "email": "someone@somewhere.tld",
+                      "name": "A N Other",
+                      "phone": "+44 (0)1234 567890"
+                    },
+                    {
+                      "email": "paul.horton@owasp.org",
+                      "name": "Paul Horton"
+                    }
+                  ],
+                  "name": "CycloneDX",
+                  "url": [
+                    "https://cyclonedx.org",
+                    "https://cyclonedx.org/docs"
+                  ]
+                }
+              }
+            ],
+            "owners": [
+              {
+                "organization": {
+                  "address": {
+                    "country": "GB",
+                    "locality": "Cheshire",
+                    "region": "England",
+                    "streetAddress": "100 Main Street"
+                  },
+                  "contact": [
+                    {
+                      "email": "someone@somewhere.tld",
+                      "name": "A N Other",
+                      "phone": "+44 (0)1234 567890"
+                    },
+                    {
+                      "email": "paul.horton@owasp.org",
+                      "name": "Paul Horton"
+                    }
+                  ],
+                  "name": "CycloneDX",
+                  "url": [
+                    "https://cyclonedx.org",
+                    "https://cyclonedx.org/docs"
+                  ]
+                }
+              }
+            ],
+            "stewards": [
+              {
+                "contact": {
+                  "email": "paul.horton@owasp.org",
+                  "name": "Paul Horton"
+                }
+              }
+            ]
+          },
+          "source": [
+            "https://0.0.0.0/source"
+          ],
+          "destination": [
+            "https://0.0.0.0/destination"
+          ]
         }
       ],
       "description": "Description goes here",
