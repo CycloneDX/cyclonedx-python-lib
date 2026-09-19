@@ -55,12 +55,51 @@ except ImportError as err:
     ), err
 
 
+_MAX_MESSAGE_LEN = 256  # chars to keep from a message before truncating
+
+
+def _shorten_message(message: str, instance: object) -> str:
+    """Return a human-readable, bounded error message.
+
+    Two sources of bloat are addressed:
+    1. jsonschema embeds ``repr(instance)`` verbatim — for large SBOM
+       documents (e.g. a ``uniqueItems`` failure on ``dependencies``) this
+       alone can be hundreds of kilobytes.
+    2. ``enum`` keywords include the full allowed-values list in the message
+       (e.g. the ~800-entry SPDX licence ID list).
+
+    Strategy: replace a long ``repr(instance)`` first, then hard-cap the
+    whole message and append ``…`` if it still exceeds ``_MAX_MESSAGE_LEN``.
+    """
+    full_repr = repr(instance)
+    if len(full_repr) > _MAX_MESSAGE_LEN // 2:
+        half = _MAX_MESSAGE_LEN // 4
+        short_repr = f'{full_repr[:half]}...{full_repr[-half:]}'
+        message = message.replace(full_repr, short_repr, 1)
+    if len(message) > _MAX_MESSAGE_LEN:
+        message = message[:_MAX_MESSAGE_LEN] + '…'
+    return message
+
+
 class JsonValidationError(ValidationError):
+    @classmethod
+    def __get_most_relevant_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonSchemaValidationError':
+        if not e.context:
+            return e
+        # nested `context` errors generally provide more useful details than
+        # the generic parent message (e.g. for oneOf/anyOf checks).
+        child = max(e.context, key=lambda ce: len(ce.absolute_path))
+        return cls.__get_most_relevant_jsve(child)
+
     @classmethod
     def _make_from_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonValidationError':
         """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
-        # in preparation for https://github.com/CycloneDX/cyclonedx-python-lib/pull/836
-        return cls(e)
+        useful = cls.__get_most_relevant_jsve(e)
+        return cls(
+            e,
+            message=_shorten_message(useful.message, useful.instance),
+            path=tuple(useful.absolute_path)
+        )
 
 
 class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
