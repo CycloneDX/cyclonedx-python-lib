@@ -18,8 +18,6 @@
 import sys
 from typing import TYPE_CHECKING
 
-from packageurl import PackageURL
-
 from cyclonedx.contrib.license.factories import LicenseFactory
 from cyclonedx.contrib.this.builders import this_component as cdx_lib_component
 from cyclonedx.exception import MissingOptionalDependencyException
@@ -68,7 +66,7 @@ component1 = Component(
         urls=[XsUri('https://www.acme.org')]
     ),
     bom_ref='myComponent@1.33.7-beta.1',
-    purl=PackageURL('generic', 'acme', 'some-component', '1.33.7-beta.1')
+    purl='pkg:generic/acme/some-component@1.33.7-beta.1'
 )
 bom.components.add(component1)
 bom.register_dependency(root_component, [component1])
