@@ -49,3 +49,4 @@ If you're looking for a CycloneDX tool to run to generate (SBOM) software bill-o
    support
    changelog
    upgrading
+   View on GitHub <https://github.com/CycloneDX/cyclonedx-python-lib>
