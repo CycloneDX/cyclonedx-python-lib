@@ -18,6 +18,8 @@
 
 from unittest import TestCase
 
+from sortedcontainers import SortedSet
+
 from cyclonedx.model.service import Service
 from tests import reorder
 
@@ -35,6 +37,7 @@ class TestModelService(TestCase):
         self.assertFalse(s.endpoints)
         self.assertIsNone(s.authenticated)
         self.assertIsNone(s.x_trust_boundary)
+        self.assertIsNone(s.trust_zone)
         self.assertFalse(s.data)
         self.assertFalse(s.licenses)
         self.assertFalse(s.external_references)
@@ -57,6 +60,7 @@ class TestModelService(TestCase):
         self.assertFalse(parent_service.endpoints)
         self.assertIsNone(parent_service.authenticated)
         self.assertIsNone(parent_service.x_trust_boundary)
+        self.assertIsNone(parent_service.trust_zone)
         self.assertFalse(parent_service.data)
         self.assertFalse(parent_service.licenses)
         self.assertFalse(parent_service.external_references)
@@ -80,3 +84,19 @@ class TestModelService(TestCase):
         sorted_services = sorted(services)
         expected_services = reorder(services, expected_order)
         self.assertListEqual(sorted_services, expected_services)
+
+    def test_trust_zone_default(self) -> None:
+        s = Service(name='my-test-service')
+        self.assertIsNone(s.trust_zone)
+
+    def test_trust_zone_setter(self) -> None:
+        s = Service(name='my-test-service', trust_zone='internal-vpc')
+        self.assertEqual('internal-vpc', s.trust_zone)
+        s.trust_zone = 'public-internet'
+        self.assertEqual('public-internet', s.trust_zone)
+
+    def test_trust_zone_affects_equality_and_sorted_set_membership(self) -> None:
+        s1 = Service(name='my-test-service', trust_zone='internal-vpc')
+        s2 = Service(name='my-test-service', trust_zone='public-internet')
+        self.assertNotEqual(s1, s2)
+        self.assertEqual(2, len(SortedSet((s1, s2))))
