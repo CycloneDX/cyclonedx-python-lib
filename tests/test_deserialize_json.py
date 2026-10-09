@@ -17,7 +17,7 @@
 
 
 from collections.abc import Callable
-from json import loads as json_loads
+from json import dumps as json_dumps, loads as json_loads
 from os.path import join
 from typing import Any
 from unittest import TestCase
@@ -25,9 +25,12 @@ from unittest.mock import patch
 
 from ddt import data, ddt, named_data
 
+from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
+from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
+from cyclonedx.validation.json import JsonStrictValidator
 from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
 from tests._data.models import (
     all_get_bom_funct_valid_immut,
@@ -150,3 +153,44 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
             json = json_loads(f.read())
         bom: Bom = Bom.from_json(json)  # <<< is expected to not crash
         self.assertIsNotNone(bom)
+
+    def test_pr1016_protocol_related_cryptographic_assets_round_trip(self) -> None:
+        json = {
+            'bomFormat': 'CycloneDX',
+            'specVersion': '1.7',
+            'version': 1,
+            'components': [{
+                'type': 'cryptographic-asset',
+                'bom-ref': 'protocol',
+                'name': 'TLS 1.3',
+                'cryptoProperties': {
+                    'assetType': 'protocol',
+                    'protocolProperties': {
+                        'type': 'tls',
+                        'version': '1.3',
+                        'cryptoRefArray': ['legacy-algorithm'],
+                        'relatedCryptographicAssets': [{
+                            'type': 'algorithm',
+                            'ref': 'preferred-algorithm',
+                        }],
+                    },
+                },
+            }],
+        }
+        try:
+            validation_errors = JsonStrictValidator(SchemaVersion.V1_7).validate_str(json_dumps(json))
+        except MissingOptionalDependencyException:
+            validation_errors = None
+        self.assertIsNone(validation_errors)
+
+        bom = Bom.from_json(json)
+        output = json_loads(make_outputter(
+            bom, OutputFormat.JSON, SchemaVersion.V1_7
+        ).output_as_string())
+        protocol_properties = output['components'][0]['cryptoProperties']['protocolProperties']
+
+        self.assertEqual(['legacy-algorithm'], protocol_properties['cryptoRefArray'])
+        self.assertEqual(
+            [{'type': 'algorithm', 'ref': 'preferred-algorithm'}],
+            protocol_properties['relatedCryptographicAssets'],
+        )

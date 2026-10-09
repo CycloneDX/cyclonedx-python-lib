@@ -1,0 +1,132 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CLS:ACTIVE",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateState": [
+            {
+              "state": "active"
+            }
+          ]
+        }
+      },
+      "name": "CertificateLifecycleState: ACTIVE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CLS:DEACTIVATED",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateState": [
+            {
+              "state": "deactivated"
+            }
+          ]
+        }
+      },
+      "name": "CertificateLifecycleState: DEACTIVATED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CLS:DESTROYED",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateState": [
+            {
+              "state": "destroyed"
+            }
+          ]
+        }
+      },
+      "name": "CertificateLifecycleState: DESTROYED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CLS:PRE_ACTIVATION",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateState": [
+            {
+              "state": "pre-activation"
+            }
+          ]
+        }
+      },
+      "name": "CertificateLifecycleState: PRE_ACTIVATION",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CLS:REVOKED",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateState": [
+            {
+              "state": "revoked"
+            }
+          ]
+        }
+      },
+      "name": "CertificateLifecycleState: REVOKED",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CLS:SUSPENDED",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateState": [
+            {
+              "state": "suspended"
+            }
+          ]
+        }
+      },
+      "name": "CertificateLifecycleState: SUSPENDED",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CLS:ACTIVE"
+    },
+    {
+      "ref": "dummy-CLS:DEACTIVATED"
+    },
+    {
+      "ref": "dummy-CLS:DESTROYED"
+    },
+    {
+      "ref": "dummy-CLS:PRE_ACTIVATION"
+    },
+    {
+      "ref": "dummy-CLS:REVOKED"
+    },
+    {
+      "ref": "dummy-CLS:SUSPENDED"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

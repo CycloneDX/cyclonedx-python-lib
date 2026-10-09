@@ -1,0 +1,164 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:AUTHORITY_INFORMATION_ACCESS">
+      <name>CertificateCommonExtensionName: AUTHORITY_INFORMATION_ACCESS</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>authorityInformationAccess</commonExtensionName>
+              <commonExtensionValue>authorityInformationAccess</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:AUTHORITY_KEY_IDENTIFIER">
+      <name>CertificateCommonExtensionName: AUTHORITY_KEY_IDENTIFIER</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>authorityKeyIdentifier</commonExtensionName>
+              <commonExtensionValue>authorityKeyIdentifier</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:BASIC_CONSTRAINTS">
+      <name>CertificateCommonExtensionName: BASIC_CONSTRAINTS</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>basicConstraints</commonExtensionName>
+              <commonExtensionValue>basicConstraints</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:CERTIFICATE_POLICIES">
+      <name>CertificateCommonExtensionName: CERTIFICATE_POLICIES</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>certificatePolicies</commonExtensionName>
+              <commonExtensionValue>certificatePolicies</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:CRL_DISTRIBUTION_POINTS">
+      <name>CertificateCommonExtensionName: CRL_DISTRIBUTION_POINTS</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>crlDistributionPoints</commonExtensionName>
+              <commonExtensionValue>crlDistributionPoints</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:EXTENDED_KEY_USAGE">
+      <name>CertificateCommonExtensionName: EXTENDED_KEY_USAGE</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>extendedKeyUsage</commonExtensionName>
+              <commonExtensionValue>extendedKeyUsage</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:KEY_USAGE">
+      <name>CertificateCommonExtensionName: KEY_USAGE</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>keyUsage</commonExtensionName>
+              <commonExtensionValue>keyUsage</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:SIGNED_CERTIFICATE_TIMESTAMP">
+      <name>CertificateCommonExtensionName: SIGNED_CERTIFICATE_TIMESTAMP</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>signedCertificateTimestamp</commonExtensionName>
+              <commonExtensionValue>signedCertificateTimestamp</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:SUBJECT_ALTERNATIVE_NAME">
+      <name>CertificateCommonExtensionName: SUBJECT_ALTERNATIVE_NAME</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>subjectAlternativeName</commonExtensionName>
+              <commonExtensionValue>subjectAlternativeName</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CCEN:SUBJECT_KEY_IDENTIFIER">
+      <name>CertificateCommonExtensionName: SUBJECT_KEY_IDENTIFIER</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>subjectKeyIdentifier</commonExtensionName>
+              <commonExtensionValue>subjectKeyIdentifier</commonExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CCEN:AUTHORITY_INFORMATION_ACCESS"/>
+    <dependency ref="dummy-CCEN:AUTHORITY_KEY_IDENTIFIER"/>
+    <dependency ref="dummy-CCEN:BASIC_CONSTRAINTS"/>
+    <dependency ref="dummy-CCEN:CERTIFICATE_POLICIES"/>
+    <dependency ref="dummy-CCEN:CRL_DISTRIBUTION_POINTS"/>
+    <dependency ref="dummy-CCEN:EXTENDED_KEY_USAGE"/>
+    <dependency ref="dummy-CCEN:KEY_USAGE"/>
+    <dependency ref="dummy-CCEN:SIGNED_CERTIFICATE_TIMESTAMP"/>
+    <dependency ref="dummy-CCEN:SUBJECT_ALTERNATIVE_NAME"/>
+    <dependency ref="dummy-CCEN:SUBJECT_KEY_IDENTIFIER"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="cryptographic-asset" bom-ref="dummy-CLS:ACTIVE">
+      <name>CertificateLifecycleState: ACTIVE</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateState>
+            <state>active</state>
+          </certificateState>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CLS:DEACTIVATED">
+      <name>CertificateLifecycleState: DEACTIVATED</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateState>
+            <state>deactivated</state>
+          </certificateState>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CLS:DESTROYED">
+      <name>CertificateLifecycleState: DESTROYED</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateState>
+            <state>destroyed</state>
+          </certificateState>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CLS:PRE_ACTIVATION">
+      <name>CertificateLifecycleState: PRE_ACTIVATION</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateState>
+            <state>pre-activation</state>
+          </certificateState>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CLS:REVOKED">
+      <name>CertificateLifecycleState: REVOKED</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateState>
+            <state>revoked</state>
+          </certificateState>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+    <component type="cryptographic-asset" bom-ref="dummy-CLS:SUSPENDED">
+      <name>CertificateLifecycleState: SUSPENDED</name>
+      <cryptoProperties>
+        <assetType>certificate</assetType>
+        <certificateProperties>
+          <certificateState>
+            <state>suspended</state>
+          </certificateState>
+        </certificateProperties>
+      </cryptoProperties>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CLS:ACTIVE"/>
+    <dependency ref="dummy-CLS:DEACTIVATED"/>
+    <dependency ref="dummy-CLS:DESTROYED"/>
+    <dependency ref="dummy-CLS:PRE_ACTIVATION"/>
+    <dependency ref="dummy-CLS:REVOKED"/>
+    <dependency ref="dummy-CLS:SUSPENDED"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
