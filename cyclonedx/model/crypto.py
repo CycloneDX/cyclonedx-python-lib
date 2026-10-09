@@ -344,8 +344,10 @@ class AlgorithmProperties:
     def __init__(
         self, *,
         primitive: Optional[CryptoPrimitive] = None,
+        algorithm_family: Optional[str] = None,
         parameter_set_identifier: Optional[str] = None,
         curve: Optional[str] = None,
+        elliptic_curve: Optional[str] = None,
         execution_environment: Optional[CryptoExecutionEnvironment] = None,
         implementation_platform: Optional[CryptoImplementationPlatform] = None,
         certification_levels: Optional[Iterable[CryptoCertificationLevel]] = None,
@@ -356,8 +358,10 @@ class AlgorithmProperties:
         nist_quantum_security_level: Optional[int] = None,
     ) -> None:
         self.primitive = primitive
+        self.algorithm_family = algorithm_family
         self.parameter_set_identifier = parameter_set_identifier
         self.curve = curve
+        self.elliptic_curve = elliptic_curve
         self.execution_environment = execution_environment
         self.implementation_platform = implementation_platform
         self.certification_levels = certification_levels or []
@@ -392,7 +396,18 @@ class AlgorithmProperties:
         self._primitive = primitive
 
     @property
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
+    def algorithm_family(self) -> Optional[str]:
+        """The standardized family identifier for the algorithm."""
+        return self._algorithm_family
+
+    @algorithm_family.setter
+    def algorithm_family(self, algorithm_family: Optional[str]) -> None:
+        self._algorithm_family = algorithm_family
+
+    @property
+    @serializable.xml_sequence(3)
     def parameter_set_identifier(self) -> Optional[str]:
         """
         An identifier for the parameter set of the cryptographic algorithm. Examples: in AES128, '128' identifies the
@@ -409,7 +424,7 @@ class AlgorithmProperties:
         self._parameter_set_identifier = parameter_set_identifier
 
     @property
-    @serializable.xml_sequence(3)
+    @serializable.xml_sequence(4)
     def curve(self) -> Optional[str]:
         """
         The specific underlying Elliptic Curve (EC) definition employed which is an indicator of the level of security
@@ -427,7 +442,18 @@ class AlgorithmProperties:
         self._curve = curve
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(5)
+    def elliptic_curve(self) -> Optional[str]:
+        """The standardized identifier of the elliptic curve used by the algorithm."""
+        return self._elliptic_curve
+
+    @elliptic_curve.setter
+    def elliptic_curve(self, elliptic_curve: Optional[str]) -> None:
+        self._elliptic_curve = elliptic_curve
+
+    @property
+    @serializable.xml_sequence(6)
     def execution_environment(self) -> Optional[CryptoExecutionEnvironment]:
         """
         The target and execution environment in which the algorithm is implemented in.
@@ -442,7 +468,7 @@ class AlgorithmProperties:
         self._execution_environment = execution_environment
 
     @property
-    @serializable.xml_sequence(4)
+    @serializable.xml_sequence(7)
     def implementation_platform(self) -> Optional[CryptoImplementationPlatform]:
         """
         The target platform for which the algorithm is implemented. The implementation can be 'generic', running on
@@ -462,7 +488,7 @@ class AlgorithmProperties:
     @serializable.view(SchemaVersion1Dot6)
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, child_name='certificationLevel')
-    @serializable.xml_sequence(5)
+    @serializable.xml_sequence(8)
     def certification_levels(self) -> 'SortedSet[CryptoCertificationLevel]':
         """
         The certification that the implementation of the cryptographic algorithm has received, if any. Certifications
@@ -478,7 +504,7 @@ class AlgorithmProperties:
         self._certification_levels = SortedSet(certification_levels)
 
     @property
-    @serializable.xml_sequence(6)
+    @serializable.xml_sequence(9)
     def mode(self) -> Optional[CryptoMode]:
         """
         The mode of operation in which the cryptographic algorithm (block cipher) is used.
@@ -493,7 +519,7 @@ class AlgorithmProperties:
         self._mode = mode
 
     @property
-    @serializable.xml_sequence(8)
+    @serializable.xml_sequence(10)
     def padding(self) -> Optional[CryptoPadding]:
         """
         The padding scheme that is used for the cryptographic algorithm.
@@ -509,7 +535,7 @@ class AlgorithmProperties:
 
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, child_name='cryptoFunction')
-    @serializable.xml_sequence(9)
+    @serializable.xml_sequence(11)
     def crypto_functions(self) -> 'SortedSet[CryptoFunction]':
         """
         The cryptographic functions implemented by the cryptographic algorithm.
@@ -524,7 +550,7 @@ class AlgorithmProperties:
         self._crypto_functions = SortedSet(crypto_functions)
 
     @property
-    @serializable.xml_sequence(10)
+    @serializable.xml_sequence(12)
     def classical_security_level(self) -> Optional[int]:
         """
         The classical security level that a cryptographic algorithm provides (in bits).
@@ -539,7 +565,7 @@ class AlgorithmProperties:
         self._classical_security_level = classical_security_level
 
     @property
-    @serializable.xml_sequence(11)
+    @serializable.xml_sequence(13)
     def nist_quantum_security_level(self) -> Optional[int]:
         """
         The NIST security strength category as defined in
@@ -564,9 +590,10 @@ class AlgorithmProperties:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.primitive, self._parameter_set_identifier, self.curve, self.execution_environment,
-            self.implementation_platform, _ComparableTuple(self.certification_levels), self.mode, self.padding,
-            _ComparableTuple(self.crypto_functions), self.classical_security_level, self.nist_quantum_security_level,
+            self.primitive, self.algorithm_family, self.parameter_set_identifier, self.curve, self.elliptic_curve,
+            self.execution_environment, self.implementation_platform, _ComparableTuple(self.certification_levels),
+            self.mode, self.padding, _ComparableTuple(self.crypto_functions), self.classical_security_level,
+            self.nist_quantum_security_level,
         ))
 
     def __eq__(self, other: object) -> bool:
