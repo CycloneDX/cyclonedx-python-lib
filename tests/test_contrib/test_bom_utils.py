@@ -188,3 +188,20 @@ class TestBomDependencyGraphFlatMerger(TestCase):
             }, bom.dependencies)
         self.assertIs(bom_dependencies, bom.dependencies)
         self.assertSetEqual(bom_dependencies, bom.dependencies)
+
+    def test_flatten_merge_preserves_provides(self) -> None:
+        ref_b = BomRef('B')
+        ref_c = BomRef('C')
+        bom = Bom(dependencies=[
+            Dependency(ref_b, provides=[Dependency(ref_c)]),
+            Dependency(ref_c),
+        ])
+        bom_dependencies = bom.dependencies
+        merger = BomDependencyGraphFlatMerger(bom)
+        with merger:
+            flat = {d.ref.value: d for d in bom.dependencies}
+            self.assertIn('B', flat)
+            self.assertIn('C', flat)
+            self.assertEqual({ref_c}, flat['B'].provides_as_bom_refs())
+            self.assertEqual(set(), flat['C'].provides_as_bom_refs())
+        self.assertIs(bom_dependencies, bom.dependencies)
