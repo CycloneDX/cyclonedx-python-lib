@@ -31,7 +31,6 @@ from cyclonedx.builder.this import this_component, this_tool
 from cyclonedx.model import (
     AttachedText,
     Copyright,
-    DataClassification,
     DataFlow,
     Encoding,
     ExternalReference,
@@ -106,7 +105,7 @@ from cyclonedx.model.license import (
 )
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
 from cyclonedx.model.release_note import ReleaseNotes
-from cyclonedx.model.service import Service
+from cyclonedx.model.service import Data, DataGovernance, OrganizationOrIndividualType, Service
 from cyclonedx.model.tool import Tool, ToolRepository
 from cyclonedx.model.vulnerability import (
     BomTarget,
@@ -626,7 +625,19 @@ def get_bom_with_services_complex() -> Bom:
                 XsUri('/api/thing/2')
             ],
             authenticated=False, x_trust_boundary=True, data=[
-                DataClassification(flow=DataFlow.OUTBOUND, classification='public')
+                Data(
+                    flow=DataFlow.OUTBOUND,
+                    classification='public',
+                    name='Credit card reporting',
+                    description='Credit card information exchanged between the web app and the database',
+                    governance=DataGovernance(
+                        custodians=[OrganizationOrIndividualType(organization=get_org_entity_1())],
+                        stewards=[OrganizationOrIndividualType(individual=get_org_contact_1())],
+                        owners=[OrganizationOrIndividualType(organization=get_org_entity_1())],
+                    ),
+                    source=[XsUri('https://0.0.0.0/source')],
+                    destination=[XsUri('https://0.0.0.0/destination')],
+                )
             ],
             licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[
@@ -654,7 +665,7 @@ def get_bom_with_nested_services() -> Bom:
                 XsUri('/api/thing/2')
             ],
             authenticated=False, x_trust_boundary=True, data=[
-                DataClassification(flow=DataFlow.OUTBOUND, classification='public')
+                Data(flow=DataFlow.OUTBOUND, classification='public')
             ],
             licenses=[DisjunctiveLicense(name='Commercial')],
             external_references=[

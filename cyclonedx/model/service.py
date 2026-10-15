@@ -25,13 +25,16 @@ This set of classes represents the data that is possible about known Services.
 
 
 from collections.abc import Iterable
+from json import loads as json_loads
 from typing import Any, Optional, Union
+from xml.etree.ElementTree import Element as XmlElement, SubElement  # nosec B405
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..schema import SchemaVersion
 from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
@@ -39,12 +42,459 @@ from ..schema.schema import (
     SchemaVersion1Dot6,
     SchemaVersion1Dot7,
 )
-from . import DataClassification, ExternalReference, Property, XsUri
+from . import DataClassification, DataFlow, ExternalReference, Property, XsUri
 from .bom_ref import BomRef
-from .contact import OrganizationalEntity
+from .contact import OrganizationalContact, OrganizationalEntity
 from .dependency import Dependable
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .release_note import ReleaseNotes
+
+
+@serializable.serializable_class
+class OrganizationOrIndividualType:
+    """
+    This is our internal representation of the organizationOrIndividualType complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_organizationOrIndividualType
+    """
+
+    def __init__(
+        self, *,
+        organization: Optional[OrganizationalEntity] = None,
+        individual: Optional[OrganizationalContact] = None,
+    ) -> None:
+        self.organization = organization
+        self.individual = individual
+
+    @property
+    @serializable.xml_sequence(1)
+    @serializable.xml_name('organization')
+    def organization(self) -> Optional[OrganizationalEntity]:
+        return self._organization
+
+    @organization.setter
+    def organization(self, organization: Optional[OrganizationalEntity]) -> None:
+        self._organization = organization
+
+    @property
+    @serializable.json_name('contact')
+    @serializable.xml_sequence(2)
+    @serializable.xml_name('individual')
+    def individual(self) -> Optional[OrganizationalContact]:
+        return self._individual
+
+    @individual.setter
+    def individual(self, individual: Optional[OrganizationalContact]) -> None:
+        self._individual = individual
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.organization, self.individual
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, OrganizationOrIndividualType):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, OrganizationOrIndividualType):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+
+@serializable.serializable_class
+class DataGovernance:
+    """
+    This is our internal representation of the dataGovernance complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_dataGovernance
+    """
+
+    def __init__(
+        self, *,
+        custodians: Optional[Iterable[OrganizationOrIndividualType]] = None,
+        stewards: Optional[Iterable[OrganizationOrIndividualType]] = None,
+        owners: Optional[Iterable[OrganizationOrIndividualType]] = None,
+    ) -> None:
+        self.custodians = custodians or []
+        self.stewards = stewards or []
+        self.owners = owners or []
+
+    @property
+    @serializable.xml_sequence(1)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'custodian')
+    def custodians(self) -> 'SortedSet[OrganizationOrIndividualType]':
+        return self._custodians
+
+    @custodians.setter
+    def custodians(self, custodians: Iterable[OrganizationOrIndividualType]) -> None:
+        self._custodians = SortedSet(custodians)
+
+    @property
+    @serializable.xml_sequence(2)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'steward')
+    def stewards(self) -> 'SortedSet[OrganizationOrIndividualType]':
+        return self._stewards
+
+    @stewards.setter
+    def stewards(self, stewards: Iterable[OrganizationOrIndividualType]) -> None:
+        self._stewards = SortedSet(stewards)
+
+    @property
+    @serializable.xml_sequence(3)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'owner')
+    def owners(self) -> 'SortedSet[OrganizationOrIndividualType]':
+        return self._owners
+
+    @owners.setter
+    def owners(self, owners: Iterable[OrganizationOrIndividualType]) -> None:
+        self._owners = SortedSet(owners)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            _ComparableTuple(self.custodians), _ComparableTuple(self.stewards), _ComparableTuple(self.owners)
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, DataGovernance):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, DataGovernance):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+
+class Data:
+    """
+    This is our internal representation of the ``serviceData`` complex type within the CycloneDX standard.
+
+    .. note::
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_service
+    """
+
+    def __init__(
+        self, *,
+        flow: DataFlow,
+        classification: str,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        governance: Optional[DataGovernance] = None,
+        source: Optional[Iterable[XsUri]] = None,
+        destination: Optional[Iterable[XsUri]] = None
+    ) -> None:
+        self.flow = flow
+        self.classification = classification
+        self.name = name
+        self.description = description
+        self.governance = governance
+        self.source = source or []
+        self.destination = destination or []
+
+    @property
+    def flow(self) -> DataFlow:
+        """
+        Specifies the flow direction of the data. Direction is relative to the service.
+
+        Returns:
+            `DataFlow`
+        """
+        return self._flow
+
+    @flow.setter
+    def flow(self, flow: DataFlow) -> None:
+        self._flow = flow
+
+    @property
+    def classification(self) -> str:
+        """
+        Data classification tags data according to its type, sensitivity, and value if altered, stolen, or destroyed.
+
+        Returns:
+            `str`
+        """
+        return self._classification
+
+    @classification.setter
+    def classification(self, classification: str) -> None:
+        self._classification = classification
+
+    @property
+    def name(self) -> Optional[str]:
+        """
+        Name for the defined data.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        self._name = name
+
+    @property
+    def description(self) -> Optional[str]:
+        """
+        Short description of the data content and usage.
+
+        Returns:
+            `str` if set else `None`
+        """
+        return self._description
+
+    @description.setter
+    def description(self, description: Optional[str]) -> None:
+        self._description = description
+
+    @property
+    def governance(self) -> Optional[DataGovernance]:
+        """
+        Data governance information.
+
+        Returns:
+            `DataGovernance` if set else `None`
+        """
+        return self._governance
+
+    @governance.setter
+    def governance(self, governance: Optional[DataGovernance]) -> None:
+        self._governance = governance
+
+    @property
+    def source(self) -> 'SortedSet[XsUri]':
+        """
+        The URI, URL, or BOM-Link of the components or services the data came in from.
+
+        Returns:
+            Set of `XsUri`
+        """
+        return self._source
+
+    @source.setter
+    def source(self, source: Iterable[XsUri]) -> None:
+        self._source = SortedSet(source)
+
+    @property
+    def destination(self) -> 'SortedSet[XsUri]':
+        """
+        The URI, URL, or BOM-Link of the components or services the data is sent to.
+
+        Returns:
+            Set of `XsUri`
+        """
+        return self._destination
+
+    @destination.setter
+    def destination(self, destination: Iterable[XsUri]) -> None:
+        self._destination = SortedSet(destination)
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((
+            self.flow, self.classification, self.name, self.description, self.governance,
+            _ComparableTuple(self.source), _ComparableTuple(self.destination)
+        ))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Data):
+            return self.__comparable_tuple() == other.__comparable_tuple()
+        return False
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, Data):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<Data flow={self.flow}, classification={self.classification}>'
+
+
+class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    @staticmethod
+    def __supports_service_data(view: Any) -> bool:
+        try:
+            return view is not None and view().schema_version_enum >= SchemaVersion.V1_5
+        except Exception:  # pragma: no cover
+            return False
+
+    @classmethod
+    def json_normalize(cls, o: 'SortedSet[Data]', *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> Optional[list[Any]]:
+        if not o:
+            return None
+        # CDX 1.5+ supports the full serviceData type; 1.2–1.4 only supports
+        # the deprecated dataClassification (flow + classification string only).
+        use_service_data = cls.__supports_service_data(view)
+        result = []
+        for d in o:
+            if use_service_data:
+                item: dict[str, Any] = {
+                    'flow': d.flow.value,
+                    'classification': d.classification,
+                }
+                if d.name is not None:
+                    item['name'] = d.name
+                if d.description is not None:
+                    item['description'] = d.description
+                if d.governance is not None:
+                    item['governance'] = json_loads(
+                        d.governance.as_json(view_=view)  # type:ignore[attr-defined]
+                    )
+                if d.source:
+                    item['source'] = [str(u) for u in d.source]
+                if d.destination:
+                    item['destination'] = [str(u) for u in d.destination]
+            else:
+                # CDX 1.2–1.4: only flow + classification
+                item = {
+                    'flow': d.flow.value,
+                    'classification': d.classification,
+                }
+            result.append(item)
+        return result
+
+    @classmethod
+    def json_denormalize(cls, o: list[dict[str, Any]], **__: Any) -> 'SortedSet[Data]':
+        result: SortedSet[Data] = SortedSet()
+        for item in o:
+            governance = None
+            if 'governance' in item:
+                governance = DataGovernance.from_json(  # type:ignore[attr-defined]
+                    item['governance'])
+            result.add(Data(
+                flow=DataFlow(item['flow']),
+                classification=item['classification'],
+                name=item.get('name'),
+                description=item.get('description'),
+                governance=governance,
+                source=[XsUri(u) for u in item.get('source', [])],
+                destination=[XsUri(u) for u in item.get('destination', [])],
+            ))
+        return result
+
+    @classmethod
+    def _xml_single_dataflow(
+        cls, d: 'Data', *,
+        pfx: str,
+        view: Optional[type[serializable.ViewType]],
+        xmlns: Optional[str],
+    ) -> XmlElement:
+        """Build a CDX 1.5+ ``<dataflow>`` element for a single Data item."""
+        dataflow_elem = XmlElement(f'{pfx}dataflow')
+        if d.name is not None:
+            dataflow_elem.set(f'{pfx}name', d.name)
+        if d.description is not None:
+            dataflow_elem.set(f'{pfx}description', d.description)
+        dataflow_elem.append(
+            DataClassification(
+                flow=d.flow, classification=d.classification
+            ).as_xml(  # type:ignore[attr-defined]
+                view_=view, as_string=False, element_name='classification', xmlns=xmlns
+            )
+        )
+        if d.governance is not None:
+            gov_elem = d.governance.as_xml(  # type:ignore[attr-defined]
+                view_=view, as_string=False, element_name='governance', xmlns=xmlns)
+            dataflow_elem.append(gov_elem)
+        if d.source:
+            src_elem = SubElement(dataflow_elem, f'{pfx}source')
+            for u in d.source:
+                SubElement(src_elem, f'{pfx}url').text = str(u)
+        if d.destination:
+            dst_elem = SubElement(dataflow_elem, f'{pfx}destination')
+            for u in d.destination:
+                SubElement(dst_elem, f'{pfx}url').text = str(u)
+        return dataflow_elem
+
+    @classmethod
+    def xml_normalize(cls, o: 'SortedSet[Data]', *,
+                      element_name: str,
+                      view: Optional[type[serializable.ViewType]],
+                      xmlns: Optional[str],
+                      **__: Any) -> Optional[XmlElement]:
+        if not o:
+            return None
+        # element_name is already namespace-qualified by py_serializable when xmlns is set.
+        # Build a prefix for child elements we create manually.
+        pfx = f'{{{xmlns}}}' if xmlns else ''
+        wrapper = XmlElement(element_name)
+        # CDX 1.5+ uses <dataflow> elements; 1.2–1.4 uses the deprecated flat <classification>
+        use_dataflow = cls.__supports_service_data(view)
+        for d in o:
+            if use_dataflow:
+                wrapper.append(cls._xml_single_dataflow(d, pfx=pfx, view=view, xmlns=xmlns))
+            else:
+                # CDX 1.2–1.4 (deprecated): <classification flow="...">text</classification>
+                wrapper.append(
+                    DataClassification(
+                        flow=d.flow, classification=d.classification
+                    ).as_xml(  # type:ignore[attr-defined]
+                        view_=view, as_string=False, element_name='classification', xmlns=xmlns
+                    )
+                )
+        return wrapper
+
+    @classmethod
+    def xml_denormalize(cls, o: XmlElement, *,
+                        default_ns: Optional[str],
+                        **__: Any) -> 'SortedSet[Data]':
+        result: SortedSet[Data] = SortedSet()
+        ns = f'{{{default_ns}}}' if default_ns else ''
+        for elem in o:
+            tag = elem.tag.replace(f'{{{default_ns}}}', '') if default_ns else elem.tag
+            if tag == 'dataflow':
+                # CDX 1.5+ <dataflow> element
+                cls_elem = elem.find(f'{ns}classification')
+                # flow attribute may be namespace-qualified or plain
+                flow_val = (cls_elem.get(f'{ns}flow') or cls_elem.get('flow')) if cls_elem is not None else None
+                classification_text = cls_elem.text or '' if cls_elem is not None else ''
+                flow = DataFlow(flow_val) if flow_val else DataFlow.UNKNOWN
+                gov_elem = elem.find(f'{ns}governance')
+                governance = None
+                if gov_elem is not None:
+                    governance = DataGovernance.from_xml(  # type:ignore[attr-defined]
+                        gov_elem, default_ns)
+                src_elem = elem.find(f'{ns}source')
+                source = [XsUri(u.text or '') for u in src_elem.findall(f'{ns}url')] if src_elem is not None else []
+                dst_elem = elem.find(f'{ns}destination')
+                destination = [XsUri(u.text or '')
+                               for u in dst_elem.findall(f'{ns}url')] if dst_elem is not None else []
+                # name and description may be namespace-qualified or plain attributes
+                name = elem.get(f'{ns}name') or elem.get('name')
+                description = elem.get(f'{ns}description') or elem.get('description')
+                result.add(Data(
+                    flow=flow,
+                    classification=classification_text,
+                    name=name,
+                    description=description,
+                    governance=governance,
+                    source=source,
+                    destination=destination,
+                ))
+            elif tag == 'classification':
+                # CDX 1.2–1.4 deprecated <classification flow="...">text</classification>
+                flow_val = elem.get(f'{ns}flow') or elem.get('flow')
+                result.add(Data(
+                    flow=DataFlow(flow_val) if flow_val else DataFlow.UNKNOWN,
+                    classification=elem.text or '',
+                ))
+        return result
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
@@ -67,7 +517,7 @@ class Service(Dependable):
         endpoints: Optional[Iterable[XsUri]] = None,
         authenticated: Optional[bool] = None,
         x_trust_boundary: Optional[bool] = None,
-        data: Optional[Iterable[DataClassification]] = None,
+        data: Optional[Iterable['Data']] = None,
         licenses: Optional[Iterable[License]] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
         properties: Optional[Iterable[Property]] = None,
@@ -251,20 +701,19 @@ class Service(Dependable):
     #     ... # since CDX1.5
 
     @property
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'classification')
+    @serializable.type_mapping(_DataRepositorySerializationHelper)
     @serializable.xml_sequence(10)
-    def data(self) -> 'SortedSet[DataClassification]':
+    def data(self) -> 'SortedSet[Data]':
         """
-        Specifies the data classification.
+        Specifies the data flow and classification.
 
         Returns:
-            Set of `DataClassification`
+            Set of `Data`
         """
-        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._data
 
     @data.setter
-    def data(self, data: Iterable[DataClassification]) -> None:
+    def data(self, data: Iterable['Data']) -> None:
         self._data = SortedSet(data)
 
     @property
@@ -277,7 +726,6 @@ class Service(Dependable):
         Returns:
             Set of `LicenseChoice`
         """
-        # TODO since CDX1.5 also supports `dataflow`, not only `DataClassification`
         return self._licenses
 
     @licenses.setter
