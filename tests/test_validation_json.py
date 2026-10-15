@@ -25,7 +25,7 @@ from ddt import data, ddt, idata, unpack
 
 from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.schema import OutputFormat, SchemaVersion
-from cyclonedx.validation.json import JsonStrictValidator, JsonValidator
+from cyclonedx.validation.json import JsonStrictValidator, JsonValidationError, JsonValidator
 from tests import OWN_DATA_DIRECTORY, SCHEMA_TESTDATA_DIRECTORY, DpTuple
 
 UNSUPPORTED_SCHEMA_VERSIONS = {SchemaVersion.V1_0, SchemaVersion.V1_1, }
@@ -92,6 +92,11 @@ class TestJsonValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNotNone(validation_error)
         self.assertIsNotNone(validation_error.data)
+        self.assertIsInstance(validation_error, JsonValidationError)
+        self.assertIsInstance(validation_error.message, str)
+        self.assertIsInstance(validation_error.path, tuple)
+        self.assertLessEqual(len(validation_error.message), 257,
+                             'message must be bounded (≤256 chars + ellipsis)')
 
     @idata(chain(
         _dp_sv_tf(False),
@@ -111,6 +116,11 @@ class TestJsonValidator(TestCase):
         self.assertGreater(len(validation_errors), 0)
         for validation_error in validation_errors:
             self.assertIsNotNone(validation_error.data)
+            self.assertIsInstance(validation_error, JsonValidationError)
+            self.assertIsInstance(validation_error.message, str)
+            self.assertIsInstance(validation_error.path, tuple)
+            self.assertLessEqual(len(validation_error.message), 257,
+                                 'message must be bounded (≤256 chars + ellipsis)')
 
 
 @ddt
@@ -151,6 +161,11 @@ class TestJsonStrictValidator(TestCase):
             self.skipTest('MissingOptionalDependencyException')
         self.assertIsNotNone(validation_error)
         self.assertIsNotNone(validation_error.data)
+        self.assertIsInstance(validation_error, JsonValidationError)
+        self.assertIsInstance(validation_error.message, str)
+        self.assertIsInstance(validation_error.path, tuple)
+        self.assertLessEqual(len(validation_error.message), 257,
+                             'message must be bounded (≤256 chars + ellipsis)')
 
     @idata(chain(
         _dp_sv_tf(False),
@@ -170,3 +185,8 @@ class TestJsonStrictValidator(TestCase):
         self.assertGreater(len(validation_errors), 0)
         for validation_error in validation_errors:
             self.assertIsNotNone(validation_error.data)
+            self.assertIsInstance(validation_error, JsonValidationError)
+            self.assertIsInstance(validation_error.message, str)
+            self.assertIsInstance(validation_error.path, tuple)
+            self.assertLessEqual(len(validation_error.message), 257,
+                                 'message must be bounded (≤256 chars + ellipsis)')
