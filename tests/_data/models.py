@@ -42,6 +42,7 @@ from cyclonedx.model import (
     Property,
     XsUri,
 )
+from cyclonedx.model.annotation import Annotation, Annotator
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import (
@@ -1679,6 +1680,27 @@ def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
 # ---
 
 
+def get_bom_with_annotations() -> Bom:
+    annotator = Annotator(
+        organization=OrganizationalEntity(
+            name='Acme, Inc.',
+            urls=[XsUri('https://example.com')]
+        )
+    )
+
+    annotation = Annotation(
+        bom_ref='annotation-1',
+        subjects=[BomRef('subject-1')],
+        annotator=annotator,
+        timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        text='This is an annotation.'
+    )
+
+    return _make_bom(annotations=[annotation])
+
+
+# ---
+
 all_get_bom_funct_valid = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid')
@@ -1726,4 +1748,5 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_distribution_constraints,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
+    get_bom_with_annotations,
 }

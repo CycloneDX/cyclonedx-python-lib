@@ -43,6 +43,7 @@ from ..schema.schema import (
 )
 from ..serialization import UrnUuidHelper
 from . import _BOM_LINK_PREFIX, ExternalReference, Property
+from .annotation import Annotation
 from .bom_ref import BomRef
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
@@ -444,6 +445,7 @@ class Bom:
         vulnerabilities: Optional[Iterable[Vulnerability]] = None,
         properties: Optional[Iterable[Property]] = None,
         definitions: Optional[Definitions] = None,
+        annotations: Optional[Iterable[Annotation]] = None,
     ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
@@ -461,6 +463,7 @@ class Bom:
         self.dependencies = dependencies or []
         self.properties = properties or []
         self.definitions = definitions or Definitions()
+        self.annotations = annotations or []
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -655,16 +658,25 @@ class Bom:
     def vulnerabilities(self, vulnerabilities: Iterable[Vulnerability]) -> None:
         self._vulnerabilities = SortedSet(vulnerabilities)
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(9)
-    # def annotations(self) -> ...:
-    #     ... # TODO Since CDX 1.5
-    #
-    # @annotations.setter
-    # def annotations(self, ...) -> None:
-    #     ...  # TODO Since CDX 1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'annotation')
+    @serializable.xml_sequence(90)
+    def annotations(self) -> 'SortedSet[Annotation]':
+        """
+        Comments, notes, explanations, or similar textual content which provides additional context
+        to the object(s) being annotated.
+
+        Returns:
+             Set of `Annotation`
+        """
+        return self._annotations
+
+    @annotations.setter
+    def annotations(self, annotations: Iterable[Annotation]) -> None:
+        self._annotations = SortedSet(annotations)
 
     # @property
     # ...
