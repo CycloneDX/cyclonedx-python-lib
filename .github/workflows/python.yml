@@ -21,7 +21,7 @@ permissions: {}
 
 env:
   REPORTS_DIR: CI_reports
-  PYTHON_VERSION_DEFAULT: "3.14"
+  PYTHON_VERSION_DEFAULT: "3.15"
   POETRY_VERSION: "1.8.1"
   TESTS_REPORTS_ARTIFACT: tests-reports
 
@@ -140,7 +140,7 @@ jobs:
         include:
           - # test with the latest dependencies
             os: ubuntu-latest
-            python-version: '3.14'
+            python-version: '3.15'
             toxenv-factors: '-current'
           - # test with the lowest dependencies
             os: ubuntu-latest
@@ -180,7 +180,8 @@ jobs:
           - macos-latest
           - windows-latest
         python-version:
-          - "3.14" # highest supported
+          - "3.15" # highest supported
+          - "3.14"
           - "3.13"
           - "3.12"
           - "3.11"
@@ -288,7 +289,7 @@ jobs:
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
-          python-version: '>=3.9 <=3.14'  # supported version range
+          python-version: '>=3.9 <=3.15'  # supported version range
       - name: Validate Python Environment
         shell: python
         run: |
