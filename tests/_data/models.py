@@ -171,8 +171,10 @@ def get_crypto_properties_algorithm() -> CryptoProperties:
         asset_type=CryptoAssetType.ALGORITHM,
         algorithm_properties=AlgorithmProperties(
             primitive=CryptoPrimitive.KEM,
+            algorithm_family='ML-KEM',
             parameter_set_identifier='a-parameter-set-id',
             curve='9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj',
+            elliptic_curve='nist/P-256',
             execution_environment=CryptoExecutionEnvironment.SOFTWARE_PLAIN_RAM,
             implementation_platform=CryptoImplementationPlatform.GENERIC,
             certification_levels=[

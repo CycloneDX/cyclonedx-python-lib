@@ -4,6 +4,7 @@
       "bom-ref": "8182921e-0588-472e-b8f9-9c527c68f067",
       "cryptoProperties": {
         "algorithmProperties": {
+          "algorithmFamily": "ML-KEM",
           "certificationLevel": [
             "fips140-1-l1",
             "fips140-2-l3",
@@ -15,6 +16,7 @@
             "unknown"
           ],
           "curve": "9n8y2oxty3ao83n8qc2g2x3qcw4jt4wj",
+          "ellipticCurve": "nist/P-256",
           "executionEnvironment": "software-plain-ram",
           "implementationPlatform": "generic",
           "mode": "ecb",
