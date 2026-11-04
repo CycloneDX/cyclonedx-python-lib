@@ -24,8 +24,6 @@ import sys
 from typing import Any, Optional
 from uuid import UUID
 
-# See https://github.com/package-url/packageurl-python/issues/65
-from packageurl import PackageURL
 from py_serializable.helpers import BaseHelper
 
 if sys.version_info >= (3, 13):
@@ -55,25 +53,6 @@ class BomRefHelper(BaseHelper):
     @classmethod
     def deserialize(cls, o: Any) -> BomRef:
         return BomRef.deserialize(o)
-
-
-class PackageUrl(BaseHelper):
-
-    @classmethod
-    def serialize(cls, o: Any, ) -> str:
-        if isinstance(o, PackageURL):
-            return str(o.to_string())
-        raise SerializationOfUnexpectedValueException(
-            f'Attempt to serialize a non-PackageURL: {o!r}')
-
-    @classmethod
-    def deserialize(cls, o: Any) -> PackageURL:
-        try:
-            return PackageURL.from_string(purl=str(o))
-        except ValueError as err:
-            raise CycloneDxDeserializationException(
-                f'PURL string supplied does not parse: {o!r}'
-            ) from err
 
 
 class UrnUuidHelper(BaseHelper):
