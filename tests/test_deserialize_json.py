@@ -27,6 +27,7 @@ from ddt import data, ddt, named_data
 
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.license import DisjunctiveLicense, LicenseExpression, LicenseRepository
+from cyclonedx.output import make_outputter
 from cyclonedx.schema import OutputFormat, SchemaVersion
 from tests import OWN_DATA_DIRECTORY, DeepCompareMixin, SnapshotMixin, mksname
 from tests._data.models import (
@@ -52,6 +53,15 @@ class TestDeserializeJson(TestCase, SnapshotMixin, DeepCompareMixin):
         bom = Bom.from_json(json)
         self.assertBomDeepEqual(expected, bom,
                                 fuzzy_deps=get_bom in all_get_bom_funct_with_incomplete_deps)
+
+    def test_crypto_algorithm_identifiers_round_trip(self) -> None:
+        snapshot_name = mksname('get_bom_v1_6_with_crypto_algorithm', _LATEST_SCHEMA, OutputFormat.JSON)
+        bom = Bom.from_json(json_loads(self.readSnapshot(snapshot_name)))
+        output = json_loads(make_outputter(bom, OutputFormat.JSON, _LATEST_SCHEMA).output_as_string())
+        properties = output['components'][0]['cryptoProperties']['algorithmProperties']
+
+        self.assertEqual('ML-KEM', properties['algorithmFamily'])
+        self.assertEqual('nist/P-256', properties['ellipticCurve'])
 
     def test_empty_supplier(self) -> None:
         """Regression for issue #600
