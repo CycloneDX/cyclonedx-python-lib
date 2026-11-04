@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="external-lib-1.0.0" isExternal="true">
+      <name>external-lib</name>
+      <version>1.0.0</version>
+      <scope>required</scope>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="external-lib-1.0.0"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+  <citations>
+    <citation bom-ref="citation-pointers">
+      <pointers>
+        <pointer>/components/0/name</pointer>
+        <pointer>/components/0/version</pointer>
+      </pointers>
+      <timestamp>2025-10-01T12:00:00+00:00</timestamp>
+      <attributedTo>external-lib-1.0.0</attributedTo>
+      <note>Name and version supplied by the component author.</note>
+    </citation>
+    <citation>
+      <expressions>
+        <expression>$.components[0].scope</expression>
+      </expressions>
+      <timestamp>2025-10-02T08:30:00+00:00</timestamp>
+      <process>some-formula-step</process>
+    </citation>
+  </citations>
+</bom>
