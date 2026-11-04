@@ -19,17 +19,14 @@
 from collections.abc import Generator, Iterable
 from datetime import datetime
 from enum import Enum
-from itertools import chain
 from typing import TYPE_CHECKING, Optional, Union
 from uuid import UUID, uuid4
-from warnings import warn
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from .._internal.time import get_now_utc as _get_now_utc
-from ..exception.model import LicenseExpressionAlongWithOthersException, UnknownComponentDependencyException
 from ..schema.deprecation import SchemaDeprecationWarning1Dot6
 from ..schema.schema import (
     SchemaVersion1Dot0,
@@ -48,7 +45,7 @@ from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
 from .definition import Definitions
 from .dependency import Dependable, Dependency
-from .license import License, LicenseExpression, LicenseRepository, _LicenseRepositorySerializationHelper
+from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .lifecycle import Lifecycle, LifecycleRepository, _LifecycleRepositoryHelper
 from .service import Service
 from .tool import Tool, ToolRepository, _ToolRepositoryHelper
