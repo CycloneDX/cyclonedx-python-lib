@@ -112,6 +112,7 @@ class TestModelComponent(TestCase):
         self.assertIsNone(c.release_notes)
         self.assertEqual(len(c.components), 0)
         self.assertEqual(len(c.get_all_nested_components(include_self=True)), 1)
+        self.assertEqual(len(list(c.iter_all_nested_components(include_self=True))), 1)
 
     def test_multiple_basic_components(self) -> None:
         c1 = Component(name='test-component')
@@ -264,6 +265,46 @@ class TestModelComponent(TestCase):
         expected_components = reorder(components, expected_order)
         self.assertListEqual(sorted_components, expected_components)
 
+    def test_is_external_default_value(self) -> None:
+        c = Component(name='test-component')
+        self.assertIsNone(c.is_external)
+
+    def test_is_external_set_true(self) -> None:
+        c = Component(name='test-component', is_external=True)
+        self.assertTrue(c.is_external)
+
+    def test_is_external_set_false(self) -> None:
+        c = Component(name='test-component', is_external=False)
+        self.assertFalse(c.is_external)
+
+    def test_is_external_equality_same(self) -> None:
+        c1 = Component(name='test-component', is_external=True)
+        c2 = Component(name='test-component', is_external=True)
+        self.assertEqual(c1, c2)
+
+    def test_is_external_equality_different(self) -> None:
+        c1 = Component(name='test-component', is_external=True)
+        c2 = Component(name='test-component', is_external=False)
+        c3 = Component(name='test-component')
+        self.assertNotEqual(c1, c2)
+        self.assertNotEqual(c1, c3)
+        self.assertNotEqual(c2, c3)
+
+    def test_is_external_sorting(self) -> None:
+        # all comparable fields except is_external are equal across these components,
+        # so is_external (the last field in the comparable tuple) decides the order.
+        # ComparableTuple treats None as greater than any value,
+        # so order is: False < True < None
+        expected_order = [1, 0, 2]
+        components = [
+            Component(name='component-a', is_external=True),
+            Component(name='component-a', is_external=False),
+            Component(name='component-a'),  # is_external=None
+        ]
+        sorted_components = sorted(components)
+        expected_components = reorder(components, expected_order)
+        self.assertListEqual(sorted_components, expected_components)
+
     def test_nested_components_1(self) -> None:
         comp_b = Component(name='comp_b')
         comp_c = Component(name='comp_c')
@@ -272,6 +313,8 @@ class TestModelComponent(TestCase):
         self.assertEqual(1, len(comp_b.components))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=True)))
         self.assertEqual(1, len(comp_b.get_all_nested_components(include_self=False)))
+        self.assertEqual(2, len(list(comp_b.iter_all_nested_components(include_self=True))))
+        self.assertEqual(1, len(list(comp_b.iter_all_nested_components(include_self=False))))
 
     def test_nested_components_2(self) -> None:
         comp_a = Component(name='comp_a')
@@ -283,6 +326,8 @@ class TestModelComponent(TestCase):
         self.assertEqual(2, len(comp_b.components))
         self.assertEqual(3, len(comp_b.get_all_nested_components(include_self=True)))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=False)))
+        self.assertEqual(3, len(list(comp_b.iter_all_nested_components(include_self=True))))
+        self.assertEqual(2, len(list(comp_b.iter_all_nested_components(include_self=False))))
 
 
 class TestModelDiff(TestCase):
