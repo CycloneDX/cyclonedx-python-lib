@@ -53,10 +53,9 @@ jobs:
           persist-credentials: false
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
-          architecture: 'x64'
       - name: Install poetry
         # see https://github.com/Gr1N/setup-poetry
         uses: Gr1N/setup-poetry@48b0f77c8c1b1b19cb962f0f00dff7b4be8f81ec  # v9
@@ -77,10 +76,9 @@ jobs:
           persist-credentials: false
       - name: Setup Python Environment
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
-          architecture: 'x64'
       - name: Install poetry
         # see https://github.com/Gr1N/setup-poetry
         uses: Gr1N/setup-poetry@48b0f77c8c1b1b19cb962f0f00dff7b4be8f81ec  # v9
@@ -110,7 +108,7 @@ jobs:
       - name: Generate GitHub App Token
         id: release-bot-token
         # see https://github.com/actions/create-github-app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1  # v3.2.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
         with:
           # see https://github.com/organizations/CycloneDX/settings/apps/cyclonedx-releases
           client-id: 3335294
@@ -134,10 +132,9 @@ jobs:
 
       - name: Setup python
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: ${{ env.PYTHON_VERSION_DEFAULT }}
-          architecture: 'x64'
       - name: Install and configure Poetry
         # Seehttps://github.com/snok/install-poetry
         uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263  # v1.4.2
@@ -155,7 +152,7 @@ jobs:
         id: release
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html
         # see https://github.com/python-semantic-release/python-semantic-release
-        uses: python-semantic-release/python-semantic-release@1a324000f2251a9e722e77b128bf72712653813f  # v10.0.2
+        uses: python-semantic-release/python-semantic-release@b700dbeb1f431a0fcc30a79f3f0869407fe07278  # v10.7.0
         with:
           git_committer_name: ${{ steps.release-bot-token.outputs.app-slug }}[bot]
           git_committer_email: ${{ steps.release-bot-user-id.outputs.user-id }}+${{ steps.release-bot-token.outputs.app-slug }}[bot]@users.noreply.github.com
@@ -167,14 +164,14 @@ jobs:
       - name: Publish package distributions to PyPI
         if: steps.release.outputs.released == 'true'
         # see https://github.com/pypa/gh-action-pypi-publish
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3
         with:
           attestations: true
 
       - name: Publish package distributions to GitHub Releases
         if: steps.release.outputs.released == 'true'
         # see https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#python-semantic-release-publish-action
-        uses: python-semantic-release/publish-action@310a9983a0ae878b29f3aac778d7c77c1db27378  # v10.5.3
+        uses: python-semantic-release/publish-action@99d4062dd393b5a7a62c5fe9ed78fb364b5674f2  # v10.7.0
         with:
           github_token: ${{ steps.release-bot-token.outputs.token }}
           tag: ${{ steps.release.outputs.tag }}
