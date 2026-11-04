@@ -43,7 +43,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialProperties,
 )
 from cyclonedx.model.issue import IssueType
-from cyclonedx.model.license import DisjunctiveLicense
+from cyclonedx.model.license import DisjunctiveLicense, Licensing
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
 from cyclonedx.model.service import DataClassification, Service
 from cyclonedx.model.vulnerability import (
@@ -87,7 +87,8 @@ from cyclonedx.model.issue import (  # isort:skip
     IssueClassification,
 )
 from cyclonedx.model.license import (  # isort:skip
-    LicenseAcknowledgement
+    LicenseAcknowledgement,
+    LicenseType,
 )
 from cyclonedx.model.vulnerability import (  # isort:skip
     VulnerabilityScoreSource,
@@ -568,6 +569,28 @@ class TestEnumLicenseAcknowledgement(_EnumTestCase):
                                acknowledgement=la,
                                ) for la in LicenseAcknowledgement
         ))])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumLicenseType(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='licenseTypeEnum']"),
+        dp_cases_from_json_schemas('definitions', 'license', 'properties', 'licensing', 'properties',
+                                   'licenseTypes', 'items'),
+        dp_cases_from_json_schemas('definitions', 'licensing', 'properties', 'licenseTypes', 'items'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(LicenseType, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(components=[Component(name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy', licenses=[
+            DisjunctiveLicense(name='dummy', licensing=Licensing(license_types=(
+                lt for lt in LicenseType
+            )))
+        ])])
         super()._test_cases_render(bom, of, sv)
 
 
