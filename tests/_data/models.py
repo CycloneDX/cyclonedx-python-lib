@@ -44,6 +44,7 @@ from cyclonedx.model import (
 )
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
 from cyclonedx.model.bom_ref import BomRef
+from cyclonedx.model.citation import Citation
 from cyclonedx.model.component import (
     Commit,
     Component,
@@ -602,6 +603,27 @@ def get_bom_with_external_references() -> Bom:
 def get_bom_with_external_component_1_7() -> Bom:
     bom = _make_bom(components=[get_component_external()])
     return bom
+
+
+def get_bom_with_citations_1_7() -> Bom:
+    component = get_component_external()
+    return _make_bom(
+        components=[component],
+        citations=[
+            Citation(
+                bom_ref='citation-pointers',
+                pointers=['/components/0/name', '/components/0/version'],
+                timestamp=datetime.fromisoformat('2025-10-01T12:00:00+00:00'),
+                attributed_to=component.bom_ref,
+                note='Name and version supplied by the component author.',
+            ),
+            Citation(
+                expressions=['$.components[0].scope'],
+                timestamp=datetime.fromisoformat('2025-10-02T08:30:00+00:00'),
+                process='some-formula-step',
+            ),
+        ],
+    )
 
 
 def get_bom_with_services_simple() -> Bom:
@@ -1719,6 +1741,7 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_multiple_licenses,
     get_bom_for_issue_497_urls,
     get_bom_with_external_component_1_7,
+    get_bom_with_citations_1_7,
     get_bom_for_issue_598_multiple_components_with_purl_qualifiers,
     get_bom_with_component_setuptools_with_v16_fields,
     get_bom_for_issue_630_empty_property,
