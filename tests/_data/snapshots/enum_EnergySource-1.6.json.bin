@@ -1,0 +1,409 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-ES:BIOFUEL",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "biofuel",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: BIOFUEL",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:COAL",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "coal",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: COAL",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:GEOTHERMAL",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "geothermal",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: GEOTHERMAL",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:HYDROPOWER",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "hydropower",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: HYDROPOWER",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:NATURAL_GAS",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "natural-gas",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: NATURAL_GAS",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:NUCLEAR",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "nuclear",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: NUCLEAR",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:OIL",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "oil",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: OIL",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:OTHER",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "other",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: OTHER",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:SOLAR",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "solar",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: SOLAR",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:UNKNOWN",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "unknown",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: UNKNOWN",
+      "type": "machine-learning-model"
+    },
+    {
+      "bom-ref": "dummy-ES:WIND",
+      "modelCard": {
+        "considerations": {
+          "environmentalConsiderations": {
+            "energyConsumptions": [
+              {
+                "activity": "training",
+                "activityEnergyCost": {
+                  "unit": "kWh",
+                  "value": 1.0
+                },
+                "energyProviders": [
+                  {
+                    "energyProvided": {
+                      "unit": "kWh",
+                      "value": 1.0
+                    },
+                    "energySource": "wind",
+                    "organization": {
+                      "name": "test-org"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "name": "EnergySource: WIND",
+      "type": "machine-learning-model"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-ES:BIOFUEL"
+    },
+    {
+      "ref": "dummy-ES:COAL"
+    },
+    {
+      "ref": "dummy-ES:GEOTHERMAL"
+    },
+    {
+      "ref": "dummy-ES:HYDROPOWER"
+    },
+    {
+      "ref": "dummy-ES:NATURAL_GAS"
+    },
+    {
+      "ref": "dummy-ES:NUCLEAR"
+    },
+    {
+      "ref": "dummy-ES:OIL"
+    },
+    {
+      "ref": "dummy-ES:OTHER"
+    },
+    {
+      "ref": "dummy-ES:SOLAR"
+    },
+    {
+      "ref": "dummy-ES:UNKNOWN"
+    },
+    {
+      "ref": "dummy-ES:WIND"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}
