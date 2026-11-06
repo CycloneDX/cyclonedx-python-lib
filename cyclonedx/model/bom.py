@@ -817,17 +817,20 @@ class Bom:
         """
         # !! deprecated function. have this as an part of the normalization process, like the BomRefDiscrimator
         # 0. Make sure all Dependable have a Dependency entry
-        # Cache existing refs to avoid registering dependencies unnecessarily
+        # Cache and track existing refs to avoid redundant linear scans in dependencies
         existing_refs = {d.ref for d in self.dependencies}
 
         if self.metadata.component and self.metadata.component.bom_ref not in existing_refs:
-            self.register_dependency(target=self.metadata.component)
+            self._dependencies.add(Dependency(ref=self.metadata.component.bom_ref))
+            existing_refs.add(self.metadata.component.bom_ref)
         for _c in self.components:
             if _c.bom_ref not in existing_refs:
-                self.register_dependency(target=_c)
+                self._dependencies.add(Dependency(ref=_c.bom_ref))
+                existing_refs.add(_c.bom_ref)
         for _s in self.services:
             if _s.bom_ref not in existing_refs:
-                self.register_dependency(target=_s)
+                self._dependencies.add(Dependency(ref=_s.bom_ref))
+                existing_refs.add(_s.bom_ref)
 
         # 1. Make sure dependencies are all in this Bom.
         component_bom_refs = {c.bom_ref for c in self._get_all_components()}
