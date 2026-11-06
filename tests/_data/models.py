@@ -1590,7 +1590,8 @@ def get_bom_with_provides() -> Bom:
         ),
         Dependency(
             ref=root_component.bom_ref,
-            dependencies=[Dependency(ref=c2.bom_ref)]
+            dependencies=[Dependency(ref=c2.bom_ref)],
+            provides=[Dependency(ref=c1.bom_ref)],
         ),
     ]
     return bom

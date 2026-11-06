@@ -785,16 +785,34 @@ class Bom:
         depends_on: Optional[Iterable[Dependable]] = None,
         provides: Optional[Iterable[Dependable]] = None,
     ) -> None:
+        """
+        Register a dependency relationship for a target.
+
+        Args:
+            target:
+                The `Dependable` target instance being registered.
+            depends_on:
+                Optional iterable of `Dependable` instances that the target depends on.
+            provides:
+                Optional iterable of `Dependable` instances that the target provides (CycloneDX 1.6+).
+
+        Returns:
+            None
+        """
         depends_on = tuple(depends_on or ())
         provides = tuple(provides or ())
-        _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
-        if _d:
-            # We use `del` by object identity to avoid ValueError from `SortedSet.discard`.
-            # Empty `BomRef` elements violate strict weak ordering which breaks `_list.remove`.
-            for i, dep in enumerate(self._dependencies):
-                if dep is _d:
-                    del self._dependencies[i]  # type: ignore[attr-defined]
-                    break
+        _idx, _d = next(
+            ((i, dep) for i, dep in enumerate(self._dependencies) if dep.ref == target.bom_ref),
+            (None, None),
+        )
+        if _d is not None and _idx is not None:
+            # We remove before mutating dependencies/provides to avoid corrupting SortedSet ordering/hash.
+            # We delete by index (`del self._dependencies[_idx]`) rather than `discard()`/`remove()`
+            # because dependencies with unset/empty `BomRef` elements may violate strict weak ordering
+            # required for binary search lookup in `SortedSet`.
+            # Note: `SortedSet.__delitem__` is supported at runtime, but sortedcontainers type stubs
+            # are incomplete for index-based deletion.
+            del self._dependencies[_idx]  # type: ignore[attr-defined]
 
             # Dependency Target already registered - but it might have new dependencies to add
             if depends_on:

@@ -23,10 +23,9 @@ from typing import Any, Optional
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
-from cyclonedx.schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
-
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import SerializationOfUnexpectedValueException
+from ..schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
 from .bom_ref import BomRef
 
 
@@ -36,8 +35,6 @@ class _DependencyRepositorySerializationHelper(serializable.helpers.BaseHelper):
     @classmethod
     def serialize(cls, o: Any) -> list[str]:
         if isinstance(o, (SortedSet, set)):
-            if not o:
-                return []
             return [str(i.ref) for i in o]
         raise SerializationOfUnexpectedValueException(
             f'Attempt to serialize a non-DependencyRepository: {o!r}')

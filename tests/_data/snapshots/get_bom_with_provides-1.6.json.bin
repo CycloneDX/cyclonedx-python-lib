@@ -16,6 +16,9 @@
       "dependsOn": [
         "C"
       ],
+      "provides": [
+        "B"
+      ],
       "ref": "A"
     },
     {

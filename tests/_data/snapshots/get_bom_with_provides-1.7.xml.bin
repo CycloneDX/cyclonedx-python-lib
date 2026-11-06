@@ -17,6 +17,7 @@
   <dependencies>
     <dependency ref="A">
       <dependency ref="C"/>
+      <provides ref="B"/>
     </dependency>
     <dependency ref="B">
       <provides ref="C"/>
