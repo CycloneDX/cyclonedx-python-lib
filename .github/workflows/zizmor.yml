@@ -32,7 +32,7 @@ jobs:
           persist-credentials: false
       - name: Run zizmor 🌈
         # see https://github.com/zizmorcore/zizmor-action
-        uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054  # v0.6.2
+        uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b  # v0.8.0
         with:
           # advanced-security: false => emit findings as workflow-command annotations (::error file=…) rather than
           # uploading a SARIF report to GitHub's Security tab.
