@@ -27,6 +27,7 @@ This set of classes represents the data that is possible about known Services.
 from collections.abc import Iterable
 from json import loads as json_loads
 from typing import Any, Optional, Union
+from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement, SubElement  # nosec B405
 
 import py_serializable as serializable
@@ -34,7 +35,10 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.model import MutuallyExclusivePropertiesException, NoPropertiesProvidedException
+from ..exception.serialization import CycloneDxDeserializationException
 from ..schema import SchemaVersion
+from ..schema.deprecation import SchemaDeprecationWarning1Dot5
 from ..schema.schema import (
     SchemaVersion1Dot3,
     SchemaVersion1Dot4,
@@ -56,7 +60,7 @@ class OrganizationOrIndividualType:
     This is our internal representation of the organizationOrIndividualType complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_organizationOrIndividualType
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.5/xml/#type_organizationOrIndividualType
     """
 
     def __init__(
@@ -64,8 +68,17 @@ class OrganizationOrIndividualType:
         organization: Optional[OrganizationalEntity] = None,
         individual: Optional[OrganizationalContact] = None,
     ) -> None:
-        self.organization = organization
-        self.individual = individual
+        if not organization and not individual:
+            raise NoPropertiesProvidedException(
+                'One of organization or individual must be provided for OrganizationOrIndividualType'
+                ' - neither provided.'
+            )
+        if organization and individual:
+            raise MutuallyExclusivePropertiesException(
+                'Either organization or individual must be provided for OrganizationOrIndividualType - both provided.'
+            )
+        self._organization = organization
+        self._individual = individual
 
     @property
     @serializable.xml_sequence(1)
@@ -75,6 +88,10 @@ class OrganizationOrIndividualType:
 
     @organization.setter
     def organization(self, organization: Optional[OrganizationalEntity]) -> None:
+        if organization is not None and getattr(self, '_individual', None) is not None:
+            raise MutuallyExclusivePropertiesException(
+                'Either organization or individual must be provided for OrganizationOrIndividualType - both provided.'
+            )
         self._organization = organization
 
     @property
@@ -86,6 +103,10 @@ class OrganizationOrIndividualType:
 
     @individual.setter
     def individual(self, individual: Optional[OrganizationalContact]) -> None:
+        if individual is not None and getattr(self, '_organization', None) is not None:
+            raise MutuallyExclusivePropertiesException(
+                'Either organization or individual must be provided for OrganizationOrIndividualType - both provided.'
+            )
         self._individual = individual
 
     def __comparable_tuple(self) -> _ComparableTuple:
@@ -106,6 +127,9 @@ class OrganizationOrIndividualType:
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
+    def __repr__(self) -> str:
+        return f'<OrganizationOrIndividualType organization={self.organization}, individual={self.individual}>'
+
 
 @serializable.serializable_class
 class DataGovernance:
@@ -113,7 +137,7 @@ class DataGovernance:
     This is our internal representation of the dataGovernance complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_dataGovernance
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.5/xml/#type_dataGovernance
     """
 
     def __init__(
@@ -174,13 +198,19 @@ class DataGovernance:
     def __hash__(self) -> int:
         return hash(self.__comparable_tuple())
 
+    def __repr__(self) -> str:
+        return (
+            f'<DataGovernance custodians={len(self.custodians)}, '
+            f'stewards={len(self.stewards)}, owners={len(self.owners)}>'
+        )
+
 
 class Data:
     """
     This is our internal representation of the ``serviceData`` complex type within the CycloneDX standard.
 
     .. note::
-        See the CycloneDX Schema: https://cyclonedx.org/docs/1.6/xml/#type_service
+        See the CycloneDX Schema: https://cyclonedx.org/docs/1.5/xml/#type_serviceData
     """
 
     def __init__(
@@ -322,6 +352,9 @@ class Data:
         return f'<Data flow={self.flow}, classification={self.classification}>'
 
 
+ServiceData = Data
+
+
 class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
     """  THIS CLASS IS NON-PUBLIC API  """
 
@@ -332,8 +365,35 @@ class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
         except Exception:  # pragma: no cover
             return False
 
+    @staticmethod
+    def _coerce_data(raw_d: Union[Data, DataClassification]) -> Data:
+        if isinstance(raw_d, DataClassification):
+            SchemaDeprecationWarning1Dot5._warn('DataClassification', instead='Data', stacklevel=3)
+            return Data(flow=raw_d.flow, classification=raw_d.classification)
+        return raw_d
+
+    @staticmethod
+    def _json_single_data(d: Data, view: Optional[type[serializable.ViewType]]) -> dict[str, Any]:
+        item: dict[str, Any] = {
+            'flow': d.flow.value,
+            'classification': d.classification,
+        }
+        if d.name is not None:
+            item['name'] = d.name
+        if d.description is not None:
+            item['description'] = d.description
+        if d.governance is not None:
+            item['governance'] = json_loads(
+                d.governance.as_json(view_=view)  # type:ignore[attr-defined]
+            )
+        if d.source:
+            item['source'] = [str(u) for u in d.source]
+        if d.destination:
+            item['destination'] = [str(u) for u in d.destination]
+        return item
+
     @classmethod
-    def json_normalize(cls, o: 'SortedSet[Data]', *,
+    def json_normalize(cls, o: 'SortedSet[Union[Data, DataClassification]]', *,
                        view: Optional[type[serializable.ViewType]],
                        **__: Any) -> Optional[list[Any]]:
         if not o:
@@ -342,37 +402,34 @@ class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
         # the deprecated dataClassification (flow + classification string only).
         use_service_data = cls.__supports_service_data(view)
         result = []
-        for d in o:
+        for raw_d in o:
+            d = cls._coerce_data(raw_d)
             if use_service_data:
-                item: dict[str, Any] = {
-                    'flow': d.flow.value,
-                    'classification': d.classification,
-                }
-                if d.name is not None:
-                    item['name'] = d.name
-                if d.description is not None:
-                    item['description'] = d.description
-                if d.governance is not None:
-                    item['governance'] = json_loads(
-                        d.governance.as_json(view_=view)  # type:ignore[attr-defined]
-                    )
-                if d.source:
-                    item['source'] = [str(u) for u in d.source]
-                if d.destination:
-                    item['destination'] = [str(u) for u in d.destination]
+                result.append(cls._json_single_data(d, view))
             else:
                 # CDX 1.2–1.4: only flow + classification
-                item = {
+                if (
+                    d.name is not None or d.description is not None
+                    or d.governance is not None or d.source or d.destination
+                ):
+                    warn(
+                        'Data details are not supported in schema versions < 1.5; skipping serialization',
+                        stacklevel=2,
+                    )
+                result.append({
                     'flow': d.flow.value,
                     'classification': d.classification,
-                }
-            result.append(item)
+                })
         return result
 
     @classmethod
     def json_denormalize(cls, o: list[dict[str, Any]], **__: Any) -> 'SortedSet[Data]':
         result: SortedSet[Data] = SortedSet()
         for item in o:
+            if 'flow' not in item or 'classification' not in item:
+                raise CycloneDxDeserializationException(
+                    f'Both "flow" and "classification" are required in Data: {item!r}'
+                )
             governance = None
             if 'governance' in item:
                 governance = DataGovernance.from_json(  # type:ignore[attr-defined]
@@ -423,7 +480,7 @@ class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
         return dataflow_elem
 
     @classmethod
-    def xml_normalize(cls, o: 'SortedSet[Data]', *,
+    def xml_normalize(cls, o: 'SortedSet[Union[Data, DataClassification]]', *,
                       element_name: str,
                       view: Optional[type[serializable.ViewType]],
                       xmlns: Optional[str],
@@ -436,11 +493,20 @@ class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
         wrapper = XmlElement(element_name)
         # CDX 1.5+ uses <dataflow> elements; 1.2–1.4 uses the deprecated flat <classification>
         use_dataflow = cls.__supports_service_data(view)
-        for d in o:
+        for raw_d in o:
+            d = cls._coerce_data(raw_d)
             if use_dataflow:
                 wrapper.append(cls._xml_single_dataflow(d, pfx=pfx, view=view, xmlns=xmlns))
             else:
                 # CDX 1.2–1.4 (deprecated): <classification flow="...">text</classification>
+                if (
+                    d.name is not None or d.description is not None
+                    or d.governance is not None or d.source or d.destination
+                ):
+                    warn(
+                        'Data details are not supported in schema versions < 1.5; skipping serialization',
+                        stacklevel=2,
+                    )
                 wrapper.append(
                     DataClassification(
                         flow=d.flow, classification=d.classification
@@ -461,10 +527,13 @@ class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
             if tag == 'dataflow':
                 # CDX 1.5+ <dataflow> element
                 cls_elem = elem.find(f'{ns}classification')
-                # flow attribute may be namespace-qualified or plain
-                flow_val = (cls_elem.get(f'{ns}flow') or cls_elem.get('flow')) if cls_elem is not None else None
-                classification_text = cls_elem.text or '' if cls_elem is not None else ''
-                flow = DataFlow(flow_val) if flow_val else DataFlow.UNKNOWN
+                if cls_elem is None:
+                    raise CycloneDxDeserializationException('<classification> child element missing in <dataflow>')
+                flow_val = (cls_elem.get(f'{ns}flow') or cls_elem.get('flow'))
+                if not flow_val:
+                    raise CycloneDxDeserializationException('flow attribute missing on <classification> in <dataflow>')
+                flow = DataFlow(flow_val)
+                classification_text = cls_elem.text or ''
                 gov_elem = elem.find(f'{ns}governance')
                 governance = None
                 if gov_elem is not None:
@@ -475,7 +544,6 @@ class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
                 dst_elem = elem.find(f'{ns}destination')
                 destination = [XsUri(u.text or '')
                                for u in dst_elem.findall(f'{ns}url')] if dst_elem is not None else []
-                # name and description may be namespace-qualified or plain attributes
                 name = elem.get(f'{ns}name') or elem.get('name')
                 description = elem.get(f'{ns}description') or elem.get('description')
                 result.add(Data(
@@ -490,8 +558,10 @@ class _DataRepositorySerializationHelper(serializable.helpers.BaseHelper):
             elif tag == 'classification':
                 # CDX 1.2–1.4 deprecated <classification flow="...">text</classification>
                 flow_val = elem.get(f'{ns}flow') or elem.get('flow')
+                if not flow_val:
+                    raise CycloneDxDeserializationException('flow attribute missing on <classification>')
                 result.add(Data(
-                    flow=DataFlow(flow_val) if flow_val else DataFlow.UNKNOWN,
+                    flow=DataFlow(flow_val),
                     classification=elem.text or '',
                 ))
         return result
@@ -517,7 +587,7 @@ class Service(Dependable):
         endpoints: Optional[Iterable[XsUri]] = None,
         authenticated: Optional[bool] = None,
         x_trust_boundary: Optional[bool] = None,
-        data: Optional[Iterable['Data']] = None,
+        data: Optional[Iterable[Union['Data', DataClassification]]] = None,
         licenses: Optional[Iterable[License]] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
         properties: Optional[Iterable[Property]] = None,
@@ -713,8 +783,15 @@ class Service(Dependable):
         return self._data
 
     @data.setter
-    def data(self, data: Iterable['Data']) -> None:
-        self._data = SortedSet(data)
+    def data(self, data: Iterable[Union['Data', DataClassification]]) -> None:
+        items: list[Data] = []
+        for item in data:
+            if isinstance(item, DataClassification):
+                SchemaDeprecationWarning1Dot5._warn('DataClassification', instead='Data', stacklevel=2)
+                items.append(Data(flow=item.flow, classification=item.classification))
+            else:
+                items.append(item)
+        self._data = SortedSet(items)
 
     @property
     @serializable.type_mapping(_LicenseRepositorySerializationHelper)

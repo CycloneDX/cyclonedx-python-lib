@@ -17,19 +17,25 @@
 
 
 from unittest import TestCase
+from warnings import catch_warnings
 
 from defusedxml.ElementTree import fromstring as xml_fromstring  # type:ignore[import-untyped]
 from sortedcontainers import SortedSet
 
-from cyclonedx.model import DataFlow, XsUri
+from cyclonedx.exception.model import MutuallyExclusivePropertiesException, NoPropertiesProvidedException
+from cyclonedx.exception.serialization import CycloneDxDeserializationException
+from cyclonedx.model import DataClassification, DataFlow, XsUri
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.service import (
     Data,
     DataGovernance,
     OrganizationOrIndividualType,
     Service,
+    ServiceData,
     _DataRepositorySerializationHelper,
 )
+from cyclonedx.schema.deprecation import SchemaDeprecationWarning1Dot5
+from cyclonedx.schema.schema import SchemaVersion1Dot4, SchemaVersion1Dot5
 from tests import reorder
 
 
@@ -102,7 +108,7 @@ class TestModelService(TestCase):
     def test_service_lt_non_service(self) -> None:
         """Service.__lt__ returns NotImplemented for incompatible types."""
         s = Service(name='svc')
-        result = s.__lt__('not-a-service')  # type: ignore[arg-type]
+        result = s.__lt__('not-a-service')
         self.assertIs(result, NotImplemented)
 
     def test_service_repr(self) -> None:
@@ -110,6 +116,28 @@ class TestModelService(TestCase):
         self.assertIn('my-svc', repr(s))
         self.assertIn('my-group', repr(s))
         self.assertIn('1.0', repr(s))
+
+    def test_service_data_backward_compat_dataclassification(self) -> None:
+        dc = DataClassification(flow=DataFlow.INBOUND, classification='public')
+        with catch_warnings(record=True) as warns:
+            s = Service(name='my-svc', data=[dc])
+        self.assertTrue(any(issubclass(w.category, SchemaDeprecationWarning1Dot5) for w in warns))
+        self.assertEqual(len(s.data), 1)
+        item = next(iter(s.data))
+        self.assertIsInstance(item, Data)
+        self.assertEqual(item.flow, DataFlow.INBOUND)
+        self.assertEqual(item.classification, 'public')
+
+        # Test setter as well
+        s2 = Service(name='my-svc-2')
+        with catch_warnings(record=True) as warns2:
+            s2.data = [dc]
+        self.assertTrue(any(issubclass(w.category, SchemaDeprecationWarning1Dot5) for w in warns2))
+        self.assertEqual(len(s2.data), 1)
+        item2 = next(iter(s2.data))
+        self.assertIsInstance(item2, Data)
+        self.assertEqual(item2.flow, DataFlow.INBOUND)
+        self.assertEqual(item2.classification, 'public')
 
 
 class TestModelOrganizationOrIndividualType(TestCase):
@@ -132,10 +160,35 @@ class TestModelOrganizationOrIndividualType(TestCase):
         self.assertIsNone(t.organization)
         self.assertEqual(t.individual, contact)
 
-    def test_empty(self) -> None:
-        t = OrganizationOrIndividualType()
-        self.assertIsNone(t.organization)
-        self.assertIsNone(t.individual)
+    def test_empty_raises(self) -> None:
+        with self.assertRaises(NoPropertiesProvidedException):
+            OrganizationOrIndividualType()
+
+    def test_both_raises(self) -> None:
+        with self.assertRaises(MutuallyExclusivePropertiesException):
+            OrganizationOrIndividualType(
+                organization=self._make_org(),
+                individual=self._make_contact(),
+            )
+
+    def test_setters_mutual_exclusion(self) -> None:
+        t = OrganizationOrIndividualType(organization=self._make_org())
+        with self.assertRaises(MutuallyExclusivePropertiesException):
+            t.individual = self._make_contact()
+        new_org = OrganizationalEntity(name='New Acme')
+        t.organization = new_org
+        self.assertEqual(t.organization, new_org)
+
+        t2 = OrganizationOrIndividualType(individual=self._make_contact())
+        with self.assertRaises(MutuallyExclusivePropertiesException):
+            t2.organization = self._make_org()
+        new_contact = OrganizationalContact(name='John Doe')
+        t2.individual = new_contact
+        self.assertEqual(t2.individual, new_contact)
+
+    def test_repr(self) -> None:
+        t = OrganizationOrIndividualType(organization=self._make_org())
+        self.assertIn('Acme Corp', repr(t))
 
     def test_eq_same(self) -> None:
         org = self._make_org()
@@ -163,7 +216,7 @@ class TestModelOrganizationOrIndividualType(TestCase):
     def test_lt_non_type(self) -> None:
         """__lt__ returns NotImplemented for incompatible types."""
         t = OrganizationOrIndividualType(organization=self._make_org())
-        result = t.__lt__('not-an-org')  # type: ignore[arg-type]
+        result = t.__lt__('not-an-org')
         self.assertIs(result, NotImplemented)
 
     def test_hash_consistency(self) -> None:
@@ -218,6 +271,13 @@ class TestModelDataGovernance(TestCase):
         self.assertNotEqual(g, 'not-governance')
         self.assertNotEqual(g, None)
 
+    def test_repr(self) -> None:
+        p = self._make_party()
+        g = DataGovernance(custodians=[p], stewards=[p])
+        self.assertIn('custodians=1', repr(g))
+        self.assertIn('stewards=1', repr(g))
+        self.assertIn('owners=0', repr(g))
+
     def test_lt(self) -> None:
         """DataGovernance.__lt__ orders by comparable tuple."""
         a = DataGovernance(custodians=[self._make_party('AAA')])
@@ -227,7 +287,7 @@ class TestModelDataGovernance(TestCase):
     def test_lt_non_type(self) -> None:
         """__lt__ returns NotImplemented for incompatible types."""
         g = DataGovernance()
-        result = g.__lt__('not-governance')  # type: ignore[arg-type]
+        result = g.__lt__('not-governance')
         self.assertIs(result, NotImplemented)
 
     def test_hash_consistency(self) -> None:
@@ -238,6 +298,9 @@ class TestModelDataGovernance(TestCase):
 
 
 class TestModelData(TestCase):
+
+    def test_service_data_alias(self) -> None:
+        self.assertIs(ServiceData, Data)
 
     def test_minimal(self) -> None:
         d = Data(flow=DataFlow.INBOUND, classification='public')
@@ -294,7 +357,7 @@ class TestModelData(TestCase):
     def test_lt_non_type(self) -> None:
         """Data.__lt__ returns NotImplemented for incompatible types."""
         d = Data(flow=DataFlow.INBOUND, classification='public')
-        result = d.__lt__('not-data')  # type: ignore[arg-type]
+        result = d.__lt__('not-data')
         self.assertIs(result, NotImplemented)
 
     def test_hash_consistency(self) -> None:
@@ -351,6 +414,66 @@ class TestDataRepositorySerializationHelper(TestCase):
             SortedSet(), element_name='data', view=None, xmlns=None
         )
         self.assertIsNone(result)
+
+    def test_json_normalize_downgrade_warning(self) -> None:
+        d = Data(flow=DataFlow.INBOUND, classification='public', name='sensitive')
+        with catch_warnings(record=True) as warns:
+            result = _DataRepositorySerializationHelper.json_normalize(
+                SortedSet([d]), view=SchemaVersion1Dot4
+            )
+        self.assertTrue(any('Data details are not supported' in str(w.message) for w in warns))
+        self.assertEqual(result, [{'flow': 'inbound', 'classification': 'public'}])
+
+    def test_xml_normalize_downgrade_warning(self) -> None:
+        d = Data(flow=DataFlow.INBOUND, classification='public', description='some desc')
+        with catch_warnings(record=True) as warns:
+            result = _DataRepositorySerializationHelper.xml_normalize(
+                SortedSet([d]), element_name='data', view=SchemaVersion1Dot4, xmlns=None
+            )
+        self.assertTrue(any('Data details are not supported' in str(w.message) for w in warns))
+        self.assertIsNotNone(result)
+
+    def test_json_normalize_with_dataclassification(self) -> None:
+        dc = DataClassification(flow=DataFlow.OUTBOUND, classification='internal')
+        with catch_warnings(record=True) as warns:
+            result = _DataRepositorySerializationHelper.json_normalize(
+                SortedSet([dc]), view=SchemaVersion1Dot5
+            )
+        self.assertTrue(any(issubclass(w.category, SchemaDeprecationWarning1Dot5) for w in warns))
+        self.assertEqual(result, [{'flow': 'outbound', 'classification': 'internal'}])
+
+    def test_xml_normalize_with_dataclassification(self) -> None:
+        dc = DataClassification(flow=DataFlow.OUTBOUND, classification='internal')
+        with catch_warnings(record=True) as warns:
+            result = _DataRepositorySerializationHelper.xml_normalize(
+                SortedSet([dc]), element_name='data', view=SchemaVersion1Dot5, xmlns=None
+            )
+        self.assertTrue(any(issubclass(w.category, SchemaDeprecationWarning1Dot5) for w in warns))
+        self.assertIsNotNone(result)
+
+    def test_json_denormalize_missing_fields_raises(self) -> None:
+        with self.assertRaises(CycloneDxDeserializationException):
+            _DataRepositorySerializationHelper.json_denormalize([{'flow': 'inbound'}])
+        with self.assertRaises(CycloneDxDeserializationException):
+            _DataRepositorySerializationHelper.json_denormalize([{'classification': 'public'}])
+
+    def test_xml_denormalize_missing_classification_element_raises(self) -> None:
+        xml_str = '<data><dataflow name="test"/></data>'
+        elem = xml_fromstring(xml_str)
+        with self.assertRaises(CycloneDxDeserializationException):
+            _DataRepositorySerializationHelper.xml_denormalize(elem, default_ns=None)
+
+    def test_xml_denormalize_missing_flow_attribute_raises(self) -> None:
+        xml_str = '<data><dataflow><classification>public</classification></dataflow></data>'
+        elem = xml_fromstring(xml_str)
+        with self.assertRaises(CycloneDxDeserializationException):
+            _DataRepositorySerializationHelper.xml_denormalize(elem, default_ns=None)
+
+    def test_xml_denormalize_legacy_missing_flow_attribute_raises(self) -> None:
+        xml_str = '<data><classification>public</classification></data>'
+        elem = xml_fromstring(xml_str)
+        with self.assertRaises(CycloneDxDeserializationException):
+            _DataRepositorySerializationHelper.xml_denormalize(elem, default_ns=None)
 
     def test_xml_denormalize_legacy_classification_tag(self) -> None:
         """xml_denormalize handles CDX 1.2-1.4 flat <classification flow='...'> elements."""
