@@ -1681,22 +1681,85 @@ def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
 
 
 def get_bom_with_annotations() -> Bom:
-    annotator = Annotator(
-        organization=OrganizationalEntity(
-            name='Acme, Inc.',
-            urls=[XsUri('https://example.com')]
-        )
+    component = Component(
+        name='annotated-component',
+        version='1.0.0',
+        type=ComponentType.LIBRARY,
+        bom_ref='component-1',
+    )
+    service = Service(
+        name='annotated-service',
+        bom_ref='service-1',
     )
 
-    annotation = Annotation(
+    annotation_org = Annotation(
         bom_ref='annotation-1',
-        subjects=[BomRef('subject-1')],
-        annotator=annotator,
+        subjects=[component.bom_ref],
+        annotator=Annotator(
+            organization=OrganizationalEntity(
+                name='Acme, Inc.',
+                urls=[XsUri('https://example.com')],
+            )
+        ),
         timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
-        text='This is an annotation.'
+        text='This is an annotation by an organization.',
     )
 
-    return _make_bom(annotations=[annotation])
+    annotation_ind = Annotation(
+        bom_ref='annotation-2',
+        subjects=[component.bom_ref, service.bom_ref],
+        annotator=Annotator(
+            individual=OrganizationalContact(
+                name='Jane Doe',
+                email='jane.doe@example.com',
+            )
+        ),
+        timestamp=datetime(2024, 1, 2, 12, 0, 0, tzinfo=timezone.utc),
+        text='This is an annotation by an individual.',
+    )
+
+    annotation_comp = Annotation(
+        bom_ref='annotation-3',
+        subjects=[component.bom_ref],
+        annotator=Annotator(
+            component=Component(
+                name='scanner',
+                version='2.0.0',
+                type=ComponentType.APPLICATION,
+                bom_ref='scanner-1',
+            )
+        ),
+        timestamp=datetime(2024, 1, 3, 12, 0, 0, tzinfo=timezone.utc),
+        text='This is an annotation by a component.',
+    )
+
+    annotation_srv = Annotation(
+        bom_ref='annotation-4',
+        subjects=[service.bom_ref],
+        annotator=Annotator(
+            service=Service(
+                name='auth-service',
+                bom_ref='auth-service-1',
+            )
+        ),
+        timestamp=datetime(2024, 1, 4, 12, 0, 0, tzinfo=timezone.utc),
+        text='This is an annotation by a service.',
+    )
+
+    return _make_bom(
+        components=[component],
+        services=[service],
+        dependencies=[
+            Dependency(ref=component.bom_ref),
+            Dependency(ref=service.bom_ref),
+        ],
+        annotations=[
+            annotation_org,
+            annotation_ind,
+            annotation_comp,
+            annotation_srv,
+        ],
+    )
 
 
 # ---
@@ -1748,5 +1811,4 @@ all_get_bom_funct_with_incomplete_deps = {
     get_bom_with_distribution_constraints,
     get_bom_with_definitions_standards,
     get_bom_with_definitions_and_detailed_standards,
-    get_bom_with_annotations,
 }

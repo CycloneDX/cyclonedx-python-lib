@@ -3,6 +3,21 @@
   <metadata>
     <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
   </metadata>
+  <components>
+    <component type="library" bom-ref="component-1">
+      <name>annotated-component</name>
+      <version>1.0.0</version>
+    </component>
+  </components>
+  <services>
+    <service bom-ref="service-1">
+      <name>annotated-service</name>
+    </service>
+  </services>
+  <dependencies>
+    <dependency ref="component-1"/>
+    <dependency ref="service-1"/>
+  </dependencies>
   <properties>
     <property name="key1">val1</property>
     <property name="key2">val2</property>
@@ -10,7 +25,7 @@
   <annotations>
     <annotation bom-ref="annotation-1">
       <subjects>
-        <subject ref="subject-1"/>
+        <subject ref="component-1"/>
       </subjects>
       <annotator>
         <organization>
@@ -19,7 +34,46 @@
         </organization>
       </annotator>
       <timestamp>2024-01-01T12:00:00+00:00</timestamp>
-      <text>This is an annotation.</text>
+      <text>This is an annotation by an organization.</text>
+    </annotation>
+    <annotation bom-ref="annotation-2">
+      <subjects>
+        <subject ref="component-1"/>
+        <subject ref="service-1"/>
+      </subjects>
+      <annotator>
+        <individual>
+          <name>Jane Doe</name>
+          <email>jane.doe@example.com</email>
+        </individual>
+      </annotator>
+      <timestamp>2024-01-02T12:00:00+00:00</timestamp>
+      <text>This is an annotation by an individual.</text>
+    </annotation>
+    <annotation bom-ref="annotation-3">
+      <subjects>
+        <subject ref="component-1"/>
+      </subjects>
+      <annotator>
+        <component type="application" bom-ref="scanner-1">
+          <name>scanner</name>
+          <version>2.0.0</version>
+        </component>
+      </annotator>
+      <timestamp>2024-01-03T12:00:00+00:00</timestamp>
+      <text>This is an annotation by a component.</text>
+    </annotation>
+    <annotation bom-ref="annotation-4">
+      <subjects>
+        <subject ref="service-1"/>
+      </subjects>
+      <annotator>
+        <service bom-ref="auth-service-1">
+          <name>auth-service</name>
+        </service>
+      </annotator>
+      <timestamp>2024-01-04T12:00:00+00:00</timestamp>
+      <text>This is an annotation by a service.</text>
     </annotation>
   </annotations>
 </bom>

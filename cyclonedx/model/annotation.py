@@ -18,6 +18,7 @@
 from collections.abc import Iterable
 from datetime import datetime
 from typing import Any, Optional, Union
+from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
 import py_serializable as serializable
 from py_serializable.helpers import XsdDateTime
@@ -40,73 +41,61 @@ class _SubjectsSerializationHelper(serializable.helpers.BaseHelper):
     """
 
     @classmethod
-    def serialize(cls, o: Any) -> list[str]:
+    def json_normalize(cls, o: Any, *,
+                       view: Optional[type[serializable.ViewType]] = None,
+                       **__: Any) -> Optional[list[str]]:
         if isinstance(o, (SortedSet, set, list)):
             return [str(i) for i in o]
         raise SerializationOfUnexpectedValueException(
             f'Attempt to serialize a non-subjects collection: {o!r}')
 
     @classmethod
-    def deserialize(cls, o: Any) -> 'set[_AnnotationSubject]':
-        subjects: set[_AnnotationSubject] = set()
+    def json_denormalize(cls, o: Any, **__: Any) -> set[BomRef]:
+        subjects: set[BomRef] = set()
         if isinstance(o, list):
             for v in o:
-                subjects.add(_AnnotationSubject(ref=BomRef(value=str(v))))
+                subjects.add(BomRef(value=str(v)))
         return subjects
 
     @classmethod
-    def xml_denormalize(cls, o: Any, *,
-                        default_ns: Any,
-                        prop_info: Any,
-                        ctx: Any,
-                        **kwargs: Any) -> set['_AnnotationSubject']:
-        subjects: set[_AnnotationSubject] = set()
-        if o is None:
-            return subjects
-        for child in o:
-            ref_val = child.get('ref')
+    def xml_normalize(cls, o: Any, *,
+                      element_name: str,
+                      view: Optional[type[serializable.ViewType]] = None,
+                      xmlns: Optional[str] = None,
+                      **__: Any) -> Optional[XmlElement]:
+        if not o:
+            return None
+        elem = XmlElement(element_name)
+        ref_attr = f'{{{xmlns}}}ref' if xmlns else 'ref'
+        for b in o:
+            sub = XmlElement(f'{{{xmlns}}}subject' if xmlns else 'subject')
+            sub.set(ref_attr, str(b))
+            elem.append(sub)
+        return elem
+
+    @classmethod
+    def xml_denormalize(cls, o: XmlElement, *,
+                        default_ns: Optional[str] = None,
+                        **__: Any) -> set[BomRef]:
+        subjects: set[BomRef] = set()
+        ns_map = {'bom': default_ns} if default_ns else None
+        sub_elements = o.findall('bom:subject', ns_map) if ns_map else o.findall('subject')
+        for child in sub_elements:
+            ref_val = (child.get(f'{{{default_ns}}}ref') if default_ns else None) or child.get('ref')
             if ref_val:
-                subjects.add(_AnnotationSubject(ref=BomRef(value=ref_val)))
+                subjects.add(BomRef(value=ref_val))
         return subjects
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class _AnnotationSubject:
-    """THIS CLASS IS NON-PUBLIC API
-
-    Wrapper that renders as ``<subject ref="..."/>`` in XML.
-    """
-
-    def __init__(self, ref: BomRef) -> None:
-        self._ref = ref
-
-    @property
-    @serializable.type_mapping(BomRef)
-    @serializable.xml_attribute()
-    def ref(self) -> BomRef:
-        return self._ref
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, _AnnotationSubject):
-            return self._ref == other._ref
-        return False
-
-    def __hash__(self) -> int:
-        return hash(self._ref)
-
-    def __lt__(self, other: object) -> bool:
-        if isinstance(other, _AnnotationSubject):
-            return str(self._ref) < str(other._ref)
-        return NotImplemented
-
-    def __str__(self) -> str:
-        return str(self._ref)
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class Annotator:
     """
     The organization, person, component, or service which created the textual content of the annotation.
+
+    .. note::
+        Exactly one of ``organization``, ``individual``, ``component``, or ``service`` must be provided.
+        While properties can be modified independently after construction, having none or multiple
+        set will produce schema-invalid output.
     """
 
     def __init__(
@@ -179,7 +168,12 @@ class Annotator:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<Annotator id={id(self)}>'
+        return (
+            f'<Annotator organization={self.organization!r}, '
+            f'individual={self.individual!r}, '
+            f'component={self.component!r}, '
+            f'service={self.service!r}>'
+        )
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
@@ -187,11 +181,15 @@ class Annotation:
     """
     A comment, note, explanation, or similar textual content which provides additional context
     to the object(s) being annotated.
+
+    .. note::
+        While CycloneDX schema does not enforce ``minItems`` for subjects, an annotation with no subjects
+        is semantically meaningless and may produce invalid XML output.
     """
 
     def __init__(
         self, *,
-        subjects: Iterable[BomRef],
+        subjects: Iterable[Union[BomRef, str]],
         annotator: Annotator,
         timestamp: datetime,
         text: str,
@@ -220,18 +218,21 @@ class Annotation:
 
     @property
     @serializable.type_mapping(_SubjectsSerializationHelper)
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'subject')
     @serializable.xml_sequence(1)
-    def subjects(self) -> 'SortedSet[_AnnotationSubject]':
+    def subjects(self) -> 'SortedSet[BomRef]':
         """
-        The object in the BOM identified by its bom-ref.
+        The object(s) in the BOM identified by its bom-ref.
+
+        .. note::
+            While CycloneDX schema does not enforce ``minItems`` for subjects, an annotation with no subjects
+            is semantically meaningless and may produce invalid XML output.
         """
         return self._subjects
 
     @subjects.setter
-    def subjects(self, subjects: Iterable[Union[BomRef, '_AnnotationSubject']]) -> None:
+    def subjects(self, subjects: Iterable[Union[BomRef, str]]) -> None:
         self._subjects = SortedSet(
-            s if isinstance(s, _AnnotationSubject) else _AnnotationSubject(ref=s)
+            s if isinstance(s, BomRef) else BomRef(value=str(s))
             for s in subjects
         )
 

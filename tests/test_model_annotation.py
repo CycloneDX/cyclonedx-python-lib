@@ -20,7 +20,9 @@ from unittest import TestCase
 
 from cyclonedx.model.annotation import Annotation, Annotator
 from cyclonedx.model.bom_ref import BomRef
+from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
+from cyclonedx.model.service import Service
 from tests import reorder
 
 _TIMESTAMP = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
@@ -49,6 +51,24 @@ class TestModelAnnotator(TestCase):
         ]
         self.assertListEqual(sorted(annotators), reorder(annotators, expected_order))
 
+    def test_repr(self) -> None:
+        org = OrganizationalEntity(name='Acme')
+        annotator = Annotator(organization=org)
+        r = repr(annotator)
+        self.assertIn('organization=', r)
+        self.assertIn('Acme', r)
+        self.assertIn('individual=None', r)
+        self.assertIn('component=None', r)
+        self.assertIn('service=None', r)
+
+    def test_component_and_service(self) -> None:
+        comp = Component(name='c', type=ComponentType.APPLICATION)
+        srv = Service(name='s')
+        a_comp = Annotator(component=comp)
+        a_srv = Annotator(service=srv)
+        self.assertEqual(a_comp.component, comp)
+        self.assertEqual(a_srv.service, srv)
+
 
 class TestModelAnnotation(TestCase):
 
@@ -65,3 +85,27 @@ class TestModelAnnotation(TestCase):
                        timestamp=_TIMESTAMP, text='beta'),
         ]
         self.assertListEqual(sorted(annotations), reorder(annotations, expected_order))
+
+    def test_subjects_returns_bom_refs(self) -> None:
+        annotator = Annotator(organization=OrganizationalEntity(name='Acme'))
+        annotation = Annotation(
+            subjects=[BomRef('s1'), 's2'],
+            annotator=annotator,
+            timestamp=_TIMESTAMP,
+            text='test'
+        )
+        self.assertEqual(len(annotation.subjects), 2)
+        for s in annotation.subjects:
+            self.assertIsInstance(s, BomRef)
+        self.assertEqual({s.value for s in annotation.subjects}, {'s1', 's2'})
+
+    def test_repr(self) -> None:
+        annotator = Annotator(organization=OrganizationalEntity(name='Acme'))
+        annotation = Annotation(
+            bom_ref='my-ref',
+            subjects=[BomRef('s1')],
+            annotator=annotator,
+            timestamp=_TIMESTAMP,
+            text='test'
+        )
+        self.assertEqual(repr(annotation), '<Annotation bom-ref=my-ref>')

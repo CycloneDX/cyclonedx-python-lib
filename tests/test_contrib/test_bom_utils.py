@@ -16,12 +16,16 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 
+from datetime import datetime, timezone
 from unittest import TestCase
 
 from cyclonedx.contrib.bom.utils import BomDependencyGraphFlatMerger, BomRefDiscriminator
+from cyclonedx.model.annotation import Annotation, Annotator
 from cyclonedx.model.bom import Bom
 from cyclonedx.model.bom_ref import BomRef
+from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.dependency import Dependency
+from cyclonedx.model.service import Service
 
 
 class TestBomRefDiscriminator(TestCase):
@@ -48,6 +52,52 @@ class TestBomRefDiscriminator(TestCase):
             self.assertNotEqual(bomref1.value, bomref2.value, 'should be discriminated')
         self.assertEqual('djdlkfjdslkf', bomref1.value)
         self.assertEqual('djdlkfjdslkf', bomref2.value)
+
+    def test_from_bom_with_annotations(self) -> None:
+        comp = Component(name='c', type=ComponentType.APPLICATION, bom_ref='dup')
+        nested_comp = Component(name='nc', type=ComponentType.APPLICATION, bom_ref='dup-nested')
+        annotator_comp = Component(
+            name='ac', type=ComponentType.APPLICATION, bom_ref='dup-ac',
+            components=[nested_comp]
+        )
+        annotator_srv = Service(name='as', bom_ref='dup-as')
+        annotation1 = Annotation(
+            bom_ref='dup',
+            subjects=[comp.bom_ref],
+            annotator=Annotator(component=annotator_comp),
+            timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+            text='t1'
+        )
+        annotation2 = Annotation(
+            bom_ref='dup-2',
+            subjects=[comp.bom_ref],
+            annotator=Annotator(service=annotator_srv),
+            timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+            text='t2'
+        )
+        annotation3 = Annotation(
+            bom_ref='dup-nested',
+            subjects=[comp.bom_ref],
+            annotator=Annotator(component=Component(name='ac2', type=ComponentType.APPLICATION, bom_ref='dup-ac')),
+            timestamp=datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+            text='t3'
+        )
+        bom = Bom(components=[comp], annotations=[annotation1, annotation2, annotation3])
+        discr = BomRefDiscriminator.from_bom(bom)
+        with discr:
+            all_refs = [
+                comp.bom_ref.value,
+                annotation1.bom_ref.value,
+                annotator_comp.bom_ref.value,
+                nested_comp.bom_ref.value,
+                annotation2.bom_ref.value,
+                annotator_srv.bom_ref.value,
+                annotation3.bom_ref.value,
+            ]
+            self.assertEqual(len(all_refs), len(set(all_refs)), 'All bom-refs must be unique')
+        self.assertEqual(comp.bom_ref.value, 'dup')
+        self.assertEqual(annotation1.bom_ref.value, 'dup')
+        self.assertEqual(nested_comp.bom_ref.value, 'dup-nested')
 
 
 class TestBomDependencyGraphFlatMerger(TestCase):
