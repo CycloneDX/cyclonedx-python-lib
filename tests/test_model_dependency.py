@@ -41,3 +41,40 @@ class TestDependency(TestCase):
         sorted_deps = sorted(deps)
         expected_deps = reorder(deps, expected_order)
         self.assertEqual(sorted_deps, expected_deps)
+
+    def test_provides_default_empty(self) -> None:
+        dep = Dependency(ref=BomRef(value='a'))
+        self.assertEqual(len(dep.provides), 0)
+        self.assertEqual(dep.provides_as_bom_refs(), set())
+
+    def test_provides_set_and_retrieved(self) -> None:
+        ref_b = BomRef(value='B')
+        ref_c = BomRef(value='C')
+        dep = Dependency(ref=ref_b, provides=[Dependency(ref=ref_c)])
+        self.assertEqual(len(dep.provides), 1)
+        self.assertEqual(dep.provides_as_bom_refs(), {ref_c})
+
+    def test_provides_included_in_hash_and_equality(self) -> None:
+        ref_b = BomRef(value='B')
+        ref_c = BomRef(value='C')
+        dep_with = Dependency(ref=ref_b, provides=[Dependency(ref=ref_c)])
+        dep_without = Dependency(ref=ref_b)
+        self.assertNotEqual(dep_with, dep_without)
+        self.assertNotEqual(hash(dep_with), hash(dep_without))
+
+    def test_sort_with_provides(self) -> None:
+        # Deps with different provides should sort deterministically
+        ref_a = BomRef(value='0b049d09-64c0-4490-a0f5-c84d9aacf857')
+        ref_b = BomRef(value='be2c6502-7e9a-47db-9a66-e34f729810a3')
+        ref_c = BomRef(value='c5b16954-5264-4bf8-af08-251f2d6b38c2')
+        dep_with_b = Dependency(ref=ref_a, provides=[Dependency(ref=ref_b)])
+        dep_with_c = Dependency(ref=ref_a, provides=[Dependency(ref=ref_c)])
+        dep_without = Dependency(ref=ref_a)
+
+        sorted_result = sorted([dep_with_c, dep_without, dep_with_b])
+
+        # ComparableTuple sorts longer tuples BEFORE shorter tuples!
+        # And within same length, 'be2c...' < 'c5b1...'
+        self.assertEqual(sorted_result[0], dep_with_b)
+        self.assertEqual(sorted_result[1], dep_with_c)
+        self.assertEqual(sorted_result[2], dep_without)
