@@ -13,6 +13,7 @@
           <type>digest</type>
           <id>some-identifier</id>
           <state>active</state>
+          <algorithmRef>material-algorithm</algorithmRef>
           <creationDate>2023-05-19T01:00:00+00:00</creationDate>
           <activationDate>2023-05-19T01:00:00+00:00</activationDate>
           <expirationDate>2024-05-19T00:59:59.999999+00:00</expirationDate>
@@ -21,7 +22,15 @@
           <format>a-format</format>
           <securedBy>
             <mechanism>hard-work</mechanism>
+            <algorithmRef>securing-algorithm</algorithmRef>
           </securedBy>
+          <fingerprint alg="SHA-256">bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</fingerprint>
+          <relatedCryptographicAssets>
+            <relatedCryptographicAsset>
+              <type>algorithm</type>
+              <ref>material-algorithm</ref>
+            </relatedCryptographicAsset>
+          </relatedCryptographicAssets>
         </relatedCryptoMaterialProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>

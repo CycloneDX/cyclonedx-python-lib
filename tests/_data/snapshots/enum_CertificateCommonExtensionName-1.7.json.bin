@@ -1,0 +1,214 @@
+{
+  "components": [
+    {
+      "bom-ref": "dummy-CCEN:AUTHORITY_INFORMATION_ACCESS",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "authorityInformationAccess",
+              "commonExtensionValue": "authorityInformationAccess"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: AUTHORITY_INFORMATION_ACCESS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:AUTHORITY_KEY_IDENTIFIER",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "authorityKeyIdentifier",
+              "commonExtensionValue": "authorityKeyIdentifier"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: AUTHORITY_KEY_IDENTIFIER",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:BASIC_CONSTRAINTS",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "basicConstraints",
+              "commonExtensionValue": "basicConstraints"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: BASIC_CONSTRAINTS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:CERTIFICATE_POLICIES",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "certificatePolicies",
+              "commonExtensionValue": "certificatePolicies"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: CERTIFICATE_POLICIES",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:CRL_DISTRIBUTION_POINTS",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "crlDistributionPoints",
+              "commonExtensionValue": "crlDistributionPoints"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: CRL_DISTRIBUTION_POINTS",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:EXTENDED_KEY_USAGE",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "extendedKeyUsage",
+              "commonExtensionValue": "extendedKeyUsage"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: EXTENDED_KEY_USAGE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:KEY_USAGE",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "keyUsage",
+              "commonExtensionValue": "keyUsage"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: KEY_USAGE",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:SIGNED_CERTIFICATE_TIMESTAMP",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "signedCertificateTimestamp",
+              "commonExtensionValue": "signedCertificateTimestamp"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: SIGNED_CERTIFICATE_TIMESTAMP",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:SUBJECT_ALTERNATIVE_NAME",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "subjectAlternativeName",
+              "commonExtensionValue": "subjectAlternativeName"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: SUBJECT_ALTERNATIVE_NAME",
+      "type": "cryptographic-asset"
+    },
+    {
+      "bom-ref": "dummy-CCEN:SUBJECT_KEY_IDENTIFIER",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "certificateExtensions": [
+            {
+              "commonExtensionName": "subjectKeyIdentifier",
+              "commonExtensionValue": "subjectKeyIdentifier"
+            }
+          ]
+        }
+      },
+      "name": "CertificateCommonExtensionName: SUBJECT_KEY_IDENTIFIER",
+      "type": "cryptographic-asset"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "dummy-CCEN:AUTHORITY_INFORMATION_ACCESS"
+    },
+    {
+      "ref": "dummy-CCEN:AUTHORITY_KEY_IDENTIFIER"
+    },
+    {
+      "ref": "dummy-CCEN:BASIC_CONSTRAINTS"
+    },
+    {
+      "ref": "dummy-CCEN:CERTIFICATE_POLICIES"
+    },
+    {
+      "ref": "dummy-CCEN:CRL_DISTRIBUTION_POINTS"
+    },
+    {
+      "ref": "dummy-CCEN:EXTENDED_KEY_USAGE"
+    },
+    {
+      "ref": "dummy-CCEN:KEY_USAGE"
+    },
+    {
+      "ref": "dummy-CCEN:SIGNED_CERTIFICATE_TIMESTAMP"
+    },
+    {
+      "ref": "dummy-CCEN:SUBJECT_ALTERNATIVE_NAME"
+    },
+    {
+      "ref": "dummy-CCEN:SUBJECT_KEY_IDENTIFIER"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}
