@@ -194,10 +194,22 @@ jobs:
         include:
           - os: macos-15
             python-version: "3.10"
+            toxenv-factors: "-allExtras"
+          - os: macos-15
+            python-version: "3.10"
+            toxenv-factors: "-noExtras"
           - os: macos-15
             python-version: "3.9"
+            toxenv-factors: "-allExtras"
+          - os: macos-15
+            python-version: "3.9"
+            toxenv-factors: "-noExtras"
           - os: ubuntu-24.04
             python-version: "3.9"
+            toxenv-factors: "-allExtras"
+          - os: ubuntu-24.04
+            python-version: "3.9"
+            toxenv-factors: "-noExtras"
     steps:
       - name: Disabled Git auto EOL CRLF transforms
         run: |
