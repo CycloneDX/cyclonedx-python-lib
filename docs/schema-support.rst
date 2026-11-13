@@ -50,7 +50,7 @@ This is a snapshot. See the API docs for the latest state.
 | ``bom.vulnerabilities``    | Yes           | Note: Prior to CycloneDX 1.4, these were present under ``bom.components`` via a schema extension. |
 |                            |               | Note: As of ``cyclonedx-python-lib`` ``>3.0.0``, Vulnerability are modelled differently           |
 +----------------------------+---------------+---------------------------------------------------------------------------------------------------+
-| ``bom.annotations``        | No            |                                                                                                   |
+| ``bom.annotations``        | Yes           | Supported when outputting to Schema Version >= 1.5. Not supported: ``signature``.               |
 +----------------------------+---------------+---------------------------------------------------------------------------------------------------+
 | ``bom.formulation``        | No            |                                                                                                   |
 +----------------------------+---------------+---------------------------------------------------------------------------------------------------+

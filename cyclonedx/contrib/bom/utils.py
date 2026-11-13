@@ -22,7 +22,7 @@ __all__ = [
     'BomDependencyGraphFlatMerger',
 ]
 
-from collections.abc import Iterable
+from collections.abc import Generator, Iterable
 from itertools import chain
 from random import random
 from typing import TYPE_CHECKING, Any
@@ -86,6 +86,17 @@ class BomRefDiscriminator:
         return f'{self._prefix}{str(random())[1:]}{str(random())[1:]}'  # nosec B311
 
     @classmethod
+    def _get_annotation_bom_refs(cls, bom: 'Bom') -> Generator['BomRef', None, None]:
+        for a in bom.annotations:
+            yield a.bom_ref
+            annotator = a.annotator
+            if annotator:
+                if annotator.component:
+                    yield from (c.bom_ref for c in annotator.component.iter_all_nested_components(include_self=True))
+                elif annotator.service:
+                    yield annotator.service.bom_ref
+
+    @classmethod
     def from_bom(cls, bom: 'Bom', prefix: str = 'BomRef') -> 'BomRefDiscriminator':
         """
         Create a discriminator for all :class:`cyclonedx.model.bom_ref.BomRefs`
@@ -95,11 +106,13 @@ class BomRefDiscriminator:
           * :attr:`cyclonedx.model.bom.Bom.components`
           * :attr:`cyclonedx.model.bom.Bom.services`
           * :attr:`cyclonedx.model.bom.Bom.vulnerabilities`
+          * :attr:`cyclonedx.model.bom.Bom.annotations`
         """
         return cls(chain(
             (c.bom_ref for c in bom._get_all_components()),
             (s.bom_ref for s in bom.services),
             (v.bom_ref for v in bom.vulnerabilities),
+            cls._get_annotation_bom_refs(bom),
         ), prefix)
 
 

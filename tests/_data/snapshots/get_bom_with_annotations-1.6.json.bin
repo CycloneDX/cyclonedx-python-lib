@@ -1,0 +1,105 @@
+{
+  "annotations": [
+    {
+      "annotator": {
+        "organization": {
+          "name": "Acme, Inc.",
+          "url": [
+            "https://example.com"
+          ]
+        }
+      },
+      "bom-ref": "annotation-1",
+      "subjects": [
+        "component-1"
+      ],
+      "text": "This is an annotation by an organization.",
+      "timestamp": "2024-01-01T12:00:00+00:00"
+    },
+    {
+      "annotator": {
+        "individual": {
+          "email": "jane.doe@example.com",
+          "name": "Jane Doe"
+        }
+      },
+      "bom-ref": "annotation-2",
+      "subjects": [
+        "component-1",
+        "service-1"
+      ],
+      "text": "This is an annotation by an individual.",
+      "timestamp": "2024-01-02T12:00:00+00:00"
+    },
+    {
+      "annotator": {
+        "component": {
+          "bom-ref": "scanner-1",
+          "name": "scanner",
+          "type": "application",
+          "version": "2.0.0"
+        }
+      },
+      "bom-ref": "annotation-3",
+      "subjects": [
+        "component-1"
+      ],
+      "text": "This is an annotation by a component.",
+      "timestamp": "2024-01-03T12:00:00+00:00"
+    },
+    {
+      "annotator": {
+        "service": {
+          "bom-ref": "auth-service-1",
+          "name": "auth-service"
+        }
+      },
+      "bom-ref": "annotation-4",
+      "subjects": [
+        "service-1"
+      ],
+      "text": "This is an annotation by a service.",
+      "timestamp": "2024-01-04T12:00:00+00:00"
+    }
+  ],
+  "components": [
+    {
+      "bom-ref": "component-1",
+      "name": "annotated-component",
+      "type": "library",
+      "version": "1.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "component-1"
+    },
+    {
+      "ref": "service-1"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "services": [
+    {
+      "bom-ref": "service-1",
+      "name": "annotated-service"
+    }
+  ],
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}
