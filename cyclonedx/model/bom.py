@@ -44,6 +44,7 @@ from ..schema.schema import (
 from ..serialization import UrnUuidHelper
 from . import _BOM_LINK_PREFIX, ExternalReference, Property
 from .bom_ref import BomRef
+from .citation import Citation
 from .component import Component
 from .contact import OrganizationalContact, OrganizationalEntity
 from .definition import Definitions
@@ -444,6 +445,7 @@ class Bom:
         vulnerabilities: Optional[Iterable[Vulnerability]] = None,
         properties: Optional[Iterable[Property]] = None,
         definitions: Optional[Definitions] = None,
+        citations: Optional[Iterable[Citation]] = None,
     ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
@@ -461,6 +463,7 @@ class Bom:
         self.dependencies = dependencies or []
         self.properties = properties or []
         self.definitions = definitions or Definitions()
+        self.citations = citations or []
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -694,6 +697,26 @@ class Bom:
     def definitions(self, definitions: Definitions) -> None:
         self._definitions = definitions
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'citation')
+    @serializable.xml_sequence(120)
+    def citations(self) -> 'SortedSet[Citation]':
+        """
+        A collection of attributions indicating which entity supplied information for specific fields within the BOM.
+
+        Returns:
+            Set of `Citation`
+
+        .. note::
+            Introduced in CycloneDX v1.7
+        """
+        return self._citations
+
+    @citations.setter
+    def citations(self, citations: Iterable[Citation]) -> None:
+        self._citations = SortedSet(citations)
+
     def get_component_by_purl(self, purl: Optional['PackageURL']) -> Optional[Component]:
         """
         Get a Component already in the Bom by its PURL
@@ -872,7 +895,7 @@ class Bom:
                 self.components), _ComparableTuple(self.services),
             _ComparableTuple(self.external_references), _ComparableTuple(
                 self.dependencies), _ComparableTuple(self.properties),
-            _ComparableTuple(self.vulnerabilities),
+            _ComparableTuple(self.vulnerabilities), _ComparableTuple(self.citations),
         ))
 
     def __eq__(self, other: object) -> bool:
