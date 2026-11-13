@@ -600,7 +600,26 @@ def get_bom_with_external_references() -> Bom:
 
 
 def get_bom_with_external_component_1_7() -> Bom:
-    bom = _make_bom(components=[get_component_external()])
+    bom = _make_bom(components=[
+        get_component_external_without_version(),
+        get_component_external_with_version(),
+        get_component_external_with_version_range(),
+    ])
+    return bom
+
+
+def get_bom_with_external_component_with_version_and_version_range_invalid() -> Bom:
+    bom = _make_bom(components=[get_component_external_with_version_and_version_range_invalid()])
+    return bom
+
+
+def get_bom_with_non_external_explicit_component_with_version_range_invalid() -> Bom:
+    bom = _make_bom(components=[get_component_non_external_explicit_with_version_range_invalid()])
+    return bom
+
+
+def get_bom_with_non_external_implicit_component_with_version_range_invalid() -> Bom:
+    bom = _make_bom(components=[get_component_non_external_implicit_with_version_range_invalid()])
     return bom
 
 
@@ -864,13 +883,65 @@ def get_component_setuptools_simple(
     )
 
 
-def get_component_external() -> Component:
+def get_component_external_without_version() -> Component:
     return Component(
-        name='external-lib', version='1.0.0',
+        name='external-lib',
+        type=ComponentType.LIBRARY,
+        is_external=True,
+        scope=ComponentScope.REQUIRED,
+        bom_ref='external-lib',
+    )
+
+
+def get_component_external_with_version() -> Component:
+    return Component(
+        name='external-lib',
+        version='1.0.0',
         type=ComponentType.LIBRARY,
         is_external=True,
         scope=ComponentScope.REQUIRED,
         bom_ref='external-lib-1.0.0',
+    )
+
+
+def get_component_external_with_version_range() -> Component:
+    return Component(
+        name='external-lib',
+        version_range='vers:all/*',
+        type=ComponentType.LIBRARY,
+        is_external=True,
+        scope=ComponentScope.REQUIRED,
+        bom_ref='external-lib-with-range',
+    )
+
+
+def get_component_external_with_version_and_version_range_invalid() -> Component:
+    return Component(
+        name='external-lib',
+        version='1.0.0',
+        version_range='vers:all/*',
+        type=ComponentType.LIBRARY,
+        is_external=True,
+        bom_ref='external-lib-with-version-and-version-range',
+    )
+
+
+def get_component_non_external_explicit_with_version_range_invalid() -> Component:
+    return Component(
+        name='internal-lib',
+        version_range='vers:all/*',
+        type=ComponentType.LIBRARY,
+        is_external=False,
+        bom_ref='internal-lib-with-range',
+    )
+
+
+def get_component_non_external_implicit_with_version_range_invalid() -> Component:
+    return Component(
+        name='internal-lib',
+        version_range='vers:all/*',
+        type=ComponentType.LIBRARY,
+        bom_ref='internal-lib-with-range',
     )
 
 
