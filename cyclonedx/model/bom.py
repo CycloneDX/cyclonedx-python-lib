@@ -14,6 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+# Copyright (C) Siemens 2026. All Rights Reserved.
 
 
 from collections.abc import Generator, Iterable
@@ -45,6 +46,7 @@ from ..serialization import UrnUuidHelper
 from . import _BOM_LINK_PREFIX, ExternalReference, Property
 from .bom_ref import BomRef
 from .component import Component
+from .composition import Composition
 from .contact import OrganizationalContact, OrganizationalEntity
 from .definition import Definitions
 from .dependency import Dependable, Dependency
@@ -444,6 +446,7 @@ class Bom:
         vulnerabilities: Optional[Iterable[Vulnerability]] = None,
         properties: Optional[Iterable[Property]] = None,
         definitions: Optional[Definitions] = None,
+        compositions: Optional[Iterable[Composition]] = None,
     ) -> None:
         """
         Create a new Bom that you can manually/programmatically add data to later.
@@ -461,6 +464,7 @@ class Bom:
         self.dependencies = dependencies or []
         self.properties = properties or []
         self.definitions = definitions or Definitions()
+        self.compositions = compositions or []
 
     @property
     @serializable.type_mapping(UrnUuidHelper)
@@ -598,18 +602,27 @@ class Bom:
     def dependencies(self, dependencies: Iterable[Dependency]) -> None:
         self._dependencies = SortedSet(dependencies)
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot3)
-    # @serializable.view(SchemaVersion1Dot4)
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(6)
-    # def compositions(self) -> ...:
-    #     ...  # TODO Since CDX 1.3
-    #
-    # @compositions.setter
-    # def compositions(self, ...) -> None:
-    #     ...  # TODO Since CDX 1.3
+    @property
+    @serializable.view(SchemaVersion1Dot3)
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'composition')
+    @serializable.xml_sequence(60)
+    def compositions(self) -> 'SortedSet[Composition]':
+        """
+        A list of compositions that describe constituent parts (including components, services, and dependency
+        relationships) and their completeness.
+
+        Returns:
+            Set of `Composition`
+        """
+        return self._compositions
+
+    @compositions.setter
+    def compositions(self, compositions: Iterable[Composition]) -> None:
+        self._compositions = SortedSet(compositions)
 
     @property
     # @serializable.view(SchemaVersion1Dot3) @todo: Update py-serializable to support view by OutputFormat filtering
@@ -873,6 +886,7 @@ class Bom:
             _ComparableTuple(self.external_references), _ComparableTuple(
                 self.dependencies), _ComparableTuple(self.properties),
             _ComparableTuple(self.vulnerabilities),
+            _ComparableTuple(self.compositions),
         ))
 
     def __eq__(self, other: object) -> bool:
