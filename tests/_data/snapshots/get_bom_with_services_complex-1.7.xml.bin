@@ -39,6 +39,7 @@
       </endpoints>
       <authenticated>false</authenticated>
       <x-trust-boundary>true</x-trust-boundary>
+      <trustZone>internal-vpc</trustZone>
       <data>
         <classification flow="outbound">public</classification>
       </data>
