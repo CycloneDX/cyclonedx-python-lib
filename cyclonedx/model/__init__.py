@@ -83,6 +83,9 @@ class DataClassification:
     DataClassification might be deprecated since CycloneDX 1.5, but it is not deprecated in this library.
     In fact, this library will try to provide a compatibility layer if needed.
 
+    .. deprecated:: next
+        Deprecated since CycloneDX 1.5. Use :class:`cyclonedx.model.service.Data` instead.
+
     .. note::
         See the CycloneDX Schema for dataClassificationType:
         https://cyclonedx.org/docs/1.7/xml/#type_dataClassificationType
