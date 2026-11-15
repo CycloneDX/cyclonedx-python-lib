@@ -34,5 +34,14 @@
       <timestamp>2025-10-02T08:30:00+00:00</timestamp>
       <process>some-formula-step</process>
     </citation>
+    <citation bom-ref="citation-both">
+      <pointers>
+        <pointer>/components/0/type</pointer>
+      </pointers>
+      <timestamp>2025-10-03T09:15:00+00:00</timestamp>
+      <attributedTo>external-lib-1.0.0</attributedTo>
+      <process>some-formula-step</process>
+      <note>Type supplied by the component author via a documented process.</note>
+    </citation>
   </citations>
 </bom>

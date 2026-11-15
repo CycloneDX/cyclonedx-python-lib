@@ -23,7 +23,7 @@ This set of classes represents the data about Citations.
     Introduced in CycloneDX v1.7
 
 .. note::
-    See the CycloneDX Schema extension definition https://cyclonedx.org/docs/1.7/xml/#type_citationType
+    See the CycloneDX Schema definition https://cyclonedx.org/docs/1.7/xml/#type_citationType
 """
 
 from collections.abc import Iterable

@@ -622,6 +622,14 @@ def get_bom_with_citations_1_7() -> Bom:
                 timestamp=datetime.fromisoformat('2025-10-02T08:30:00+00:00'),
                 process='some-formula-step',
             ),
+            Citation(
+                bom_ref='citation-both',
+                pointers=['/components/0/type'],
+                timestamp=datetime.fromisoformat('2025-10-03T09:15:00+00:00'),
+                attributed_to=component.bom_ref,
+                process='some-formula-step',
+                note='Type supplied by the component author via a documented process.',
+            ),
         ],
     )
 

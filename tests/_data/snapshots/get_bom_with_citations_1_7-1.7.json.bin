@@ -16,6 +16,16 @@
       ],
       "process": "some-formula-step",
       "timestamp": "2025-10-02T08:30:00+00:00"
+    },
+    {
+      "attributedTo": "external-lib-1.0.0",
+      "bom-ref": "citation-both",
+      "note": "Type supplied by the component author via a documented process.",
+      "pointers": [
+        "/components/0/type"
+      ],
+      "process": "some-formula-step",
+      "timestamp": "2025-10-03T09:15:00+00:00"
     }
   ],
   "components": [
