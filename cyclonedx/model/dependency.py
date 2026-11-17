@@ -25,6 +25,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.serialization import SerializationOfUnexpectedValueException
+from ..schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
 from .bom_ref import BomRef
 
 
@@ -56,9 +57,15 @@ class Dependency:
         See https://cyclonedx.org/docs/1.7/xml/#type_dependencyType
     """
 
-    def __init__(self, ref: BomRef, dependencies: Optional[Iterable['Dependency']] = None) -> None:
+    def __init__(
+        self,
+        ref: BomRef,
+        dependencies: Optional[Iterable['Dependency']] = None,
+        provides: Optional[Iterable['Dependency']] = None
+    ) -> None:
         self.ref = ref
         self.dependencies = dependencies or []
+        self.provides = provides or []
 
     @property
     @serializable.type_mapping(BomRef)
@@ -84,9 +91,25 @@ class Dependency:
     def dependencies_as_bom_refs(self) -> set[BomRef]:
         return set(map(lambda d: d.ref, self.dependencies))
 
+    @property
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.json_name('provides')
+    @serializable.type_mapping(_DependencyRepositorySerializationHelper)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'provides')
+    def provides(self) -> 'SortedSet[Dependency]':
+        return self._provides
+
+    @provides.setter
+    def provides(self, provides: Iterable['Dependency']) -> None:
+        self._provides = SortedSet(provides)
+
+    def provides_as_bom_refs(self) -> set[BomRef]:
+        return set(map(lambda d: d.ref, self.provides))
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.ref, _ComparableTuple(self.dependencies)
+            self.ref, _ComparableTuple(self.dependencies), _ComparableTuple(self.provides)
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -103,7 +126,7 @@ class Dependency:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<Dependency ref={self.ref!r}, targets={len(self.dependencies)}>'
+        return f'<Dependency ref={self.ref!r}, targets={len(self.dependencies)}, provides={len(self.provides)}>'
 
 
 class Dependable(ABC):

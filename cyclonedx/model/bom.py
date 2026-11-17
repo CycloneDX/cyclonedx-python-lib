@@ -779,23 +779,62 @@ class Bom:
         """
         return bool(self.vulnerabilities)
 
-    def register_dependency(self, target: Dependable, depends_on: Optional[Iterable[Dependable]] = None) -> None:
-        _d = next(filter(lambda _d: _d.ref == target.bom_ref, self.dependencies), None)
-        if _d:
+    def register_dependency(
+        self,
+        target: Dependable,
+        depends_on: Optional[Iterable[Dependable]] = None,
+        provides: Optional[Iterable[Dependable]] = None,
+    ) -> None:
+        """
+        Register a dependency relationship for a target.
+
+        Args:
+            target:
+                The `Dependable` target instance being registered.
+            depends_on:
+                Optional iterable of `Dependable` instances that the target depends on.
+            provides:
+                Optional iterable of `Dependable` instances that the target provides (CycloneDX 1.6+).
+
+        Returns:
+            None
+        """
+        depends_on = tuple(depends_on or ())
+        provides = tuple(provides or ())
+        _idx, _d = next(
+            ((i, dep) for i, dep in enumerate(self._dependencies) if dep.ref == target.bom_ref),
+            (None, None),
+        )
+        if _d is not None and _idx is not None:
+            # We remove before mutating dependencies/provides to avoid corrupting SortedSet ordering/hash.
+            # We delete by index (`del self._dependencies[_idx]`) rather than `discard()`/`remove()`
+            # because dependencies with unset/empty `BomRef` elements may violate strict weak ordering
+            # required for binary search lookup in `SortedSet`.
+            # Note: `SortedSet.__delitem__` is supported at runtime, but sortedcontainers type stubs
+            # are incomplete for index-based deletion.
+            del self._dependencies[_idx]  # type: ignore[attr-defined]
+
             # Dependency Target already registered - but it might have new dependencies to add
             if depends_on:
-                _d.dependencies.update(map(lambda _d: Dependency(ref=_d.bom_ref), depends_on))
+                _d.dependencies.update(map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on))
+            if provides:
+                _d.provides.update(map(lambda _prov: Dependency(ref=_prov.bom_ref), provides))
+            self._dependencies.add(_d)
         else:
             # First time we are seeing this target as a Dependency
             self._dependencies.add(Dependency(
                 ref=target.bom_ref,
-                dependencies=map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on) if depends_on else []
+                dependencies=map(lambda _dep: Dependency(ref=_dep.bom_ref), depends_on) if depends_on else [],
+                provides=map(lambda _prov: Dependency(ref=_prov.bom_ref), provides) if provides else [],
             ))
 
         if depends_on:
             # Ensure dependents are registered with no further dependents in the DependencyGraph
             for _d2 in depends_on:
                 self.register_dependency(target=_d2, depends_on=None)
+        if provides:
+            for _p2 in provides:
+                self.register_dependency(target=_p2, depends_on=None, provides=None)
 
     def urn(self) -> str:
         """
@@ -825,12 +864,13 @@ class Bom:
         for _s in self.services:
             self.register_dependency(target=_s)
 
-        # 1. Make sure dependencies are all in this Bom.
+        # 1. Make sure dependencies and provides are all in this Bom.
         component_bom_refs = set(map(lambda c: c.bom_ref, self._get_all_components())) | set(
             map(lambda s: s.bom_ref, self.services))
         dependency_bom_refs = set(chain(
             (d.ref for d in self.dependencies),
-            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies)
+            chain.from_iterable(d.dependencies_as_bom_refs() for d in self.dependencies),
+            chain.from_iterable(d.provides_as_bom_refs() for d in self.dependencies)
         ))
         dependency_diff = dependency_bom_refs - component_bom_refs
         if len(dependency_diff) > 0:
