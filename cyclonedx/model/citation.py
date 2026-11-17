@@ -75,7 +75,9 @@ class Citation:
             raise MutuallyExclusivePropertiesException(
                 'Only one of `pointers` or `expressions` must be supplied - both supplied'
             )
-        if attributed_to is None and process is None:
+        self.attributed_to = attributed_to
+        self.process = process
+        if self.attributed_to is None and self.process is None:
             raise NoPropertiesProvidedException(
                 'At least one of `attributed_to` or `process` must be supplied - neither supplied'
             )
@@ -83,8 +85,6 @@ class Citation:
         self.pointers = pointers
         self.expressions = expressions
         self.timestamp = timestamp
-        self.attributed_to = attributed_to
-        self.process = process
         self.note = note
         # TODO: signature
 

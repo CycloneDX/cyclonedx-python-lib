@@ -58,6 +58,17 @@ class TestModelCitation(TestCase):
         with self.assertRaises(NoPropertiesProvidedException):
             Citation(timestamp=_TS, pointers=['/a'])
 
+    def test_requires_non_empty_attributed_to_or_process(self) -> None:
+        for kwargs in ({'attributed_to': ''}, {'process': ''}, {'attributed_to': '', 'process': ''}):
+            with self.subTest(**kwargs), self.assertRaises(NoPropertiesProvidedException):
+                Citation(timestamp=_TS, pointers=['/a'], **kwargs)
+
+    def test_empty_attributed_to_with_process(self) -> None:
+        c = Citation(timestamp=_TS, pointers=['/a'], attributed_to='', process='p1')
+        self.assertIsNone(c.attributed_to)
+        self.assertEqual('p1', c.process.value)
+        self.assertEqual(Citation(timestamp=_TS, pointers=['/a'], process='p1'), c)
+
     def test_equal(self) -> None:
         c1 = Citation(timestamp=_TS, pointers=['/a'], attributed_to='a', note='x')
         c2 = Citation(timestamp=_TS, pointers=['/a'], attributed_to='a', note='x')
