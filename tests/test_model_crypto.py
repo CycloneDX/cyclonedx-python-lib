@@ -15,7 +15,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
+from json import loads as json_loads
 from unittest import TestCase
+from xml.etree.ElementTree import fromstring
 
 from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.crypto import (
@@ -29,6 +31,7 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialSecuredBy,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.schema.schema import SchemaVersion1Dot6
 
 
 class TestModelAlgorithmProperties(TestCase):
@@ -43,6 +46,34 @@ class TestModelAlgorithmProperties(TestCase):
         algo_list = [algo2, algo3, algo1]
         sorted_algos = sorted(algo_list)
         self.assertEqual(len(sorted_algos), 3)
+
+    def test_algorithm_identifier_equality_and_hashing(self) -> None:
+        for field, value, other_value in (
+            ('algorithm_family', 'AES', 'ML-KEM'),
+            ('elliptic_curve', 'nist/P-256', 'nist/P-384'),
+        ):
+            with self.subTest(field=field):
+                first = AlgorithmProperties()
+                same = AlgorithmProperties()
+                different = AlgorithmProperties()
+                setattr(first, field, value)
+                setattr(same, field, value)
+                setattr(different, field, other_value)
+
+                self.assertEqual(first, same)
+                self.assertEqual(hash(first), hash(same))
+                self.assertNotEqual(first, different)
+                self.assertEqual(2, len({first, same, different}))
+
+    def test_elliptic_curve_downgrade_does_not_populate_legacy_curve(self) -> None:
+        properties = AlgorithmProperties(elliptic_curve='nist/P-256')
+        data = json_loads(properties.as_json(view_=SchemaVersion1Dot6))
+        self.assertNotIn('ellipticCurve', data)
+        self.assertNotIn('curve', data)
+        xml = fromstring(properties.as_xml(view_=SchemaVersion1Dot6))
+        self.assertIsNone(xml.find('ellipticCurve'))
+        self.assertIsNone(xml.find('curve'))
+        self.assertIsNone(properties.curve)
 
 
 class TestModelCertificateProperties(TestCase):
