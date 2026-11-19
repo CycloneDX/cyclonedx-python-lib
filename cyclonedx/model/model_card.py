@@ -29,7 +29,7 @@ This set of classes represents the model card types in the CycloneDX standard.
 
 from collections.abc import Iterable
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
@@ -80,6 +80,12 @@ class Approach:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
     def type(self) -> Optional[MachineLearningApproach]:
+        """
+        Learning types describing the learning problem or hybrid learning problem.
+
+        Returns:
+            `MachineLearningApproach` if set else `None`
+        """
         return self._type
 
     @type.setter
@@ -130,6 +136,12 @@ class InputOutputMLParameters:
     @serializable.xml_sequence(1)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def format(self) -> str:
+        """
+        The data format for input/output to the model.
+
+        Returns:
+            `str`
+        """
         return self._format
 
     @format.setter
@@ -163,12 +175,24 @@ class InputOutputMLParameters:
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
-        return f'<IOParam format={self.format!r}>'
+        return f'<InputOutputMLParameters format={self.format!r}>'
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ModelParameters:
-    """`modelParameters` block within `modelCard`."""
+    """`modelParameters` block within `modelCard`.
+
+    .. note::
+        `datasets` is not supported yet (see issue #913):
+
+        - passing non-empty `datasets` to the constructor raises `NotImplementedError`.
+        - `datasets` found while deserializing JSON/XML are ignored,
+          so re-serializing such a BOM drops them.
+
+    .. note::
+        `inputs` and `outputs` keep their given order and duplicates,
+        because the position of an input/output is meaningful for a model signature.
+    """
 
     def __init__(
         self, *,
@@ -203,6 +227,12 @@ class ModelParameters:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
     def approach(self) -> Optional[Approach]:
+        """
+        The overall approach to learning used by the model for problem solving.
+
+        Returns:
+            `Approach` if set else `None`
+        """
         return self._approach
 
     @approach.setter
@@ -218,6 +248,12 @@ class ModelParameters:
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_name('task')
     def task(self) -> Optional[str]:
+        """
+        Directly influences the input and/or output. Examples include classification, regression, clustering, etc.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._task
 
     @task.setter
@@ -233,6 +269,13 @@ class ModelParameters:
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_name('architectureFamily')
     def architecture_family(self) -> Optional[str]:
+        """
+        The model architecture family such as transformer network, convolutional neural network, residual neural
+        network, LSTM neural network, etc.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._architecture_family
 
     @architecture_family.setter
@@ -248,6 +291,12 @@ class ModelParameters:
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_name('modelArchitecture')
     def model_architecture(self) -> Optional[str]:
+        """
+        The specific architecture of the model such as GPT-1, ResNet-50, YOLOv3, etc.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._model_architecture
 
     @model_architecture.setter
@@ -265,12 +314,18 @@ class ModelParameters:
     @serializable.json_name('inputs')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'input')
     @serializable.xml_name('inputs')
-    def inputs(self) -> 'SortedSet[InputOutputMLParameters]':
+    def inputs(self) -> 'List[InputOutputMLParameters]':
+        """
+        The input format(s) of the model, in the given order.
+
+        Returns:
+            List of `InputOutputMLParameters`
+        """
         return self._inputs
 
     @inputs.setter
     def inputs(self, inputs: Iterable[InputOutputMLParameters]) -> None:
-        self._inputs = SortedSet(inputs)
+        self._inputs = list(inputs)
 
     @property
     @serializable.view(SchemaVersion1Dot5)
@@ -280,12 +335,18 @@ class ModelParameters:
     @serializable.json_name('outputs')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'output')
     @serializable.xml_name('outputs')
-    def outputs(self) -> 'SortedSet[InputOutputMLParameters]':
+    def outputs(self) -> 'List[InputOutputMLParameters]':
+        """
+        The output format(s) from the model, in the given order.
+
+        Returns:
+            List of `InputOutputMLParameters`
+        """
         return self._outputs
 
     @outputs.setter
     def outputs(self, outputs: Iterable[InputOutputMLParameters]) -> None:
-        self._outputs = SortedSet(outputs)
+        self._outputs = list(outputs)
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
@@ -342,6 +403,12 @@ class ConfidenceInterval:
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_name('lowerBound')
     def lower_bound(self) -> Optional[str]:
+        """
+        The lower bound of the confidence interval.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._lower_bound
 
     @lower_bound.setter
@@ -357,6 +424,12 @@ class ConfidenceInterval:
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_name('upperBound')
     def upper_bound(self) -> Optional[str]:
+        """
+        The upper bound of the confidence interval.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._upper_bound
 
     @upper_bound.setter
@@ -416,6 +489,12 @@ class PerformanceMetric:
     @serializable.xml_sequence(1)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def type(self) -> Optional[str]:
+        """
+        The type of performance metric.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._type
 
     @type.setter
@@ -429,6 +508,12 @@ class PerformanceMetric:
     @serializable.xml_sequence(2)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def value(self) -> Optional[str]:
+        """
+        The value of the performance metric.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._value
 
     @value.setter
@@ -444,6 +529,12 @@ class PerformanceMetric:
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     @serializable.xml_name('slice')
     def slice_(self) -> Optional[str]:
+        """
+        The name of the slice this metric was computed on. By default, assume this metric is not sliced.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._slice
 
     @slice_.setter
@@ -458,6 +549,12 @@ class PerformanceMetric:
     @serializable.json_name('confidenceInterval')
     @serializable.xml_name('confidenceInterval')
     def confidence_interval(self) -> Optional[ConfidenceInterval]:
+        """
+        The confidence interval of the metric.
+
+        Returns:
+            `ConfidenceInterval` if set else `None`
+        """
         return self._confidence_interval
 
     @confidence_interval.setter
@@ -509,6 +606,12 @@ class Graphic:
     @serializable.xml_sequence(1)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
+        """
+        The name of the graphic.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._name
 
     @name.setter
@@ -521,6 +624,12 @@ class Graphic:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     def image(self) -> Optional[AttachedText]:
+        """
+        The graphic (vector or raster). Base64 encoding must be specified for binary images.
+
+        Returns:
+            `AttachedText` if set else `None`
+        """
         return self._image
 
     @image.setter
@@ -572,6 +681,12 @@ class GraphicsCollection:
     @serializable.xml_sequence(1)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
+        """
+        A description of this collection of graphics.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._description
 
     @description.setter
@@ -587,6 +702,12 @@ class GraphicsCollection:
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'graphic')
     @serializable.xml_name('collection')
     def collection(self) -> 'SortedSet[Graphic]':
+        """
+        A collection of graphics.
+
+        Returns:
+            Set of `Graphic`
+        """
         return self._collection
 
     @collection.setter
@@ -644,6 +765,13 @@ class QuantitativeAnalysis:
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'performanceMetric')
     @serializable.xml_name('performanceMetrics')
     def performance_metrics(self) -> 'SortedSet[PerformanceMetric]':
+        """
+        The model performance metrics being reported. Examples may include accuracy, F1 score, precision, top-3 error
+        rates, MSC, etc.
+
+        Returns:
+            Set of `PerformanceMetric`
+        """
         return self._performance_metrics
 
     @performance_metrics.setter
@@ -656,6 +784,12 @@ class QuantitativeAnalysis:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     def graphics(self) -> Optional[GraphicsCollection]:
+        """
+        A collection of graphics that represent various measurements.
+
+        Returns:
+            `GraphicsCollection` if set else `None`
+        """
         return self._graphics
 
     @graphics.setter
@@ -709,6 +843,12 @@ class EthicalConsideration:
     @serializable.xml_sequence(1)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def name(self) -> Optional[str]:
+        """
+        The name of the risk.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._name
 
     @name.setter
@@ -724,6 +864,12 @@ class EthicalConsideration:
     @serializable.xml_name('mitigationStrategy')
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def mitigation_strategy(self) -> Optional[str]:
+        """
+        Strategy used to address this risk.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._mitigation_strategy
 
     @mitigation_strategy.setter
@@ -785,6 +931,12 @@ class FairnessAssessment:
     @serializable.xml_name('groupAtRisk')
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def group_at_risk(self) -> Optional[str]:
+        """
+        The groups or individuals at risk of being systematically disadvantaged by the model.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._group_at_risk
 
     @group_at_risk.setter
@@ -798,6 +950,12 @@ class FairnessAssessment:
     @serializable.xml_sequence(2)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def benefits(self) -> Optional[str]:
+        """
+        Expected benefits to the identified groups.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._benefits
 
     @benefits.setter
@@ -811,6 +969,12 @@ class FairnessAssessment:
     @serializable.xml_sequence(3)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def harms(self) -> Optional[str]:
+        """
+        Expected harms to the identified groups.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._harms
 
     @harms.setter
@@ -826,6 +990,12 @@ class FairnessAssessment:
     @serializable.xml_name('mitigationStrategy')
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def mitigation_strategy(self) -> Optional[str]:
+        """
+        With respect to the benefits and harms outlined, any mitigation strategy implemented.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._mitigation_strategy
 
     @mitigation_strategy.setter
@@ -864,12 +1034,7 @@ class FairnessAssessment:
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class EnvironmentalConsiderations:
-    """Environmental considerations (1.6+). Energy consumptions and properties.
-
-    NOTE: Prior revisions kept `energy_consumptions` opaque. This has been replaced by
-    concrete types that match CycloneDX 1.6+/1.7 schema: `EnergyConsumption`, `EnergyMeasure`,
-    `Co2Measure`, `EnergyProvider`, and enumerations for `activity` and `energySource`.
-    """
+    """Environmental considerations (1.6+). Energy consumptions and properties."""
 
     def __init__(
         self, *,
@@ -887,6 +1052,12 @@ class EnvironmentalConsiderations:
     @serializable.xml_name('energyConsumptions')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'energyConsumption')
     def energy_consumptions(self) -> 'SortedSet[EnergyConsumption]':
+        """
+        Describes energy consumption information incurred for one or more component lifecycle activities.
+
+        Returns:
+            Set of `EnergyConsumption`
+        """
         return self._energy_consumptions
 
     @energy_consumptions.setter
@@ -900,6 +1071,12 @@ class EnvironmentalConsiderations:
     @serializable.xml_name('properties')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a name-value store.
+
+        Returns:
+            Set of `Property`
+        """
         return self._properties
 
     @properties.setter
@@ -963,6 +1140,12 @@ class EnergyMeasure:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
     def value(self) -> float:
+        """
+        Quantity of energy.
+
+        Returns:
+            `float`
+        """
         return self._value
 
     @value.setter
@@ -974,6 +1157,12 @@ class EnergyMeasure:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     def unit(self) -> EnergyMeasureUnit:
+        """
+        Unit of energy.
+
+        Returns:
+            `EnergyMeasureUnit`
+        """
         return self._unit
 
     @unit.setter
@@ -1023,6 +1212,12 @@ class Co2Measure:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
     def value(self) -> float:
+        """
+        Quantity of carbon dioxide (CO2).
+
+        Returns:
+            `float`
+        """
         return self._value
 
     @value.setter
@@ -1034,6 +1229,12 @@ class Co2Measure:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     def unit(self) -> Co2MeasureUnit:
+        """
+        Unit of carbon dioxide (CO2).
+
+        Returns:
+            `Co2MeasureUnit`
+        """
         return self._unit
 
     @unit.setter
@@ -1099,7 +1300,7 @@ class EnergyProvider:
         description: Optional[str] = None,
         external_references: Optional[Iterable[ExternalReference]] = None,
     ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref) if bom_ref is not None else _bom_ref_from_str(None)
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.description = description
         self.organization = organization
         self.energy_source = energy_source
@@ -1114,6 +1315,13 @@ class EnergyProvider:
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
+        """
+        An identifier which can be used to reference the energy provider elsewhere in the BOM. Every `bom-ref` must be
+        unique within the BOM.
+
+        Returns:
+            `BomRef`
+        """
         return self._bom_ref
 
     @property
@@ -1122,6 +1330,12 @@ class EnergyProvider:
     @serializable.xml_sequence(1)
     @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
     def description(self) -> Optional[str]:
+        """
+        A description of the energy provider.
+
+        Returns:
+            `str` if set else `None`
+        """
         return self._description
 
     @description.setter
@@ -1133,6 +1347,12 @@ class EnergyProvider:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(2)
     def organization(self) -> OrganizationalEntity:
+        """
+        The organization that provides energy.
+
+        Returns:
+            `OrganizationalEntity`
+        """
         return self._organization
 
     @organization.setter
@@ -1146,6 +1366,12 @@ class EnergyProvider:
     @serializable.json_name('energySource')
     @serializable.xml_name('energySource')
     def energy_source(self) -> EnergySource:
+        """
+        The energy source for the energy provider.
+
+        Returns:
+            `EnergySource`
+        """
         return self._energy_source
 
     @energy_source.setter
@@ -1159,6 +1385,12 @@ class EnergyProvider:
     @serializable.json_name('energyProvided')
     @serializable.xml_name('energyProvided')
     def energy_provided(self) -> EnergyMeasure:
+        """
+        The energy provided by the energy source for an associated activity.
+
+        Returns:
+            `EnergyMeasure`
+        """
         return self._energy_provided
 
     @energy_provided.setter
@@ -1173,6 +1405,13 @@ class EnergyProvider:
     @serializable.xml_name('externalReferences')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'reference')
     def external_references(self) -> 'SortedSet[ExternalReference]':
+        """
+        External references provide a way to document systems, sites, and information that may be relevant but are not
+        included with the BOM.
+
+        Returns:
+            Set of `ExternalReference`
+        """
         return self._external_references
 
     @external_references.setter
@@ -1241,6 +1480,12 @@ class EnergyConsumption:
     @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(1)
     def activity(self) -> EnergyActivity:
+        """
+        The type of activity that is part of a machine learning model development or operational lifecycle.
+
+        Returns:
+            `EnergyActivity`
+        """
         return self._activity
 
     @activity.setter
@@ -1254,6 +1499,12 @@ class EnergyConsumption:
     @serializable.json_name('energyProviders')
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'energyProviders')
     def energy_providers(self) -> 'SortedSet[EnergyProvider]':
+        """
+        The provider(s) of the energy consumed by the associated model development lifecycle activity.
+
+        Returns:
+            Set of `EnergyProvider`
+        """
         return self._energy_providers
 
     @energy_providers.setter
@@ -1267,6 +1518,12 @@ class EnergyConsumption:
     @serializable.json_name('activityEnergyCost')
     @serializable.xml_name('activityEnergyCost')
     def activity_energy_cost(self) -> EnergyMeasure:
+        """
+        The total energy cost associated with the model lifecycle activity.
+
+        Returns:
+            `EnergyMeasure`
+        """
         return self._activity_energy_cost
 
     @activity_energy_cost.setter
@@ -1280,6 +1537,12 @@ class EnergyConsumption:
     @serializable.json_name('co2CostEquivalent')
     @serializable.xml_name('co2CostEquivalent')
     def co2_cost_equivalent(self) -> Optional[Co2Measure]:
+        """
+        The CO2 cost (debit) equivalent to the total energy cost.
+
+        Returns:
+            `Co2Measure` if set else `None`
+        """
         return self._co2_cost_equivalent
 
     @co2_cost_equivalent.setter
@@ -1293,6 +1556,12 @@ class EnergyConsumption:
     @serializable.json_name('co2CostOffset')
     @serializable.xml_name('co2CostOffset')
     def co2_cost_offset(self) -> Optional[Co2Measure]:
+        """
+        The CO2 offset (credit) for the CO2 equivalent cost.
+
+        Returns:
+            `Co2Measure` if set else `None`
+        """
         return self._co2_cost_offset
 
     @co2_cost_offset.setter
@@ -1306,6 +1575,12 @@ class EnergyConsumption:
     @serializable.xml_name('properties')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a name-value store.
+
+        Returns:
+            Set of `Property`
+        """
         return self._properties
 
     @properties.setter
@@ -1383,6 +1658,12 @@ class Considerations:
     @serializable.json_name('users')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'user')
     def users(self) -> 'SortedSet[str]':
+        """
+        Who are the intended users of the model?
+
+        Returns:
+            Set of `str`
+        """
         return self._users
 
     @users.setter
@@ -1398,6 +1679,12 @@ class Considerations:
     @serializable.xml_name('useCases')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'useCase')
     def use_cases(self) -> 'SortedSet[str]':
+        """
+        What are the intended use cases of the model?
+
+        Returns:
+            Set of `str`
+        """
         return self._use_cases
 
     @use_cases.setter
@@ -1413,6 +1700,13 @@ class Considerations:
     @serializable.xml_name('technicalLimitations')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'technicalLimitation')
     def technical_limitations(self) -> 'SortedSet[str]':
+        """
+        What are the known technical limitations of the model? E.g. What kind(s) of data should the model be expected
+        not to perform well on? What are the factors that might degrade model performance?
+
+        Returns:
+            Set of `str`
+        """
         return self._technical_limitations
 
     @technical_limitations.setter
@@ -1428,6 +1722,12 @@ class Considerations:
     @serializable.xml_name('performanceTradeoffs')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'performanceTradeoff')
     def performance_tradeoffs(self) -> 'SortedSet[str]':
+        """
+        What are the known tradeoffs in accuracy/performance of the model?
+
+        Returns:
+            Set of `str`
+        """
         return self._performance_tradeoffs
 
     @performance_tradeoffs.setter
@@ -1443,6 +1743,12 @@ class Considerations:
     @serializable.xml_name('ethicalConsiderations')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'ethicalConsideration')
     def ethical_considerations(self) -> 'SortedSet[EthicalConsideration]':
+        """
+        What are the ethical risks involved in the application of this model?
+
+        Returns:
+            Set of `EthicalConsideration`
+        """
         return self._ethical_considerations
 
     @ethical_considerations.setter
@@ -1456,6 +1762,13 @@ class Considerations:
     @serializable.json_name('environmentalConsiderations')
     @serializable.xml_name('environmentalConsiderations')
     def environmental_considerations(self) -> Optional[EnvironmentalConsiderations]:
+        """
+        What are the various environmental impacts the corresponding machine learning model has exhibited across its
+        lifecycle?
+
+        Returns:
+            `EnvironmentalConsiderations` if set else `None`
+        """
         return self._environmental_considerations
 
     @environmental_considerations.setter
@@ -1471,6 +1784,13 @@ class Considerations:
     @serializable.xml_name('fairnessAssessments')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'fairnessAssessment')
     def fairness_assessments(self) -> 'SortedSet[FairnessAssessment]':
+        """
+        How does the model affect groups at risk of being systematically disadvantaged? What are the harms and benefits
+        to the various affected groups?
+
+        Returns:
+            Set of `FairnessAssessment`
+        """
         return self._fairness_assessments
 
     @fairness_assessments.setter
@@ -1536,7 +1856,7 @@ class ModelCard:
         considerations: Optional[Considerations] = None,
         properties: Optional[Iterable[Property]] = None,
     ) -> None:
-        self._bom_ref = _bom_ref_from_str(bom_ref) if bom_ref is not None else _bom_ref_from_str(None)
+        self._bom_ref = _bom_ref_from_str(bom_ref)
         self.model_parameters = model_parameters
         self.quantitative_analysis = quantitative_analysis
         self.considerations = considerations
@@ -1552,6 +1872,13 @@ class ModelCard:
     @serializable.xml_attribute()
     @serializable.xml_name('bom-ref')
     def bom_ref(self) -> BomRef:
+        """
+        An identifier which can be used to reference the model card elsewhere in the BOM. Every `bom-ref` must be unique
+        within the BOM.
+
+        Returns:
+            `BomRef`
+        """
         return self._bom_ref
 
     @property
@@ -1562,6 +1889,12 @@ class ModelCard:
     @serializable.json_name('modelParameters')
     @serializable.xml_name('modelParameters')
     def model_parameters(self) -> Optional[ModelParameters]:
+        """
+        Hyper-parameters for construction of the model.
+
+        Returns:
+            `ModelParameters` if set else `None`
+        """
         return self._model_parameters
 
     @model_parameters.setter
@@ -1576,6 +1909,12 @@ class ModelCard:
     @serializable.json_name('quantitativeAnalysis')
     @serializable.xml_name('quantitativeAnalysis')
     def quantitative_analysis(self) -> Optional[QuantitativeAnalysis]:
+        """
+        A quantitative analysis of the model.
+
+        Returns:
+            `QuantitativeAnalysis` if set else `None`
+        """
         return self._quantitative_analysis
 
     @quantitative_analysis.setter
@@ -1590,6 +1929,12 @@ class ModelCard:
     @serializable.json_name('considerations')
     @serializable.xml_name('considerations')
     def considerations(self) -> Optional[Considerations]:
+        """
+        What considerations should be taken into account regarding the model's construction, training, and application?
+
+        Returns:
+            `Considerations` if set else `None`
+        """
         return self._considerations
 
     @considerations.setter
@@ -1605,6 +1950,12 @@ class ModelCard:
     @serializable.xml_name('properties')
     @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'property')
     def properties(self) -> 'SortedSet[Property]':
+        """
+        Provides the ability to document properties in a name-value store.
+
+        Returns:
+            Set of `Property`
+        """
         return self._properties
 
     @properties.setter

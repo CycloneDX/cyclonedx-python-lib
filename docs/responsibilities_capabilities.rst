@@ -42,6 +42,7 @@ Capabilities
    * :mod:`Issue <cyclonedx.model.issue>`
    * :mod:`License Named, SPDX, Expression, and more <cyclonedx.model.license>`
    * :mod:`Lifecycle <cyclonedx.model.lifecycle>`
+   * :mod:`Model Card and Environmental Considerations <cyclonedx.model.model_card>`
    * :mod:`Release Notes <cyclonedx.model.release_note>`
    * :mod:`Service <cyclonedx.model.service>`
    * :mod:`Tool <cyclonedx.model.tool>`

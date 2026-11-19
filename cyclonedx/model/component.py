@@ -1648,17 +1648,6 @@ class Component(Dependable):
     # @property
     # ...
     # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(22)
-    # def model_card(self) -> ...:
-    #     ...  # TODO since CDX1.5
-    #
-    # @model_card.setter
-    # def model_card(self, ...) -> None:
-    #     ...  # TODO since CDX1.5
-
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
     # @serializable.xml_sequence(23)
     # def data(self) -> ...:
     #     ...  # TODO since CDX1.5

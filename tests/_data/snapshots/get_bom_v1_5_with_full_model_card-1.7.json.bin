@@ -126,19 +126,19 @@
           "architectureFamily": "Transformer",
           "inputs": [
             {
-              "format": "application/json"
+              "format": "text/plain"
             },
             {
-              "format": "text/plain"
+              "format": "application/json"
             }
           ],
           "modelArchitecture": "tiny-transformer-v1",
           "outputs": [
             {
-              "format": "confidence-score"
+              "format": "label"
             },
             {
-              "format": "label"
+              "format": "confidence-score"
             }
           ],
           "task": "text-classification"

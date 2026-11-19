@@ -18,18 +18,18 @@
           <modelArchitecture>tiny-transformer-v1</modelArchitecture>
           <inputs>
             <input>
-              <format>application/json</format>
+              <format>text/plain</format>
             </input>
             <input>
-              <format>text/plain</format>
+              <format>application/json</format>
             </input>
           </inputs>
           <outputs>
             <output>
-              <format>confidence-score</format>
+              <format>label</format>
             </output>
             <output>
-              <format>label</format>
+              <format>confidence-score</format>
             </output>
           </outputs>
         </modelParameters>

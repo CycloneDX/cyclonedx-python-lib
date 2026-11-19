@@ -200,7 +200,7 @@ class TestInputOutputMLParameters(TestCase):
     def test_repr(self) -> None:
         self.assertEqual(
             repr(InputOutputMLParameters(format='JSON')),
-            "<IOParam format='JSON'>",
+            "<InputOutputMLParameters format='JSON'>",
         )
 
 
@@ -247,16 +247,14 @@ class TestModelParameters(TestCase):
         with self.assertRaises(NotImplementedError):
             ModelParameters(datasets=['dataset'])
 
-    def test_sorted_input_collection(self) -> None:
-        first = InputOutputMLParameters(format='A')
-        second = InputOutputMLParameters(format='B')
+    def test_inputs_outputs_keep_order_and_duplicates(self) -> None:
+        a = InputOutputMLParameters(format='A')
+        b = InputOutputMLParameters(format='B')
 
-        obj = ModelParameters(inputs=[second, first])
+        obj = ModelParameters(inputs=[b, a, a], outputs=[b, a, a])
 
-        self.assertEqual(
-            list(obj.inputs),
-            [first, second],
-        )
+        self.assertEqual(obj.inputs, [b, a, a])
+        self.assertEqual(obj.outputs, [b, a, a])
 
     def test_equality(self) -> None:
         self.assertEqual(
