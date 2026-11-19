@@ -112,6 +112,7 @@ class TestModelComponent(TestCase):
         self.assertIsNone(c.release_notes)
         self.assertEqual(len(c.components), 0)
         self.assertEqual(len(c.get_all_nested_components(include_self=True)), 1)
+        self.assertEqual(len(list(c.iter_all_nested_components(include_self=True))), 1)
 
     def test_multiple_basic_components(self) -> None:
         c1 = Component(name='test-component')
@@ -312,6 +313,8 @@ class TestModelComponent(TestCase):
         self.assertEqual(1, len(comp_b.components))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=True)))
         self.assertEqual(1, len(comp_b.get_all_nested_components(include_self=False)))
+        self.assertEqual(2, len(list(comp_b.iter_all_nested_components(include_self=True))))
+        self.assertEqual(1, len(list(comp_b.iter_all_nested_components(include_self=False))))
 
     def test_nested_components_2(self) -> None:
         comp_a = Component(name='comp_a')
@@ -323,6 +326,8 @@ class TestModelComponent(TestCase):
         self.assertEqual(2, len(comp_b.components))
         self.assertEqual(3, len(comp_b.get_all_nested_components(include_self=True)))
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=False)))
+        self.assertEqual(3, len(list(comp_b.iter_all_nested_components(include_self=True))))
+        self.assertEqual(2, len(list(comp_b.iter_all_nested_components(include_self=False))))
 
 
 class TestModelDiff(TestCase):
