@@ -4,7 +4,7 @@
       "bom-ref": "acme-library",
       "name": "acme-library",
       "signature": {
-        "algorithm": "urn:example:signature-algorithm",
+        "algorithm": "ES256",
         "value": "simple-signature",
         "keyId": "test-key-1",
         "publicKey": {
@@ -56,7 +56,7 @@
             "value": "chain-signature-1"
           },
           {
-            "algorithm": "Ed448",
+            "algorithm": "urn:example:signature-algorithm",
             "value": "chain-signature-2"
           }
         ]
@@ -75,7 +75,7 @@
         }
       },
       {
-        "algorithm": "ES384",
+        "algorithm": "Ed25519",
         "value": "okp-signature",
         "keyId": "okp-key",
         "publicKey": {

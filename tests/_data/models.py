@@ -1618,7 +1618,7 @@ def get_bom_for_issue540_duplicate_components() -> Bom:
 def get_bom_with_signatures() -> Bom:
     # Tests all JSF signature modes, key types, and optional fields (JSON-only, CDX >= 1.4).
     simple_sig = JsfSimpleSignature(
-        algorithm=XsUri('urn:example:signature-algorithm'),
+        algorithm=JsfAlgorithm.ES256,
         value='simple-signature',
         key_id='test-key-1',
         public_key=JsfPublicKey(
@@ -1642,7 +1642,7 @@ def get_bom_with_signatures() -> Bom:
                 ),
             ),
             JsfSimpleSignature(
-                algorithm=JsfAlgorithm.ES384,
+                algorithm=JsfAlgorithm.ED25519,
                 value='okp-signature',
                 public_key=JsfPublicKey(
                     kty=JsfKeyType.OKP,
@@ -1676,7 +1676,7 @@ def get_bom_with_signatures() -> Bom:
                             value='chain-signature-1',
                         ),
                         JsfSimpleSignature(
-                            algorithm=JsfAlgorithm.ED448,
+                            algorithm=XsUri('urn:example:signature-algorithm'),
                             value='chain-signature-2',
                         ),
                     ]
@@ -1775,8 +1775,7 @@ all_get_bom_funct_valid = tuple(
 
 all_get_bom_funct_no_xml_roundtrip: frozenset = frozenset({
     # BOMs that contain JSON-only fields (e.g. JSF signatures).
-    # These are excluded from test_deserialize_xml's test_prepared assertBomDeepEqual comparison.
-    # Use all_get_bom_funct_no_xml_roundtrip_immut for @named_data.
+    # test_deserialize_xml excludes these from test_prepared and checks them in test_no_xml_roundtrip instead.
     get_bom_with_signatures,
 })
 
@@ -1787,7 +1786,6 @@ all_get_bom_funct_no_xml_roundtrip_immut = tuple(
 all_get_bom_funct_valid_immut = tuple(
     (n, f) for n, f in getmembers(sys.modules[__name__], isfunction)
     if n.startswith('get_bom_') and not n.endswith('_invalid') and not n.endswith('_migrate')
-    and f not in all_get_bom_funct_no_xml_roundtrip
 )
 
 all_get_bom_funct_valid_reversible_migrate = tuple(

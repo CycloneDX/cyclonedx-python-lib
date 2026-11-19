@@ -28,6 +28,7 @@ from cyclonedx.model.signature import (
     JsfSignatureChain,
     JsfSignatureSigners,
     JsfSimpleSignature,
+    _JsfSignatureSerializationHelper,
 )
 from tests import reorder
 
@@ -151,6 +152,26 @@ class TestJsfPublicKey(TestCase):
         obj.n = 'new_modulus'
         self.assertEqual(obj.n, 'new_modulus')
 
+    def test_property_setters_validate_and_keep_key_valid(self) -> None:
+        ec = JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='x', y='y')
+        cases = (
+            ('n', 'bad'),
+            ('y', None),
+            ('crv', JsfOkpCurve.ED25519),
+            ('kty', JsfKeyType.RSA),
+        )
+        for attr, value in cases:
+            with self.subTest(attr=attr):
+                before = getattr(ec, attr)
+                with self.assertRaises(InvalidValueException):
+                    setattr(ec, attr, value)
+                self.assertEqual(before, getattr(ec, attr))
+        self.assertEqual({'kty': 'EC', 'crv': 'P-256', 'x': 'x', 'y': 'y'}, ec._as_dict())
+
+    def test_validation_unknown_kty(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfPublicKey(kty='oct', x='x')  # type: ignore[arg-type]
+
     # -------------------------------------------------------------------------
     # Exhaustive Conditional Validation Tests (Every Permutation)
     # -------------------------------------------------------------------------
@@ -257,16 +278,29 @@ class TestJsfPublicKey(TestCase):
     def test_from_dict_rejects_incompatible_fields(self) -> None:
         cases = (
             {'kty': 'RSA', 'n': 'n', 'e': 'e', 'crv': 'P-256'},
-            {'kty': 'RSA', 'n': 'n', 'e': 'e', 'crv': None},
             {'kty': 'RSA', 'n': 'n', 'e': 'e', 'x': 'x'},
             {'kty': 'EC', 'crv': 'P-256', 'x': 'x', 'y': 'y', 'n': 'n'},
-            {'kty': 'EC', 'crv': 'P-256', 'x': 'x', 'y': 'y', 'e': None},
             {'kty': 'OKP', 'crv': 'Ed25519', 'x': 'x', 'y': 'y'},
-            {'kty': 'OKP', 'crv': 'Ed25519', 'x': 'x', 'n': None},
         )
         for data in cases:
             with self.subTest(data=data), self.assertRaises(InvalidValueException):
                 JsfPublicKey._from_dict(data)
+
+    def test_from_dict(self) -> None:
+        cases = (
+            ({'kty': 'EC', 'crv': 'P-256', 'x': 'x', 'y': 'y'},
+             JsfPublicKey(kty=JsfKeyType.EC, crv=JsfEcCurve.P_256, x='x', y='y')),
+            ({'kty': 'OKP', 'crv': 'Ed448', 'x': 'x'},
+             JsfPublicKey(kty=JsfKeyType.OKP, crv=JsfOkpCurve.ED448, x='x')),
+            ({'kty': 'RSA', 'n': 'n', 'e': 'e'},
+             JsfPublicKey(kty=JsfKeyType.RSA, n='n', e='e')),
+        )
+        for data, expected in cases:
+            with self.subTest(data=data):
+                actual = JsfPublicKey._from_dict(data)
+                self.assertEqual(expected, actual)
+                self.assertIs(type(expected.crv), type(actual.crv))
+                self.assertEqual(data, actual._as_dict())
 
     # -------------------------------------------------------------------------
     # Equality, Comparison, Hash & Sort Tests
@@ -645,3 +679,72 @@ class TestJsfSignaturePolymorphism(TestCase):
         simple = JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='val')
         with self.assertRaises(TypeError):
             r = simple < 'other'  # pylint: disable=unused-variable # noqa: disable=E841
+
+    def test_cross_subtype_order_is_explicit(self) -> None:
+        simple = JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='val')
+        signers = JsfSignatureSigners(signers=[simple])
+        chain = JsfSignatureChain(chain=[simple])
+        self.assertEqual([simple, signers, chain], sorted([chain, signers, simple]))
+
+
+class TestJsfSimpleSignatureSetters(TestCase):
+
+    def test_value_must_be_str(self) -> None:
+        with self.assertRaises(InvalidValueException):
+            JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value=123)  # type: ignore[arg-type]
+        sig = JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='val')
+        with self.assertRaises(InvalidValueException):
+            sig.value = None  # type: ignore[assignment]
+        self.assertEqual('val', sig.value)
+
+    def test_list_fields_accept_iterables_and_keep_order(self) -> None:
+        sig = JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='val',
+                                 certificate_path=iter(['leaf', 'intermediate', 'root']),
+                                 excludes=('b', 'a'))
+        self.assertEqual(['leaf', 'intermediate', 'root'], sig.certificate_path)
+        self.assertEqual(['b', 'a'], sig.excludes)
+
+    def test_signers_and_chain_setters_validate(self) -> None:
+        simple = JsfSimpleSignature(algorithm=JsfAlgorithm.RS256, value='val')
+        signers = JsfSignatureSigners(signers=(simple,))
+        chain = JsfSignatureChain(chain=(simple,))
+        self.assertEqual([simple], signers.signers)
+        self.assertEqual([simple], chain.chain)
+        with self.assertRaises(InvalidValueException):
+            signers.signers = [chain]  # type: ignore[list-item]
+        with self.assertRaises(InvalidValueException):
+            chain.chain = [signers]  # type: ignore[list-item]
+
+
+class TestJsfSignatureSerializationHelper(TestCase):
+
+    def test_json_denormalize_modes(self) -> None:
+        simple = {'algorithm': 'Ed25519', 'value': 'v', 'keyId': 'k',
+                  'publicKey': {'kty': 'OKP', 'crv': 'Ed25519', 'x': 'x'},
+                  'certificatePath': ['c'], 'excludes': ['e']}
+        cases = (
+            (simple, JsfSimpleSignature),
+            ({'signers': [simple, {'algorithm': 'RS256', 'value': 'w'}]}, JsfSignatureSigners),
+            ({'chain': [simple]}, JsfSignatureChain),
+        )
+        for data, cls in cases:
+            with self.subTest(cls=cls.__name__):
+                sig = _JsfSignatureSerializationHelper.json_denormalize(data)
+                self.assertIsInstance(sig, cls)
+                self.assertEqual(data, _JsfSignatureSerializationHelper.json_normalize(sig, view=None))
+
+    def test_json_denormalize_rejects_invalid(self) -> None:
+        cases = (
+            ['not', 'a', 'dict'],
+            {'signers': [], 'chain': []},
+            {'value': 'v'},
+            {'algorithm': 'RS256'},
+            {'algorithm': 'RS256', 'value': 'v', 'publicKey': {'crv': 'P-256'}},
+            {'algorithm': 'RS256', 'value': 'v', 'publicKey': {'kty': 'oct'}},
+            {'algorithm': 'ES256', 'value': 'v', 'publicKey': {'kty': 'EC', 'crv': 'P-999', 'x': 'x', 'y': 'y'}},
+            {'signers': [{'algorithm': 'RS256'}]},
+            {'chain': None},
+        )
+        for data in cases:
+            with self.subTest(data=data), self.assertRaises(InvalidValueException):
+                _JsfSignatureSerializationHelper.json_denormalize(data)
