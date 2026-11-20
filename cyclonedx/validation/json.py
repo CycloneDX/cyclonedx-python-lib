@@ -59,8 +59,7 @@ class JsonValidationError(ValidationError):
     @classmethod
     def _make_from_jsve(cls, e: 'JsonSchemaValidationError') -> 'JsonValidationError':
         """⚠️ This is an internal API. It is not part of the public interface and may change without notice."""
-        # in preparation for https://github.com/CycloneDX/cyclonedx-python-lib/pull/836
-        return cls(e)
+        return cls(e.message)  # TODO: shorten and more useful message? maybe there is a massage formatter?
 
 
 class _BaseJsonValidator(BaseSchemabasedValidator, ABC):
