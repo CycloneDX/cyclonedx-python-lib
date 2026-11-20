@@ -10,12 +10,51 @@
       <cryptoProperties>
         <assetType>certificate</assetType>
         <certificateProperties>
+          <serialNumber>3942447fac867ae5cdb3229b658f4d48</serialNumber>
           <subjectName>cyclonedx.org</subjectName>
           <issuerName>Cloudflare Inc ECC CA-3</issuerName>
           <notValidBefore>2023-05-19T01:00:00+00:00</notValidBefore>
           <notValidAfter>2024-05-19T00:59:59.999999+00:00</notValidAfter>
+          <signatureAlgorithmRef>signature-algorithm</signatureAlgorithmRef>
+          <subjectPublicKeyRef>subject-public-key</subjectPublicKeyRef>
           <certificateFormat>pem</certificateFormat>
           <certificateExtension>csr</certificateExtension>
+          <certificateFileExtension>pem</certificateFileExtension>
+          <fingerprint alg="SHA-256">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</fingerprint>
+          <certificateState>
+            <name>pending-rotation</name>
+            <description>The certificate is waiting to be rotated.</description>
+            <reason>scheduled maintenance</reason>
+          </certificateState>
+          <certificateState>
+            <state>active</state>
+            <reason>certificate is in use</reason>
+          </certificateState>
+          <creationDate>2023-05-18T12:00:00+00:00</creationDate>
+          <activationDate>2023-05-19T01:00:00+00:00</activationDate>
+          <deactivationDate>2024-05-18T12:00:00+00:00</deactivationDate>
+          <revocationDate>2024-05-18T13:00:00+00:00</revocationDate>
+          <destructionDate>2024-05-18T14:00:00+00:00</destructionDate>
+          <certificateExtensions>
+            <certificateExtension>
+              <commonExtensionName>keyUsage</commonExtensionName>
+              <commonExtensionValue>digitalSignature</commonExtensionValue>
+            </certificateExtension>
+            <certificateExtension>
+              <customExtensionName>1.2.3.4.5</customExtensionName>
+              <customExtensionValue>custom-value</customExtensionValue>
+            </certificateExtension>
+          </certificateExtensions>
+          <relatedCryptographicAssets>
+            <relatedCryptographicAsset>
+              <type>algorithm</type>
+              <ref>signature-algorithm</ref>
+            </relatedCryptographicAsset>
+            <relatedCryptographicAsset>
+              <type>publicKey</type>
+              <ref>subject-public-key</ref>
+            </relatedCryptographicAsset>
+          </relatedCryptographicAssets>
         </certificateProperties>
         <oid>an-oid-here</oid>
       </cryptoProperties>

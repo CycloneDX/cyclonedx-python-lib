@@ -28,14 +28,17 @@ This set of classes represents cryptoPropertiesType Complex Type in the CycloneD
 from collections.abc import Iterable
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
+from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.compare import ComparableTuple as _ComparableTuple
 from ..exception.model import InvalidNistQuantumSecurityLevelException, InvalidRelatedCryptoMaterialSizeException
+from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot6, SchemaVersion1Dot7
+from . import HashType
 from .bom_ref import BomRef
 
 
@@ -586,6 +589,342 @@ class AlgorithmProperties:
         return f'<AlgorithmProperties primitive={self.primitive}, execution_environment={self.execution_environment}>'
 
 
+@serializable.serializable_enum
+class CertificateLifecycleState(str, Enum):
+    """A pre-defined state in the certificate lifecycle."""
+
+    PRE_ACTIVATION = 'pre-activation'
+    ACTIVE = 'active'
+    SUSPENDED = 'suspended'
+    DEACTIVATED = 'deactivated'
+    REVOKED = 'revoked'
+    DESTROYED = 'destroyed'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateState:
+    """Common base for certificate states; deserialization selects the concrete variant."""
+
+    if TYPE_CHECKING:  # pragma: no cover
+        @classmethod
+        def from_json(cls, data: dict[str, Any]) -> 'CertificateState':
+            ...
+
+        @classmethod
+        def from_xml(cls, data: Element, default_namespace: Optional[str] = None) -> 'CertificateState':
+            ...
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        raise NotImplementedError()
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, CertificateState) and self._comparable_tuple() == other._comparable_tuple()
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, CertificateState):
+            return self._comparable_tuple() < other._comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._comparable_tuple())
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificatePredefinedState(CertificateState):
+    """A standardized certificate lifecycle state with an optional reason."""
+
+    def __init__(self, *, state: CertificateLifecycleState, reason: Optional[str] = None) -> None:
+        self.state = state
+        self.reason = reason
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def state(self) -> CertificateLifecycleState:
+        return self._state
+
+    @state.setter
+    def state(self, state: CertificateLifecycleState) -> None:
+        self._state = state
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def reason(self) -> Optional[str]:
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason: Optional[str]) -> None:
+        self._reason = reason
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('predefined', self.state, self.reason))
+
+    def __repr__(self) -> str:
+        return f'<CertificatePredefinedState state={self.state!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateCustomState(CertificateState):
+    """An application-defined certificate lifecycle state."""
+
+    def __init__(self, *, name: str, description: Optional[str] = None, reason: Optional[str] = None) -> None:
+        self.name = name
+        self.description = description
+        self.reason = reason
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, name: str) -> None:
+        self._name = name
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @description.setter
+    def description(self, description: Optional[str]) -> None:
+        self._description = description
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(30)
+    def reason(self) -> Optional[str]:
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason: Optional[str]) -> None:
+        self._reason = reason
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('custom', self.name, self.description, self.reason))
+
+    def __repr__(self) -> str:
+        return f'<CertificateCustomState name={self.name!r}>'
+
+
+def _certificate_state_from_json(cls: type[CertificateState], data: dict[str, Any]) -> CertificateState:
+    if 'state' in data:
+        return CertificatePredefinedState.from_json(data)
+    if 'name' in data:
+        return CertificateCustomState.from_json(data)
+    raise CycloneDxDeserializationException(f'unexpected certificate state: {data!r}')
+
+
+def _certificate_state_from_xml(
+    cls: type[CertificateState], data: Element, default_namespace: Optional[str] = None
+) -> CertificateState:
+    child_names = {child.tag.rsplit('}', 1)[-1] for child in data}
+    if 'state' in child_names:
+        return CertificatePredefinedState.from_xml(data, default_namespace)
+    if 'name' in child_names:
+        return CertificateCustomState.from_xml(data, default_namespace)
+    raise CycloneDxDeserializationException(f'unexpected certificate state: {data!r}')
+
+
+# Install dispatch after decoration because serializable_class overwrites the deserializers.
+CertificateState.from_json = classmethod(_certificate_state_from_json)  # type:ignore[assignment]
+CertificateState.from_xml = classmethod(_certificate_state_from_xml)  # type:ignore[assignment]
+
+
+@serializable.serializable_enum
+class CertificateCommonExtensionName(str, Enum):
+    """Names of common X.509 certificate extensions supported by CycloneDX 1.7."""
+
+    BASIC_CONSTRAINTS = 'basicConstraints'
+    KEY_USAGE = 'keyUsage'
+    EXTENDED_KEY_USAGE = 'extendedKeyUsage'
+    SUBJECT_ALTERNATIVE_NAME = 'subjectAlternativeName'
+    AUTHORITY_KEY_IDENTIFIER = 'authorityKeyIdentifier'
+    SUBJECT_KEY_IDENTIFIER = 'subjectKeyIdentifier'
+    AUTHORITY_INFORMATION_ACCESS = 'authorityInformationAccess'
+    CERTIFICATE_POLICIES = 'certificatePolicies'
+    CRL_DISTRIBUTION_POINTS = 'crlDistributionPoints'
+    SIGNED_CERTIFICATE_TIMESTAMP = 'signedCertificateTimestamp'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateExtension:
+    """Common base for certificate extensions; deserialization selects the concrete variant."""
+
+    if TYPE_CHECKING:  # pragma: no cover
+        @classmethod
+        def from_json(cls, data: dict[str, Any]) -> 'CertificateExtension':
+            ...
+
+        @classmethod
+        def from_xml(cls, data: Element, default_namespace: Optional[str] = None) -> 'CertificateExtension':
+            ...
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        raise NotImplementedError()
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, CertificateExtension) and self._comparable_tuple() == other._comparable_tuple()
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, CertificateExtension):
+            return self._comparable_tuple() < other._comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self._comparable_tuple())
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateCommonExtension(CertificateExtension):
+    """A standardized certificate extension and its value."""
+
+    def __init__(
+        self, *,
+        common_extension_name: CertificateCommonExtensionName,
+        common_extension_value: str,
+    ) -> None:
+        self.common_extension_name = common_extension_name
+        self.common_extension_value = common_extension_value
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def common_extension_name(self) -> CertificateCommonExtensionName:
+        return self._common_extension_name
+
+    @common_extension_name.setter
+    def common_extension_name(self, common_extension_name: CertificateCommonExtensionName) -> None:
+        self._common_extension_name = common_extension_name
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def common_extension_value(self) -> str:
+        return self._common_extension_value
+
+    @common_extension_value.setter
+    def common_extension_value(self, common_extension_value: str) -> None:
+        self._common_extension_value = common_extension_value
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('common', self.common_extension_name, self.common_extension_value))
+
+    def __repr__(self) -> str:
+        return f'<CertificateCommonExtension name={self.common_extension_name!r}>'
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class CertificateCustomExtension(CertificateExtension):
+    """An application- or vendor-defined certificate extension."""
+
+    def __init__(self, *, custom_extension_name: str, custom_extension_value: Optional[str] = None) -> None:
+        self.custom_extension_name = custom_extension_name
+        self.custom_extension_value = custom_extension_value
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def custom_extension_name(self) -> str:
+        return self._custom_extension_name
+
+    @custom_extension_name.setter
+    def custom_extension_name(self, custom_extension_name: str) -> None:
+        self._custom_extension_name = custom_extension_name
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def custom_extension_value(self) -> Optional[str]:
+        return self._custom_extension_value
+
+    @custom_extension_value.setter
+    def custom_extension_value(self, custom_extension_value: Optional[str]) -> None:
+        self._custom_extension_value = custom_extension_value
+
+    def _comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple(('custom', self.custom_extension_name, self.custom_extension_value))
+
+    def __repr__(self) -> str:
+        return f'<CertificateCustomExtension name={self.custom_extension_name!r}>'
+
+
+def _certificate_extension_from_json(
+    cls: type[CertificateExtension], data: dict[str, Any]
+) -> CertificateExtension:
+    if 'commonExtensionName' in data:
+        return CertificateCommonExtension.from_json(data)
+    if 'customExtensionName' in data:
+        return CertificateCustomExtension.from_json(data)
+    raise CycloneDxDeserializationException(f'unexpected certificate extension: {data!r}')
+
+
+def _certificate_extension_from_xml(
+    cls: type[CertificateExtension], data: Element, default_namespace: Optional[str] = None
+) -> CertificateExtension:
+    child_names = {child.tag.rsplit('}', 1)[-1] for child in data}
+    if 'commonExtensionName' in child_names:
+        return CertificateCommonExtension.from_xml(data, default_namespace)
+    if 'customExtensionName' in child_names:
+        return CertificateCustomExtension.from_xml(data, default_namespace)
+    raise CycloneDxDeserializationException(f'unexpected certificate extension: {data!r}')
+
+
+# Install dispatch after decoration because serializable_class overwrites the deserializers.
+CertificateExtension.from_json = classmethod(_certificate_extension_from_json)  # type:ignore[assignment]
+CertificateExtension.from_xml = classmethod(_certificate_extension_from_xml)  # type:ignore[assignment]
+
+
+@serializable.serializable_class(ignore_unknown_during_deserialization=True)
+class RelatedCryptographicAsset:
+    """A typed reference to another cryptographic asset."""
+
+    def __init__(self, *, type: Optional[str] = None, ref: Optional[BomRef] = None) -> None:
+        self.type = type
+        self.ref = ref
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(10)
+    def type(self) -> Optional[str]:
+        return self._type
+
+    @type.setter
+    def type(self, type: Optional[str]) -> None:
+        self._type = type
+
+    @property
+    @serializable.type_mapping(BomRef)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(20)
+    def ref(self) -> Optional[BomRef]:
+        return self._ref
+
+    @ref.setter
+    def ref(self, ref: Optional[BomRef]) -> None:
+        self._ref = ref
+
+    def __comparable_tuple(self) -> _ComparableTuple:
+        return _ComparableTuple((self.type, self.ref))
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, RelatedCryptographicAsset) and self.__comparable_tuple() == other.__comparable_tuple()
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, RelatedCryptographicAsset):
+            return self.__comparable_tuple() < other.__comparable_tuple()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.__comparable_tuple())
+
+    def __repr__(self) -> str:
+        return f'<RelatedCryptographicAsset type={self.type!r}, ref={self.ref!r}>'
+
+
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class CertificateProperties:
     """
@@ -602,6 +941,7 @@ class CertificateProperties:
 
     def __init__(
         self, *,
+        serial_number: Optional[str] = None,
         subject_name: Optional[str] = None,
         issuer_name: Optional[str] = None,
         not_valid_before: Optional[datetime] = None,
@@ -610,7 +950,18 @@ class CertificateProperties:
         subject_public_key_ref: Optional[BomRef] = None,
         certificate_format: Optional[str] = None,
         certificate_extension: Optional[str] = None,
+        certificate_file_extension: Optional[str] = None,
+        fingerprint: Optional[HashType] = None,
+        certificate_states: Optional[Iterable[CertificateState]] = None,
+        creation_date: Optional[datetime] = None,
+        activation_date: Optional[datetime] = None,
+        deactivation_date: Optional[datetime] = None,
+        revocation_date: Optional[datetime] = None,
+        destruction_date: Optional[datetime] = None,
+        certificate_extensions: Optional[Iterable[CertificateExtension]] = None,
+        related_cryptographic_assets: Optional[Iterable[RelatedCryptographicAsset]] = None,
     ) -> None:
+        self.serial_number = serial_number
         self.subject_name = subject_name
         self.issuer_name = issuer_name
         self.not_valid_before = not_valid_before
@@ -619,9 +970,30 @@ class CertificateProperties:
         self.subject_public_key_ref = subject_public_key_ref
         self.certificate_format = certificate_format
         self.certificate_extension = certificate_extension
+        self.certificate_file_extension = certificate_file_extension
+        self.fingerprint = fingerprint
+        self.certificate_states = certificate_states or []
+        self.creation_date = creation_date
+        self.activation_date = activation_date
+        self.deactivation_date = deactivation_date
+        self.revocation_date = revocation_date
+        self.destruction_date = destruction_date
+        self.certificate_extensions = certificate_extensions or []
+        self.related_cryptographic_assets = related_cryptographic_assets or []
 
     @property
+    @serializable.view(SchemaVersion1Dot7)
     @serializable.xml_sequence(10)
+    def serial_number(self) -> Optional[str]:
+        """The unique serial number assigned to the certificate by its issuer."""
+        return self._serial_number
+
+    @serial_number.setter
+    def serial_number(self, serial_number: Optional[str]) -> None:
+        self._serial_number = serial_number
+
+    @property
+    @serializable.xml_sequence(20)
     def subject_name(self) -> Optional[str]:
         """
         The subject name for the certificate.
@@ -636,7 +1008,7 @@ class CertificateProperties:
         self._subject_name = subject_name
 
     @property
-    @serializable.xml_sequence(20)
+    @serializable.xml_sequence(30)
     def issuer_name(self) -> Optional[str]:
         """
         The issuer name for the certificate.
@@ -652,7 +1024,7 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
-    @serializable.xml_sequence(30)
+    @serializable.xml_sequence(40)
     def not_valid_before(self) -> Optional[datetime]:
         """
         The date and time according to ISO-8601 standard from which the certificate is valid.
@@ -668,7 +1040,7 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(serializable.helpers.XsdDateTime)
-    @serializable.xml_sequence(40)
+    @serializable.xml_sequence(50)
     def not_valid_after(self) -> Optional[datetime]:
         """
         The date and time according to ISO-8601 standard from which the certificate is not valid anymore.
@@ -684,10 +1056,13 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(BomRef)
-    @serializable.xml_sequence(50)
+    @serializable.xml_sequence(60)
     def signature_algorithm_ref(self) -> Optional[BomRef]:
         """
         The bom-ref to signature algorithm used by the certificate.
+
+        .. note::
+            Deprecated in CycloneDX 1.7. Use :attr:`related_cryptographic_assets` instead.
 
         Returns:
             `BomRef` or `None`
@@ -700,10 +1075,13 @@ class CertificateProperties:
 
     @property
     @serializable.type_mapping(BomRef)
-    @serializable.xml_sequence(60)
+    @serializable.xml_sequence(70)
     def subject_public_key_ref(self) -> Optional[BomRef]:
         """
         The bom-ref to the public key of the subject.
+
+        .. note::
+            Deprecated in CycloneDX 1.7. Use :attr:`related_cryptographic_assets` instead.
 
         Returns:
             `BomRef` or `None`
@@ -715,7 +1093,7 @@ class CertificateProperties:
         self._subject_public_key_ref = subject_public_key_ref
 
     @property
-    @serializable.xml_sequence(70)
+    @serializable.xml_sequence(80)
     def certificate_format(self) -> Optional[str]:
         """
         The format of the certificate. Examples include X.509, PEM, DER, and CVC.
@@ -730,10 +1108,13 @@ class CertificateProperties:
         self._certificate_format = certificate_format
 
     @property
-    @serializable.xml_sequence(80)
+    @serializable.xml_sequence(90)
     def certificate_extension(self) -> Optional[str]:
         """
         The file extension of the certificate. Examples include crt, pem, cer, der, and p12.
+
+        .. note::
+            Deprecated in CycloneDX 1.7. Use :attr:`certificate_file_extension` instead.
 
         Returns:
             `str` or `None`
@@ -744,16 +1125,139 @@ class CertificateProperties:
     def certificate_extension(self, certificate_extension: Optional[str]) -> None:
         self._certificate_extension = certificate_extension
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(100)
+    def certificate_file_extension(self) -> Optional[str]:
+        """The preferred file extension for the certificate."""
+        return self._certificate_file_extension
+
+    @certificate_file_extension.setter
+    def certificate_file_extension(self, certificate_file_extension: Optional[str]) -> None:
+        self._certificate_file_extension = certificate_file_extension
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(110)
+    def fingerprint(self) -> Optional[HashType]:
+        """A cryptographic hash of the certificate."""
+        return self._fingerprint
+
+    @fingerprint.setter
+    def fingerprint(self, fingerprint: Optional[HashType]) -> None:
+        self._fingerprint = fingerprint
+
+    @property
+    @serializable.json_name('certificateState')
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'certificateState')
+    @serializable.xml_sequence(120)
+    def certificate_states(self) -> 'SortedSet[CertificateState]':
+        """The lifecycle states associated with the certificate."""
+        return self._certificate_states
+
+    @certificate_states.setter
+    def certificate_states(self, certificate_states: Iterable[CertificateState]) -> None:
+        self._certificate_states = SortedSet(certificate_states)
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(130)
+    def creation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was created."""
+        return self._creation_date
+
+    @creation_date.setter
+    def creation_date(self, creation_date: Optional[datetime]) -> None:
+        self._creation_date = creation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(140)
+    def activation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate became active."""
+        return self._activation_date
+
+    @activation_date.setter
+    def activation_date(self, activation_date: Optional[datetime]) -> None:
+        self._activation_date = activation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(150)
+    def deactivation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was deactivated."""
+        return self._deactivation_date
+
+    @deactivation_date.setter
+    def deactivation_date(self, deactivation_date: Optional[datetime]) -> None:
+        self._deactivation_date = deactivation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(160)
+    def revocation_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was revoked."""
+        return self._revocation_date
+
+    @revocation_date.setter
+    def revocation_date(self, revocation_date: Optional[datetime]) -> None:
+        self._revocation_date = revocation_date
+
+    @property
+    @serializable.type_mapping(serializable.helpers.XsdDateTime)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(170)
+    def destruction_date(self) -> Optional[datetime]:
+        """The date and time when the certificate was destroyed."""
+        return self._destruction_date
+
+    @destruction_date.setter
+    def destruction_date(self, destruction_date: Optional[datetime]) -> None:
+        self._destruction_date = destruction_date
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'certificateExtension')
+    @serializable.xml_sequence(180)
+    def certificate_extensions(self) -> 'SortedSet[CertificateExtension]':
+        """The X.509 extensions associated with the certificate."""
+        return self._certificate_extensions
+
+    @certificate_extensions.setter
+    def certificate_extensions(self, certificate_extensions: Iterable[CertificateExtension]) -> None:
+        self._certificate_extensions = SortedSet(certificate_extensions)
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'relatedCryptographicAsset')
+    @serializable.xml_sequence(190)
+    def related_cryptographic_assets(self) -> 'SortedSet[RelatedCryptographicAsset]':
+        """Cryptographic assets related to this certificate."""
+        return self._related_cryptographic_assets
+
+    @related_cryptographic_assets.setter
+    def related_cryptographic_assets(
+        self, related_cryptographic_assets: Iterable[RelatedCryptographicAsset]
+    ) -> None:
+        self._related_cryptographic_assets = SortedSet(related_cryptographic_assets)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
-            self.certificate_format, self.certificate_extension
+            self.serial_number, self.subject_name, self.issuer_name, self.not_valid_before, self.not_valid_after,
+            self.signature_algorithm_ref, self.subject_public_key_ref, self.certificate_format,
+            self.certificate_extension, self.certificate_file_extension, self.fingerprint,
+            _ComparableTuple(self.certificate_states), self.creation_date, self.activation_date,
+            self.deactivation_date, self.revocation_date, self.destruction_date,
+            _ComparableTuple(self.certificate_extensions), _ComparableTuple(self.related_cryptographic_assets),
         ))
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, CertificateProperties):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
+        return isinstance(other, CertificateProperties) and self.__comparable_tuple() == other.__comparable_tuple()
 
     def __lt__(self, other: object) -> bool:
         if isinstance(other, CertificateProperties):
@@ -927,6 +1431,8 @@ class RelatedCryptoMaterialProperties:
         size: Optional[int] = None,
         format: Optional[str] = None,
         secured_by: Optional[RelatedCryptoMaterialSecuredBy] = None,
+        fingerprint: Optional[HashType] = None,
+        related_cryptographic_assets: Optional[Iterable[RelatedCryptographicAsset]] = None,
     ) -> None:
         self.type = type
         self.id = id
@@ -940,6 +1446,8 @@ class RelatedCryptoMaterialProperties:
         self.size = size
         self.format = format
         self.secured_by = secured_by
+        self.fingerprint = fingerprint
+        self.related_cryptographic_assets = related_cryptographic_assets or []
 
     @property
     @serializable.xml_sequence(10)
@@ -1126,10 +1634,36 @@ class RelatedCryptoMaterialProperties:
     def secured_by(self, secured_by: Optional[RelatedCryptoMaterialSecuredBy]) -> None:
         self._secured_by = secured_by
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(130)
+    def fingerprint(self) -> Optional[HashType]:
+        """A cryptographic hash of the related material."""
+        return self._fingerprint
+
+    @fingerprint.setter
+    def fingerprint(self, fingerprint: Optional[HashType]) -> None:
+        self._fingerprint = fingerprint
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'relatedCryptographicAsset')
+    @serializable.xml_sequence(140)
+    def related_cryptographic_assets(self) -> 'SortedSet[RelatedCryptographicAsset]':
+        """Cryptographic assets related to this material."""
+        return self._related_cryptographic_assets
+
+    @related_cryptographic_assets.setter
+    def related_cryptographic_assets(
+        self, related_cryptographic_assets: Iterable[RelatedCryptographicAsset]
+    ) -> None:
+        self._related_cryptographic_assets = SortedSet(related_cryptographic_assets)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.type, self.id, self.state, self.algorithm_ref, self.creation_date, self.activation_date,
-            self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by
+            self.update_date, self.expiration_date, self.value, self.size, self.format, self.secured_by,
+            self.fingerprint, _ComparableTuple(self.related_cryptographic_assets),
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -1490,12 +2024,14 @@ class ProtocolProperties:
         cipher_suites: Optional[Iterable[ProtocolPropertiesCipherSuite]] = None,
         ikev2_transform_types: Optional[Ikev2TransformTypes] = None,
         crypto_refs: Optional[Iterable[BomRef]] = None,
+        related_cryptographic_assets: Optional[Iterable[RelatedCryptographicAsset]] = None,
     ) -> None:
         self.type = type
         self.version = version
         self.cipher_suites = cipher_suites or []
         self.ikev2_transform_types = ikev2_transform_types
         self.crypto_refs = crypto_refs or []
+        self.related_cryptographic_assets = related_cryptographic_assets or []
 
     @property
     @serializable.type_mapping(_ProtocolPropertiesTypeSerializationHelper)
@@ -1562,9 +2098,13 @@ class ProtocolProperties:
     @property
     @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'cryptoRef')
     @serializable.json_name('cryptoRefArray')
+    @serializable.xml_sequence(50)
     def crypto_refs(self) -> 'SortedSet[BomRef]':
         """
         A list of protocol-related cryptographic assets.
+
+        .. note::
+            Deprecated in CycloneDX 1.7. Use :attr:`related_cryptographic_assets` instead.
 
         Returns:
             `Iterable[BomRef]`
@@ -1575,13 +2115,29 @@ class ProtocolProperties:
     def crypto_refs(self, crypto_refs: Iterable[BomRef]) -> None:
         self._crypto_refs = SortedSet(crypto_refs)
 
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.json_name('relatedCryptographicAssets')
+    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'relatedCryptographicAsset')
+    @serializable.xml_sequence(60)
+    def related_cryptographic_assets(self) -> 'SortedSet[RelatedCryptographicAsset]':
+        """Cryptographic assets related to this protocol."""
+        return self._related_cryptographic_assets
+
+    @related_cryptographic_assets.setter
+    def related_cryptographic_assets(
+        self, related_cryptographic_assets: Iterable[RelatedCryptographicAsset]
+    ) -> None:
+        self._related_cryptographic_assets = SortedSet(related_cryptographic_assets)
+
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
             self.type,
             self.version,
             _ComparableTuple(self.cipher_suites),
             self.ikev2_transform_types,
-            _ComparableTuple(self.crypto_refs)
+            _ComparableTuple(self.crypto_refs),
+            _ComparableTuple(self.related_cryptographic_assets),
         ))
 
     def __eq__(self, other: object) -> bool:
