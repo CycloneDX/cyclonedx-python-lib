@@ -24,7 +24,6 @@ from typing import Any, List, Optional, Union
 from warnings import warn
 from xml.etree.ElementTree import Element as XmlElement  # nosec B405
 
-# See https://github.com/package-url/packageurl-python/issues/65
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 

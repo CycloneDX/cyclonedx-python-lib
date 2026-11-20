@@ -22,10 +22,7 @@ Everything might change without any notice.
 """
 
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, Optional
-
-if TYPE_CHECKING:  # pragma: no cover
-    from packageurl import PackageURL
+from typing import Any, Optional
 
 
 class ComparableTuple(tuple[Optional[Any], ...]):
