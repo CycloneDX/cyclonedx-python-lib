@@ -26,6 +26,7 @@ import sys
 from abc import ABC, abstractmethod
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
+from warnings import warn as _warn
 
 if sys.version_info >= (3, 13):
     from warnings import deprecated
@@ -34,6 +35,7 @@ else:
 
 from ..contrib.bom.utils import BomRefDiscriminator as _BomRefDiscriminator
 from ..schema import OutputFormat, SchemaVersion
+from ..validation.model import ModelValidationErrorSeverity, ModelValidator
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..model.bom import Bom
@@ -71,6 +73,20 @@ class BaseOutput(ABC):
 
     def set_bom(self, bom: 'Bom') -> None:
         self._bom = bom
+
+    def _prepare(self) -> None:
+        """Normalize dependency graph and validate model integrity before serialization."""
+        bom = self._bom
+        if bom.metadata.component:
+            bom.register_dependency(target=bom.metadata.component)
+        for _c in bom.components:
+            bom.register_dependency(target=_c)
+        for _s in bom.services:
+            bom.register_dependency(target=_s)
+        for _err in ModelValidator().validate(bom):
+            if _err.severity is ModelValidationErrorSeverity.ERROR:
+                raise _err.data
+            _warn(str(_err.data), stacklevel=3)
 
     @abstractmethod
     def generate(self, force_regeneration: bool = False) -> None:
