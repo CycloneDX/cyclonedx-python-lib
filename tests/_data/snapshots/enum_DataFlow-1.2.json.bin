@@ -13,20 +13,20 @@
       "bom-ref": "dummy",
       "data": [
         {
-          "classification": "BI_DIRECTIONAL",
-          "flow": "bi-directional"
+          "flow": "bi-directional",
+          "classification": "BI_DIRECTIONAL"
         },
         {
-          "classification": "INBOUND",
-          "flow": "inbound"
+          "flow": "inbound",
+          "classification": "INBOUND"
         },
         {
-          "classification": "OUTBOUND",
-          "flow": "outbound"
+          "flow": "outbound",
+          "classification": "OUTBOUND"
         },
         {
-          "classification": "UNKNOWN",
-          "flow": "unknown"
+          "flow": "unknown",
+          "classification": "UNKNOWN"
         }
       ],
       "name": "dummy"
