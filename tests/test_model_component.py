@@ -305,6 +305,27 @@ class TestModelComponent(TestCase):
         expected_components = reorder(components, expected_order)
         self.assertListEqual(sorted_components, expected_components)
 
+    def test_version_range_comparison(self) -> None:
+        component_all = Component(name='test-component', is_external=True, version_range='vers:all/*')
+        component_none = Component(name='test-component', is_external=True, version_range='vers:none/*')
+        self.assertEqual(component_all, component_all)
+        self.assertEqual(component_none, component_none)
+        self.assertNotEqual(component_all, component_none)
+        self.assertLess(component_all, component_none)
+        self.assertNotEqual(hash(component_all), hash(component_none))
+
+    def test_version_range_sorting(self) -> None:
+        # version is compared before version_range, None sorts as greater than any string
+        expected_order = [1, 2, 0]
+        components = [
+            Component(name='test_component', is_external=True),
+            Component(name='test_component', is_external=True, version='1.0.0'),
+            Component(name='test_component', is_external=True, version_range='vers:all/*'),
+        ]
+        sorted_components = sorted(components)
+        expected_components = reorder(components, expected_order)
+        self.assertListEqual(sorted_components, expected_components)
+
     def test_nested_components_1(self) -> None:
         comp_b = Component(name='comp_b')
         comp_c = Component(name='comp_c')

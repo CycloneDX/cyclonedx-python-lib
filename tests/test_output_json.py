@@ -30,6 +30,7 @@ from cyclonedx.exception.model import (
     InvalidOmniBorIdException,
     InvalidSwhidException,
     LicenseExpressionAlongWithOthersException,
+    MutuallyExclusivePropertiesException,
     UnknownComponentDependencyException,
 )
 from cyclonedx.exception.output import FormatNotSupportedException
@@ -93,6 +94,7 @@ class TestOutputJson(TestCase, SnapshotMixin):
             LicenseExpressionAlongWithOthersException,
             InvalidOmniBorIdException,
             InvalidSwhidException,
+            MutuallyExclusivePropertiesException,
             UnknownComponentDependencyException,
         )):
             return None  # expected

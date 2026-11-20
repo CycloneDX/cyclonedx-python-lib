@@ -9,9 +9,20 @@
       <version>1.0.0</version>
       <scope>required</scope>
     </component>
+    <component type="library" bom-ref="external-lib" isExternal="true">
+      <name>external-lib</name>
+      <scope>required</scope>
+    </component>
+    <component type="library" bom-ref="external-lib-with-range" isExternal="true">
+      <name>external-lib</name>
+      <versionRange>vers:all/*</versionRange>
+      <scope>required</scope>
+    </component>
   </components>
   <dependencies>
+    <dependency ref="external-lib"/>
     <dependency ref="external-lib-1.0.0"/>
+    <dependency ref="external-lib-with-range"/>
   </dependencies>
   <properties>
     <property name="key1">val1</property>

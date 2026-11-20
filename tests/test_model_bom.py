@@ -217,6 +217,13 @@ class TestBom(TestCase):
             self.assertEqual(len(w.warnings), 1)
             self.assertIn('has no defined dependencies ', str(w.warnings[0]))
 
+    def test_warning_root_component_is_external(self) -> None:
+        with self.assertWarns(expected_warning=UserWarning) as w:
+            bom = Bom(metadata=BomMetaData(component=Component(name='root_component', is_external=True)))
+            _ = JsonV1Dot7(bom).output_as_string()
+            self.assertEqual(len(w.warnings), 1)
+            self.assertIn('must not have is_external=true', str(w.warnings[0]))
+
     def test_empty_bom_defined_serial(self) -> None:
         serial_number = uuid4()
         bom = Bom(serial_number=serial_number)

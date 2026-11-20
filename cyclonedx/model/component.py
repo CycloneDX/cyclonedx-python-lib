@@ -34,7 +34,7 @@ from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparablePackageURL as _ComparablePackageURL, ComparableTuple as _ComparableTuple
-from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException
+from ..exception.model import InvalidOmniBorIdException, InvalidSwhidException, MutuallyExclusivePropertiesException
 from ..exception.serialization import (
     CycloneDxDeserializationException,
     SerializationOfUnexpectedValueException,
@@ -991,6 +991,7 @@ class Component(Dependable):
         publisher: Optional[str] = None,
         group: Optional[str] = None,
         version: Optional[str] = None,
+        version_range: Optional[str] = None,
         description: Optional[str] = None,
         scope: Optional[ComponentScope] = None,
         is_external: Optional[bool] = None,
@@ -1025,6 +1026,8 @@ class Component(Dependable):
         self.publisher = publisher
         self.group = group
         self.name = name
+        self.version = version
+        self.version_range = version_range
         self.description = description
         self.scope = scope
         self.is_external = is_external
@@ -1047,7 +1050,6 @@ class Component(Dependable):
         # spec-deprecated properties below
         self.author = author
         self.modified = modified
-        self.version = version
 
     @property
     @serializable.type_mapping(_ComponentTypeSerializationHelper)
@@ -1271,6 +1273,34 @@ class Component(Dependable):
         if version and len(version) > 1024:
             warn('`@.version`has a maximum length of 1024 from CycloneDX v1.6 onwards.', UserWarning)
         self._version = version
+
+    @property
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.json_name('versionRange')
+    @serializable.xml_name('versionRange')
+    @serializable.xml_sequence(8)
+    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
+    def version_range(self) -> Optional[str]:
+        """
+        For an external component, this specifies the accepted version range.
+
+        The value must adhere to the Package URL Version Range syntax (vers), as defined at
+        https://github.com/package-url/vers-spec
+
+        May only be used if .isExternal is set to true.
+
+        Must be used exclusively, either 'version' or 'version_range', but not both.
+
+        Returns:
+            `str` if set, else `None`
+        """
+        return self._version_range
+
+    @version_range.setter
+    def version_range(self, version_range: Optional[str]) -> None:
+        if version_range is not None and not 1 <= len(version_range) <= 4096:
+            warn('`@.version_range`has a minimum length of 1 and a maximum length of 4096 characters.', UserWarning)
+        self._version_range = version_range
 
     @property
     @serializable.xml_sequence(9)
@@ -1729,7 +1759,7 @@ class Component(Dependable):
             _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
             _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
             self.crypto_properties, _ComparableTuple(self.tags),
-            self.is_external,
+            self.is_external, self.version_range,
         ))
 
     def __eq__(self, other: object) -> bool:
@@ -1746,5 +1776,38 @@ class Component(Dependable):
         return hash(self.__comparable_tuple())
 
     def __repr__(self) -> str:
+        version = f'versionRange={self.version_range}' \
+            if self.version_range is not None \
+            else f'version={self.version}'
         return f'<Component bom-ref={self.bom_ref!r}, group={self.group}, name={self.name}, ' \
-            f'version={self.version}, type={self.type}>'
+            f'{version}, type={self.type}>'
+
+
+class _ComponentValidationHelper:
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    @staticmethod
+    def validate_version_choice(component: Component) -> None:
+        """ Validates that version and version_range are not both set. """
+        if component.version is not None and component.version_range is not None:
+            raise MutuallyExclusivePropertiesException(
+                f'Component cannot have both `version` and `version_range` set. Component: {component.name}'
+            )
+
+    @staticmethod
+    def validate_version_range_requirements(component: Component) -> None:
+        """ Validates that version_range is used correctly with is_external. """
+        if component.version_range is not None and not component.is_external:
+            raise MutuallyExclusivePropertiesException(
+                f'Component cannot have `version_range` set unless `is_external=true`. Component: {component.name}'
+            )
+
+    @staticmethod
+    def validate(component: Component) -> None:
+        """
+        Validates that the component conforms to CycloneDX 1.7 constraints:
+        - version and version_range are mutually exclusive
+        - version_range requires is_external=true
+        """
+        _ComponentValidationHelper.validate_version_choice(component)
+        _ComponentValidationHelper.validate_version_range_requirements(component)
