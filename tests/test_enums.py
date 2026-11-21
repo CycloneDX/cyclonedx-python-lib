@@ -14,6 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+# Copyright (C) Siemens 2026. All Rights Reserved.
 
 import ast
 from collections.abc import Generator, Iterable
@@ -34,8 +35,10 @@ from cyclonedx.exception import MissingOptionalDependencyException
 from cyclonedx.exception.serialization import SerializationOfUnsupportedComponentTypeException
 from cyclonedx.model import AttachedText, ExternalReference, HashType, XsUri
 from cyclonedx.model.bom import Bom, BomMetaData, DistributionConstraints, TlpClassification
+from cyclonedx.model.bom_ref import BomRef
 from cyclonedx.model.component import Component, Patch, Pedigree
 from cyclonedx.model.component_evidence import ComponentEvidence, Identity as CEIdentity, Method as CEMethod
+from cyclonedx.model.composition import AggregateType, Composition
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
     CryptoProperties,
@@ -511,6 +514,25 @@ class TestEnumVulnerabilitySeverity(_EnumTestCase):
             VulnerabilityRating(severity=vs)
             for vs in VulnerabilitySeverity
         ))])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumAggregateType(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='aggregateType']"),
+        dp_cases_from_json_schemas('definitions', 'aggregateType'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(AggregateType, value)
+
+    @named_data(*NAMED_OF_SV)
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        bom = _make_bom(compositions=[
+            Composition(aggregate=aggregate, dependencies=[BomRef(f'dep-{i}')])
+            for i, aggregate in enumerate(AggregateType)
+        ])
         super()._test_cases_render(bom, of, sv)
 
 

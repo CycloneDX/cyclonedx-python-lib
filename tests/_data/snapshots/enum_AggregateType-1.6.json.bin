@@ -1,0 +1,82 @@
+{
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "dep-0"
+      ]
+    },
+    {
+      "aggregate": "incomplete",
+      "dependencies": [
+        "dep-1"
+      ]
+    },
+    {
+      "aggregate": "incomplete_first_party_only",
+      "dependencies": [
+        "dep-2"
+      ]
+    },
+    {
+      "aggregate": "incomplete_first_party_opensource_only",
+      "dependencies": [
+        "dep-4"
+      ]
+    },
+    {
+      "aggregate": "incomplete_first_party_proprietary_only",
+      "dependencies": [
+        "dep-3"
+      ]
+    },
+    {
+      "aggregate": "incomplete_third_party_only",
+      "dependencies": [
+        "dep-5"
+      ]
+    },
+    {
+      "aggregate": "incomplete_third_party_opensource_only",
+      "dependencies": [
+        "dep-7"
+      ]
+    },
+    {
+      "aggregate": "incomplete_third_party_proprietary_only",
+      "dependencies": [
+        "dep-6"
+      ]
+    },
+    {
+      "aggregate": "not_specified",
+      "dependencies": [
+        "dep-9"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "dep-8"
+      ]
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

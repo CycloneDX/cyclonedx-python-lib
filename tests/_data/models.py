@@ -14,6 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) OWASP Foundation. All Rights Reserved.
+# Copyright (C) Siemens 2026. All Rights Reserved.
 
 import base64
 import sys
@@ -67,6 +68,7 @@ from cyclonedx.model.component_evidence import (
     Method,
     Occurrence,
 )
+from cyclonedx.model.composition import AggregateType, Composition
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.crypto import (
     AlgorithmProperties,
@@ -1675,6 +1677,32 @@ def get_bom_for_issue941_nested_dependencies_irreversible_migrate() -> Bom:
     )
 
     return bom
+
+# ---
+
+
+def get_bom_with_compositions() -> Bom:
+    return _make_bom(
+        compositions=[
+            Composition(
+                aggregate=AggregateType.INCOMPLETE,
+                assemblies=[
+                    BomRef('my-specific-bom-ref-for-first-assembly'),
+                    XsUri('urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1#some-ref'),
+                ],
+                dependencies=[
+                    BomRef('my-specific-bom-ref-for-dependency'),
+                ],
+                vulnerabilities=[
+                    BomRef('my-specific-bom-ref-for-vulnerability'),
+                ],
+                bom_ref='my-specific-bom-ref-for-composition',
+            ),
+            Composition(
+                aggregate=AggregateType.COMPLETE,
+            ),
+        ]
+    )
 
 # ---
 
