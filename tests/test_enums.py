@@ -57,7 +57,7 @@ from cyclonedx.model.model_card import (
     ModelCard,
     ModelParameters,
 )
-from cyclonedx.model.service import DataClassification, Service
+from cyclonedx.model.service import Data, DataClassification, Service
 from cyclonedx.model.vulnerability import (
     BomTarget,
     BomTargetVersionRange,
@@ -226,7 +226,7 @@ class TestEnumDataFlow(_EnumTestCase):
     @named_data(*NAMED_OF_SV)
     def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
         bom = _make_bom(services=[Service(name='dummy', bom_ref='dummy', data=(
-            DataClassification(flow=df, classification=df.name)
+            Data(flow=df, classification=df.name)
             for df in DataFlow
         ))])
         super()._test_cases_render(bom, of, sv)
