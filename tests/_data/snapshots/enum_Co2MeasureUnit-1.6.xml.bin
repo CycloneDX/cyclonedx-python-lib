@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="machine-learning-model" bom-ref="dummy-CMU:TCO2EQ">
+      <name>Co2MeasureUnit: TCO2EQ</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>solar</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+                <co2CostEquivalent>
+                  <value>1.0</value>
+                  <unit>tCO2eq</unit>
+                </co2CostEquivalent>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-CMU:TCO2EQ"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
