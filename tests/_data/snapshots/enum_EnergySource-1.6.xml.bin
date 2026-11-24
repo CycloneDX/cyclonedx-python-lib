@@ -1,0 +1,333 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="machine-learning-model" bom-ref="dummy-ES:BIOFUEL">
+      <name>EnergySource: BIOFUEL</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>biofuel</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:COAL">
+      <name>EnergySource: COAL</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>coal</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:GEOTHERMAL">
+      <name>EnergySource: GEOTHERMAL</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>geothermal</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:HYDROPOWER">
+      <name>EnergySource: HYDROPOWER</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>hydropower</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:NATURAL_GAS">
+      <name>EnergySource: NATURAL_GAS</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>natural-gas</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:NUCLEAR">
+      <name>EnergySource: NUCLEAR</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>nuclear</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:OIL">
+      <name>EnergySource: OIL</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>oil</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:OTHER">
+      <name>EnergySource: OTHER</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>other</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:SOLAR">
+      <name>EnergySource: SOLAR</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>solar</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:UNKNOWN">
+      <name>EnergySource: UNKNOWN</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>unknown</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-ES:WIND">
+      <name>EnergySource: WIND</name>
+      <modelCard>
+        <considerations>
+          <environmentalConsiderations>
+            <energyConsumptions>
+              <energyConsumption>
+                <activity>training</activity>
+                <energyProviders>
+                  <organization>
+                    <name>test-org</name>
+                  </organization>
+                  <energySource>wind</energySource>
+                  <energyProvided>
+                    <value>1.0</value>
+                    <unit>kWh</unit>
+                  </energyProvided>
+                </energyProviders>
+                <activityEnergyCost>
+                  <value>1.0</value>
+                  <unit>kWh</unit>
+                </activityEnergyCost>
+              </energyConsumption>
+            </energyConsumptions>
+          </environmentalConsiderations>
+        </considerations>
+      </modelCard>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-ES:BIOFUEL"/>
+    <dependency ref="dummy-ES:COAL"/>
+    <dependency ref="dummy-ES:GEOTHERMAL"/>
+    <dependency ref="dummy-ES:HYDROPOWER"/>
+    <dependency ref="dummy-ES:NATURAL_GAS"/>
+    <dependency ref="dummy-ES:NUCLEAR"/>
+    <dependency ref="dummy-ES:OIL"/>
+    <dependency ref="dummy-ES:OTHER"/>
+    <dependency ref="dummy-ES:SOLAR"/>
+    <dependency ref="dummy-ES:UNKNOWN"/>
+    <dependency ref="dummy-ES:WIND"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
