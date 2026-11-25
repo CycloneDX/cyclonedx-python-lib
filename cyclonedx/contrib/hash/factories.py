@@ -19,8 +19,6 @@
 
 __all__ = ['HashTypeFactory']
 
-from typing import Optional
-
 from ...exception.model import UnknownHashTypeException
 from ...model import HashAlgorithm, HashType
 
@@ -41,6 +39,13 @@ _MAP_HASHLIB: dict[str, HashAlgorithm] = {
     # shake_128:
     # shake_256:
 }
+
+
+def _hash_algorithm(name: str) -> HashAlgorithm:
+    try:
+        return HashAlgorithm[name]
+    except KeyError:
+        raise UnknownHashTypeException(f'Unable to determine hash alg for {name!r}') from None
 
 
 class HashTypeFactory:
@@ -94,23 +99,40 @@ class HashTypeFactory:
             raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
 
         algorithm_prefix = parts[0].lower()
-        content = parts[1].lower()
-        alg: Optional[HashAlgorithm] = None
         if algorithm_prefix == 'md5':
-            alg = HashAlgorithm.MD5
+            return HashType(
+                alg=HashAlgorithm.MD5,
+                content=parts[1].lower()
+            )
         elif algorithm_prefix[0:4] == 'sha3':
-            alg = HashAlgorithm.__members__.get(f'SHA3_{algorithm_prefix[5:]}')
+            return HashType(
+                alg=_hash_algorithm(f'SHA3_{algorithm_prefix[5:]}'),
+                content=parts[1].lower()
+            )
         elif algorithm_prefix == 'sha1':
-            alg = HashAlgorithm.SHA_1
+            return HashType(
+                alg=HashAlgorithm.SHA_1,
+                content=parts[1].lower()
+            )
         elif algorithm_prefix[0:3] == 'sha':
             # This is actually SHA2...
-            alg = HashAlgorithm.__members__.get(f'SHA_{algorithm_prefix[3:]}')
+            return HashType(
+                alg=_hash_algorithm(f'SHA_{algorithm_prefix[3:]}'),
+                content=parts[1].lower()
+            )
         elif algorithm_prefix[0:7] == 'blake2b':
-            alg = HashAlgorithm.__members__.get(f'BLAKE2B_{algorithm_prefix[7:]}')
+            return HashType(
+                alg=_hash_algorithm(f'BLAKE2B_{algorithm_prefix[7:]}'),
+                content=parts[1].lower()
+            )
         elif algorithm_prefix[0:6] == 'blake2':
-            alg = HashAlgorithm.__members__.get(f'BLAKE2B_{algorithm_prefix[6:]}')
+            return HashType(
+                alg=_hash_algorithm(f'BLAKE2B_{algorithm_prefix[6:]}'),
+                content=parts[1].lower()
+            )
         elif algorithm_prefix[0:6] == 'blake3':
-            alg = HashAlgorithm.BLAKE3
-        if alg is not None:
-            return HashType(alg=alg, content=content)
+            return HashType(
+                alg=HashAlgorithm.BLAKE3,
+                content=parts[1].lower()
+            )
         raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
