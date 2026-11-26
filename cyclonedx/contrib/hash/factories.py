@@ -41,6 +41,13 @@ _MAP_HASHLIB: dict[str, HashAlgorithm] = {
 }
 
 
+def _hash_algorithm(name: str) -> HashAlgorithm:
+    try:
+        return HashAlgorithm[name]
+    except KeyError:
+        raise UnknownHashTypeException(f'Unable to determine hash alg for {name!r}') from None
+
+
 class HashTypeFactory:
 
     def from_hashlib_alg(self, hashlib_alg: str, content: str) -> HashType:
@@ -88,6 +95,8 @@ class HashTypeFactory:
             An instance of `HashType`.
         """
         parts = composite_hash.split(':')
+        if len(parts) < 2:
+            raise UnknownHashTypeException(f'Unable to determine hash type from {composite_hash!r}')
 
         algorithm_prefix = parts[0].lower()
         if algorithm_prefix == 'md5':
@@ -97,7 +106,7 @@ class HashTypeFactory:
             )
         elif algorithm_prefix[0:4] == 'sha3':
             return HashType(
-                alg=getattr(HashAlgorithm, f'SHA3_{algorithm_prefix[5:]}'),
+                alg=_hash_algorithm(f'SHA3_{algorithm_prefix[5:]}'),
                 content=parts[1].lower()
             )
         elif algorithm_prefix == 'sha1':
@@ -108,17 +117,17 @@ class HashTypeFactory:
         elif algorithm_prefix[0:3] == 'sha':
             # This is actually SHA2...
             return HashType(
-                alg=getattr(HashAlgorithm, f'SHA_{algorithm_prefix[3:]}'),
+                alg=_hash_algorithm(f'SHA_{algorithm_prefix[3:]}'),
                 content=parts[1].lower()
             )
         elif algorithm_prefix[0:7] == 'blake2b':
             return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[7:]}'),
+                alg=_hash_algorithm(f'BLAKE2B_{algorithm_prefix[7:]}'),
                 content=parts[1].lower()
             )
         elif algorithm_prefix[0:6] == 'blake2':
             return HashType(
-                alg=getattr(HashAlgorithm, f'BLAKE2B_{algorithm_prefix[6:]}'),
+                alg=_hash_algorithm(f'BLAKE2B_{algorithm_prefix[6:]}'),
                 content=parts[1].lower()
             )
         elif algorithm_prefix[0:6] == 'blake3':
