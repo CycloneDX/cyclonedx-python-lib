@@ -1,0 +1,74 @@
+{
+  "components": [
+    {
+      "bom-ref": "data-referenced",
+      "data": [
+        {
+          "name": "referenced-dataset",
+          "type": "dataset"
+        }
+      ],
+      "name": "referenced-dataset",
+      "type": "data",
+      "version": "1.0.0"
+    },
+    {
+      "bom-ref": "ml-datasets",
+      "modelCard": {
+        "bom-ref": "mc-datasets",
+        "modelParameters": {
+          "datasets": [
+            {
+              "bom-ref": "dataset-inline",
+              "contents": {
+                "url": "https://example.com/datasets/inline.csv"
+              },
+              "description": "Dataset described in place.",
+              "name": "inline-dataset",
+              "type": "dataset"
+            },
+            {
+              "ref": "data-referenced"
+            },
+            {
+              "ref": "urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#data-external"
+            }
+          ],
+          "task": "text-classification"
+        }
+      },
+      "name": "model-with-datasets",
+      "type": "machine-learning-model",
+      "version": "1.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "data-referenced"
+    },
+    {
+      "dependsOn": [
+        "data-referenced"
+      ],
+      "ref": "ml-datasets"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7"
+}

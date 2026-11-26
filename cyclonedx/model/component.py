@@ -66,6 +66,7 @@ from .bom_ref import BomRef
 from .component_evidence import ComponentEvidence, _ComponentEvidenceSerializationHelper
 from .contact import OrganizationalContact, OrganizationalEntity
 from .crypto import CryptoProperties
+from .data import ComponentData
 from .dependency import Dependable
 from .issue import IssueType
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
@@ -1003,6 +1004,7 @@ class Component(Dependable):
         properties: Optional[Iterable[Property]] = None,
         release_notes: Optional[ReleaseNotes] = None,
         model_card: Optional[ModelCard] = None,
+        data: Optional[Iterable[ComponentData]] = None,
         cpe: Optional[str] = None,
         swid: Optional[Swid] = None,
         pedigree: Optional[Pedigree] = None,
@@ -1045,6 +1047,7 @@ class Component(Dependable):
         self.evidence = evidence
         self.release_notes = release_notes
         self.model_card = model_card
+        self.data = data or []
         self.crypto_properties = crypto_properties
         self.tags = tags or []
         # spec-deprecated properties below
@@ -1645,16 +1648,28 @@ class Component(Dependable):
     def model_card(self, model_card: Optional[ModelCard]) -> None:
         self._model_card = model_card
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(23)
-    # def data(self) -> ...:
-    #     ...  # TODO since CDX1.5
-    #
-    # @data.setter
-    # def data(self, ...) -> None:
-    #     ...  # TODO since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_array(serializable.XmlArraySerializationType.FLAT, 'data')
+    @serializable.xml_sequence(27)
+    def data(self) -> 'SortedSet[ComponentData]':
+        """
+        This object SHOULD be specified for any component of type `data` and MUST NOT be specified for other
+        component types.
+
+        .. note::
+            The XML schema of CycloneDX 1.5 allows at most one `data` element per component.
+
+        Returns:
+            Set of `ComponentData`
+        """
+        return self._data
+
+    @data.setter
+    def data(self, data: Iterable[ComponentData]) -> None:
+        self._data = SortedSet(data)
 
     @property
     @serializable.view(SchemaVersion1Dot6)
@@ -1740,7 +1755,8 @@ class Component(Dependable):
             _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
             _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
             _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
-            self.crypto_properties, _ComparableTuple(self.tags), self.model_card, self.is_external,
+            self.crypto_properties, _ComparableTuple(self.tags), self.model_card, _ComparableTuple(self.data),
+            self.is_external,
         ))
 
     def __eq__(self, other: object) -> bool:

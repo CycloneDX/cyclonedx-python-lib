@@ -36,8 +36,10 @@ Capabilities
    * :mod:`Component, Evidence, Patch, Pedigree, and more <cyclonedx.model.component>`
    * :mod:`Organizational Contact and Entity <cyclonedx.model.contact>`
    * :mod:`Cryptographic properties and more <cyclonedx.model.crypto>`
+   * :mod:`Component Data and Dataset Reference <cyclonedx.model.data>`
    * :mod:`Definition and Standard <cyclonedx.model.definition>`
    * :mod:`Dependency <cyclonedx.model.dependency>`
+   * :mod:`Graphics <cyclonedx.model.graphics>`
    * :mod:`Impact and related Analysis <cyclonedx.model.impact_analysis>`
    * :mod:`Issue <cyclonedx.model.issue>`
    * :mod:`License Named, SPDX, Expression, and more <cyclonedx.model.license>`

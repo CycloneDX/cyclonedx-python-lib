@@ -43,6 +43,7 @@ from cyclonedx.model.crypto import (
     ProtocolProperties,
     RelatedCryptoMaterialProperties,
 )
+from cyclonedx.model.data import ComponentData
 from cyclonedx.model.issue import IssueType
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, PredefinedLifecycle
@@ -117,6 +118,9 @@ from cyclonedx.model.crypto import (  # isort:skip
     ProtocolPropertiesType,
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
+)
+from cyclonedx.model.data import (  # isort:skip
+    ComponentDataKind,
 )
 from cyclonedx.model.model_card import (  # isort:skip
     Co2MeasureUnit,
@@ -1186,6 +1190,34 @@ class TestEnumCo2MeasureUnit(_EnumTestCase):
                     )
                 ) for cmu in Co2MeasureUnit
             ])
+        super()._test_cases_render(bom, of, sv)
+
+
+@ddt
+class TestEnumComponentDataKind(_EnumTestCase):
+
+    @idata(set(chain(
+        dp_cases_from_xml_schemas(f"./{SCHEMA_NS}simpleType[@name='componentDataTypeEnumeration']"),
+        dp_cases_from_json_schemas('definitions', 'componentData', 'properties', 'type'),
+    )))
+    def test_knows_value(self, value: str) -> None:
+        super()._test_knows_value(ComponentDataKind, value)
+
+    @named_data(*(d for d in NAMED_OF_SV if d[2] >= SchemaVersion.V1_5))
+    def test_cases_render_valid(self, of: OutputFormat, sv: SchemaVersion, *_: Any, **__: Any) -> None:
+        # CycloneDX 1.5's XSD only allows a single `data` element per component
+        # (fixed to `unbounded` from 1.6 onwards) -- so only exercise one kind there.
+        kinds = list(ComponentDataKind)[:1] if (of, sv) == (OutputFormat.XML, SchemaVersion.V1_5) \
+            else list(ComponentDataKind)
+        bom = _make_bom(components=[
+            Component(
+                name='dummy', type=ComponentType.LIBRARY, bom_ref='dummy',
+                data=[
+                    ComponentData(type=cdk, name=f'ComponentDataKind: {cdk.name}')
+                    for cdk in kinds
+                ]
+            )
+        ])
         super()._test_cases_render(bom, of, sv)
 
 

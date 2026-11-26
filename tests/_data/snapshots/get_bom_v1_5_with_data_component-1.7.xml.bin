@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.7" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="data" bom-ref="data-full">
+      <name>full-data-component</name>
+      <version>1.0.0</version>
+      <purl>pkg:pypi/full-data-component@1.0.0</purl>
+      <data bom-ref="data-comp-full">
+        <type>dataset</type>
+        <name>training-dataset-v1</name>
+        <contents>
+          <attachment content-type="text/plain" encoding="base64">aGVsbG8gd29ybGQ=</attachment>
+          <url>https://example.com/datasets/training-v1.csv</url>
+          <properties>
+            <property name="format">csv</property>
+          </properties>
+        </contents>
+        <classification>public</classification>
+        <sensitiveData>PII</sensitiveData>
+        <sensitiveData>financial</sensitiveData>
+        <graphics>
+          <description>Data distribution plots,
+multi-line</description>
+          <collection>
+            <graphic>
+              <name>class-distribution</name>
+              <image content-type="image/png" encoding="base64">ZnVsbC1kYXRhLWNvbXBvbmVudC1pbWFnZQ==</image>
+            </graphic>
+            <graphic>
+              <name>feature
+correlation</name>
+              <image content-type="image/png" encoding="base64">ZnVsbC1kYXRhLWNvbXBvbmVudC1pbWFnZQ==</image>
+            </graphic>
+          </collection>
+        </graphics>
+        <description>Training dataset for the primary classifier, version 1.</description>
+        <governance>
+          <custodians>
+            <custodian>
+              <organization>
+                <name>CycloneDX</name>
+                <address>
+                  <country>GB</country>
+                  <region>England</region>
+                  <locality>Cheshire</locality>
+                  <streetAddress>100 Main Street</streetAddress>
+                </address>
+                <url>https://cyclonedx.org</url>
+                <url>https://cyclonedx.org/docs</url>
+                <contact>
+                  <name>A N Other</name>
+                  <email>someone@somewhere.tld</email>
+                  <phone>+44 (0)1234 567890</phone>
+                </contact>
+                <contact>
+                  <name>Paul Horton</name>
+                  <email>paul.horton@owasp.org</email>
+                </contact>
+              </organization>
+            </custodian>
+            <custodian>
+              <individual>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
+              </individual>
+            </custodian>
+          </custodians>
+          <stewards>
+            <steward>
+              <organization>
+                <name>CycloneDX</name>
+                <address>
+                  <country>GB</country>
+                  <region>England</region>
+                  <locality>Cheshire</locality>
+                  <streetAddress>100 Main Street</streetAddress>
+                </address>
+                <url>https://cyclonedx.org</url>
+                <url>https://cyclonedx.org/docs</url>
+                <contact>
+                  <name>A N Other</name>
+                  <email>someone@somewhere.tld</email>
+                  <phone>+44 (0)1234 567890</phone>
+                </contact>
+                <contact>
+                  <name>Paul Horton</name>
+                  <email>paul.horton@owasp.org</email>
+                </contact>
+              </organization>
+            </steward>
+          </stewards>
+          <owners>
+            <owner>
+              <individual>
+                <name>A N Other</name>
+                <email>someone@somewhere.tld</email>
+                <phone>+44 (0)1234 567890</phone>
+              </individual>
+            </owner>
+            <owner>
+              <individual>
+                <name>Paul Horton</name>
+                <email>paul.horton@owasp.org</email>
+              </individual>
+            </owner>
+          </owners>
+        </governance>
+      </data>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="data-full"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>
