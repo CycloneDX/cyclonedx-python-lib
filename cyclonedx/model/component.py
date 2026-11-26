@@ -71,6 +71,7 @@ from .issue import IssueType
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
 from .model_card import ModelCard
 from .release_note import ReleaseNotes
+from .signature import JsfSignature, _JsfSignatureSerializationHelper
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
@@ -1015,6 +1016,7 @@ class Component(Dependable):
         swhids: Optional[Iterable[Swhid]] = None,
         crypto_properties: Optional[CryptoProperties] = None,
         tags: Optional[Iterable[str]] = None,
+        signature: Optional[JsfSignature] = None,
         # Deprecated in v1.6
         author: Optional[str] = None,
     ) -> None:
@@ -1047,6 +1049,7 @@ class Component(Dependable):
         self.model_card = model_card
         self.crypto_properties = crypto_properties
         self.tags = tags or []
+        self.signature = signature
         # spec-deprecated properties below
         self.author = author
         self.modified = modified
@@ -1696,6 +1699,31 @@ class Component(Dependable):
     def tags(self, tags: Iterable[str]) -> None:
         self._tags = SortedSet(tags)
 
+    @property
+    @serializable.view(SchemaVersion1Dot4)
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.type_mapping(_JsfSignatureSerializationHelper)
+    def signature(self) -> Optional[JsfSignature]:
+        """
+        Enveloped signature in JSON Signature Format (JSF).
+
+        .. note::
+            JSON-only. There is no XSD/XML equivalent in any CycloneDX schema version.
+
+        .. note::
+            Introduced in CycloneDX v1.4
+
+        Returns:
+            `JsfSignature` if set else `None`
+        """
+        return self._signature
+
+    @signature.setter
+    def signature(self, signature: Optional[JsfSignature]) -> None:
+        self._signature = signature
+
     def iter_all_nested_components(self, include_self: bool = False) -> Iterator['Component']:
         """
         Iterate over this component and all its nested components (assemblies), recursively.
@@ -1740,7 +1768,8 @@ class Component(Dependable):
             _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
             _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
             _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
-            self.crypto_properties, _ComparableTuple(self.tags), self.model_card, self.is_external,
+            self.crypto_properties, _ComparableTuple(self.tags), self.model_card, self.signature,
+            self.is_external,
         ))
 
     def __eq__(self, other: object) -> bool:
