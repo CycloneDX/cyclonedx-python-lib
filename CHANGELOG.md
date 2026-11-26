@@ -2,6 +2,38 @@
 
 <!-- version list -->
 
+## v11.13.0 (2026-11-26)
+
+### Documentation
+
+- Explain model fixture and snapshot workflow
+  ([#1031](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1031),
+  [`020f539`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/020f539096df788f4679f3b85bb055942785983a))
+
+### Features
+
+- Add support for Component modelCard field
+  ([#914](https://github.com/CycloneDX/cyclonedx-python-lib/pull/914),
+  [`3d62bf6`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/3d62bf672340e5a0a3994b028e316033915ef53c))
+
+- Support CycloneDX 1.7.2 ([#1046](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1046),
+  [`2069316`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/20693167b87e77fcdcb20a1f4676877048d1df94))
+
+### Performance Improvements
+
+- Get_component_by_purl to use early exit generator
+  ([#1037](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1037),
+  [`206e593`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/206e59303e728f66964ca4c89d7fd175482dd76e))
+
+- Get_localised_vector with pre-compiled regex
+  ([#1038](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1038),
+  [`8aada45`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/8aada455018e11b1b71c1dd102448e98f71217b1))
+
+- Optimize get_all_nested_components with stack iteration
+  ([#1039](https://github.com/CycloneDX/cyclonedx-python-lib/pull/1039),
+  [`7869f95`](https://github.com/CycloneDX/cyclonedx-python-lib/commit/7869f95a25ba1582e9d4b4dde25c5e441a326b01))
+
+
 ## v11.12.0 (2026-08-13)
 
 ### Features
