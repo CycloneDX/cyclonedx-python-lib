@@ -409,7 +409,8 @@ class OrganizationalEntity:
 
     def __comparable_tuple(self) -> _ComparableTuple:
         return _ComparableTuple((
-            self.name, _ComparableTuple(self.urls), _ComparableTuple(self.contacts),
+            self.name, self.address,
+            _ComparableTuple(self.urls), _ComparableTuple(self.contacts),
             self._bom_ref.value,
         ))
 

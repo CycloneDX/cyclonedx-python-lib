@@ -39,7 +39,7 @@ from cyclonedx.model import (
     XsUri,
 )
 from cyclonedx.model.bom_ref import BomRef
-from cyclonedx.model.contact import OrganizationalContact
+from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity, PostalAddress
 from cyclonedx.model.issue import IssueClassification, IssueType, IssueTypeSource
 from tests import reorder
 
@@ -461,6 +461,36 @@ class TestModelOrganizationalContact(TestCase):
         sorted_contacts = sorted(contacts)
         expected_contacts = reorder(contacts, expected_order)
         self.assertListEqual(sorted_contacts, expected_contacts)
+
+
+class TestModelOrganizationalEntity(TestCase):
+
+    def test_not_same_when_address_differs(self) -> None:
+        a = OrganizationalEntity(name='a', address=PostalAddress(country='DE'))
+        b = OrganizationalEntity(name='a', address=PostalAddress(country='FR'))
+        self.assertNotEqual(a, b)
+        self.assertNotEqual(hash(a), hash(b))
+        self.assertEqual(2, len({a, b}))
+
+    def test_same_when_address_equal(self) -> None:
+        a = OrganizationalEntity(name='a', address=PostalAddress(country='DE'))
+        b = OrganizationalEntity(name='a', address=PostalAddress(country='DE'))
+        self.assertEqual(a, b)
+        self.assertEqual(hash(a), hash(b))
+
+    def test_sort(self) -> None:
+        # expected sort order: ([name], [address])
+        expected_order = [1, 0, 2, 3]
+        entities = [
+            OrganizationalEntity(name='a', address=PostalAddress(country='FR')),
+            OrganizationalEntity(name='a', address=PostalAddress(country='DE')),
+            OrganizationalEntity(name='a'),
+            OrganizationalEntity(name='b', address=PostalAddress(country='DE')),
+        ]
+        sorted_entities = sorted(entities)
+        expected_entities = reorder(entities, expected_order)
+        # compare by address explicitly, so the assertion does not depend on `OrganizationalEntity.__eq__`
+        self.assertListEqual([e.address for e in sorted_entities], [e.address for e in expected_entities])
 
 
 class TestModelXsUri(TestCase):
