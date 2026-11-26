@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="machine-learning-model" bom-ref="dummy-MLA:REINFORCEMENT_LEARNING">
+      <name>MachineLearningApproach: REINFORCEMENT_LEARNING</name>
+      <modelCard>
+        <modelParameters>
+          <approach>
+            <type>reinforcement-learning</type>
+          </approach>
+        </modelParameters>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-MLA:SELF_SUPERVISED">
+      <name>MachineLearningApproach: SELF_SUPERVISED</name>
+      <modelCard>
+        <modelParameters>
+          <approach>
+            <type>self-supervised</type>
+          </approach>
+        </modelParameters>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-MLA:SEMI_SUPERVISED">
+      <name>MachineLearningApproach: SEMI_SUPERVISED</name>
+      <modelCard>
+        <modelParameters>
+          <approach>
+            <type>semi-supervised</type>
+          </approach>
+        </modelParameters>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-MLA:SUPERVISED">
+      <name>MachineLearningApproach: SUPERVISED</name>
+      <modelCard>
+        <modelParameters>
+          <approach>
+            <type>supervised</type>
+          </approach>
+        </modelParameters>
+      </modelCard>
+    </component>
+    <component type="machine-learning-model" bom-ref="dummy-MLA:UNSUPERVISED">
+      <name>MachineLearningApproach: UNSUPERVISED</name>
+      <modelCard>
+        <modelParameters>
+          <approach>
+            <type>unsupervised</type>
+          </approach>
+        </modelParameters>
+      </modelCard>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="dummy-MLA:REINFORCEMENT_LEARNING"/>
+    <dependency ref="dummy-MLA:SELF_SUPERVISED"/>
+    <dependency ref="dummy-MLA:SEMI_SUPERVISED"/>
+    <dependency ref="dummy-MLA:SUPERVISED"/>
+    <dependency ref="dummy-MLA:UNSUPERVISED"/>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

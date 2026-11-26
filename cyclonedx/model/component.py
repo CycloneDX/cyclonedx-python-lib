@@ -69,6 +69,7 @@ from .crypto import CryptoProperties
 from .dependency import Dependable
 from .issue import IssueType
 from .license import License, LicenseRepository, _LicenseRepositorySerializationHelper
+from .model_card import ModelCard
 from .release_note import ReleaseNotes
 from .signature import JsfSignature, _JsfSignatureSerializationHelper
 
@@ -1002,6 +1003,7 @@ class Component(Dependable):
         external_references: Optional[Iterable[ExternalReference]] = None,
         properties: Optional[Iterable[Property]] = None,
         release_notes: Optional[ReleaseNotes] = None,
+        model_card: Optional[ModelCard] = None,
         cpe: Optional[str] = None,
         swid: Optional[Swid] = None,
         pedigree: Optional[Pedigree] = None,
@@ -1044,6 +1046,7 @@ class Component(Dependable):
         self.components = components or []
         self.evidence = evidence
         self.release_notes = release_notes
+        self.model_card = model_card
         self.crypto_properties = crypto_properties
         self.tags = tags or []
         self.signature = signature
@@ -1625,16 +1628,25 @@ class Component(Dependable):
     def release_notes(self, release_notes: Optional[ReleaseNotes]) -> None:
         self._release_notes = release_notes
 
-    # @property
-    # ...
-    # @serializable.view(SchemaVersion1Dot5)
-    # @serializable.xml_sequence(22)
-    # def model_card(self) -> ...:
-    #     ...  # TODO since CDX1.5
-    #
-    # @model_card.setter
-    # def model_card(self, ...) -> None:
-    #     ...  # TODO since CDX1.5
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(26)
+    @serializable.json_name('modelCard')
+    @serializable.xml_name('modelCard')
+    def model_card(self) -> Optional[ModelCard]:
+        """
+        Specifies the model card for components of type `machine-learning-model`.
+
+        Returns:
+            `ModelCard` or `None`
+        """
+        return self._model_card
+
+    @model_card.setter
+    def model_card(self, model_card: Optional[ModelCard]) -> None:
+        self._model_card = model_card
 
     # @property
     # ...
@@ -1756,7 +1768,7 @@ class Component(Dependable):
             _ComparableTuple(self.external_references), _ComparableTuple(self.properties),
             _ComparableTuple(self.components), self.evidence, self.release_notes, self.modified,
             _ComparableTuple(self.authors), _ComparableTuple(self.omnibor_ids), self.manufacturer,
-            self.crypto_properties, _ComparableTuple(self.tags), self.signature,
+            self.crypto_properties, _ComparableTuple(self.tags), self.model_card, self.signature,
             self.is_external,
         ))
 
