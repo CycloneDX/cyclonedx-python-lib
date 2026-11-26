@@ -46,7 +46,7 @@ class ComponentBuilder:
             `Component` representing the supplied file
         """
         if not exists(absolute_file_path):
-            raise FileExistsError(f'Supplied file path {absolute_file_path!r} does not exist')
+            raise FileNotFoundError(f'Supplied file path {absolute_file_path!r} does not exist')
 
         return Component(
             type=ComponentType.FILE,
