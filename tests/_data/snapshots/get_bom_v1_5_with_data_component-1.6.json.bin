@@ -1,0 +1,161 @@
+{
+  "components": [
+    {
+      "bom-ref": "data-full",
+      "data": [
+        {
+          "bom-ref": "data-comp-full",
+          "classification": "public",
+          "contents": {
+            "attachment": {
+              "content": "aGVsbG8gd29ybGQ=",
+              "contentType": "text/plain",
+              "encoding": "base64"
+            },
+            "properties": [
+              {
+                "name": "format",
+                "value": "csv"
+              }
+            ],
+            "url": "https://example.com/datasets/training-v1.csv"
+          },
+          "description": "Training dataset for the primary classifier, version 1.",
+          "governance": {
+            "custodians": [
+              {
+                "organization": {
+                  "address": {
+                    "country": "GB",
+                    "locality": "Cheshire",
+                    "region": "England",
+                    "streetAddress": "100 Main Street"
+                  },
+                  "contact": [
+                    {
+                      "email": "someone@somewhere.tld",
+                      "name": "A N Other",
+                      "phone": "+44 (0)1234 567890"
+                    },
+                    {
+                      "email": "paul.horton@owasp.org",
+                      "name": "Paul Horton"
+                    }
+                  ],
+                  "name": "CycloneDX",
+                  "url": [
+                    "https://cyclonedx.org",
+                    "https://cyclonedx.org/docs"
+                  ]
+                }
+              },
+              {
+                "contact": {
+                  "email": "paul.horton@owasp.org",
+                  "name": "Paul Horton"
+                }
+              }
+            ],
+            "owners": [
+              {
+                "contact": {
+                  "email": "someone@somewhere.tld",
+                  "name": "A N Other",
+                  "phone": "+44 (0)1234 567890"
+                }
+              },
+              {
+                "contact": {
+                  "email": "paul.horton@owasp.org",
+                  "name": "Paul Horton"
+                }
+              }
+            ],
+            "stewards": [
+              {
+                "organization": {
+                  "address": {
+                    "country": "GB",
+                    "locality": "Cheshire",
+                    "region": "England",
+                    "streetAddress": "100 Main Street"
+                  },
+                  "contact": [
+                    {
+                      "email": "someone@somewhere.tld",
+                      "name": "A N Other",
+                      "phone": "+44 (0)1234 567890"
+                    },
+                    {
+                      "email": "paul.horton@owasp.org",
+                      "name": "Paul Horton"
+                    }
+                  ],
+                  "name": "CycloneDX",
+                  "url": [
+                    "https://cyclonedx.org",
+                    "https://cyclonedx.org/docs"
+                  ]
+                }
+              }
+            ]
+          },
+          "graphics": {
+            "collection": [
+              {
+                "image": {
+                  "content": "ZnVsbC1kYXRhLWNvbXBvbmVudC1pbWFnZQ==",
+                  "contentType": "image/png",
+                  "encoding": "base64"
+                },
+                "name": "class-distribution"
+              },
+              {
+                "image": {
+                  "content": "ZnVsbC1kYXRhLWNvbXBvbmVudC1pbWFnZQ==",
+                  "contentType": "image/png",
+                  "encoding": "base64"
+                },
+                "name": "feature\ncorrelation"
+              }
+            ],
+            "description": "Data distribution plots,\nmulti-line"
+          },
+          "name": "training-dataset-v1",
+          "sensitiveData": [
+            "PII",
+            "financial"
+          ],
+          "type": "dataset"
+        }
+      ],
+      "name": "full-data-component",
+      "purl": "pkg:pypi/full-data-component@1.0.0",
+      "type": "data",
+      "version": "1.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "data-full"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2023-01-07T13:44:32.312678+00:00"
+  },
+  "properties": [
+    {
+      "name": "key1",
+      "value": "val1"
+    },
+    {
+      "name": "key2",
+      "value": "val2"
+    }
+  ],
+  "serialNumber": "urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac",
+  "version": 1,
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6"
+}

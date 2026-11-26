@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:1441d33a-e0fc-45b5-af3b-61ee52a88bac" version="1">
+  <metadata>
+    <timestamp>2023-01-07T13:44:32.312678+00:00</timestamp>
+  </metadata>
+  <components>
+    <component type="data" bom-ref="data-referenced">
+      <name>referenced-dataset</name>
+      <version>1.0.0</version>
+      <data>
+        <type>dataset</type>
+        <name>referenced-dataset</name>
+      </data>
+    </component>
+    <component type="machine-learning-model" bom-ref="ml-datasets">
+      <name>model-with-datasets</name>
+      <version>1.0.0</version>
+      <modelCard bom-ref="mc-datasets">
+        <modelParameters>
+          <task>text-classification</task>
+          <datasets>
+            <dataset bom-ref="dataset-inline">
+              <type>dataset</type>
+              <name>inline-dataset</name>
+              <contents>
+                <url>https://example.com/datasets/inline.csv</url>
+              </contents>
+              <description>Dataset described in place.</description>
+            </dataset>
+            <ref>data-referenced</ref>
+            <ref>urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#data-external</ref>
+          </datasets>
+        </modelParameters>
+      </modelCard>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="data-referenced"/>
+    <dependency ref="ml-datasets">
+      <dependency ref="data-referenced"/>
+    </dependency>
+  </dependencies>
+  <properties>
+    <property name="key1">val1</property>
+    <property name="key2">val2</property>
+  </properties>
+</bom>

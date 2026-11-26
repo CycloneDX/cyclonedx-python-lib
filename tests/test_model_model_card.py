@@ -19,6 +19,7 @@ from unittest import TestCase
 
 from cyclonedx.model import ExternalReference, ExternalReferenceType, Property
 from cyclonedx.model.contact import OrganizationalEntity
+from cyclonedx.model.data import ComponentData, ComponentDataKind, DatasetReference
 from cyclonedx.model.model_card import (
     Approach,
     Co2Measure,
@@ -243,9 +244,43 @@ class TestModelParameters(TestCase):
         self.assertEqual(obj.architecture_family, 'cnn')
         self.assertEqual(obj.model_architecture, 'resnet')
 
-    def test_dataset_not_supported(self) -> None:
-        with self.assertRaises(NotImplementedError):
-            ModelParameters(datasets=['dataset'])
+    def test_datasets(self) -> None:
+        inline = ComponentData(type=ComponentDataKind.DATASET, name='inline')
+        reference = DatasetReference(ref='data-1')
+
+        obj = ModelParameters(datasets=[reference, inline])
+
+        self.assertEqual(len(obj.datasets), 2)
+        self.assertIn(inline, obj.datasets)
+        self.assertIn(reference, obj.datasets)
+
+    def test_datasets_default_and_setter(self) -> None:
+        obj = ModelParameters()
+        self.assertEqual(len(obj.datasets), 0)
+
+        reference = DatasetReference(ref='data-1')
+        obj.datasets = [reference]
+        self.assertEqual(list(obj.datasets), [reference])
+
+    def test_datasets_sort_inline_before_references(self) -> None:
+        inline_a = ComponentData(type=ComponentDataKind.DATASET, name='a')
+        inline_b = ComponentData(type=ComponentDataKind.DATASET, name='b')
+        reference_a = DatasetReference(ref='a')
+        reference_b = DatasetReference(ref='b')
+
+        obj = ModelParameters(datasets=[reference_b, inline_b, reference_a, inline_a])
+
+        self.assertListEqual([inline_a, inline_b, reference_a, reference_b], list(obj.datasets))
+
+    def test_datasets_affect_equality(self) -> None:
+        self.assertEqual(
+            ModelParameters(datasets=[DatasetReference(ref='a')]),
+            ModelParameters(datasets=[DatasetReference(ref='a')]),
+        )
+        self.assertNotEqual(
+            ModelParameters(datasets=[DatasetReference(ref='a')]),
+            ModelParameters(datasets=[DatasetReference(ref='b')]),
+        )
 
     def test_inputs_outputs_keep_order_and_duplicates(self) -> None:
         a = InputOutputMLParameters(format='A')

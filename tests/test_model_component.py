@@ -28,6 +28,7 @@ from cyclonedx.model import (
     XsUri,
 )
 from cyclonedx.model.component import Commit, Component, ComponentType, Diff, Patch, PatchClassification, Pedigree
+from cyclonedx.model.data import ComponentData, ComponentDataKind
 from cyclonedx.model.issue import IssueClassification, IssueType
 from tests import reorder
 from tests._data.models import (
@@ -328,6 +329,24 @@ class TestModelComponent(TestCase):
         self.assertEqual(2, len(comp_b.get_all_nested_components(include_self=False)))
         self.assertEqual(3, len(list(comp_b.iter_all_nested_components(include_self=True))))
         self.assertEqual(2, len(list(comp_b.iter_all_nested_components(include_self=False))))
+
+    def test_data(self) -> None:
+        data_a = ComponentData(type=ComponentDataKind.DATASET, name='a')
+        data_b = ComponentData(type=ComponentDataKind.OTHER, name='b')
+
+        self.assertEqual(0, len(Component(name='c').data))
+
+        comp = Component(name='c', type=ComponentType.DATA, data=[data_b, data_a])
+        self.assertListEqual([data_a, data_b], list(comp.data))
+
+        comp.data = [data_b]
+        self.assertListEqual([data_b], list(comp.data))
+
+    def test_data_affects_equality(self) -> None:
+        data = ComponentData(type=ComponentDataKind.DATASET, name='a')
+
+        self.assertEqual(Component(name='c', data=[data]), Component(name='c', data=[data]))
+        self.assertNotEqual(Component(name='c', data=[data]), Component(name='c'))
 
 
 class TestModelDiff(TestCase):

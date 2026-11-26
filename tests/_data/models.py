@@ -88,6 +88,14 @@ from cyclonedx.model.crypto import (
     RelatedCryptoMaterialState,
     RelatedCryptoMaterialType,
 )
+from cyclonedx.model.data import (
+    ComponentData,
+    ComponentDataKind,
+    DataContents,
+    DataGovernance,
+    DataGovernanceResponsibleParty,
+    DatasetReference,
+)
 from cyclonedx.model.definition import CreId, Definitions, Level, Requirement, Standard
 from cyclonedx.model.dependency import Dependency
 from cyclonedx.model.impact_analysis import (
@@ -543,6 +551,120 @@ def get_bom_v1_5_with_full_model_card() -> Bom:
 
     bom = _make_bom(components=[component])
     bom.register_dependency(component)
+    return bom
+
+
+def get_bom_v1_5_with_data_component() -> Bom:
+    """Single component with a fully populated componentData entry (schema 1.5+ only)."""
+
+    image_content = base64.b64encode(b'full-data-component-image').decode('utf-8')
+
+    governance = DataGovernance(
+        custodians=[
+            DataGovernanceResponsibleParty(organization=get_org_entity_1()),
+            DataGovernanceResponsibleParty(contact=get_org_contact_1()),
+        ],
+        stewards=[
+            DataGovernanceResponsibleParty(organization=get_org_entity_1()),
+        ],
+        owners=[
+            DataGovernanceResponsibleParty(contact=get_org_contact_1()),
+            DataGovernanceResponsibleParty(contact=get_org_contact_2()),
+        ],
+    )
+
+    data_component = ComponentData(
+        bom_ref='data-comp-full',
+        type=ComponentDataKind.DATASET,
+        name='training-dataset-v1',
+        contents=DataContents(
+            attachment=AttachedText(
+                content='aGVsbG8gd29ybGQ=',
+                content_type='text/plain',
+                encoding=Encoding.BASE_64,
+            ),
+            url=XsUri('https://example.com/datasets/training-v1.csv'),
+            properties=[Property(name='format', value='csv')],
+        ),
+        classification='public',
+        sensitive_data=['PII', 'financial'],
+        graphics=GraphicsCollection(
+            description='Data distribution plots,\nmulti-line',
+            collection=[
+                Graphic(
+                    name='class-distribution',
+                    image=AttachedText(
+                        content=image_content,
+                        content_type='image/png',
+                        encoding=Encoding.BASE_64,
+                    ),
+                ),
+                Graphic(
+                    name='feature\ncorrelation',
+                    image=AttachedText(
+                        content=image_content,
+                        content_type='image/png',
+                        encoding=Encoding.BASE_64,
+                    ),
+                ),
+            ],
+        ),
+        description='Training dataset for the primary classifier, version 1.',
+        governance=governance,
+    )
+
+    component = Component(
+        name='full-data-component',
+        version='1.0.0',
+        type=ComponentType.DATA,
+        bom_ref='data-full',
+        purl=PackageURL(type='pypi', name='full-data-component', version='1.0.0'),
+        data=[data_component],
+    )
+
+    bom = _make_bom(components=[component])
+    bom.register_dependency(component)
+    return bom
+
+
+def get_bom_v1_5_with_model_card_datasets() -> Bom:
+    """Model card whose `modelParameters.datasets` hold inline data, a reference to a data component and a BOM-Link."""
+
+    data_component = Component(
+        name='referenced-dataset',
+        version='1.0.0',
+        type=ComponentType.DATA,
+        bom_ref='data-referenced',
+        data=[ComponentData(type=ComponentDataKind.DATASET, name='referenced-dataset')],
+    )
+
+    ml_component = Component(
+        name='model-with-datasets',
+        version='1.0.0',
+        type=ComponentType.MACHINE_LEARNING_MODEL,
+        bom_ref='ml-datasets',
+        model_card=ModelCard(
+            bom_ref='mc-datasets',
+            model_parameters=ModelParameters(
+                task='text-classification',
+                datasets=[
+                    ComponentData(
+                        bom_ref='dataset-inline',
+                        type=ComponentDataKind.DATASET,
+                        name='inline-dataset',
+                        description='Dataset described in place.',
+                        contents=DataContents(url=XsUri('https://example.com/datasets/inline.csv')),
+                    ),
+                    DatasetReference(ref=data_component.bom_ref),
+                    DatasetReference(ref=XsUri('urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#data-external')),
+                ],
+            ),
+        ),
+    )
+
+    bom = _make_bom(components=[data_component, ml_component])
+    bom.register_dependency(data_component)
+    bom.register_dependency(ml_component, [data_component])
     return bom
 
 

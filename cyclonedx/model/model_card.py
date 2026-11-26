@@ -29,17 +29,22 @@ This set of classes represents the model card types in the CycloneDX standard.
 
 from collections.abc import Iterable
 from enum import Enum
-from typing import Any, List, Optional, Union
+from json import loads as json_loads
+from typing import TYPE_CHECKING, Any, List, Optional, Union
+from xml.etree.ElementTree import Element  # nosec B405
 
 import py_serializable as serializable
 from sortedcontainers import SortedSet
 
 from .._internal.bom_ref import bom_ref_from_str as _bom_ref_from_str
 from .._internal.compare import ComparableTuple as _ComparableTuple
+from ..exception.serialization import CycloneDxDeserializationException
 from ..schema.schema import SchemaVersion1Dot5, SchemaVersion1Dot6, SchemaVersion1Dot7
-from . import AttachedText, ExternalReference, Property
+from . import ExternalReference, Property, XsUri
 from .bom_ref import BomRef
 from .contact import OrganizationalEntity
+from .data import ComponentData, DatasetReference
+from .graphics import Graphic, GraphicsCollection  # noqa: F401  # Graphic kept importable from here, since 11.13.0
 
 
 @serializable.serializable_enum
@@ -178,16 +183,104 @@ class InputOutputMLParameters:
         return f'<InputOutputMLParameters format={self.format!r}>'
 
 
+Dataset = Union[ComponentData, DatasetReference]
+"""TypeAlias for a union of the supported dataset entries of `modelParameters.datasets`.
+
+- :class:`~cyclonedx.model.data.ComponentData`: inline data
+- :class:`~cyclonedx.model.data.DatasetReference`: reference to a data component
+"""
+
+if TYPE_CHECKING:  # pragma: no cover
+    # workaround for https://github.com/python/mypy/issues/5264
+    # this code path is taken when static code analysis or documentation tools runs through.
+    class DatasetRepository(SortedSet[Dataset]):
+        """Collection of :class:`Dataset`.
+
+        This is a `set`, not a `list`.  Order MUST NOT matter here.
+        """
+
+else:
+    class DatasetRepository(SortedSet):
+        """Collection of :class:`Dataset`.
+
+        This is a `set`, not a `list`.  Order MUST NOT matter here.
+        """
+
+
+class _DatasetRepositorySerializationHelper(serializable.helpers.BaseHelper):
+    """  THIS CLASS IS NON-PUBLIC API  """
+
+    @staticmethod
+    def __ref_to_str(ref: Union[str, BomRef, XsUri]) -> str:
+        return str(ref)
+
+    @staticmethod
+    def __str_to_ref(value: str) -> Union[BomRef, XsUri]:
+        # BOM-Link is the only reference form that is not a plain `bom-ref`
+        return XsUri(value) if value.startswith('urn:cdx:') else BomRef(value)
+
+    @classmethod
+    def json_normalize(cls, o: DatasetRepository, *,
+                       view: Optional[type[serializable.ViewType]],
+                       **__: Any) -> Any:
+        if len(o) == 0:
+            return None
+        return [
+            json_loads(d.as_json(view_=view))  # type:ignore[attr-defined]
+            if isinstance(d, ComponentData)
+            else {'ref': cls.__ref_to_str(d.ref)}
+            for d in o
+        ]
+
+    @classmethod
+    def json_denormalize(cls, o: list[dict[str, Any]],
+                         **__: Any) -> DatasetRepository:
+        repo = DatasetRepository()
+        for d in o:
+            if 'ref' in d:
+                repo.add(DatasetReference(ref=cls.__str_to_ref(str(d['ref']))))
+            else:
+                repo.add(ComponentData.from_json(d))  # type:ignore[attr-defined]
+        return repo
+
+    @classmethod
+    def xml_normalize(cls, o: DatasetRepository, *,
+                      element_name: str,
+                      view: Optional[type[serializable.ViewType]],
+                      xmlns: Optional[str],
+                      **__: Any) -> Optional[Element]:
+        if len(o) == 0:
+            return None
+        elem = Element(element_name)
+        for d in o:
+            if isinstance(d, ComponentData):
+                elem.append(d.as_xml(  # type:ignore[attr-defined]
+                    view_=view, as_string=False, element_name='dataset', xmlns=xmlns))
+            else:
+                ref = Element(f'{{{xmlns}}}ref' if xmlns else 'ref')
+                ref.text = cls.__ref_to_str(d.ref)
+                elem.append(ref)
+        return elem
+
+    @classmethod
+    def xml_denormalize(cls, o: Element,
+                        default_ns: Optional[str],
+                        **__: Any) -> DatasetRepository:
+        repo = DatasetRepository()
+        for d in o:
+            tag = d.tag if default_ns is None else d.tag.replace(f'{{{default_ns}}}', '')
+            if tag == 'ref':
+                repo.add(DatasetReference(ref=cls.__str_to_ref(d.text or '')))
+            elif tag == 'dataset':
+                repo.add(ComponentData.from_xml(d, default_ns))  # type:ignore[attr-defined]
+            else:
+                raise CycloneDxDeserializationException(f'unexpected content: {d!r}')
+        return repo
+
+
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
 class ModelParameters:
     """`modelParameters` block within `modelCard`.
-
-    .. note::
-        `datasets` is not supported yet (see issue #913):
-
-        - passing non-empty `datasets` to the constructor raises `NotImplementedError`.
-        - `datasets` found while deserializing JSON/XML are ignored,
-          so re-serializing such a BOM drops them.
 
     .. note::
         `inputs` and `outputs` keep their given order and duplicates,
@@ -200,7 +293,7 @@ class ModelParameters:
         task: Optional[str] = None,
         architecture_family: Optional[str] = None,
         model_architecture: Optional[str] = None,
-        datasets: Optional[Iterable[Any]] = None,  # Unsupported placeholder until #913 lands.
+        datasets: Optional[Iterable[Dataset]] = None,
         inputs: Optional[Iterable[InputOutputMLParameters]] = None,
         outputs: Optional[Iterable[InputOutputMLParameters]] = None,
     ) -> None:
@@ -208,16 +301,7 @@ class ModelParameters:
         self.task = task
         self.architecture_family = architecture_family
         self.model_architecture = model_architecture
-        # datasets: The CycloneDX spec allows inline componentData or ref entries.
-        # This library has not yet implemented component.data (#913). To avoid emitting
-        # invalid or partial structures, any attempt to populate datasets is rejected.
-        if datasets is not None:
-            sentinel = object()
-            if next(iter(datasets), sentinel) is not sentinel:
-                raise NotImplementedError(
-                    'modelParameters.datasets is not yet supported. Tracked by issue #913.'
-                )
-        self._datasets: 'SortedSet[Any]' = SortedSet()  # always empty until implemented
+        self.datasets = datasets or []
         self.inputs = inputs or []
         self.outputs = outputs or []
 
@@ -303,8 +387,26 @@ class ModelParameters:
     def model_architecture(self, model_architecture: Optional[str]) -> None:
         self._model_architecture = model_architecture
 
-    # datasets intentionally omitted from serialization until #913 implemented.
-    # A future implementation will add a concrete union type and proper annotations.
+    @property
+    @serializable.view(SchemaVersion1Dot5)
+    @serializable.view(SchemaVersion1Dot6)
+    @serializable.view(SchemaVersion1Dot7)
+    @serializable.xml_sequence(5)
+    @serializable.json_name('datasets')
+    @serializable.type_mapping(_DatasetRepositorySerializationHelper)
+    @serializable.xml_name('datasets')
+    def datasets(self) -> 'SortedSet[Dataset]':
+        """
+        The datasets used to train and evaluate the model: inline data or references to data components.
+
+        Returns:
+            Set of `ComponentData` and `DatasetReference`
+        """
+        return self._datasets
+
+    @datasets.setter
+    def datasets(self, datasets: Iterable[Dataset]) -> None:
+        self._datasets = DatasetRepository(datasets)
 
     @property
     @serializable.view(SchemaVersion1Dot5)
@@ -354,7 +456,7 @@ class ModelParameters:
             self.task,
             self.architecture_family,
             self.model_architecture,
-            _ComparableTuple(self._datasets),
+            _ComparableTuple(self.datasets),
             _ComparableTuple(self.inputs),
             _ComparableTuple(self.outputs),
         ))
@@ -589,159 +691,6 @@ class PerformanceMetric:
 
     def __repr__(self) -> str:
         return f'<PerformanceMetric type={self.type!r} value={self.value!r}>'
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class Graphic:
-    """Graphic entry with optional name and image (AttachedText)."""
-
-    def __init__(self, *, name: Optional[str] = None, image: Optional[AttachedText] = None) -> None:
-        self.name = name
-        self.image = image
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(1)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def name(self) -> Optional[str]:
-        """
-        The name of the graphic.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        self._name = name
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(2)
-    def image(self) -> Optional[AttachedText]:
-        """
-        The graphic (vector or raster). Base64 encoding must be specified for binary images.
-
-        Returns:
-            `AttachedText` if set else `None`
-        """
-        return self._image
-
-    @image.setter
-    def image(self, image: Optional[AttachedText]) -> None:
-        self._image = image
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((self.name, self.image))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Graphic):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, Graphic):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __le__(self, other: Any) -> bool:
-        if isinstance(other, Graphic):
-            return self.__comparable_tuple() <= other.__comparable_tuple()
-        return NotImplemented
-
-    def __ge__(self, other: Any) -> bool:
-        if isinstance(other, Graphic):
-            return self.__comparable_tuple() >= other.__comparable_tuple()
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<Graphic name={self.name!r}>'
-
-
-@serializable.serializable_class(ignore_unknown_during_deserialization=True)
-class GraphicsCollection:
-    """A collection of graphics with optional description."""
-
-    def __init__(self, *, description: Optional[str] = None, collection: Optional[Iterable[Graphic]] = None) -> None:
-        self.description = description
-        self.collection = collection or []
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(1)
-    @serializable.xml_string(serializable.XmlStringSerializationType.NORMALIZED_STRING)
-    def description(self) -> Optional[str]:
-        """
-        A description of this collection of graphics.
-
-        Returns:
-            `str` if set else `None`
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description: Optional[str]) -> None:
-        self._description = description
-
-    @property
-    @serializable.view(SchemaVersion1Dot5)
-    @serializable.view(SchemaVersion1Dot6)
-    @serializable.view(SchemaVersion1Dot7)
-    @serializable.xml_sequence(2)
-    @serializable.json_name('collection')
-    @serializable.xml_array(serializable.XmlArraySerializationType.NESTED, 'graphic')
-    @serializable.xml_name('collection')
-    def collection(self) -> 'SortedSet[Graphic]':
-        """
-        A collection of graphics.
-
-        Returns:
-            Set of `Graphic`
-        """
-        return self._collection
-
-    @collection.setter
-    def collection(self, collection: Iterable[Graphic]) -> None:
-        self._collection = SortedSet(collection)
-
-    def __comparable_tuple(self) -> _ComparableTuple:
-        return _ComparableTuple((self.description, _ComparableTuple(self.collection)))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, GraphicsCollection):
-            return self.__comparable_tuple() == other.__comparable_tuple()
-        return False
-
-    def __lt__(self, other: Any) -> bool:
-        if isinstance(other, GraphicsCollection):
-            return self.__comparable_tuple() < other.__comparable_tuple()
-        return NotImplemented
-
-    def __le__(self, other: Any) -> bool:
-        if isinstance(other, GraphicsCollection):
-            return self.__comparable_tuple() <= other.__comparable_tuple()
-        return NotImplemented
-
-    def __ge__(self, other: Any) -> bool:
-        if isinstance(other, GraphicsCollection):
-            return self.__comparable_tuple() >= other.__comparable_tuple()
-        return NotImplemented
-
-    def __hash__(self) -> int:
-        return hash(self.__comparable_tuple())
-
-    def __repr__(self) -> str:
-        return f'<GraphicsCollection count={len(self.collection)}>'
 
 
 @serializable.serializable_class(ignore_unknown_during_deserialization=True)
