@@ -16,6 +16,7 @@
 # Copyright (c) OWASP Foundation. All Rights Reserved.
 
 from collections.abc import Callable
+from io import StringIO
 from os.path import join
 from typing import Any
 from unittest import TestCase
@@ -57,3 +58,15 @@ class TestDeserializeXml(TestCase, SnapshotMixin, DeepCompareMixin):
         with open(xml_file) as f:
             bom: Bom = Bom.from_xml(f)  # <<< is expected to not crash
         self.assertIsNotNone(bom)
+
+    def test_component_is_external_with_whitespace(self) -> None:
+        for literal, expected in (('true', True), ('false', False), ('1', True), ('0', False)):
+            for whitespace in (' ', '\t', '\r', '\n', ' \t\r\n'):
+                with self.subTest(literal=literal, whitespace=whitespace):
+                    bom = Bom.from_xml(StringIO(
+                        '<bom xmlns="http://cyclonedx.org/schema/bom/1.7" version="1">'
+                        '<components><component type="library" '
+                        f'isExternal="{whitespace}{literal}{whitespace}">'
+                        '<name>test-component</name></component></components></bom>'
+                    ))
+                    self.assertIs(next(iter(bom.components)).is_external, expected)
