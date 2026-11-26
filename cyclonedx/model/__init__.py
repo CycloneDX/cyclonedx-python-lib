@@ -481,8 +481,7 @@ class ExternalReferenceType(str, Enum):
 
     .. note::
         ``RFC_9116`` (for ``security.txt``, see RFC 9116) and ``RFC_9166`` are the same member.
-        ``RFC_9166`` is a misspelled name kept for backwards compatibility; use ``RFC_9116`` instead.
-        The member's ``name`` stays ``RFC_9166`` until the next major version.
+        ``RFC_9166`` is a deprecated alias with a misspelled RFC number; use ``RFC_9116`` instead.
     """
     # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
     ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
@@ -519,8 +518,9 @@ class ExternalReferenceType(str, Enum):
     POAM = 'poam'  # Only supported in >= 1.5
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
     RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
-    RFC_9166 = 'rfc-9116'  # Only supported in >= 1.6 -- misspelled name, kept for backwards compatibility
-    RFC_9116 = 'rfc-9116'  # Only supported in >= 1.6 -- alias of `RFC_9166` under the correct RFC number
+    RFC_9116 = 'rfc-9116'  # Only supported in >= 1.6
+    # Deprecated; use RFC_9116 instead. see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1074
+    RFC_9166 = 'rfc-9116'
     RISK_ASSESSMENT = 'risk-assessment'  # Only supported in >= 1.5
     RUNTIME_ANALYSIS_REPORT = 'runtime-analysis-report'  # Only supported in >= 1.5
     SECURITY_CONTACT = 'security-contact'  # Only supported in >= 1.5

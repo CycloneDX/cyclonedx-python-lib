@@ -272,12 +272,13 @@ class TestEnumExternalReferenceType(_EnumTestCase):
         ])
         super()._test_cases_render(bom, of, sv)
 
-    def test_rfc_9116_is_alias_of_rfc_9166(self) -> None:
+    def test_rfc_9166_is_deprecated_alias_of_rfc_9116(self) -> None:
         # see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1074
-        self.assertIs(ExternalReferenceType.RFC_9166, ExternalReferenceType.RFC_9116)
+        self.assertIs(ExternalReferenceType.RFC_9116, ExternalReferenceType.RFC_9166)
         self.assertIs(ExternalReferenceType.RFC_9116, ExternalReferenceType('rfc-9116'))
-        self.assertIs(ExternalReferenceType.RFC_9116, ExternalReferenceType['RFC_9116'])
-        self.assertEqual('rfc-9116', ExternalReferenceType.RFC_9116.value)
+        self.assertIs(ExternalReferenceType.RFC_9116, ExternalReferenceType['RFC_9166'])
+        self.assertEqual('RFC_9116', ExternalReferenceType.RFC_9166.name)
+        self.assertEqual('rfc-9116', ExternalReferenceType.RFC_9166.value)
 
 
 @ddt
