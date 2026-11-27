@@ -145,7 +145,7 @@
         },
         {
           "type": "rfc-9116",
-          "url": "tests/RFC_9166"
+          "url": "tests/RFC_9116"
         },
         {
           "type": "risk-assessment",

@@ -478,6 +478,10 @@ class ExternalReferenceType(str, Enum):
 
     .. note::
         See the CycloneDX Schema definition: https://cyclonedx.org/docs/1.7/xml/#type_externalReferenceType
+
+    .. note::
+        ``RFC_9116`` (for ``security.txt``, see RFC 9116) and ``RFC_9166`` are the same member.
+        ``RFC_9166`` is a deprecated alias with a misspelled RFC number; use ``RFC_9116`` instead.
     """
     # see `_ExternalReferenceSerializationHelper.__CASES` for view/case map
     ADVERSARY_MODEL = 'adversary-model'  # Only supported in >= 1.5
@@ -514,7 +518,8 @@ class ExternalReferenceType(str, Enum):
     POAM = 'poam'  # Only supported in >= 1.5
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
     RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
-    RFC_9166 = 'rfc-9116'  # Only supported in >= 1.6
+    RFC_9116 = 'rfc-9116'  # Only supported in >= 1.6
+    RFC_9166 = 'rfc-9116'  # Deprecated; use RFC_9116 instead. see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1074  # noqa: E501
     RISK_ASSESSMENT = 'risk-assessment'  # Only supported in >= 1.5
     RUNTIME_ANALYSIS_REPORT = 'runtime-analysis-report'  # Only supported in >= 1.5
     SECURITY_CONTACT = 'security-contact'  # Only supported in >= 1.5
@@ -586,7 +591,7 @@ class _ExternalReferenceSerializationHelper(serializable.helpers.BaseHelper):
         ExternalReferenceType.SOURCE_DISTRIBUTION,
         ExternalReferenceType.ELECTRONIC_SIGNATURE,
         ExternalReferenceType.DIGITAL_SIGNATURE,
-        ExternalReferenceType.RFC_9166,
+        ExternalReferenceType.RFC_9116,
     }
     __CASES[SchemaVersion1Dot7] = __CASES[SchemaVersion1Dot6] | {
         ExternalReferenceType.CITATION,
