@@ -519,8 +519,7 @@ class ExternalReferenceType(str, Enum):
     QUALITY_METRICS = 'quality-metrics'  # Only supported in >= 1.5
     RELEASE_NOTES = 'release-notes'  # Only supported in >= 1.4
     RFC_9116 = 'rfc-9116'  # Only supported in >= 1.6
-    # Deprecated; use RFC_9116 instead. see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1074
-    RFC_9166 = 'rfc-9116'
+    RFC_9166 = 'rfc-9116'  # Deprecated; use RFC_9116 instead. see https://github.com/CycloneDX/cyclonedx-python-lib/issues/1074  # noqa: E501
     RISK_ASSESSMENT = 'risk-assessment'  # Only supported in >= 1.5
     RUNTIME_ANALYSIS_REPORT = 'runtime-analysis-report'  # Only supported in >= 1.5
     SECURITY_CONTACT = 'security-contact'  # Only supported in >= 1.5
