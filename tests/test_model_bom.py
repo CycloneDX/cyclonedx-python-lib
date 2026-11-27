@@ -30,6 +30,7 @@ from cyclonedx.model.component import Component, ComponentType
 from cyclonedx.model.contact import OrganizationalContact, OrganizationalEntity
 from cyclonedx.model.license import DisjunctiveLicense
 from cyclonedx.model.lifecycle import LifecyclePhase, NamedLifecycle, PredefinedLifecycle
+from cyclonedx.model.service import Service
 from cyclonedx.model.tool import Tool
 from cyclonedx.output.json import JsonV1Dot7
 from tests import reorder
@@ -268,6 +269,20 @@ class TestBom(TestCase):
         bom = get_bom()
         with self.assertRaises(LicenseExpressionAlongWithOthersException):
             bom.validate()
+
+    def test_validate_registers_dependencies_for_components_and_services(self) -> None:
+        c1 = Component(name='c1', bom_ref='ref1')
+        c2 = Component(name='c2', bom_ref='ref2')
+        s1 = Service(name='s1', bom_ref='ref3')
+        s2 = Service(name='s2', bom_ref='ref2')  # shares ref with c2
+        bom = Bom()
+        bom.components.update([c1, c2])
+        bom.services.update([s1, s2])
+        self.assertEqual(len(bom.dependencies), 0)
+        self.assertTrue(bom.validate())
+        dep_refs = {d.ref.value for d in bom.dependencies}
+        self.assertEqual(dep_refs, {'ref1', 'ref2', 'ref3'})
+        self.assertEqual(len(bom.dependencies), 3)
 
     # def test_bom_nested_services_issue_275(self) -> None:
     #    """regression test for issue #275
